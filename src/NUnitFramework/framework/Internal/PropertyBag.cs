@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -49,13 +49,20 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The value</param>
         public void Add(string key, object value)
         {
-            IList list;
-            if (!inner.TryGetValue(key, out list))
+            if (value != null)
             {
-                list = new List<object>();
-                inner.Add(key, list);
+                IList list;
+                if (!inner.TryGetValue(key, out list))
+                {
+                    list = new List<object>();
+                    inner.Add(key, list);
+                }
+                list.Add(value);
             }
-            list.Add(value);
+            else
+            {
+                throw new ArgumentException("The provided value cannot be null.");
+            }
         }
 
         /// <summary>
