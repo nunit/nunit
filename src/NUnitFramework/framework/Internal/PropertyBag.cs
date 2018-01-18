@@ -49,6 +49,8 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The value</param>
         public void Add(string key, object value)
         {
+            Guard.ArgumentNotNull(value, "value");
+
             if (value != null)
             {
                 IList list;

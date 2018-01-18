@@ -131,7 +131,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestNullPropertyValueIsntAdded()
         {
-            Assert.Throws<ArgumentException>(() => bag.Add("dontAddMe", null));
+            Assert.Throws<ArgumentNullException>(() => bag.Add("dontAddMe", null));
             Assert.IsFalse(bag.ContainsKey("dontAddMe"));
         }
     }
