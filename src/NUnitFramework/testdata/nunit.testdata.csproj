@@ -8,6 +8,9 @@
     <!-- Needed because we test stack traces and don't want to have to put
          [MethodImpl(MethodImplOptions.NoInlining)] on everything involved. -->
     <Optimize>false</Optimize>
+
+    <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
