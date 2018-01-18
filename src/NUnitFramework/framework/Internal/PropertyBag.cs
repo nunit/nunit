@@ -51,20 +51,13 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(value, "value");
 
-            if (value != null)
+            IList list;
+            if (!inner.TryGetValue(key, out list))
             {
-                IList list;
-                if (!inner.TryGetValue(key, out list))
-                {
-                    list = new List<object>();
-                    inner.Add(key, list);
-                }
-                list.Add(value);
+                list = new List<object>();
+                inner.Add(key, list);
             }
-            else
-            {
-                throw new ArgumentException("The provided value cannot be null.");
-            }
+            list.Add(value);
         }
 
         /// <summary>
