@@ -380,14 +380,6 @@ Teardown(context => CheckForError(ref ErrorDetail));
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
 
-void RunGitCommand(string arguments)
-{
-    StartProcess("git", new ProcessSettings()
-    {
-        Arguments = arguments
-    });
-}
-
 void UploadArtifacts(string packageDir, string searchPattern)
 {
     foreach(var zip in System.IO.Directory.GetFiles(packageDir, searchPattern))
