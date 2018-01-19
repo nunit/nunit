@@ -291,16 +291,16 @@ var FrameworkFiles = new FilePath[]
     "System.ValueTuple.dll"
 };
 
+string CurrentImageDir => $"{IMAGE_DIR}NUnit-{packageVersion}/";
+
 Task("CreateImage")
     .Description("Copies all files into the image directory")
     .Does(() =>
     {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-        var imageBinDir = currentImageDir + "bin/";
+        CleanDirectory(CurrentImageDir);
+        CopyFiles(RootFiles, CurrentImageDir);
 
-        CleanDirectory(currentImageDir);
-
-        CopyFiles(RootFiles, currentImageDir);
+        var imageBinDir = CurrentImageDir + "bin/";
 
         CreateDirectory(imageBinDir);
         Information("Created directory " + imageBinDir);
@@ -324,23 +324,17 @@ Task("PackageFramework")
     .IsDependentOn("CreateImage")
     .Does(() =>
     {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
         CreateDirectory(PACKAGE_DIR);
 
-        NuGetPack("nuget/framework/nunit.nuspec", new NuGetPackSettings()
+        var settings = new NuGetPackSettings
         {
             Version = packageVersion,
-            BasePath = currentImageDir,
+            BasePath = CurrentImageDir,
             OutputDirectory = PACKAGE_DIR
-        });
+        };
 
-        NuGetPack("nuget/nunitlite/nunitlite.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR
-        });
+        NuGetPack("nuget/framework/nunit.nuspec", settings);
+        NuGetPack("nuget/nunitlite/nunitlite.nuspec", settings);
     });
 
 Task("PackageZip")
@@ -350,17 +344,15 @@ Task("PackageZip")
     {
         CreateDirectory(PACKAGE_DIR);
 
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
         var zipFiles =
-            GetFiles(currentImageDir + "*.*") +
-            GetFiles(currentImageDir + "bin/net20/*.*") +
-            GetFiles(currentImageDir + "bin/net35/*.*") +
-            GetFiles(currentImageDir + "bin/net40/*.*") +
-            GetFiles(currentImageDir + "bin/net45/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard1.6/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard2.0/*.*");
-        Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
+            GetFiles(CurrentImageDir + "*.*") +
+            GetFiles(CurrentImageDir + "bin/net20/*.*") +
+            GetFiles(CurrentImageDir + "bin/net35/*.*") +
+            GetFiles(CurrentImageDir + "bin/net40/*.*") +
+            GetFiles(CurrentImageDir + "bin/net45/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard1.6/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard2.0/*.*");
+        Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
 //////////////////////////////////////////////////////////////////////
