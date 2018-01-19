@@ -1,4 +1,5 @@
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.7.0
+#tool GitLink
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -319,9 +320,17 @@ Task("CreateImage")
         }
     });
 
+Task("GitLink")
+    .IsDependentOn("CreateImage")
+    .Description("Source-indexes PDBs in the images directory to the current commit")
+    .Does(() =>
+    {
+        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"));
+    });
+
 Task("PackageFramework")
     .Description("Creates NuGet packages of the framework")
-    .IsDependentOn("CreateImage")
+    .IsDependentOn("GitLink")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -339,7 +348,7 @@ Task("PackageFramework")
 
 Task("PackageZip")
     .Description("Creates a ZIP file of the framework")
-    .IsDependentOn("CreateImage")
+    .IsDependentOn("GitLink")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
