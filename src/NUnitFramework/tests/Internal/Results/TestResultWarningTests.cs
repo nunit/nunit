@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultIsWarning()
         {
-            Assert.AreEqual(ResultState.Warning, _suiteResult.ResultState);
+            Assert.AreEqual(ResultState.ChildWarning, _suiteResult.ResultState);
             Assert.AreEqual(TestResult.CHILD_WARNINGS_MESSAGE, _suiteResult.Message);
 
             Assert.AreEqual(0, _suiteResult.PassCount);
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.AreEqual("Warning", suiteNode.Attributes["result"]);
             Assert.AreEqual(null, suiteNode.Attributes["label"]);
-            Assert.AreEqual(null, suiteNode.Attributes["site"]);
+            Assert.AreEqual("Child", suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
             Assert.AreEqual("1", suiteNode.Attributes["warnings"]);
