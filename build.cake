@@ -157,6 +157,9 @@ MSBuildSettings CreateSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
+    // Only needed when packaging
+    settings.WithProperty("DebugType", "pdbonly");
+
     if (IsRunningOnWindows())
         settings.ToolVersion = MSBuildToolVersion.VS2017;
     else
@@ -266,16 +269,19 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
+    "nunit.framework.pdb",
     "nunit.framework.xml",
     "NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
+    "nunitlite.pdb",
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
     "nunitlite-runner.dll",
+    "nunitlite-runner.pdb",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
     "Microsoft.Threading.Tasks.Extensions.dll",
