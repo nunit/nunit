@@ -135,7 +135,7 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState ChildFailure = ResultState.Failure.WithSite(FailureSite.Child);
 
         /// <summary>
-        /// A suite failed because one or more child tests failed or had errors
+        /// A suite failed because one or more child tests had warnings
         /// </summary>
         public readonly static ResultState ChildWarning = ResultState.Warning.WithSite(FailureSite.Child);
 
