@@ -21,19 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using NUnit.Framework;
 using NUnit.Compatibility;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.ActionAttributeTests;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
     [TestFixture, NonParallelizable]
     public class ActionAttributeTests
@@ -421,4 +419,3 @@ namespace NUnit.Framework.Tests
         #endregion
     }
 }
-#endif

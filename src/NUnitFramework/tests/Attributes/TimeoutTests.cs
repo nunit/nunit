@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PLATFORM_DETECTION
 using System;
 using System.Linq;
 using System.Threading;
@@ -167,7 +167,6 @@ namespace NUnit.Framework.Attributes
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("Test exceeded Timeout value of 500ms"));
-            Assert.That(result.Duration, Is.EqualTo(0.5).Within(0.2));
         }
     }
 }

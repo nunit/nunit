@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
+using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
@@ -113,7 +114,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        [TestCaseSource(typeof(IgnoreCaseDataProvider), "TestCases")]
+        [TestCaseSource(typeof(IgnoreCaseDataProvider), nameof(IgnoreCaseDataProvider.TestCases))]
         public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
         {
             var constraint = new CollectionEquivalentConstraint( expected ).IgnoreCase;
@@ -140,7 +141,7 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
                     yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
                     yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
                     yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
                     yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
@@ -169,6 +170,21 @@ namespace NUnit.Framework.Constraints
             ICollection ints = new SimpleObjectCollection(1, 2, 3);
 
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
+        }
+
+#if !(NET20 || NET35)
+        [Test]
+        public static void UsesProvidedGenericEqualityComparison()
+        {
+            var comparer = new GenericEqualityComparison<int>();
+            Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>(comparer.Delegate));
+            Assert.That(comparer.WasCalled, "Comparer was not called");
+        }
+
+        [Test]
+        public static void UsesBooleanReturningDelegateWithImplicitParameterTypes()
+        {
+            Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>((x, y) => x.Equals(y)));
         }
 
         [Test]
@@ -209,7 +225,6 @@ namespace NUnit.Framework.Constraints
             Assert.AreEqual(expectedMsg, writer.ToString());
         }
 
-#if (NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6)
         [Test]
         public void WorksWithHashSets()
         {
@@ -252,7 +267,7 @@ namespace NUnit.Framework.Constraints
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
 
-            var expectedMessage = 
+            var expectedMessage =
                 "  Expected: equivalent to < \"presto\", \"abracadabra\", \"hocuspocus\" >" + Environment.NewLine +
                 "  But was:  < \"abracadabra\", \"presto\", \"hocusfocus\" >" + Environment.NewLine +
                 "  Missing (1): < \"hocuspocus\" >" + Environment.NewLine +

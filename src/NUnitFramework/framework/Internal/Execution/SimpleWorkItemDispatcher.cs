@@ -27,6 +27,7 @@ using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
 {
+#if !NETSTANDARD1_6
     /// <summary>
     /// SimpleWorkItemDispatcher handles execution of WorkItems by
     /// directly executing them. It is provided so that a dispatcher
@@ -35,33 +36,34 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         // The first WorkItem to be dispatched, assumed to be top-level item
         private WorkItem _topLevelWorkItem;
 
         // Thread used to run and cancel tests
         private Thread _runnerThread;
-#endif
 
         #region IWorkItemDispatcher Members
 
         /// <summary>
+        ///  The level of parallelism supported
+        /// </summary>
+        public int LevelOfParallelism { get { return 0; } }
+
+        /// <summary>
         /// Start execution, creating the execution thread,
-        /// setting the top level work  and dispatching it.
+        /// setting the top level work and dispatching it.
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            Dispatch(topLevelWorkItem);
-#else
             _topLevelWorkItem = topLevelWorkItem;
             _runnerThread = new Thread(RunnerThreadProc);
 
+#if APARTMENT_STATE
             if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
                 _runnerThread.SetApartmentState(ApartmentState.STA);
+#endif
 
             _runnerThread.Start();
-#endif
         }
 
         /// <summary>
@@ -75,16 +77,16 @@ namespace NUnit.Framework.Internal.Execution
                 work.Execute();
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+
         private void RunnerThreadProc()
         {
             _topLevelWorkItem.Execute();
         }
-#endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+
+
         private object cancelLock = new object();
-#endif
+
 
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.
@@ -93,7 +95,6 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the run should be aborted, false if it should allow its currently running test to complete</param>
         public void CancelRun(bool force)
         {
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
             lock (cancelLock)
             {
                 if (_topLevelWorkItem != null)
@@ -103,8 +104,8 @@ namespace NUnit.Framework.Internal.Execution
                         _topLevelWorkItem = null;
                 }
             }
-#endif
         }
-#endregion
+        #endregion
     }
+#endif
 }

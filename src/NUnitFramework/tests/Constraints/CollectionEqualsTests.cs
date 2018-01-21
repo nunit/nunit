@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
 
-        [TestCaseSource( "IgnoreCaseData" )]
+        [TestCaseSource( nameof(IgnoreCaseData) )]
         public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
         {
             Assert.That( expected, Is.EqualTo( actual ).IgnoreCase );

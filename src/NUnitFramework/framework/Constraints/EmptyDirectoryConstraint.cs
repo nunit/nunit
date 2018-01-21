@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         {
             DirectoryInfo dirInfo = actual as DirectoryInfo;
             if (dirInfo == null)
-                throw new ArgumentException("The actual value must be a DirectoryInfo", "actual");
+                throw new ArgumentException("The actual value must be a DirectoryInfo", nameof(actual));
             files = dirInfo.GetFiles().Length;
             subdirs = dirInfo.GetDirectories().Length;
             bool hasSucceeded = files == 0 && subdirs == 0;

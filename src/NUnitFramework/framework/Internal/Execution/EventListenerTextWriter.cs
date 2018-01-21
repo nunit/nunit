@@ -53,14 +53,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Get the Encoding for this TextWriter
         /// </summary>
-        override public System.Text.Encoding Encoding
-		{
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            get { return Encoding.UTF8; }
-#else
-            get { return Encoding.Default; }
-#endif
-        }
+        public override Encoding Encoding { get; } = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
         private bool TrySendToListener(string text)
         {
@@ -68,10 +61,9 @@ namespace NUnit.Framework.Internal.Execution
             if (context == null || context.Listener == null)
                 return false;
 
-            string testName = context.CurrentTest != null
-                ? context.CurrentTest.FullName
-                : null;
-            context.Listener.TestOutput(new TestOutput(text, _streamName, testName));
+            context.Listener.TestOutput(new TestOutput(text, _streamName, 
+                context.CurrentTest?.Id, context.CurrentTest?.FullName));
+
             return true;
         }
 

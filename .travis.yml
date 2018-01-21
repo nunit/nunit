@@ -1,12 +1,24 @@
 language: csharp
 sudo: false
+
+# Need 2.*, should keep up to date with security releases
+dotnet: 2.0.3
+
+# Mono: Need 5.2+ for the included MSBuild
+# Right now Mono 5.4+ crashes while compiling build.cake. Should diagnose.
 matrix:
   include:
+
     - os: linux
-      mono: 4.6.2
-    - os: linux
-      mono: latest
+      mono: 5.2.0
+
     - os: osx
-      mono: latest
+      mono: 5.2.0
+
+      # .NET Core 2 requires OSX 10.12+
+      # https://github.com/dotnet/core/blob/master/release-notes/2.0/2.0-supported-os.md#macos
+      # https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
+      osx_image: xcode9.1
+
 script:
-  - ./build.sh --target "Travis" --configuration "Release"
+  - ./build.sh --target=Travis --configuration=Release

@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if NET20 || NET35 || NET40 || NET45
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -15,7 +14,7 @@ namespace NUnit.Framework.Assertions
         // These unit tests demonstrate that the user can call a test directly
         // and have it execute. Only information from exceptions thrown is 
         // available in this case, but it appears that a number of users do this.
-        // When a user calls a test me thod directly, without use of NUnit,
+        // When a user calls a test method directly, without use of NUnit,
         // the TestExecutionContext is null. We provide an AdhocContext in
         // that case, so that the tests can run. The technique is not useful
         // with warnings or multiple asserts, but will at least run without
@@ -42,13 +41,13 @@ namespace NUnit.Framework.Assertions
             {
                 RestoreExecutionContext(savedContext);
             }
-            
+
             // Throw any exception we got only after context is restored
             if (testException != null)
                 throw testException;
         }
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if !(NET20 || NET35 || NET40 || NET45)
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;

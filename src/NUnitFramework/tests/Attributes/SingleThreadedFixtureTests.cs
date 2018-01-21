@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 using System;
 using System.Linq;
 using System.Threading;
@@ -40,11 +40,13 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
 
+#if THREAD_ABORT
         [Test, Timeout(100)]
         public void TestWithTimeoutIsValid()
         {
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
         }
+#endif
 
         [Test]
         public void TestWithRequiresThreadIsInvalid()
@@ -52,6 +54,7 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThreadAttribute may not be specified");
         }
 
+#if APARTMENT_STATE
         [Test]
         public void TestWithDifferentApartmentIsInvalid()
         {
@@ -64,6 +67,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
             Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
         }
+#endif
 
         private void CheckTestIsInvalid<TFixture>(string reason)
         {
@@ -74,6 +78,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
+#if APARTMENT_STATE
     [SingleThreaded, Apartment(ApartmentState.STA)]
     public class SingleThreadedFixtureRunInSTA : ThreadingTests
     {
@@ -91,5 +96,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
         }
     }
+#endif
 }
 #endif

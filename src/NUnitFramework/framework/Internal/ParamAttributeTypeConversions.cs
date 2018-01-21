@@ -39,6 +39,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static IEnumerable ConvertData(object[] data, Type targetType)
         {
+            Guard.ArgumentNotNull(data, nameof(data));
+            Guard.ArgumentNotNull(targetType, nameof(targetType));
+
             if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
             {
                 return Enum.GetValues(targetType);
@@ -61,18 +64,16 @@ namespace NUnit.Framework.Internal
                     continue;
                 }
 
-                if (targetType.GetTypeInfo().IsAssignableFrom(arg.GetType().GetTypeInfo()))
+                if (targetType.GetTypeInfo().IsInstanceOfType(arg))
                 {
                     continue;
                 }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-                if (arg is DBNull)
+                if (arg.GetType().FullName == "System.DBNull")
                 {
                     data[i] = null;
                     continue;
                 }
-#endif
 
                 bool convert = false;
 

@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Is true for intervals created with a non zero value
+        /// Is true for intervals created with a non-zero value
         /// </summary>
         public bool IsNotZero
         {

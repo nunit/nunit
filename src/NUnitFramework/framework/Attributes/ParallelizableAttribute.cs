@@ -71,10 +71,19 @@ namespace NUnit.Framework
                 return;
 
             if (Scope.HasFlag(ParallelScope.Self) && Scope.HasFlag(ParallelScope.None))
+            {
                 test.MakeInvalid("Test may not be both parallel and non-parallel");
-
-            if (test is TestMethod && Scope.HasFlag(ParallelScope.ContextMask))
-                test.MakeInvalid("ParallelScope of a test method may not specify Children or Fixtures");
+            }
+            else if (Scope.HasFlag(ParallelScope.Fixtures))
+            {
+                if (test is TestMethod || test is ParameterizedMethodSuite)
+                    test.MakeInvalid("May not specify ParallelScope.Fixtures on a test method");
+            }
+            else if (Scope.HasFlag(ParallelScope.Children))
+            {
+                if (test is TestMethod)
+                    test.MakeInvalid("May not specify ParallelScope.Children on a non-parameterized test method");
+            }
         }
 
         #region IApplyToContext Interface

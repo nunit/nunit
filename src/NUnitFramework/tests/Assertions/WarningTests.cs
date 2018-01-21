@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -33,7 +33,7 @@ using NUnit.TestUtilities;
 using System.Threading.Tasks;
 #endif
 
-#if NET_4_0
+#if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
 
@@ -42,55 +42,55 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class WarningTests
     {
-        [TestCase("WarnUnless_Passes_Boolean")]
-        [TestCase("WarnIf_Passes_Boolean")]
-        [TestCase("WarnUnless_Passes_BooleanWithMessage")]
-        [TestCase("WarnIf_Passes_BooleanWithMessage")]
-        [TestCase("WarnUnless_Passes_BooleanWithMessageAndArgs")]
-        [TestCase("WarnIf_Passes_BooleanWithMessageAndArgs")]
-#if !NET_2_0
-        [TestCase("WarnUnless_Passes_BooleanWithMessageStringFunc")]
-        [TestCase("WarnIf_Passes_BooleanWithMessageStringFunc")]
-        [TestCase("WarnUnless_Passes_BooleanLambda")]
-        [TestCase("WarnIf_Passes_BooleanLambda")]
-        [TestCase("WarnUnless_Passes_BooleanLambdaWithMessage")]
-        [TestCase("WarnIf_Passes_BooleanLambdaWithMessage")]
-        [TestCase("WarnUnless_Passes_BooleanLambdaWithMessageAndArgs")]
-        [TestCase("WarnIf_Passes_BooleanLambdaWithMessageAndArgs")]
-        [TestCase("WarnUnless_Passes_BooleanLambdaWithWithMessageStringFunc")]
-        [TestCase("WarnIf_Passes_BooleanLambdaWithWithMessageStringFunc")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_Boolean))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_Boolean))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanWithMessageAndArgs))]
+#if !NET20
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambda))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambda))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambdaWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambdaWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambdaWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambdaWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_BooleanLambdaWithWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_BooleanLambdaWithWithMessageStringFunc))]
 #endif
-        [TestCase("WarnUnless_Passes_ActualAndConstraint")]
-        [TestCase("WarnIf_Passes_ActualAndConstraint")]
-        [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessage")]
-        [TestCase("WarnIf_Passes_ActualAndConstraintWithMessage")]
-        [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessageAndArgs")]
-        [TestCase("WarnIf_Passes_ActualAndConstraintWithMessageAndArgs")]
-#if !NET_2_0
-        [TestCase("WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc")]
-        [TestCase("WarnIf_Passes_ActualAndConstraintWithMessageStringFunc")]
-        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraint")]
-        [TestCase("WarnIf_Passes_ActualLambdaAndConstraint")]
-        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraintWithMessage")]
-        [TestCase("WarnIf_Passes_ActualLambdaAndConstraintWithMessage")]
-        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraintWithMessageAndArgs")]
-        [TestCase("WarnIf_Passes_ActualLambdaAndConstraintWithMessageAndArgs")]
-        [TestCase("WarnUnless_Passes_ActualLambdaAndConstraintWithMessageStringFunc")]
-        [TestCase("WarnIf_Passes_ActualLambdaAndConstraintWithMessageStringFunc")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraint))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraint))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraintWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraintWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraintWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraintWithMessageAndArgs))]
+#if !NET20
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualAndConstraintWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraint))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraint))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraintWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraintWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraintWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraintWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_ActualLambdaAndConstraintWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_ActualLambdaAndConstraintWithMessageStringFunc))]
 #endif
-        [TestCase("WarnUnless_Passes_DelegateAndConstraint")]
-        [TestCase("WarnIf_Passes_DelegateAndConstraint")]
-        [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessage")]
-        [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessage")]
-        [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessageAndArgs")]
-        [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs")]
-#if !NET_2_0
-        [TestCase("WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc")]
-        [TestCase("WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraint))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraint))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessage))]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessageAndArgs))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs))]
+#if !NET20
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc))]
 #endif
 #if ASYNC
-        [TestCase("WarnUnless_Passes_Async")]
-        [TestCase("WarnIf_Passes_Async")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Passes_Async))]
+        [TestCase(nameof(WarningFixture.WarnIf_Passes_Async))]
 #endif
         public void WarningPasses(string methodName)
         {
@@ -101,55 +101,55 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertionResults.Count, Is.EqualTo(0), "There should be no AssertionResults");
         }
 
-        [TestCase("WarnUnless_Fails_Boolean", null)]
-        [TestCase("WarnIf_Fails_Boolean", null)]
-        [TestCase("WarnUnless_Fails_BooleanWithMessage", "message")]
-        [TestCase("WarnIf_Fails_BooleanWithMessage", "message")]
-        [TestCase("WarnUnless_Fails_BooleanWithMessageAndArgs", "got 5")]
-        [TestCase("WarnIf_Fails_BooleanWithMessageAndArgs", "got 5")]
-#if !NET_2_0
-        [TestCase("WarnUnless_Fails_BooleanWithMessageStringFunc", "got 5")]
-        [TestCase("WarnIf_Fails_BooleanWithMessageStringFunc", "got 5")]
-        [TestCase("WarnUnless_Fails_BooleanLambda", null)]
-        [TestCase("WarnIf_Fails_BooleanLambda", null)]
-        [TestCase("WarnUnless_Fails_BooleanLambdaWithMessage", "message")]
-        [TestCase("WarnIf_Fails_BooleanLambdaWithMessage", "message")]
-        [TestCase("WarnUnless_Fails_BooleanLambdaWithMessageAndArgs", "got 5")]
-        [TestCase("WarnIf_Fails_BooleanLambdaWithMessageAndArgs", "got 5")]
-        [TestCase("WarnUnless_Fails_BooleanLambdaWithMessageStringFunc", "got 5")]
-        [TestCase("WarnIf_Fails_BooleanLambdaWithMessageStringFunc", "got 5")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_Boolean), null)]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_Boolean), null)]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanWithMessage), "message")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanWithMessage), "message")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanWithMessageAndArgs), "got 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanWithMessageAndArgs), "got 5")]
+#if !NET20
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanWithMessageStringFunc), "got 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanWithMessageStringFunc), "got 5")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambda), null)]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambda), null)]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambdaWithMessage), "message")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambdaWithMessage), "message")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambdaWithMessageAndArgs), "got 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambdaWithMessageAndArgs), "got 5")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_BooleanLambdaWithMessageStringFunc), "got 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_BooleanLambdaWithMessageStringFunc), "got 5")]
 #endif
-        [TestCase("WarnUnless_Fails_ActualAndConstraint", null)]
-        [TestCase("WarnIf_Fails_ActualAndConstraint", null)]
-        [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessage", "Error")]
-        [TestCase("WarnIf_Fails_ActualAndConstraintWithMessage", "Error")]
-        [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
-        [TestCase("WarnIf_Fails_ActualAndConstraintWithMessageAndArgs", "Should be 5")]
-#if !NET_2_0
-        [TestCase("WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
-        [TestCase("WarnIf_Fails_ActualAndConstraintWithMessageStringFunc", "Should be 5")]
-        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraint", null)]
-        [TestCase("WarnIf_Fails_ActualLambdaAndConstraint", null)]
-        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraintWithMessage", "Error")]
-        [TestCase("WarnIf_Fails_ActualLambdaAndConstraintWithMessage", "Error")]
-        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraintWithMessageAndArgs", "Should be 5")]
-        [TestCase("WarnIf_Fails_ActualLambdaAndConstraintWithMessageAndArgs", "Should be 5")]
-        [TestCase("WarnUnless_Fails_ActualLambdaAndConstraintWithMessageStringFunc", "Should be 5")]
-        [TestCase("WarnIf_Fails_ActualLambdaAndConstraintWithMessageStringFunc", "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraint), null)]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraint), null)]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraintWithMessage), "Error")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraintWithMessage), "Error")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraintWithMessageAndArgs), "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraintWithMessageAndArgs), "Should be 5")]
+#if !NET20
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc), "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualAndConstraintWithMessageStringFunc), "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraint), null)]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraint), null)]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraintWithMessage), "Error")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraintWithMessage), "Error")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraintWithMessageAndArgs), "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraintWithMessageAndArgs), "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_ActualLambdaAndConstraintWithMessageStringFunc), "Should be 5")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_ActualLambdaAndConstraintWithMessageStringFunc), "Should be 5")]
 #endif
-        [TestCase("WarnUnless_Fails_DelegateAndConstraint", null)]
-        [TestCase("WarnIf_Fails_DelegateAndConstraint", null)]
-        [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessage", "Error")]
-        [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessage", "Error")]
-        [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
-        [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs", "Should be 4")]
-#if !NET_2_0
-        [TestCase("WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
-        [TestCase("WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc", "Should be 4")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraint), null)]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraint), null)]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessage), "Error")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessage), "Error")]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessageAndArgs), "Should be 4")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs), "Should be 4")]
+#if !NET20
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
 #endif
 #if ASYNC
-        [TestCase("WarnUnless_Fails_Async", null)]
-        [TestCase("WarnIf_Fails_Async", null)]
+        [TestCase(nameof(WarningFixture.WarnUnless_Fails_Async), null)]
+        [TestCase(nameof(WarningFixture.WarnIf_Fails_Async), null)]
 #endif
         public void WarningFails(string methodName, string expectedMessage)
         {
@@ -162,10 +162,8 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertionResults[0].Message, Is.Not.Null, "Assertion Message should not be null");
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
-#if !NETSTANDARD1_3
             Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
             Assert.That(result.AssertionResults[0].StackTrace.Split(new char[] { '\n' }).Length, Is.LessThan(3));
-#endif
 
             if (expectedMessage != null)
             {
@@ -174,7 +172,28 @@ namespace NUnit.Framework.Assertions
             }
         }
 
-#if !NET_2_0
+        [TestCase(typeof(WarningInSetUpPasses), nameof(WarningInSetUpPasses.WarningPassesInTest), 2, 0)]
+        [TestCase(typeof(WarningInSetUpPasses), nameof(WarningInSetUpPasses.WarningFailsInTest), 2, 1)]
+        [TestCase(typeof(WarningInSetUpPasses), nameof(WarningInSetUpPasses.ThreeWarningsFailInTest), 4, 3)]
+        [TestCase(typeof(WarningInSetUpFails), nameof(WarningInSetUpFails.WarningPassesInTest), 2, 1)]
+        [TestCase(typeof(WarningInSetUpFails), nameof(WarningInSetUpFails.WarningFailsInTest), 2, 2)]
+        [TestCase(typeof(WarningInSetUpFails), nameof(WarningInSetUpFails.ThreeWarningsFailInTest), 4, 4)]
+        [TestCase(typeof(WarningInTearDownPasses), nameof(WarningInTearDownPasses.WarningPassesInTest), 2, 0)]
+        [TestCase(typeof(WarningInTearDownPasses), nameof(WarningInTearDownPasses.WarningFailsInTest), 2, 1)]
+        [TestCase(typeof(WarningInTearDownPasses), nameof(WarningInTearDownPasses.ThreeWarningsFailInTest), 4, 3)]
+        [TestCase(typeof(WarningInTearDownFails), nameof(WarningInTearDownFails.WarningPassesInTest), 2, 1)]
+        [TestCase(typeof(WarningInTearDownFails), nameof(WarningInTearDownFails.WarningFailsInTest), 2, 2)]
+        [TestCase(typeof(WarningInTearDownFails), nameof(WarningInTearDownFails.ThreeWarningsFailInTest), 4, 4)]
+        public void WarningUsedInSetUpOrTearDown(Type fixtureType, string methodName, int expectedAsserts, int expectedWarnings)
+        {
+            var result = TestBuilder.RunTestCase(fixtureType, methodName);
+
+            Assert.That(result.ResultState, Is.EqualTo(expectedWarnings == 0 ? ResultState.Success : ResultState.Warning));
+            Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "Incorrect AssertCount");
+            Assert.That(result.AssertionResults.Count, Is.EqualTo(expectedWarnings), $"There should be {expectedWarnings} AssertionResults");
+        }
+
+#if !NET20
         [Test]
         public void PassingAssertion_DoesNotCallExceptionStringFunc()
         {
@@ -218,13 +237,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void WarnUnless_Async_Error()
         {
-#if !NET_4_0
+#if !NET40
             var exception =
 #endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if !NET_4_0
+#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
@@ -232,13 +251,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void WarnIf_Async_Error()
         {
-#if !NET_4_0
+#if !NET40
             var exception =
 #endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
 
-#if !NET_4_0
+#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
 #endif
         }
@@ -260,7 +279,7 @@ namespace NUnit.Framework.Assertions
         // See https://github.com/nunit/nunit/pull/2431#issuecomment-328404432.
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if !PLATFORM_DETECTION
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
 #else
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]

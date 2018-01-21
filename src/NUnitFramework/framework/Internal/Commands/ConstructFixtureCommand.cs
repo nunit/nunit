@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Commands
         public ConstructFixtureCommand(TestCommand innerCommand)
             : base(innerCommand) 
         {
-            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", "innerCommand");
+            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal.Commands
 
                 if (typeInfo != null)
                 {
-                    // Use pre-constructed fixture if available, otherwise construct it
+                    // Use preconstructed fixture if available, otherwise construct it
                     if (!typeInfo.IsStaticClass)
                     {
                         context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);

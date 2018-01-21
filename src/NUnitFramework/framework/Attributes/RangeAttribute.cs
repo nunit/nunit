@@ -61,7 +61,7 @@ namespace NUnit.Framework
         public RangeAttribute(int from, int to, int step)
         {
             Guard.ArgumentValid(step > 0 && to >= from || step < 0 && to <= from,
-                "Step must be positive with to >= from or negative with to <= from", "step");
+                "Step must be positive with to >= from or negative with to <= from", nameof(step));
 
             int count = (to - from) / step + 1;
             _data = new object[count];
@@ -91,8 +91,8 @@ namespace NUnit.Framework
         [CLSCompliant(false)]
         public RangeAttribute(uint from, uint to, uint step)
         {
-            Guard.ArgumentValid(step > 0, "Step must be greater than zero", "step");
-            Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
+            Guard.ArgumentValid(step > 0, "Step must be greater than zero", nameof(step));
+            Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", nameof(to));
 
             uint count = (to - from) / step + 1;
             _data = new object[count];
@@ -121,7 +121,7 @@ namespace NUnit.Framework
         public RangeAttribute(long from, long to, long step)
         {
             Guard.ArgumentValid(step > 0L && to >= from || step < 0L && to <= from,
-                "Step must be positive with to >= from or negative with to <= from", "step");
+                "Step must be positive with to >= from or negative with to <= from", nameof(step));
 
             long count = (to - from) / step + 1;
             _data = new object[count];
@@ -151,8 +151,8 @@ namespace NUnit.Framework
         [CLSCompliant(false)]
         public RangeAttribute(ulong from, ulong to, ulong step)
         {
-            Guard.ArgumentValid(step > 0, "Step must be greater than zero", "step");
-            Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", "to");
+            Guard.ArgumentValid(step > 0, "Step must be greater than zero", nameof(step));
+            Guard.ArgumentValid(to >= from, "Value of to must be greater than or equal to from", nameof(to));
 
             ulong count = (to - from) / step + 1;
             _data = new object[count];
@@ -174,7 +174,7 @@ namespace NUnit.Framework
         public RangeAttribute(double from, double to, double step)
         {
             Guard.ArgumentValid(step > 0.0D && to >= from || step < 0.0D && to <= from,
-                "Step must be positive with to >= from or negative with to <= from", "step");
+                "Step must be positive with to >= from or negative with to <= from", nameof(step));
 
             double aStep = Math.Abs(step);
             double tol = aStep / 1000;
@@ -198,7 +198,7 @@ namespace NUnit.Framework
         public RangeAttribute(float from, float to, float step)
         {
             Guard.ArgumentValid(step > 0.0F && to >= from || step < 0.0F && to <= from,
-                "Step must be positive with to >= from or negative with to <= from", "step");
+                "Step must be positive with to >= from or negative with to <= from", nameof(step));
 
             float aStep = Math.Abs(step);
             float tol = aStep / 1000;

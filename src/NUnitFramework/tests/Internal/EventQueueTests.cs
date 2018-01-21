@@ -124,7 +124,11 @@ namespace NUnit.Framework.Internal.Execution
             private volatile int receivedEvents;
 
             [Test]
+#if NET35
+            [Timeout(2000)]
+#elif THREAD_ABORT
             [Timeout(1000)]
+#endif
             public void DequeueBlocking_Stop()
             {
                 this.q = new EventQueue();
@@ -162,7 +166,11 @@ namespace NUnit.Framework.Internal.Execution
             private volatile bool afterEnqueue;
 
             [Test]
+#if NET35
+            [Timeout(2000)]
+#elif THREAD_ABORT
             [Timeout(1000)]
+#endif
             public void SetWaitHandle_Enqueue_Asynchronous()
             {
                 using (AutoResetEvent waitHandle = new AutoResetEvent(false))
@@ -219,7 +227,9 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         [Test]
+#if THREAD_ABORT
         [Timeout(3000)]
+#endif
         public void PumpEvents()
         {
             EventQueue q = new EventQueue();
@@ -238,7 +248,9 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         [Test]
-        [Timeout(1000)]
+#if THREAD_ABORT
+        [Timeout(3000)]
+#endif
         public void PumpSynchronousAndAsynchronousEvents()
         {
             EventQueue q = new EventQueue();
@@ -265,7 +277,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        #endregion
+#endregion
 
         public abstract class ProducerConsumerTest
         {
@@ -284,7 +296,9 @@ namespace NUnit.Framework.Internal.Execution
                 }
                 finally
                 {
+#if THREAD_ABORT
                     ThreadUtility.Kill(consumerThread);
+#endif
                 }
 
                 Assert.IsNull(this.myConsumerException);

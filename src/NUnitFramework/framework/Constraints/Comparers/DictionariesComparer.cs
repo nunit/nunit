@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
             if (!(x is IDictionary) || !(y is IDictionary))
                 return null;
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 return false;
 
             foreach (object key in xDictionary.Keys)
-                if (!_equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance))
+                if (!_equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance, topLevelComparison: false))
                     return false;
 
             return true;

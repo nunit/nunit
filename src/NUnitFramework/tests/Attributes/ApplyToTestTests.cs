@@ -41,6 +41,17 @@ namespace NUnit.Framework.Attributes
         }
 
         #region CategoryAttribute
+        
+        [TestCase('!')]
+        [TestCase('+')]
+        [TestCase(',')]
+        [TestCase('-')]
+        public void CategoryAttributePassesOnSpecialCharacters(char specialCharacter)
+        {
+            var categoryName = new string(specialCharacter, 5);
+            new CategoryAttribute(categoryName).ApplyToTest(test);
+            Assert.That(test.Properties.Get(PropertyNames.Category), Is.EqualTo(categoryName));
+        }
 
         [Test]
         public void CategoryAttributeSetsCategory()
@@ -351,7 +362,7 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PLATFORM_DETECTION
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -421,8 +432,9 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PARALLEL
 
+#if APARTMENT_STATE
         #region RequiresMTAAttribute
 
         [Test]
@@ -464,12 +476,10 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
-
 #endif
 
         #region RequiresThreadAttribute
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         [Test]
         public void RequiresThreadAttributeSetsRequiresThread()
         {
@@ -484,9 +494,8 @@ namespace NUnit.Framework.Attributes
             new RequiresThreadAttribute().ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
-#endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if APARTMENT_STATE
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -496,8 +505,9 @@ namespace NUnit.Framework.Attributes
                 Is.EqualTo(ApartmentState.STA));
         }
 #endif
-
         #endregion
+
+#endif
 
         #region SequentialAttribute
 
@@ -518,7 +528,7 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PARALLEL
 
         #region SetCultureAttribute
 

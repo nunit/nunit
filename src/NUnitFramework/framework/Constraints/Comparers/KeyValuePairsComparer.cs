@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -40,9 +40,9 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
-            // IDictionary<,> will eventually try to compare it's key value pairs when using CollectionTally
+            // IDictionary<,> will eventually try to compare its key value pairs when using CollectionTally
             Type xType = x.GetType();
             Type yType = y.GetType();
 
@@ -59,8 +59,8 @@ namespace NUnit.Framework.Constraints.Comparers
             object xValue = xType.GetProperty("Value").GetValue(x, null);
             object yValue = yType.GetProperty("Value").GetValue(y, null);
 
-            return _equalityComparer.AreEqual(xKey, yKey, ref keyTolerance) 
-                && _equalityComparer.AreEqual(xValue, yValue, ref tolerance);
+            return _equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, false) 
+                && _equalityComparer.AreEqual(xValue, yValue, ref tolerance, false);
         }
     }
 }

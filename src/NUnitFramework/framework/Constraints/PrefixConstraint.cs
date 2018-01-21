@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         protected PrefixConstraint(IResolveConstraint baseConstraint)
             : base(baseConstraint)
         {
-            Guard.ArgumentNotNull(baseConstraint, "baseConstraint");
+            Guard.ArgumentNotNull(baseConstraint, nameof(baseConstraint));
 
             BaseConstraint = baseConstraint.Resolve();
         }

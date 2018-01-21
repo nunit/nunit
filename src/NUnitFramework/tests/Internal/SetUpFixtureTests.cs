@@ -4,7 +4,6 @@
 // obtain a copy of the license at http://nunit.org
 // ****************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -56,7 +55,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class as a 'virtual namespace' into which
-        /// all it's sibling classes are inserted.
+        /// all its sibling classes are inserted.
         /// </summary>
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureReplacesNamespaceNodeInTree()
@@ -91,7 +90,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class with no parent namespace
-        /// as a 'virtual assembly' into which all it's sibling fixtures are inserted.
+        /// as a 'virtual assembly' into which all its sibling fixtures are inserted.
         /// </summary>
         [Test]
         public void AssemblySetUpFixtureFollowsAssemblyNodeInTree()
@@ -254,4 +253,3 @@ namespace NUnit.Framework.Internal
         #endregion NoNamespaceSetupFixture
     }
 }
-#endif

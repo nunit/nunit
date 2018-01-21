@@ -1,4 +1,4 @@
-﻿// **********************************************************************************
+// **********************************************************************************
 // The MIT License (MIT)
 // 
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
@@ -32,7 +32,7 @@ using NUnit.TestUtilities;
 
 #endregion
 
-namespace NUnit.Framework.Tests.Attributes
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     [Author("Rob Prouse", "rob@prouse.org")]
@@ -44,21 +44,21 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void ReflectionTest()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "Method");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(TestOfFixture.Method));
             Assert.AreEqual(RunState.Runnable, testCase.RunState);
         }
 
         [Test]
         public void TestOf()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "Method");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(TestOfFixture.Method));
             Assert.AreEqual("NUnit.Framework.TestOfAttribute", testCase.Properties.Get(PropertyNames.TestOf));
         }
 
         [Test]
         public void NoTestOf()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "NoTestOfMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(TestOfFixture.NoTestOfMethod));
             Assert.IsNull(testCase.Properties.Get(PropertyNames.TestOf));
         }
 
@@ -76,14 +76,14 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void SeparateTestOfAttribute()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateTestOfTypeMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(TestOfFixture.SeparateTestOfTypeMethod));
             Assert.AreEqual("NUnit.Framework.TestOfAttribute", testCase.Properties.Get(PropertyNames.TestOf));
         }
 
         [Test]
         public void SeparateTestOfStringMethod()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, "SeparateTestOfStringMethod");
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(TestOfFixture.SeparateTestOfStringMethod));
             Assert.AreEqual("NUnit.Framework.TestOfAttribute", testCase.Properties.Get(PropertyNames.TestOf));
         }
 

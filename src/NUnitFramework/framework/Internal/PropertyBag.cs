@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -49,6 +49,8 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The value</param>
         public void Add(string key, object value)
         {
+            Guard.ArgumentNotNull(value, "value");
+
             IList list;
             if (!inner.TryGetValue(key, out list))
             {
@@ -67,8 +69,8 @@ namespace NUnit.Framework.Internal
         public void Set(string key, object value)
         {
             // Guard against mystery exceptions later!
-            Guard.ArgumentNotNull(key, "key");
-            Guard.ArgumentNotNull(value, "value");
+            Guard.ArgumentNotNull(key, nameof(key));
+            Guard.ArgumentNotNull(value, nameof(value));
 
             IList list = new List<object>();
             list.Add(value);

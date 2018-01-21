@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
 using System;
 using System.Threading;
 
@@ -42,6 +42,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
+#if APARTMENT_STATE
         [Test, RequiresThread( ApartmentState.STA )]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
         {
@@ -55,6 +56,7 @@ namespace NUnit.Framework.Attributes
             Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
             Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
         }
+#endif
 
         [TestFixture, RequiresThread]
         public class FixtureRequiresThread

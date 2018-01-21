@@ -25,7 +25,7 @@ using System;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Tests
+namespace NUnit.Framework.Internal
 {
     [TestFixture]
     public class StackFilterTests

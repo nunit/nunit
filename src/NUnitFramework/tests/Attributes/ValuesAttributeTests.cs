@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,13 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
-
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-using System.Linq;
-#endif
 
 namespace NUnit.Framework.Attributes
 {
@@ -84,16 +81,44 @@ namespace NUnit.Framework.Attributes
 
         private void CheckValues(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo method = GetType().GetTypeInfo().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             ParameterInfo param = method.GetParameters()[0];
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false).First() as ValuesAttribute;
-#else
-            var attr = param.GetCustomAttributes(typeof(ValuesAttribute), false)[0] as ValuesAttribute;
-#endif
+
+            var attr = param.GetAttributes<ValuesAttribute>(false).Single();
+
             Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
         }
 
         #endregion
+
+        [Test]
+        public void SupportsNullableDecimal([Values(null)] decimal? x)
+        {
+            Assert.That(x.HasValue, Is.False);
+        }
+
+        [Test]
+        public void SupportsNullableDateTime([Values(null)] DateTime? dt)
+        {
+            Assert.That(dt.HasValue, Is.False);
+        }
+
+        [Test]
+        public void SupportsNullableTimeSpan([Values(null)] TimeSpan? dt)
+        {
+            Assert.That(dt.HasValue, Is.False);
+        }
+
+        [Test]
+        public void NullableSimpleFormalParametersWithArgument([Values(1)] int? a)
+        {
+            Assert.AreEqual(1, a);
+        }
+
+        [Test]
+        public void NullableSimpleFormalParametersWithNullArgument([Values(null)] int? a)
+        {
+            Assert.IsNull(a);
+        }
     }
 }

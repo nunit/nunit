@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
         /// <param name="method">MethodInfo for the method to examine</param>
         public GenericMethodHelper(MethodInfo method)
         {
-            Guard.ArgumentValid(method.IsGenericMethod, "Specified method must be generic", "method");
+            Guard.ArgumentValid(method.IsGenericMethod, "Specified method must be generic", nameof(method));
 
             Method = method;
 
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal
         /// <returns>An array of type arguments.</returns>
         public Type[] GetTypeArguments(object[] argList)
         {
-            Guard.ArgumentValid(argList.Length == ParmTypes.Length, "Supplied arguments do not match required method parameters", "argList");
+            Guard.ArgumentValid(argList.Length == ParmTypes.Length, "Supplied arguments do not match required method parameters", nameof(argList));
 
             for (int argIndex = 0; argIndex < ParmTypes.Length; argIndex++)
             {

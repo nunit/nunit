@@ -24,7 +24,7 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Operator that requires both it's arguments to succeed
+    /// Operator that requires both its arguments to succeed
     /// </summary>
     public class AndOperator : BinaryOperator
     {

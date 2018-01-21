@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework.Constraints;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Syntax
 {
@@ -116,6 +117,14 @@ namespace NUnit.Framework.Syntax
             Assert.That(
                 delegate { throw new Exception(); },
                 Throws.Exception);
+        }
+
+        [Test]
+        public void ArgumentNullException_ConstraintMatchesThrownArgumentNullException()
+        {
+            Assert.That(
+                TestDelegates.ThrowsArgumentNullException, 
+                Throws.ArgumentNullException);
         }
 
         [Test]

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework;
-#if !NETCOREAPP1_0
+#if !NETCOREAPP1_1
 using NUnit.Compatibility;
 #endif
 using NUnit.Framework.Interfaces;
@@ -35,10 +35,6 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
 
-#if NETSTANDARD1_3 && !NETSTANDARD1_6 && !NETCOREAPP1_0
-using BindingFlags = NUnit.Compatibility.BindingFlags;
-#endif
-
 namespace NUnit.TestUtilities
 {
     /// <summary>
@@ -46,7 +42,12 @@ namespace NUnit.TestUtilities
     /// </summary>
     public static class TestBuilder
     {
-#region Build Tests
+        #region Build Tests
+
+        public static TestSuite MakeSuite(string name)
+        {
+            return new TestSuite(name);
+        }
 
         public static TestSuite MakeFixture(Type type)
         {
@@ -60,28 +61,6 @@ namespace NUnit.TestUtilities
             return suite;
         }
 
-        public static TestSuite MakeFixture(List<Type> types)
-        {
-            // following the pattern found in DefaultTestAssemblyBuilder
-            var fixtures = new List<Test>();
-            var defaultSuiteBuilder = new DefaultSuiteBuilder();
-            foreach (var type in types)
-            {
-                var typeInfo = new TypeWrapper(type);
-                var test = defaultSuiteBuilder.BuildFrom(typeInfo);
-                fixtures.Add(test);
-            }
-
-            var assembly = AssemblyHelper.Load("nunit.testdata");
-            var assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-            TestSuite testSuite = new TestAssembly(assembly, assemblyPath);
-
-            var treeBuilder = new NamespaceTreeBuilder(testSuite);
-            treeBuilder.Add(fixtures);
-
-            return treeBuilder.RootSuite;
-        }
-
         public static TestSuite MakeParameterizedMethodSuite(Type type, string methodName)
         {
             var suite = MakeTestFromMethod(type, methodName) as TestSuite;
@@ -89,22 +68,12 @@ namespace NUnit.TestUtilities
             return suite;
         }
 
-        public static TestSuite MakeParameterizedMethodSuite(object fixture, string methodName)
-        {
-            var test = MakeTestFromMethod(fixture.GetType(), methodName) as ParameterizedMethodSuite;
-            Assert.That(test, Is.TypeOf<ParameterizedMethodSuite>());
-
-            TestSuite suite = test as TestSuite;
-            suite.Fixture = fixture;
-            return suite;
-        }
-
         public static TestMethod MakeTestCase(Type type, string methodName)
         {
-            var test = MakeTestFromMethod(type, methodName);
-            Assert.That(test, Is.TypeOf<TestMethod>());
+            var test = MakeTestFromMethod(type, methodName) as TestMethod;
+            Assert.NotNull(test, "Unable to create TestMethod from {0}", methodName);
 
-            return (TestMethod)test;
+            return test;
         }
 
         // Will return either a ParameterizedMethodSuite or an NUnitTestMethod
@@ -118,9 +87,48 @@ namespace NUnit.TestUtilities
             return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
         }
 
-#endregion
+        #endregion
 
-#region Run Tests
+        #region Create WorkItems
+
+        public static WorkItem CreateWorkItem(Type type)
+        {
+            return CreateWorkItem(MakeFixture(type));
+        }
+
+        public static WorkItem CreateWorkItem(Type type, string methodName)
+        {
+            return CreateWorkItem(MakeTestFromMethod(type, methodName));
+        }
+
+        public static WorkItem CreateWorkItem(Test test)
+        {
+            var context = new TestExecutionContext();
+            context.Dispatcher = new SuperSimpleDispatcher();
+
+            return CreateWorkItem(test, context);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, object testObject)
+        {
+            var context = new TestExecutionContext();
+            context.TestObject = testObject;
+            context.Dispatcher = new SuperSimpleDispatcher();
+
+            return CreateWorkItem(test, context);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context)
+        {
+            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
+            work.InitializeContext(context);
+
+            return work;
+        }
+
+        #endregion
+
+        #region Run Tests
 
         public static ITestResult RunTestFixture(Type type)
         {
@@ -161,14 +169,16 @@ namespace NUnit.TestUtilities
             return RunTest(testMethod, fixture);
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
         public static ITestResult RunAsTestCase(Action action)
         {
+#if NETCOREAPP1_1
+            var method = action.GetMethodInfo();
+#else
             var method = action.Method;
+#endif
             var testMethod = MakeTestCase(method.DeclaringType, method.Name);
             return RunTest(testMethod);
         }
-#endif
 
         public static ITestResult RunTest(Test test)
         {
@@ -177,22 +187,7 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTest(Test test, object testObject)
         {
-            return ExecuteWorkItem(PrepareWorkItem(test, testObject));
-        }
-
-        // NOTE: The following two methods are separate in order to support
-        // tests that need to access the WorkItem before or after execution.
-
-        public static WorkItem PrepareWorkItem(Test test, object testObject)
-        {
-            var context = new TestExecutionContext();
-            context.TestObject = testObject;
-            context.Dispatcher = new SuperSimpleDispatcher();
-
-            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
-            work.InitializeContext(context);
-
-            return work;
+            return ExecuteWorkItem(CreateWorkItem(test, testObject));
         }
 
         public static ITestResult ExecuteWorkItem(WorkItem work)
@@ -202,28 +197,28 @@ namespace NUnit.TestUtilities
             // TODO: Replace with an event - but not while method is static
             while (work.State != WorkItemState.Complete)
             {
-#if NETSTANDARD1_3
-                System.Threading.Tasks.Task.Delay(1);
-#else
                 Thread.Sleep(1);
-#endif
             }
 
             return work.Result;
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static bool IsStaticClass(Type type)
         {
+#if NET40
+            return type.IsAbstract && type.IsSealed;
+#else
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
+#endif
         }
 
-#endregion
+        #endregion
 
-#region Nested TestDispatcher Class
+        #region Nested TestDispatcher Class
 
         /// <summary>
         /// SuperSimpleDispatcher merely executes the work item.
@@ -232,6 +227,8 @@ namespace NUnit.TestUtilities
         /// </summary>
         class SuperSimpleDispatcher : IWorkItemDispatcher
         {
+            public int LevelOfParallelism { get { return 0; } }
+
             public void Start(WorkItem topLevelWorkItem)
             {
                 topLevelWorkItem.Execute();
@@ -247,6 +244,6 @@ namespace NUnit.TestUtilities
                 throw new NotImplementedException();
             }
         }
-#endregion
+        #endregion
     }
 }

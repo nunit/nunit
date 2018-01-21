@@ -86,7 +86,7 @@ namespace NUnitLite
 
             TNode testRun = MakeTestRunElement(result);
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             testRun.ChildNodes.Add(MakeCommandLineElement());
 #endif
             testRun.ChildNodes.Add(MakeTestFilterElement(filter));
@@ -128,7 +128,7 @@ namespace NUnitLite
             return testRun;
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         private static TNode MakeCommandLineElement()
         {
             return new TNode("command-line", Environment.CommandLine, true);

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -204,10 +204,28 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
+        public void CategoryFilterWithSpecialCharacters_FromXml()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                "<filter><cat>Special,Character-Fixture+!</cat></filter>");
+
+            Assert.That(filter, Is.TypeOf<CategoryFilter>());
+            Assert.That(filter.Match(_specialFixture));
+            Assert.False(filter.Match(_anotherFixture));
+        }
+
+        [Test]
         public void CategoryFilter_ToXml()
         {
             TestFilter filter = new CategoryFilter("CATEGORY");
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat>CATEGORY</cat>"));
+        }
+
+        [Test]
+        public void CategoryFilterWithSpecialCharacters_ToXml()
+        {
+            TestFilter filter = new CategoryFilter("Special,Character-Fixture+!");
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat>Special,Character-Fixture+!</cat>"));
         }
 
         [Test]
@@ -222,10 +240,28 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
+        public void CategoryFilterWithSpecialCharacters_FromXml_Regex()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                @"<filter><cat re='1'>Special,Character-Fixture\+!</cat></filter>");
+
+            Assert.That(filter, Is.TypeOf<CategoryFilter>());
+            Assert.That(filter.Match(_specialFixture));
+            Assert.False(filter.Match(_anotherFixture));
+        }
+
+        [Test]
         public void CategoryFilter_ToXml_Regex()
         {
             TestFilter filter = new CategoryFilter("CATEGORY") { IsRegex = true };
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">CATEGORY</cat>"));
+        }
+
+        [Test]
+        public void CategoryFilterWithSpecialCharacters_ToXml_Regex()
+        {
+            TestFilter filter = new CategoryFilter("Special,Character-Fixture+!") { IsRegex = true };
+            Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">Special,Character-Fixture+!</cat>"));
         }
 
         #endregion

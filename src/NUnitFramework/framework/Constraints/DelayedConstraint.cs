@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -20,8 +20,6 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
-#if !NETSTANDARD1_3
 
 using System;
 using System.Diagnostics;
@@ -216,7 +214,7 @@ namespace NUnit.Framework.Constraints
             : base(baseConstraint)
         {
             if (delayInMilliseconds < 0)
-                throw new ArgumentException("Cannot check a condition in the past", "delayInMilliseconds");
+                throw new ArgumentException("Cannot check a condition in the past", nameof(delayInMilliseconds));
 
             DelayInterval = new Interval(delayInMilliseconds).InMilliseconds;
             PollingInterval = new Interval(pollingIntervalInMilliseconds).InMilliseconds;
@@ -253,7 +251,7 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
@@ -262,7 +260,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
@@ -284,7 +282,7 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     actual = InvokeDelegate(del);
@@ -302,7 +300,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             actual = InvokeDelegate(del);
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
@@ -326,7 +324,7 @@ namespace NUnit.Framework.Constraints
                 while ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 {
                     if (nextPoll > now)
-                        Thread.Sleep((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
+                        ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd < nextPoll ? delayEnd : nextPoll, now).TotalMilliseconds);
                     nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
 
                     try
@@ -342,14 +340,14 @@ namespace NUnit.Framework.Constraints
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
-                Thread.Sleep((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
+                ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
         }
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
-#if NET_4_0 || NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6
+#if ASYNC
             if (AsyncInvocationRegion.IsAsyncOperation(del))
                 using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
                     return region.WaitForPendingOperationsToComplete(del());
@@ -389,4 +387,3 @@ namespace NUnit.Framework.Constraints
         }
     }
 }
-#endif

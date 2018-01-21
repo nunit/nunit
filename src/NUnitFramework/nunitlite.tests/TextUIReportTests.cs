@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -120,6 +120,8 @@ namespace NUnitLite.Tests
                 "    Duration: 0.123 seconds\n\n"));
         }
 
+        // Requires mock-assembly to be compiled with /optimize-
+        // or else the test methods do tail calls and the stack frame disappears
         [Test]
         public void ErrorsAndFailuresReportTest()
         {

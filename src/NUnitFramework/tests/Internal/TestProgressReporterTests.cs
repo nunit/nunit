@@ -27,7 +27,7 @@ using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
 
-namespace NUnit.Framework.Internal.Tests
+namespace NUnit.Framework.Internal
 {
 	public class TestProgressReporterTests
 	{
@@ -50,8 +50,7 @@ namespace NUnit.Framework.Internal.Tests
 		[Test]
 		public void TestStarted_FixtureEmitsStartSuiteElement()
 		{
-			var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestFixtureAttribute));
-			var work = TestBuilder.PrepareWorkItem(fixture, null);
+			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute));
 			work.Context.Listener = _reporter;
 
 			TestBuilder.ExecuteWorkItem(work);
@@ -64,8 +63,7 @@ namespace NUnit.Framework.Internal.Tests
 		[Test]
 		public void TestStarted_TestMethodEmitsStartTestElement()
 		{
-			var test = TestBuilder.MakeTestCase(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
-			var work = TestBuilder.PrepareWorkItem(test, null);
+			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
 			work.Context.Listener = _reporter;
 
 			TestBuilder.ExecuteWorkItem(work);
@@ -78,8 +76,7 @@ namespace NUnit.Framework.Internal.Tests
 		[Test]
 		public void TestStarted_ReportAttributes()
 		{
-			var fixture = TestBuilder.MakeTestCase(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
-			var work = TestBuilder.PrepareWorkItem(fixture, null);
+			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
 			work.Context.Listener = _reporter;
 
 			TestBuilder.ExecuteWorkItem(work);
@@ -97,8 +94,7 @@ namespace NUnit.Framework.Internal.Tests
 		[Test]
 		public void TestFinished_AdditionalReportAttributes()
 		{
-			var test = TestBuilder.MakeTestCase(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
-			var work = TestBuilder.PrepareWorkItem(test, null);
+			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
 			work.Context.Listener = _reporter;
 
 			TestBuilder.ExecuteWorkItem(work);

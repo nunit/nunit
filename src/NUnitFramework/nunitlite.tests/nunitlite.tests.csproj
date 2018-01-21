@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\Common.props" />
+  <PropertyGroup>
+    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NUnitLite.Tests</RootNamespace>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
+    <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Fakes.cs" Link="TestUtilities\Fakes.cs" />
+    <Compile Include="..\TestBuilder.cs" Link="TestUtilities\TestBuilder.cs" />
+    <Compile Include="..\TestFile.cs" Link="TestUtilities\TestFile.cs" />
+
+    <EmbeddedResource Include="TestListFile.txt" />
+    <EmbeddedResource Include="TestListFile2.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+</Project>

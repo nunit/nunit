@@ -28,7 +28,7 @@ using System.IO;
 namespace NUnitLite
 {
     /// <summary>
-    /// DebugWriter is a TextWriter that sends it's 
+    /// DebugWriter is a TextWriter that sends its 
     /// output to Debug. We don't use Trace because
     /// writing to it is not supported in CF.
     /// </summary>
@@ -103,13 +103,6 @@ namespace NUnitLite
         /// <returns>
         /// The Encoding in which the output is written.
         /// </returns>
-        public override System.Text.Encoding Encoding
-        {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            get { return System.Text.Encoding.UTF8; }
-#else
-            get { return System.Text.Encoding.Default; }
-#endif
-        }
+        public override System.Text.Encoding Encoding { get; } = new System.Text.UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
     }
 }

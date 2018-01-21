@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
             new ArrayList(),
 #endif
             new System.Collections.Generic.List<int>()
@@ -112,12 +112,8 @@ namespace NUnit.Framework.Constraints
         {
             using (var testDir = new TestDirectory())
             {
-                var stream = File.Create(Path.Combine(testDir.Directory.FullName, "DUMMY.FILE"));
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-                stream.Dispose();
-#else
-                stream.Close();
-#endif
+                File.Create(Path.Combine(testDir.Directory.FullName, "DUMMY.FILE")).Dispose();
+
                 Assert.That(testDir.Directory, Is.Not.Empty);
             }
         }

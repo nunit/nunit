@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,7 @@ using System.Collections.Concurrent;
 #endif
 using NUnit.Framework.Interfaces;
 using System.Threading;
-#if NET_2_0
+#if NET20
 using NUnit.Compatibility;
 #endif
 
@@ -45,9 +45,9 @@ namespace NUnit.Framework.Internal
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
 #if PARALLEL
-        private ConcurrentQueue<ITestResult> _children;
+        private ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
 #else
-        private List<ITestResult> _children;
+        private List<ITestResult> _children = new List<ITestResult>();
 #endif
 
         /// <summary>
@@ -56,11 +56,6 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The TestSuite to which the result applies</param>
         public TestSuiteResult(TestSuite suite) : base(suite)
         {
-#if PARALLEL
-            _children = new ConcurrentQueue<ITestResult>();
-#else
-            _children = new List<ITestResult>();
-#endif
         }
 
 #region Overrides

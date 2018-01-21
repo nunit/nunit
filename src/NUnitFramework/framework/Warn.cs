@@ -111,7 +111,7 @@ namespace NUnit.Framework
             Assert.Warn(writer.ToString());
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and issuing a warning on failure.
@@ -161,7 +161,7 @@ namespace NUnit.Framework
             Warn.Unless(condition, Is.True, null, null);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false a warning is issued.
         /// </summary> 
@@ -177,7 +177,7 @@ namespace NUnit.Framework
 
         #region Lambda returning Boolean
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
@@ -265,7 +265,7 @@ namespace NUnit.Framework
                 IssueWarning(result, message, args);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and issuing a warning on failure.
@@ -340,7 +340,7 @@ namespace NUnit.Framework
         //    Assert.Warn(writer.ToString());
         //}
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// fails and issuing a warning on failure.
@@ -390,7 +390,7 @@ namespace NUnit.Framework
             Warn.If(condition, Is.True, null, null);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false a warning is issued.
         /// </summary> 
@@ -406,7 +406,7 @@ namespace NUnit.Framework
 
         #region Lambda returning Boolean
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is false. If the condition is true a warning is issued.
         /// </summary> 
@@ -476,7 +476,7 @@ namespace NUnit.Framework
                 IssueWarning(result, message, args);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and issuing a warning on failure.

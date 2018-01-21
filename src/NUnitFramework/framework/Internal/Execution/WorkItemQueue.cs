@@ -26,7 +26,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
 using ManualResetEventSlim = System.Threading.ManualResetEvent;
 #endif
 
@@ -77,10 +77,14 @@ namespace NUnit.Framework.Internal.Execution
         private class SavedState
         {
             public ConcurrentQueue<WorkItem>[] InnerQueues;
+            public int AddId;
+            public int RemoveId;
 
             public SavedState(WorkItemQueue queue)
             {
                 InnerQueues = queue._innerQueues;
+                AddId = queue._addId;
+                RemoveId = queue._removeId;
             }
         }
 
@@ -101,6 +105,7 @@ namespace NUnit.Framework.Internal.Execution
         private int _addId = int.MinValue;
         private int _removeId = int.MinValue;
 
+#if APARTMENT_STATE
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
         /// </summary>
@@ -108,10 +113,20 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
         /// <param name="apartment">ApartmentState to use for items on this queue</param>
         public WorkItemQueue(string name, bool isParallel, ApartmentState apartment)
+#else
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
+        /// </summary>
+        /// <param name="name">The name of the queue.</param>
+        /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
+        public WorkItemQueue(string name, bool isParallel)
+#endif
         {
             Name = name;
             IsParallelQueue = isParallel;
+#if APARTMENT_STATE
             TargetApartment = apartment;
+#endif
             State = WorkItemQueueState.Paused;
             ItemsProcessed = 0;
 
@@ -120,13 +135,16 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeQueues()
         {
-            _innerQueues = new ConcurrentQueue<WorkItem>[PRIORITY_LEVELS];
+            ConcurrentQueue<WorkItem>[] newQueues = new ConcurrentQueue<WorkItem>[PRIORITY_LEVELS];
 
             for (int i = 0; i < PRIORITY_LEVELS; i++)
-                _innerQueues[i] = new ConcurrentQueue<WorkItem>();
+                newQueues[i] = new ConcurrentQueue<WorkItem>();
+
+            _innerQueues = newQueues;
+            _addId = _removeId = 0;
         }
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Gets the name of the work item queue.
@@ -138,10 +156,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsParallelQueue { get; private set; }
 
+#if APARTMENT_STATE
         /// <summary>
         /// Gets the target ApartmentState for work items on this queue
         /// </summary>
         public ApartmentState TargetApartment { get; private set; }
+#endif
 
         private int _itemsProcessed;
         /// <summary>
@@ -178,9 +198,9 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         /// <summary>
         /// Enqueue a WorkItem to be processed
@@ -199,7 +219,7 @@ namespace NUnit.Framework.Internal.Execution
         internal void Enqueue(WorkItem work, int priority)
         {
             Guard.ArgumentInRange(priority >= 0 && priority < PRIORITY_LEVELS,
-                "Invalid priority specified", "priority");
+                "Invalid priority specified", nameof(priority));
 
             do
             {
@@ -339,17 +359,70 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void Restore()
         {
-            Pause();
+            // TODO: Originally, the following Guard statement was used. In theory, no queues should be running
+            // when we are doing a restore. It appears, however, that we end the shift, pausing queues, buy that
+            // a thread may then sneak in and restart some of them. My tests pass without the guard but I'm still
+            // concerned to understand what is happening and why. I'm leaving this commented out so that somebody
+            // else can take a look at it later on.
+            //Guard.OperationValid(State != WorkItemQueueState.Running, $"Attempted to restore state of {Name} while queue was running.");
 
-            _innerQueues = _savedState.Pop().InnerQueues;
+            var state = _savedState.Pop();
 
-            Start();
+            // If there are any queued items, copy to the next lower level
+            for (int i = 0; i < PRIORITY_LEVELS; i++)
+            {
+                WorkItem work;
+                while (_innerQueues[i].TryDequeue(out work))
+                    state.InnerQueues[i].Enqueue(work);
+            }
+
+            _innerQueues = state.InnerQueues;
+            _addId += state.AddId;
+            _removeId += state.RemoveId;
         }
 
-        #endregion
+#endregion
+
+#region Internal Methods for Testing
+
+        internal string DumpContents()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"Contents of {Name} at isolation level {_savedState.Count}");
+
+            if (IsEmpty)
+                sb.AppendLine("  <empty>");
+            else
+                for (int priority = 0; priority < PRIORITY_LEVELS; priority++)
+                {
+                    foreach (WorkItem work in _innerQueues[priority])
+                        sb.AppendLine($"pri-{priority}: {work.Name}");
+                }
+
+            int level = 0;
+            foreach (var state in _savedState)
+            {
+                sb.AppendLine($"Saved State {level++}");
+                bool isEmpty = true;
+                for (int priority = 0; priority < PRIORITY_LEVELS; priority++)
+                {
+                    foreach (WorkItem work in state.InnerQueues[priority])
+                    {
+                        sb.AppendLine($"pri-{priority}: {work.Name}");
+                        isEmpty = false;
+                    }
+                }
+                if (isEmpty)
+                    sb.AppendLine("  <empty>");
+            }
+
+            return sb.ToString();
+        }
+
+#endregion
     }
 
-#if NET_2_0 || NET_3_5
+#if NET20 || NET35
     internal static class ManualResetEventExtensions
     {
         public static bool Wait (this ManualResetEvent mre, int millisecondsTimeout)

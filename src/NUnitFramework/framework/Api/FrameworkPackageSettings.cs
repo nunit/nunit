@@ -115,6 +115,11 @@ namespace NUnit
         /// </summary>
         public const string TestParametersDictionary = "TestParametersDictionary";
 
+        /// <summary>
+        /// If true, the tests will run on the same thread as the NUnit runner itself
+        /// </summary>
+        public const string RunOnMainThread = "RunOnMainThread";
+
         #endregion
     }
 }

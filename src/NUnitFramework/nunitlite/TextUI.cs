@@ -30,9 +30,6 @@ using NUnit.Common;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-using System.Runtime.InteropServices;
-#endif
 
 namespace NUnitLite
 {
@@ -170,11 +167,14 @@ namespace NUnitLite
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            Writer.WriteLabelLine("   OS Version: ", RuntimeInformation.OSDescription);
-            Writer.WriteLabelLine("  CLR Version: ", RuntimeInformation.FrameworkDescription);
+#if !PLATFORM_DETECTION
+            Writer.WriteLabelLine("   OS Version: ", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
+#endif
+#if NETSTANDARD1_6
+            Writer.WriteLabelLine("  CLR Version: ", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
+#else
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
 #endif
             Writer.WriteLine();
@@ -496,12 +496,7 @@ namespace NUnitLite
             string stackTrace = result.StackTrace;
             string reportID = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
-
-#if NETSTANDARD1_3 && !NETSTANDARD1_6
-            ColorStyle style = GetColorStyle(resultState);
-            string status = GetResultStatus(resultState);
-            DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
-#else
+            
             if (numAsserts > 0)
             {
                 int assertionCounter = 0;
@@ -521,7 +516,6 @@ namespace NUnitLite
                 string status = GetResultStatus(resultState);
                 DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
             }
-#endif
         }
 
         private void DisplayTestResult(ColorStyle style, string prefix, string status, string fullName, string message, string stackTrace)

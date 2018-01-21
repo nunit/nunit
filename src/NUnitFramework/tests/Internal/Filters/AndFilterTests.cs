@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal.Filters
                     return filter.Pass(_dummyFixture);
                 default:
                     throw new ArgumentException(
-                        "Unexpected StrictIdFilterForTests.EqualValueFunction.", "matchFunction");
+                        "Unexpected StrictIdFilterForTests.EqualValueFunction.", nameof(matchFunction));
             }
         }
 

@@ -29,6 +29,11 @@ namespace NUnit.Framework.Internal.Execution
     public interface IWorkItemDispatcher
     {
         /// <summary>
+        /// The level of parallelism supported. Zero if not supported.
+        /// </summary>
+        int LevelOfParallelism { get; }
+
+        /// <summary>
         /// Start execution, performing any initialization. Sets
         /// the top level work item and dispatches it.
         /// </summary>

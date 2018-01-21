@@ -225,7 +225,7 @@ namespace NUnit.Framework
             }
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PLATFORM_DETECTION
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
@@ -278,8 +278,7 @@ namespace NUnit.Framework
                     {
                         if (argsProvided == argsNeeded)
                         {
-                            Type lastArgumentType = parms.Arguments[argsProvided - 1].GetType();
-                            if (!lastParameterType.GetTypeInfo().IsAssignableFrom(lastArgumentType.GetTypeInfo()))
+                            if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
                             {
                                 Array array = Array.CreateInstance(elementType, 1);
                                 array.SetValue(parms.Arguments[argsProvided - 1], 0);
@@ -370,15 +369,15 @@ namespace NUnit.Framework
                 if (arg == null)
                     continue;
 
-                if (targetType.IsAssignableFrom(arg.GetType()))
+                if (targetType.IsInstanceOfType(arg))
                     continue;
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-                if (arg is DBNull)
+
+                if (arg.GetType().FullName == "System.DBNull")
                 {
                     arglist[i] = null;
                     continue;
                 }
-#endif
+
                 bool convert = false;
 
                 if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
@@ -424,7 +423,7 @@ namespace NUnit.Framework
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PLATFORM_DETECTION
             if (test.RunState != RunState.NotRunnable &&
                 test.RunState != RunState.Ignored)
             {

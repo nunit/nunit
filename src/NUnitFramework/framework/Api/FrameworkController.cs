@@ -34,9 +34,6 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-using System.Runtime.InteropServices;
-#endif
 
 namespace NUnit.Framework.Api
 {
@@ -57,7 +54,7 @@ namespace NUnit.Framework.Api
     {
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 
-        // Pre-loaded test assembly, if passed in constructor
+        // Preloaded test assembly, if passed in constructor
         private Assembly _testAssembly;
 
         #region Constructors
@@ -149,7 +146,7 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
                     var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
                     var id = Process.GetCurrentProcess().Id;
@@ -239,7 +236,7 @@ namespace NUnit.Framework.Api
             return result.OuterXml;
         }
 
-#if !NET_2_0
+#if !NET20
 
         class ActionCallback : ICallbackEventHandler
         {
@@ -364,39 +361,31 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="targetNode">Target node</param>
         /// <returns>The new node</returns>
-#if NETSTANDARD1_3 || NETSTANDARD1_6
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
 
-            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(FrameworkController).GetTypeInfo().Assembly);
-            env.AddAttribute("framework-version", assemblyName.Version.ToString());
-            env.AddAttribute("cwd", Directory.GetCurrentDirectory());
-            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
-            env.AddAttribute("clr-version", RuntimeInformation.FrameworkDescription);
-            env.AddAttribute("os-version", RuntimeInformation.OSDescription);
-#if !NETSTANDARD1_3
-            env.AddAttribute("machine-name", Environment.MachineName);
-#endif
-            env.AddAttribute("os-architecture", RuntimeInformation.ProcessArchitecture.ToString());
-            return env;
-        }
+            env.AddAttribute("framework-version", typeof(FrameworkController).GetTypeInfo().Assembly.GetName().Version.ToString());
+#if NETSTANDARD1_6
+            env.AddAttribute("clr-version", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
-            public static TNode InsertEnvironmentElement(TNode targetNode)
-        {
-            TNode env = new TNode("environment");
-            targetNode.ChildNodes.Insert(0, env);
-
-            env.AddAttribute("framework-version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             env.AddAttribute("clr-version", Environment.Version.ToString());
+#endif
+#if !PLATFORM_DETECTION
+            env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+#else
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
+#endif
+#if !NETSTANDARD1_6
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
-            env.AddAttribute("cwd", Environment.CurrentDirectory);
+#endif
+            env.AddAttribute("cwd", Directory.GetCurrentDirectory());
             env.AddAttribute("machine-name", Environment.MachineName);
+#if !NETSTANDARD1_6
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
+#endif
             env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
             env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
             env.AddAttribute("os-architecture", GetProcessorArchitecture());
@@ -408,7 +397,6 @@ namespace NUnit.Framework.Api
         {
             return IntPtr.Size == 8 ? "x64" : "x86";
         }
-#endif
 
         /// <summary>
         /// Inserts settings element
@@ -438,15 +426,22 @@ namespace NUnit.Framework.Api
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);
 
-            var dict = value as IDictionary;
-            if (dict != null)
+            if (value != null)
             {
-                AddDictionaryEntries(setting, dict);
-                AddBackwardsCompatibleDictionaryEntries(setting, dict);
+                var dict = value as IDictionary;
+                if (dict != null)
+                {
+                    AddDictionaryEntries(setting, dict);
+                    AddBackwardsCompatibleDictionaryEntries(setting, dict);
+                }
+                else
+                {
+                    setting.AddAttribute("value", value.ToString());
+                }
             }
             else
             {
-                setting.AddAttribute("value", value.ToString());
+                setting.AddAttribute("value", null);
             }
 
             settingsNode.ChildNodes.Add(setting);
@@ -474,11 +469,11 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested Action Classes
+#region Nested Action Classes
 
-        #region TestContollerAction
+#region TestContollerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions
@@ -488,9 +483,9 @@ namespace NUnit.Framework.Api
         {
         }
 
-        #endregion
+#endregion
 
-        #region LoadTestsAction
+#region LoadTestsAction
 
         /// <summary>
         /// LoadTestsAction loads a test into the FrameworkController
@@ -508,9 +503,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region ExploreTestsAction
+#region ExploreTestsAction
 
         /// <summary>
         /// ExploreTestsAction returns info about the tests in an assembly
@@ -529,9 +524,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region CountTestsAction
+#region CountTestsAction
 
         /// <summary>
         /// CountTestsAction counts the number of test cases in the loaded TestSuite
@@ -551,9 +546,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region RunTestsAction
+#region RunTestsAction
 
         /// <summary>
         /// RunTestsAction runs the loaded TestSuite held by the FrameworkController.
@@ -572,9 +567,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region RunAsyncAction
+#region RunAsyncAction
 
         /// <summary>
         /// RunAsyncAction initiates an asynchronous test run, returning immediately
@@ -593,9 +588,9 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #region StopRunAction
+#region StopRunAction
 
         /// <summary>
         /// StopRunAction stops an ongoing run.
@@ -616,8 +611,8 @@ namespace NUnit.Framework.Api
             }
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -33,7 +33,7 @@ using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
     [TestFixture]
     public class TestContextTests
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Tests
             Assert.That(_testDirectory, Is.Not.Null);
         }
 
-        [TestCaseSource("TestDirectorySource")]
+        [TestCaseSource(nameof(TestDirectorySource))]
         public void TestCaseSourceCanAccessTestDirectory(string testDirectory)
         {
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Tests
             Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
         }
 
-        [TestCaseSource("WorkDirectorySource")]
+        [TestCaseSource(nameof(WorkDirectorySource))]
         public void TestCaseSourceCanAccessWorkDirectory(string workDirectory)
         {
             Assert.That(workDirectory, Is.EqualTo(_workDirectory));
@@ -168,14 +168,14 @@ namespace NUnit.Framework.Tests
         public void TestCanAccessItsOwnFullName()
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.TestContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [TestCase(42)]
         public void TestCaseCanAccessItsOwnFullName(int x)
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
+                Is.EqualTo("NUnit.Framework.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
         }
 
         #endregion
@@ -377,7 +377,7 @@ namespace NUnit.Framework.Tests
 
         private async Task YieldAsync()
         {
-#if NET_4_0
+#if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
@@ -402,7 +402,7 @@ namespace NUnit.Framework.Tests
         }
 
         [TestCase(null)]
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if PLATFORM_DETECTION
         [TestCase("bad<>path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
@@ -416,6 +416,16 @@ namespace NUnit.Framework.Tests
             Assert.That(() => TestContext.AddTestAttachment("NotAFile.txt"), Throws.InstanceOf<FileNotFoundException>());
         }
 
+        #endregion
+
+        #region Retry
+        [Test]
+        public void TestCanAccessCurrentRepeatCount()
+        {
+            var context = TestExecutionContext.CurrentContext;
+
+            Assert.That(context.CurrentRepeatCount, Is.EqualTo(0), "expected TestContext.CurrentRepeatCount to be accessible and be zero on first execution of test");
+        }
         #endregion
     }
 

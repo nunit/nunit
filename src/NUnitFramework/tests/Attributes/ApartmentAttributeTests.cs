@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if APARTMENT_STATE
 using System;
 using System.Threading;
 
@@ -45,7 +45,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+#if THREAD_ABORT
         [Timeout(10000)]
+#endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
         {
@@ -53,7 +55,9 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestFixture]
+#if THREAD_ABORT
         [Timeout(10000)]
+#endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
         {
@@ -118,6 +122,86 @@ namespace NUnit.Framework.Attributes
                 Attribute[] attributes = Attribute.GetCustomAttributes(GetType(), typeof(ApartmentAttribute), true);
                 Assert.That(attributes, Has.Length.EqualTo(1),
                     "RequiresMTAAttribute was not inherited from the base class");
+            }
+        }
+
+        [TestFixture]
+        [Apartment(ApartmentState.STA)]
+        [Parallelizable(ParallelScope.Children)]
+        public class ParallelStaFixture
+        {
+            [Test]
+            public void TestMethodsShouldInheritApartmentFromFixture()
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+            }
+
+            [TestCase(1)]
+            [TestCase(2)]
+            public void TestCasesShouldInheritApartmentFromFixture(int n)
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+            }
+        }
+
+        [TestFixture]
+        [Apartment(ApartmentState.STA)]
+        [Parallelizable(ParallelScope.Children)]
+        public class ParallelStaFixtureWithMtaTests
+        {
+            [Test]
+            [Apartment(ApartmentState.MTA)]
+            public void TestMethodsShouldRespectTheirApartment()
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
+
+            [TestCase(1)]
+            [TestCase(2)]
+            [Apartment(ApartmentState.MTA)]
+            public void TestCasesShouldRespectTheirApartment(int n)
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
+        }
+
+        [TestFixture]
+        [Apartment(ApartmentState.STA)]
+        [Parallelizable(ParallelScope.None)]
+        public class NonParallelStaFixture
+        {
+            [Test]
+            public void TestMethodsShouldInheritApartmentFromFixture()
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+            }
+
+            [TestCase(1)]
+            [TestCase(2)]
+            public void TestCasesShouldInheritApartmentFromFixture(int n)
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+            }
+        }
+
+        [TestFixture]
+        [Apartment(ApartmentState.STA)]
+        [Parallelizable(ParallelScope.None)]
+        public class NonParallelStaFixtureWithMtaTests
+        {
+            [Test]
+            [Apartment(ApartmentState.MTA)]
+            public void TestMethodsShouldRespectTheirApartment()
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
+
+            [TestCase(1)]
+            [TestCase(2)]
+            [Apartment(ApartmentState.MTA)]
+            public void TestCasesShouldRespectTheirApartment(int n)
+            {
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
             }
         }
     }

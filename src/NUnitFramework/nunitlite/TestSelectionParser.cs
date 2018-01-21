@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -73,7 +73,7 @@ namespace NUnit.Common
         }
 
         /// <summary>
-        /// Parse a single term or an or expression, returning the xml
+        /// Parse a single term or an or expression, returning the XML
         /// </summary>
         /// <returns></returns>
         public string ParseFilterExpression()

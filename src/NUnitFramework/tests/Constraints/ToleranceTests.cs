@@ -29,7 +29,7 @@ using NUnit.Framework.Constraints;
 
 #endregion
 
-namespace NUnit.Framework.Tests.Constraints
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class ToleranceTests

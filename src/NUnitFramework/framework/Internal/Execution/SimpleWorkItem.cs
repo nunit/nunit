@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -66,12 +66,13 @@ namespace NUnit.Framework.Internal.Execution
                 // users may create their own command wrappers, etc.
                 // we have to protect against unhandled exceptions.
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
 
                 Context.CurrentResult.RecordException(ex);
+                Result = Context.CurrentResult;
             }
             finally
             {
@@ -103,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
                         command = new TestActionCommand(command, action); ;
 
                 // Try to locate the parent fixture. In current implementations, the test method 
-                // is either one or two levels levels below the TestFixture - if this changes, 
+                // is either one or two levels below the TestFixture - if this changes, 
                 // so should the following code.
                 TestFixture parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
 
@@ -141,7 +142,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // If a timeout is specified, create a TimeoutCommand
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if THREAD_ABORT
                 // Timeout set at a higher level
                 int timeout = Context.TestCaseTimeout;
 

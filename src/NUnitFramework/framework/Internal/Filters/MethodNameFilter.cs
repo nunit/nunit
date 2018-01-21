@@ -29,10 +29,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// FullName filter selects tests based on their FullName
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public class MethodNameFilter : ValueMatchFilter
+    internal class MethodNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a MethodNameFilter for a single name

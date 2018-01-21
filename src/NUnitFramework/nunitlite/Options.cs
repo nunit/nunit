@@ -138,32 +138,17 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using NUnit.Compatibility;
 
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-using NUnit.Compatibility;
-#else
+#if !NETSTANDARD1_6
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 #endif
 
-#if LINQ
-using System.Linq;
-#endif
-
-#if TEST
-using NDesk.Options;
-#endif
-
-#if NUNIT_CONSOLE || NUNITLITE || NUNIT_ENGINE
 namespace NUnit.Options
-#elif NDESK_OPTIONS
-namespace NDesk.Options
-#else
-namespace Mono.Options
-#endif
 {
     public class OptionValueCollection : IList, IList<string> {
 
@@ -220,7 +205,7 @@ namespace Mono.Options
             if (c.Option == null)
                 throw new InvalidOperationException ("OptionContext.Option is null.");
             if (index >= c.Option.MaxValueCount)
-                throw new ArgumentOutOfRangeException ("index");
+                throw new ArgumentOutOfRangeException (nameof(index));
             if (c.Option.OptionValueType == OptionValueType.Required &&
                     index >= values.Count)
                 throw new OptionException (string.Format (
@@ -313,11 +298,11 @@ namespace Mono.Options
         protected Option (string prototype, string description, int maxValueCount)
         {
             if (prototype == null)
-                throw new ArgumentNullException ("prototype");
+                throw new ArgumentNullException (nameof(prototype));
             if (prototype.Length == 0)
-                throw new ArgumentException ("Cannot be the empty string.", "prototype");
+                throw new ArgumentException ("Cannot be the empty string.", nameof(prototype));
             if (maxValueCount < 0)
-                throw new ArgumentOutOfRangeException ("maxValueCount");
+                throw new ArgumentOutOfRangeException (nameof(maxValueCount));
 
             this.prototype   = prototype;
             this.names       = prototype.Split ('|');
@@ -329,17 +314,17 @@ namespace Mono.Options
                 throw new ArgumentException (
                         "Cannot provide maxValueCount of 0 for OptionValueType.Required or " +
                             "OptionValueType.Optional.",
-                        "maxValueCount");
+                        nameof(maxValueCount));
             if (this.type == OptionValueType.None && maxValueCount > 1)
                 throw new ArgumentException (
                         string.Format ("Cannot provide maxValueCount of {0} for OptionValueType.None.", maxValueCount),
-                        "maxValueCount");
+                        nameof(maxValueCount));
             if (Array.IndexOf (names, "<>") >= 0 &&
                     ((names.Length == 1 && this.type != OptionValueType.None) ||
                      (names.Length > 1 && this.MaxValueCount > 1)))
                 throw new ArgumentException (
                         "The default option handler '<>' cannot require values.",
-                        "prototype");
+                        nameof(prototype));
         }
 
         public string           Prototype       {get {return prototype;}}
@@ -362,25 +347,18 @@ namespace Mono.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-#if NETSTANDARD1_3 || NETSTANDARD1_6
             bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
                 !tt.GetTypeInfo().IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
-#else
-            bool nullable = tt.IsValueType && tt.IsGenericType &&
-                !tt.IsGenericTypeDefinition &&
-                tt.GetGenericTypeDefinition () == typeof (Nullable<>);
-            Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
-#endif
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -490,7 +468,7 @@ namespace Mono.Options
         }
     }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
     [Serializable]
 #endif
     public class OptionException : Exception
@@ -513,7 +491,7 @@ namespace Mono.Options
             this.option = optionName;
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -525,7 +503,7 @@ namespace Mono.Options
             get {return this.option;}
         }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {
@@ -552,7 +530,7 @@ namespace Mono.Options
         protected override string GetKeyForItem (Option item)
         {
             if (item == null)
-                throw new ArgumentNullException ("option");
+                throw new ArgumentNullException (nameof(item));
             if (item.Names != null && item.Names.Length > 0)
                 return item.Names [0];
             // This should never happen, as it's invalid for Option to be
@@ -564,7 +542,7 @@ namespace Mono.Options
         protected Option GetOptionForName (string option)
         {
             if (option == null)
-                throw new ArgumentNullException ("option");
+                throw new ArgumentNullException (nameof(option));
             try {
                 return base [option];
             }
@@ -599,7 +577,7 @@ namespace Mono.Options
         private void AddImpl (Option option)
         {
             if (option == null)
-                throw new ArgumentNullException ("option");
+                throw new ArgumentNullException (nameof(option));
             List<string> added = new List<string> (option.Names.Length);
             try {
                 // KeyedCollection.InsertItem/SetItem handle the 0th name.
@@ -628,7 +606,7 @@ namespace Mono.Options
                 : base (prototype, description, count)
             {
                 if (action == null)
-                    throw new ArgumentNullException ("action");
+                    throw new ArgumentNullException (nameof(action));
                 this.action = action;
             }
 
@@ -646,7 +624,7 @@ namespace Mono.Options
         public OptionSet Add (string prototype, string description, Action<string> action)
         {
             if (action == null)
-                throw new ArgumentNullException ("action");
+                throw new ArgumentNullException (nameof(action));
             Option p = new ActionOption (prototype, description, 1,
                     delegate (OptionValueCollection v) { action (v [0]); });
             base.Add (p);
@@ -661,7 +639,7 @@ namespace Mono.Options
         public OptionSet Add (string prototype, string description, OptionAction<string, string> action)
         {
             if (action == null)
-                throw new ArgumentNullException ("action");
+                throw new ArgumentNullException (nameof(action));
             Option p = new ActionOption (prototype, description, 2,
                     delegate (OptionValueCollection v) {action (v [0], v [1]);});
             base.Add (p);
@@ -675,7 +653,7 @@ namespace Mono.Options
                 : base (prototype, description, 1)
             {
                 if (action == null)
-                    throw new ArgumentNullException ("action");
+                    throw new ArgumentNullException (nameof(action));
                 this.action = action;
             }
 
@@ -692,7 +670,7 @@ namespace Mono.Options
                 : base (prototype, description, 2)
             {
                 if (action == null)
-                    throw new ArgumentNullException ("action");
+                    throw new ArgumentNullException (nameof(action));
                 this.action = action;
             }
 
@@ -729,35 +707,6 @@ namespace Mono.Options
             return new OptionContext (this);
         }
 
-#if LINQ
-        public List<string> Parse (IEnumerable<string> arguments)
-        {
-            bool process = true;
-            OptionContext c = CreateOptionContext ();
-            c.OptionIndex = -1;
-            var def = GetOptionForName ("<>");
-            var unprocessed =
-                from argument in arguments
-                where ++c.OptionIndex >= 0 && (process || def != null)
-                    ? process
-                        ? argument == "--"
-                            ? (process = false)
-                            : !Parse (argument, c)
-                                ? def != null
-                                    ? Unprocessed (null, def, c, argument)
-                                    : true
-                                : false
-                        : def != null
-                            ? Unprocessed (null, def, c, argument)
-                            : true
-                    : true
-                select argument;
-            List<string> r = unprocessed.ToList ();
-            if (c.Option != null)
-                c.Option.Invoke (c);
-            return r;
-        }
-#else
         public List<string> Parse (IEnumerable<string> arguments)
         {
             OptionContext c = CreateOptionContext ();
@@ -782,7 +731,6 @@ namespace Mono.Options
                 c.Option.Invoke (c);
             return unprocessed;
         }
-#endif
 
         private static bool Unprocessed (ICollection<string> extra, Option def, OptionContext c, string argument)
         {
@@ -802,7 +750,7 @@ namespace Mono.Options
         protected bool GetOptionParts (string argument, out string flag, out string name, out string sep, out string value)
         {
             if (argument == null)
-                throw new ArgumentNullException ("argument");
+                throw new ArgumentNullException (nameof(argument));
 
             flag = name = sep = value = null;
             Match m = ValueOption.Match (argument);

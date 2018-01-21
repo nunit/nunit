@@ -251,46 +251,46 @@ namespace NUnitLite.Tests
 #pragma warning disable 414
         static TestCaseData[] ImmediateOutputData = new[] {
             new TestCaseData("Off",
-                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "OUTPUT\n"),
             new TestCaseData("On",
-                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("All",
-                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("Before",
-                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("After",
-                new [] { new TestOutput("OUTPUT\n", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT\n"),
             new TestCaseData("Off",
-                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
                 "OUTPUT"),
             new TestCaseData("On",
-                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("All",
-                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("Before",
-                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("After",
-                new [] { new TestOutput("OUTPUT", "", "SomeMethod") },
+                new [] { new TestOutput("OUTPUT", "", null, "SomeMethod") },
                 "=> SomeMethod\nOUTPUT"),
             new TestCaseData("On",
-                new [] { new TestOutput("A", "", "T1"), new TestOutput("B", "", "T1"), new TestOutput("C", "", "T1") },
+                new [] { new TestOutput("A", "", null, "T1"), new TestOutput("B", "", null, "T1"), new TestOutput("C", "", null, "T1") },
                 "=> T1\nABC"),
             new TestCaseData("On",
-                new [] { new TestOutput("A", "", "T1"), new TestOutput("B", "", "T1"), new TestOutput("C", "", "T1"), new TestOutput("\n", "", "T1") },
+                new [] { new TestOutput("A", "", null, "T1"), new TestOutput("B", "", null, "T1"), new TestOutput("C", "", null, "T1"), new TestOutput("\n", "", null, "T1") },
                 "=> T1\nABC\n"),
             new TestCaseData("On",
-                new [] { new TestOutput("Hello\n", "", "EN"), new TestOutput("Ciao!\n", "", "IT"), new TestOutput("World!\n", "", "EN") },
+                new [] { new TestOutput("Hello\n", "", null, "EN"), new TestOutput("Ciao!\n", "", null, "IT"), new TestOutput("World!\n", "", null, "EN") },
                 "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!\n"),
             new TestCaseData("On",
-                new [] { new TestOutput("Hello", "", "EN"), new TestOutput("Ciao!", "", "IT"), new TestOutput("World!", "", "EN") },
+                new [] { new TestOutput("Hello", "", null, "EN"), new TestOutput("Ciao!", "", null, "IT"), new TestOutput("World!", "", null, "EN") },
                 "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!"),
         };
 #pragma warning restore 414
@@ -337,7 +337,7 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test);
-            textUI.TestOutput(new TestOutput("IMMEDIATE OUTPUT\n", "", test.FullName));
+            textUI.TestOutput(new TestOutput("IMMEDIATE OUTPUT\n", "", null, test.FullName));
             result.OutWriter.WriteLine("NORMAL OUTPUT");
             textUI.TestFinished(result);
 
@@ -454,10 +454,10 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test1);
-            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", null, test1.FullName));
             textUI.TestStarted(test2);
-            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", test1.FullName));
-            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", test2.FullName));
+            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", null, test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", null, test2.FullName));
             result1.OutWriter.WriteLine("OUTPUT1");
             textUI.TestFinished(result1);
             result2.OutWriter.WriteLine("OUTPUT2");
@@ -527,10 +527,10 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
 
             textUI.TestStarted(test1);
-            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from first test\n", "", null, test1.FullName));
             textUI.TestStarted(test2);
-            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", test1.FullName));
-            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", test2.FullName));
+            textUI.TestOutput(new TestOutput("Another immediate output from first test\n", "", null, test1.FullName));
+            textUI.TestOutput(new TestOutput("Immediate output from second test\n", "", null, test2.FullName));
             result2.OutWriter.WriteLine("OUTPUT2");
             textUI.TestFinished(result2);
             result1.OutWriter.WriteLine("OUTPUT1");

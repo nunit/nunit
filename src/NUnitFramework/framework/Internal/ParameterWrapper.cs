@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,14 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
-
-#if NETSTANDARD1_3|| NETSTANDARD1_6
-using System.Linq;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -87,11 +83,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
             return ParameterInfo.GetAttributes<T>(inherit).ToArray();
-#else
-            return (T[])ParameterInfo.GetCustomAttributes(typeof(T), inherit);
-#endif
         }
 
         /// <summary>
@@ -99,8 +91,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
-            return ParameterInfo.GetCustomAttributes(inherit).Any(a => typeof(T).IsAssignableFrom(a.GetType()));
+#if NETSTANDARD1_6
+            return ParameterInfo.GetCustomAttributes(inherit).Any(typeof(T).IsInstanceOfType);
 #else
             return ParameterInfo.IsDefined(typeof(T), inherit);
 #endif

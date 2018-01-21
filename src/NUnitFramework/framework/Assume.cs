@@ -109,7 +109,7 @@ namespace NUnit.Framework
             throw new InconclusiveException(writer.ToString());
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.
@@ -161,7 +161,7 @@ namespace NUnit.Framework
             Assume.That(condition, Is.True, null, null);
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
@@ -178,7 +178,7 @@ namespace NUnit.Framework
 
         #region Lambda returning Boolean
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
@@ -270,7 +270,7 @@ namespace NUnit.Framework
             }
         }
 
-#if !NET_2_0
+#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an InconclusiveException on failure.

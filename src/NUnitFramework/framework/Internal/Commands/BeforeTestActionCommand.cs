@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal.Commands
         public BeforeTestActionCommand(TestCommand innerCommand, TestActionItem action)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionBeforeCommand may only apply to a TestSuite", "innerCommand");
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionBeforeCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
             BeforeTest = (context) =>

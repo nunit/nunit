@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -25,7 +25,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
 using System.Xml.Linq;
 #endif
 
@@ -134,13 +134,13 @@ namespace NUnit.Framework.Interfaces
         #region Static Methods
 
         /// <summary>
-        /// Create a TNode from it's XML text representation
+        /// Create a TNode from its XML text representation
         /// </summary>
         /// <param name="xmlText">The XML text to be parsed</param>
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             return FromXml(XElement.Parse(xmlText));
 #else
             var doc = new XmlDocument();
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Finds a single descendant of this node matching an xpath
+        /// Finds a single descendant of this node matching an XPath
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// Finds all descendants of this node matching an xpath
+        /// Finds all descendants of this node matching an XPath
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Interfaces
 
         #region Helper Methods
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
         private static TNode FromXml(XElement xElement)
         {
             TNode tNode = new TNode(xElement.Name.ToString(), xElement.Value);
@@ -289,11 +289,11 @@ namespace NUnit.Framework.Interfaces
 
         private static NodeList ApplySelection(NodeList nodeList, string xpath)
         {
-            Guard.ArgumentNotNullOrEmpty(xpath, "xpath");
+            Guard.ArgumentNotNullOrEmpty(xpath, nameof(xpath));
             if (xpath[0] == '/')
-                throw new ArgumentException("XPath expressions starting with '/' are not supported", "xpath");
+                throw new ArgumentException("XPath expressions starting with '/' are not supported", nameof(xpath));
             if (xpath.IndexOf("//") >= 0)
-                throw new ArgumentException("XPath expressions with '//' are not supported", "xpath");
+                throw new ArgumentException("XPath expressions with '//' are not supported", nameof(xpath));
 
             string head = xpath;
             string tail = null;
@@ -374,14 +374,14 @@ namespace NUnit.Framework.Interfaces
                 if (lbrack >= 0)
                 {
                     if (!xpath.EndsWith("]"))
-                        throw new ArgumentException("Invalid property expression", "xpath");
+                        throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _nodeName = xpath.Substring(0, lbrack);
                     string filter = xpath.Substring(lbrack+1, xpath.Length - lbrack - 2);
 
                     int equals = filter.IndexOf('=');
                     if (equals < 0 || filter[0] != '@')
-                        throw new ArgumentException("Invalid property expression", "xpath");
+                        throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _propName = filter.Substring(1, equals - 1).Trim();
                     _propValue = filter.Substring(equals + 1).Trim(new char[] { ' ', '"', '\'' });

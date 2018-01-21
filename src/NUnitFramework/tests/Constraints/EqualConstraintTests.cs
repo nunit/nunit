@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007-2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -356,7 +356,7 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETCOREAPP1_1
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
@@ -747,7 +747,7 @@ namespace NUnit.Framework.Constraints
             Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL);
         }
 
-        [Test, TestCaseSource("DifferentTypeSameValueTestData")]
+        [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));

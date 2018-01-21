@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Interfaces
     /// should use the Set method to set the value and Get to
     /// retrieve the value. The GetSetting methods may also be
     /// used to retrieve the value in a type-safe manner while
-    /// also providing  default. For example:
+    /// also providing default. For example:
     /// 
     ///     bag.Set("Priority", "low");
     ///     bag.Set("Priority", "high"); // replaces value

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "nunit.framework.tests": {
+      "commandName": "Executable",
+      "executablePath": "C:\\src\\nunit\\nunit\\packages\\NUnit.ConsoleRunner.3.7.0\\tools\\nunit3-console.exe",
+      "commandLineArgs": "--inprocess --debug --wait $(SolutionDir)\\bin\\$(Configuration)\\$(TargetFramework)\\nunit.framework.tests.dll"
+    }
+  }
+}

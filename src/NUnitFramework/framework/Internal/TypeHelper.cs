@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -248,23 +248,22 @@ namespace NUnit.Framework.Internal
             {
                 object arg = arglist[i];
 
-                if (arg != null && arg is IConvertible)
+                if (arg is IConvertible)
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
                     bool convert = false;
 
-                    if (argType != targetType && !argType.IsAssignableFrom(targetType))
+                    if (argType != targetType && IsNumeric(argType) && IsNumeric(targetType))
                     {
-                        if (IsNumeric(argType) && IsNumeric(targetType))
-                        {
-                            if (targetType == typeof(double) || targetType == typeof(float))
-                                convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
-                            else if (targetType == typeof(long))
+                        if (targetType == typeof(double) || targetType == typeof(float))
+                            convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
+                        else
+                            if (targetType == typeof(long))
                                 convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                            else if (targetType == typeof(short))
-                                convert = arg is byte || arg is sbyte;
-                        }
+                            else
+                                if (targetType == typeof(short))
+                                    convert = arg is byte || arg is sbyte;
                     }
 
                     if (convert)
@@ -380,6 +379,36 @@ namespace NUnit.Framework.Internal
         {
             int index = fullTypeName.IndexOf('`');
             return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
+        }
+
+        /// <summary>
+        /// Determines whether the cast to the given type would succeed.
+        /// If <paramref name="obj"/> is <see langword="null"/> and <typeparamref name="T"/>
+        /// can be <see langword="null"/>, the cast succeeds just like the C# language feature.
+        /// </summary>
+        /// <param name="obj">The object to cast.</param>
+        internal static bool CanCast<T>(object obj)
+        {
+            return obj is T || (obj == null && default(T) == null);
+        }
+
+        /// <summary>
+        /// Casts to a value of the given type if possible.
+        /// If <paramref name="obj"/> is <see langword="null"/> and <typeparamref name="T"/>
+        /// can be <see langword="null"/>, the cast succeeds just like the C# language feature.
+        /// </summary>
+        /// <param name="obj">The object to cast.</param>
+        /// <param name="value">The value of the object, if the cast succeeded.</param>
+        internal static bool TryCast<T>(object obj, out T value)
+        {
+            if (obj is T)
+            {
+                value = (T)obj;
+                return true;
+            }
+
+            value = default(T);
+            return obj == null && default(T) == null;
         }
     }
 }

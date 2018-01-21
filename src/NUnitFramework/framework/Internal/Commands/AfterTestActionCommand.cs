@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -41,13 +41,22 @@ namespace NUnit.Framework.Internal.Commands
         public AfterTestActionCommand(TestCommand innerCommand, TestActionItem action)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", "innerCommand");
+            Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
             AfterTest = (context) =>
             {
                 if (action.BeforeTestWasRun)
+                {
+                    var oldCount = context.CurrentResult.AssertionResults.Count;
+
                     action.AfterTest(Test);
+
+                    // If there are new assertion results here, they are warnings issued
+                    // in teardown. Redo test completion so they are listed properly.
+                    if (context.CurrentResult.AssertionResults.Count > oldCount)
+                        context.CurrentResult.RecordTestCompletion();
+                };
             };
         }
     }

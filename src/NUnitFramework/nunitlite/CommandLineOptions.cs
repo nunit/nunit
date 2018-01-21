@@ -54,7 +54,7 @@ namespace NUnit.Common
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, bool requireInputFile, params string[] args)
         {
             // Apply default options
-            if (defaultOptionsProvider == null) throw new ArgumentNullException("defaultOptionsProvider");
+            if (defaultOptionsProvider == null) throw new ArgumentNullException(nameof(defaultOptionsProvider));
 
             TeamCity = defaultOptionsProvider.TeamCity;
 
@@ -388,7 +388,7 @@ namespace NUnit.Common
                         }
                     }
                 });
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
 #endif

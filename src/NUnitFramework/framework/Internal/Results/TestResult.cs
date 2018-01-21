@@ -24,19 +24,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-#if PARALLEL
-using System.Collections.Concurrent;
-#endif
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-#if NET_2_0
-using NUnit.Compatibility;
-#endif
 using System.Threading;
 using NUnit.Framework.Interfaces;
+#if NET20
+using NUnit.Compatibility;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -88,7 +85,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
-#if NET_2_0
+#if NET20
         protected ReaderWriterLock RwLock = new ReaderWriterLock();
 #else
         protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
@@ -108,7 +105,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
+#if NETSTANDARD1_6
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
@@ -228,7 +225,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Gets any stacktrace associated with an
+        /// Gets any stack trace associated with an
         /// error or failure.
         /// </summary>
         public virtual string StackTrace
@@ -351,7 +348,7 @@ namespace NUnit.Framework.Internal
         #region IXmlNodeBuilder Members
 
         /// <summary>
-        /// Returns the Xml representation of the result.
+        /// Returns the XML representation of the result.
         /// </summary>
         /// <param name="recursive">If true, descendant results are included</param>
         /// <returns>An XmlNode representing the result</returns>
@@ -516,7 +513,7 @@ namespace NUnit.Framework.Internal
 
                 SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
             }
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled,
                     "Test cancelled by user",
@@ -553,7 +550,7 @@ namespace NUnit.Framework.Internal
                 SetResult(((ResultStateException)ex).ResultState.WithSite(site),
                     ex.Message,
                     StackFilter.DefaultFilter.Filter(ex.StackTrace));
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
             else if (ex is System.Threading.ThreadAbortException)
                 SetResult(ResultState.Cancelled.WithSite(site),
                     "Test cancelled by user",
@@ -566,7 +563,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// RecordTearDownException appends the message and stacktrace
+        /// RecordTearDownException appends the message and stack trace
         /// from an exception arising during teardown of the test
         /// to any previously recorded information, so that any
         /// earlier failure information is not lost. Note that

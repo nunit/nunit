@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests
+namespace NUnit.Framework
 {
     public class TextOutputTests : ITestListener
     {
@@ -57,8 +57,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ConsoleErrorWrite_WritesToListener()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "ConsoleErrorWrite");
-            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), nameof(TextOutputFixture.ConsoleErrorWrite));
+            var work = TestBuilder.CreateWorkItem(test, new TextOutputFixture());
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
@@ -73,8 +73,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void ConsoleErrorWriteLine_WritesToListener()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "ConsoleErrorWriteLine");
-            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), nameof(TextOutputFixture.ConsoleErrorWriteLine));
+            var work = TestBuilder.CreateWorkItem(test, new TextOutputFixture());
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
@@ -100,8 +100,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestContextError_WritesToListener()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "TestContextErrorWriteLine");
-            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), nameof(TextOutputFixture.TestContextErrorWriteLine));
+            var work = TestBuilder.CreateWorkItem(test, new TextOutputFixture());
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 
@@ -116,8 +116,8 @@ namespace NUnit.Framework.Tests
         [Test]
         public void TestContextProgress_WritesToListener()
         {
-            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), "TestContextProgressWriteLine");
-            var work = TestBuilder.PrepareWorkItem(test, new TextOutputFixture());
+            var test = TestBuilder.MakeTestFromMethod(typeof(TextOutputFixture), nameof(TextOutputFixture.TestContextProgressWriteLine));
+            var work = TestBuilder.CreateWorkItem(test, new TextOutputFixture());
             work.Context.Listener = this;
             var result = TestBuilder.ExecuteWorkItem(work);
 

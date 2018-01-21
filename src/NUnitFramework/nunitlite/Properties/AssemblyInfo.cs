@@ -32,14 +32,20 @@ using System.Runtime.CompilerServices;
                               "bee5e972a004ddd692dec8fa404ba4591e847a8cf35de21c2d3" +
                               "723bc8d775a66b594adeb967537729fe2a446b548cd57a6")]
 
-#if NET_4_5
-[assembly: AssemblyTitle("NUnitLite Runner .NET 4.5")]
-#elif NET_4_0
-[assembly: AssemblyTitle("NUnitLite Runner .NET 4.0")]
-#elif NET_2_0
-[assembly: AssemblyTitle("NUnitLite Runner .NET 2.0")]
+#if NET45
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.5)")]
+#elif NET40
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.0)")]
+#elif NET35
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 3.5)")]
+#elif NET20
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 2.0)")]
+#elif NETSTANDARD1_6
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 1.6)")]
+#elif NETSTANDARD2_0
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
 #else
-[assembly: AssemblyTitle("NUnitLite Runner")]
+#error Missing AssemblyTitle attribute for this target.
 #endif
 
 [assembly: AssemblyDescription("")]

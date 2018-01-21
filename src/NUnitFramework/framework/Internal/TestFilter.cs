@@ -33,9 +33,6 @@ namespace NUnit.Framework.Internal
     /// The filter applies when running the test, after it has been
     /// loaded, since this is the only time an ITest exists.
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
     public abstract class TestFilter : ITestFilter
     {
         /// <summary>
@@ -73,7 +70,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Determine if a test matches the filter explicitly. That is, it must
-        /// be a direct match of the test itself or one of it's children.
+        /// be a direct match of the test itself or one of its children.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the test matches the filter explicitly, otherwise false</returns>
@@ -121,7 +118,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Create a TestFilter instance from an xml representation.
+        /// Create a TestFilter instance from an XML representation.
         /// </summary>
         public static TestFilter FromXml(string xmlText)
         {
@@ -147,7 +144,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Create a TestFilter from it's TNode representation
+        /// Create a TestFilter from its TNode representation
         /// </summary>
         public static TestFilter FromXml(TNode node)
         {
@@ -206,7 +203,7 @@ namespace NUnit.Framework.Internal
         /// Nested class provides an empty filter - one that always
         /// returns true when called. It never matches explicitly.
         /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if !NETSTANDARD1_6
         [Serializable]
 #endif
         private class EmptyFilter : TestFilter

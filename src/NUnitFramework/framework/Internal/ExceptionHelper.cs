@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if !NET_4_5 && !NETSTANDARD1_3 && !NETSTANDARD1_6
+#if NET20 || NET35 || NET40
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -60,11 +60,11 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET_4_5 || NETSTANDARD1_3 || NETSTANDARD1_6
-            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
-#else
+#if NET20 || NET35 || NET40
             PreserveStackTrace(exception);
             throw exception;
+#else
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
 #endif
         }
 

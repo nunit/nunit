@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,18 +23,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
 
-namespace NUnit.Framework.Tests.Compatibility
+namespace NUnit.Framework.Compatibility
 {
-    /// <summary>
-    /// A series of unit tests to ensure that the type extensions in the .NET Standard
-    /// framework behave the same as their counterparts in the full framework
-    /// </summary>
-    [TestFixture]
-    public class ReflectionExtensionsTests
+    using System.Reflection;
+
+    partial class ReflectionExtensionsTests
     {
         [Test]
         public void CanCallTypeInfoOnAllPlatforms()
@@ -42,7 +38,20 @@ namespace NUnit.Framework.Tests.Compatibility
             var result = typeof(Object).GetTypeInfo();
             Assert.That(result, Is.Not.Null);
         }
+    }
+}
 
+namespace NUnit.Framework.Compatibility
+{
+    using BindingFlags = System.Reflection.BindingFlags;
+
+    /// <summary>
+    /// A series of unit tests to ensure that the type extensions in the .NET Standard
+    /// framework behave the same as their counterparts in the full framework
+    /// </summary>
+    [TestFixture]
+    public partial class ReflectionExtensionsTests
+    {
         [Test]
         public void CanGetGenericArguments()
         {
@@ -244,7 +253,16 @@ namespace NUnit.Framework.Tests.Compatibility
         {
             var result = typeof(DerivedTestClass).GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public);
             var methodNames = result.Select(m => m.Name);
-            CollectionAssert.AreEquivalent(methodNames, new string[] { "Hello", "Hello", "DerivedInstanceMethod" });
+            CollectionAssert.AreEquivalent(new string[] { "Hello", "Hello", "DerivedInstanceMethod" }, methodNames);
+        }
+
+        [Test]
+        public void CanGetVirtualMethodsFromMostDerivedClassOnly()
+        {
+            var result = typeof(MostDerivedTestClass).GetMethods(BindingFlags.FlattenHierarchy | BindingFlags.Instance | BindingFlags.Public);
+            var methodNames = result.Where(m => m.Name == "Hello").Select(m => m.Name);
+
+            CollectionAssert.AreEquivalent(new string[] { "Hello", "Hello" }, methodNames);
         }
 
         [TestCase(BindingFlags.Instance | BindingFlags.Public,
@@ -301,7 +319,7 @@ namespace NUnit.Framework.Tests.Compatibility
         public void CanGetStaticMethodsOnBase()
         {
             var result = typeof(DerivedTestClass).GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-            foreach(var info in result)
+            foreach (var info in result)
             {
                 if (info.Name == "StaticMethod")
                     Assert.Pass();
@@ -334,7 +352,6 @@ namespace NUnit.Framework.Tests.Compatibility
             Assert.That(minfo != null, Is.EqualTo(shouldFind));
         }
 
-#if NETSTANDARD1_3 || NETSTANDARD1_6
         [Test]
         public void CanGetAttributesUsingAnInterface()
         {
@@ -350,7 +367,6 @@ namespace NUnit.Framework.Tests.Compatibility
             var result = typeof(NoGetterPropertyDerivedClass).GetMember("NoGetter", BindingFlags.Default);
             Assert.That(result, Is.Not.Null);
         }
-#endif
     }
 
     public class BaseTestClass : IDisposable
@@ -426,6 +442,13 @@ namespace NUnit.Framework.Tests.Compatibility
         public override void Hello(string msg) { }
     }
 
+    public class MostDerivedTestClass : DerivedTestClass
+    {
+        public override void Hello() { }
+
+        public override void Hello(string msg) { }
+    }
+
     public class GenericTestClass<T1, T2>
     {
         public T1 PropertyOne { get; set; }
@@ -438,8 +461,6 @@ namespace NUnit.Framework.Tests.Compatibility
         }
     }
 
-
-#if NETSTANDARD1_3 || NETSTANDARD1_6
     public class NoGetterPropertyBaseClass
     {
         public string NoGetter { set { } }
@@ -448,5 +469,4 @@ namespace NUnit.Framework.Tests.Compatibility
     public class NoGetterPropertyDerivedClass : NoGetterPropertyBaseClass
     {
     }
-#endif
 }

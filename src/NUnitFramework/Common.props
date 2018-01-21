@@ -1,0 +1,34 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>6</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- netcoreapp1.1 tests currently pull the netstandard1.6 framework, and
+         netcoreapp2.0 tests currently pull the netstandard2.0 framework -->
+
+    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.6'
+                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PARALLEL</DefineConstants>
+
+    <DefineConstants Condition="'$(TargetFramework)' != 'net20'
+                            and '$(TargetFramework)' != 'net35'">$(DefineConstants);ASYNC</DefineConstants>
+
+    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.6'
+                            and '$(TargetFramework)' != 'netcoreapp1.1'
+                            and '$(TargetFramework)' != 'netstandard2.0'
+                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);PLATFORM_DETECTION;THREAD_ABORT;APARTMENT_STATE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
+  </ItemGroup>
+
+</Project>

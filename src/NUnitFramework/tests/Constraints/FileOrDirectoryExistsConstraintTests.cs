@@ -21,23 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_3
 using System;
 using System.IO;
 using NUnit.Framework.Assertions;
 using NUnit.Framework.Constraints;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Tests.Constraints
+namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class FileOrDirectoryExistsConstraintTests
     {
         private FileOrDirectoryExistsConstraint _constraint;
         private TestDirectory _goodDir;
-        private readonly static string BAD_DIRECTORY = Path.Combine(Path.GetTempPath(), @"\I\hope\this\is\garbage");
-        private readonly static string BAD_FILE = Path.Combine(Path.GetTempPath(), "garbage.txt");
-        private const string TEST_FILE = "Test1.txt";
+        private static readonly string BAD_DIRECTORY = Path.Combine(Path.GetTempPath(), @"\I\hope\this\is\garbage");
+        private static readonly string BAD_FILE = Path.Combine(Path.GetTempPath(), "garbage.txt");
         private const string RESOURCE_FILE = "TestText1.txt";
 
         [SetUp]
@@ -57,7 +55,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenFileInfoExists()
         {
-            using (var actualTestFile = new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var actualTestFile = new TestFile(RESOURCE_FILE))
             {
                 Assert.That(_constraint.ApplyTo(actualTestFile.File).IsSuccess);
                 Assert.That(actualTestFile.File, Does.Exist);
@@ -75,7 +73,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void PassesWhenFileStringExists()
         {
-            using (var tf = new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var tf = new TestFile(RESOURCE_FILE))
             {
                 Assert.That(_constraint.ApplyTo(tf.File.FullName).IsSuccess);
                 Assert.That(tf.File.FullName, Does.Exist);
@@ -92,7 +90,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenIgnoreFilesIsTrueWithFileString()
         {
-            using (var tf = new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var tf = new TestFile(RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
                 Assert.That(constraint.ApplyTo(tf.File.FullName).Status == ConstraintStatus.Failure);
@@ -102,7 +100,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void FailsWhenIgnoreFilesIsTrueWithFileInfo()
         {
-            using (var tf = new TestFile(TEST_FILE, RESOURCE_FILE))
+            using (var tf = new TestFile(RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
                 var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(tf.File));
@@ -191,4 +189,3 @@ namespace NUnit.Framework.Tests.Constraints
         }
     }
 }
-#endif

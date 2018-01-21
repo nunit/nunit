@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 // 
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-namespace NUnit.Framework.Tests.Attributes
+using NUnit.TestData.TestMethodSignatureFixture;
+using NUnit.TestUtilities;
+
+namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     public class TestExpectedResult
@@ -50,12 +53,10 @@ namespace NUnit.Framework.Tests.Attributes
             return null;
         }
 
-        [Test(ExpectedResult = 1024)]
-        [TestCase(1, 1, ExpectedResult = 2)]
-        [TestCase(5, 3, ExpectedResult = 8)]
-        public int TestAttributeExpectedResultDoesNotOverrideTestCaseExpectedResult(int x, int y)
+        [Test]
+        public void ExpectedResultNotAllowedOnParameterizedMethod()
         {
-            return x + y;
+            TestAssert.IsNotRunnable(typeof(TestMethodSignatureFixture), nameof(TestMethodSignatureFixture.TestCasesWithReturnValueAndArgs_WithExpectedResult));
         }
 
         [Test(ExpectedResult = 42), Description("A description")]

@@ -29,10 +29,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// NotFilter negates the operation of another filter
     /// </summary>
-#if !NETSTANDARD1_3 && !NETSTANDARD1_6
-    [Serializable]
-#endif
-    public class NotFilter : TestFilter
+    internal class NotFilter : TestFilter
     {
         /// <summary>
         /// Construct a not filter on another filter
@@ -74,7 +71,7 @@ namespace NUnit.Framework.Internal.Filters
 
         /// <summary>
         /// Determine if a test matches the filter explicitly. That is, it must
-        /// be a direct match of the test itself or one of it's children.
+        /// be a direct match of the test itself or one of its children.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the test matches the filter explicitly, otherwise false</returns>

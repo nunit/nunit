@@ -82,10 +82,20 @@ namespace NUnit.Framework
         #region Fluent Instance Modifiers
 
         /// <summary>
+        /// Sets the name of the test fixture
+        /// </summary>
+        /// <returns>The modified TestFixtureData instance</returns>
+        internal TestFixtureData SetName(string name)
+        {
+            TestName = name;
+            return this;
+        }
+
+        /// <summary>
         /// Marks the test fixture as explicit.
         /// </summary>
         public TestFixtureData Explicit()	{
-            this.RunState = RunState.Explicit;
+            RunState = RunState.Explicit;
             return this;
         }
 
@@ -94,8 +104,8 @@ namespace NUnit.Framework
         /// </summary>
         public TestFixtureData Explicit(string reason)
         {
-            this.RunState = RunState.Explicit;
-            this.Properties.Set(PropertyNames.SkipReason, reason);
+            RunState = RunState.Explicit;
+            Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }
 
@@ -106,8 +116,8 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestFixtureData Ignore(string reason)
         {
-            this.RunState = RunState.Ignored;
-            this.Properties.Set(PropertyNames.SkipReason, reason);
+            RunState = RunState.Ignored;
+            Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }
 
