@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal
 
                 case TestStatus.Warning:
                     if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
-                        SetResult(childResultState, CHILD_WARNINGS_MESSAGE);
+                        SetResult(ResultState.ChildWarning, CHILD_WARNINGS_MESSAGE);
                     break;
 
                 case TestStatus.Failed:
