@@ -41,17 +41,23 @@ Supported platforms:
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
     <file src="bin/net20/nunit.framework.dll" target="lib\net20" />
+    <file src="bin/net20/nunit.framework.pdb" target="lib\net20" />
     <file src="bin/net20/nunit.framework.xml" target="lib\net20" />
     <file src="bin/net20/NUnit.System.Linq.dll" target="lib\net20" />
     <file src="bin/net35/nunit.framework.dll" target="lib\net35" />
+    <file src="bin/net35/nunit.framework.pdb" target="lib\net35" />
     <file src="bin/net35/nunit.framework.xml" target="lib\net35" />
     <file src="bin/net40/nunit.framework.dll" target="lib\net40" />
+    <file src="bin/net40/nunit.framework.pdb" target="lib\net40" />
     <file src="bin/net40/nunit.framework.xml" target="lib\net40" />
     <file src="bin/net45/nunit.framework.dll" target="lib\net45" />
+    <file src="bin/net45/nunit.framework.pdb" target="lib\net45" />
     <file src="bin/net45/nunit.framework.xml" target="lib\net45" />
     <file src="bin/netstandard1.6/nunit.framework.dll" target="lib\netstandard1.6" />
+    <file src="bin/netstandard1.6/nunit.framework.pdb" target="lib\netstandard1.6" />
     <file src="bin/netstandard1.6/nunit.framework.xml" target="lib\netstandard1.6" />
     <file src="bin/netstandard2.0/nunit.framework.dll" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunit.framework.pdb" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunit.framework.xml" target="lib\netstandard2.0" />
     <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>

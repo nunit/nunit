@@ -11,6 +11,7 @@ NUnit is a unit-testing framework for all .NET languages. Initially ported from 
 - [Downloads](#downloads)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
+- [Debugger source-stepping](#debugger-source-stepping)
 - [License](#license)
 - [NUnit Projects](#nunit-projects)
 
@@ -34,6 +35,12 @@ For more information on contributing to the NUnit project, please see [CONTRIBUT
 NUnit 3.0 was created by [Charlie Poole](https://github.com/CharliePoole), [Rob Prouse](https://github.com/rprouse), [Simone Busoli](https://github.com/simoneb), [Neil Colvin](https://github.com/oznetmaster) and numerous community contributors. A complete list of contributors since NUnit migrated to GitHub can be [found on GitHub](https://github.com/nunit/nunit/graphs/contributors).
 
 Earlier versions of NUnit were developed by Charlie Poole, James W. Newkirk, Alexei A. Vorontsov, Michael C. Two and Philip A. Craig.
+
+## Debugger source-stepping ##
+
+The NUnit and NUnitLite NuGet packages contain a source-indexed PDB for each binary from this repository.
+If you’re in the middle of a debugging session and realize you’d like to be able to step into NUnit code,
+set breakpoints and watch variables, [follow these steps](https://github.com/nunit/docs/wiki/Debugger-Source-Stepping).
 
 ## License ##
 

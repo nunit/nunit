@@ -34,6 +34,10 @@ Issues that need confirmation will have the **confirm** label or be unlabeled an
 - Create unit tests to demonstrate the issue
 - Test issues and provide feedback
 
+As of version 3.10, the NUnit and NUnitLite NuGet packages support **debugger source-stepping** for each binary from the repository. Debuggers can step into the source code, set breakpoints, watch variables, etc. If you’re getting ready to report a bug in NUnit, figuring out how to create a minimal repro is much easier since you aren’t dealing with a black box!
+
+To easily drop into NUnit code from your project any time, [follow these steps](https://github.com/nunit/docs/wiki/Debugger-Source-Stepping).
+
 ## Documentation
 
 Great documentation is essential for any open source project and NUnit is no exception. [Our documentation](https://github.com/nunit/docs/wiki/NUnit-Documentation) often lags behind the features that have been implemented or would benefit from better examples.
