@@ -290,27 +290,17 @@ namespace NUnit.Common
 
         protected int RequiredInt(string val, string option)
         {
+            int result;
+            if (int.TryParse(val, out result)) return result;
+
+            ErrorMessages.Add(string.IsNullOrEmpty(val)
+                ? "Missing required value for option '" + option + "'."
+                : "An int value was expected for option '{0}' but a value of '{1}' was used");
+
             // We have to return something even though the value will
             // be ignored if an error is reported. The -1 value seems
             // like a safe bet in case it isn't ignored due to a bug.
-            int result = -1;
-
-            if (string.IsNullOrEmpty(val))
-                ErrorMessages.Add("Missing required value for option '" + option + "'.");
-            else
-            {
-                // NOTE: Don't replace this with TryParse or you'll break the CF build!
-                try
-                {
-                    result = int.Parse(val);
-                }
-                catch (Exception)
-                {
-                    ErrorMessages.Add("An int value was expected for option '{0}' but a value of '{1}' was used");
-                }
-            }
-
-            return result;
+            return -1;
         }
 
         private string ExpandToFullPath(string path)
