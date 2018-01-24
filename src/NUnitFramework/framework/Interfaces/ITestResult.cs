@@ -91,9 +91,7 @@ namespace NUnit.Framework.Interfaces
 
         /// <summary>
         /// Gets any stack trace associated with an
-        /// error or failure. Not available in
-        /// the Compact Framework 1.0.
-        /// </summary>
+        /// error or failure.</summary>
         string StackTrace
         {
             get;
