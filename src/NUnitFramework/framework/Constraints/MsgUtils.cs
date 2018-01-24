@@ -61,6 +61,7 @@ namespace NUnit.Framework.Constraints
         /// Formatting strings used for expected and actual values
         /// </summary>
         private static readonly string Fmt_Null = "null";
+
         private static readonly string Fmt_EmptyString = "<string.Empty>";
         private static readonly string Fmt_EmptyCollection = "<empty>";
         private static readonly string Fmt_String = "\"{0}\"";
@@ -84,7 +85,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
 
-            AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset ((DateTimeOffset)val) : next (val));
+            AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset((DateTimeOffset)val) : next(val));
 
             AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
 
@@ -102,9 +103,9 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => TryFormatKeyValuePair(val) ?? next(val));
 
-            AddFormatter(next => val => TryFormatTuple(val, "System.Tuple", GetValueFromTuple) ?? next(val));
+            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsTuple, GetValueFromTuple) ?? next(val));
 
-            AddFormatter(next => val => TryFormatTuple(val, "System.ValueTuple", GetValueFromValueTuple) ?? next(val));
+            AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace NUnit.Framework.Constraints
             int rank = array.Rank;
             int[] products = new int[rank];
 
-            for (int product = 1, r = rank; --r >= 0; )
+            for (int product = 1, r = rank; --r >= 0;)
                 products[r] = product *= array.GetLength(r);
 
             int count = 0;
@@ -243,14 +244,13 @@ namespace NUnit.Framework.Constraints
             return type.GetField(propertyName).GetValue(obj);
         }
 
-        private static string TryFormatTuple(object value, string tupleType, Func<Type, string, object, object> getValue)
+        private static string TryFormatTuple(object value, Func<Type, bool> isTuple, Func<Type, string, object, object> getValue)
         {
             if (value == null)
                 return null;
 
             Type valueType = value.GetType();
-            string typeName = GetTypeNameWithoutGenerics(valueType.FullName);
-            if (typeName != tupleType)
+            if (!isTuple(valueType))
                 return null;
 
             return FormatTuple(value, true, getValue);
@@ -281,12 +281,6 @@ namespace NUnit.Framework.Constraints
             return sb.ToString();
         }
 
-        private static string GetTypeNameWithoutGenerics(string fullTypeName)
-        {
-            int index = fullTypeName.IndexOf('`');
-            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
-        }
-
         private static string FormatString(string s)
         {
             return s == string.Empty
@@ -296,7 +290,6 @@ namespace NUnit.Framework.Constraints
 
         private static string FormatDouble(double d)
         {
-
             if (double.IsNaN(d) || double.IsInfinity(d))
                 return d.ToString();
             else
@@ -375,6 +368,7 @@ namespace NUnit.Framework.Constraints
 
             return string.Format("<{0}>", sb.ToString());
         }
+
         /// <summary>
         /// Converts any control characters in a string 
         /// to their escaped representation.
@@ -451,13 +445,13 @@ namespace NUnit.Framework.Constraints
         /// <returns>The converted string</returns>
         public static string EscapeNullCharacters(string s)
         {
-            if(s != null)
+            if (s != null)
             {
                 StringBuilder sb = new StringBuilder();
 
-                foreach(char c in s)
+                foreach (char c in s)
                 {
-                    switch(c)
+                    switch (c)
                     {
                         case '\0':
                             sb.Append("\\0");
@@ -469,7 +463,7 @@ namespace NUnit.Framework.Constraints
                     }
                 }
 
-                s = sb.ToString();               
+                s = sb.ToString();
             }
 
             return s;
@@ -506,7 +500,7 @@ namespace NUnit.Framework.Constraints
             int rank = array == null ? 1 : array.Rank;
             int[] result = new int[rank];
 
-            for (int r = rank; --r > 0; )
+            for (int r = rank; --r > 0;)
             {
                 int l = array.GetLength(r);
                 result[r] = (int)index % l;

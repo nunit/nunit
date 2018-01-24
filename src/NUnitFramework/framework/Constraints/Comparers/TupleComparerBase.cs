@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        protected abstract string NameOfType { get; }
+        protected abstract bool IsCorrectType(Type type);
 
         protected abstract object GetValue(Type type, string propertyName, object obj);
 
@@ -47,9 +47,7 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            string xTypeName = GetTypeNameWithoutGenerics(xType.FullName);
-            string yTypeName = GetTypeNameWithoutGenerics(yType.FullName);
-            if (xTypeName != NameOfType || yTypeName != NameOfType)
+            if (!IsCorrectType(xType) || !IsCorrectType(yType))
                 return null;
 
             int numberOfGenericArgs = xType.GetGenericArguments().Length;
@@ -69,12 +67,6 @@ namespace NUnit.Framework.Constraints.Comparers
             }
 
             return true;
-        }
-
-        private string GetTypeNameWithoutGenerics(string fullTypeName)
-        {
-            int index = fullTypeName.IndexOf('`');
-            return index == -1 ? fullTypeName : fullTypeName.Substring(0, index);
         }
     }
 }
