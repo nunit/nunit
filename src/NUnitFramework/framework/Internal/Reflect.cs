@@ -163,7 +163,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Returns an array of types from an array of objects.
-        /// Differs from <see cref="Type.GetTypeArray"/> by returning <see cref="NUnitNullType"/>
+        /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see cref="NUnitNullType"/>
         /// for null elements rather than throwing <see cref="ArgumentNullException"/>.
         /// </summary>
         internal static Type[] GetTypeArray(object[] objects)
