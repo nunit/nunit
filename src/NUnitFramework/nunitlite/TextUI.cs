@@ -131,8 +131,7 @@ namespace NUnitLite
             WriteSectionHeader("Notes:");
             WriteHelpLine("    * File names may be listed by themselves, with a relative path or ");
             WriteHelpLine("      using an absolute path. Any relative path is based on the current ");
-            WriteHelpLine("      directory or on the Documents folder if running on a under the ");
-            WriteHelpLine("      compact framework.");
+            WriteHelpLine("      directory.");
             Writer.WriteLine();
             WriteHelpLine("    * On Windows, options may be prefixed by a '/' character if desired");
             Writer.WriteLine();
@@ -496,7 +495,7 @@ namespace NUnitLite
             string stackTrace = result.StackTrace;
             string reportID = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
-            
+
             if (numAsserts > 0)
             {
                 int assertionCounter = 0;
