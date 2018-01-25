@@ -21,10 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework;
 
-namespace NUnit.TestData.AssertFailFixture
+namespace NUnit.TestData
 {
     [TestFixture]
     public class AssertFailFixture
