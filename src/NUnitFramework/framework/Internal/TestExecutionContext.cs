@@ -563,6 +563,7 @@ namespace NUnit.Framework.Internal
             /// </summary>
             public void Dispose()
             {
+                _originalContext.OutWriter.Write(CurrentContext.CurrentResult.Output);
                 CurrentContext = _originalContext;
             }
         }

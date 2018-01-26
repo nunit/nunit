@@ -37,6 +37,21 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void ThrowsDoesNotDiscardOutput()
+        {
+            Console.WriteLine(1);
+            Assert.Throws<Exception>(() =>
+            {
+                Console.WriteLine(2);
+                throw new Exception("test");
+            });
+            Console.WriteLine(3);
+
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output, 
+                Is.EqualTo("1" + Environment.NewLine + "2" + Environment.NewLine + "3" + Environment.NewLine));
+        }
+
+        [Test]
         public void GenericThrowsSucceedsWithDelegate()
         {
             Assert.Throws<ArgumentException>(

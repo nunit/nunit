@@ -30,17 +30,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using NUnit.Framework.Interfaces;
-#if NET20
 using NUnit.Compatibility;
-#endif
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// The TestResult class represents the result of a test.
     /// </summary>
-    public abstract class TestResult : ITestResult
+    public abstract class TestResult : LongLivedMarshalByRefObject, ITestResult
     {
         #region Fields
 
