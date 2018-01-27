@@ -32,6 +32,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
+using static NUnit.Framework.TestContext;
 
 namespace NUnit.Framework
 {
@@ -221,10 +222,19 @@ namespace NUnit.Framework
         #region Properties
 
         [Test]
-        [Property("Answer", 42)]
+        [Property("Answer", "42")]
         public void TestCanAccessItsOwnProperties()
         {
-            Assert.That(TestContext.CurrentContext.Test.Properties.Get("Answer"), Is.EqualTo(42));
+            Assert.That(TestContext.CurrentContext.Test.Properties.Get("Answer"), Is.EqualTo("42"));
+        }
+
+        [Test]
+        public void TestGettingPropertiesReturnsNewObjEveryTime()
+        {
+            PropertyBagAdapter adapter1 = CurrentContext.Test.Properties;
+            PropertyBagAdapter adapter2 = CurrentContext.Test.Properties;
+
+            Assert.AreNotEqual(adapter1, adapter2);
         }
 
         #endregion
