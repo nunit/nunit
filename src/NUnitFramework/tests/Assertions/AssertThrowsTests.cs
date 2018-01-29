@@ -37,6 +37,37 @@ namespace NUnit.Framework.Assertions
         }
 
         [Test]
+        public void AssertThrowsDoesNotDiscardOutput()
+        {
+            Console.WriteLine(1);
+            Assert.Throws<Exception>(() =>
+            {
+                Console.WriteLine(2);
+                TestContext.WriteLine(3);
+                throw new Exception("test");
+            });
+            Console.WriteLine(4);
+
+            var NL = Environment.NewLine;
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output,
+                Is.EqualTo($"1{NL}2{NL}3{NL}4{NL}"));
+        }
+
+        [Test]
+        public void ThrowsConstraintDoesNotDiscardOutput()
+        {
+            Console.WriteLine(1);
+            Assert.That(
+                () => { Console.WriteLine(2); TestContext.WriteLine(3); throw new Exception("test"); }, 
+                Throws.Exception);
+            Console.WriteLine(4);
+
+            var NL = Environment.NewLine;
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output,
+                Is.EqualTo($"1{NL}2{NL}3{NL}4{NL}"));
+        }
+
+        [Test]
         public void GenericThrowsSucceedsWithDelegate()
         {
             Assert.Throws<ArgumentException>(
