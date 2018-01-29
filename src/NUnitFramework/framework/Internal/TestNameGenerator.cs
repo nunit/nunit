@@ -241,8 +241,11 @@ namespace NUnit.Framework.Internal
                             var element = argArray.GetValue(i);
                             var childArray = element as Array;
 
-                            if (childArray != null)
-                                builder.Append("[ ... ]");
+                            if (childArray != null && childArray.Rank == 1)
+                            {
+                                builder.Append(childArray.GetType().GetElementType().Name);
+                                builder.Append("[]");
+                            }
                             else
                             {
                                 var elementDisplayString = GetDisplayString(element, stringMax);
@@ -334,7 +337,7 @@ namespace NUnit.Framework.Internal
                     bool tooLong = stringMax > 0 && str.Length > stringMax;
                     int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     sb.Append("\"");
                     foreach (char c in str)
                     {
