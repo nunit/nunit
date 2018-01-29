@@ -722,5 +722,36 @@ namespace NUnit.Framework.Assertions
         }
 #endregion
 
+#if NET45
+#region ValueTuple
+        [Test]
+        public void ValueTupleAreEqual()
+        {
+            var set1 = new SimpleEnumerable(ValueTuple.Create(1,2,3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3));
+            var set2 = new SimpleEnumerable(ValueTuple.Create(1,2,3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3));
+
+            CollectionAssert.AreEqual(set1, set2);
+            CollectionAssert.AreEqual(set1, set2, new TestComparer());
+
+            Assert.AreEqual(set1, set2);
+        }
+
+        [Test]
+        public void ValueTupleAreEqualFail()
+        {
+            var set1 = new SimpleEnumerable(ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3));
+            var set2 = new SimpleEnumerable(ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 4));
+
+            var expectedMessage =
+                "  Expected and actual are both <NUnit.TestUtilities.Collections.SimpleEnumerable>" + Environment.NewLine +
+                "  Values differ at index [2]" + Environment.NewLine +
+                "  Expected: (1, 2, 3)" + Environment.NewLine +
+                "  But was:  (1, 2, 4)" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+#endregion
+#endif
     }
 }

@@ -73,8 +73,6 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
         {
-            // NOTE: Original implementation used Array.ConvertAll and
-            // Array.FindAll, which don't exist in the compact framework.
             var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
 
             foreach (Type @interface in type.GetInterfaces())

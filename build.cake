@@ -1,4 +1,5 @@
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.7.0
+#tool GitLink
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -157,6 +158,9 @@ MSBuildSettings CreateSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
+    // Only needed when packaging
+    settings.WithProperty("DebugType", "pdbonly");
+
     if (IsRunningOnWindows())
         settings.ToolVersion = MSBuildToolVersion.VS2017;
     else
@@ -266,16 +270,19 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
+    "nunit.framework.pdb",
     "nunit.framework.xml",
     "NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
+    "nunitlite.pdb",
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
     "nunitlite-runner.dll",
+    "nunitlite-runner.pdb",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
     "Microsoft.Threading.Tasks.Extensions.dll",
@@ -285,16 +292,16 @@ var FrameworkFiles = new FilePath[]
     "System.ValueTuple.dll"
 };
 
+string CurrentImageDir => $"{IMAGE_DIR}NUnit-{packageVersion}/";
+
 Task("CreateImage")
     .Description("Copies all files into the image directory")
     .Does(() =>
     {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-        var imageBinDir = currentImageDir + "bin/";
+        CleanDirectory(CurrentImageDir);
+        CopyFiles(RootFiles, CurrentImageDir);
 
-        CleanDirectory(currentImageDir);
-
-        CopyFiles(RootFiles, currentImageDir);
+        var imageBinDir = CurrentImageDir + "bin/";
 
         CreateDirectory(imageBinDir);
         Information("Created directory " + imageBinDir);
@@ -313,48 +320,48 @@ Task("CreateImage")
         }
     });
 
-Task("PackageFramework")
-    .Description("Creates NuGet packages of the framework")
+Task("GitLink")
     .IsDependentOn("CreateImage")
+    .Description("Source-indexes PDBs in the images directory to the current commit")
     .Does(() =>
     {
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
+        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"));
+    });
 
+Task("PackageFramework")
+    .Description("Creates NuGet packages of the framework")
+    .IsDependentOn("GitLink")
+    .Does(() =>
+    {
         CreateDirectory(PACKAGE_DIR);
 
-        NuGetPack("nuget/framework/nunit.nuspec", new NuGetPackSettings()
+        var settings = new NuGetPackSettings
         {
             Version = packageVersion,
-            BasePath = currentImageDir,
+            BasePath = CurrentImageDir,
             OutputDirectory = PACKAGE_DIR
-        });
+        };
 
-        NuGetPack("nuget/nunitlite/nunitlite.nuspec", new NuGetPackSettings()
-        {
-            Version = packageVersion,
-            BasePath = currentImageDir,
-            OutputDirectory = PACKAGE_DIR
-        });
+        NuGetPack("nuget/framework/nunit.nuspec", settings);
+        NuGetPack("nuget/nunitlite/nunitlite.nuspec", settings);
     });
 
 Task("PackageZip")
     .Description("Creates a ZIP file of the framework")
-    .IsDependentOn("CreateImage")
+    .IsDependentOn("GitLink")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
 
-        var currentImageDir = IMAGE_DIR + "NUnit-" + packageVersion + "/";
-
         var zipFiles =
-            GetFiles(currentImageDir + "*.*") +
-            GetFiles(currentImageDir + "bin/net20/*.*") +
-            GetFiles(currentImageDir + "bin/net35/*.*") +
-            GetFiles(currentImageDir + "bin/net40/*.*") +
-            GetFiles(currentImageDir + "bin/net45/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard1.6/*.*") +
-            GetFiles(currentImageDir + "bin/netstandard2.0/*.*");
-        Zip(currentImageDir, File(ZIP_PACKAGE), zipFiles);
+            GetFiles(CurrentImageDir + "*.*") +
+            GetFiles(CurrentImageDir + "bin/net20/*.*") +
+            GetFiles(CurrentImageDir + "bin/net35/*.*") +
+            GetFiles(CurrentImageDir + "bin/net40/*.*") +
+            GetFiles(CurrentImageDir + "bin/net45/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard1.6/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard2.0/*.*");
+        Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -379,14 +386,6 @@ Teardown(context => CheckForError(ref ErrorDetail));
 //////////////////////////////////////////////////////////////////////
 // HELPER METHODS - GENERAL
 //////////////////////////////////////////////////////////////////////
-
-void RunGitCommand(string arguments)
-{
-    StartProcess("git", new ProcessSettings()
-    {
-        Arguments = arguments
-    });
-}
 
 void UploadArtifacts(string packageDir, string searchPattern)
 {

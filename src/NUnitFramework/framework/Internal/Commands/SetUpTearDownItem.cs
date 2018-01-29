@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -80,11 +80,19 @@ namespace NUnit.Framework.Internal.Commands
             if (_setUpWasRun)
                 try
                 {
+                    // Count of assertion results so far
+                    var oldCount = context.CurrentResult.AssertionResults.Count;
+
                     // Even though we are only running one level at a time, we
                     // run the teardowns in reverse order to provide consistency.
                     int index = _tearDownMethods.Count;
                     while (--index >= 0)
                         RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
+
+                    // If there are new assertion results here, they are warnings issued
+                    // in teardown. Redo test completion so they are listed properly.
+                    if (context.CurrentResult.AssertionResults.Count > oldCount)
+                        context.CurrentResult.RecordTestCompletion();
                 }
                 catch (Exception ex)
                 {

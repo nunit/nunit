@@ -163,11 +163,9 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Returns an array of types from an array of objects.
-        /// Used because the compact framework doesn't support
-        /// Type.GetTypeArray()
+        /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see cref="NUnitNullType"/>
+        /// for null elements rather than throwing <see cref="ArgumentNullException"/>.
         /// </summary>
-        /// <param name="objects">An array of objects</param>
-        /// <returns>An array of Types</returns>
         internal static Type[] GetTypeArray(object[] objects)
         {
             Type[] types = new Type[objects.Length];

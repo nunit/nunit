@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,7 +23,7 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.AssertFailFixture;
+using NUnit.TestData;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions

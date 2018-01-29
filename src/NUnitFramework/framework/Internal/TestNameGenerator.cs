@@ -161,18 +161,7 @@ namespace NUnit.Framework.Internal
                         if (token.Length >= 5 && token[2] == ':' && (c == 'a' || char.IsDigit(c)))
                         {
                             int length;
-
-                            // NOTE: The code would be much simpler using TryParse. However,
-                            // that method doesn't exist in the Compact Framework.
-                            try
-                            {
-                                length = int.Parse(token.Substring(3, token.Length - 4));
-                            }
-                            catch
-                            {
-                                length = -1;
-                            }
-                            if (length > 0)
+                            if (int.TryParse(token.Substring(3, token.Length - 4), out length) && length > 0)
                             {
                                 if (c == 'a')
                                     fragments.Add(new ArgListFragment(length));

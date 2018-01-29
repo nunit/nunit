@@ -47,7 +47,16 @@ namespace NUnit.Framework.Internal.Commands
             AfterTest = (context) =>
             {
                 if (action.BeforeTestWasRun)
+                {
+                    var oldCount = context.CurrentResult.AssertionResults.Count;
+
                     action.AfterTest(Test);
+
+                    // If there are new assertion results here, they are warnings issued
+                    // in teardown. Redo test completion so they are listed properly.
+                    if (context.CurrentResult.AssertionResults.Count > oldCount)
+                        context.CurrentResult.RecordTestCompletion();
+                };
             };
         }
     }
