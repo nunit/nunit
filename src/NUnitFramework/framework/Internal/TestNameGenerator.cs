@@ -228,7 +228,7 @@ namespace NUnit.Framework.Internal
                     else
                     {
                         var builder = new StringBuilder();
-                        builder.Append("[ ");
+                        builder.Append("[");
 
                         const int MaxNumItemsToEnumerate = 5;
 
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal
                         if (argArray.Length > MaxNumItemsToEnumerate)
                             builder.Append(", ...");
 
-                        builder.Append(" ]");
+                        builder.Append("]");
                         display = builder.ToString();
                     }
                 }
