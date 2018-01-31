@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -39,7 +39,11 @@ namespace NUnit.Framework.Internal
         // pattern all the way down the test builder hierarchy
 
         /// <summary>
-        /// Default pattern used to generate names
+        /// Default pattern used to generate test fixture names
+        /// </summary>
+        public static string DefaultTestFixturePattern = "{c}{a}";
+        /// <summary>
+        /// Default pattern used to generate test method names
         /// </summary>
         public static string DefaultTestNamePattern = "{m}{a}";
 
@@ -73,16 +77,22 @@ namespace NUnit.Framework.Internal
         /// <returns>The display name</returns>
         public string GetDisplayName(TestMethod testMethod)
         {
-            return GetDisplayName(testMethod, null);
+            return GetDisplayName(testMethod, null, null);
         }
 
         /// <summary>
-        /// Get the display name for a TestMethod and its arguments
+        /// Get the display name for a test and its arguments
         /// </summary>
-        /// <param name="testMethod">A TestMethod</param>
-        /// <param name="args">Arguments to be used</param>
-        /// <returns>The display name</returns>
-        public string GetDisplayName(TestMethod testMethod, object[] args)
+        /// <param name="test">A test</param>
+        /// <param name="argDisplayNames">
+        /// Overrides argument list display.
+        /// The strings in this list are already display names and will be rendered as is, without quotes.
+        /// </param>
+        /// <param name="args">
+        /// Arguments to be used if <paramref name="argDisplayNames"/> is <see langword="null"/>.
+        /// A string in this list will be rendered with quotes.
+        /// </param>
+        public string GetDisplayName(Test test, string[] argDisplayNames, object[] args)
         {
             if (_fragments == null)
                 _fragments = BuildFragmentList(_pattern);
@@ -90,7 +100,7 @@ namespace NUnit.Framework.Internal
             var result = new StringBuilder();
 
             foreach (var fragment in _fragments)
-                result.Append(fragment.GetText(testMethod, args));
+                result.Append(fragment.GetText(test, argDisplayNames ?? args, argDisplayNames != null));
 
             return result.ToString();
         }
@@ -193,14 +203,9 @@ namespace NUnit.Framework.Internal
 
         private abstract class NameFragment
         {
-            private const string THREE_DOTS = "...";
+            private const string ELLIPSIS = "...";
 
-            public virtual string GetText(TestMethod testMethod, object[] args)
-            {
-                return GetText(testMethod.Method.MethodInfo, args);
-            }
-
-            public abstract string GetText(MethodInfo method, object[] args);
+            public abstract string GetText(Test test, object[] args, bool argsAreDisplayNames);
 
             protected static void AppendGenericTypeNames(StringBuilder sb, MethodInfo method)
             {
@@ -212,6 +217,35 @@ namespace NUnit.Framework.Internal
                     sb.Append(t.Name);
                 }
                 sb.Append(">");
+            }
+
+            protected static string LimitString(string value, int maxLength)
+            {
+                if (value == null) return null;
+                if (value.Length <= maxLength) return value;
+
+                var valueLengthToAppend = maxLength - ELLIPSIS.Length;
+                if (valueLengthToAppend <= 0) return ELLIPSIS;
+
+                var buffer = new char[maxLength];
+                value.CopyTo(0, buffer, 0, valueLengthToAppend);
+                ELLIPSIS.CopyTo(0, buffer, valueLengthToAppend, ELLIPSIS.Length);
+                return new string(buffer);
+            }
+
+            protected static void AppendLimited(StringBuilder sb, string value, int maxLength)
+            {
+                if (value == null) return;
+                if (value.Length <= maxLength)
+                {
+                    sb.Append(value);
+                }
+                else
+                {
+                    var valueLengthToAppend = maxLength - ELLIPSIS.Length;
+                    if (0 < valueLengthToAppend) sb.Append(value, 0, valueLengthToAppend);
+                    sb.Append(ELLIPSIS);
+                }
             }
 
             protected static string GetDisplayString(object arg, int stringMax)
@@ -295,7 +329,7 @@ namespace NUnit.Framework.Internal
                 {
                     var str = (string)arg;
                     bool tooLong = stringMax > 0 && str.Length > stringMax;
-                    int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
+                    int limit = tooLong ? stringMax - ELLIPSIS.Length : 0;
 
                     StringBuilder sb = new StringBuilder();
                     sb.Append("\"");
@@ -304,7 +338,7 @@ namespace NUnit.Framework.Internal
                         sb.Append(EscapeCharInString(c));
                         if (tooLong && sb.Length > limit)
                         {
-                            sb.Append(THREE_DOTS);
+                            sb.Append(ELLIPSIS);
                             break;
                         }
                     }
@@ -376,7 +410,7 @@ namespace NUnit.Framework.Internal
 
                 return EscapeControlChar(c);
             }
-            
+
             private static string EscapeControlChar(char c)
             {
                 switch (c)
@@ -413,14 +447,9 @@ namespace NUnit.Framework.Internal
 
         private class TestIDFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
-                return "{i}"; // No id available using MethodInfo
-            }
-
-            public override string GetText(TestMethod testMethod, object[] args)
-            {
-                return testMethod.Id;
+                return test.Id;
             }
         }
 
@@ -433,7 +462,7 @@ namespace NUnit.Framework.Internal
                 _text = text;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
                 return _text;
             }
@@ -441,14 +470,17 @@ namespace NUnit.Framework.Internal
 
         private class MethodNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
+                var method = test.Method;
+                if (method == null) return null;
+
                 var sb = new StringBuilder();
 
                 sb.Append(method.Name);
 
                 if (method.IsGenericMethod)
-                    AppendGenericTypeNames(sb, method);
+                    AppendGenericTypeNames(sb, method.MethodInfo);
 
                 return sb.ToString();
             }
@@ -456,24 +488,27 @@ namespace NUnit.Framework.Internal
 
         private class NamespaceFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
-                return method.DeclaringType.Namespace;
+                return (test.Method?.TypeInfo ?? test.TypeInfo)?.Namespace;
             }
         }
 
         private class MethodFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
+                var method = test.Method;
+                if (method == null) return null;
+
                 var sb = new StringBuilder();
 
-                sb.Append(method.DeclaringType.FullName);
+                sb.Append(method.TypeInfo.FullName);
                 sb.Append('.');
                 sb.Append(method.Name);
 
                 if (method.IsGenericMethod)
-                    AppendGenericTypeNames(sb, method);
+                    AppendGenericTypeNames(sb, method.MethodInfo);
 
                 return sb.ToString();
             }
@@ -481,17 +516,17 @@ namespace NUnit.Framework.Internal
 
         private class ClassNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
-                return method.DeclaringType.Name;
+                return (test.Method?.TypeInfo ?? test.TypeInfo)?.Name;
             }
         }
 
         private class ClassFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
-                return method.DeclaringType.FullName;
+                return (test.Method?.TypeInfo ?? test.TypeInfo)?.FullName;
             }
         }
 
@@ -504,7 +539,7 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] arglist)
+            public override string GetText(Test test, object[] arglist, bool argsAreDisplayNames)
             {
                 var sb = new StringBuilder();
 
@@ -515,9 +550,21 @@ namespace NUnit.Framework.Internal
                     for (int i = 0; i < arglist.Length; i++)
                     {
                         if (i > 0) sb.Append(",");
-                        sb.Append(GetDisplayString(arglist[i], _maxStringLength));
+
+                        if (argsAreDisplayNames)
+                        {
+                            var displayName = (string)arglist[i];
+                            if (_maxStringLength != 0)
+                                AppendLimited(sb, displayName, _maxStringLength);
+                            else
+                                sb.Append(displayName);
+                        }
+                        else
+                        {
+                            sb.Append(GetDisplayString(arglist[i], _maxStringLength));
+                        }
                     }
-                    
+
                     sb.Append(')');
                 }
 
@@ -536,11 +583,17 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override string GetText(Test test, object[] args, bool argsAreDisplayNames)
             {
-                return _index < args.Length
-                    ? GetDisplayString(args[_index], _maxStringLength)
-                    : string.Empty;
+                if (args.Length <= _index) return string.Empty;
+
+                if (argsAreDisplayNames)
+                {
+                    var displayName = (string)args[_index];
+                    return _maxStringLength != 0 ? LimitString(displayName, _maxStringLength) : displayName;
+                }
+
+                return GetDisplayString(args[_index], _maxStringLength);
             }
         }
 

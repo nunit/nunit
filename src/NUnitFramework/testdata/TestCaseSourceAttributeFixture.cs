@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit.TestData.TestCaseSourceAttributeFixture
@@ -178,5 +179,46 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 }
             }
         }
+
+        #region Test name tests
+
+        [TestCaseSource(nameof(TestCaseNameTestDataSource))]
+        public static void TestCaseNameTestDataMethod(params object[] args) { }
+
+        public static IEnumerable<TestCaseData> TestCaseNameTestDataSource()
+        {
+            yield return CreateTestCaseData(null, new object[] { "argValue" }, null, nameof(TestCaseNameTestDataMethod) + "(\"argValue\")");
+
+            yield return CreateTestCaseData(null, new object[] { "argValue" }, null, nameof(TestCaseNameTestDataMethod) + "()")
+                .SetArgDisplayNames(null); // Test use of target-typed null literal
+
+            yield return CreateTestCaseData(null, new object[] { "argValue" }, new[] { "argName" }, nameof(TestCaseNameTestDataMethod) + "(argName)");
+
+            yield return CreateTestCaseData("a", new object[] { "argValue" }, new[] { "argName" }, "a");
+
+            yield return CreateTestCaseData("{a}", new object[] { "argValue" }, null, "(\"argValue\")");
+
+            yield return CreateTestCaseData("{a}", new object[] { "argValue" }, new[] { "argName" }, "(argName)");
+
+            yield return CreateTestCaseData("{a}", new object[] { "argValue1", "argValue2" }, new[] { "argName" }, "(argName)");
+
+            yield return CreateTestCaseData("{a}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "(argName1,argName2)");
+
+            yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue1", "argValue2" }, new[] { "argName" }, "argName, ");
+
+            yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
+
+            yield return CreateTestCaseData("{0}, {1}", new object[] { "argValue" }, new[] { "argName1", "argName2" }, "argName1, argName2");
+        }
+
+        private static TestCaseData CreateTestCaseData(string testName, object[] args, string[] argDisplayNames, string expectedTestName)
+        {
+            var data = new TestCaseData(args) { Properties = { ["ExpectedTestName"] = { expectedTestName } } };
+            if (testName != null) data.SetName(testName);
+            if (argDisplayNames != null) data.SetArgDisplayNames(argDisplayNames);
+            return data;
+        }
+
+        #endregion
     }
 }

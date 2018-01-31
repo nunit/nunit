@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -81,7 +81,20 @@ namespace NUnit.Framework.Internal
             ExpectedResult = "TestMethod(\"Now is the time f...\")")]
         public string ParameterizedTests(string pattern, object[] args)
         {
-            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, null, args);
+        }
+
+        [TestCase("{a}", new[] { "1", "2" }, ExpectedResult = "(1,2)")]
+        [TestCase("{a}", new[] { ",", " " }, ExpectedResult = "(,, )")]
+        [TestCase("{a}", new string[0], ExpectedResult = "()")]
+        [TestCase("{0}", new[] { "1", "2" }, ExpectedResult = "1")]
+        [TestCase("{0}{1}", new[] { "1", "2" }, ExpectedResult = "12")]
+        [TestCase("{0},{1},{2}", new[] { "1", "2" }, ExpectedResult = "1,2,")]
+        [TestCase("{0:20}", new[] { "Now is the time for all good men to come to the aid of their country." }, ExpectedResult = "Now is the time f...")]
+        [TestCase("{a:20}", new[] { "42", "Now is the time for all good men to come to the aid of their country." }, ExpectedResult = "(42,Now is the time f...)")]
+        public string ArgumentDisplayNames(string pattern, string[] argDisplayNames)
+        {
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, argDisplayNames, new object[] { 1, 2, 3 });
         }
 
         [TestCase("FIXED", ExpectedResult="FIXED")]
@@ -139,7 +152,7 @@ namespace NUnit.Framework.Internal
         [TestCase(sbyte.MinValue, ExpectedResult = "sbyte.MinValue")]
         public string SpecialNamedValues(object arg)
         {
-            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg } );
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, null, new[] { arg } );
         }
 
         #region Methods Used as Data

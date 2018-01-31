@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
     /// TestParameters is the abstract base class for all classes
     /// that know how to provide data for constructing a test.
     /// </summary>
-    public abstract class TestParameters : ITestData, IApplyToTest
+    public abstract class TestParameters : ITestData
     {
         #region Constructors
 
@@ -117,29 +117,41 @@ namespace NUnit.Framework.Internal
         public string TestName { get; set; }
 
         /// <summary>
+        /// If not <see langword="null"/>, overrides the list of argument display names to be used when generating a test name.
+        /// </summary>
+        // TODO: use private protected as soon as the codebase supports C# 7.2
+        internal string[] ArgDisplayNames { private get; set; }
+
+        /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
         public IPropertyBag Properties { get; private set; }
 
         #endregion
 
-        #region IApplyToTest Members
-
         /// <summary>
-        /// Applies ParameterSet values to the test itself.
+        /// Applies the encapsulated parameters to the test.
         /// </summary>
-        /// <param name="test">A test.</param>
-        public void ApplyToTest(Test test)
+        public void ApplyToTest(Test test, TestNameGenerator defaultTestNameGenerator)
         {
-            if (this.RunState != RunState.Runnable)
-                test.RunState = this.RunState;
+            if (RunState != RunState.Runnable)
+                test.RunState = RunState;
 
             foreach (string key in Properties.Keys)
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
-        }
 
-        #endregion
+            if (TestName == null)
+            {
+                test.Name = defaultTestNameGenerator.GetDisplayName(test, ArgDisplayNames, ArgDisplayNames != null ? null : OriginalArguments);
+            }
+            else
+            {
+                test.Name = TestName.Contains("{")
+                    ? new TestNameGenerator(TestName).GetDisplayName(test, ArgDisplayNames, ArgDisplayNames != null ? null : OriginalArguments)
+                    : TestName;
+            }
+        }
 
         #region Other Public Properties
 

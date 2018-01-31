@@ -44,13 +44,12 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Builds a single NUnitTestMethod, either as a child of the fixture
-        /// or as one of a set of test cases under a ParameterizedTestMethodSuite.
+        /// Builds a single <see cref="TestMethod"/>, either as a child of the fixture
+        /// or as one of a set of test cases under a <see cref="ParameterizedMethodSuite"/>.
         /// </summary>
-        /// <param name="method">The MethodInfo from which to construct the TestMethod</param>
+        /// <param name="method">The <see cref="IMethodInfo"/> from which to construct the <see cref="TestMethod"/></param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
-        /// <param name="parms">The ParameterSet to be used, or null</param>
-        /// <returns></returns>
+        /// <param name="parms">The <see cref="TestCaseParameters"/> to be used, or null</param>
         public TestMethod BuildTestMethod(IMethodInfo method, Test parentSuite, TestCaseParameters parms)
         {
             var testMethod = new TestMethod(method, parentSuite)
@@ -75,23 +74,11 @@ namespace NUnit.Framework.Internal.Builders
 
             if (parms != null)
             {
-                parms.ApplyToTest(testMethod);
-
-                if (parms.TestName != null)
-                {
-                    // The test is simply for efficiency
-                    testMethod.Name = parms.TestName.Contains("{")
-                        ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
-                        : parms.TestName;
-                }
-                else
-                {
-                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
-                }
+                parms.ApplyToTest(testMethod, _nameGenerator);
             }
             else
             {
-                testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
+                testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null, null);
             }
 
             testMethod.FullName = prefix + "." + testMethod.Name;
@@ -134,7 +121,7 @@ namespace NUnit.Framework.Internal.Builders
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
-                // IsOptional is supported since .NET 1.1 
+                // IsOptional is supported since .NET 1.1
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }

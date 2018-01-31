@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -51,6 +50,7 @@ namespace NUnit.Framework.Internal.Builders
         #region Instance Fields
 
         private ITestCaseBuilder _testBuilder = new DefaultTestCaseBuilder();
+        private readonly TestNameGenerator _nameGenerator = new TestNameGenerator(TestNameGenerator.DefaultTestFixturePattern);
 
         #endregion
 
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal.Builders
 
         /// <summary>
         /// Overload of BuildFrom called by tests that have arguments.
-        /// Builds a fixture using the provided type and information 
+        /// Builds a fixture using the provided type and information
         /// in the ITestFixtureData object.
         /// </summary>
         /// <param name="typeInfo">The TypeInfo for which to construct a fixture.</param>
@@ -128,10 +128,26 @@ namespace NUnit.Framework.Internal.Builders
             var fixture = new TestFixture(typeInfo, arguments);
 
             string name = fixture.Name;
-            if (testFixtureData.TestName != null)
-                fixture.Name = testFixtureData.TestName;
-            else if (arguments != null && arguments.Length > 0)
-                fixture.Name = typeInfo.GetDisplayName(arguments);
+
+            var parms = testFixtureData as TestParameters;
+            if (parms != null)
+            {
+                parms.ApplyToTest(fixture, _nameGenerator);
+            }
+            else
+            {
+                if (testFixtureData.TestName != null)
+                    fixture.Name = testFixtureData.TestName;
+                else if (arguments != null && arguments.Length > 0)
+                    fixture.Name = typeInfo.GetDisplayName(arguments);
+
+                if (fixture.RunState != RunState.NotRunnable)
+                    fixture.RunState = testFixtureData.RunState;
+
+                foreach (string key in testFixtureData.Properties.Keys)
+                    foreach (object val in testFixtureData.Properties[key])
+                        fixture.Properties.Add(key, val);
+            }
 
             if (fixture.Name != name) // name was changed
             {
@@ -140,13 +156,6 @@ namespace NUnit.Framework.Internal.Builders
                     ? nspace + "." + fixture.Name
                     : fixture.Name;
             }
-
-            if (fixture.RunState != RunState.NotRunnable)
-                fixture.RunState = testFixtureData.RunState;
-
-            foreach (string key in testFixtureData.Properties.Keys)
-                foreach (object val in testFixtureData.Properties[key])
-                    fixture.Properties.Add(key, val);
 
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
@@ -196,7 +205,7 @@ namespace NUnit.Framework.Internal.Builders
         /// any global TestCaseBuilder addin wants to build the
         /// test case. If not, it uses the internal builder
         /// collection maintained by this fixture builder.
-        /// 
+        ///
         /// The default implementation has no test case builders.
         /// Derived classes should add builders to the collection
         /// in their constructor.
