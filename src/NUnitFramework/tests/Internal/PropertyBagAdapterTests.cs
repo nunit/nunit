@@ -24,10 +24,10 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void PropertyBagAdapter_Get_CanAccesKeysFromSourceIPropertyBag()
+        public void PropertyBagAdapter_Get_CanAccessKeysFromSourceIPropertyBag()
         {
             Assert.AreEqual("val1", _adapter.Get("key"));
-            Assert.AreEqual("42", _adapter.Get("meaningOfLife"));
+            Assert.AreEqual(42, _adapter.Get("meaningOfLife"));
             Assert.AreEqual(null, _adapter.Get("nonExistantKey"));
         }
 
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         {
             var enumerable = _adapter["key"];
 
-            var asList = new List<string>(enumerable);
+            var asList = new List<object>(enumerable);
             Assert.AreEqual(2, asList.Count);
             CollectionAssert.Contains(asList, "val1");
             CollectionAssert.Contains(asList, "val2");

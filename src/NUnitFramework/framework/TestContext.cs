@@ -570,16 +570,16 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// Get the first property at <paramref name="key"/>, if it can be found, otherwise
+            /// Get the first property with the given <paramref name="key"/>, if it can be found, otherwise
             /// returns null.
             /// </summary>
-            public string Get(string key)
+            public object Get(string key)
             {
-                return _source.Get(key)?.ToString() ?? null;
+                return _source.Get(key);
             }
 
             /// <summary>
-            /// Returns if <paramref name="key"/> is found in this
+            /// Indicates whether <paramref name="key"/> is found in this
             /// <see cref="PropertyBagAdapter"/>.
             /// </summary>
             public bool ContainsKey(string key)
@@ -588,25 +588,25 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// Returns an <see cref="IEnumerable{String}"/> of properties
-            /// at the <paramref name="key"/>.
+            /// Returns a collection of properties
+            /// with the given <paramref name="key"/>.
             /// </summary>
-            public IEnumerable<string> this[string key]
+            public IEnumerable<object> this[string key]
             {
                 get
                 {
-                    var collection = new List<string>();
-                    foreach(var obj in _source[key])
+                    var list = new List<object>();
+                    foreach(var item in _source[key])
                     {
-                        collection.Add(obj.ToString());
+                        list.Add(item);
                     }
 
-                    return collection;
+                    return list;
                 }
             }
 
             /// <summary>
-            /// Returns the count of elements at the <paramref name="key"/>.
+            /// Returns the count of elements with the given <paramref name="key"/>.
             /// </summary>
             public int Count(string key)
             {
@@ -614,7 +614,7 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// Returns an <see cref="ICollection{String}"/> of the property keys.
+            /// Returns a collection of the property keys.
             /// </summary>
             public ICollection<string> Keys
             {

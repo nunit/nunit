@@ -228,15 +228,6 @@ namespace NUnit.Framework
             Assert.That(TestContext.CurrentContext.Test.Properties.Get("Answer"), Is.EqualTo("42"));
         }
 
-        [Test]
-        public void TestGettingPropertiesReturnsNewObjEveryTime()
-        {
-            PropertyBagAdapter adapter1 = CurrentContext.Test.Properties;
-            PropertyBagAdapter adapter2 = CurrentContext.Test.Properties;
-
-            Assert.AreNotEqual(adapter1, adapter2);
-        }
-
         #endregion
 
         #region Arguments
