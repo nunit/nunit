@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -418,11 +419,11 @@ namespace NUnit.Framework
             }
 
             /// <summary>
-            /// The properties of the test.
+            /// A shallow copy of the properties of the test.
             /// </summary>
-            public IPropertyBag Properties
+            public PropertyBagAdapter Properties
             {
-                get { return _test.Properties; }
+                get { return new PropertyBagAdapter(_test.Properties); }
             }
 
             /// <summary>
@@ -547,6 +548,83 @@ namespace NUnit.Framework
 #endregion
         }
 
-#endregion
+        #endregion
+
+        #region Nested PropertyBagAdapter Class
+
+        /// <summary>
+        /// <see cref="PropertyBagAdapter"/> adapts an <see cref="IPropertyBag"/>
+        /// for consumption by the user.
+        /// </summary>
+        public class PropertyBagAdapter
+        {
+            private IPropertyBag _source;
+            
+            /// <summary>
+            /// Construct a <see cref="PropertyBagAdapter"/> from a source
+            /// <see cref="IPropertyBag"/>.
+            /// </summary>
+            public PropertyBagAdapter(IPropertyBag source)
+            {
+                _source = source;
+            }
+
+            /// <summary>
+            /// Get the first property with the given <paramref name="key"/>, if it can be found, otherwise
+            /// returns null.
+            /// </summary>
+            public object Get(string key)
+            {
+                return _source.Get(key);
+            }
+
+            /// <summary>
+            /// Indicates whether <paramref name="key"/> is found in this
+            /// <see cref="PropertyBagAdapter"/>.
+            /// </summary>
+            public bool ContainsKey(string key)
+            {
+                return _source.ContainsKey(key);
+            }
+
+            /// <summary>
+            /// Returns a collection of properties
+            /// with the given <paramref name="key"/>.
+            /// </summary>
+            public IEnumerable<object> this[string key]
+            {
+                get
+                {
+                    var list = new List<object>();
+                    foreach(var item in _source[key])
+                    {
+                        list.Add(item);
+                    }
+
+                    return list;
+                }
+            }
+
+            /// <summary>
+            /// Returns the count of elements with the given <paramref name="key"/>.
+            /// </summary>
+            public int Count(string key)
+            {
+                return _source[key].Count;
+            }
+
+            /// <summary>
+            /// Returns a collection of the property keys.
+            /// </summary>
+            public ICollection<string> Keys
+            {
+                get
+                {
+                    return _source.Keys;
+                }
+            }
+        }
+
+        #endregion
     }
 }
