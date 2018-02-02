@@ -152,6 +152,14 @@ namespace NUnit.Framework.Internal
             get { return Method.Name; }
         }
 
+        /// <summary>
+        /// Returns the TestName of the method
+        /// </summary>
+        public override string TestName
+        {
+            get { return (parms != null ? parms.TestName : null); }
+        }
+
         #endregion
     }
 }

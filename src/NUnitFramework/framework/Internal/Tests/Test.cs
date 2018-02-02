@@ -182,6 +182,15 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the value associated with TestName attribute of the test.
+        /// Returns null if the test is not implemented as a method.
+        /// </summary>
+        public virtual string TestName
+        {
+            get { return null; }
+        }
+
+        /// <summary>
         /// The arguments to use in creating the test or empty array if none required.
         /// </summary>
         public abstract object[] Arguments { get; }
@@ -392,6 +401,8 @@ namespace NUnit.Framework.Internal
             if (this.ClassName != null)
                 thisNode.AddAttribute("classname", this.ClassName);
             thisNode.AddAttribute("runstate", this.RunState.ToString());
+            if(this.TestName != null)
+                thisNode.AddAttribute("testname", this.TestName);
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
