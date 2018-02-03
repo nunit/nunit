@@ -127,7 +127,8 @@ namespace NUnit.Framework.Assertions
                 if (expectedResultState == ResultState.Error)
                     --numFailures;
 
-                Assert.That(result.Message, Contains.Substring("One or more failures in Multiple Assert block"));
+                if (numFailures > 1)
+                    Assert.That(result.Message, Contains.Substring("Multiple failures or warnings in test:"));
 
                 int i = 0;
                 foreach (var assertion in result.AssertionResults)

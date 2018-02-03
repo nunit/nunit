@@ -599,6 +599,34 @@ namespace NUnit.TestData
 
         #endregion
 
+        #region Warnings followed by terminating Assert
+
+        [Test]
+        public void TwoWarningsAndFailure()
+        {
+            Assert.Warn("First warning");
+            Assert.Warn("Second warning");
+            Assert.Fail("This fails");
+        }
+
+        [Test]
+        public void TwoWarningsAndIgnore()
+        {
+            Assert.Warn("First warning");
+            Assert.Warn("Second warning");
+            Assert.Ignore("Ignore this");
+        }
+
+        [Test]
+        public void TwoWarningsAndInconclusive()
+        {
+            Assert.Warn("First warning");
+            Assert.Warn("Second warning");
+            Assert.Inconclusive("This is inconclusive");
+        }
+
+        #endregion
+
         #region Helper Methods
 
         private int ReturnsFour()

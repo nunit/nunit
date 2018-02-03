@@ -496,24 +496,15 @@ namespace NUnit.Framework.Internal
             if (ex is NUnitException || ex is TargetInvocationException)
                 ex = ex.InnerException;
 
-            if (ex is AssertionException)
-            {
-                AssertionResults.Add(new AssertionResult(AssertionStatus.Failed, ex.Message, StackFilter.DefaultFilter.Filter(ex.StackTrace)));
-            }
-
             if (ex is ResultStateException)
-            {
-                string message = ex is MultipleAssertException
-                    ? CreateLegacyFailureMessage()
-                    : ex.Message;
-
-                string stackTrace = StackFilter.DefaultFilter.Filter(ex.StackTrace);
-
-                SetResult(((ResultStateException)ex).ResultState, message, stackTrace);
-            }
+                SetResult(
+                    ((ResultStateException)ex).ResultState,
+                    ex.Message, 
+                    StackFilter.DefaultFilter.Filter(ex.StackTrace));
 #if !NETSTANDARD1_6
             else if (ex is System.Threading.ThreadAbortException)
-                SetResult(ResultState.Cancelled,
+                SetResult(
+                    ResultState.Cancelled,
                     "Test cancelled by user",
                     ex.StackTrace);
 #endif
@@ -594,7 +585,8 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Determine result after test has run to completion.
+        /// Update overall test result, including legacy Message, based
+        /// on AssertionResults that have been saved to this point.
         /// </summary>
         public void RecordTestCompletion()
         {
@@ -639,6 +631,27 @@ namespace NUnit.Framework.Internal
         public void RecordAssertion(AssertionStatus status, string message)
         {
             RecordAssertion(status, message, null);
+        }
+
+
+        /// <summary>
+        /// Creates a failure message incorporating failures
+        /// from a Multiple Assert block for use by runners
+        /// that don't know about AssertionResults.
+        /// </summary>
+        /// <returns>Message as a string</returns>
+        public string CreateLegacyFailureMessage()
+        {
+            var writer = new StringWriter();
+
+            if (AssertionResults.Count > 1)
+                writer.WriteLine("Multiple failures or warnings in test:");
+
+            int counter = 0;
+            foreach (var assertion in AssertionResults)
+                writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
+
+            return writer.ToString();
         }
 
         #endregion
@@ -734,25 +747,6 @@ namespace NUnit.Framework.Internal
             }
 
             return attachmentsNode;
-        }
-
-        /// <summary>
-        /// Creates a failure message incorporating failures
-        /// from a Multiple Assert block for use by runners
-        /// that don't know about AssertionResults.
-        /// </summary>
-        /// <returns>Message as a string</returns>
-        private string CreateLegacyFailureMessage()
-        {
-            var writer = new StringWriter();
-
-            writer.WriteLine("\n  One or more failures in Multiple Assert block:");
-
-            int counter = 0;
-            foreach (var assertion in AssertionResults)
-                writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
-
-            return writer.ToString();
         }
 
         #endregion
