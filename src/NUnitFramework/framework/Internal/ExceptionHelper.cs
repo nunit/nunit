@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined message string.</returns>
         public static string BuildMessage(Exception exception, bool excludeExceptionNames=false)
         {
-            Guard.ArgumentNotNull(exception, "exception");
+            Guard.ArgumentNotNull(exception, nameof(exception));
 
             StringBuilder sb = new StringBuilder();
             if (!excludeExceptionNames)

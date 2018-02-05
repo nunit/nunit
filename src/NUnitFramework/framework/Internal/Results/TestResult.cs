@@ -493,7 +493,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
-            Guard.ArgumentNotNull(ex, "ex");
+            Guard.ArgumentNotNull(ex, nameof(ex));
 
             if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
                 ex = ex.InnerException;
