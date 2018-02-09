@@ -206,7 +206,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region One
-       
+
         /// <summary>
         /// Returns a <see cref="ItemsConstraintExpression"/>, which will
         /// apply the following constraint to a collection of length one, succeeding
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Constraints
                 builder.Append(new ExactCountOperator(1));
                 return new ItemsConstraintExpression(builder);
             }
-            
+
         }
 
         #endregion
@@ -986,5 +986,26 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region Item From
+
+        /// <summary>
+        /// Returns a constraint that tests if an item is present in the collection
+        /// </summary>
+        /// <param name="expected">Expected collection</param>
+        public Constraint ItemFrom(IEnumerable expected)
+        {
+            return Append(new ItemFromConstraint(expected));
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests if an item is present in the collection
+        /// </summary>
+        /// <param name="expected">Expected collection</param>
+        public Constraint ItemFrom(params object[] expected)
+        {
+            return Append(new ItemFromConstraint(expected));
+        }
+
+        #endregion
     }
 }
