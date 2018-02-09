@@ -486,24 +486,24 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region One Of
+        #region Item From
 
         /// <summary>
         /// Returns a constraint that tests if an item is present in the collection
         /// </summary>
         /// <param name="expected">Expected collection</param>
-        public static OneOfConstraint OneOf(IEnumerable expected)
+        public static ItemFromConstraint ItemFrom(IEnumerable expected)
         {
-            return new OneOfConstraint(expected);
+            return new ItemFromConstraint(expected);
         }
 
         /// <summary>
         /// Returns a constraint that tests if an item is present in the collection
         /// </summary>
         /// <param name="expected">Expected collection</param>
-        public static OneOfConstraint OneOf(params object[] expected)
+        public static ItemFromConstraint ItemFrom(params object[] expected)
         {
-            return new OneOfConstraint(expected);
+            return new ItemFromConstraint(expected);
         }
 
         #endregion

@@ -25,18 +25,18 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class OneOfConstraintTests
+    public class ItemFromConstraintTests
     {
         [Test]
         public void ItemIsPresent()
         {
-            Assert.That("42", Is.OneOf("1", "5", "42"));
+            Assert.That("42", Is.ItemFrom("1", "5", "42"));
         }
 
         [Test]
         public void ItemIsAbsent()
         {
-            TestDelegate testAction = () => Assert.That(42, Is.OneOf(new[] { 1, 2, 3 }));
+            TestDelegate testAction = () => Assert.That(42, Is.ItemFrom(new[] { 1, 2, 3 }));
 
             Assert.That(testAction, Throws.TypeOf(typeof(AssertionException)));
         }
@@ -44,14 +44,14 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ItemIsPresent_IgnoreCase()
         {
-            Assert.That("aB", new OneOfConstraint(new[] { "a", "B", "ab" }).IgnoreCase);
+            Assert.That("aB", new ItemFromConstraint(new[] { "a", "B", "ab" }).IgnoreCase);
         }
 
         [Test]
         public void ItemIsAbsent_WithEqualityComparer()
         {
             Func<object, object, bool> comparer = Equals;
-            TestDelegate testAction = () => Assert.That("1", Is.OneOf(1, 2, 3));
+            TestDelegate testAction = () => Assert.That("1", Is.ItemFrom(1, 2, 3));
 
             Assert.That(testAction, Throws.TypeOf(typeof(AssertionException)));
         }
