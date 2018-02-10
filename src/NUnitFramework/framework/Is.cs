@@ -486,24 +486,15 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Item From
+        #region Any Of
 
         /// <summary>
-        /// Returns a constraint that tests if an item is present in the collection
+        /// Returns a constraint that tests if an item is equal to any of parameters
         /// </summary>
-        /// <param name="expected">Expected collection</param>
-        public static ItemFromConstraint ItemFrom(IEnumerable expected)
+        /// <param name="expected">Expected values</param>
+        public static AnyOfConstraint AnyOf(params object[] expected)
         {
-            return new ItemFromConstraint(expected);
-        }
-
-        /// <summary>
-        /// Returns a constraint that tests if an item is present in the collection
-        /// </summary>
-        /// <param name="expected">Expected collection</param>
-        public static ItemFromConstraint ItemFrom(params object[] expected)
-        {
-            return new ItemFromConstraint(expected);
+            return new AnyOfConstraint(expected);
         }
 
         #endregion

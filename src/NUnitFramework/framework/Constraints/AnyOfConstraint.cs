@@ -29,9 +29,9 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// <see cref="ItemFromConstraint"/> is used to determine whether item is present in a collection
+    /// <see cref="AnyOfConstraint"/> is used to determine whether item is equal to any of parameters
     /// </summary>
-    public class ItemFromConstraint : Constraint
+    public class AnyOfConstraint : Constraint
     {
         private readonly IEnumerable _expected;
 
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// Construct a OneOfConstraint
         /// </summary>
         /// <param name="expected">Expected collection</param>
-        public ItemFromConstraint(IEnumerable expected)
+        public AnyOfConstraint(IEnumerable expected)
         {
             _expected = expected;
         }
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                return "item from " + MsgUtils.FormatValue(_expected);
+                return "any of " + MsgUtils.FormatValue(_expected);
             }
         }
 
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to ignore case and return self.
         /// </summary>
-        public ItemFromConstraint IgnoreCase
+        public AnyOfConstraint IgnoreCase
         {
             get
             {
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
-        public ItemFromConstraint Using(IComparer comparer)
+        public AnyOfConstraint Using(IComparer comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
-        public ItemFromConstraint Using<T>(IComparer<T> comparer)
+        public AnyOfConstraint Using<T>(IComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The Comparison object to use.</param>
         /// <returns>Self.</returns>
-        public ItemFromConstraint Using<T>(Comparison<T> comparer)
+        public AnyOfConstraint Using<T>(Comparison<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The IEqualityComparer object to use.</param>
         /// <returns>Self.</returns>
-        public ItemFromConstraint Using(IEqualityComparer comparer)
+        public AnyOfConstraint Using(IEqualityComparer comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
         /// <returns>Self.</returns>
-        public ItemFromConstraint Using<T>(IEqualityComparer<T> comparer)
+        public AnyOfConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
@@ -155,13 +155,13 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied boolean-returning delegate.
         /// </summary>
         /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
-        public ItemFromConstraint Using<T>(Func<T, T, bool> comparer)
+        public AnyOfConstraint Using<T>(Func<T, T, bool> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
-        internal ItemFromConstraint Using(EqualityAdapter adapter)
+        internal AnyOfConstraint Using(EqualityAdapter adapter)
         {
             _comparer.ExternalComparers.Add(adapter);
             return this;
