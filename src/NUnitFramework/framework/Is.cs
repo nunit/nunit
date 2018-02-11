@@ -494,6 +494,12 @@ namespace NUnit.Framework
         /// <param name="expected">Expected values</param>
         public static AnyOfConstraint AnyOf(params object[] expected)
         {
+            if (expected.Length == 0)
+            {
+                throw new ArgumentException(nameof(expected),
+                    "Expected values are required for AnyOf constraint!");
+            }
+
             return new AnyOfConstraint(expected);
         }
 

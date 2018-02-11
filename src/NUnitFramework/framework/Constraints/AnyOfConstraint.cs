@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NUnit.Framework.Constraints
 {
@@ -41,10 +42,10 @@ namespace NUnit.Framework.Constraints
         private readonly NUnitEqualityComparer _comparer = NUnitEqualityComparer.Default;
 
         /// <summary>
-        /// Construct a OneOfConstraint
+        /// Construct a <see cref="AnyOfConstraint"/>
         /// </summary>
         /// <param name="expected">Expected collection</param>
-        public AnyOfConstraint(IEnumerable expected)
+        public AnyOfConstraint(IEnumerable expected) : base(expected)
         {
             _expected = expected;
         }
@@ -59,6 +60,16 @@ namespace NUnit.Framework.Constraints
             {
                 return "any of " + MsgUtils.FormatValue(_expected);
             }
+        }
+
+        /// <summary>
+        /// Returns the constraint DisplayName followed by arguments within angle brackets.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            var expectedStrings = _expected.Cast<object>().Select(MsgUtils.FormatValue).ToArray();
+            return $"<{DisplayName.ToLower()} {string.Join(", ", expectedStrings)}>";
         }
 
         /// <summary>
@@ -158,12 +169,6 @@ namespace NUnit.Framework.Constraints
         public AnyOfConstraint Using<T>(Func<T, T, bool> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
-            return this;
-        }
-
-        internal AnyOfConstraint Using(EqualityAdapter adapter)
-        {
-            _comparer.ExternalComparers.Add(adapter);
             return this;
         }
 

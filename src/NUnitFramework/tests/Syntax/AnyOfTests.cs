@@ -21,37 +21,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Internal;
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Syntax
 {
-    [TestFixture]
-    public class AnyOfConstraintTests : ConstraintTestBase
+    public class AnyOfTests : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new AnyOfConstraint(new[] { 1, 2, 3 });
-            expectedDescription = "any of < 1, 2, 3 >";
-            stringRepresentation = "<anyof 1, 2, 3>";
-        }
-
-        private static object[] SuccessData = new object[] { 1, 2, 3 };
-        private static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { "A", "\"A\"" } };
-
-        [Test]
-        public void ItemIsPresent_IgnoreCase()
-        {
-            var anyOf = new AnyOfConstraint(new[] { "a", "B", "ab" }).IgnoreCase;
-            Assert.That(anyOf.ApplyTo("AB").Status, Is.EqualTo(ConstraintStatus.Success));
+            parseTree = "<anyof 1, 2, 3>";
+            staticSyntax = Is.AnyOf(1, 2, 3);
+            builderSyntax = Builder().AnyOf(1, 2, 3);
         }
 
         [Test]
-        public void ItemIsPresent_WithEqualityComparer()
+        public void ThrowsExceptionIfNoValuesProvided_StaticSyntax()
         {
-            Func<string, string, bool> comparer = (expected, actual) => actual.Contains(expected);
-            var anyOf = new AnyOfConstraint(new[] { "A", "B", "C" }).Using(comparer);
-            Assert.That(anyOf.ApplyTo("1. A").Status, Is.EqualTo(ConstraintStatus.Success));
+            Assert.That(() => Is.AnyOf(), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void ThrowsExceptionIfNoValuesProvided_ConstraintBuilder()
+        {
+            Assert.That(() => Builder().AnyOf(), Throws.ArgumentException);
         }
     }
 }
