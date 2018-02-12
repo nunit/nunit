@@ -28,7 +28,7 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<anyof 1, 2, 3>";
+            parseTree = "<anyof 1 2 3>";
             staticSyntax = Is.AnyOf(1, 2, 3);
             builderSyntax = Builder().AnyOf(1, 2, 3);
         }

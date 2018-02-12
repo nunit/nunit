@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,6 +46,10 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">Expected collection</param>
         public AnyOfConstraint(IEnumerable expected) : base(expected)
         {
+            Guard.ArgumentNotNull(expected, nameof(expected));
+            Guard.ArgumentValid(expected.Cast<object>().Any(),
+                $"{nameof(AnyOfConstraint)} requires non-empty expected collection!", nameof(expected));
+
             _expected = expected;
         }
 
@@ -69,7 +72,7 @@ namespace NUnit.Framework.Constraints
         public override string ToString()
         {
             var expectedStrings = _expected.Cast<object>().Select(MsgUtils.FormatValue).ToArray();
-            return $"<{DisplayName.ToLower()} {string.Join(", ", expectedStrings)}>";
+            return $"<{DisplayName.ToLower()} {string.Join(" ", expectedStrings)}>";
         }
 
         /// <summary>

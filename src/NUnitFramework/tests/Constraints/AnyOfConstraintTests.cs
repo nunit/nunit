@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
         {
             theConstraint = new AnyOfConstraint(new[] { 1, 2, 3 });
             expectedDescription = "any of < 1, 2, 3 >";
-            stringRepresentation = "<anyof 1, 2, 3>";
+            stringRepresentation = "<anyof 1 2 3>";
         }
 
         private static object[] SuccessData = new object[] { 1, 2, 3 };
