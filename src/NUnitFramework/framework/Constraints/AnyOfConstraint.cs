@@ -29,21 +29,17 @@ using System.Linq;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// <see cref="AnyOfConstraint"/> is used to determine whether item is equal to any of parameters
+    /// <see cref="AnyOfConstraint"/> is used to determine whether the value is equal to any of the expected values.
     /// </summary>
     public class AnyOfConstraint : Constraint
     {
         private readonly IEnumerable _expected;
-
-        /// <summary>
-        /// The NUnitEqualityComparer in use for this constraint
-        /// </summary>
         private readonly NUnitEqualityComparer _comparer = NUnitEqualityComparer.Default;
 
         /// <summary>
         /// Construct a <see cref="AnyOfConstraint"/>
         /// </summary>
-        /// <param name="expected">Expected collection</param>
+        /// <param name="expected">Collection of expected values</param>
         public AnyOfConstraint(IEnumerable expected) : base(expected)
         {
             Guard.ArgumentNotNull(expected, nameof(expected));
@@ -68,7 +64,6 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the constraint DisplayName followed by arguments within angle brackets.
         /// </summary>
-        /// <returns></returns>
         public override string ToString()
         {
             var expectedStrings = _expected.Cast<object>().Select(MsgUtils.FormatValue).ToArray();
@@ -80,8 +75,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <typeparam name="TActual">Actual item type</typeparam>
         /// <param name="actual">Actual item</param>
-        /// <returns>A <see cref="ConstraintResult"/> indicating whether item is present 
-        /// in expected collection.</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var tolerance = Tolerance.Default;
