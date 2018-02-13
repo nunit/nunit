@@ -107,7 +107,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public AnyOfConstraint Using(IComparer comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -118,7 +117,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public AnyOfConstraint Using<T>(IComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -129,7 +127,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparer">The Comparison object to use.</param>
-        /// <returns>Self.</returns>
         public AnyOfConstraint Using<T>(Comparison<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -140,7 +137,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IEqualityComparer object to use.</param>
-        /// <returns>Self.</returns>
         public AnyOfConstraint Using(IEqualityComparer comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -151,7 +147,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public AnyOfConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
