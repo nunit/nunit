@@ -494,6 +494,11 @@ namespace NUnit.Framework
         /// <param name="expected">Expected values</param>
         public static AnyOfConstraint AnyOf(params object[] expected)
         {
+            if (expected == null)
+            {
+                expected = new object[] { null };
+            }
+
             return new AnyOfConstraint(expected);
         }
 

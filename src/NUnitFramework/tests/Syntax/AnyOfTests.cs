@@ -45,4 +45,15 @@ namespace NUnit.Framework.Syntax
             Assert.That(() => Builder().AnyOf(), Throws.ArgumentException);
         }
     }
+
+    public class AnyOf_NullValue_Tests : SyntaxTest
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            parseTree = "<anyof null>";
+            staticSyntax = Is.AnyOf(null);
+            builderSyntax = Builder().AnyOf(null);
+        }
+    }
 }
