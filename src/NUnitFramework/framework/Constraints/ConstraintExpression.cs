@@ -206,7 +206,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region One
-       
+
         /// <summary>
         /// Returns a <see cref="ItemsConstraintExpression"/>, which will
         /// apply the following constraint to a collection of length one, succeeding
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Constraints
                 builder.Append(new ExactCountOperator(1));
                 return new ItemsConstraintExpression(builder);
             }
-            
+
         }
 
         #endregion
@@ -986,5 +986,22 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region AnyOf
+
+        /// <summary>
+        /// Returns a constraint that tests if an item is equal to any of parameters
+        /// </summary>
+        /// <param name="expected">Expected values</param>
+        public Constraint AnyOf(params object[] expected)
+        {
+            if (expected == null)
+            {
+                expected = new object[] { null };
+            }
+
+            return Append(new AnyOfConstraint(expected));
+        }
+
+        #endregion
     }
 }
