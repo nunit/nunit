@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NUnit.Framework.Constraints
 {
@@ -33,17 +32,17 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AnyOfConstraint : Constraint
     {
-        private readonly IEnumerable _expected;
+        private readonly object[] _expected;
         private readonly NUnitEqualityComparer _comparer = NUnitEqualityComparer.Default;
 
         /// <summary>
         /// Construct a <see cref="AnyOfConstraint"/>
         /// </summary>
         /// <param name="expected">Collection of expected values</param>
-        public AnyOfConstraint(IEnumerable expected) : base(expected)
+        public AnyOfConstraint(object[] expected) : base(expected)
         {
             Guard.ArgumentNotNull(expected, nameof(expected));
-            Guard.ArgumentValid(expected.Cast<object>().Any(),
+            Guard.ArgumentValid(expected.Length > 0,
                 $"{nameof(AnyOfConstraint)} requires non-empty expected collection!", nameof(expected));
 
             _expected = expected;
@@ -59,15 +58,6 @@ namespace NUnit.Framework.Constraints
             {
                 return "any of " + MsgUtils.FormatValue(_expected);
             }
-        }
-
-        /// <summary>
-        /// Returns the constraint DisplayName followed by arguments within angle brackets.
-        /// </summary>
-        public override string ToString()
-        {
-            var expectedStrings = _expected.Cast<object>().Select(MsgUtils.FormatValue).ToArray();
-            return $"<{DisplayName.ToLower()} {string.Join(" ", expectedStrings)}>";
         }
 
         /// <summary>
