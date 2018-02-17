@@ -126,7 +126,7 @@ namespace NUnitLite
             }
             else
             {
-                outWriter = new ColorConsoleWriter();
+                outWriter = new ColorConsoleWriter(!_options.NoColor);
             }
 
             using (outWriter)
