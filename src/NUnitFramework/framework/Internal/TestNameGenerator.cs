@@ -220,7 +220,47 @@ namespace NUnit.Framework.Internal
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
-                if (arg is double)
+                var argArray = arg as Array;
+                if (argArray != null)
+                {
+                    if (argArray.Length == 0)
+                        display = "[]";
+                    else
+                    {
+                        var builder = new StringBuilder();
+                        builder.Append("[");
+
+                        const int MaxNumItemsToEnumerate = 5;
+
+                        var numItemsToEnumerate = Math.Min(argArray.Length, MaxNumItemsToEnumerate);
+                        for (int i = 0; i < numItemsToEnumerate; i++)
+                        {
+                            if (i > 0)
+                                builder.Append(", ");
+
+                            var element = argArray.GetValue(i);
+                            var childArray = element as Array;
+
+                            if (childArray != null && childArray.Rank == 1)
+                            {
+                                builder.Append(childArray.GetType().GetElementType().Name);
+                                builder.Append("[]");
+                            }
+                            else
+                            {
+                                var elementDisplayString = GetDisplayString(element, stringMax);
+                                builder.Append(elementDisplayString);
+                            }
+                        }
+
+                        if (argArray.Length > MaxNumItemsToEnumerate)
+                            builder.Append(", ...");
+
+                        builder.Append("]");
+                        display = builder.ToString();
+                    }
+                }
+                else if (arg is double)
                 {
                     double d = (double)arg;
 
@@ -297,7 +337,7 @@ namespace NUnit.Framework.Internal
                     bool tooLong = stringMax > 0 && str.Length > stringMax;
                     int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
 
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     sb.Append("\"");
                     foreach (char c in str)
                     {

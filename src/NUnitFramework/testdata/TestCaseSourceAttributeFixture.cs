@@ -147,6 +147,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
+        [TestCaseSource(nameof(ComplexArrayBasedTestInput))]
+        public void MethodWithArrayArguments(object o)
+        {
+        }
+
         static IEnumerable exception_source
         {
             get
@@ -178,5 +183,13 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 }
             }
         }
+
+        public static object[] ComplexArrayBasedTestInput = new[]
+        {
+            new object[] { 1, "text", new object() },
+            new object[0],
+            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+        };
     }
 }

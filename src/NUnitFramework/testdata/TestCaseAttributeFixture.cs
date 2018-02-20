@@ -100,5 +100,13 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 #endif
+
+        [TestCase((object)new object[] { })]
+        [TestCase((object)new object[] { 1, "text", null })]
+        [TestCase((object)new object[] { 1, new int[] { 2, 3 }, 4 })]
+        [TestCase((object)new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })]
+        public void MethodWithArrayArguments(object o)
+        {
+        }
     }
 }
