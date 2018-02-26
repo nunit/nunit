@@ -135,7 +135,7 @@ namespace NUnit.Framework.Assertions
             });
 
             // Ensure that no spurious info was recorded from the assertion
-            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults.Count, Is.EqualTo(0));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
         }
 
         [Test]

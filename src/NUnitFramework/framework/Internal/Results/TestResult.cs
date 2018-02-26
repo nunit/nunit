@@ -640,7 +640,7 @@ namespace NUnit.Framework.Internal
         /// that don't know about AssertionResults.
         /// </summary>
         /// <returns>Message as a string</returns>
-        public string CreateLegacyFailureMessage()
+        private string CreateLegacyFailureMessage()
         {
             var writer = new StringWriter();
 
