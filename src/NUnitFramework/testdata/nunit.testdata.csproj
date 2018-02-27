@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\Common.props" />
   <PropertyGroup>
     <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
     <RootNamespace>NUnit.TestData</RootNamespace>
