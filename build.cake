@@ -417,6 +417,8 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
         var settings = new NUnit3Settings();
         if(!IsRunningOnWindows())
             settings.Process = NUnit3ProcessOption.InProcess;
+        if(BuildSystem.IsRunningOnAppVeyor)
+            settings.Results = new [] { new NUnit3Result { FileName = workingDir.CombineWithFilePath(new FilePath(testAssembly + "." + framework + ".nunit.xml")), Format = "AppVeyor" } };
         NUnit3(path.ToString(), settings);
     }
     catch(CakeException ce)
