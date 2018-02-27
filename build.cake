@@ -418,8 +418,10 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
         if(!IsRunningOnWindows())
             settings.Process = NUnit3ProcessOption.InProcess;
         if(BuildSystem.IsRunningOnAppVeyor)
-            settings.Results = new [] { new NUnit3Result { FileName = workingDir.CombineWithFilePath(new FilePath(testAssembly + "." + framework + ".nunit.xml")), Format = "AppVeyor" } };
+            settings.Results = new [] { new NUnit3Result { FileName = workingDir.CombineWithFilePath(new FilePath("TestResult.xml")) } };
         NUnit3(path.ToString(), settings);
+        if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
+            BuildSystem.AppVeyor.UploadTestResults(workingDir.CombineWithFilePath(new FilePath("TestResult.xml")), AppVeyorTestResultsType.NUnit3);
     }
     catch(CakeException ce)
     {
