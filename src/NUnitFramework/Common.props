@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>6</LangVersion>
+    <Features>strict</Features>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
