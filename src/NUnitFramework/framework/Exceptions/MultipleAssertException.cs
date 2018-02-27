@@ -36,9 +36,25 @@ namespace NUnit.Framework
     public class MultipleAssertException : ResultStateException
     {
         /// <summary>
-        /// Default Constructor (normally used)
+        /// Default Constructor
         /// </summary>
-        public MultipleAssertException() : base("One or more failures in Multiple Assert block:") { } 
+        public MultipleAssertException(string message) : base(message) { }
+
+        /// <summary>
+        /// Construct based on the TestResult so far. This is the constructor
+        /// used normally, when exiting the multiple assert block with failures.
+        /// Not used internally but provided to facilitate debugging.
+        /// </summary>
+        /// <param name="testResult">
+        /// The current result, up to this point. The result is not used 
+        /// internally by NUnit but is provided to facilitate debugging.
+        /// </param>
+        public MultipleAssertException(ITestResult testResult)
+            : base(testResult?.Message)
+        {
+            Guard.ArgumentNotNull(testResult, "testResult");
+            TestResult = testResult;
+        }
 
         /// <param name="message">The error message that explains 
         /// the reason for the exception</param>
@@ -58,11 +74,16 @@ namespace NUnit.Framework
 #endif
 
         /// <summary>
-        /// Gets the ResultState provided by this exception
+        /// Gets the <see cref="ResultState"/> provided by this exception.
         /// </summary>
         public override ResultState ResultState
         {
             get { return ResultState.Failure; }
         }
+
+        /// <summary>
+        /// Gets the <see cref="ITestResult"/> of this test at the point the exception was thrown,
+        /// </summary>
+        public ITestResult TestResult { get; }
     }
 }

@@ -338,7 +338,10 @@ namespace NUnit.Framework
             }
 
             if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
-                throw new MultipleAssertException();
+            {
+                context.CurrentResult.RecordTestCompletion();
+                throw new MultipleAssertException(context.CurrentResult);
+            }
         }
 
 #if ASYNC
@@ -369,7 +372,10 @@ namespace NUnit.Framework
             }
 
             if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
-                throw new MultipleAssertException();
+            {
+                context.CurrentResult.RecordTestCompletion();
+                throw new MultipleAssertException(context.CurrentResult);
+            }
         }
 #endif
 
@@ -392,13 +398,14 @@ namespace NUnit.Framework
 
         private static void ReportFailure(string message)
         {
-            // If we are outside any multiple assert block, then throw
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
-                throw new AssertionException(message);
-
-            // Otherwise, just record the failure in an <assertion> element
+            // Record the failure in an <assertion> element
             var result = TestExecutionContext.CurrentContext.CurrentResult;
             result.RecordAssertion(AssertionStatus.Failed, message, GetStackTrace());
+            result.RecordTestCompletion();
+
+            // If we are outside any multiple assert block, then throw
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel == 0)
+                throw new AssertionException(result.Message);
         }
 
         private static void IssueWarning(string message)

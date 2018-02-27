@@ -73,7 +73,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.AreEqual(ResultState.Failure, result.ResultState);
 
-            Assert.AreEqual(result.AssertionResults.Count, 1);
+            Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
             Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
         }
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("MESSAGE", result.Message);
 
-            Assert.AreEqual(result.AssertionResults.Count, 1);
+            Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
             Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
             Assert.That(assertion.Message, Is.EqualTo("MESSAGE"));
@@ -104,13 +104,13 @@ namespace NUnit.Framework.Assertions
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
 
-            Assert.AreEqual(result.AssertionResults.Count, 1);
+            Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
             Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
             Assert.That(assertion.Message, Is.EqualTo("MESSAGE: 2+2=4"));
         }
 
-        [Test]
+        [Test, Ignore("Currently Fails: Must use Assert.Catch or Assert.Throws")]
         public void CatchingAssertionExceptionMakesTestPass()
         {
             try
@@ -121,6 +121,30 @@ namespace NUnit.Framework.Assertions
             {
                 // Eat the exception
             }
+
+            // Ensure that no spurious info was recorded from the assertion
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults.Count, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AssertCatchMakesTestPass()
+        {
+            Assert.Catch(() =>
+            {
+                Assert.Fail("This should not be seen");
+            });
+
+            // Ensure that no spurious info was recorded from the assertion
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
+        }
+
+        [Test]
+        public void AssertThrowsMakesTestPass()
+        {
+            Assert.Throws<AssertionException>(() =>
+            {
+                Assert.Fail("This should not be seen");
+            });
 
             // Ensure that no spurious info was recorded from the assertion
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults.Count, Is.EqualTo(0));
