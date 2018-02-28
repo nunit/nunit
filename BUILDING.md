@@ -68,7 +68,7 @@ NUnit often uses conditional preprocessor to light up APIs and behaviors per pla
 In general, try to use feature constants rather than platform constants.
 This brings clarity to the code and makes it easy to change the mapping between features and platforms.
 
-Feature constants are defined in [Common.props](src/NUnitFramework/Common.props):
+Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
  - `ASYNC` enables asynchrony
  - `PARALLEL` enables running tests in parallel

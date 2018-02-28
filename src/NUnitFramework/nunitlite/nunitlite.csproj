@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="..\Common.props" />
   <PropertyGroup>
     <TargetFrameworks>net20;net35;net40;net45;netstandard1.6;netstandard2.0</TargetFrameworks>
     <RootNamespace>NUnitLite</RootNamespace>
