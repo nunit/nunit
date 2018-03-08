@@ -115,12 +115,30 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(1942, dt.Year);
         }
 
+        [TestCase("1942-10-12")]
+        public void CanConvertIso8601DateStringToDateTime(DateTime dt)
+        {
+            Assert.AreEqual(new DateTime(1942,10,12), dt);
+        }
+
+        [TestCase("1942-10-12", ExpectedResult = "1942-10-12")]
+        public DateTime CanConvertExpectedResultStringToDateTime(DateTime dt)
+        {
+            return dt;
+        }
+
         [TestCase("4:44:15")]
         public void CanConvertStringToTimeSpan(TimeSpan ts)
         {
             Assert.AreEqual(4, ts.Hours);
             Assert.AreEqual(44, ts.Minutes);
             Assert.AreEqual(15, ts.Seconds);
+        }
+
+        [TestCase("4:44:15", ExpectedResult = "4:44:15")]
+        public TimeSpan CanConvertExpectedResultStringToTimeSpan(TimeSpan ts)
+        {
+            return ts;
         }
 
         [TestCase(null)]
