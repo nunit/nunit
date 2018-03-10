@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -112,10 +112,18 @@ namespace NUnit.Framework.Constraints
             object value = null;
             Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(value));
         }
+
         [Test]
         public void InvalidDataThrowsArgumentException()
         {
             Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(42));
+        }
+
+        [Test]
+        public void InvalidPropertyExceptionMessageContainsTypeName()
+        {
+            Assert.That(() => theConstraint.ApplyTo(42),
+                Throws.ArgumentException.With.Message.Contains("System.Int32"));
         }
 
         [Test]
