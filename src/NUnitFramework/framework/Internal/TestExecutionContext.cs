@@ -162,39 +162,37 @@ namespace NUnit.Framework.Internal
         }
 #else
         // In all other builds, we use the CallContext
-        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
-
         /// <summary>
         /// Gets and sets the current context.
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            // This getter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
+            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
             // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
             // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             get
             {
-                var context = CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                var context = CallContext.GetData(NUnitCallContext.TestExecutionContextKey) as TestExecutionContext;
 
                 if (context == null)
                 {
                     context = new AdhocContext();
-                    CallContext.SetData(CONTEXT_KEY, context);
+                    CallContext.SetData(NUnitCallContext.TestExecutionContextKey, context);
                 }
 
                 return context;
             }
-            // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
+            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
             // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
             // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             private set
             {
                 if (value == null)
-                    CallContext.FreeNamedDataSlot(CONTEXT_KEY);
+                    CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
                 else
-                    CallContext.SetData(CONTEXT_KEY, value);
+                    CallContext.SetData(NUnitCallContext.TestExecutionContextKey, value);
             }
         }
 #endif

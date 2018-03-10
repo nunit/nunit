@@ -483,6 +483,22 @@ namespace NUnit.Framework.Api
         /// </summary>
         public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject
         {
+            /// <summary>
+            /// Wrap in NUnitCallContext executes the action within an NUnitCallContext
+            /// which ensures System.Runtime.Remoting.Messaging.CallContext is cleaned up
+            /// suitably at the end of the test run. This method only has an effect running
+            /// the full .NET Framework.
+            /// </summary>
+            /// <param name="action"></param>
+            protected void WrapInNUnitCallContext(Action action)
+            {
+#if !(NET20 || NET35 || NET40 || NET45)
+                action();
+#else
+                using (new NUnitCallContext())
+                    action();
+#endif
+            }
         }
 
 #endregion
@@ -501,7 +517,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">The callback handler.</param>
             public LoadTestsAction(FrameworkController controller, object handler)
             {
-                controller.LoadTests((ICallbackEventHandler)handler);
+                WrapInNUnitCallContext(() => controller.LoadTests((ICallbackEventHandler)handler));
             }
         }
 
@@ -522,7 +538,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">The callback handler.</param>
             public ExploreTestsAction(FrameworkController controller, string filter, object handler)
             {
-                controller.ExploreTests((ICallbackEventHandler)handler, filter);
+                WrapInNUnitCallContext(() => controller.ExploreTests((ICallbackEventHandler)handler, filter));
             }
         }
 
@@ -544,7 +560,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">A callback handler used to report results</param>
             public CountTestsAction(FrameworkController controller, string filter, object handler)
             {
-                controller.CountTests((ICallbackEventHandler)handler, filter);
+                WrapInNUnitCallContext(() => controller.CountTests((ICallbackEventHandler)handler, filter));
             }
         }
 
@@ -565,7 +581,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">A callback handler used to report results</param>
             public RunTestsAction(FrameworkController controller, string filter, object handler)
             {
-                controller.RunTests((ICallbackEventHandler)handler, filter);
+                WrapInNUnitCallContext(() => controller.RunTests((ICallbackEventHandler)handler, filter));
             }
         }
 
@@ -586,7 +602,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">A callback handler used to report results</param>
             public RunAsyncAction(FrameworkController controller, string filter, object handler)
             {
-                controller.RunAsync((ICallbackEventHandler)handler, filter);
+                WrapInNUnitCallContext(() => controller.RunAsync((ICallbackEventHandler)handler, filter));
             }
         }
 
@@ -609,7 +625,7 @@ namespace NUnit.Framework.Api
             /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
             public StopRunAction(FrameworkController controller, bool force, object handler)
             {
-                controller.StopRun((ICallbackEventHandler)handler, force);
+                WrapInNUnitCallContext(() => controller.StopRun((ICallbackEventHandler)handler, force));
             }
         }
 
