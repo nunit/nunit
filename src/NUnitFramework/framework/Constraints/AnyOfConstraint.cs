@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
     public class AnyOfConstraint : Constraint
     {
         private readonly object[] _expected;
-        private readonly NUnitEqualityComparer _comparer = NUnitEqualityComparer.Default;
+        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
 
         /// <summary>
         /// Construct a <see cref="AnyOfConstraint"/>

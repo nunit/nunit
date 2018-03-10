@@ -62,7 +62,10 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        internal NUnitEqualityComparer()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NUnitEqualityComparer"/> class.
+        /// </summary>
+        public NUnitEqualityComparer()
         {
             EnumerablesComparer _enumerablesComparer = new EnumerablesComparer(this);
             _comparers = new List<IChainComparer>
@@ -90,6 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the default NUnitEqualityComparer
         /// </summary>
+        [Obsolete("Deprecated. Use the default constructor instead.")]
         public static NUnitEqualityComparer Default
         {
             get { return new NUnitEqualityComparer(); }
