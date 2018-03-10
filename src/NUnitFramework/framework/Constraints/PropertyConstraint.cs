@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
 
             // TODO: Use an error result here
             if (property == null)
-                throw new ArgumentException(string.Format("Property {0} was not found", name), "name");
+                throw new ArgumentException($"Property {name} was not found on {actualType}.", "name");
 
             propValue = property.GetValue(actual, null);
             var baseResult = BaseConstraint.ApplyTo(propValue);
