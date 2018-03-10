@@ -6,7 +6,7 @@
     <version>$version$</version>
     <authors>Charlie Poole, Rob Prouse</authors>
     <owners>Charlie Poole, Rob Prouse</owners>
-    <licenseUrl>http://nunit.org/nuget/nunit3-license.txt</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -25,7 +25,7 @@ How to use this package:
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) 2017 Charlie Poole, Rob Prouse</copyright>
+    <copyright>Copyright (c) 2018 Charlie Poole, Rob Prouse</copyright>
     <dependencies>
       <group targetFramework="net20">
         <dependency id="NUnit" version="[$version$]" />
