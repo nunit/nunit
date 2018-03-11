@@ -140,6 +140,11 @@ namespace NUnit.Framework.Interfaces
         public readonly static ResultState ChildWarning = ResultState.Warning.WithSite(FailureSite.Child);
 
         /// <summary>
+        /// A suite is marked ignored because one or more child tests were ignored
+        /// </summary>
+        public readonly static ResultState ChildIgnored = ResultState.Ignored.WithSite(FailureSite.Child);
+        
+        /// <summary>
         /// A suite failed in its OneTimeSetUp
         /// </summary>
         public readonly static ResultState SetUpFailure = ResultState.Failure.WithSite(FailureSite.SetUp);
