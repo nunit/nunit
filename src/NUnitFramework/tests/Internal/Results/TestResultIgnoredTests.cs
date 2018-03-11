@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultIsIgnored()
         {
-            Assert.AreEqual(ResultState.Ignored, _suiteResult.ResultState);
+            Assert.AreEqual(ResultState.ChildIgnored, _suiteResult.ResultState);
             Assert.AreEqual(TestResult.CHILD_IGNORE_MESSAGE, _suiteResult.Message);
 
             Assert.AreEqual(0, _suiteResult.PassCount);
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.AreEqual("Skipped", suiteNode.Attributes["result"]);
             Assert.AreEqual("Ignored", suiteNode.Attributes["label"]);
-            Assert.AreEqual(null, suiteNode.Attributes["site"]);
+            Assert.AreEqual("Child", suiteNode.Attributes["site"]);
             Assert.AreEqual("0", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
             Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
