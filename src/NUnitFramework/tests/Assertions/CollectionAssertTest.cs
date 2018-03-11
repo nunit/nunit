@@ -123,6 +123,34 @@ namespace NUnit.Framework.Assertions
                 () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
         }
 
+        [Test]
+        public void UniqueFailure_ElementTypeIsObject_NUnitEqualityIsUsed()
+        {
+            var collection = new List<object> { 42, null, 42f };
+            Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
+        }
+
+        [Test]
+        public void UniqueFailure_ElementTypeIsInterface_NUnitEqualityIsUsed()
+        {
+            var collection = new List<IConvertible> { 42, null, 42f };
+            Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
+        }
+
+        [Test]
+        public void UniqueFailure_ElementTypeIsStruct_ImplicitCastAndNewAlgorithmIsUsed()
+        {
+            var collection = new List<float> { 42, 42f };
+            Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
+        }
+
+        [Test]
+        public void UniqueFailure_ElementTypeIsNotSealed_NUnitEqualityIsUsed()
+        {
+            var collection = new List<ValueType> { 42, 42f };
+            Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
+        }
+
         static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
 
         static readonly IEnumerable[] PerformanceData =

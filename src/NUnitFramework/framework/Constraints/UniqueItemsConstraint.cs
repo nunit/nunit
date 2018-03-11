@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type memberType = GetGenericTypeArgument(actual);
-            if (memberType == null || IsHandledSpeciallyByNUnit(memberType))
+            if (memberType == null || !IsSealed(memberType) || IsHandledSpeciallyByNUnit(memberType))
                 return null;
 
             // Special handling for ignore case with strings and chars
@@ -92,6 +92,11 @@ namespace NUnit.Framework.Constraints
             }
 
             return (bool)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
+        }
+
+        private bool IsSealed(Type type)
+        {
+            return type.GetTypeInfo().IsSealed;
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
