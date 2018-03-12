@@ -1,3 +1,69 @@
+### NUnit 3.10 - March 12, 2018
+
+This release adds a .NET Standard 2.0 version of the framework which re-enables
+most of the features that have been missing in our earlier .NET Standard builds
+like parallelism, timeouts, directory and path based asserts, etc. It also contains
+numerous bug fixes and smaller enhancements. We've improved our XML docs,
+fixed performance issues and added more detail to Multiple Asserts.
+
+#### Issues Resolved
+
+ * 1373 Setting with a null value
+ * 1382 Use array argument contents in name of parameterized tests rather than just array type.
+ * 1578 TestContext.CurrentTest exposes too much internal info
+ * 1678 Result Message: OneTimeSetUp: Category name must not contain ',', '!', '+' or '-'
+ * 1944 Removing Compact Framework workarounds
+ * 1958 System.Reflection.TargetInvocationException after run finished
+ * 2033 Nameof refactor
+ * 2202 Best practices for XML doc comments
+ * 2325 Retry attribute doesn't retry the test.
+ * 2331 Repo does not build in VS without running `build -t build` first
+ * 2405 Improve PropertyConstraint error output
+ * 2421 Publishing symbols with releases
+ * 2494 CollectionAssert.AllItemsAreUnique() very slow
+ * 2515 Retarget Solution to use the New CSPROJ Format
+ * 2518 Bug in CollectionAssert.AreEqual for ValueTuples.
+ * 2530 Running tests on main thread. Revisiting #2483
+ * 2542 NUnit does not support parallelism on .NET Core 2.0
+ * 2555 CI timeout: NUnit.Framework.Assertions.CollectionAssertTest.PerformanceTests
+ * 2564 Add minClientVersion to .nuspec files
+ * 2566 Refactor `SimpleEnumerableWithIEquatable` test object
+ * 2577 Warning in TearDown is inconsistent with Assertion failure
+ * 2580 Remove unused defines
+ * 2591 NUnitEqualityComparer.Default should be replaced with new NUnitEqualityComparer()
+ * 2592 Add .props with ProjectCapability to suppress test project service GUID item
+ * 2608 Culture differences on .NET Core on non-Windows causes test failures
+ * 2622 Fix flakey test
+ * 2624 Prevent emails for successful builds on Travis
+ * 2626 SetUp/TearDown methods are invoked multiple times before/after test in .NET Standard targeted projects
+ * 2627 Breaking change in CollectionAssert.AllItemsAreUnique with NUnit 3.9
+ * 2628 Error during installing tools when running build script
+ * 2630 Framework throws NullReferenceException if test parameter is marked with [Values(null)]
+ * 2632 Parallel tests are loading 100% CPU when nested SetUpFixture exists
+ * 2639 ValuesAttribute causes ExpectedResult to have no effect
+ * 2647 Add Current Attempt indicator in TestContext for use with RetryAttribute
+ * 2654 Address feedback from @oznetmaster
+ * 2656 NuGet package links to outdated license
+ * 2659 Naming Errors
+ * 2662 NullReferenceException after parallel tests have finished executing
+ * 2663 Building NUnit .NET 4.5 in VS2017 fails
+ * 2669 Removed vestigial build script helper method
+ * 2670 Invalid assemblies no longer give an error message
+ * 2671 Ensure that FailureSite.Child is used where appropriate.
+ * 2685 Remove Rebracer file
+ * 2688 Assert.Throws swallows console output
+ * 2695 MultipleAssertException doesn't provide proper details on failures
+ * 2698 Syntax suggestions errors as warnings
+ * 2704 Add Constraint to test whether actual item is contained in expected collection
+ * 2711 NUnitLite: Add support for --nocolor option
+ * 2714 AnyOfConstraint enumerates multiple times
+ * 2725 Enable 'strict' compilation flag
+ * 2726 Replace the ConcurrentQueue and SpinWait compatibility classes
+ * 2727 Avoid treating warnings as errors inside the IDE
+ * 2734 TestCaseAttribute: ExpectedResult should support same value conversion as normal method arguments
+ * 2742 FailureSite not correctly set on containing suites when tests are ignored.
+ * 2749 Update Travis SDK versions
+
 ### NUnit 3.9 - November 10, 2017
 
 This release addresses numerous parallelization issues that were introduced in 3.8
