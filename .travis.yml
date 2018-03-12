@@ -1,11 +1,9 @@
 language: csharp
 sudo: false
 
-# Should keep up to date with security releases
-dotnet: 2.0.3
+dotnet: 2.1.4 # SDK version; includes runtime version 2.0.5. Need 2.0+ for netcoreapp2.0 tests.
 
-# Need 5.2+ for the included MSBuild
-mono: 5.10.0
+mono: 5.10.0 # Need 5.2+ for the included MSBuild.
 
 matrix:
   include:
