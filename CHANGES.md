@@ -6,6 +6,13 @@ like parallelism, timeouts, directory and path based asserts, etc. It also conta
 numerous bug fixes and smaller enhancements. We've improved our XML docs,
 fixed performance issues and added more detail to Multiple Asserts.
 
+In order to support the .NET Standard 2.0 version, the NUnit project switched to
+the new CSPROJ format and now requires Visual Studio 2017 to compile. This only
+effects people contributing to the project. NUnit still supports building and
+compiling your tests in older .NET IDE's and NUnit still supports older versions
+of the .NET Framework back to 2.0. For contributors, NUnit can now compile all
+supported targets on Windows, Linux and Mac using the Cake command line build.
+
 #### Issues Resolved
 
  * 1373 Setting with a null value
