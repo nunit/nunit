@@ -1,7 +1,7 @@
 language: csharp
 sudo: false
 
-# Need 2.*, should keep up to date with security releases
+# Should keep up to date with security releases
 dotnet: 2.0.3
 
 # Mono: Need 5.2+ for the included MSBuild
@@ -11,9 +11,14 @@ matrix:
 
     - os: linux
       mono: 5.2.0
+      install:
+        - sudo apt-get install dotnet-sharedframework-microsoft.netcore.app-1.1.6
 
     - os: osx
       mono: 5.2.0
+      install:
+        - curl https://download.microsoft.com/download/A/7/E/A7EF2AFF-F77B-4F77-A21B-0F7BD09A4065/dotnet-osx-x64.1.1.6.pkg -O
+        - sudo installer -pkg dotnet-osx-x64.1.1.6.pkg -target /
 
       # .NET Core 2 requires OSX 10.12+
       # https://github.com/dotnet/core/blob/master/release-notes/2.0/2.0-supported-os.md#macos
