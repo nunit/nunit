@@ -1,21 +1,17 @@
 language: csharp
 sudo: false
 
-# Should keep up to date with security releases
-dotnet: 2.0.3
+dotnet: 2.1.4 # SDK version; includes runtime version 2.0.5. Need 2.0+ for netcoreapp2.0 tests.
 
-# Mono: Need 5.2+ for the included MSBuild
-# Right now Mono 5.4+ crashes while compiling build.cake. Should diagnose.
+mono: 5.10.0 # Need 5.2+ for the included MSBuild.
+
 matrix:
   include:
-
     - os: linux
-      mono: 5.2.0
       install:
         - sudo apt-get install dotnet-sharedframework-microsoft.netcore.app-1.1.6
 
     - os: osx
-      mono: 5.2.0
       install:
         - curl https://download.microsoft.com/download/A/7/E/A7EF2AFF-F77B-4F77-A21B-0F7BD09A4065/dotnet-osx-x64.1.1.6.pkg -O
         - sudo installer -pkg dotnet-osx-x64.1.1.6.pkg -target /
