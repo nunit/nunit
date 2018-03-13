@@ -1,3 +1,8 @@
+### NUnit 3.10.1 - March 12, 2018
+
+Added a namespace to the props file included in the NuGet package to make it
+compatible with versions of Visual Studio prior to VS 2017.
+
 ### NUnit 3.10 - March 12, 2018
 
 This release adds a .NET Standard 2.0 version of the framework which re-enables
