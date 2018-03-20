@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -54,9 +54,6 @@ namespace NUnit.Framework.Constraints
                 return y == null ? 0 : -1;
             else if (y == null)
                 return +1;
-
-            if (x is char && y is char)
-                return (char)x == (char)y ? 0 : 1;
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.Compare(x, y);
