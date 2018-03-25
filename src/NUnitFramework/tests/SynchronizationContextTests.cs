@@ -36,6 +36,9 @@ namespace NUnit.Framework
     public static class SynchronizationContextTests
     {
 #if NET40 || NET45
+        // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread
+        // to ensure that the message pump is shut down on the correct thread.
+
         public static readonly IEnumerable<Type> KnownSynchronizationContextTypes = new[]
         {
             typeof(System.Windows.Forms.WindowsFormsSynchronizationContext),
