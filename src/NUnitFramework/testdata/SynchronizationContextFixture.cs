@@ -55,13 +55,15 @@ namespace NUnit.TestData
 
 #if ASYNC
         [Test]
-        public async Task YieldingTestMethod()
+        public async Task YieldAndAssertSameThread()
         {
+            var originalThread = Thread.CurrentThread;
 #if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
 #endif
+            Assert.That(Thread.CurrentThread, Is.SameAs(originalThread));
         }
 #endif
 

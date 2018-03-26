@@ -54,7 +54,7 @@ namespace NUnit.Framework
             using (var fixture = new SynchronizationContextFixture(createdOnThisThread))
             {
                 TestBuilder
-                    .RunTestCase(fixture, nameof(fixture.YieldingTestMethod))
+                    .RunTestCase(fixture, nameof(fixture.YieldAndAssertSameThread))
                     .AssertPassed();
             }
         }
@@ -67,7 +67,7 @@ namespace NUnit.Framework
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                Assert.That(Yields, Throws.Nothing);
+                Assert.That(YieldAndAssertSameThread, Throws.Nothing);
             }
         }
 
@@ -79,7 +79,7 @@ namespace NUnit.Framework
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                Assert.DoesNotThrowAsync(Yields);
+                Assert.DoesNotThrowAsync(YieldAndAssertSameThread);
             }
         }
 
@@ -91,7 +91,7 @@ namespace NUnit.Framework
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                Assert.ThrowsAsync<Exception>(ThrowsAfterYield);
+                Assert.ThrowsAsync<DummyException>(YieldAndAssertSameThreadAndThrowDummyException);
             }
         }
 
@@ -103,27 +103,36 @@ namespace NUnit.Framework
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                Assert.CatchAsync(ThrowsAfterYield);
+                Assert.CatchAsync(YieldAndAssertSameThreadAndThrowDummyException);
             }
         }
 
-        public static async Task Yields()
+        public static async Task YieldAndAssertSameThread()
         {
+            var originalThread = Thread.CurrentThread;
 #if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
 #endif
+            Assert.That(Thread.CurrentThread, Is.SameAs(originalThread));
         }
 
-        public static async Task ThrowsAfterYield()
+        public static async Task YieldAndAssertSameThreadAndThrowDummyException()
         {
+            var originalThread = Thread.CurrentThread;
 #if NET40
             await TaskEx.Yield();
 #else
             await Task.Yield();
 #endif
-            throw new Exception();
+            Assert.That(Thread.CurrentThread, Is.SameAs(originalThread));
+
+            throw new DummyException();
+        }
+
+        private sealed class DummyException : Exception
+        {
         }
 #endif
 
