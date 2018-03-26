@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
@@ -45,11 +46,31 @@ namespace NUnit.Framework
             typeof(System.Windows.Threading.DispatcherSynchronizationContext)
         };
 
+        private static SynchronizationContext CreateSynchronizationContext(Type knownSynchronizationContextType)
+        {
+            if (new PlatformHelper().IsPlatformSupported("Mono"))
+            {
+                if (knownSynchronizationContextType == typeof(System.Windows.Threading.DispatcherSynchronizationContext))
+                {
+                    Assert.Ignore("DispatcherSynchronizationContext throws NotImplementedException on Mono.");
+                }
+                else if (knownSynchronizationContextType == typeof(System.Windows.Forms.WindowsFormsSynchronizationContext))
+                {
+                    if (!Environment.UserInteractive)
+                    {
+                        Assert.Inconclusive("WindowsFormsSynchronizationContext throws ArgumentNullException on Mono when not running interactively.");
+                    }
+                }
+            }
+
+            return (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
+        }
+
         [Timeout(10000)]
         [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
         public static void TestMethodContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
         {
-            var createdOnThisThread = (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
             using (var fixture = new SynchronizationContextFixture(createdOnThisThread))
             {
@@ -63,7 +84,7 @@ namespace NUnit.Framework
         [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
         public static void AssertThatContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
         {
-            var createdOnThisThread = (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
@@ -75,7 +96,7 @@ namespace NUnit.Framework
         [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
         public static void AssertDoesNotThrowAsyncContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
         {
-            var createdOnThisThread = (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
@@ -87,7 +108,7 @@ namespace NUnit.Framework
         [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
         public static void AssertThrowsAsyncContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
         {
-            var createdOnThisThread = (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
@@ -99,7 +120,7 @@ namespace NUnit.Framework
         [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
         public static void AssertCatchAsyncContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
         {
-            var createdOnThisThread = (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
