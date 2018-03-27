@@ -28,7 +28,7 @@ namespace NUnit.Framework
     public static class CurrentCultureTests
     {
 #if !(NET20 || NET35 || NET40 || NETCOREAPP1_1)
-        [Test, RequiresThread]
+        [Test, RequiresThread, NonParallelizable]
         public static void CurrentCultureIsNotUnnecessarilySet()
         {
             var nonCurrent = new CultureInfo(
@@ -46,7 +46,7 @@ namespace NUnit.Framework
             }
         }
 
-        [Test, RequiresThread]
+        [Test, RequiresThread, NonParallelizable]
         public static void CurrentUICultureIsNotUnnecessarilySet()
         {
             var nonCurrent = new CultureInfo(

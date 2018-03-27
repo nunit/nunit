@@ -475,8 +475,11 @@ namespace NUnit.Framework.Internal.Execution
         {
             thread = new Thread(() =>
             {
-                thread.CurrentCulture = Context.CurrentCulture;
-                thread.CurrentUICulture = Context.CurrentUICulture;
+                if (thread.CurrentCulture != Context.CurrentCulture)
+                    thread.CurrentCulture = Context.CurrentCulture;
+
+                if (thread.CurrentUICulture != Context.CurrentUICulture)
+                    thread.CurrentUICulture = Context.CurrentUICulture;
 #if THREAD_ABORT
                 lock (threadLock)
                     nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
