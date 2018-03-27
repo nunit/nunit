@@ -383,7 +383,8 @@ namespace NUnit.Framework.Internal
             {
                 _currentCulture = value;
 #if !NETSTANDARD1_6
-                Thread.CurrentThread.CurrentCulture = _currentCulture;
+                if (Thread.CurrentThread.CurrentCulture != _currentCulture)
+                    Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
         }
@@ -398,7 +399,8 @@ namespace NUnit.Framework.Internal
             {
                 _currentUICulture = value;
 #if !NETSTANDARD1_6
-                Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+                if (Thread.CurrentThread.CurrentUICulture != _currentUICulture)
+                    Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
         }
@@ -461,8 +463,12 @@ namespace NUnit.Framework.Internal
         public void EstablishExecutionEnvironment()
         {
 #if !NETSTANDARD1_6
-            Thread.CurrentThread.CurrentCulture = _currentCulture;
-            Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+            if (Thread.CurrentThread.CurrentCulture != _currentCulture)
+                Thread.CurrentThread.CurrentCulture = _currentCulture;
+
+            if (Thread.CurrentThread.CurrentUICulture != _currentUICulture)
+                Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+
             Thread.CurrentPrincipal = _currentPrincipal;
 #endif
 
