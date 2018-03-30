@@ -67,7 +67,6 @@ NUnit is made up of several projects. When reporting issues, please try to repor
 - [NUnit GUI](https://github.com/nunit/nunit-gui) - Runs NUnit 3 tests in a GUI based runner
 - [NUnit Xamarin Runner](https://github.com/nunit/nunit.xamarin) - Runs NUnit 3 tests on mobile devices using the Xamarin framework
 - [NUnit .NET Core Runner](https://github.com/nunit/dotnet-test-nunit) - Runs NUnit tests compiled against .NET Core
-- [NUnit Installer](https://github.com/nunit/nunit-distribution) - Creates the installer for the NUnit Console, Engine and Extensions
 - [NUnit Project Editor](https://github.com/nunit/nunit-project-editor) - Edits the NUnit Project format
 
 ### NUnit Engine Extensions ###
