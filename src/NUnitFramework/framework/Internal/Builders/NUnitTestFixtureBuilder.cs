@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal.Builders
                 }
 
                 if (typeArgs.Length > 0 ||
-                    TypeHelper.CanDeduceTypeArgsFromArgs(typeInfo.Type, arguments, ref typeArgs))
+                    TypeHelper.TryDeduceTypeArgsFromConstructorArgs(typeInfo.Type, arguments, out typeArgs))
                 {
                     typeInfo = typeInfo.MakeGenericType(typeArgs);
                 }

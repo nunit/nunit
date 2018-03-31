@@ -274,49 +274,44 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
+        /// Attempts to deduce generic argument types from constructor argument values.
         /// </summary>
-        /// <param name="type">The type to be examined.</param>
-        /// <param name="arglist">The arglist.</param>
-        /// <param name="typeArgsOut">The type args to be used.</param>
-        /// <returns>
-        /// 	<c>true</c> if this the provided args give sufficient information to determine the type args to be used; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool CanDeduceTypeArgsFromArgs(Type type, object[] arglist, ref Type[] typeArgsOut)
+        public static bool TryDeduceTypeArgsFromConstructorArgs(Type type, object[] constructorArgs, out Type[] typeArgs)
         {
             Type[] typeParameters = type.GetGenericArguments();
 
             foreach (ConstructorInfo ctor in type.GetConstructors())
             {
                 ParameterInfo[] parameters = ctor.GetParameters();
-                if (parameters.Length != arglist.Length)
+                if (parameters.Length != constructorArgs.Length)
                     continue;
 
-                Type[] typeArgs = new Type[typeParameters.Length];
-                for (int i = 0; i < typeArgs.Length; i++)
+                Type[] builder = new Type[typeParameters.Length];
+                for (int i = 0; i < builder.Length; i++)
                 {
-                    for (int j = 0; j < arglist.Length; j++)
+                    for (int j = 0; j < constructorArgs.Length; j++)
                     {
                         if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
-                            typeArgs[i] = TypeHelper.BestCommonType(
-                                typeArgs[i],
-                                arglist[j].GetType());
+                            builder[i] = TypeHelper.BestCommonType(
+                                builder[i],
+                                constructorArgs[j].GetType());
                     }
 
-                    if (typeArgs[i] == null)
+                    if (builder[i] == null)
                     {
-                        typeArgs = null;
+                        builder = null;
                         break;
                     }
                 }
 
-                if (typeArgs != null)
+                if (builder != null)
                 {
-                    typeArgsOut = typeArgs;
+                    typeArgs = builder;
                     return true;
                 }
             }
 
+            typeArgs = null;
             return false;
         }
 
