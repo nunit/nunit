@@ -265,16 +265,74 @@ namespace NUnit.Framework.Internal
             Assert.That(suite.Tests.Count, Is.EqualTo(2));
         }
 
-//        [Test]
-//        public void CannotRunGenericFixtureWithNoTestFixtureAttribute()
-//        {
-//            TestSuite suite = TestBuilder.MakeFixture(
-//                GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1"));
-//
-//            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
-//            Assert.That(suite.Properties.Get(PropertyNames.SkipReason),
-//                Does.StartWith("Fixture type contains generic parameters"));
-//        }
+        [Test]
+        public void CanRunNestedFixture()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureWithProperArgsProvided<>.NestedFixture));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CanRunNestedFixtureWithProperArgsProvided()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureWithProperArgsProvided<>.NestedFixtureWithProperArgsProvided<>));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void CannotRunNestedFixtureWithNoArgsProvided_1()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureWithProperArgsProvided<>.NestedFixtureWithNoArgsProvided<>));
+            Assert.That(suite.Tests.Count, Is.EqualTo(2));
+            Test fixture = (Test)suite.Tests[0];
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
+        }
+
+        [Test]
+        public void CannotRunNestedFixtureWithNoArgsProvided_2()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureWithNoArgsProvided<>.NestedFixture));
+            Assert.That(suite.Tests.Count, Is.EqualTo(1));
+            Test fixture = (Test)suite.Tests[0];
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
+        }
+
+        [Test]
+        public void CannotRunNestedFixtureWithNoArgsProvided_3()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureWithNoArgsProvided<>.NestedFixtureWithNoArgsProvided<>));
+            Assert.That(suite.Tests.Count, Is.EqualTo(1));
+            Test fixture = (Test)suite.Tests[0];
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
+        }
+
+        [Test]
+        public void CannotRunNestedFixtureWithNoArgsProvided_4()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureWithNoArgsProvided<>.NestedFixtureWithSomeArgsProvided<>));
+            Assert.That(suite.Tests.Count, Is.EqualTo(2));
+            Test fixture = (Test)suite.Tests[0];
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
+        }
+
+        //        [Test]
+        //        public void CannotRunGenericFixtureWithNoTestFixtureAttribute()
+        //        {
+        //            TestSuite suite = TestBuilder.MakeFixture(
+        //                GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1"));
+        //
+        //            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
+        //            Assert.That(suite.Properties.Get(PropertyNames.SkipReason),
+        //                Does.StartWith("Fixture type contains generic parameters"));
+        //        }
 
         [Test]
         public void CannotRunGenericFixtureWithNoArgsProvided()

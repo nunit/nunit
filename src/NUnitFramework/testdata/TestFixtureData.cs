@@ -548,6 +548,32 @@ namespace NUnit.TestData.TestFixtureTests
         public void SomeTest()
         {
         }
+
+        public class NestedFixture
+        {
+            [Test]
+            public void SomeTest()
+            {
+            }
+        }
+
+        public class NestedFixtureWithNoArgsProvided<T2>
+        {
+            [Test]
+            public void SomeTest()
+            {
+            }
+        }
+
+        [TestFixture(typeof(int))]
+        [TestFixture(typeof(string))]
+        public class NestedFixtureWithProperArgsProvided<T2>
+        {
+            [Test]
+            public void SomeTest()
+            {
+            }
+        }
     }
 
     public class GenericFixtureWithNoTestFixtureAttribute<T>
@@ -564,6 +590,32 @@ namespace NUnit.TestData.TestFixtureTests
         [Test]
         public void SomeTest()
         {
+        }
+
+        public class NestedFixture
+        {
+            [Test]
+            public void SomeTest()
+            {
+            }
+        }
+
+        public class NestedFixtureWithNoArgsProvided<T2>
+        {
+            [Test]
+            public void SomeTest()
+            {
+            }
+        }
+
+        [TestFixture(typeof(int))]
+        [TestFixture(typeof(string))]
+        public class NestedFixtureWithSomeArgsProvided<T2>
+        {
+            [Test]
+            public void SomeTest()
+            {
+            }
         }
     }
 
