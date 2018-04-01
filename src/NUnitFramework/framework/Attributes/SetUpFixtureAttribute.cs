@@ -63,6 +63,11 @@ namespace NUnit.Framework
             return new TestSuite[] { fixture };
         }
 
+        public IEnumerable<Type[]> GetIntroducedGenericArguments(Type typeDefinition)
+        {
+            return new[] { Type.EmptyTypes };
+        }
+
         #endregion
 
         #region Helper Methods

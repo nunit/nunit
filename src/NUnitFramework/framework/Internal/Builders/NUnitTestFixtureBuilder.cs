@@ -82,48 +82,20 @@ namespace NUnit.Framework.Internal.Builders
 
         /// <summary>
         /// Overload of BuildFrom called by tests that have arguments.
-        /// Builds a fixture using the provided type and information 
+        /// Builds a fixture using the provided type and information
         /// in the ITestFixtureData object.
         /// </summary>
-        /// <param name="typeInfo">The TypeInfo for which to construct a fixture.</param>
-        /// <param name="testFixtureData">An object implementing ITestFixtureData or null.</param>
-        /// <returns></returns>
+        /// <param name="typeInfo">The TypeInfo for which to construct a fixture. If generic, must be constructed.</param>
+        /// <param name="testFixtureData">An object implementing ITestFixtureData.</param>
         public TestSuite BuildFrom(ITypeInfo typeInfo, ITestFixtureData testFixtureData)
         {
+            Guard.ArgumentNotNull(typeInfo, nameof(typeInfo));
             Guard.ArgumentNotNull(testFixtureData, nameof(testFixtureData));
 
+            if (typeInfo.Type.GetTypeInfo().IsGenericTypeDefinition)
+                throw new ArgumentException("The fixture type must either be non-generic or a constructed generic type.", nameof(typeInfo));
+
             object[] arguments = testFixtureData.Arguments;
-
-            if (typeInfo.ContainsGenericParameters)
-            {
-                Type[] typeArgs = testFixtureData.TypeArgs;
-                if (typeArgs == null || typeArgs.Length == 0)
-                {
-                    int cnt = 0;
-                    foreach (object o in arguments)
-                        if (o is Type) cnt++;
-                        else break;
-
-                    typeArgs = new Type[cnt];
-                    for (int i = 0; i < cnt; i++)
-                        typeArgs[i] = (Type)arguments[i];
-
-                    if (cnt > 0)
-                    {
-                        object[] args = new object[arguments.Length - cnt];
-                        for (int i = 0; i < args.Length; i++)
-                            args[i] = arguments[cnt + i];
-
-                        arguments = args;
-                    }
-                }
-
-                if (typeArgs.Length > 0 ||
-                    TypeHelper.TryDeduceTypeArgsFromConstructorArgs(typeInfo.Type, arguments, out typeArgs))
-                {
-                    typeInfo = typeInfo.MakeGenericType(typeArgs);
-                }
-            }
 
             var fixture = new TestFixture(typeInfo, arguments);
 

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,6 +23,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -63,6 +66,70 @@ namespace NUnit.Framework.Internal.Builders
             return typeInfo.HasMethodWithAttribute(typeof(IImplyFixture));
         }
 
+        internal static IEnumerable<Type> GetUniqueTypeInstantiations(Type typeDefinition)
+        {
+            if (!typeDefinition.GetTypeInfo().IsGenericType)
+                return new[] { typeDefinition };
+
+            if (!typeDefinition.GetTypeInfo().IsGenericTypeDefinition)
+                throw new ArgumentException("The specified type must be either non-generic or a generic type definition.", nameof(typeDefinition));
+
+            var typesIntroducingGenericArguments = new List<Type>();
+
+            var arity = typeDefinition.GetGenericArguments().Length;
+
+            var current = typeDefinition;
+            var currentArity = arity;
+            while (currentArity != 0)
+            {
+                var parent = current.DeclaringType;
+                var parentArity = parent.GetGenericArguments().Length;
+
+                if (currentArity != parentArity)
+                    typesIntroducingGenericArguments.Add(current);
+
+                current = parent;
+                currentArity = parentArity;
+            }
+
+            var uniqueGenericArgumentListsByFixture = new Type[typesIntroducingGenericArguments.Count][][];
+            var permutationCount = 1;
+
+            for (var i = uniqueGenericArgumentListsByFixture.Length - 1; i >= 0; i--)
+            {
+                var type = typesIntroducingGenericArguments[i];
+
+                foreach (var builder in GetFixtureBuilderAttributes(new TypeWrapper(type)))
+                {
+                    var options = builder
+                        .GetIntroducedGenericArguments(type)
+                        .Distinct(ArrayEqualityComparer<Type>.Default)
+                        .ToArray();
+
+                    permutationCount *= options.Length;
+
+                    uniqueGenericArgumentListsByFixture[uniqueGenericArgumentListsByFixture.Length - 1 - i] = options;
+                }
+            }
+
+            var allPermutations = new List<Type>(permutationCount);
+            var arguments = new Type[arity];
+
+            foreach (var permutation in uniqueGenericArgumentListsByFixture.PermutationsByElementSources())
+            {
+                var argumentsAdded = 0;
+                foreach (var element in permutation)
+                {
+                    element.CopyTo(arguments, argumentsAdded);
+                    argumentsAdded += element.Length;
+                }
+
+                allPermutations.Add(typeDefinition.MakeGenericType(arguments));
+            }
+
+            return allPermutations;
+        }
+
         /// <summary>
         /// Build a TestSuite from TypeInfo provided.
         /// </summary>
@@ -70,6 +137,12 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>A TestSuite built from that type</returns>
         public TestSuite BuildFrom(ITypeInfo typeInfo)
         {
+            var declaringType = typeInfo.Type.DeclaringType;
+            if (declaringType != null && declaringType.GetTypeInfo().IsGenericTypeDefinition)
+            {
+
+            }
+
             var fixtures = new List<TestSuite>();
 
             try
@@ -126,7 +199,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="typeInfo">The type being examined for attributes</param>
         /// <returns>A list of the attributes found.</returns>
-        private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo typeInfo)
+        private static IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo typeInfo)
         {
             IFixtureBuilder[] attrs = new IFixtureBuilder[0];
 
@@ -171,7 +244,7 @@ namespace NUnit.Framework.Internal.Builders
             return attrs;
         }
 
-        private bool HasArguments(IFixtureBuilder attr)
+        private static bool HasArguments(IFixtureBuilder attr)
         {
             // Only TestFixtureAttribute can be used without arguments
             var temp = attr as TestFixtureAttribute;

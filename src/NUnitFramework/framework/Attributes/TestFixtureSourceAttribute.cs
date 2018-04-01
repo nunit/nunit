@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -113,6 +114,13 @@ namespace NUnit.Framework
 
             foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
                 yield return _builder.BuildFrom(typeInfo, parms);
+        }
+
+        public IEnumerable<Type[]> GetIntroducedGenericArguments(Type typeDefinition)
+        {
+            return
+                from parms in GetParametersFor(typeDefinition)
+                select parms.GetTypeGenericArguments(typeDefinition);
         }
 
         #endregion

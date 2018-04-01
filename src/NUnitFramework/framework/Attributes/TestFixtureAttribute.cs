@@ -227,6 +227,11 @@ namespace NUnit.Framework
             yield return _builder.BuildFrom(typeInfo, this);
         }
 
+        public IEnumerable<Type[]> GetPossibleGenericArguments(Type typeDefinition)
+        {
+            return new[] { this.GetTypeGenericArguments(typeDefinition) };
+        }
+
         #endregion
     }
 }

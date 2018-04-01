@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -47,5 +47,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
         IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo);
+
+        IEnumerable<Type[]> BuildGenericArgumentSets(Type typeDefinition);
     }
 }
