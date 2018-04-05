@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
+            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
                 return RunAsyncTestMethod(context);
             else
 #endif
@@ -87,9 +87,9 @@ namespace NUnit.Framework.Internal.Commands
 #if ASYNC
         private object RunAsyncTestMethod(TestExecutionContext context)
         {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method.MethodInfo))
+            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method))
             {
-                object result = Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
+                object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
 
                 try
                 {
@@ -105,8 +105,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunNonAsyncTestMethod(TestExecutionContext context)
         {
-            //return Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
-            return testMethod.Method.Invoke(context.TestObject, arguments);
+            return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
         }
     }
 }

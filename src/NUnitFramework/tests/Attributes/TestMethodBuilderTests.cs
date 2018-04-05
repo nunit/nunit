@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Interfaces;
 
@@ -214,9 +213,9 @@ namespace NUnit.Framework.Attributes
 
         #region Helper Methods and Data
 
-        private IMethodInfo GetMethod(string methodName)
+        private FixtureMethod GetMethod(string methodName)
         {
-            return new MethodWrapper(GetType(), methodName);
+            return GetType().GetFixtureMethod(methodName);
         }
 
         public static void MethodWithoutArgs() { }

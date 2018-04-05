@@ -575,7 +575,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed
         /// but not available in CurrentContext. This happens when tests are run
-        /// on an adoc basis or Asserts are used outside of tests.
+        /// on an ad-hoc basis or Asserts are used outside of tests.
         /// </summary>
         public class AdhocContext : TestExecutionContext
         {
@@ -588,7 +588,7 @@ namespace NUnit.Framework.Internal
                 var type = GetType();
                 var method = type.GetMethod("AdhocTestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                CurrentTest = new TestMethod(new MethodWrapper(type, method));
+                CurrentTest = new TestMethod(new FixtureMethod(type, method));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

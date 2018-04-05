@@ -22,8 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -43,14 +42,14 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = (context) =>
             {
-                ITypeInfo typeInfo = Test.TypeInfo;
+                Type type = Test.Type;
 
-                if (typeInfo != null)
+                if (type != null)
                 {
                     // Use preconstructed fixture if available, otherwise construct it
-                    if (!typeInfo.IsStaticClass)
+                    if (!type.IsStatic())
                     {
-                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
+                        context.TestObject = Test.Fixture ?? Reflect.Construct(type, ((TestSuite)Test).Arguments);
                         if (Test.Fixture == null)
                             Test.Fixture = context.TestObject;
                     }

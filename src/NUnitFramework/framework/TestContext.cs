@@ -22,10 +22,10 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -133,7 +133,7 @@ namespace NUnit.Framework
         {
             get
             {
-                Assembly assembly = _testExecutionContext?.CurrentTest?.TypeInfo?.Assembly;
+                Assembly assembly = _testExecutionContext?.CurrentTest?.Type?.GetTypeInfo().Assembly;
 
                 if (assembly != null)
                     return AssemblyHelper.GetDirectoryName(assembly);

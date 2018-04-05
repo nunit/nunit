@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -149,9 +149,11 @@ namespace NUnit.Framework
         #region IParameterDataSource Interface
 
         /// <summary>
-        /// Get the collection of values to be used as arguments.
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        public IEnumerable GetData(IParameterInfo parameter)
+        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
+        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
             // Since a separate Randomizer is used for each parameter,
             // we can't fill in the data in the constructor of the
@@ -198,16 +200,7 @@ namespace NUnit.Framework
 
             _source.Distinct = Distinct;
 
-            return _source.GetData(parameter);
-
-            //// Copy the random values into the data array
-            //// and call the base class which may need to
-            //// convert them to another type.
-            //this.data = new object[values.Count];
-            //for (int i = 0; i < values.Count; i++)
-            //    this.data[i] = values[i];
-
-            //return base.GetData(parameter);
+            return _source.GetData(fixtureType, parameter);
         }
 
         private bool WeConvert(Type sourceType, Type targetType)
@@ -232,7 +225,7 @@ namespace NUnit.Framework
             public Type DataType { get; protected set; }
             public bool Distinct { get; set; }
 
-            public abstract IEnumerable GetData(IParameterInfo parameter);
+            public abstract IEnumerable GetData(Type fixtureType, ParameterInfo parameter);
         }
 
         abstract class RandomDataSource<T> : RandomDataSource
@@ -264,11 +257,11 @@ namespace NUnit.Framework
                 DataType = typeof(T);
             }
 
-            public override IEnumerable GetData(IParameterInfo parameter)
+            public override IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
             {
                 //Guard.ArgumentValid(parameter.ParameterType == typeof(T), "Parameter type must be " + typeof(T).Name, "parameter");
 
-                _randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
+                _randomizer = Randomizer.GetRandomizer(parameter);
 
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min, _max, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
                 
@@ -315,11 +308,11 @@ namespace NUnit.Framework
                 _source = source;
             }
 
-            public override IEnumerable GetData(IParameterInfo parameter)
+            public override IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
             {
                 Type parmType = parameter.ParameterType;
 
-                foreach (object obj in _source.GetData(parameter))
+                foreach (object obj in _source.GetData(fixtureType, parameter))
                 {
                     if (obj is int)
                     {
@@ -621,11 +614,11 @@ namespace NUnit.Framework
                 DataType = typeof(Enum);
             }
 
-            public override IEnumerable GetData(IParameterInfo parameter)
+            public override IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
             {
                 Guard.ArgumentValid(parameter.ParameterType.GetTypeInfo().IsEnum, "EnumDataSource requires an enum parameter", nameof(parameter));
 
-                Randomizer randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
+                Randomizer randomizer = Randomizer.GetRandomizer(parameter);
                 DataType = parameter.ParameterType;
 
                 int valueCount = Enum.GetValues(DataType).Cast<int>().Distinct().Count();

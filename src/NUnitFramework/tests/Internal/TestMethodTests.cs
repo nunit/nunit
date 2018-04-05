@@ -24,7 +24,6 @@
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.TestFixtureTests;
 
-
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
@@ -41,7 +40,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureNoArgumentsForRegularTestMethod()
         {
-            var test = _builder.BuildFrom(new MethodWrapper(typeof(RegularFixtureWithOneTest), nameof(RegularFixtureWithOneTest.OneTest)));
+            var test = _builder.BuildFrom(typeof(RegularFixtureWithOneTest)
+                .GetFixtureMethod(nameof(RegularFixtureWithOneTest.OneTest)));
 
             Assert.That(test, Is.TypeOf<TestMethod>());
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));
@@ -50,7 +50,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureArgumentsForParameterizedTestMethod()
         {
-            var test = _builder.BuildFrom(new MethodWrapper(typeof(FixtureWithParameterizedTestAndArgsSupplied), nameof(FixtureWithParameterizedTestAndArgsSupplied.SomeTest)));
+            var test = _builder.BuildFrom(typeof(FixtureWithParameterizedTestAndArgsSupplied)
+                .GetFixtureMethod(nameof(FixtureWithParameterizedTestAndArgsSupplied.SomeTest)));
 
             Assert.That(test.HasChildren, Is.True);
             Assert.That(test.Tests[0], Is.TypeOf<TestMethod>());
@@ -60,7 +61,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureArgumentsForParameterizedTestMethodWithMultipleArguments()
         {
-            var test = _builder.BuildFrom(new MethodWrapper(typeof(FixtureWithParameterizedTestAndMultipleArgsSupplied), nameof(FixtureWithParameterizedTestAndMultipleArgsSupplied.SomeTest)));
+            var test = _builder.BuildFrom(typeof(FixtureWithParameterizedTestAndMultipleArgsSupplied)
+                .GetFixtureMethod(nameof(FixtureWithParameterizedTestAndMultipleArgsSupplied.SomeTest)));
 
             Assert.That(test.HasChildren, Is.True);
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));

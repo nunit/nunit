@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -96,9 +96,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the collection of values to be used as arguments
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        public IEnumerable GetData(IParameterInfo parameter)
+        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
+        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
             return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
         }

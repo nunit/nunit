@@ -63,7 +63,7 @@ namespace NUnit.Framework.Attributes
         [TestCaseSourceAttribute(nameof(Scopes))]
         public void ApplyScopeToTestFixture(ParallelScope scope)
         {
-            var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
+            var fixture = new TestFixture(typeof(FixtureClass));
             var attr = new ParallelizableAttribute(scope);
             attr.ApplyToTest(fixture);
             if (scope == ParallelScope.Fixtures)
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MayNotCombineParallelScopeSelfAndParallelScopeNone()
         {
-            var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
+            var fixture = new TestFixture(typeof(FixtureClass));
             var attr = new ParallelizableAttribute(ParallelScope.Self | ParallelScope.None);
             attr.ApplyToTest(fixture);
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));

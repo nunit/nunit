@@ -166,7 +166,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void OneTimeTearDownGetsPriority()
         {
-            var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
+            var testFixture = new TestFixture(typeof(MyFixture));
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty) as CompositeWorkItem;
             var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem);
             EnqueueWorkItem("Test1");

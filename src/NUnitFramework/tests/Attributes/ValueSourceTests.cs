@@ -213,13 +213,13 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ValueSourceAttributeShouldThrowInsteadOfReturningNull()
         {
-            var method = new MethodWrapper(GetType(), "ValueSourceMayNotBeNull");
+            var method = GetType().GetMethod("ValueSourceMayNotBeNull");
             var parameters = method.GetParameters();
 
             foreach (var parameter in parameters)
             {
-                var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
-                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter)); 
+                var dataSource = parameter.GetAttributes<IParameterDataSource>(false)[0];
+                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(GetType(), parameter));
             }
         }
 

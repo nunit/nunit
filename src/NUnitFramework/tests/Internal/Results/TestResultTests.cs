@@ -21,11 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Results
 {
@@ -45,7 +41,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _test = new TestMethod(new MethodWrapper(typeof(DummySuite), "DummyMethod"));
+            _test = new TestMethod(typeof(DummySuite).GetFixtureMethod("DummyMethod"));
             _testResult = _test.MakeTestResult();
 
             _suite = new TestSuite(typeof(DummySuite));

@@ -42,8 +42,8 @@ namespace NUnit.Framework.Internal
         public void Setup()
         {
             _testObject = new AsyncSetupTearDownFixture();
-            var method = new MethodWrapper(typeof(AsyncSetupTearDownFixture), Success.ElementAt(0));
-            _context = new TestExecutionContext {TestObject = _testObject, CurrentResult = new TestCaseResult(new TestMethod(method))};
+            var method = new FixtureMethod(_testObject.GetType(), Success.ElementAt(0));
+            _context = new TestExecutionContext { TestObject = _testObject, CurrentResult = new TestCaseResult(new TestMethod(method)) };
         }
 
         [Test]

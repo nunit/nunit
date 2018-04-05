@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateWorkItems()
         {
-            IMethodInfo method = new MethodWrapper(typeof(DummyFixture), "DummyTest");
+            FixtureMethod method = typeof(DummyFixture).GetFixtureMethod("DummyTest");
             ITest test = new TestMethod(method);
             _workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty);
 

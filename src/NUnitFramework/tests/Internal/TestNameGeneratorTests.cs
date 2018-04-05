@@ -35,10 +35,10 @@ namespace NUnit.Framework.Internal
         public void InitializeMethodInfos()
         {
             Type thisType = GetType();
-            var simpleMethod = thisType.GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            var genericMethod = thisType.GetMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
-            _simpleTest = new TestMethod(new MethodWrapper(thisType, simpleMethod));
-            _genericTest = new TestMethod(new MethodWrapper(thisType, genericMethod));
+            var simpleMethod = thisType.GetFixtureMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+            var genericMethod = thisType.GetFixtureMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
+            _simpleTest = new TestMethod(simpleMethod);
+            _genericTest = new TestMethod(genericMethod);
             _simpleTest.Id = "THE_ID";
         }
 
