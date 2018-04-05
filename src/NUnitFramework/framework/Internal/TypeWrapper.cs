@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-            return Type.GetTypeInfo().GetAttributes<T>(inherit).ToArray();
+            return Type.GetAttributes<T>(inherit);
         }
 
         /// <summary>

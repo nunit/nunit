@@ -418,34 +418,6 @@ namespace NUnit.Compatibility
             return pinfo.GetMethod;
         }
 #endif
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this member
-        /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this MemberInfo info, bool inherit) where T : class
-        {
-            return info.GetCustomAttributes(inherit).OfType<T>();
-        }
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this parameter
-        /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this ParameterInfo info, bool inherit) where T : class
-        {
-            return info.GetCustomAttributes(inherit).OfType<T>();
-        }
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this assembly
-        /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this Assembly asm) where T : class
-        {
-#if NET20 || NET35 || NET40
-            return asm.GetCustomAttributes(false).OfType<T>();
-#else
-            return asm.GetCustomAttributes().OfType<T>();
-#endif
-        }
     }
 
     /// <summary>

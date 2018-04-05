@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-            return MethodInfo.GetAttributes<T>(inherit).ToArray();
+            return MethodInfo.GetAttributes<T>(inherit);
         }
 
         /// <summary>
