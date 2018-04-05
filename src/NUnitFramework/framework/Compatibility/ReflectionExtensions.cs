@@ -117,9 +117,7 @@ namespace NUnit.Compatibility
         /// <returns></returns>
         public static ConstructorInfo GetConstructor(this Type type, Type[] ptypes)
         {
-            return type.GetConstructors()
-                .Where(c => c.GetParameters().ParametersMatch(ptypes))
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetConstructor(ptypes);
         }
 
         /// <summary>
@@ -418,66 +416,6 @@ namespace NUnit.Compatibility
             return pinfo.GetMethod;
         }
 #endif
-    }
-
-    /// <summary>
-    /// Type extensions that apply to all target frameworks
-    /// </summary>
-    public static class AdditionalTypeExtensions
-    {
-        /// <summary>
-        /// Determines if the given <see cref="Type"/> array is castable/matches the <see cref="ParameterInfo"/> array.
-        /// </summary>
-        /// <param name="pinfos"></param>
-        /// <param name="ptypes"></param>
-        /// <returns></returns>
-        public static bool ParametersMatch(this ParameterInfo[] pinfos, Type[] ptypes)
-        {
-            if (pinfos.Length != ptypes.Length)
-                return false;
-
-            for (int i = 0; i < pinfos.Length; i++)
-            {
-                if (!pinfos[i].ParameterType.IsCastableFrom(ptypes[i]))
-                    return false;
-            }
-            return true;
-        }
-
-        // §6.1.2 (Implicit numeric conversions) of the specification
-        static Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
-            { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
-            { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(ulong), new List<Type> { typeof(byte), typeof(ushort), typeof(uint), typeof(char) } },
-            { typeof(long), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(char) } },
-            { typeof(uint), new List<Type> { typeof(byte), typeof(ushort), typeof(char) } },
-            { typeof(int), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(char) } },
-            { typeof(ushort), new List<Type> { typeof(byte), typeof(char) } },
-            { typeof(short), new List<Type> { typeof(byte) } }
-        };
-
-        /// <summary>
-        /// Determines if one type can be implicitly converted from another
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="from"></param>
-        /// <returns></returns>
-        public static bool IsCastableFrom(this Type to, Type from)
-        {
-            if (to.IsAssignableFrom(from))
-                return true;
-
-            // Look for the marker that indicates from was null
-            if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
-                return true;
-
-            if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
-                return true;
-
-            return from.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                       .Any(m => m.ReturnType == to && m.Name == "op_Implicit");
-        }
     }
 
     /// <summary>

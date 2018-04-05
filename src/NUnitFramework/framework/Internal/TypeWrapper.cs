@@ -232,9 +232,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ConstructorInfo GetConstructor(Type[] argTypes)
         {
-            return Type.GetConstructors()
-                .Where(c => c.GetParameters().ParametersMatch(argTypes))
-                .FirstOrDefault();
+            return Type.GetConstructor(argTypes);
         }
 
         /// <summary>
