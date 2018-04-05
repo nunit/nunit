@@ -228,11 +228,6 @@ namespace NUnit.Framework.Internal.Builders
             }
         }
 
-        private static bool IsStaticClass(Type type)
-        {
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
-        }
-
         #endregion
     }
 }

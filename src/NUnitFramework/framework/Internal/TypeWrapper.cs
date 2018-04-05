@@ -149,10 +149,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether this type represents a static class.
         /// </summary>
-        public bool IsStaticClass
-        {
-            get { return Type.GetTypeInfo().IsSealed && Type.GetTypeInfo().IsAbstract; }
-        }
+        public bool IsStaticClass => Type.IsStatic();
 
         /// <summary>
         /// Get the display name for this type

@@ -145,7 +145,7 @@ namespace NUnit.TestUtilities
             var suite = MakeParameterizedMethodSuite(type, methodName);
 
             object testObject = null;
-            if (!IsStaticClass(type))
+            if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
             return RunTest(suite, testObject);
@@ -156,7 +156,7 @@ namespace NUnit.TestUtilities
             var testMethod = MakeTestCase(type, methodName);
 
             object testObject = null;
-            if (!IsStaticClass(type))
+            if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
             return RunTest(testMethod, testObject);
@@ -201,19 +201,6 @@ namespace NUnit.TestUtilities
             }
 
             return work.Result;
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        private static bool IsStaticClass(Type type)
-        {
-#if NET40
-            return type.IsAbstract && type.IsSealed;
-#else
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
-#endif
         }
 
         #endregion

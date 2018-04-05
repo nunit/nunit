@@ -33,6 +33,11 @@ namespace NUnit.Framework
     /// </summary>
     internal static class Extensions
     {
+        public static bool IsStatic(this Type type)
+        {
+            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
+        }
+
         public static bool HasAttribute<T>(this ICustomAttributeProvider attributeProvider, bool inherit)
         {
 #if NETSTANDARD1_6

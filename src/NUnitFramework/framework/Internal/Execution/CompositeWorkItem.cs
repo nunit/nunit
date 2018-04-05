@@ -386,11 +386,6 @@ namespace NUnit.Framework.Internal.Execution
             Context.Dispatcher.Dispatch(teardown);
         }
 
-        private static bool IsStaticClass(Type type)
-        {
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
-        }
-
         private object cancelLock = new object();
 
         /// <summary>
