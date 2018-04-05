@@ -33,6 +33,24 @@ namespace NUnit.Framework
     /// </summary>
     internal static class Extensions
     {
+        public static bool HasAttribute<T>(this ICustomAttributeProvider attributeProvider, bool inherit)
+        {
+#if NETSTANDARD1_6
+            if (!typeof(Attribute).IsAssignableFrom(typeof(T)))
+            {
+                // Filter manually for any targets that may run on .NET Core 1.1 or lower
+                // because only types derived from System.Attribute are allowed.
+                return attributeProvider.GetCustomAttributes(inherit).OfType<T>().Any();
+            }
+#endif
+            return attributeProvider.IsDefined(typeof(T), inherit);
+        }
+
+        public static bool HasAttribute<T>(this Type type, bool inherit)
+        {
+            return ((ICustomAttributeProvider)type.GetTypeInfo()).HasAttribute<T>(inherit);
+        }
+
         public static T[] GetAttributes<T>(this ICustomAttributeProvider attributeProvider, bool inherit) where T : class
         {
 #if NETSTANDARD1_6

@@ -91,11 +91,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsDefined<T>(bool inherit)
         {
-#if NETSTANDARD1_6
-            return ParameterInfo.GetCustomAttributes(inherit).Any(typeof(T).IsInstanceOfType);
-#else
-            return ParameterInfo.IsDefined(typeof(T), inherit);
-#endif
+            return ParameterInfo.HasAttribute<T>(inherit);
         }
 
         #endregion

@@ -111,17 +111,12 @@ namespace NUnit.Framework.Internal
         /// <returns>True if found, otherwise false</returns>
         public static bool HasMethodWithAttribute(Type fixtureType, Type attributeType)
         {
-#if NETSTANDARD1_6
-            return fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy)
-                .Any(m => m.GetCustomAttributes(false).Any(attributeType.IsInstanceOfType));
-#else
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
                 if (method.IsDefined(attributeType, false))
                     return true;
             }
             return false;
-#endif
         }
 
         #endregion
