@@ -478,7 +478,7 @@ namespace NUnit.Framework.Attributes
 #else
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
-            Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
+            Assert.That(attr.GetData(GetType(), param), Is.EqualTo(expected));
         }
 
         private void CheckValuesWithinTolerance(string methodName, params object[] expected)
@@ -490,7 +490,7 @@ namespace NUnit.Framework.Attributes
 #else
             var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
 #endif
-            Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), 
+            Assert.That(attr.GetData(GetType(), param),
                 Is.EqualTo(expected).Within(0.000001));
         }
         

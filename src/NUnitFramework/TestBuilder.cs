@@ -51,7 +51,7 @@ namespace NUnit.TestUtilities
 
         public static TestSuite MakeFixture(Type type)
         {
-            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(type));
+            return (TestSuite)new DefaultSuiteBuilder().BuildFrom(type);
         }
 
         public static TestSuite MakeFixture(object fixture)
@@ -84,7 +84,7 @@ namespace NUnit.TestUtilities
 
             if (method == null)
                 Assert.Fail("Method not found: " + methodName);
-            return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
+            return new DefaultTestCaseBuilder().BuildFrom(new FixtureMethod(type, method));
         }
 
         #endregion
@@ -145,7 +145,7 @@ namespace NUnit.TestUtilities
             var suite = MakeParameterizedMethodSuite(type, methodName);
 
             object testObject = null;
-            if (!IsStaticClass(type))
+            if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
             return RunTest(suite, testObject);
@@ -156,7 +156,7 @@ namespace NUnit.TestUtilities
             var testMethod = MakeTestCase(type, methodName);
 
             object testObject = null;
-            if (!IsStaticClass(type))
+            if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
             return RunTest(testMethod, testObject);
@@ -201,19 +201,6 @@ namespace NUnit.TestUtilities
             }
 
             return work.Result;
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        private static bool IsStaticClass(Type type)
-        {
-#if NET40
-            return type.IsAbstract && type.IsSealed;
-#else
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
-#endif
         }
 
         #endregion

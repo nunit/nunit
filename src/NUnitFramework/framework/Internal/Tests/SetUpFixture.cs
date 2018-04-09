@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -36,8 +37,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
         /// </summary>
-        /// <param name="type">The type.</param>
-        public SetUpFixture( ITypeInfo type ) : base( type )
+        public SetUpFixture(Type type) : base(type)
         {
             this.Name = type.Namespace;
             if (this.Name == null)
@@ -46,8 +46,8 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
 
-            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeSetUpAttribute), true);
-            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeTearDownAttribute), true);
+            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(Type, typeof(OneTimeSetUpAttribute), true);
+            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(Type, typeof(OneTimeTearDownAttribute), true);
 
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);

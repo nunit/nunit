@@ -87,7 +87,7 @@ namespace NUnit.Framework.Attributes
 
             var attr = param.GetAttributes<ValuesAttribute>(false).Single();
 
-            Assert.That(attr.GetData(new ParameterWrapper(new MethodWrapper(GetType(), method), param)), Is.EqualTo(expected));
+            Assert.That(attr.GetData(GetType(), param), Is.EqualTo(expected));
         }
 
         #endregion

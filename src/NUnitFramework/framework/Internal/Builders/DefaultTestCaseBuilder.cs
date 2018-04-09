@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,11 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -45,12 +43,11 @@ namespace NUnit.Framework.Internal.Builders
     {
         private NUnitTestCaseBuilder _nunitTestCaseBuilder = new NUnitTestCaseBuilder();
 
-        #region ITestCaseBuilder Methods
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
         /// test method of some kind. The method must normally be marked
         /// with an identifying attribute for this to be true.
-        /// 
+        ///
         /// Note that this method does not check that the signature
         /// of the method for validity. If we did that here, any
         /// test methods with invalid signatures would be passed
@@ -58,36 +55,30 @@ namespace NUnit.Framework.Internal.Builders
         /// methods to be reported, the check for validity is made
         /// in BuildFrom rather than here.
         /// </summary>
-        /// <param name="method">An IMethodInfo for the method being used as a test method</param>
-        /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(IMethodInfo method)
+        /// <param name="method">The method to be used as a test.</param>
+        public bool CanBuildFrom(FixtureMethod method)
         {
-            return method.IsDefined<ITestBuilder>(false)
-                || method.IsDefined<ISimpleTestBuilder>(false);
+            return method.Method.HasAttribute<ITestBuilder>(false)
+                || method.Method.HasAttribute<ISimpleTestBuilder>(false);
         }
 
         /// <summary>
-        /// Build a Test from the provided MethodInfo. Depending on
-        /// whether the method takes arguments and on the availability
-        /// of test case data, this method may return a single test
-        /// or a group of tests contained in a ParameterizedMethodSuite.
+        /// Builds a single test from the specified method and context,
+        /// possibly containing child test cases.
         /// </summary>
-        /// <param name="method">The method for which a test is to be built</param>
-        /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(IMethodInfo method)
+        /// <param name="method">The method to be used as a test.</param>
+        public Test BuildFrom(FixtureMethod method)
         {
             return BuildFrom(method, null);
         }
 
-        #endregion
-
-        #region ITestCaseBuilder2 Members
+        #region ITestCaseBuilder Members
 
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
         /// test method of some kind. The method must normally be marked
         /// with an identifying attribute for this to be true.
-        /// 
+        ///
         /// Note that this method does not check that the signature
         /// of the method for validity. If we did that here, any
         /// test methods with invalid signatures would be passed
@@ -95,29 +86,25 @@ namespace NUnit.Framework.Internal.Builders
         /// methods to be reported, the check for validity is made
         /// in BuildFrom rather than here.
         /// </summary>
-        /// <param name="method">An IMethodInfo for the method being used as a test method</param>
-        /// <param name="parentSuite">The test suite being built, to which the new test would be added</param>
-        /// <returns>True if the builder can create a test case from this method</returns>
-        public bool CanBuildFrom(IMethodInfo method, Test parentSuite)
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="suite">The parent to which the test will be added.</param>
+        public bool CanBuildFrom(FixtureMethod method, Test suite)
         {
             return CanBuildFrom(method);
         }
 
         /// <summary>
-        /// Build a Test from the provided MethodInfo. Depending on
-        /// whether the method takes arguments and on the availability
-        /// of test case data, this method may return a single test
-        /// or a group of tests contained in a ParameterizedMethodSuite.
+        /// Builds a single test from the specified method and context,
+        /// possibly containing child test cases.
         /// </summary>
-        /// <param name="method">The method for which a test is to be built</param>
-        /// <param name="parentSuite">The test fixture being populated, or null</param>
-        /// <returns>A Test representing one or more method invocations</returns>
-        public Test BuildFrom(IMethodInfo method, Test parentSuite)
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="suite">The parent to which the test will be added.</param>
+        public Test BuildFrom(FixtureMethod method, Test suite)
         {
             var tests = new List<TestMethod>();
 
             List<ITestBuilder> builders = new List<ITestBuilder>(
-                method.GetCustomAttributes<ITestBuilder>(false));
+                method.Method.GetAttributes<ITestBuilder>(false));
 
             // See if we need a CombinatorialAttribute added
             bool needCombinatorial = true;
@@ -141,13 +128,13 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (var attr in builders)
             {
-                foreach (var test in attr.BuildFrom(method, parentSuite))
+                foreach (var test in attr.BuildFrom(method, suite))
                     tests.Add(test); 
             }
 
-            return hasBuildersSpecified && method.GetParameters().Length > 0 || tests.Count > 0
+            return hasBuildersSpecified && method.Method.GetParameters().Length > 0 || tests.Count > 0
                 ? BuildParameterizedMethodSuite(method, tests)
-                : BuildSingleTestMethod(method, parentSuite);
+                : BuildSingleTestMethod(method, suite);
         }
 
         #endregion
@@ -157,13 +144,12 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Builds a ParameterizedMethodSuite containing individual test cases.
         /// </summary>
-        /// <param name="method">The method for which a test is to be built.</param>
+        /// <param name="method">The method to be used as a test.</param>
         /// <param name="tests">The list of test cases to include.</param>
-        /// <returns>A ParameterizedMethodSuite populated with test cases</returns>
-        private Test BuildParameterizedMethodSuite(IMethodInfo method, IEnumerable<TestMethod> tests)
+        private Test BuildParameterizedMethodSuite(FixtureMethod method, IEnumerable<TestMethod> tests)
         {
             ParameterizedMethodSuite methodSuite = new ParameterizedMethodSuite(method);
-            methodSuite.ApplyAttributesToTest(method.MethodInfo);
+            methodSuite.ApplyAttributesToTest(method.Method);
 
             foreach (TestMethod test in tests)
                 methodSuite.Add(test);
@@ -174,12 +160,11 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Build a simple, non-parameterized TestMethod for this method.
         /// </summary>
-        /// <param name="method">The MethodInfo for which a test is to be built</param>
-        /// <param name="suite">The test suite for which the method is being built</param>
-        /// <returns>A TestMethod.</returns>
-        private Test BuildSingleTestMethod(IMethodInfo method, Test suite)
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="suite">The parent to which the test will be added.</param>
+        private Test BuildSingleTestMethod(FixtureMethod method, Test suite)
         {
-            var builders = method.GetCustomAttributes<ISimpleTestBuilder>(false);
+            var builders = method.Method.GetAttributes<ISimpleTestBuilder>(false);
             return builders.Length > 0
                 ? builders[0].BuildFrom(method, suite)
                 : _nunitTestCaseBuilder.BuildTestMethod(method, suite, null);

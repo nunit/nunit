@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal.Builders
         public void AddSetUpFixture_BottomUp()
         {
             _builder.Add(new TestSuite(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture)));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
+            _builder.Add(new SetUpFixture(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1)));
 
             CheckTree("NUnit", "TestData", "SetupFixture", "Namespace1", "SomeFixture");
             Assert.That(_builder.RootSuite.Tests[0].Tests[0].Tests[0].Tests[0], Is.TypeOf<SetUpFixture>());
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal.Builders
         [Test]
         public void AddSetUpFixture_TopDown()
         {
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1))));
+            _builder.Add(new SetUpFixture(typeof(NUnit.TestData.SetupFixture.Namespace1.NUnitNamespaceSetUpFixture1)));
             _builder.Add(new TestSuite(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture)));
 
             CheckTree("NUnit", "TestData", "SetupFixture", "Namespace1", "SomeFixture");
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Internal.Builders
         public void AddGlobalSetUpFixture_BottomUp()
         {
             _builder.Add(new TestSuite(typeof(SomeFixture)));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NoNamespaceSetupFixture))));
+            _builder.Add(new SetUpFixture(typeof(NoNamespaceSetupFixture)));
 
             CheckTree("[default namespace]", "SomeFixture");
         }
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal.Builders
         [Test]
         public void AddGlobalSetUpFixture_TopDown()
         {
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NoNamespaceSetupFixture))));
+            _builder.Add(new SetUpFixture(typeof(NoNamespaceSetupFixture)));
             _builder.Add(new TestSuite(typeof(SomeFixture)));
 
             CheckTree("[default namespace]", "SomeFixture");
@@ -142,8 +142,8 @@ namespace NUnit.Framework.Internal.Builders
         public void AddTwoGlobalSetupFixtures_BottomUp()
         {
             _builder.Add(new TestSuite(typeof(SomeFixture)));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NoNamespaceSetupFixture))));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NoNamespaceSetupFixture))));
+            _builder.Add(new SetUpFixture(typeof(NoNamespaceSetupFixture)));
+            _builder.Add(new SetUpFixture(typeof(NoNamespaceSetupFixture)));
 
             CheckTree("[default namespace]", "[default namespace]", "SomeFixture");
         }
@@ -151,8 +151,8 @@ namespace NUnit.Framework.Internal.Builders
         [Test]
         public void AddTwoGlobalSetUpFixture_TopDown()
         {
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NoNamespaceSetupFixture))));
-            _builder.Add(new SetUpFixture(new TypeWrapper(typeof(NoNamespaceSetupFixture))));
+            _builder.Add(new SetUpFixture(typeof(NoNamespaceSetupFixture)));
+            _builder.Add(new SetUpFixture(typeof(NoNamespaceSetupFixture)));
             _builder.Add(new TestSuite(typeof(SomeFixture)));
 
             CheckTree("[default namespace]", "[default namespace]", "SomeFixture");

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2015–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
 
 namespace NUnit.Compatibility
 {
@@ -99,414 +97,126 @@ namespace NUnit.Compatibility
     public static class TypeExtensions
     {
         /// <summary>
-        /// Returns an array of generic arguments for the give type
+        /// Returns an array of <see cref="Type"/> objects that represent the type arguments of a closed generic type or the type parameters of a generic type definition.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
         public static Type[] GetGenericArguments(this Type type)
         {
-            var info = type.GetTypeInfo();
-            return info.GenericTypeArguments.Concat(info.GenericTypeParameters).ToArray();
+            return type.GetTypeInfo().GetGenericArguments();
         }
 
         /// <summary>
-        /// Gets the constructor with the given parameter types
+        /// Searches for a public instance constructor whose parameters match the types in the specified array.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="ptypes"></param>
-        /// <returns></returns>
-        public static ConstructorInfo GetConstructor(this Type type, Type[] ptypes)
+        public static ConstructorInfo GetConstructor(this Type type, Type[] types)
         {
-            return type.GetConstructors()
-                .Where(c => c.GetParameters().ParametersMatch(ptypes))
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetConstructor(types);
         }
 
         /// <summary>
-        /// Gets the constructors for a type
+        /// Returns all the public constructors defined for the current <see cref="Type"/>.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
         public static ConstructorInfo[] GetConstructors(this Type type)
         {
-            return type.GetTypeInfo()
-                .DeclaredConstructors
-                .Where(c => c.IsPublic && !c.IsStatic)
-                .ToArray();
+            return type.GetTypeInfo().GetConstructors();
         }
 
         /// <summary>
-        ///
+        /// Determines whether an instance of a specified type can be assigned to an instance of the current type.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public static bool IsAssignableFrom(this Type type, Type other)
+        public static bool IsAssignableFrom(this Type type, Type c)
         {
-            return other != null && type.GetTypeInfo().IsAssignableFrom(other.GetTypeInfo());
+            return type.GetTypeInfo().IsAssignableFrom(c?.GetTypeInfo());
         }
 
         /// <summary>
-        ///
+        /// Determines whether the specified object is an instance of the current <see cref="Type"/>.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public static bool IsInstanceOfType(this Type type, object other)
+        public static bool IsInstanceOfType(this Type type, object o)
         {
-            return type.GetTypeInfo().IsInstanceOfType(other);
+            return type.GetTypeInfo().IsInstanceOfType(o);
         }
 
         /// <summary>
-        /// Gets declared or inherited interfaces on this type
+        /// When overridden in a derived class, gets all the interfaces implemented or inherited by the current <see cref="Type"/>.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
         public static Type[] GetInterfaces(this Type type)
         {
-            return type.GetTypeInfo().ImplementedInterfaces.ToArray();
+            return type.GetTypeInfo().GetInterfaces();
         }
 
         /// <summary>
-        /// Gets the member on a given type by name. BindingFlags ARE IGNORED.
+        /// Searches for the specified members, using the specified binding constraints.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <param name="ignored"></param>
-        /// <returns></returns>
-        public static MemberInfo[] GetMember(this Type type, string name, BindingFlags ignored)
+        public static MemberInfo[] GetMember(this Type type, string name, BindingFlags bindingAttr)
         {
-            return type.GetAllMembers()
-                .Where(m => m.Name == name)
-                .ToArray();
+            return type.GetTypeInfo().GetMember(name, bindingAttr);
         }
 
         /// <summary>
-        /// Gets all members on a given type. BindingFlags ARE IGNORED.
+        /// Searches for the members defined for the current <see cref="Type"/>, using the specified binding constraints.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="ignored"></param>
-        /// <returns></returns>
-        public static MemberInfo[] GetMembers(this Type type, BindingFlags ignored)
+        public static MemberInfo[] GetMembers(this Type type, BindingFlags bindingAttr)
         {
-            // We only use this in two places and ask for public, private, static and instance
-            // members. Since none of that info is available on MemberInfo, I am skipping and
-            // returning all.
-            return type.GetAllMembers().ToArray();
-        }
-
-        static IList<MemberInfo> GetAllMembers(this Type type)
-        {
-            List<MemberInfo> members = type.GetTypeInfo().DeclaredMembers.ToList();
-            type = type.GetTypeInfo().BaseType;
-            if (type != null)
-            {
-                var baseMembers = type.GetAllMembers();
-                members.AddRange(baseMembers.Where(NotPrivate));
-            }
-            return members;
-        }
-
-        static bool NotPrivate(MemberInfo info)
-        {
-            var pinfo = info as PropertyInfo;
-            if (pinfo != null)
-                return pinfo.GetMethod?.IsPrivate == false;
-
-            var finfo = info as FieldInfo;
-            if (finfo != null)
-                return finfo.IsPrivate == false;
-
-            var minfo = info as MethodBase;
-            if (minfo != null)
-                return minfo.IsPrivate == false;
-
-            var einfo = info as EventInfo;
-            if (einfo != null)
-                return einfo.RaiseMethod.IsPrivate == false;
-
-            return true;
+            return type.GetTypeInfo().GetMembers(bindingAttr);
         }
 
         /// <summary>
-        /// Gets field of the given name on the type
+        /// Searches for the public field with the specified name.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public static FieldInfo GetField(this Type type, string name)
         {
-            return type.GetTypeInfo()
-                .DeclaredFields
-                .Where(p => p.Name == name && p.IsPublic)
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetField(name);
         }
 
         /// <summary>
-        /// Gets property of the given name on the type
+        /// Searches for the public property with the specified name.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public static PropertyInfo GetProperty(this Type type, string name)
         {
-            return type.GetRuntimeProperties()
-                .Where(p => ((p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic)) && p.Name == name)
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetProperty(name);
         }
 
         /// <summary>
-        /// Gets property of the given name on the type
+        /// Searches for the specified property, using the specified binding constraints.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <param name="flags"></param>
-        /// <returns></returns>
-        public static PropertyInfo GetProperty(this Type type, string name, BindingFlags flags)
+        public static PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
         {
-            bool declaredOnly = flags.HasFlag(BindingFlags.DeclaredOnly);
-            return type.GetRuntimeProperties()
-                .Where(prop => declaredOnly ? prop.DeclaringType.Equals(type) : true)
-                .ApplyBindingFlags(flags)
-                .Where(p => p.Name == name)
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetProperty(name, bindingAttr);
         }
 
         /// <summary>
-        /// Gets the method with the given name and parameter list
+        /// Searches for the public method with the specified name.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public static MethodInfo GetMethod(this Type type, string name)
         {
-            return type.GetMethods()
-                .Where(m => m.Name == name)
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetMethod(name);
         }
 
         /// <summary>
-        /// Gets the method with the given name and parameter list
+        /// GSearches for the specified method, using the specified binding constraints.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <param name="flags"></param>
-        /// <returns></returns>
-        public static MethodInfo GetMethod(this Type type, string name, BindingFlags flags)
+        public static MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr)
         {
-            return type.GetMethods(flags)
-                .Where(m => m.Name == name)
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetMethod(name, bindingAttr);
         }
 
         /// <summary>
-        /// Gets the method with the given name and parameter list
+        /// Searches for the specified public method whose parameters match the specified argument types.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="name"></param>
-        /// <param name="ptypes"></param>
-        /// <returns></returns>
-        public static MethodInfo GetMethod(this Type type, string name, Type[] ptypes)
+        public static MethodInfo GetMethod(this Type type, string name, Type[] types)
         {
-            return type.GetMethods()
-                .Where(m => m.Name == name && m.GetParameters().ParametersMatch(ptypes))
-                .FirstOrDefault();
+            return type.GetTypeInfo().GetMethod(name, types);
         }
 
         /// <summary>
-        /// Gets public methods on the given type
+        /// Searches for the methods defined for the current <see cref="Type"/>, using the specified binding constraints.
         /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static MethodInfo[] GetMethods(this Type type)
-        {
-            return type.GetAllMethods().Where(m => m.IsPublic).ToArray();
-        }
-
-        /// <summary>
-        /// Gets methods on a type
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="flags"></param>
-        /// <returns></returns>
         public static MethodInfo[] GetMethods(this Type type, BindingFlags flags)
         {
-            bool declaredOnly = flags.HasFlag(BindingFlags.DeclaredOnly);
-            IEnumerable<MethodInfo> methods;
-            if (declaredOnly)
-                methods = type.GetTypeInfo().DeclaredMethods;
-            else
-                methods = type.GetAllMethods(flags.HasFlag(BindingFlags.Static) && flags.HasFlag(BindingFlags.FlattenHierarchy));
-
-            return methods.ApplyBindingFlags(flags).ToArray();
-        }
-
-        static IList<MethodInfo> GetAllMethods(this Type type, bool includeBaseStatic = false)
-        {
-            List<MethodInfo> methods = type.GetTypeInfo().DeclaredMethods.ToList();
-            type = type.GetTypeInfo().BaseType;
-            if (type != null)
-            {
-                var baseMethods = type.GetAllMethods(includeBaseStatic)
-                    .Where(b => !b.IsPrivate && (includeBaseStatic || !b.IsStatic) && !methods.Any(m => m.GetRuntimeBaseDefinition() == b.GetRuntimeBaseDefinition()));
-                methods.AddRange(baseMethods);
-            }
-
-            return methods;
-        }
-
-        static IEnumerable<PropertyInfo> ApplyBindingFlags(this IEnumerable<PropertyInfo> infos, BindingFlags flags)
-        {
-            bool pub = flags.HasFlag(BindingFlags.Public);
-            bool priv = flags.HasFlag(BindingFlags.NonPublic);
-            if (pub && !priv)
-                infos = infos.Where(p => (p.GetMethod != null && p.GetMethod.IsPublic) || (p.SetMethod != null && p.SetMethod.IsPublic));
-            if (priv && !pub)
-                infos = infos.Where(p => (p.GetMethod == null || !(p.GetMethod.IsPublic)) && (p.SetMethod == null || !(p.SetMethod.IsPublic)));
-
-            bool stat = flags.HasFlag(BindingFlags.Static);
-            bool inst = flags.HasFlag(BindingFlags.Instance);
-            if (stat && !inst)
-                infos = infos.Where(p => (p.GetMethod != null && p.GetMethod.IsStatic) || (p.SetMethod != null && p.SetMethod.IsStatic));
-            else if (inst && !stat)
-                infos = infos.Where(p => (p.GetMethod != null && !p.GetMethod.IsStatic) || (p.SetMethod != null && !p.SetMethod.IsStatic));
-
-            return infos;
-        }
-
-        static IEnumerable<MethodInfo> ApplyBindingFlags(this IEnumerable<MethodInfo> infos, BindingFlags flags)
-        {
-            bool pub = flags.HasFlag(BindingFlags.Public);
-            bool priv = flags.HasFlag(BindingFlags.NonPublic);
-            if (priv && !pub)
-                infos = infos.Where(m => !m.IsPublic);
-            else if (pub && !priv)
-                infos = infos.Where(m => m.IsPublic);
-
-            bool stat = flags.HasFlag(BindingFlags.Static);
-            bool inst = flags.HasFlag(BindingFlags.Instance);
-            if (stat && !inst)
-                infos = infos.Where(m => m.IsStatic);
-            else if (inst && !stat)
-                infos = infos.Where(m => !m.IsStatic);
-
-            return infos;
+            return type.GetTypeInfo().GetMethods(flags);
         }
     }
 #endif
-
-    /// <summary>
-    /// Extensions to the various MemberInfo derived classes
-    /// </summary>
-    public static class MemberInfoExtensions
-    {
-#if NETSTANDARD1_6
-        /// <summary>
-        /// Returns the get method for the given property
-        /// </summary>
-        /// <param name="pinfo"></param>
-        /// <param name="nonPublic"></param>
-        /// <returns></returns>
-        public static MethodInfo GetGetMethod(this PropertyInfo pinfo, bool nonPublic)
-        {
-            if (pinfo.GetMethod == null)
-                return null;
-
-            if (nonPublic == false && pinfo.GetMethod.IsPrivate)
-                return null;
-
-            return pinfo.GetMethod;
-        }
-#endif
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this member
-        /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this MemberInfo info, bool inherit) where T : class
-        {
-            return info.GetCustomAttributes(inherit).OfType<T>();
-        }
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this parameter
-        /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this ParameterInfo info, bool inherit) where T : class
-        {
-            return info.GetCustomAttributes(inherit).OfType<T>();
-        }
-
-        /// <summary>
-        /// Returns an array of custom attributes of the specified type applied to this assembly
-        /// </summary>
-        public static IEnumerable<T> GetAttributes<T>(this Assembly asm) where T : class
-        {
-#if NET20 || NET35 || NET40
-            return asm.GetCustomAttributes(false).OfType<T>();
-#else
-            return asm.GetCustomAttributes().OfType<T>();
-#endif
-        }
-    }
-
-    /// <summary>
-    /// Type extensions that apply to all target frameworks
-    /// </summary>
-    public static class AdditionalTypeExtensions
-    {
-        /// <summary>
-        /// Determines if the given <see cref="Type"/> array is castable/matches the <see cref="ParameterInfo"/> array.
-        /// </summary>
-        /// <param name="pinfos"></param>
-        /// <param name="ptypes"></param>
-        /// <returns></returns>
-        public static bool ParametersMatch(this ParameterInfo[] pinfos, Type[] ptypes)
-        {
-            if (pinfos.Length != ptypes.Length)
-                return false;
-
-            for (int i = 0; i < pinfos.Length; i++)
-            {
-                if (!pinfos[i].ParameterType.IsCastableFrom(ptypes[i]))
-                    return false;
-            }
-            return true;
-        }
-
-        // §6.1.2 (Implicit numeric conversions) of the specification
-        static Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
-            { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
-            { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
-            { typeof(ulong), new List<Type> { typeof(byte), typeof(ushort), typeof(uint), typeof(char) } },
-            { typeof(long), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(char) } },
-            { typeof(uint), new List<Type> { typeof(byte), typeof(ushort), typeof(char) } },
-            { typeof(int), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(char) } },
-            { typeof(ushort), new List<Type> { typeof(byte), typeof(char) } },
-            { typeof(short), new List<Type> { typeof(byte) } }
-        };
-
-        /// <summary>
-        /// Determines if one type can be implicitly converted from another
-        /// </summary>
-        /// <param name="to"></param>
-        /// <param name="from"></param>
-        /// <returns></returns>
-        public static bool IsCastableFrom(this Type to, Type from)
-        {
-            if (to.IsAssignableFrom(from))
-                return true;
-
-            // Look for the marker that indicates from was null
-            if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
-                return true;
-
-            if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
-                return true;
-
-            return from.GetMethods(BindingFlags.Public | BindingFlags.Static)
-                       .Any(m => m.ReturnType == to && m.Name == "op_Implicit");
-        }
-    }
 
     /// <summary>
     /// This class is used as a flag when we get a parameter list for a method/constructor, but

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -255,13 +255,13 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private TestCaseParameters GetParametersForTestCase(IMethodInfo method)
+        private TestCaseParameters GetParametersForTestCase(MethodInfo method)
         {
             TestCaseParameters parms;
 
             try
             {
-                IParameterInfo[] parameters = method.GetParameters();
+                ParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
 
@@ -270,7 +270,7 @@ namespace NUnit.Framework
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
                 object expectedResultInTargetType;
                 if (parms.HasExpectedResult
-                    && PerformSpecialConversion(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
+                    && PerformSpecialConversion(parms.ExpectedResult, method.ReturnType, out expectedResultInTargetType))
                 {
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
@@ -278,11 +278,11 @@ namespace NUnit.Framework
                 // Special handling for params arguments
                 if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
                 {
-                    IParameterInfo lastParameter = parameters[argsNeeded - 1];
+                    ParameterInfo lastParameter = parameters[argsNeeded - 1];
                     Type lastParameterType = lastParameter.ParameterType;
                     Type elementType = lastParameterType.GetElementType();
 
-                    if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
+                    if (lastParameterType.IsArray && lastParameter.HasAttribute<ParamArrayAttribute>(false))
                     {
                         if (argsProvided == argsNeeded)
                         {
@@ -367,7 +367,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arglist">The arguments to be converted</param>
         /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object[] arglist, IParameterInfo[] parameters)
+        private static void PerformSpecialConversions(object[] arglist, ParameterInfo[] parameters)
         {
             for (int i = 0; i < arglist.Length; i++)
             {
@@ -446,15 +446,13 @@ namespace NUnit.Framework
         #region ITestBuilder Members
 
         /// <summary>
-        /// Construct one or more TestMethods from a given MethodInfo,
-        /// using available parameter data.
+        /// Builds a single test from the specified method and context.
         /// </summary>
-        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
-        /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="suite">The parent to which the test will be added.</param>
+        public IEnumerable<TestMethod> BuildFrom(FixtureMethod method, Test suite)
         {
-            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
+            TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method.Method));
 
 #if PLATFORM_DETECTION
             if (test.RunState != RunState.NotRunnable &&

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2007-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -66,16 +67,16 @@ namespace NUnit.Framework.Interfaces
         string MethodName { get; }
 
         /// <summary>
-        /// Gets the Type of the test fixture, if applicable, or
-        /// null if no fixture type is associated with this test.
+        /// Gets the type which declares the fixture, or <see langword="null"/>
+        /// if no fixture type is associated with this test.
         /// </summary>
-        ITypeInfo TypeInfo { get; }
+        Type Type { get; }
 
         /// <summary>
-        /// Gets an IMethod for the method implementing this test.
-        /// Returns null if the test is not implemented as a method.
+        /// Gets the method which declares the test, or <see langword="null"/>
+        /// if no method is associated with this test.
         /// </summary>
-        IMethodInfo Method { get; }
+        MethodInfo Method { get; }
 
         /// <summary>
         /// Gets the RunState of the test, indicating whether it can be run.

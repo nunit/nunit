@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal
 
             public virtual string GetText(TestMethod testMethod, object[] args)
             {
-                return GetText(testMethod.Method.MethodInfo, args);
+                return GetText(testMethod.Method, args);
             }
 
             public abstract string GetText(MethodInfo method, object[] args);

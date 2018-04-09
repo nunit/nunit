@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework
@@ -39,6 +41,16 @@ namespace NUnit.Framework
             if (result == null) throw new ArgumentNullException(nameof(result));
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
+        }
+
+        public static FixtureMethod GetFixtureMethod(this Type type, string methodName)
+        {
+            return new FixtureMethod(type, type.GetTypeInfo().GetMethod(methodName));
+        }
+
+        public static FixtureMethod GetFixtureMethod(this Type type, string methodName, BindingFlags bindingAttr)
+        {
+            return new FixtureMethod(type, type.GetTypeInfo().GetMethod(methodName, bindingAttr));
         }
     }
 }

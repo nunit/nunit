@@ -398,11 +398,11 @@ namespace NUnit.Framework.Internal.Execution
 
             var list = new List<SetUpTearDownItem>();
 
-            Type fixtureType = Test.TypeInfo?.Type;
+            Type fixtureType = Test.Type;
             if (fixtureType == null)
                 return list;
 
-            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
+            while (fixtureType != null && fixtureType != typeof(object))
             {
                 var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
                 if (node.HasMethods)
@@ -515,7 +515,7 @@ namespace NUnit.Framework.Internal.Execution
             // If there is no fixture and so nothing to do but dispatch
             // grandchildren we run directly. This saves time that would
             // otherwise be spent enqueuing and dequeuing items.
-            if (Test.TypeInfo == null)
+            if (Test.Type == null)
                 return ParallelExecutionStrategy.Direct;
 
             // If the context is single-threaded we are required to run

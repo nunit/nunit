@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
@@ -95,7 +94,7 @@ namespace NUnit.Framework.Internal.Execution
                 var method = _testMethod.Method;
 
                 // Add any wrappers to the TestMethodCommand
-                foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
+                foreach (IWrapTestMethod wrapper in method.GetAttributes<IWrapTestMethod>(true))
                     command = wrapper.Wrap(command);
 
                 // Create TestActionCommands using attributes of the method
@@ -111,8 +110,8 @@ namespace NUnit.Framework.Internal.Execution
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent 
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(SetUpAttribute), true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(TearDownAttribute), true);
+                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.Type, typeof(SetUpAttribute), true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.Type, typeof(TearDownAttribute), true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
@@ -134,11 +133,11 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
+                foreach (ICommandWrapper decorator in method.GetAttributes<IWrapSetUpTearDown>(true))
                     command = decorator.Wrap(command);
 
                 // Add command to set up context using attributes that implement IApplyToContext
-                foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
+                foreach (var attr in method.GetAttributes<IApplyToContext>(true))
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // If a timeout is specified, create a TimeoutCommand

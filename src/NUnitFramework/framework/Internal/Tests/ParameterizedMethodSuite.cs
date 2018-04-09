@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,14 +34,13 @@ namespace NUnit.Framework.Internal
         private bool _isTheory;
 
         /// <summary>
-        /// Construct from a MethodInfo
+        /// Initializes a new instance of the <see cref="ParameterizedMethodSuite"/> class.
         /// </summary>
-        /// <param name="method"></param>
-        public ParameterizedMethodSuite(IMethodInfo method)
-            : base(method.TypeInfo.FullName, method.Name)
+        public ParameterizedMethodSuite(FixtureMethod method)
+            : base(method.FixtureType.FullName, method.Method.Name)
         {
-            Method = method;
-            _isTheory = method.IsDefined<TheoryAttribute>(true);
+            Method = method.Method;
+            _isTheory = method.Method.HasAttribute<TheoryAttribute>(true);
             this.MaintainTestOrder = true;
         }
 

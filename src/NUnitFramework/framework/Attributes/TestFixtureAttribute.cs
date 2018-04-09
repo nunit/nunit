@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2009-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -211,20 +211,18 @@ namespace NUnit.Framework
                     Properties.Add(PropertyNames.Category, cat);
             }
         }
- 
+
         #endregion
 
         #region IFixtureBuilder Members
 
         /// <summary>
-        /// Build a fixture from type provided. Normally called for a Type
-        /// on which the attribute has been placed.
+        /// Builds a single test fixture from the specified type.
         /// </summary>
-        /// <param name="typeInfo">The type info of the fixture to be used.</param>
-        /// <returns>A an IEnumerable holding one TestFixture object.</returns>
-        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
+        /// <param name="type">The type to be used as a fixture.</param>
+        public IEnumerable<TestSuite> BuildFrom(Type type)
         {
-            yield return _builder.BuildFrom(typeInfo, this);
+            yield return _builder.BuildFrom(type, this);
         }
 
         #endregion

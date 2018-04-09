@@ -208,14 +208,14 @@ namespace NUnit.Framework.Internal.Execution
             while (--index >= 0)
                 command = new BeforeTestActionCommand(command, actions[index]);
 
-            if (Test.TypeInfo != null)
+            if (Test.Type != null)
             {
                 // Build the OneTimeSetUpCommands
                 foreach (SetUpTearDownItem item in setUpTearDown)
                     command = new OneTimeSetUpCommand(command, item);
 
                 // Construct the fixture if necessary
-                if (!Test.TypeInfo.IsStaticClass)
+                if (!Test.Type.IsStatic())
                     command = new ConstructFixtureCommand(command);
             }
 
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.Type))
                 command = new DisposeFixtureCommand(command);
 
             return command;
@@ -384,11 +384,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             var teardown = new OneTimeTearDownWorkItem(this);
             Context.Dispatcher.Dispatch(teardown);
-        }
-
-        private static bool IsStaticClass(Type type)
-        {
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
 
         private object cancelLock = new object();

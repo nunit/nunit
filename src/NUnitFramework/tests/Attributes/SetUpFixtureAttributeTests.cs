@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SetUpFixtureCanBeIgnored()
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(typeof(IgnoredSetUpFixture)));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(typeof(IgnoredSetUpFixture));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.Ignored));
         }
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SetUpFixtureMayBeParallelizable()
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(typeof(ParallelizableSetUpFixture)));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(typeof(ParallelizableSetUpFixture));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.Self));
         }
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(TestTearDownClass))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(type));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(type);
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }
