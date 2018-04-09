@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
@@ -79,11 +80,7 @@ namespace NUnit.TestUtilities
                     }
                     else
                     {
-#if NETCOREAPP1_1
                         var actionMethod = action.GetMethodInfo();
-#else
-                        var actionMethod = action.Method;
-#endif
 
                         new Thread(work.Invoke)
                         {
