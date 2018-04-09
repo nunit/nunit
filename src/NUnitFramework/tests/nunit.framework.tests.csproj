@@ -16,7 +16,7 @@
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net20' and '$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
@@ -34,6 +34,7 @@
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" Condition="'$(TargetFramework)' != 'net20'" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Compatibility;
 
 #if !NET40
@@ -104,6 +105,17 @@ at wrapping a non-async method invocation in an async region was done");
 
             public override object WaitForPendingOperationsToComplete(object invocationResult)
             {
+                var awaitAdapter = AwaitAdapter.FromAwaitable(invocationResult);
+
+                if (!awaitAdapter.IsCompleted)
+                {
+                    var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
+                    waitStrategy.WaitForCompletion(awaitAdapter);
+                }
+
+                // Future: instead of Wait(), use GetAwaiter() to check awaiter.IsCompleted above
+                // and use awaiter.OnCompleted/awaiter.GetResult below.
+                // (Implement a ReflectionAwaitAdapter)
                 try
                 {
                     invocationResult.GetType().GetMethod(TaskWaitMethod, new Type[0]).Invoke(invocationResult, null);
