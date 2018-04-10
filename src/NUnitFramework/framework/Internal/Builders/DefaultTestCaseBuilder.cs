@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal.Builders
 
         /// <summary>
         /// Checks to see if the method is parameterized with DataAttribute, 
-        /// if the argument has 0 data it can fail the test when it should be not run / not exist.
+        /// if the argument has no data, it can fail the test when it should not be run.
         /// </summary>
         /// <param name="method">The method for which a test is to be built.</param>
         /// <returns>True if the method signature contains DataAttribute arguments</returns>
