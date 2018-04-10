@@ -140,8 +140,8 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Checks to see if the method is parameterized with DataAttribute, 
-        /// if the argument has no data, it can fail the test when it should not be run.
+        /// Checks to see if the method has arguments with DataAttribute, 
+        /// if the argument has no data, the test should not run rather than fail.
         /// </summary>
         /// <param name="method">The method for which a test is to be built.</param>
         /// <returns>True if the method signature contains DataAttribute arguments</returns>
@@ -151,9 +151,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 var dataAttributes = parameter.GetAttributes<DataAttribute>(true);
                 if (dataAttributes.Length > 0)
-                {
                     return true;
-                }
             }
             return false;
         }
