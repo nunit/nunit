@@ -43,7 +43,7 @@ namespace NUnit.TestUtilities
             var exception = (Exception)null;
 
             var threadsToWaitFor = maxParallelism;
-            using (var noMoreThreadsEvent = new ManualResetEvent(false))
+            using (var noMoreThreadsEvent = new ManualResetEventSlim())
             {
                 for (var i = 0; i < maxParallelism; i++)
                 {
@@ -89,7 +89,7 @@ namespace NUnit.TestUtilities
                     }
                 }
 
-                noMoreThreadsEvent.WaitOne();
+                noMoreThreadsEvent.Wait();
 
 #if NET20 || NET35 || NET40
                 Thread.MemoryBarrier();
