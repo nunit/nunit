@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Attributes
@@ -66,7 +68,7 @@ namespace NUnit.Framework.Attributes
         {
             public int Count { get; set; }
 
-            IEnumerable IParameterDataSource.GetData(IParameterInfo parameter)
+            public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
             {
                 for (var i = 0; i < Count; i++)
                 {
