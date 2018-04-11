@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -51,13 +51,13 @@ namespace NUnit.Framework.Constraints
             _tallyResult = tallyResult;
         }
 
-        /// <summary>Write the custom failure message for this object's <see cref="CollectionEquivalentConstraint"/>.</summary>
+        /// <summary>Write the custom actual value for a failing constraint. <see cref="CollectionEquivalentConstraint"/>.</summary>
         /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>
-        public override void WriteMessageTo(MessageWriter writer)
+        public override void WriteActualValueTo(MessageWriter writer)
         {
             //Write the expected/actual message first.
-            base.WriteMessageTo(writer);
-            
+            base.WriteActualValueTo(writer);
+
             if (_tallyResult.MissingItems.Count > 0)
             {
                 int missingItemsCount = _tallyResult.MissingItems.Count;
