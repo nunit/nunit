@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         public static string DefaultTestNamePattern = "{m}{a}";
 
         // The name pattern used by this TestNameGenerator
-        private string _pattern;
+        private readonly string _pattern;
 
         // The list of NameFragments used to generate names
         private List<NameFragment> _fragments;
@@ -466,7 +466,7 @@ namespace NUnit.Framework.Internal
 
         private class FixedTextFragment : NameFragment
         {
-            private string _text;
+            private readonly string _text;
 
             public FixedTextFragment(string text)
             {
@@ -537,7 +537,7 @@ namespace NUnit.Framework.Internal
 
         private class ArgListFragment : NameFragment
         {
-            private int _maxStringLength;
+            private readonly int _maxStringLength;
 
             public ArgListFragment(int maxStringLength)
             {
@@ -567,8 +567,8 @@ namespace NUnit.Framework.Internal
 
         private class ArgumentFragment : NameFragment
         {
-            private int _index;
-            private int _maxStringLength;
+            private readonly int _index;
+            private readonly int _maxStringLength;
 
             public ArgumentFragment(int index, int maxStringLength)
             {

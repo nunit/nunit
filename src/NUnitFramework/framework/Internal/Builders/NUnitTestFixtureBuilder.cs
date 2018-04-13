@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal.Builders
 
         #region Instance Fields
 
-        private ITestCaseBuilder _testBuilder = new DefaultTestCaseBuilder();
+        private readonly ITestCaseBuilder _testBuilder = new DefaultTestCaseBuilder();
 
         #endregion
 

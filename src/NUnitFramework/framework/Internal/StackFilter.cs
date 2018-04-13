@@ -42,8 +42,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static StackFilter DefaultFilter = new StackFilter();
 
-        private Regex _topOfStackRegex;
-        private Regex _bottomOfStackRegex;
+        private readonly Regex _topOfStackRegex;
+        private readonly Regex _bottomOfStackRegex;
 
         /// <summary>
         /// Construct a stack filter instance

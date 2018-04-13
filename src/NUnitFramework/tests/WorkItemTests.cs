@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
         // Use static for simplicity
         static class DummyFixture
         {
-            public static int Delay = 0;
+            public static readonly int Delay = 0;
 
             public static void DummyTest()
             {

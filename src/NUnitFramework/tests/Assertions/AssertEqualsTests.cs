@@ -573,7 +573,7 @@ namespace NUnit.Framework.Assertions
 
         class IntEquatable : IEquatable<int>
         {
-            int i;
+            readonly int i;
 
             public IntEquatable(int i)
             {
@@ -594,7 +594,7 @@ namespace NUnit.Framework.Assertions
     /// </summary>
     internal class ThrowsIfToStringIsCalled
     {
-        int _x;
+        readonly int _x;
 
         public ThrowsIfToStringIsCalled(int x)
         {

@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
-        private List<EqualityAdapter> externalComparers = new List<EqualityAdapter>();
+        private readonly List<EqualityAdapter> externalComparers = new List<EqualityAdapter>();
 
         /// <summary>
         /// List of points at which a failure occurred.

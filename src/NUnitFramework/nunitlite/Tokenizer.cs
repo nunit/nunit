@@ -104,7 +104,7 @@ namespace NUnit.Common
     /// </summary>
     public class Tokenizer
     {
-        private string _input;
+        private readonly string _input;
         private int _index;
 
         private const char EOF_CHAR = '\0';

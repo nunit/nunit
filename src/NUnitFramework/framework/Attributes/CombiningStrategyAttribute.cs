@@ -40,10 +40,10 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
     {
-        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
-        private ICombiningStrategy _strategy;
-        private IParameterDataProvider _dataProvider;
+        private readonly ICombiningStrategy _strategy;
+        private readonly IParameterDataProvider _dataProvider;
 
         /// <summary>
         /// Construct a CombiningStrategyAttribute incorporating an

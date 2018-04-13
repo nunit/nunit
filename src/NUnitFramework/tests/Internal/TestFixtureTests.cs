@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestFixtureTests
     {
-        private static string dataAssembly = "nunit.testdata";
+        private static readonly string dataAssembly = "nunit.testdata";
 
         private static void CanConstructFrom(Type fixtureType)
         {

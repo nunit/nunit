@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -150,7 +150,8 @@ namespace NUnit.Framework.Internal
 
         class DummyGenericClass<T>
         {
-            private object _obj;
+            private readonly object _obj;
+
             public DummyGenericClass(object obj)
             {
                 _obj = obj;
@@ -345,7 +346,7 @@ namespace NUnit.Framework.Internal
                 "B.GenA`1[GenX`1[Int16]]");
 
             TestShortenedNameDifference(
-                new B.GenA<A.B.GenX<short>>(), 
+                new B.GenA<A.B.GenX<short>>(),
                 new A.GenA<A.B.GenX<int>>(),
                 "B.GenA`1[GenX`1[Int16]]",
                 "A.GenA`1[GenX`1[Int32]]");

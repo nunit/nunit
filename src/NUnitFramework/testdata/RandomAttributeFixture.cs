@@ -33,7 +33,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Int
 
-        private List<int> previousIntValues = new List<int>();
+        private readonly List<int> previousIntValues = new List<int>();
 
         [Test]
         public void RandomInt([Random(COUNT)] int x)
@@ -58,7 +58,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Unsigned Int
 
-        private List<uint> previousUIntValues = new List<uint>();
+        private readonly List<uint> previousUIntValues = new List<uint>();
 
         [Test]
         public void RandomUInt([Random(COUNT)] uint x)
@@ -83,7 +83,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Short
 
-        private List<short> previousShortValues = new List<short>();
+        private readonly List<short> previousShortValues = new List<short>();
 
         [Test]
         public void RandomShort([Random(COUNT)] short x)
@@ -114,7 +114,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Unsigned Short
 
-        private List<ushort> previousUShortValues = new List<ushort>();
+        private readonly List<ushort> previousUShortValues = new List<ushort>();
 
         [Test]
         public void RandomUShort([Random(COUNT)] ushort x)
@@ -145,7 +145,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Long
 
-        private List<long> previousLongValues = new List<long>();
+        private readonly List<long> previousLongValues = new List<long>();
 
         [Test]
         public void RandomLong([Random(COUNT)] long x)
@@ -170,7 +170,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Unsigned Long
 
-        private List<ulong> previousULongValues = new List<ulong>();
+        private readonly List<ulong> previousULongValues = new List<ulong>();
 
         [Test]
         public void RandomULong([Random(COUNT)] ulong x)
@@ -195,7 +195,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Double
 
-        private List<double> previousDoubleValues = new List<double>();
+        private readonly List<double> previousDoubleValues = new List<double>();
 
         [Test]
         public void RandomDouble([Random(COUNT)] double x)
@@ -220,7 +220,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Float
 
-        private List<float> previousFloatValues = new List<float>();
+        private readonly List<float> previousFloatValues = new List<float>();
 
         [Test]
         public void RandomFloat([Random(COUNT)] float x)
@@ -245,7 +245,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Enum
 
-        private List<TestEnum> previousEnumValues = new List<TestEnum>();
+        private readonly List<TestEnum> previousEnumValues = new List<TestEnum>();
 
         [Test]
         public void RandomEnum([Random(COUNT)] TestEnum x)
@@ -269,7 +269,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Decimal
 
-        private List<decimal> previousDecimalValues = new List<decimal>();
+        private readonly List<decimal> previousDecimalValues = new List<decimal>();
 
         [Test]
         public void RandomDecimal([Random(COUNT)] decimal x)
@@ -300,7 +300,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region Byte
 
-        private List<decimal> previousByteValues = new List<decimal>();
+        private readonly List<decimal> previousByteValues = new List<decimal>();
 
         [Test]
         public void RandomByte([Random(COUNT)] byte x)
@@ -331,7 +331,7 @@ namespace NUnit.TestData.RandomAttributeTests
 
         #region SByte
 
-        private List<decimal> previousSByteValues = new List<decimal>();
+        private readonly List<decimal> previousSByteValues = new List<decimal>();
 
         [Test]
         public void RandomSByte([Random(COUNT)] sbyte x)

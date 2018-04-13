@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
 
     class ClassWithIComparable : IComparable
     {
-        private int val;
+        private readonly int val;
 
         public ClassWithIComparable(int val)
         {
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
 
     class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>
     {
-        private int val;
+        private readonly int val;
 
         public ClassWithIComparableOfT(int val)
         {

@@ -42,7 +42,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RepeatAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
-        private int _count;
+        private readonly int _count;
 
         /// <summary>
         /// Construct a RepeatAttribute
@@ -74,7 +74,7 @@ namespace NUnit.Framework
         /// </summary>
         public class RepeatedTestCommand : DelegatingTestCommand
         {
-            private int repeatCount;
+            private readonly int repeatCount;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RepeatedTestCommand"/> class.

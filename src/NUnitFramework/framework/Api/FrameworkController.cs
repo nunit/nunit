@@ -55,7 +55,7 @@ namespace NUnit.Framework.Api
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 
         // Preloaded test assembly, if passed in constructor
-        private Assembly _testAssembly;
+        private readonly Assembly _testAssembly;
 
         #region Constructors
 

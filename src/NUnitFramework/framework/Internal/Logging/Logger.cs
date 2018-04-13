@@ -34,10 +34,10 @@ namespace NUnit.Framework.Internal
         private readonly static string TIME_FMT = "HH:mm:ss.fff";
         private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
-        private string name;
-        private string fullname;
-        private InternalTraceLevel maxLevel;
-        private TextWriter writer;
+        private readonly string name;
+        private readonly string fullname;
+        private readonly InternalTraceLevel maxLevel;
+        private readonly TextWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.

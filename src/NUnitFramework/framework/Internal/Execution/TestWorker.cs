@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestWorker
     {
-        private static Logger log = InternalTrace.GetLogger("TestWorker");
+        private static readonly Logger log = InternalTrace.GetLogger("TestWorker");
 
         private Thread _workerThread;
 
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Start();
         }
 
-        private object cancelLock = new object();
+        private readonly object cancelLock = new object();
 
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem

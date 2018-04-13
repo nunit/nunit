@@ -67,9 +67,9 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( 0, "0" ),
             new TestCaseData( null, "null" ) };
 
-        static ActualValueDelegate DelegateReturningValue;
-        static ActualValueDelegate DelegateReturningFalse;
-        static ActualValueDelegate DelegateReturningZero;
+        static readonly ActualValueDelegate DelegateReturningValue;
+        static readonly ActualValueDelegate DelegateReturningFalse;
+        static readonly ActualValueDelegate DelegateReturningZero;
 
         static ActualValueDelegate<object>[] SuccessDelegates;
         static ActualValueDelegate<object>[] FailureDelegates;
@@ -254,7 +254,7 @@ namespace NUnit.Framework.Constraints
 
         private static object MethodReturningZero() { return 0; }
 
-        private static AutoResetEvent waitEvent = new AutoResetEvent(false);
+        private static readonly AutoResetEvent waitEvent = new AutoResetEvent(false);
 
         private static void Delay(int delay)
         {

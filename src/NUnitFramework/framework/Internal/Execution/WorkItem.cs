@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem : IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("WorkItem");
+        static readonly Logger log = InternalTrace.GetLogger("WorkItem");
 
         #region Construction and Initialization
 

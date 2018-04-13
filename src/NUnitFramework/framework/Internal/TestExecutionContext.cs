@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        private TestExecutionContext _priorContext;
+        private readonly TestExecutionContext _priorContext;
 
         /// <summary>
         /// Indicates that a stop has been requested
@@ -546,7 +546,7 @@ namespace NUnit.Framework.Internal
         /// </example>
         public class IsolatedContext : IDisposable
         {
-            private TestExecutionContext _originalContext;
+            private readonly TestExecutionContext _originalContext;
 
             /// <summary>
             /// Save the original current TestExecutionContext and

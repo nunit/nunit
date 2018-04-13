@@ -41,22 +41,14 @@ namespace NUnit.Framework
     {
         private TestContext _setupContext;
 
-        private string _name;
+        private readonly string _name = TestContext.CurrentContext.Test.Name;
 
-        private string _testDirectory;
-        private string _workDirectory;
+        private readonly string _testDirectory = TestContext.CurrentContext.TestDirectory;
+        private readonly string _workDirectory = TestContext.CurrentContext.WorkDirectory;
 
         private string _tempFilePath;
 
         private const string TempFileName = "TestContextTests.tmp";
-
-        public TestContextTests()
-        {
-            _name = TestContext.CurrentContext.Test.Name;
-
-            _testDirectory = TestContext.CurrentContext.TestDirectory;
-            _workDirectory = TestContext.CurrentContext.WorkDirectory;
-        }
 
         [OneTimeSetUp]
         public void CreateTempFile()
