@@ -58,6 +58,26 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Method to write message with optional args.
+        /// </summary>
+        /// <param name="message">The message to be written</param>
+        /// <param name="args">Any arguments used in formatting the message</param>
+        public void WriteMessage(string message, params object[] args)
+        {
+            WriteMessage(0, message, args);
+        }
+
+        /// <summary>
+        /// Method to write message with optional args, usually
+        /// written to precede the general failure message, at a given 
+        /// indentation level.
+        /// </summary>
+        /// <param name="level">The indentation level of the message</param>
+        /// <param name="message">The message to be written</param>
+        /// <param name="args">Any arguments used in formatting the message</param>
+        public abstract void WriteMessage(int level, string message, params object[] args);
+
+        /// <summary>
         /// Method to write single line message with optional args, usually
         /// written to precede the general failure message, at a given 
         /// indentation level.

@@ -116,6 +116,27 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Method to write message with optional args, usually
+        /// written to precede the general failure message, at a given 
+        /// indentation level.
+        /// </summary>
+        /// <param name="level">The indentation level of the message</param>
+        /// <param name="message">The message to be written</param>
+        /// <param name="args">Any arguments used in formatting the message</param>
+        public override void WriteMessage(int level, string message, params object[] args)
+        {
+            if (message != null)
+            {
+                while (level-- >= 0) Write("  ");
+
+                if (args != null && args.Length > 0)
+                    message = string.Format(message, args);
+
+                Write(MsgUtils.EscapeNullCharacters(message));
+            }
+        }
+
+        /// <summary>
         /// Display Expected and Actual lines for a constraint. This
         /// is called by MessageWriter's default implementation of 
         /// WriteMessageTo and provides the generic two-line display. 

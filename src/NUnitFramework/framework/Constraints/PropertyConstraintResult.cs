@@ -3,7 +3,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// Contain the result of matching a <see cref="PropertyConstraint"/> against an actual value.
     /// </summary>
-    public sealed class PropertyConstraintResult : ConstraintResult
+    internal sealed class PropertyConstraintResult : ConstraintResult
     {
         private readonly ConstraintResult _baseResult;
 
