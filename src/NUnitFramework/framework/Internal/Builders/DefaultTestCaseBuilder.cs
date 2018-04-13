@@ -132,9 +132,9 @@ namespace NUnit.Framework.Internal.Builders
                     tests.Add(test); 
             }
 
-            return hasBuildersSpecified && method.Method.GetParameters().Length > 0 || tests.Count > 0 ||
-                   HasMethodGotDataAttributeParameters(method) || 
-                   tests.Count > 0
+            return hasBuildersSpecified && method.Method.GetParameters().Length > 0 || 
+                   tests.Count > 0 ||
+                   HasMethodGotDataAttributeParameters(method)
                 ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, suite);
         }
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Internal.Builders
         /// Checks to see if the method has arguments with DataAttribute, 
         /// if the argument has no data, the test should not run rather than fail.
         /// </summary>
-        /// <param name="method">The method for which a test is to be built.</param>
+        /// <param name="fixtureMethod">The method for which a test is to be built.</param>
         /// <returns>True if the method signature contains DataAttribute arguments</returns>
         private bool HasMethodGotDataAttributeParameters(FixtureMethod fixtureMethod)
         {
