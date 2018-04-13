@@ -70,15 +70,15 @@ namespace NUnit.Framework.Internal.Execution
         private const int NORMAL_PRIORITY = 1;
         private const int PRIORITY_LEVELS = 2;
 
-        private Logger log = InternalTrace.GetLogger("WorkItemQueue");
+        private readonly Logger log = InternalTrace.GetLogger("WorkItemQueue");
 
         private ConcurrentQueue<WorkItem>[] _innerQueues;
 
         private class SavedState
         {
-            public ConcurrentQueue<WorkItem>[] InnerQueues;
-            public int AddId;
-            public int RemoveId;
+            public readonly ConcurrentQueue<WorkItem>[] InnerQueues;
+            public readonly int AddId;
+            public readonly int RemoveId;
 
             public SavedState(WorkItemQueue queue)
             {
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private Stack<SavedState> _savedState = new Stack<SavedState>();
+        private readonly Stack<SavedState> _savedState = new Stack<SavedState>();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)

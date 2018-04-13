@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DefaultTestCaseBuilder : ITestCaseBuilder
     {
-        private NUnitTestCaseBuilder _nunitTestCaseBuilder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder = new NUnitTestCaseBuilder();
 
         /// <summary>
         /// Determines if the method can be used to build an NUnit test

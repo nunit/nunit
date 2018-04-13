@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
         [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
         private class ExpectedExceptionAttribute : NUnitAttribute, IWrapTestMethod
         {
-            private Type _expectedExceptionType;
+            private readonly Type _expectedExceptionType;
 
             public ExpectedExceptionAttribute(Type type)
             {
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Attributes
 
             private class ExpectedExceptionCommand : DelegatingTestCommand
             {
-                private Type _expectedType;
+                private readonly Type _expectedType;
 
                 public ExpectedExceptionCommand(TestCommand innerCommand, Type expectedType)
                     : base(innerCommand)

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class CollectionEquivalentConstraintResultTests
     {
-        private List<string> _expected = new List<string>() { "one", "two" };
+        private readonly List<string> _expected = new List<string> { "one", "two" };
 
         private CollectionEquivalentConstraint _constraint;
         private TextMessageWriter _writer;
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
             ConstraintResult cr = _constraint.ApplyTo(actualList);
             cr.WriteMessageTo(_writer);
 
-            string expectedMsg = 
+            string expectedMsg =
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\" >" + Environment.NewLine +
                 "  Missing (1): < \"two\" >" + Environment.NewLine;
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
             ConstraintResult cr = _constraint.ApplyTo(actualList);
             cr.WriteMessageTo(_writer);
 
-            string expectedMsg = 
+            string expectedMsg =
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine +
                 "  Missing (2): < \"one\", \"two\" >" + Environment.NewLine;
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
             ConstraintResult cr = _constraint.ApplyTo(actualList);
             cr.WriteMessageTo(_writer);
 
-            string expectedMsg = 
+            string expectedMsg =
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"three\", \"one\", \"two\" >" + Environment.NewLine +
                 "  Extra (1): < \"three\" >" + Environment.NewLine;
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
             ConstraintResult cr = _constraint.ApplyTo(actualList);
             cr.WriteMessageTo(_writer);
 
-            string expectedMsg = 
+            string expectedMsg =
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"three\", \"one\" >" + Environment.NewLine +
                 "  Missing (1): < \"two\" >" + Environment.NewLine +
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Constraints
             ConstraintResult cr = _constraint.ApplyTo(actualList);
             cr.WriteMessageTo(_writer);
 
-            string expectedMsg = 
+            string expectedMsg =
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\", \"two\", \"two\" >" + Environment.NewLine +
                 "  Extra (1): < \"two\" >" + Environment.NewLine;
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Constraints
             ConstraintResult cr = _constraint.ApplyTo(actualList);
             cr.WriteMessageTo(_writer);
 
-            string expectedMsg = 
+            string expectedMsg =
                 "  Expected: equivalent to < \"one\", \"two\" >" + Environment.NewLine +
                 "  But was:  < \"one\", \"two\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\"... >" + Environment.NewLine +
                 "  Extra (11): < \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\", \"nine\", \"ten\"... >" + Environment.NewLine;

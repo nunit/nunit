@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestMethodSignatureTests
     {
-        private static Type fixtureType = typeof(TestMethodSignatureFixture);
+        private static readonly Type fixtureType = typeof(TestMethodSignatureFixture);
 
         [Test]
         public void InstanceTestMethodIsRunnable()

@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Execution
 
 
 
-        private object cancelLock = new object();
+        private readonly object cancelLock = new object();
 
 
         /// <summary>

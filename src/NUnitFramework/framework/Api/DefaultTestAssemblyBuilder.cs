@@ -40,14 +40,14 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        static Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
 
         #region Instance Fields
 
         /// <summary>
         /// The default suite builder used by the test assembly builder.
         /// </summary>
-        ISuiteBuilder _defaultSuiteBuilder;
+        readonly ISuiteBuilder _defaultSuiteBuilder;
 
         #endregion
 

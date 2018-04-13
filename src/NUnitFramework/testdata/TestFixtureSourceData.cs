@@ -30,8 +30,8 @@ namespace NUnit.TestData.TestFixtureSourceData
 {
     public abstract class TestFixtureSourceTest
     {
-        private string Arg;
-        private string Expected;
+        private readonly string Arg;
+        private readonly string Expected;
 
         public TestFixtureSourceTest(string arg, string expected)
         {
@@ -48,9 +48,9 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     public abstract class TestFixtureSourceDivideTest
     {
-        private int X;
-        private int Y;
-        private int Z;
+        private readonly int X;
+        private readonly int Y;
+        private readonly int Z;
 
         public TestFixtureSourceDivideTest(int x, int y, int z)
         {

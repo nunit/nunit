@@ -33,8 +33,8 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownItem
     {
-        private IList<MethodInfo> _setUpMethods;
-        private IList<MethodInfo> _tearDownMethods;
+        private readonly IList<MethodInfo> _setUpMethods;
+        private readonly IList<MethodInfo> _tearDownMethods;
         private bool _setUpWasRun;
 
         /// <summary>

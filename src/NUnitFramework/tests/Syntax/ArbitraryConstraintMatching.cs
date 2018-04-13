@@ -30,8 +30,8 @@ namespace NUnit.Framework.Syntax
     [TestFixture]
     public class ArbitraryConstraintMatching
     {
-        Constraint custom = new CustomConstraint();
-        Constraint another = new AnotherConstraint();
+        readonly Constraint custom = new CustomConstraint();
+        readonly Constraint another = new AnotherConstraint();
 
         [Test]
         public void CanMatchCustomConstraint()

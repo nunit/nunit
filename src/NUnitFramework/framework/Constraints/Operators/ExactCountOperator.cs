@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ExactCountOperator : SelfResolvingOperator
     {
-        private int expectedCount;
+        private readonly int expectedCount;
 
         /// <summary>
         /// Construct an ExactCountOperator for a specified count

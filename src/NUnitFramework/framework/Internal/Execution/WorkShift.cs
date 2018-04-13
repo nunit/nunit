@@ -51,9 +51,9 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkShift
     {
-        private static Logger log = InternalTrace.GetLogger("WorkShift");
+        private static readonly Logger log = InternalTrace.GetLogger("WorkShift");
 
-        private object _syncRoot = new object();
+        private readonly object _syncRoot = new object();
         private int _busyCount = 0;
 
         /// <summary>

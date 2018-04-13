@@ -41,7 +41,7 @@ namespace NUnit.Framework
     public class RandomAttribute : DataAttribute, IParameterDataSource
     {
         private RandomDataSource _source;
-        private int _count;
+        private readonly int _count;
 
         /// <summary>
         /// If true, no value will be repeated.
@@ -230,12 +230,12 @@ namespace NUnit.Framework
 
         abstract class RandomDataSource<T> : RandomDataSource
         {
-            private T _min;
-            private T _max;
-            private int _count;
-            private bool _inRange;
+            private readonly T _min;
+            private readonly T _max;
+            private readonly int _count;
+            private readonly bool _inRange;
 
-            private List<T> previousValues = new List<T>();
+            private readonly List<T> previousValues = new List<T>();
 
             protected Randomizer _randomizer;
 
@@ -301,7 +301,7 @@ namespace NUnit.Framework
 
         class RandomDataConverter : RandomDataSource
         {
-            IParameterDataSource _source;
+            readonly IParameterDataSource _source;
 
             public RandomDataConverter(IParameterDataSource source)
             {
@@ -604,9 +604,9 @@ namespace NUnit.Framework
 
         class EnumDataSource : RandomDataSource
         {
-            private int _count;
+            private readonly int _count;
 
-            private List<object> previousValues = new List<object>();
+            private readonly List<object> previousValues = new List<object>();
 
             public EnumDataSource(int count)
             {

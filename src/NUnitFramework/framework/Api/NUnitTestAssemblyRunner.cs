@@ -46,10 +46,10 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
-        private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
-        private ITestAssemblyBuilder _builder;
-        private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private readonly ITestAssemblyBuilder _builder;
+        private readonly ManualResetEvent _runComplete = new ManualResetEvent(false);
 
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;

@@ -42,7 +42,7 @@ namespace NUnit.Framework
         // elements may have their type changed in GetData
         // if necessary
         // TODO: This causes a lot of boxing so we should eliminate it
-        private object[] _data;
+        private readonly object[] _data;
         #region Ints
 
         /// <summary>

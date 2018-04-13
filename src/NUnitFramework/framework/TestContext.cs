@@ -558,7 +558,7 @@ namespace NUnit.Framework
         /// </summary>
         public class PropertyBagAdapter
         {
-            private IPropertyBag _source;
+            private readonly IPropertyBag _source;
             
             /// <summary>
             /// Construct a <see cref="PropertyBagAdapter"/> from a source

@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedFixtureSuite : TestSuite
     {
-        private bool _genericFixture;
+        private readonly bool _genericFixture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterizedFixtureSuite"/> class.

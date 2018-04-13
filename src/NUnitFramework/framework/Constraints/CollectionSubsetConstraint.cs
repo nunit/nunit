@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionSubsetConstraint : CollectionItemsEqualConstraint
     {
-        private IEnumerable _expected;
+        private readonly IEnumerable _expected;
 
         /// <summary>
         /// Construct a CollectionSubsetConstraint

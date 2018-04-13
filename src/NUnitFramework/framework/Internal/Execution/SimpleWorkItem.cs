@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
-        TestMethod _testMethod;
+        readonly TestMethod _testMethod;
 
         /// <summary>
         /// Construct a simple work item for a test.

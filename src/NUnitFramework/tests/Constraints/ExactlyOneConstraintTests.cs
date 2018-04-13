@@ -28,10 +28,10 @@ namespace NUnit.Framework.Constraints
 {
     public class ExactlyOneConstraintTests
     {
-        private static IEnumerable<string> testCollectionLen0 = new List<string>();
-        private static IEnumerable<string> testCollectionLen1 = new List<string> { "item" };
-        private static IEnumerable<string> testCollectionLen2 = new List<string> { "item", "otherItem" };
-        private static IEnumerable<string> testCollectionLen3 = new List<string> { "item", "item", "otherItem" };
+        private static readonly IEnumerable<string> testCollectionLen0 = new List<string>();
+        private static readonly IEnumerable<string> testCollectionLen1 = new List<string> { "item" };
+        private static readonly IEnumerable<string> testCollectionLen2 = new List<string> { "item", "otherItem" };
+        private static readonly IEnumerable<string> testCollectionLen3 = new List<string> { "item", "item", "otherItem" };
 
         [Test]
         public void ExactlyOneItemInCollection()

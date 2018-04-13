@@ -34,9 +34,9 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestProgressReporter : ITestListener
     {
-        static Logger log = InternalTrace.GetLogger("TestProgressReporter");
+        static readonly Logger log = InternalTrace.GetLogger("TestProgressReporter");
 
-        private ICallbackEventHandler handler;
+        private readonly ICallbackEventHandler handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.

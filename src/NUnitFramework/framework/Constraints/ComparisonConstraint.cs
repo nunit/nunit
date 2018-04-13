@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The value against which a comparison is to be made
         /// </summary>
-        private object _expected;
+        private readonly object _expected;
 
         /// <summary>
         /// Tolerance used in making the comparison

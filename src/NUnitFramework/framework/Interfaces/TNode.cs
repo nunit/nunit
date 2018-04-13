@@ -362,9 +362,9 @@ namespace NUnit.Framework.Interfaces
 
         class NodeFilter
         {
-            private string _nodeName;
-            private string _propName;
-            private string _propValue;
+            private readonly string _nodeName;
+            private readonly string _propName;
+            private readonly string _propValue;
 
             public NodeFilter(string xpath)
             {

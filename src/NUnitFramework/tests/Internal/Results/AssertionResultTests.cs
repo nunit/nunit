@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Results
             _suiteResult.AddResult(_testResult);
         }
 
-        private List<AssertionResult> _expectedAssertions = new List<AssertionResult>();
+        private readonly List<AssertionResult> _expectedAssertions = new List<AssertionResult>();
 
         protected void RecordExpectedAssertions(params AssertionResult[] expectedAssertions)
         {

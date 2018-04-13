@@ -39,7 +39,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]
     public class SetCultureAttribute : PropertyAttribute, IApplyToContext
     {
-        private string _culture;
+        private readonly string _culture;
 
         /// <summary>
         /// Construct given the name of a culture

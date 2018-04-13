@@ -39,8 +39,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
-
-        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
         #region Constructors
 

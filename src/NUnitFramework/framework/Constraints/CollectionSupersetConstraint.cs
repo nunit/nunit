@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionSupersetConstraint : CollectionItemsEqualConstraint
     {
-        private IEnumerable _expected;
+        private readonly IEnumerable _expected;
 
         /// <summary>
         /// Construct a CollectionSupersetConstraint

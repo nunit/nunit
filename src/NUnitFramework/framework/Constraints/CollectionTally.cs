@@ -62,9 +62,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private List<object> _missingItems = new List<object>();
+        private readonly List<object> _missingItems = new List<object>();
 
-        private List<object> _extraItems = new List<object>();
+        private readonly List<object> _extraItems = new List<object>();
 
         /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
         /// <param name="comparer">The comparer to use for equality.</param>

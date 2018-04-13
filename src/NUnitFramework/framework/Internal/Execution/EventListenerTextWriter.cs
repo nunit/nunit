@@ -36,8 +36,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
 	public class EventListenerTextWriter : TextWriter
 	{
-        private TextWriter _defaultWriter;
-		private string _streamName;
+        private readonly TextWriter _defaultWriter;
+		private readonly string _streamName;
 
         /// <summary>
         /// Construct an EventListenerTextWriter

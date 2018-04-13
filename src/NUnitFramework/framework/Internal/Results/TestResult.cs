@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
 
         //        static Logger log = InternalTrace.GetLogger("TestResult");
 
-        private StringBuilder _output = new StringBuilder();
+        private readonly StringBuilder _output = new StringBuilder();
         private double _duration;
 
         /// <summary>
