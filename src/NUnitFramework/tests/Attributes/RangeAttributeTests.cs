@@ -34,6 +34,16 @@ namespace NUnit.Framework.Attributes
 {
     public class RangeAttributeTests
     {
+        [Test]
+        public void MultipleAttributes()
+        {
+            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleRanges));
+
+            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+        }
+
+        private void MethodWithMultipleRanges([Range(1, 3)] [Range(10, 12)] int x) { }
+
         #region Ints
 
         [Test]
@@ -100,16 +110,6 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithIntRangeAndNegativeStep_Reversed([Range(15, 11, -2)] int x) { }
 
-        [Test]
-        public void IntRangeWithMultipleAttributes()
-        {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleIntRange));
-
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
-        }
-
-        private void MethodWithMultipleIntRange([Range(1, 3)][Range(10, 12)]int x) { }
-
         #endregion
 
         #region Unsigned Ints
@@ -161,16 +161,6 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithUintRangeAndStep_Reversed([Range(15u, 11u, 2u)] uint x) { }
-
-        [Test]
-        public void UnsignedIntRangeWithMultipleAttributes()
-        {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleUnsignedIntRange));
-
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
-        }
-
-        private void MethodWithMultipleUnsignedIntRange([Range(1u, 3u)] [Range(10u, 12u)] uint x) { }
 
         #endregion
 
@@ -240,16 +230,6 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithLongRangeAndNegativeStep_Reversed([Range(15L, 11L, -2L)] long x) { }
 
-        [Test]
-        public void LongRangeWithMultipleAttributes()
-        {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleLongRange));
-
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
-        }
-
-        private void MethodWithMultipleLongRange([Range(1L, 3L)] [Range(10L, 12L)] long x) { }
-
         #endregion
 
         #region Unsigned Longs
@@ -302,16 +282,6 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithUlongRangeAndStep_Reversed([Range(15ul, 11ul, 2ul)] ulong x) { }
 
-        [Test]
-        public void UnsignedLongRangeWithMultipleAttributes()
-        {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleUnsignedLongRange));
-
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
-        }
-
-        private void MethodWithMultipleUnsignedLongRange([Range(1ul, 3ul)] [Range(10ul, 12ul)] ulong x) { }
-
         #endregion
 
         #region Doubles
@@ -356,16 +326,6 @@ namespace NUnit.Framework.Attributes
 
         private void MethodWithDoubleRangeAndNegativeStep_Reversed([Range(1.2, 0.7, -0.2)] double x) { }
 
-        [Test]
-        public void DoubleRangeWithMultipleAttributes()
-        {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleDoubleRange));
-
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
-        }
-
-        private void MethodWithMultipleDoubleRange([Range(1.0, 3.0, 1.0)] [Range(10.0, 12.0, 1.0)] double x) { }
-
         #endregion
 
         #region Floats
@@ -409,16 +369,6 @@ namespace NUnit.Framework.Attributes
         }
 
         private void MethodWithFloatRangeAndNegativeStep_Reversed([Range(1.2f, 0.7f, -0.2f)] float x) { }
-
-        [Test]
-        public void FloatRangeWithMultipleAttributes()
-        {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleFloatRange));
-
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
-        }
-
-        private void MethodWithMultipleFloatRange([Range(1.0f, 3.0f, 1.0f)] [Range(10.0f, 12.0f, 1.0f)] float x) { }
 
         #endregion
 
