@@ -96,7 +96,6 @@ namespace NUnit.Framework.Interfaces
         public override int GetHashCode()
         {
             var hashCode = 662238274;
-            hashCode = hashCode * -1521134295 + base.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(FixtureType);
             hashCode = hashCode * -1521134295 + EqualityComparer<MethodInfo>.Default.GetHashCode(Method);
             return hashCode;
