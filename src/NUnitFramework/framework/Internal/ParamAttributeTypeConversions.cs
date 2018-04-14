@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
+// Copyright (c) 2017–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -57,46 +57,68 @@ namespace NUnit.Framework.Internal
         {
             for (int i = 0; i < data.Length; i++)
             {
-                object arg = data[i];
-
-                if (arg == null)
-                {
-                    continue;
-                }
-
-                if (targetType.GetTypeInfo().IsInstanceOfType(arg))
-                {
-                    continue;
-                }
-
-                if (arg.GetType().FullName == "System.DBNull")
-                {
-                    data[i] = null;
-                    continue;
-                }
-
-                bool convert = false;
-
-                if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
-                {
-                    convert = arg is int;
-                }
-                else if (targetType == typeof(decimal))
-                {
-                    convert = arg is double || arg is string || arg is int;
-                }
-                else if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
-                {
-                    convert = arg is string;
-                }
-
-                if (convert)
-                {
-                    data[i] = Convert.ChangeType(arg, targetType, System.Globalization.CultureInfo.InvariantCulture);
-                }
+                object convertedValue;
+                if (TryConvert(data[i], targetType, out convertedValue))
+                    data[i] = convertedValue;
             }
 
             return data;
+        }
+
+        /// <summary>
+        /// Converts a single value to the <paramref name="targetType"/>, if it is supported.
+        /// </summary>
+        public static object Convert(object value, Type targetType)
+        {
+            object convertedValue;
+            if (TryConvert(value, targetType, out convertedValue))
+                return convertedValue;
+
+            throw new InvalidOperationException(
+                (value == null ? "Null" : $"A value of type {value.GetType()} ({value})")
+                + $" cannot be passed to a parameter of type {targetType}.");
+        }
+
+        /// <summary>
+        /// Converts a single value to the <paramref name="targetType"/>, if it is supported.
+        /// </summary>
+        public static bool TryConvert(object value, Type targetType, out object convertedValue)
+        {
+            if (targetType.GetTypeInfo().IsInstanceOfType(value))
+            {
+                convertedValue = value;
+                return true;
+            }
+
+            if (value == null || value.GetType().FullName == "System.DBNull")
+            {
+                convertedValue = null;
+                return Reflect.IsAssignableFromNull(targetType);
+            }
+
+            bool convert = false;
+
+            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+            {
+                convert = value is int;
+            }
+            else if (targetType == typeof(decimal))
+            {
+                convert = value is double || value is string || value is int;
+            }
+            else if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
+            {
+                convert = value is string;
+            }
+
+            if (convert)
+            {
+                convertedValue = System.Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
+                return true;
+            }
+
+            convertedValue = null;
+            return false;
         }
     }
 }

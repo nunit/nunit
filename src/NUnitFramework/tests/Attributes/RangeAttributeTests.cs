@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -408,7 +408,7 @@ namespace NUnit.Framework.Attributes
             CheckValuesWithinTolerance(nameof(MethodWithFloatRangeAndNegativeStep_Reversed), 1.2f, 1.0f, 0.8f);
         }
 
-        private void MethodWithFloatRangeAndNegativeStep_Reversed([Range(1.2f, 0.7, -0.2f)] float x) { }
+        private void MethodWithFloatRangeAndNegativeStep_Reversed([Range(1.2f, 0.7f, -0.2f)] float x) { }
 
         [Test]
         public void FloatRangeWithMultipleAttributes()
@@ -433,19 +433,19 @@ namespace NUnit.Framework.Attributes
         private void MethodWithIntRangeAndShortArgument([Range(1, 3)] short x) { }
 
         [Test]
-        public void CanConvertIntRangeToByte() 
+        public void CanConvertIntRangeToByte()
         {
             CheckValues(nameof(MethodWithIntRangeAndByteArgument), (byte)1, (byte)2, (byte)3);
         }
-        
+
         private void MethodWithIntRangeAndByteArgument([Range(1, 3)] byte x) { }
 
         [Test]
-        public void CanConvertIntRangeToSByte() 
+        public void CanConvertIntRangeToSByte()
         {
             CheckValues(nameof(MethodWithIntRangeAndSByteArgument), (sbyte)1, (sbyte)2, (sbyte)3);
         }
-        
+
         private void MethodWithIntRangeAndSByteArgument([Range(1, 3)] sbyte x) { }
 
         [Test]
@@ -453,11 +453,11 @@ namespace NUnit.Framework.Attributes
         {
             CheckValues(nameof(MethodWithIntRangeAndDecimalArgument), 1M, 2M, 3M);
         }
-        
+
         private void MethodWithIntRangeAndDecimalArgument([Range(1, 3)] decimal x) { }
 
         [Test]
-        public void CanConvertDoubleRangeToDecimal() 
+        public void CanConvertDoubleRangeToDecimal()
         {
             CheckValues(nameof(MethodWithDoubleRangeAndDecimalArgument), 1.0M, 1.1M, 1.2M);
         }
@@ -468,7 +468,7 @@ namespace NUnit.Framework.Attributes
         #endregion
 
         #region Helper Methods
-        
+
         private void CheckValues(string methodName, params object[] expected)
         {
             var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
@@ -493,7 +493,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(attr.GetData(GetType(), param),
                 Is.EqualTo(expected).Within(0.000001));
         }
-        
+
         #endregion
     }
 }

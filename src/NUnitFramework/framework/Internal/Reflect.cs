@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2012 Charlie Poole, Rob Prouse
+// Copyright (c) 2007-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -349,6 +349,20 @@ namespace NUnit.Framework.Internal
             }
 
             return null;
+        }
+
+        internal static bool IsAssignableFromNull(Type type)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+            return !type.GetTypeInfo().IsValueType || IsNullable(type);
+        }
+
+        private static bool IsNullable(Type type)
+        {
+            // Compare with https://github.com/dotnet/coreclr/blob/bb01fb0d954c957a36f3f8c7aad19657afc2ceda/src/mscorlib/src/System/Nullable.cs#L152-L157
+            return type.GetTypeInfo().IsGenericType
+                && !type.GetTypeInfo().IsGenericTypeDefinition
+                && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
         }
     }
 }
