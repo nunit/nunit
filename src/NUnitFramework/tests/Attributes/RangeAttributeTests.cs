@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
@@ -32,7 +33,7 @@ using System.Linq;
 
 namespace NUnit.Framework.Attributes
 {
-    public class RangeAttributeTests
+    public partial class RangeAttributeTests
     {
         [Test]
         public void MultipleAttributes()
@@ -46,69 +47,123 @@ namespace NUnit.Framework.Attributes
 
         #region Ints
 
-        [Test]
-        public void IntRange()
+        public static IEnumerable<TestCaseData> IntRangeCases() => new[]
         {
-            CheckValues(nameof(MethodWithIntRange), 11, 12, 13, 14, 15);
+            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 11, 12, 13, 14, 15 })),
+            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 11, 12, 13, 14, 15 })),
+            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 11, 12, 13, 14, 15 })),
+            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 11, 12, 13, 14, 15 })),
+            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 11, 12, 13, 14, 15 }))
+        };
+        [TestCaseSource(nameof(IntRangeCases))]
+        public static void IntRange(Type parameterType, ExpectedOutcome outcome)
+        {
+            outcome.Assert(new RangeAttribute(11, 15), parameterType);
         }
 
-        private void MethodWithIntRange([Range(11, 15)] int x) { }
-
-        [Test]
-        public void IntRange_Reversed()
+        public static IEnumerable<TestCaseData> IntRange_ReversedCases() => new[]
         {
-            CheckValues(nameof(MethodWithIntRange_Reversed), 15, 14, 13, 12, 11);
+            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 15, 14, 13, 12, 11 })),
+            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 15, 14, 13, 12, 11 })),
+            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 15, 14, 13, 12, 11 })),
+            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 15, 14, 13, 12, 11 })),
+            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 15, 14, 13, 12, 11 }))
+        };
+        [TestCaseSource(nameof(IntRange_ReversedCases))]
+        public static void IntRange_Reversed(Type parameterType, ExpectedOutcome outcome)
+        {
+            outcome.Assert(new RangeAttribute(15, 11), parameterType);
         }
 
-        private void MethodWithIntRange_Reversed([Range(15, 11)] int x) { }
-
-        [Test]
-        public void IntRange_FromEqualsTo()
+        public static IEnumerable<TestCaseData> IntRange_FromEqualsToCases() => new[]
         {
-            CheckValues(nameof(MethodWithIntRange_FromEqualsTo), 11);
+            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 11 })),
+            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 11 })),
+            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 11 })),
+            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 11 })),
+            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 11 }))
+        };
+        [TestCaseSource(nameof(IntRange_FromEqualsToCases))]
+        public static void IntRange_FromEqualsTo(Type parameterType, ExpectedOutcome outcome)
+        {
+            outcome.Assert(new RangeAttribute(11, 11), parameterType);
         }
 
-        private void MethodWithIntRange_FromEqualsTo([Range(11, 11)] int x) { }
-
-        [Test]
-        public void IntRangeAndStep()
+        public static IEnumerable<TestCaseData> IntRangeAndStepCases() => new[]
         {
-            CheckValues(nameof(MethodWithIntRangeAndStep), 11, 13, 15);
+            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 11, 13, 15 })),
+            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 11, 13, 15 })),
+            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 11, 13, 15 })),
+            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 11, 13, 15 })),
+            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 11, 13, 15 }))
+        };
+        [TestCaseSource(nameof(IntRangeAndStepCases))]
+        public static void IntRangeAndStep(Type parameterType, ExpectedOutcome outcome)
+        {
+            outcome.Assert(new RangeAttribute(11, 15, 2), parameterType);
         }
 
-        private void MethodWithIntRangeAndStep([Range(11, 15, 2)] int x) { }
-
         [Test]
-        public void IntRangeAndZeroStep()
+        public static void IntRangeAndZeroStep()
         {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithIntRangeAndZeroStep), 11, 12, 13));
+            Assert.That(() => new RangeAttribute(11, 15, 0), Throws.InstanceOf<ArgumentException>());
         }
 
-        private void MethodWithIntRangeAndZeroStep([Range(11, 15, 0)] int x) { }
-
         [Test]
-        public void IntRangeAndStep_Reversed()
+        public static void IntRangeAndStep_Reversed()
         {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithIntRangeAndStep_Reversed), 11, 13, 15));
+            Assert.That(() => new RangeAttribute(15, 11, 2), Throws.InstanceOf<ArgumentException>());
         }
 
-        private void MethodWithIntRangeAndStep_Reversed([Range(15, 11, 2)] int x) { }
-
         [Test]
-        public void IntRangeAndNegativeStep()
+        public static void IntRangeAndNegativeStep()
         {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithIntRangeAndNegativeStep), 11, 13, 15));
+            Assert.That(() => new RangeAttribute(11, 15, -2), Throws.InstanceOf<ArgumentException>());
         }
 
-        private void MethodWithIntRangeAndNegativeStep([Range(11, 15, -2)] int x) { }
-
-        [Test]
-        public void IntRangeAndNegativeStep_Reversed()
+        public static IEnumerable<TestCaseData> IntRangeAndNegativeStep_ReversedCases() => new[]
         {
-            CheckValues(nameof(MethodWithIntRangeAndNegativeStep_Reversed), 15, 13, 11);
+            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 15, 13, 11 })),
+            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 15, 13, 11 })),
+            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 15, 13, 11 })),
+            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 15, 13, 11 })),
+            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
+            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 15, 13, 11 }))
+        };
+        [TestCaseSource(nameof(IntRangeAndNegativeStep_ReversedCases))]
+        public static void IntRangeAndNegativeStep_Reversed(Type parameterType, ExpectedOutcome outcome)
+        {
+            outcome.Assert(new RangeAttribute(15, 11, -2), parameterType);
         }
-
-        private void MethodWithIntRangeAndNegativeStep_Reversed([Range(15, 11, -2)] int x) { }
 
         #endregion
 
@@ -373,38 +428,6 @@ namespace NUnit.Framework.Attributes
         #endregion
 
         #region Conversions
-
-        [Test]
-        public void CanConvertIntRangeToShort()
-        {
-            CheckValues(nameof(MethodWithIntRangeAndShortArgument), (short)1, (short)2, (short)3);
-        }
-
-        private void MethodWithIntRangeAndShortArgument([Range(1, 3)] short x) { }
-
-        [Test]
-        public void CanConvertIntRangeToByte()
-        {
-            CheckValues(nameof(MethodWithIntRangeAndByteArgument), (byte)1, (byte)2, (byte)3);
-        }
-
-        private void MethodWithIntRangeAndByteArgument([Range(1, 3)] byte x) { }
-
-        [Test]
-        public void CanConvertIntRangeToSByte()
-        {
-            CheckValues(nameof(MethodWithIntRangeAndSByteArgument), (sbyte)1, (sbyte)2, (sbyte)3);
-        }
-
-        private void MethodWithIntRangeAndSByteArgument([Range(1, 3)] sbyte x) { }
-
-        [Test]
-        public void CanConvertIntRangeToDecimal()
-        {
-            CheckValues(nameof(MethodWithIntRangeAndDecimalArgument), 1M, 2M, 3M);
-        }
-
-        private void MethodWithIntRangeAndDecimalArgument([Range(1, 3)] decimal x) { }
 
         [Test]
         public void CanConvertDoubleRangeToDecimal()
