@@ -30,13 +30,13 @@ namespace NUnit.Framework.Internal
     {
         private sealed class UInt64ValueGenerator : ValueGenerator<ulong>
         {
-            public override IEnumerable<ulong> GenerateRange(ulong start, ulong end, ulong step)
+            public override IEnumerable<ulong> GenerateRange(ulong start, ulong end, Step step)
             {
                 if (start == end)
                 {
                     yield return start;
                 }
-                else if ((start < end && step <= 0) || (end < start))
+                else if ((start < end && !step.IsPositive) || (end < start))
                 {
                     throw new ArgumentException("Step must be in the direction of the end.");
                 }
@@ -46,14 +46,39 @@ namespace NUnit.Framework.Internal
                     {
                         yield return current;
 
-                        var next = unchecked(current + step);
+                        var next = step.Apply(current);
 
-                        if (end < next) break; // We stepped past the end of the range.
-                        if (next < current) break; // We overflowed which means we tried to step past the end.
+                        if (start < end)
+                        {
+                            if (end < next) break; // We stepped past the end of the range.
+                            if (next < current) break; // We overflowed which means we tried to step past the end.
+                        }
+                        else
+                        {
+                            if (next < end) break; // We stepped past the end of the range.
+                            if (current < next) break; // We overflowed which means we tried to step past the end.
+                        }
 
                         current = next;
                     }
                 }
+            }
+
+            public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+            {
+                if (value is ulong)
+                {
+                    step = new ComparableStep<ulong>((ulong)value, (prev, stepValue) => unchecked(prev + stepValue));
+                    return true;
+                }
+
+                if (value is int)
+                {
+                    step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked(prev + (ulong)stepValue));
+                    return true;
+                }
+
+                return base.TryCreateStep(value, out step);
             }
         }
     }

@@ -30,13 +30,13 @@ namespace NUnit.Framework.Internal
     {
         private sealed class ByteValueGenerator : ValueGenerator<byte>
         {
-            public override IEnumerable<byte> GenerateRange(byte start, byte end, byte step)
+            public override IEnumerable<byte> GenerateRange(byte start, byte end, Step step)
             {
                 if (start == end)
                 {
                     yield return start;
                 }
-                else if ((start < end && step <= 0) || (end < start && 0 <= step))
+                else if ((start < end && !step.IsPositive) || (end < start && !step.IsNegative))
                 {
                     throw new ArgumentException("Step must be in the direction of the end.");
                 }
@@ -46,14 +46,39 @@ namespace NUnit.Framework.Internal
                     {
                         yield return current;
 
-                        var next = unchecked((byte)(current + step));
+                        var next = step.Apply(current);
 
-                        if (end < next) break; // We stepped past the end of the range.
-                        if (next < current) break; // We overflowed which means we tried to step past the end.
+                        if (start < end)
+                        {
+                            if (end < next) break; // We stepped past the end of the range.
+                            if (next < current) break; // We overflowed which means we tried to step past the end.
+                        }
+                        else
+                        {
+                            if (next < end) break; // We stepped past the end of the range.
+                            if (current < next) break; // We overflowed which means we tried to step past the end.
+                        }
 
                         current = next;
                     }
                 }
+            }
+
+            public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+            {
+                if (value is byte)
+                {
+                    step = new ComparableStep<byte>((byte)value, (prev, stepValue) => unchecked((byte)(prev + stepValue)));
+                    return true;
+                }
+
+                if (value is int)
+                {
+                    step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked((byte)(prev + stepValue)));
+                    return true;
+                }
+
+                return base.TryCreateStep(value, out step);
             }
         }
     }

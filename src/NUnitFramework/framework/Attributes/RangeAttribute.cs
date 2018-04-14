@@ -175,9 +175,26 @@ namespace NUnit.Framework
         {
             var from = ParamAttributeTypeConversions.Convert(_from, parameter.ParameterType);
             var to = ParamAttributeTypeConversions.Convert(_to, parameter.ParameterType);
-            var step = ParamAttributeTypeConversions.Convert(_step, parameter.ParameterType);
 
-            return ValueGenerator.Create(parameter.ParameterType).GenerateRange(from, to, step);
+            var valueGenerator = ValueGenerator.Create(parameter.ParameterType);
+
+            ValueGenerator.Step step;
+            if (!valueGenerator.TryCreateStep(_step, out step))
+            {
+                // ValueGenerator.CreateStep is responsible to enable incrementing bytes by (int)(-1),
+                // or perhaps in the future a DateTime by a TimeSpan, but the responsibility to convert
+                // attribute values from Double to Decimal is in ParamAttributeTypeConversions.
+                // (ParamAttributeTypeConversions tries to simulate what would happen in C# if the
+                // literal syntax used for the attribute value had been used as a parameter argument
+                // in a direct call to the test method.)
+                object stepValueToRequire;
+                if (!ParamAttributeTypeConversions.TryConvert(_step, parameter.ParameterType, out stepValueToRequire))
+                    stepValueToRequire = _step;
+
+                step = valueGenerator.CreateStep(stepValueToRequire);
+            }
+
+            return valueGenerator.GenerateRange(from, to, step);
         }
     }
 }

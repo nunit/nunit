@@ -37,20 +37,57 @@ namespace NUnit.Framework.Internal
             return new NotSupportedException($"{typeof(T)} is using the default value generator which does not support {description}.");
         }
 
-        public virtual IEnumerable<T> GenerateRange(T start, T end, T step)
+        public virtual IEnumerable<T> GenerateRange(T start, T end, Step step)
         {
             throw CreateNotSupportedException("generating a range");
         }
 
-        public override IEnumerable GenerateRange(object start, object end, object step)
+        public sealed override IEnumerable GenerateRange(object start, object end, ValueGenerator.Step step)
         {
-            return GenerateRange((T)start, (T)end, (T)step);
+            return GenerateRange((T)start, (T)end, (Step)step);
+        }
+
+        public sealed class ComparableStep<TStep> : Step where TStep: IComparable
+        {
+            private readonly TStep _step;
+            private readonly Func<T, TStep, T> _apply;
+
+            public ComparableStep(TStep value, Func<T, TStep, T> apply)
+            {
+                if (apply == null) throw new ArgumentNullException(nameof(apply));
+                _step = value;
+                _apply = apply;
+            }
+
+            public override bool IsPositive => Comparer<TStep>.Default.Compare(default(TStep), _step) < 0;
+            public override bool IsNegative => Comparer<TStep>.Default.Compare(_step, default(TStep)) < 0;
+
+            public override T Apply(T value) => _apply.Invoke(value, _step);
+        }
+
+        public new abstract class Step : ValueGenerator.Step
+        {
+            public abstract T Apply(T value);
+        }
+
+        public sealed override ValueGenerator.Step CreateStep(object value)
+        {
+            ValueGenerator.Step step;
+            if (TryCreateStep(value, out step)) return step;
+            throw CreateNotSupportedException($"creating a step of type {value.GetType()}");
+        }
+
+        public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+        {
+            Guard.ArgumentNotNull(value, nameof(value));
+            step = null;
+            return false;
         }
     }
 
     internal abstract partial class ValueGenerator
     {
-        public abstract IEnumerable GenerateRange(object start, object end, object step);
+        public abstract IEnumerable GenerateRange(object start, object end, Step step);
 
         private static readonly MethodInfo GenericCreateMethod =
             typeof(ValueGenerator)
@@ -90,5 +127,14 @@ namespace NUnit.Framework.Internal
 
             return new DefaultValueGenerator<T>();
         }
+
+        public abstract class Step
+        {
+            public abstract bool IsPositive { get; }
+            public abstract bool IsNegative { get; }
+        }
+
+        public abstract Step CreateStep(object value);
+        public abstract bool TryCreateStep(object value, out Step step);
     }
 }

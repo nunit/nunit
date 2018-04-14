@@ -30,13 +30,13 @@ namespace NUnit.Framework.Internal
     {
         private sealed class UInt16ValueGenerator : ValueGenerator<ushort>
         {
-            public override IEnumerable<ushort> GenerateRange(ushort start, ushort end, ushort step)
+            public override IEnumerable<ushort> GenerateRange(ushort start, ushort end, Step step)
             {
                 if (start == end)
                 {
                     yield return start;
                 }
-                else if ((start < end && step <= 0) || (end < start))
+                else if ((start < end && !step.IsPositive) || (end < start))
                 {
                     throw new ArgumentException("Step must be in the direction of the end.");
                 }
@@ -46,14 +46,39 @@ namespace NUnit.Framework.Internal
                     {
                         yield return current;
 
-                        var next = unchecked((ushort)(current + step));
+                        var next = step.Apply(current);
 
-                        if (end < next) break; // We stepped past the end of the range.
-                        if (next < current) break; // We overflowed which means we tried to step past the end.
+                        if (start < end)
+                        {
+                            if (end < next) break; // We stepped past the end of the range.
+                            if (next < current) break; // We overflowed which means we tried to step past the end.
+                        }
+                        else
+                        {
+                            if (next < end) break; // We stepped past the end of the range.
+                            if (current < next) break; // We overflowed which means we tried to step past the end.
+                        }
 
                         current = next;
                     }
                 }
+            }
+
+            public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+            {
+                if (value is ushort)
+                {
+                    step = new ComparableStep<ushort>((ushort)value, (prev, stepValue) => unchecked((ushort)(prev + stepValue)));
+                    return true;
+                }
+
+                if (value is int)
+                {
+                    step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked((ushort)(prev + stepValue)));
+                    return true;
+                }
+
+                return base.TryCreateStep(value, out step);
             }
         }
     }

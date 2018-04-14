@@ -30,13 +30,13 @@ namespace NUnit.Framework.Internal
     {
         private sealed class DoubleValueGenerator : ValueGenerator<double>
         {
-            public override IEnumerable<double> GenerateRange(double start, double end, double step)
+            public override IEnumerable<double> GenerateRange(double start, double end, Step step)
             {
                 if (start == end)
                 {
                     yield return start;
                 }
-                else if ((start < end && step <= 0) || (end < start && 0 <= step))
+                else if ((start < end && !step.IsPositive) || (end < start && !step.IsNegative))
                 {
                     throw new ArgumentException("Step must be in the direction of the end.");
                 }
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
                     {
                         yield return current;
 
-                        var next = current + step;
+                        var next = step.Apply(current);
 
                         if (start < end)
                         {
@@ -62,6 +62,17 @@ namespace NUnit.Framework.Internal
                         current = next;
                     }
                 }
+            }
+
+            public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+            {
+                if (value is double)
+                {
+                    step = new ComparableStep<double>((double)value, (prev, stepValue) => prev + stepValue);
+                    return true;
+                }
+
+                return base.TryCreateStep(value, out step);
             }
         }
     }
