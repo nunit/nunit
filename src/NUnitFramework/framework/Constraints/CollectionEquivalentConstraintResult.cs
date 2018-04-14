@@ -51,20 +51,20 @@ namespace NUnit.Framework.Constraints
             _tallyResult = tallyResult;
         }
 
-         /// <summary>Write the custom actual value for a failing constraint. <see cref="CollectionEquivalentConstraint"/>.</summary>
+         /// <summary>Write the custom extra chainable message to the failure message for a failing constraint. <see cref="CollectionEquivalentConstraint"/>.</summary>
         /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>
-        public override void WriteActualValueTo(MessageWriter writer)
-        {
-            base.WriteActualValueTo(writer);
-           
+        public override void WriteExtraChainableMessage(MessageWriter writer)
+        {            
+            base.WriteExtraChainableMessage(writer);
+
             if (_tallyResult.MissingItems.Count > 0)
             {
                 int missingItemsCount = _tallyResult.MissingItems.Count;
 
                 string missingStr = $"Missing ({missingItemsCount}): ";
                 missingStr += MsgUtils.FormatCollection(_tallyResult.MissingItems, 0, MaxDifferingElemsToWrite);
-                writer.WriteLine();
-                writer.WriteMessage(missingStr);
+
+                writer.WriteMessageLine(missingStr);
             }
 
             if (_tallyResult.ExtraItems.Count > 0)
@@ -73,8 +73,8 @@ namespace NUnit.Framework.Constraints
 
                 string extraStr = $"Extra ({extraItemsCount}): ";
                 extraStr += MsgUtils.FormatCollection(_tallyResult.ExtraItems, 0, MaxDifferingElemsToWrite);
-                writer.WriteLine();
-                writer.WriteMessage(extraStr);                
+
+                writer.WriteMessageLine(extraStr);
             }
         }
     }

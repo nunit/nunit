@@ -22,18 +22,16 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region Write Methods
-       
+
 
         /// <summary>
-        /// Write the actual value for a failing constraint test to a
-        /// MessageWriter. The default implementation simply writes
-        /// the raw value of actual, leaving it to the writer to
-        /// perform any formatting.
+        /// Write the extra failure message for a failing constraint to a
+        /// MessageWriter.
         /// </summary>
         /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteActualValueTo(MessageWriter writer)
+        public override void WriteExtraChainableMessage(MessageWriter writer)
         {
-            _baseResult.WriteActualValueTo(writer);
+            _baseResult.WriteExtraChainableMessage(writer);
         }
 
         #endregion
