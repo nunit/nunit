@@ -68,7 +68,13 @@ namespace NUnit.Framework.Internal
             {
                 if (value is double)
                 {
-                    step = new ComparableStep<double>((double)value, (prev, stepValue) => prev + stepValue);
+                    step = new ComparableStep<double>((double)value, (prev, stepValue) =>
+                    {
+                        var next = prev + stepValue;
+                        if (stepValue > 0 ? next <= prev : prev <= next)
+                            throw new ArithmeticException($"Not enough precision to represent the next step; {prev:r} + {stepValue:r} = {next:r}.");
+                        return next;
+                    });
                     return true;
                 }
 

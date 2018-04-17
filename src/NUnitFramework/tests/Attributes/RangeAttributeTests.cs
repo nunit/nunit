@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Internal;
@@ -336,6 +335,13 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
+        // The smallest distance from MaxValue or MinValue which results in a different number,
+        // overcoming loss of precision.
+        private const float SingleExtremaEpsilon = 2.028241E+31f;
+        private const double DoubleExtremaEpsilon = 1.99584030953472E+292;
+        private const double LargestDoubleConvertibleToDecimal = 7.9228162514264329E+28;
+        private const double NextLargestDoubleConvertibleToLowerDecimal = 7.92281625142642E+28;
+
         #region MaxValue
 
         [Test]
@@ -370,6 +376,58 @@ namespace NUnit.Framework.Attributes
                 Is.EqualTo(new[] { ulong.MaxValue - 2, ulong.MaxValue - 1, ulong.MaxValue }));
         }
 
+        [Test]
+        public static void MaxValueRange_Single()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(float.MaxValue - SingleExtremaEpsilon * 2, float.MaxValue, SingleExtremaEpsilon), typeof(float)),
+                Is.EqualTo(new[] { float.MaxValue - SingleExtremaEpsilon * 2, float.MaxValue - SingleExtremaEpsilon, float.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRangeLosingPrecision_Single()
+        {
+            Assert.That(() => GetData(new RangeAttribute(float.MaxValue - SingleExtremaEpsilon, float.MaxValue, SingleExtremaEpsilon / 2), typeof(float)),
+                Throws.InstanceOf<ArithmeticException>());
+        }
+
+        [Test]
+        public static void MaxValueRange_Double()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(double.MaxValue - DoubleExtremaEpsilon * 2, double.MaxValue, DoubleExtremaEpsilon), typeof(double)),
+                Is.EqualTo(new[] { double.MaxValue - DoubleExtremaEpsilon * 2, double.MaxValue - DoubleExtremaEpsilon, double.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRangeLosingPrecision_Double()
+        {
+            Assert.That(() => GetData(new RangeAttribute(double.MaxValue - DoubleExtremaEpsilon, double.MaxValue, DoubleExtremaEpsilon / 2), typeof(double)),
+                Throws.InstanceOf<ArithmeticException>());
+        }
+
+        [Test]
+        public static void MaxValueRange_Decimal()
+        {
+            const double step = (double)(((decimal)LargestDoubleConvertibleToDecimal - (decimal)NextLargestDoubleConvertibleToLowerDecimal) / 2);
+
+            Assert.That(
+                GetData(new RangeAttribute(NextLargestDoubleConvertibleToLowerDecimal, LargestDoubleConvertibleToDecimal, step), typeof(decimal)),
+                Is.EqualTo(new[]
+                {
+                    (decimal)NextLargestDoubleConvertibleToLowerDecimal,
+                    (decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step,
+                    (decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step * 2
+                }));
+        }
+
+        [Test]
+        public static void MaxValueRangeLosingPrecision_Decimal()
+        {
+            Assert.That(() => GetData(new RangeAttribute(NextLargestDoubleConvertibleToLowerDecimal, LargestDoubleConvertibleToDecimal, 0.1), typeof(decimal)),
+                Throws.InstanceOf<ArithmeticException>());
+        }
+
         #endregion
 
         #region MinValue
@@ -390,11 +448,63 @@ namespace NUnit.Framework.Attributes
                 Is.EqualTo(new[] { long.MinValue + 2, long.MinValue + 1, long.MinValue }));
         }
 
+        [Test]
+        public static void MinValueRange_Single()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(float.MinValue + SingleExtremaEpsilon * 2, float.MinValue, -SingleExtremaEpsilon), typeof(float)),
+                Is.EqualTo(new[] { float.MinValue + SingleExtremaEpsilon * 2, float.MinValue + SingleExtremaEpsilon, float.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRangeLosingPrecision_Single()
+        {
+            Assert.That(() => GetData(new RangeAttribute(float.MinValue + SingleExtremaEpsilon, float.MinValue, -SingleExtremaEpsilon / 2), typeof(float)),
+                Throws.InstanceOf<ArithmeticException>());
+        }
+
+        [Test]
+        public static void MinValueRange_Double()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(double.MinValue + DoubleExtremaEpsilon * 2, double.MinValue, -DoubleExtremaEpsilon), typeof(double)),
+                Is.EqualTo(new[] { double.MinValue + DoubleExtremaEpsilon * 2, double.MinValue + DoubleExtremaEpsilon, double.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRangeLosingPrecision_Double()
+        {
+            Assert.That(() => GetData(new RangeAttribute(double.MinValue + DoubleExtremaEpsilon, double.MinValue, -DoubleExtremaEpsilon / 2), typeof(double)),
+                Throws.InstanceOf<ArithmeticException>());
+        }
+
+        [Test]
+        public static void MinValueRange_Decimal()
+        {
+            const double step = (double)((-(decimal)LargestDoubleConvertibleToDecimal - -(decimal)NextLargestDoubleConvertibleToLowerDecimal) / 2);
+
+            Assert.That(
+                GetData(new RangeAttribute(-NextLargestDoubleConvertibleToLowerDecimal, -LargestDoubleConvertibleToDecimal, step), typeof(decimal)),
+                Is.EqualTo(new[]
+                {
+                    -(decimal)NextLargestDoubleConvertibleToLowerDecimal,
+                    -(decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step,
+                    -(decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step * 2
+                }));
+        }
+
+        [Test]
+        public static void MinValueRangeLosingPrecision_Decimal()
+        {
+            Assert.That(() => GetData(new RangeAttribute(-NextLargestDoubleConvertibleToLowerDecimal, -LargestDoubleConvertibleToDecimal, -0.1), typeof(decimal)),
+                Throws.InstanceOf<ArithmeticException>());
+        }
+
         #endregion
 
-        private static IEnumerable GetData(RangeAttribute rangeAttribute, Type parameterType)
+        private static object[] GetData(RangeAttribute rangeAttribute, Type parameterType)
         {
-            return rangeAttribute.GetData(null, StubParameterInfo.OfType(parameterType));
+            return rangeAttribute.GetData(null, StubParameterInfo.OfType(parameterType)).Cast<object>().ToArray();
         }
     }
 }

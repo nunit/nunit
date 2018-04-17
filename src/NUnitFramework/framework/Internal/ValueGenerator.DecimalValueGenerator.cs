@@ -46,17 +46,25 @@ namespace NUnit.Framework.Internal
                     {
                         yield return current;
 
-                        var next = step.Apply(current);
+                        decimal next;
+                        try
+                        {
+                            next = step.Apply(current);
+                        }
+                        catch (OverflowException)
+                        {
+                            break;
+                        }
 
                         if (start < end)
                         {
                             if (end < next) break; // We stepped past the end of the range.
-                            if (next < current) break; // We overflowed which means we tried to step past the end.
+                            if (next <= current) throw new InvalidOperationException("The step must monotonically increase.");
                         }
                         else
                         {
                             if (next < end) break; // We stepped past the end of the range.
-                            if (current < next) break; // We overflowed which means we tried to step past the end.
+                            if (current <= next) throw new InvalidOperationException("The step must monotonically increase.");
                         }
 
                         current = next;
@@ -68,7 +76,13 @@ namespace NUnit.Framework.Internal
             {
                 if (value is decimal)
                 {
-                    step = new ComparableStep<decimal>((decimal)value, (prev, stepValue) => prev + stepValue);
+                    step = new ComparableStep<decimal>((decimal)value, (prev, stepValue) =>
+                    {
+                        var next = prev + stepValue;
+                        if (stepValue > 0 ? next <= prev : prev <= next)
+                            throw new ArithmeticException($"Not enough precision to represent the next step; {prev} + {stepValue} = {next}.");
+                        return next;
+                    });
                     return true;
                 }
 
