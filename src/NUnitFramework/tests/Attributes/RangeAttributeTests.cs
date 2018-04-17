@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Internal;
@@ -135,6 +136,66 @@ namespace NUnit.Framework.Attributes
         {
             rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
                 parameterType, new[] { 11 });
+        }
+
+        public static IEnumerable<RangeWithExpectedConversions> DegeneratePositiveStepRangeCases => new[]
+        {
+            new RangeWithExpectedConversions(new RangeAttribute(11, 11, 2), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11u, 11u, 2u), UInt32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11L, 11L, 2L), Int64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11UL, 11UL, 2UL), UInt64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11f, 11f, 2f), SingleRangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11d, 11d, 2d), DoubleRangeConvertibleToParameterTypes)
+        };
+
+        [Test]
+        public static void DegeneratePositiveStepRangeDisallowed_Int32(
+            [ValueSource(nameof(DegeneratePositiveStepRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
+        {
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 11 });
+        }
+
+        public static IEnumerable<RangeWithExpectedConversions> DegenerateNegativeStepRangeCases => new[]
+        {
+            new RangeWithExpectedConversions(new RangeAttribute(11, 11, -2), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11L, 11L, -2L), Int64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11f, 11f, -2f), SingleRangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11d, 11d, -2d), DoubleRangeConvertibleToParameterTypes)
+        };
+
+        [Test]
+        public static void DegenerateNegativeStepRange(
+            [ValueSource(nameof(DegenerateNegativeStepRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
+        {
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 11 });
+        }
+
+        [Test]
+        public static void DegenerateZeroStepRangeDisallowed_Int32()
+        {
+            Assert.That(() => new RangeAttribute(11, 11, 0), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void DegenerateZeroStepRangeDisallowed_Int64()
+        {
+            Assert.That(() => new RangeAttribute(11L, 11L, 0L), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void DegenerateZeroStepRangeDisallowed_Single()
+        {
+            Assert.That(() => new RangeAttribute(11f, 11f, 0f), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void DegenerateZeroStepRangeDisallowed_Double()
+        {
+            Assert.That(() => new RangeAttribute(11d, 11d, 0d), Throws.InstanceOf<ArgumentException>());
         }
 
         #endregion
@@ -274,5 +335,66 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
+
+        #region MaxValue
+
+        [Test]
+        public static void MaxValueRange_Int32()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(int.MaxValue - 2, int.MaxValue), typeof(int)),
+                Is.EqualTo(new[] { int.MaxValue - 2, int.MaxValue - 1, int.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRange_UInt32()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(uint.MaxValue - 2, uint.MaxValue), typeof(uint)),
+                Is.EqualTo(new[] { uint.MaxValue - 2, uint.MaxValue - 1, uint.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRange_Int64()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(long.MaxValue - 2, long.MaxValue), typeof(long)),
+                Is.EqualTo(new[] { long.MaxValue - 2, long.MaxValue - 1, long.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRange_UInt64()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(ulong.MaxValue - 2, ulong.MaxValue), typeof(ulong)),
+                Is.EqualTo(new[] { ulong.MaxValue - 2, ulong.MaxValue - 1, ulong.MaxValue }));
+        }
+
+        #endregion
+
+        #region MinValue
+
+        [Test]
+        public static void MinValueRange_Int32()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(int.MinValue + 2, int.MinValue), typeof(int)),
+                Is.EqualTo(new[] { int.MinValue + 2, int.MinValue + 1, int.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRange_Int64()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(long.MinValue + 2, long.MinValue), typeof(long)),
+                Is.EqualTo(new[] { long.MinValue + 2, long.MinValue + 1, long.MinValue }));
+        }
+
+        #endregion
+
+        private static IEnumerable GetData(RangeAttribute rangeAttribute, Type parameterType)
+        {
+            return rangeAttribute.GetData(null, StubParameterInfo.OfType(parameterType));
+        }
     }
 }
