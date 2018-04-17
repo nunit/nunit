@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -195,6 +196,12 @@ namespace NUnit.Framework
             }
 
             return valueGenerator.GenerateRange(from, to, step);
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        public override string ToString()
+        {
+            return $"{MsgUtils.FormatValue(_from)} .. {MsgUtils.FormatValue(_step)} .. {MsgUtils.FormatValue(_to)}";
         }
     }
 }

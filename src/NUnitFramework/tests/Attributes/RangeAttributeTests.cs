@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2009-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,448 +23,254 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
-
-#if NETCOREAPP1_1
 using System.Linq;
-#endif
+using NUnit.Framework.Internal;
+using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     public partial class RangeAttributeTests
     {
+        #region Shared specs
+
+        public static IEnumerable<Type> TestedParameterTypes() => new[]
+        {
+            typeof(sbyte),
+            typeof(byte),
+            typeof(short),
+            typeof(ushort),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(float),
+            typeof(double),
+            typeof(decimal)
+        };
+
+        private static readonly Type[] Int32RangeConvertibleToParameterTypes = { typeof(int), typeof(sbyte), typeof(byte), typeof(short), typeof(decimal) };
+        private static readonly Type[] UInt32RangeConvertibleToParameterTypes = { typeof(uint) };
+        private static readonly Type[] Int64RangeConvertibleToParameterTypes = { typeof(long) };
+        private static readonly Type[] UInt64RangeConvertibleToParameterTypes = { typeof(ulong) };
+        private static readonly Type[] SingleRangeConvertibleToParameterTypes = { typeof(float) };
+        private static readonly Type[] DoubleRangeConvertibleToParameterTypes = { typeof(double), typeof(decimal) };
+
+        #endregion
+
         [Test]
         public void MultipleAttributes()
         {
-            Test test = TestBuilder.MakeParameterizedMethodSuite(GetType(), nameof(MethodWithMultipleRanges));
+            Test test = TestBuilder.MakeParameterizedMethodSuite(typeof(RangeTestFixture), nameof(RangeTestFixture.MethodWithMultipleRanges));
 
-            Assert.That(test.TestCaseCount, Is.EqualTo(6));
+            Assert.That(from testCase in test.Tests select testCase.Arguments[0], Is.EqualTo(new[] { 1, 2, 3, 10, 11, 12 }));
         }
 
-        private void MethodWithMultipleRanges([Range(1, 3)] [Range(10, 12)] int x) { }
+        #region Forward
 
-        #region Ints
-
-        public static IEnumerable<TestCaseData> IntRangeCases() => new[]
+        public static IEnumerable<RangeWithExpectedConversions> ForwardRangeCases => new[]
         {
-            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 11, 12, 13, 14, 15 })),
-            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 11, 12, 13, 14, 15 })),
-            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 11, 12, 13, 14, 15 })),
-            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 11, 12, 13, 14, 15 })),
-            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 11, 12, 13, 14, 15 }))
+            new RangeWithExpectedConversions(new RangeAttribute(11, 15), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11u, 15u), UInt32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11L, 15L), Int64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11UL, 15UL), UInt64RangeConvertibleToParameterTypes)
         };
-        [TestCaseSource(nameof(IntRangeCases))]
-        public static void IntRange(Type parameterType, ExpectedOutcome outcome)
+
+        [Test]
+        public static void ForwardRange(
+            [ValueSource(nameof(ForwardRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
         {
-            outcome.Assert(new RangeAttribute(11, 15), parameterType);
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 11, 12, 13, 14, 15 });
         }
 
-        public static IEnumerable<TestCaseData> IntRange_ReversedCases() => new[]
-        {
-            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 15, 14, 13, 12, 11 })),
-            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 15, 14, 13, 12, 11 })),
-            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 15, 14, 13, 12, 11 })),
-            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 15, 14, 13, 12, 11 })),
-            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 15, 14, 13, 12, 11 }))
-        };
-        [TestCaseSource(nameof(IntRange_ReversedCases))]
-        public static void IntRange_Reversed(Type parameterType, ExpectedOutcome outcome)
-        {
-            outcome.Assert(new RangeAttribute(15, 11), parameterType);
-        }
+        #endregion
 
-        public static IEnumerable<TestCaseData> IntRange_FromEqualsToCases() => new[]
-        {
-            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 11 })),
-            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 11 })),
-            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 11 })),
-            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 11 })),
-            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 11 }))
-        };
-        [TestCaseSource(nameof(IntRange_FromEqualsToCases))]
-        public static void IntRange_FromEqualsTo(Type parameterType, ExpectedOutcome outcome)
-        {
-            outcome.Assert(new RangeAttribute(11, 11), parameterType);
-        }
+        #region Backward
 
-        public static IEnumerable<TestCaseData> IntRangeAndStepCases() => new[]
+        public static IEnumerable<RangeWithExpectedConversions> BackwardRangeCases => new[]
         {
-            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 11, 13, 15 })),
-            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 11, 13, 15 })),
-            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 11, 13, 15 })),
-            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 11, 13, 15 })),
-            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 11, 13, 15 }))
+            new RangeWithExpectedConversions(new RangeAttribute(15, 11), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(15L, 11L), Int64RangeConvertibleToParameterTypes)
         };
-        [TestCaseSource(nameof(IntRangeAndStepCases))]
-        public static void IntRangeAndStep(Type parameterType, ExpectedOutcome outcome)
+
+        [Test]
+        public static void BackwardRange(
+            [ValueSource(nameof(BackwardRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
         {
-            outcome.Assert(new RangeAttribute(11, 15, 2), parameterType);
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 15, 14, 13, 12, 11 });
         }
 
         [Test]
-        public static void IntRangeAndZeroStep()
+        public static void BackwardRangeDisallowed_UInt32()
+        {
+            Assert.That(() => new RangeAttribute(15u, 11u), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void BackwardRangeDisallowed_UInt64()
+        {
+            Assert.That(() => new RangeAttribute(15UL, 11UL), Throws.InstanceOf<ArgumentException>());
+        }
+
+        #endregion
+
+        #region Degenerate
+
+        public static IEnumerable<RangeWithExpectedConversions> DegenerateRangeCases => new[]
+        {
+            new RangeWithExpectedConversions(new RangeAttribute(11, 11), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11u, 11u), UInt32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11L, 11L), Int64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11UL, 11UL), UInt64RangeConvertibleToParameterTypes)
+        };
+
+        [Test]
+        public static void DegenerateRange(
+            [ValueSource(nameof(DegenerateRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
+        {
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 11 });
+        }
+
+        #endregion
+
+        #region Forward step
+
+        public static IEnumerable<RangeWithExpectedConversions> ForwardStepRangeCases => new[]
+        {
+            new RangeWithExpectedConversions(new RangeAttribute(11, 15, 2), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11u, 15u, 2u), UInt32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11L, 15L, 2L), Int64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11UL, 15UL, 2UL), UInt64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11f, 15f, 2f), SingleRangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(11d, 15d, 2d), DoubleRangeConvertibleToParameterTypes)
+        };
+
+        [Test]
+        public static void ForwardStepRange(
+            [ValueSource(nameof(ForwardStepRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
+        {
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 11, 13, 15 });
+        }
+
+        #endregion
+
+        #region Backward step
+
+        public static IEnumerable<RangeWithExpectedConversions> BackwardStepRangeCases => new[]
+        {
+            new RangeWithExpectedConversions(new RangeAttribute(15, 11, -2), Int32RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(15L, 11L, -2L), Int64RangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(15f, 11f, -2f), SingleRangeConvertibleToParameterTypes),
+            new RangeWithExpectedConversions(new RangeAttribute(15d, 11d, -2d), DoubleRangeConvertibleToParameterTypes)
+        };
+
+        [Test]
+        public static void BackwardStepRange(
+            [ValueSource(nameof(BackwardStepRangeCases))] RangeWithExpectedConversions rangeWithExpectedConversions,
+            [ValueSource(nameof(TestedParameterTypes))] Type parameterType)
+        {
+            rangeWithExpectedConversions.AssertCoercionErrorOrMatchingSequence(
+                parameterType, new[] { 15, 13, 11 });
+        }
+
+        #endregion
+
+        #region Zero step
+
+        [Test]
+        public static void ZeroStepRangeDisallowed_Int32()
         {
             Assert.That(() => new RangeAttribute(11, 15, 0), Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
-        public static void IntRangeAndStep_Reversed()
+        public static void ZeroStepRangeDisallowed_UInt32()
+        {
+            Assert.That(() => new RangeAttribute(11u, 15u, 0u), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void ZeroStepRangeDisallowed_Int64()
+        {
+            Assert.That(() => new RangeAttribute(11L, 15L, 0L), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void ZeroStepRangeDisallowed_UInt64()
+        {
+            Assert.That(() => new RangeAttribute(11UL, 15UL, 0UL), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void ZeroStepRangeDisallowed_Single()
+        {
+            Assert.That(() => new RangeAttribute(11f, 15f, 0f), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void ZeroStepRangeDisallowed_Double()
+        {
+            Assert.That(() => new RangeAttribute(11d, 15d, 0d), Throws.InstanceOf<ArgumentException>());
+        }
+
+        #endregion
+
+        #region Opposing step
+
+        [Test]
+        public static void OpposingStepForwardRangeDisallowed_Int32()
+        {
+            Assert.That(() => new RangeAttribute(11, 15, -2), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public static void OpposingStepBackwardRangeDisallowed_Int32()
         {
             Assert.That(() => new RangeAttribute(15, 11, 2), Throws.InstanceOf<ArgumentException>());
         }
 
         [Test]
-        public static void IntRangeAndNegativeStep()
+        public static void OppositeStepForwardRangeDisallowed_Int64()
         {
-            Assert.That(() => new RangeAttribute(11, 15, -2), Throws.InstanceOf<ArgumentException>());
+            Assert.That(() => new RangeAttribute(11L, 15L, -2L), Throws.InstanceOf<ArgumentException>());
         }
-
-        public static IEnumerable<TestCaseData> IntRangeAndNegativeStep_ReversedCases() => new[]
-        {
-            new TestCaseData(typeof(sbyte), ExpectedOutcome.Values(new sbyte[] { 15, 13, 11 })),
-            new TestCaseData(typeof(byte), ExpectedOutcome.Values(new byte[] { 15, 13, 11 })),
-            new TestCaseData(typeof(short), ExpectedOutcome.Values(new short[] { 15, 13, 11 })),
-            new TestCaseData(typeof(ushort), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(int), ExpectedOutcome.Values(new int[] { 15, 13, 11 })),
-            new TestCaseData(typeof(uint), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(long), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(ulong), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(float), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(double), ExpectedOutcome.CoercionError),
-            new TestCaseData(typeof(decimal), ExpectedOutcome.Values(new decimal[] { 15, 13, 11 }))
-        };
-        [TestCaseSource(nameof(IntRangeAndNegativeStep_ReversedCases))]
-        public static void IntRangeAndNegativeStep_Reversed(Type parameterType, ExpectedOutcome outcome)
-        {
-            outcome.Assert(new RangeAttribute(15, 11, -2), parameterType);
-        }
-
-        #endregion
-
-        #region Unsigned Ints
 
         [Test]
-        public void UintRange()
+        public static void OpposingStepBackwardRangeDisallowed_Int64()
         {
-            CheckValues(nameof(MethodWithUintRange), 11u, 12u, 13u, 14u, 15u);
+            Assert.That(() => new RangeAttribute(15L, 11L, 2L), Throws.InstanceOf<ArgumentException>());
         }
-
-        private void MethodWithUintRange([Range(11u, 15u)] uint x) { }
 
         [Test]
-        public void UintRange_Reversed()
+        public static void OppositeStepForwardRangeDisallowed_Single()
         {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithUintRange_Reversed), 15u, 14u, 13u, 12u, 11u));
+            Assert.That(() => new RangeAttribute(11f, 15f, -2f), Throws.InstanceOf<ArgumentException>());
         }
-
-        private void MethodWithUintRange_Reversed([Range(15u, 11u)] uint x) { }
 
         [Test]
-        public void UintRange_FromEqualsTo()
+        public static void OpposingStepBackwardRangeDisallowed_Single()
         {
-            CheckValues(nameof(MethodWithUintRange_FromEqualsTo), 11u);
+            Assert.That(() => new RangeAttribute(15f, 11f, 2f), Throws.InstanceOf<ArgumentException>());
         }
-
-        private void MethodWithUintRange_FromEqualsTo([Range(11u, 11u)] uint x) { }
 
         [Test]
-        public void UintRangeAndStep()
+        public static void OppositeForwardRangeDisallowed_Double()
         {
-            CheckValues(nameof(MethodWithUintRangeAndStep), 11u, 13u, 15u);
+            Assert.That(() => new RangeAttribute(11d, 15d, -2d), Throws.InstanceOf<ArgumentException>());
         }
-
-        private void MethodWithUintRangeAndStep([Range(11u, 15u, 2u)] uint x) { }
 
         [Test]
-        public void UintRangeAndZeroStep()
+        public static void OpposingStepBackwardRangeDisallowed_Double()
         {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithUintRangeAndZeroStep), 11u, 12u, 13u));
-        }
-
-        private void MethodWithUintRangeAndZeroStep([Range(11u, 15u, 0u)] uint x) { }
-
-        [Test]
-        public void UintRangeAndStep_Reversed()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithUintRangeAndStep_Reversed), 11u, 13u, 15u));
-        }
-
-        private void MethodWithUintRangeAndStep_Reversed([Range(15u, 11u, 2u)] uint x) { }
-
-        #endregion
-
-        #region Longs
-
-        [Test]
-        public void LongRange()
-        {
-            CheckValues(nameof(MethodWithLongRange), 11L, 12L, 13L, 14L, 15L);
-        }
-
-        private void MethodWithLongRange([Range(11L, 15L)] long x) { }
-
-        [Test]
-        public void LongRange_Reversed()
-        {
-            CheckValues(nameof(MethodWithLongRange_Reversed), 15L, 14L, 13L, 12L, 11L);
-        }
-
-        private void MethodWithLongRange_Reversed([Range(15L, 11L)] long x) { }
-
-        [Test]
-        public void LongRange_FromEqualsTo()
-        {
-            CheckValues(nameof(MethodWithLongRange_FromEqualsTo), 11L);
-        }
-
-        private void MethodWithLongRange_FromEqualsTo([Range(11L, 11L)] long x) { }
-
-        [Test]
-        public void LongRangeAndStep()
-        {
-            CheckValues(nameof(MethodWithLongRangeAndStep), 11L, 13L, 15L);
-        }
-
-        private void MethodWithLongRangeAndStep([Range(11L, 15L, 2)] long x) { }
-
-        [Test]
-        public void LongRangeAndZeroStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithLongRangeAndZeroStep), 11L, 12L, 13L));
-        }
-
-        private void MethodWithLongRangeAndZeroStep([Range(11L, 15L, 0L)] long x) { }
-
-        [Test]
-        public void LongRangeAndStep_Reversed()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithLongRangeAndStep_Reversed), 11L, 13L, 15L));
-        }
-
-        private void MethodWithLongRangeAndStep_Reversed([Range(15L, 11L, 2L)] long x) { }
-
-        [Test]
-        public void LongRangeAndNegativeStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithLongRangeAndNegativeStep), 11L, 13L, 15L));
-        }
-
-        private void MethodWithLongRangeAndNegativeStep([Range(11L, 15L, -2L)] long x) { }
-
-        [Test]
-        public void LongRangeAndNegativeStep_Reversed()
-        {
-            CheckValues(nameof(MethodWithLongRangeAndNegativeStep_Reversed), 15L, 13L, 11L);
-        }
-
-        private void MethodWithLongRangeAndNegativeStep_Reversed([Range(15L, 11L, -2L)] long x) { }
-
-        #endregion
-
-        #region Unsigned Longs
-
-        [Test]
-        public void UlongRange()
-        {
-            CheckValues(nameof(MethodWithUlongRange), 11ul, 12ul, 13ul, 14ul, 15ul);
-        }
-
-        private void MethodWithUlongRange([Range(11ul, 15ul)] ulong x) { }
-
-        [Test]
-        public void UlongRange_Reversed()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithUlongRange_Reversed), 15ul, 14ul, 13ul, 12ul, 11ul));
-        }
-
-        private void MethodWithUlongRange_Reversed([Range(15ul, 11ul)] ulong x) { }
-
-        [Test]
-        public void UlongRange_FromEqualsTo()
-        {
-            CheckValues(nameof(MethodWithUlongRange_FromEqualsTo), 11ul);
-        }
-
-        private void MethodWithUlongRange_FromEqualsTo([Range(11ul, 11ul)] ulong x) { }
-
-        [Test]
-        public void UlongRangeAndStep()
-        {
-            CheckValues(nameof(MethodWithUlongRangeAndStep), 11ul, 13ul, 15ul);
-        }
-
-        private void MethodWithUlongRangeAndStep([Range(11ul, 15ul, 2ul)] ulong x) { }
-
-        [Test]
-        public void UlongRangeAndZeroStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithUlongRangeAndZeroStep), 11ul, 12ul, 13ul));
-        }
-
-        private void MethodWithUlongRangeAndZeroStep([Range(11ul, 15ul, 0ul)] ulong x) { }
-
-        [Test]
-        public void UlongRangeAndStep_Reversed()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValues(nameof(MethodWithUlongRangeAndStep_Reversed), 11ul, 13ul, 15ul));
-        }
-
-        private void MethodWithUlongRangeAndStep_Reversed([Range(15ul, 11ul, 2ul)] ulong x) { }
-
-        #endregion
-
-        #region Doubles
-
-        [Test]
-        public void DoubleRangeAndStep()
-        {
-            CheckValuesWithinTolerance(nameof(MethodWithDoubleRangeAndStep), 0.7, 0.9, 1.1);
-        }
-
-        private void MethodWithDoubleRangeAndStep([Range(0.7, 1.2, 0.2)] double x) { }
-
-        [Test]
-        public void DoubleRangeAndZeroStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValuesWithinTolerance(nameof(MethodWithDoubleRangeAndZeroStep), 0.7, 0.9, 1.1));
-        }
-
-        private void MethodWithDoubleRangeAndZeroStep([Range(0.7, 1.2, 0.0)] double x) { }
-
-        [Test]
-        public void DoubleRangeAndStep_Reversed()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValuesWithinTolerance(nameof(MethodWithDoubleRangeAndStep_Reversed), 0.7, 0.9, 1.1));
-        }
-
-        private void MethodWithDoubleRangeAndStep_Reversed([Range(1.2, 0.7, 0.2)] double x) { }
-
-        [Test]
-        public void DoubleRangeAndNegativeStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValuesWithinTolerance(nameof(MethodWithDoubleRangeAndNegativeStep), 0.7, 0.9, 1.1));
-        }
-
-        private void MethodWithDoubleRangeAndNegativeStep([Range(0.7, 1.2, -0.2)] double x) { }
-
-        [Test]
-        public void DoubleRangeAndNegativeStep_Reversed()
-        {
-            CheckValuesWithinTolerance(nameof(MethodWithDoubleRangeAndNegativeStep_Reversed), 1.2, 1.0, 0.8);
-        }
-
-        private void MethodWithDoubleRangeAndNegativeStep_Reversed([Range(1.2, 0.7, -0.2)] double x) { }
-
-        #endregion
-
-        #region Floats
-
-        [Test]
-        public void FloatRangeAndStep()
-        {
-            CheckValuesWithinTolerance(nameof(MethodWithFloatRangeAndStep), 0.7f, 0.9f, 1.1f);
-        }
-
-        private void MethodWithFloatRangeAndStep([Range(0.7f, 1.2f, 0.2f)] float x) { }
-
-        [Test]
-        public void FloatRangeAndZeroStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValuesWithinTolerance(nameof(MethodWithFloatRangeAndZeroStep), 0.7f, 0.9f, 1.1f));
-        }
-
-        private void MethodWithFloatRangeAndZeroStep([Range(0.7f, 1.2f, 0.0f)] float x) { }
-
-        [Test]
-        public void FloatRangeAndStep_Reversed()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValuesWithinTolerance(nameof(MethodWithFloatRangeAndStep_Reversed), 0.7f, 0.9f, 1.1f));
-        }
-
-        private void MethodWithFloatRangeAndStep_Reversed([Range(1.2f, 0.7, 0.2f)] float x) { }
-
-        [Test]
-        public void FloatRangeAndNegativeStep()
-        {
-            Assert.Throws<ArgumentException>(() => CheckValuesWithinTolerance(nameof(MethodWithFloatRangeAndNegativeStep), 0.7f, 0.9f, 1.1f));
-        }
-
-        private void MethodWithFloatRangeAndNegativeStep([Range(0.7f, 1.2f, -0.2f)] float x) { }
-
-        [Test]
-        public void FloatRangeAndNegativeStep_Reversed()
-        {
-            CheckValuesWithinTolerance(nameof(MethodWithFloatRangeAndNegativeStep_Reversed), 1.2f, 1.0f, 0.8f);
-        }
-
-        private void MethodWithFloatRangeAndNegativeStep_Reversed([Range(1.2f, 0.7f, -0.2f)] float x) { }
-
-        #endregion
-
-        #region Conversions
-
-        [Test]
-        public void CanConvertDoubleRangeToDecimal()
-        {
-            CheckValues(nameof(MethodWithDoubleRangeAndDecimalArgument), 1.0M, 1.1M, 1.2M);
-        }
-
-        // Use max of 1.21 rather than 1.3 so rounding won't give an extra value
-        private void MethodWithDoubleRangeAndDecimalArgument([Range(1.0, 1.21, 0.1)] decimal x) { }
-
-        #endregion
-
-        #region Helper Methods
-
-        private void CheckValues(string methodName, params object[] expected)
-        {
-            var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-            var param = method.GetParameters()[0];
-#if NETCOREAPP1_1
-            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
-#else
-            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
-#endif
-            Assert.That(attr.GetData(GetType(), param), Is.EqualTo(expected));
-        }
-
-        private void CheckValuesWithinTolerance(string methodName, params object[] expected)
-        {
-            var method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
-            var param = method.GetParameters()[0];
-#if NETCOREAPP1_1
-            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false).First() as RangeAttribute;
-#else
-            var attr = param.GetCustomAttributes(typeof(RangeAttribute), false)[0] as RangeAttribute;
-#endif
-            Assert.That(attr.GetData(GetType(), param),
-                Is.EqualTo(expected).Within(0.000001));
+            Assert.That(() => new RangeAttribute(15d, 11d, 2d), Throws.InstanceOf<ArgumentException>());
         }
 
         #endregion

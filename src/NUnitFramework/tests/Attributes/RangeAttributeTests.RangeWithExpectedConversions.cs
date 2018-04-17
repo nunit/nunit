@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,60 +24,58 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Framework.Constraints;
-
-#if NETCOREAPP1_1
 using System.Linq;
-#endif
+using System.Reflection;
 
 namespace NUnit.Framework.Attributes
 {
     partial class RangeAttributeTests
     {
-        public struct ExpectedOutcome
+        public sealed class RangeWithExpectedConversions
         {
-            private readonly IEnumerable _values;
+            public RangeAttribute Attribute { get; }
+            public Type[] ExpectedConversions { get; }
 
-            private ExpectedOutcome(IEnumerable values)
+            public RangeWithExpectedConversions(RangeAttribute attribute, Type[] expectedConversions)
             {
-                _values = values;
+                Attribute = attribute;
+                ExpectedConversions = expectedConversions;
             }
 
             public override string ToString()
             {
-                return _values == null
-                    ? "Expected: coercion error"
-                    : "Expected: values " + MsgUtils.FormatCollection(_values, 0, int.MaxValue);
+                return Attribute.ToString();
             }
 
-            public static ExpectedOutcome CoercionError => new ExpectedOutcome(null);
-
-            public static ExpectedOutcome Values(IEnumerable expected)
-            {
-                Guard.ArgumentNotNull(expected, nameof(expected));
-                return new ExpectedOutcome(expected);
-            }
-
-            public void Assert(RangeAttribute attribute, Type parameterType)
+            /// <summary>
+            /// Helper method. If the parameter type is contained in <see cref="ExpectedConversions"/>,
+            /// converts the specified values to that type and asserts that the attribute produces those
+            /// exact values. Otherwise, asserts that a type coercion exception is thrown.
+            /// </summary>
+            public void AssertCoercionErrorOrMatchingSequence(Type parameterType, IEnumerable valuesToConvert)
             {
                 var param = GetStubParameter(parameterType);
 
-                if (_values != null)
+                if (ExpectedConversions.Contains(parameterType))
                 {
-                    Framework.Assert.That(attribute.GetData(null, param),
-                        Is.EqualTo(_values).AsCollection.Using((IEqualityComparer)EqualityComparer<object>.Default));
+                    // Important: do not use conversion procedure from NUnit framework. That is part of the system
+                    // under test. This conversion procedure must be dead simple, no more than a wrapper over
+                    // new byte[] { 1, 2, 3 }, new sbyte { 1, 2, 3 }, etc.
+                    var convertedValues = valuesToConvert.Cast<object>().Select(value => Convert.ChangeType(value, parameterType));
+
+                    Assert.That(Attribute.GetData(null, param),
+                        Is.EqualTo(convertedValues).AsCollection.Using((IEqualityComparer)EqualityComparer<object>.Default));
                 }
                 else
                 {
-                    Framework.Assert.That(() => attribute.GetData(null, param),
+                    Assert.That(() => Attribute.GetData(null, param),
                         Throws.Exception.Message.Contains("cannot be passed to a parameter of type"));
                 }
             }
 
             private static ParameterInfo GetStubParameter(Type parameterType)
             {
-                return typeof(ExpectedOutcome)
+                return typeof(RangeWithExpectedConversions)
                        .GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic)
                        .MakeGenericMethod(parameterType)
                        .GetParameters()[0];
