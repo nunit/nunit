@@ -33,6 +33,14 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class GenericMethodHelper
     {
+        private static class ConflictingTypesMarkerClass { }
+
+        /// <summary>
+        /// A special value, which is used to indicate that BestCommonType() method
+        /// was unable to find a common type for the specified arguments.
+        /// </summary>
+        private static readonly Type ConflictingTypesMarker = typeof(ConflictingTypesMarkerClass);
+
         /// <summary>
         /// Construct a GenericMethodHelper for a method
         /// </summary>
@@ -64,8 +72,8 @@ namespace NUnit.Framework.Internal
         /// from the arguments actually provided.
         /// </summary>
         /// <param name="argList">The arguments to the method</param>
-        /// <returns>An array of type arguments.</returns>
-        public Type[] GetTypeArguments(object[] argList)
+        /// <param name="typeArguments">If successful, an array of type arguments.</param>
+        public bool TryGetTypeArguments(object[] argList, out Type[] typeArguments)
         {
             Guard.ArgumentValid(argList.Length == ParmTypes.Length, "Supplied arguments do not match required method parameters", nameof(argList));
 
@@ -80,7 +88,17 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            return TypeArgs;
+            foreach (var typeArg in TypeArgs)
+            {
+                if (typeArg == null || typeArg == ConflictingTypesMarker)
+                {
+                    typeArguments = null;
+                    return false;
+                }
+            }
+
+            typeArguments = TypeArgs;
+            return true;
         }
 
         private void TryApplyArgType(Type parmType, Type argType)
@@ -112,7 +130,8 @@ namespace NUnit.Framework.Internal
         {
             // Note: parmType must be generic parameter type - checked by caller
             var index = parmType.GenericParameterPosition;
-            TypeArgs[index] = TypeHelper.BestCommonType(TypeArgs[index], argType);
+            if (!TypeHelper.TryGetBestCommonType(TypeArgs[index], argType, out TypeArgs[index]))
+                TypeArgs[index] = ConflictingTypesMarker;
         }
 
         // Simulates IsAssignableTo generics

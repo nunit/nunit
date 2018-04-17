@@ -31,15 +31,14 @@ namespace NUnit.Framework.Internal
     {
         #region BestCommonType
 
-        [TestCase(typeof(TypeHelper.NonmatchingTypeClass), typeof(object), ExpectedResult = typeof(TypeHelper.NonmatchingTypeClass))]
-        [TestCase(typeof(object), typeof(TypeHelper.NonmatchingTypeClass), ExpectedResult = typeof(TypeHelper.NonmatchingTypeClass))]
         [TestCase(typeof(A), typeof(B), ExpectedResult = typeof(A))]
         [TestCase(typeof(B), typeof(A), ExpectedResult = typeof(A))]
-        [TestCase(typeof(A), typeof(string), ExpectedResult = typeof(TypeHelper.NonmatchingTypeClass))]
+        [TestCase(typeof(A), typeof(string), ExpectedResult = null)]
         [TestCase(typeof(int[]), typeof(IEnumerable<int>), ExpectedResult=typeof(IEnumerable<int>))]
         public Type BestCommonTypeTest(Type type1, Type type2)
         {
-            return TypeHelper.BestCommonType(type1, type2);
+            Type result;
+            return TypeHelper.TryGetBestCommonType(type1, type2, out result) ? result : null;
         }
 
         public class A

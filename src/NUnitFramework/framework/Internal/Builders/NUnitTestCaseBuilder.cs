@@ -202,11 +202,9 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                var typeArguments = new GenericMethodHelper(testMethod.Method).GetTypeArguments(arglist);
-                foreach (Type o in typeArguments)
-                    if (o == null || o == TypeHelper.NonmatchingType)
-                        return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
-
+                Type[] typeArguments;
+                if (!new GenericMethodHelper(testMethod.Method).TryGetTypeArguments(arglist, out typeArguments))
+                    return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();

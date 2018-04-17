@@ -80,7 +80,7 @@ namespace NUnit.Framework.Internal
                 TypeArgs<int>()),
             new TestCaseData("MethodWithGenericListOfType",
                 ArgList(new LinkedList<int>()),
-                new Type[] { null } ),
+                null),
             new TestCaseData("MethodWithGenericListOfLists",
                 ArgList(new List<List<int>>()),
                 TypeArgs<int>()),
@@ -105,7 +105,9 @@ namespace NUnit.Framework.Internal
         public void GetTypeArgumentsForMethodTests(string methodName, object[] args, Type[] typeArgs)
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.That(new GenericMethodHelper(method).GetTypeArguments(args), Is.EqualTo(typeArgs));
+
+            Type[] typeArguments;
+            Assert.That(new GenericMethodHelper(method).TryGetTypeArguments(args, out typeArguments) ? typeArguments : null, Is.EqualTo(typeArgs));
         }
 
         private static object[] ArgList(params object[] args) { return args; }
