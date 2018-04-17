@@ -25,7 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Attributes
             /// </summary>
             public void AssertCoercionErrorOrMatchingSequence(Type parameterType, IEnumerable valuesToConvert)
             {
-                var param = GetStubParameter(parameterType);
+                var param = StubParameterInfo.OfType(parameterType);
 
                 if (ExpectedConversions.Contains(parameterType))
                 {
@@ -72,16 +72,6 @@ namespace NUnit.Framework.Attributes
                         Throws.Exception.Message.Contains("cannot be passed to a parameter of type"));
                 }
             }
-
-            private static ParameterInfo GetStubParameter(Type parameterType)
-            {
-                return typeof(RangeWithExpectedConversions)
-                       .GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic)
-                       .MakeGenericMethod(parameterType)
-                       .GetParameters()[0];
-            }
-
-            private static void DummyMethod<T>(T parameter) { }
         }
     }
 }
