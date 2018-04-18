@@ -104,7 +104,7 @@ namespace NUnit.Framework.Syntax
 
         private class Unit
         {
-            public List<int> Items { get; private set; }
+            public List<int> Items { get; }
             public Unit()
             {
                 Items = new List<int>(new int[] { 1, 2, 3, 4, 5 });

@@ -165,13 +165,13 @@ namespace NUnit.Framework.Api
         /// Gets the ITestAssemblyBuilder used by this controller instance.
         /// </summary>
         /// <value>The builder.</value>
-        public ITestAssemblyBuilder Builder { get; private set; }
+        public ITestAssemblyBuilder Builder { get; }
 
         /// <summary>
         /// Gets the ITestAssemblyRunner used by this controller instance.
         /// </summary>
         /// <value>The runner.</value>
-        public ITestAssemblyRunner Runner { get; private set; }
+        public ITestAssemblyRunner Runner { get; }
 
         /// <summary>
         /// Gets the AssemblyName or the path for which this FrameworkController was created

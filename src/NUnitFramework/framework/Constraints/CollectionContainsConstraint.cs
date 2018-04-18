@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets the expected object
         /// </summary>
-        protected object Expected { get; private set; }
+        protected object Expected { get; }
 
         /// <summary>
         /// Test whether the expected item is contained in the collection

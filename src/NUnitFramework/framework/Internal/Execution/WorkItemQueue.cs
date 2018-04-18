@@ -149,18 +149,18 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the name of the work item queue.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets a flag indicating whether this queue is used for parallel execution
         /// </summary>
-        public bool IsParallelQueue { get; private set; }
+        public bool IsParallelQueue { get; }
 
 #if APARTMENT_STATE
         /// <summary>
         /// Gets the target ApartmentState for work items on this queue
         /// </summary>
-        public ApartmentState TargetApartment { get; private set; }
+        public ApartmentState TargetApartment { get; }
 #endif
 
         private int _itemsProcessed;

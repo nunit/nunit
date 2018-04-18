@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint

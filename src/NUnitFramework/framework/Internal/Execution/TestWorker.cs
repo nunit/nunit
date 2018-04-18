@@ -84,12 +84,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The WorkItemQueue from which this worker pulls WorkItems
         /// </summary>
-        public WorkItemQueue WorkQueue { get; private set; }
+        public WorkItemQueue WorkQueue { get; }
 
         /// <summary>
         /// The name of this worker - also used for the thread
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Indicates whether the worker thread is running
