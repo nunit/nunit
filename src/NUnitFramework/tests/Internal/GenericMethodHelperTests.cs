@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,82 +30,84 @@ namespace NUnit.Framework.Internal
     public class GenericMethodHelperTests
     {
         static TestCaseData[] TypeArgData = new TestCaseData[] {
-            new TestCaseData("MethodWithOneTypeAndOneParameter", 
-                ArgList(42), 
+            new TestCaseData("MethodWithOneTypeAndOneParameter",
+                ArgList(42),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters", 
-                ArgList(42, 99), 
+            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+                ArgList(42, 99),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters", 
-                ArgList(42.0, 99.0), 
+            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+                ArgList(42.0, 99.0),
                 TypeArgs<double>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters", 
-                ArgList(42, 99.0), 
+            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+                ArgList(42, 99.0),
                 TypeArgs<double>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters", 
-                ArgList(42.0, 99), 
+            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+                ArgList(42.0, 99),
                 TypeArgs<double>()),
-            new TestCaseData("MethodWithOneTypeAndThreeParameters", 
-                ArgList(42, -1, 7), 
+            new TestCaseData("MethodWithOneTypeAndThreeParameters",
+                ArgList(42, -1, 7),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithTwoTypesAndTwoParameters", 
-                ArgList(42, "Answer"), 
+            new TestCaseData("MethodWithTwoTypesAndTwoParameters",
+                ArgList(42, "Answer"),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithTwoTypesAndTwoParameters_Reversed", 
-                ArgList("Answer", 42), 
+            new TestCaseData("MethodWithTwoTypesAndTwoParameters_Reversed",
+                ArgList("Answer", 42),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithTwoTypesAndThreeParameters", 
-                ArgList(42, "Answer", 42), 
+            new TestCaseData("MethodWithTwoTypesAndThreeParameters",
+                ArgList(42, "Answer", 42),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithTwoTypesAndFourParameters", 
-                ArgList("Question", 1, "Answer", 42), 
+            new TestCaseData("MethodWithTwoTypesAndFourParameters",
+                ArgList("Question", 1, "Answer", 42),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order123", 
-                ArgList(42, 42.0, "forty-two"), 
+            new TestCaseData("MethodWithThreeTypes_Order123",
+                ArgList(42, 42.0, "forty-two"),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order132", 
-                ArgList(42, "forty-two", 42.0), 
+            new TestCaseData("MethodWithThreeTypes_Order132",
+                ArgList(42, "forty-two", 42.0),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order321", 
-                ArgList("forty-two", 42.0, 42), 
+            new TestCaseData("MethodWithThreeTypes_Order321",
+                ArgList("forty-two", 42.0, 42),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order213", 
-                ArgList(42.0, 42, "forty-two"), 
+            new TestCaseData("MethodWithThreeTypes_Order213",
+                ArgList(42.0, 42, "forty-two"),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithOneTypeAndOneParameter", 
-                ArgList(new int[] { 1, 2, 3 }), 
+            new TestCaseData("MethodWithOneTypeAndOneParameter",
+                ArgList(new int[] { 1, 2, 3 }),
                 TypeArgs<int[]>()),
-            new TestCaseData("MethodWithGenericListOfType", 
+            new TestCaseData("MethodWithGenericListOfType",
                 ArgList(new List<int>()),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericListOfType", 
+            new TestCaseData("MethodWithGenericListOfType",
                 ArgList(new LinkedList<int>()),
-                new Type[] { null } ),
-            new TestCaseData("MethodWithGenericListOfLists", 
-                ArgList(new List<List<int>>()), 
+                null),
+            new TestCaseData("MethodWithGenericListOfLists",
+                ArgList(new List<List<int>>()),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericEnumerableOfType", 
-                ArgList(new List<int>(new int[] { 1, 2, 3 })), 
+            new TestCaseData("MethodWithGenericEnumerableOfType",
+                ArgList(new List<int>(new int[] { 1, 2, 3 })),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericEnumerableOfType", 
-                ArgList(new int[] { 1, 2, 3 }), 
+            new TestCaseData("MethodWithGenericEnumerableOfType",
+                ArgList(new int[] { 1, 2, 3 }),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericEnumerableOfTypeAsSecondArg", 
-                ArgList("X", new int[] { } ), 
+            new TestCaseData("MethodWithGenericEnumerableOfTypeAsSecondArg",
+                ArgList("X", new int[] { } ),
                 TypeArgs<string,int>()),
-            new TestCaseData("MethodTakingDictionary",                       
-                ArgList(new Dictionary<string, object>()), 
+            new TestCaseData("MethodTakingDictionary",
+                ArgList(new Dictionary<string, object>()),
                 TypeArgs<string,object>()),
-            new TestCaseData("MethodWithNestedTypes",                        
-                ArgList(new List<Dictionary<string, int>>(), new Dictionary<int, List<string[]>>() ), 
-                TypeArgs<string,int,string[]>()) 
+            new TestCaseData("MethodWithNestedTypes",
+                ArgList(new List<Dictionary<string, int>>(), new Dictionary<int, List<string[]>>() ),
+                TypeArgs<string,int,string[]>())
         };
 
         [TestCaseSource(nameof(TypeArgData))]
         public void GetTypeArgumentsForMethodTests(string methodName, object[] args, Type[] typeArgs)
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-            Assert.That(new GenericMethodHelper(method).GetTypeArguments(args), Is.EqualTo(typeArgs));
+
+            Type[] typeArguments;
+            Assert.That(new GenericMethodHelper(method).TryGetTypeArguments(args, out typeArguments) ? typeArguments : null, Is.EqualTo(typeArgs));
         }
 
         private static object[] ArgList(params object[] args) { return args; }

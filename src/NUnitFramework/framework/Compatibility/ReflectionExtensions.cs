@@ -217,12 +217,4 @@ namespace NUnit.Compatibility
         }
     }
 #endif
-
-    /// <summary>
-    /// This class is used as a flag when we get a parameter list for a method/constructor, but
-    /// we do not know one of the types because null was passed in.
-    /// </summary>
-    public class NUnitNullType
-    {
-    }
 }

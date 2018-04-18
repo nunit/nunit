@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Returns an array of types from an array of objects.
-        /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see cref="NUnitNullType"/>
+        /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see langword="null"/>
         /// for null elements rather than throwing <see cref="ArgumentNullException"/>.
         /// </summary>
         internal static Type[] GetTypeArray(object[] objects)
@@ -161,8 +161,7 @@ namespace NUnit.Framework.Internal
             int index = 0;
             foreach (object o in objects)
             {
-                // NUnitNullType is a marker to indicate null since we can't do typeof(null) or null.GetType()
-                types[index++] = o == null ? typeof(NUnitNullType) : o.GetType();
+                types[index++] = o?.GetType();
             }
             return types;
         }
@@ -215,7 +214,7 @@ namespace NUnit.Framework.Internal
                 return true;
 
             // Look for the marker that indicates from was null
-            if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
+            if (from == null && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
                 return true;
 
             if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
