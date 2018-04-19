@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Assembly represented by this instance.
         /// </summary>
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         /// <summary>
         /// Gets the name used for the top-level element in the

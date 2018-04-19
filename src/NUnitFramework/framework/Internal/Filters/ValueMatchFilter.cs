@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Returns the value matched by the filter - used for testing
         /// </summary>
-        public string ExpectedValue { get; private set; }
+        public string ExpectedValue { get; }
 
         /// <summary>
         /// Indicates whether the value is a regular expression

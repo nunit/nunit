@@ -60,7 +60,7 @@ namespace NUnit.TestData.ActionAttributeTests
     [TaggedAction("OnFixture")]
     public class ActionAttributeFixture : BaseActionAttributeFixture, IWithAction
     {
-        public static List<string> Events { get; private set; }
+        public static List<string> Events { get; }
 
         List<string> IWithAction.Events { get { return Events; } }
 

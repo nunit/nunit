@@ -49,9 +49,9 @@ namespace NUnit.Common
             Text = text;
         }
 
-        public TokenKind Kind { get; private set; }
+        public TokenKind Kind { get; }
 
-        public string Text { get; private set; }
+        public string Text { get; }
 
         public int Pos { get; set; }
 

@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test being executed by the work item
         /// </summary>
-        public Test Test { get; private set; }
+        public Test Test { get; }
 
         /// <summary>
         /// The name of the work item - defaults to the Test name.
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Filter used to include or exclude child tests
         /// </summary>
-        public ITestFilter Filter { get; private set; }
+        public ITestFilter Filter { get; }
 
         /// <summary>
         /// The execution context
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets the ParallelScope associated with the test, if any,
         /// otherwise returning ParallelScope.Default;
         /// </summary>
-        public ParallelScope ParallelScope { get; private set; }
+        public ParallelScope ParallelScope { get; }
 
 #if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }

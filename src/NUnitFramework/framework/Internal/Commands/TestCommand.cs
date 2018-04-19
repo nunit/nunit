@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Gets the test associated with this command.
         /// </summary>
-        public Test Test { get; private set; }
+        public Test Test { get; }
 
         /// <summary>
         /// Runs the test in a specified context, returning a TestResult.

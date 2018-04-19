@@ -76,12 +76,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The arguments originally provided to the attribute
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// Properties pertaining to this fixture
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         #endregion
 

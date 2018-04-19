@@ -60,12 +60,12 @@ namespace NUnit.Framework.Internal
                 ParmTypes[i] = parms[i].ParameterType;
         }
 
-        private MethodInfo Method { get; set; }
+        private MethodInfo Method { get; }
 
-        private Type[] TypeParms { get; set; }
-        private Type[] TypeArgs { get; set; }
+        private Type[] TypeParms { get; }
+        private Type[] TypeArgs { get; }
 
-        private Type[] ParmTypes { get; set; }
+        private Type[] ParmTypes { get; }
 
         /// <summary>
         /// Return the type arguments for the method, deducing them

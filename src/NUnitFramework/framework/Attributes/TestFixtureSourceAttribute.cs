@@ -84,12 +84,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
-        public string SourceName { get; private set; }
+        public string SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; private set; }
+        public Type SourceType { get; }
 
         /// <summary>
         /// Gets or sets the category associated with every fixture created from 

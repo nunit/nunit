@@ -367,7 +367,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests
         /// </summary>
-        public List<ITestAction> UpstreamActions { get; private set; }
+        public List<ITestAction> UpstreamActions { get; }
 
         // TODO: Put in checks on all of these settings
         // with side effects so we only change them

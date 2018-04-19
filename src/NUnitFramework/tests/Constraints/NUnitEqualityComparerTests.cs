@@ -525,7 +525,7 @@ namespace NUnit.Framework.Constraints
             SomeProperty = someProperty;
         }
 
-        public int SomeProperty { get; private set; }
+        public int SomeProperty { get; }
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
@@ -552,7 +552,7 @@ namespace NUnit.Framework.Constraints
             OtherProperty = otherProperty;
         }
 
-        public int OtherProperty { get; private set; }
+        public int OtherProperty { get; }
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>

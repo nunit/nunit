@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The EventQueue created and filled by this listener
         /// </summary>
-        public EventQueue Events { get; private set; }
+        public EventQueue Events { get; }
 
         /// <summary>
         /// Construct a QueuingEventListener

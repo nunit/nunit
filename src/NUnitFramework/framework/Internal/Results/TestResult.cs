@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the test with which this result is associated.
         /// </summary>
-        public ITest Test { get; private set; }
+        public ITest Test { get; }
 
         /// <summary>
         /// Gets the ResultState of the test result, which 
@@ -323,7 +323,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
         /// </summary>
-        public TextWriter OutWriter { get; private set; }
+        public TextWriter OutWriter { get; }
 
         /// <summary>
         /// Gets any text output written to this result.
