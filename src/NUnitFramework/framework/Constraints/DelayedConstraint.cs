@@ -23,7 +23,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -348,9 +350,8 @@ namespace NUnit.Framework.Constraints
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(del))
-                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(del))
-                    return region.WaitForPendingOperationsToComplete(del());
+            if (AsyncToSyncAdapter.IsAsyncOperation(del))
+                return AsyncToSyncAdapter.Await(() => del.Invoke());
 #endif
 
             return del();

@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
+using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -88,6 +91,25 @@ namespace NUnit.Framework
         {
             if (!condition)
                 throw new InvalidOperationException(message);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the specified delegate is <c>async void</c>.
+        /// </summary>
+        public static void ArgumentNotAsyncVoid(Delegate @delegate, string paramName)
+        {
+            ArgumentNotAsyncVoid(@delegate.GetMethodInfo(), paramName);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the specified delegate is <c>async void</c>.
+        /// </summary>
+        public static void ArgumentNotAsyncVoid(MethodInfo method, string paramName)
+        {
+            if (method.ReturnType != typeof(void)) return;
+            if (!AsyncToSyncAdapter.IsAsyncOperation(method)) return;
+
+            throw new ArgumentException("Async void methods are not supported. Please use 'async Task' instead.", paramName);
         }
     }
 }

@@ -157,23 +157,18 @@ namespace NUnit.Framework.Constraints
                 var invocationDescriptor = GetInvocationDescriptor(invocation);
 
 #if ASYNC
-                if (AsyncInvocationRegion.IsAsyncOperation(invocationDescriptor.Delegate))
+                if (AsyncToSyncAdapter.IsAsyncOperation(invocationDescriptor.Delegate))
                 {
-                    using (var region = AsyncInvocationRegion.Create(invocationDescriptor.Delegate))
+                    try
                     {
-                        try
-                        {
-                            object result = invocationDescriptor.Invoke();
-                            region.WaitForPendingOperationsToComplete(result);
-                            return null;
-                        }
-                        catch (Exception ex)
-                        {
-                            return ex;
-                        }
+                        AsyncToSyncAdapter.Await(invocationDescriptor.Invoke);
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex;
                     }
                 }
-                else
 #endif
                 {
                     using (new TestExecutionContext.IsolatedContext())
@@ -201,6 +196,7 @@ namespace NUnit.Framework.Constraints
 
                     if (testDelegate != null)
                     {
+                        Guard.ArgumentNotAsyncVoid(testDelegate, nameof(actual));
                         invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
                     }
 

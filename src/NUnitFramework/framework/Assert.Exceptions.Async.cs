@@ -43,17 +43,13 @@ namespace NUnit.Framework
         public static Exception ThrowsAsync(IResolveConstraint expression, AsyncTestDelegate code, string message, params object[] args)
         {
             Exception caughtException = null;
-            using (var region = AsyncInvocationRegion.Create(code))
+            try
             {
-                try
-                {
-                    var task = code();
-                    region.WaitForPendingOperationsToComplete(task);
-                }
-                catch (Exception e)
-                {
-                    caughtException = e;
-                }
+                AsyncToSyncAdapter.Await(code.Invoke);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
             }
 
             Assert.That(caughtException, expression, message, args);
