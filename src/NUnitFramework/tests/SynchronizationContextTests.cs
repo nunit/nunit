@@ -21,21 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if ASYNC
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-
-#if ASYNC
-using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework
 {
     public static class SynchronizationContextTests
     {
-#if ASYNC
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
 #if NET40 || NET45
@@ -131,7 +128,6 @@ namespace NUnit.Framework
             }
         }
 #endif
-#endif
 
         private static IDisposable TemporarySynchronizationContext(SynchronizationContext synchronizationContext)
         {
@@ -141,3 +137,4 @@ namespace NUnit.Framework
         }
     }
 }
+#endif
