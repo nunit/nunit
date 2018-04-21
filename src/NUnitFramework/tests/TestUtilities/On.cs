@@ -24,7 +24,7 @@
 using System;
 using System.Threading;
 
-namespace NUnit.TestData
+namespace NUnit.TestUtilities
 {
     /// <summary>
     /// Enables the <see cref="On.Dispose"/> syntax.

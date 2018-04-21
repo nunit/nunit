@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 #if ASYNC
 using System.Threading.Tasks;
@@ -36,6 +35,9 @@ namespace NUnit.Framework
 {
     public static class SynchronizationContextTests
     {
+#if ASYNC
+        public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
+
 #if NET40 || NET45
         // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread
         // to ensure that the message pump is shut down on the correct thread.
@@ -66,95 +68,47 @@ namespace NUnit.Framework
             return (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
         }
 
-        [Timeout(10000)]
-        [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
-        public static void TestMethodContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
-        {
-            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
-
-            using (var fixture = new SynchronizationContextFixture(createdOnThisThread))
-            {
-                TestBuilder
-                    .RunTestCase(fixture, nameof(fixture.YieldAndAssertSameThread))
-                    .AssertPassed();
-            }
-        }
-
-        [Timeout(10000)]
-        [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
-        public static void AssertThatContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
+        [Test, Timeout(10000)]
+        public static void ContinuationDoesNotDeadlockOnKnownSynchronizationContext(
+            [ValueSource(nameof(KnownSynchronizationContextTypes))] Type knownSynchronizationContextType,
+            [ValueSource(nameof(ApiAdapters))] AsyncExecutionApiAdapter apiAdapter)
         {
             var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                Assert.That(YieldAndAssertSameThread, Throws.Nothing);
-            }
-        }
-
-        [Timeout(10000)]
-        [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
-        public static void AssertDoesNotThrowAsyncContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
-        {
-            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
-
-            using (TemporarySynchronizationContext(createdOnThisThread))
-            {
-                Assert.DoesNotThrowAsync(YieldAndAssertSameThread);
-            }
-        }
-
-        [Timeout(10000)]
-        [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
-        public static void AssertThrowsAsyncContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
-        {
-            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
-
-            using (TemporarySynchronizationContext(createdOnThisThread))
-            {
-                Assert.ThrowsAsync<DummyException>(YieldAndAssertSameThreadAndThrowDummyException);
-            }
-        }
-
-        [Timeout(10000)]
-        [TestCaseSource(nameof(KnownSynchronizationContextTypes))]
-        public static void AssertCatchAsyncContinuationDoesNotDeadlock(Type knownSynchronizationContextType)
-        {
-            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
-
-            using (TemporarySynchronizationContext(createdOnThisThread))
-            {
-                Assert.CatchAsync(YieldAndAssertSameThreadAndThrowDummyException);
-            }
-        }
-
-        public static async Task YieldAndAssertSameThread()
-        {
-            var originalThread = Thread.CurrentThread;
+                apiAdapter.Execute(async () =>
+                {
 #if NET40
-            await TaskEx.Yield();
+                    await TaskEx.Yield();
 #else
-            await Task.Yield();
+                    await Task.Yield();
 #endif
-            Assert.That(Thread.CurrentThread, Is.SameAs(originalThread));
+                });
+            }
         }
 
-        public static async Task YieldAndAssertSameThreadAndThrowDummyException()
+        [Test]
+        public static void AsyncDelegatesAreExecutedUnderTheCurrentSynchronizationContext(
+            [ValueSource(nameof(KnownSynchronizationContextTypes))] Type knownSynchronizationContextType,
+            [ValueSource(nameof(ApiAdapters))] AsyncExecutionApiAdapter apiAdapter)
         {
-            var originalThread = Thread.CurrentThread;
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
+
+            using (TemporarySynchronizationContext(createdOnThisThread))
+            {
+                apiAdapter.Execute(() =>
+                {
+                    Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
 #if NET40
-            await TaskEx.Yield();
+                    return TaskEx.FromResult<object>(null);
 #else
-            await Task.Yield();
+                    return Task.FromResult<object>(null);
 #endif
-            Assert.That(Thread.CurrentThread, Is.SameAs(originalThread));
-
-            throw new DummyException();
+                });
+            }
         }
-
-        private sealed class DummyException : Exception
-        {
-        }
+#endif
 #endif
 
         private static IDisposable TemporarySynchronizationContext(SynchronizationContext synchronizationContext)
