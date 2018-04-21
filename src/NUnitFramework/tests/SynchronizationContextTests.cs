@@ -108,6 +108,28 @@ namespace NUnit.Framework
                 });
             }
         }
+
+        [Test, Timeout(10000)]
+        public static void AwaitingContinuationDoesNotAlterSynchronizationContext(
+            [ValueSource(nameof(KnownSynchronizationContextTypes))] Type knownSynchronizationContextType,
+            [ValueSource(nameof(ApiAdapters))] AsyncExecutionApiAdapter apiAdapter)
+        {
+            var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
+
+            using (TemporarySynchronizationContext(createdOnThisThread))
+            {
+                apiAdapter.Execute(async () =>
+                {
+#if NET40
+                    await TaskEx.Yield();
+#else
+                    await Task.Yield();
+#endif
+                });
+
+                Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
+            }
+        }
 #endif
 #endif
 

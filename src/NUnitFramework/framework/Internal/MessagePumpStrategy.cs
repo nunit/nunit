@@ -23,6 +23,7 @@
 
 #if ASYNC
 using System;
+using System.Security;
 using System.Threading;
 
 #if NET40 || NET45
@@ -68,6 +69,7 @@ namespace NUnit.Framework.Internal
             public static readonly WindowsFormsMessagePumpStrategy Instance = new WindowsFormsMessagePumpStrategy();
             private WindowsFormsMessagePumpStrategy() { }
 
+            [SecuritySafeCritical]
             public override void WaitForCompletion(AwaitAdapter awaitable)
             {
                 var context = SynchronizationContext.Current;
@@ -85,7 +87,14 @@ namespace NUnit.Framework.Internal
                     state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, Application.Exit),
                     state: awaitable);
 
-                Application.Run();
+                try
+                {
+                    Application.Run();
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(context);
+                }
             }
         }
 
