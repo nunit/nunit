@@ -35,6 +35,42 @@ namespace NUnit.Framework
     {
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
+#if APARTMENT_STATE
+        [Apartment(ApartmentState.STA)]
+        [TestCaseSource(nameof(ApiAdapters))]
+        public static void ContinuationStaysOnStaThread(AsyncExecutionApiAdapter apiAdapter)
+        {
+            var thread = Thread.CurrentThread;
+
+            apiAdapter.Execute(async () =>
+            {
+#if NET40
+                await TaskEx.Yield();
+#else
+                await Task.Yield();
+#endif
+                Assert.That(Thread.CurrentThread, Is.SameAs(thread));
+            });
+        }
+
+        [Apartment(ApartmentState.STA)]
+        [TestCaseSource(nameof(ApiAdapters))]
+        public static void AsyncDelegatesAreExecutedOnStaThread(AsyncExecutionApiAdapter apiAdapter)
+        {
+            var thread = Thread.CurrentThread;
+
+            apiAdapter.Execute(() =>
+            {
+                Assert.That(Thread.CurrentThread, Is.SameAs(thread));
+#if NET40
+                return TaskEx.FromResult<object>(null);
+#else
+                return Task.FromResult<object>(null);
+#endif
+            });
+        }
+#endif
+
 #if NET40 || NET45
         // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread
         // to ensure that the message pump is shut down on the correct thread.
