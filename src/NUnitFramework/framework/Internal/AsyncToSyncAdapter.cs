@@ -25,6 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security;
+using System.Threading;
 using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
@@ -69,16 +71,20 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
-            var invocationResult = invoke.Invoke();
-            if (invocationResult == null || !IsTaskType(invocationResult.GetType()))
-                throw new InvalidOperationException("The delegate did not return a Task."); // General awaitable support coming soon.
-
-            var awaitAdapter = AwaitAdapter.FromAwaitable(invocationResult);
-
-            if (!awaitAdapter.IsCompleted)
+            object invocationResult;
+            using (InitializeExecutionEnvironment())
             {
-                var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
-                waitStrategy.WaitForCompletion(awaitAdapter);
+                invocationResult = invoke.Invoke();
+                if (invocationResult == null || !IsTaskType(invocationResult.GetType()))
+                    throw new InvalidOperationException("The delegate did not return a Task."); // General awaitable support coming soon.
+
+                var awaitAdapter = AwaitAdapter.FromAwaitable(invocationResult);
+
+                if (!awaitAdapter.IsCompleted)
+                {
+                    var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
+                    waitStrategy.WaitForCompletion(awaitAdapter);
+                }
             }
 
             // Future: instead of Wait(), use GetAwaiter() to check awaiter.IsCompleted above
@@ -102,6 +108,34 @@ namespace NUnit.Framework.Internal
             PropertyInfo taskResultProperty = invocationResult.GetType().GetProperty(TaskResultProperty, TaskResultPropertyBindingFlags);
 
             return taskResultProperty != null ? taskResultProperty.GetValue(invocationResult, null) : invocationResult;
+        }
+
+        private static IDisposable InitializeExecutionEnvironment()
+        {
+#if APARTMENT_STATE
+            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
+            {
+                var context = SynchronizationContext.Current;
+                if (context == null || context.GetType() == typeof(SynchronizationContext))
+                {
+                    var singleThreadedContext = new SingleThreadedTestSynchronizationContext();
+                    SetSynchronizationContext(singleThreadedContext);
+
+                    return On.Dispose(() =>
+                    {
+                        SetSynchronizationContext(context);
+                        singleThreadedContext.Dispose();
+                    });
+                }
+            }
+#endif
+            return null;
+        }
+
+        [SecuritySafeCritical]
+        private static void SetSynchronizationContext(SynchronizationContext syncContext)
+        {
+            SynchronizationContext.SetSynchronizationContext(syncContext);
         }
 
         private static IList<Exception> GetAllExceptions(Exception exception)
