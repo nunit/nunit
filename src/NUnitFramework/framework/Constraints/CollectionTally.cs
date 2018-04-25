@@ -34,16 +34,16 @@ namespace NUnit.Framework.Constraints
         public sealed class CollectionTallyResult
         {
             /// <summary>Items that were not in the expected collection.</summary>
-            public List<object> ExtraItems { get; set; }
+            public List<object> ExtraItems { get; }
 
             /// <summary>Items that were not accounted for in the expected collection.</summary>
-            public List<object> MissingItems { get; set; }
+            public List<object> MissingItems { get; }
 
-            /// <summary>Constructs an empty <see cref="CollectionTallyResult"/>.</summary>
-            public CollectionTallyResult()
+            /// <summary>Initializes a new instance of the <see cref="CollectionTallyResult"/> class with the given fields.</summary>
+            public CollectionTallyResult(List<object> missingItems, List<object> extraItems)
             {
-                ExtraItems = new List<object>();
-                MissingItems = new List<object>();
+                MissingItems = missingItems;
+                ExtraItems = extraItems;
             }
         }
 
@@ -54,11 +54,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                return new CollectionTallyResult()
-                {
-                    MissingItems = new List<object>(_missingItems),
-                    ExtraItems = new List<object>(_extraItems)
-                };
+                return new CollectionTallyResult(
+                    new List<object>(_missingItems),
+                    new List<object>(_extraItems));
             }
         }
 
