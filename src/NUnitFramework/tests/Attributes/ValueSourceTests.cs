@@ -233,7 +233,8 @@ namespace NUnit.Framework.Attributes
             new object[] { 1, "text", new object() },
             new object[0],
             new object[] { 1, new int[] { 2, 3 }, 4 },
-            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+            new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
 
         [Test]
@@ -242,7 +243,7 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 GetType(), nameof(MethodWithArrayArguments));
 
-            Assert.That(suite.TestCaseCount, Is.EqualTo(4));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(5));
 
             Assert.Multiple(() =>
             {
@@ -250,6 +251,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
                 Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([1, Int32[], 4])"));
                 Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"));
+                Assert.That(suite.Tests[4].Name, Is.EqualTo(@"MethodWithArrayArguments([System.Byte[,]])"));
             });
         }
     }

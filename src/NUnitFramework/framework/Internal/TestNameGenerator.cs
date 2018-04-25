@@ -221,7 +221,7 @@ namespace NUnit.Framework.Internal
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
                 var argArray = arg as Array;
-                if (argArray != null)
+                if (argArray != null && argArray.Rank == 1)
                 {
                     if (argArray.Length == 0)
                         display = "[]";
