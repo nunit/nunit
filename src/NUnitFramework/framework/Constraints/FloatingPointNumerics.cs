@@ -26,7 +26,6 @@ using System.Runtime.InteropServices;
 
 namespace NUnit.Framework.Constraints
 {
-
     /// <summary>Helper routines for working with floating point numbers</summary>
     /// <remarks>
     ///   <para>
@@ -45,9 +44,8 @@ namespace NUnit.Framework.Constraints
     ///     as low as 0.0000001 for small numbers or as high as 10.0 for large numbers.
     ///   </para>
     /// </remarks>
-    public class FloatingPointNumerics
+    internal static class FloatingPointNumerics
     {
-
         #region struct FloatIntUnion
 
         /// <summary>Union of a floating point variable and an integer</summary>
@@ -256,10 +254,6 @@ namespace NUnit.Framework.Constraints
             DoubleLongUnion union = new DoubleLongUnion();
             union.Long = value;
             return union.Double;
-        }
-
-        private FloatingPointNumerics()
-        {
         }
     }
 }

@@ -28,10 +28,10 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences 
     /// of each object in one or more enumerations.</summary>
-    public class CollectionTally
+    public sealed class CollectionTally
     {
         /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
-        public class CollectionTallyResult
+        public sealed class CollectionTallyResult
         {
             /// <summary>Items that were not in the expected collection.</summary>
             public List<object> ExtraItems { get; set; }
