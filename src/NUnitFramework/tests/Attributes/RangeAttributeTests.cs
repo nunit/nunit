@@ -411,15 +411,17 @@ namespace NUnit.Framework.Attributes
         [Test]
         public static void MaxValueRange_Decimal()
         {
-            const double step = (double)(((decimal)LargestDoubleConvertibleToDecimal - (decimal)NextLargestDoubleConvertibleToLowerDecimal) / 2);
+            const decimal fromDecimal = (decimal)NextLargestDoubleConvertibleToLowerDecimal;
+            const decimal toDecimal = (decimal)LargestDoubleConvertibleToDecimal;
+            const double step = (double)((toDecimal - fromDecimal) / 2);
 
             Assert.That(
                 GetData(new RangeAttribute(NextLargestDoubleConvertibleToLowerDecimal, LargestDoubleConvertibleToDecimal, step), typeof(decimal)),
                 Is.EqualTo(new[]
                 {
-                    (decimal)NextLargestDoubleConvertibleToLowerDecimal,
-                    (decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step,
-                    (decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step * 2
+                    fromDecimal,
+                    fromDecimal + (decimal)step,
+                    fromDecimal + (decimal)step * 2
                 }));
         }
 
@@ -483,15 +485,17 @@ namespace NUnit.Framework.Attributes
         [Test]
         public static void MinValueRange_Decimal()
         {
-            const double step = (double)((-(decimal)LargestDoubleConvertibleToDecimal - -(decimal)NextLargestDoubleConvertibleToLowerDecimal) / 2);
+            const decimal fromDecimal = -(decimal)NextLargestDoubleConvertibleToLowerDecimal;
+            const decimal toDecimal = -(decimal)LargestDoubleConvertibleToDecimal;
+            const double step = (double)((toDecimal - fromDecimal) / 2);
 
             Assert.That(
                 GetData(new RangeAttribute(-NextLargestDoubleConvertibleToLowerDecimal, -LargestDoubleConvertibleToDecimal, step), typeof(decimal)),
                 Is.EqualTo(new[]
                 {
-                    -(decimal)NextLargestDoubleConvertibleToLowerDecimal,
-                    -(decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step,
-                    -(decimal)NextLargestDoubleConvertibleToLowerDecimal + (decimal)step * 2
+                    fromDecimal,
+                    fromDecimal + (decimal)step,
+                    fromDecimal + (decimal)step * 2
                 }));
         }
 
