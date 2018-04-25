@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal
 {
@@ -30,48 +29,6 @@ namespace NUnit.Framework.Internal
     {
         private sealed class DecimalValueGenerator : ValueGenerator<decimal>
         {
-            public override IEnumerable<decimal> GenerateRange(decimal start, decimal end, Step step)
-            {
-                if (start == end)
-                {
-                    yield return start;
-                }
-                else if ((start < end && !step.IsPositive) || (end < start && !step.IsNegative))
-                {
-                    throw new ArgumentException("Step must be in the direction of the end.");
-                }
-                else
-                {
-                    for (var current = start;;)
-                    {
-                        yield return current;
-
-                        decimal next;
-                        try
-                        {
-                            next = step.Apply(current);
-                        }
-                        catch (OverflowException)
-                        {
-                            break;
-                        }
-
-                        if (start < end)
-                        {
-                            if (end < next) break; // We stepped past the end of the range.
-                            if (next <= current) throw new InvalidOperationException("The step must monotonically increase.");
-                        }
-                        else
-                        {
-                            if (next < end) break; // We stepped past the end of the range.
-                            if (current <= next) throw new InvalidOperationException("The step must monotonically increase.");
-                        }
-
-                        current = next;
-                    }
-                }
-            }
-
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
                 if (value is decimal)

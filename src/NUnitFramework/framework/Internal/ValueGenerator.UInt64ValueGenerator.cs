@@ -21,60 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-
 namespace NUnit.Framework.Internal
 {
     partial class ValueGenerator
     {
         private sealed class UInt64ValueGenerator : ValueGenerator<ulong>
         {
-            public override IEnumerable<ulong> GenerateRange(ulong start, ulong end, Step step)
-            {
-                if (start == end)
-                {
-                    yield return start;
-                }
-                else if ((start < end && !step.IsPositive) || (end < start))
-                {
-                    throw new ArgumentException("Step must be in the direction of the end.");
-                }
-                else
-                {
-                    for (var current = start;;)
-                    {
-                        yield return current;
-
-                        var next = step.Apply(current);
-
-                        if (start < end)
-                        {
-                            if (end < next) break; // We stepped past the end of the range.
-                            if (next < current) break; // We overflowed which means we tried to step past the end.
-                        }
-                        else
-                        {
-                            if (next < end) break; // We stepped past the end of the range.
-                            if (current < next) break; // We overflowed which means we tried to step past the end.
-                        }
-
-                        current = next;
-                    }
-                }
-            }
-
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
                 if (value is ulong)
                 {
-                    step = new ComparableStep<ulong>((ulong)value, (prev, stepValue) => unchecked(prev + stepValue));
+                    step = new ComparableStep<ulong>((ulong)value, (prev, stepValue) => checked(prev + stepValue));
                     return true;
                 }
 
                 if (value is int)
                 {
-                    step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked(prev + (ulong)stepValue));
+                    step = new ComparableStep<int>((int)value, (prev, stepValue) => checked(prev + (ulong)stepValue));
                     return true;
                 }
 

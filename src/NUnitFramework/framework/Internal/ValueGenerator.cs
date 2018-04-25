@@ -37,9 +37,59 @@ namespace NUnit.Framework.Internal
             return new NotSupportedException($"{typeof(T)} is using the default value generator which does not support {description}.");
         }
 
-        public virtual IEnumerable<T> GenerateRange(T start, T end, Step step)
+        public virtual int Compare(T x, T y)
         {
-            throw CreateNotSupportedException("generating a range");
+            if (!typeof(IComparable<T>).IsAssignableFrom(typeof(T)))
+                throw CreateNotSupportedException("comparisons");
+
+            return Comparer<T>.Default.Compare(x, y);
+        }
+
+        public IEnumerable<T> GenerateRange(T start, T end, Step step)
+        {
+            var startToEnd = Compare(start, end);
+
+            if (startToEnd == 0)
+            {
+                yield return start;
+            }
+            else if ((startToEnd < 0 && !step.IsPositive) || (startToEnd > 0 && !step.IsNegative))
+            {
+                throw new ArgumentException("Step must be in the direction of the end.");
+            }
+            else
+            {
+                for (var current = start;;)
+                {
+                    yield return current;
+
+                    T next;
+                    try
+                    {
+                        next = step.Apply(current);
+                    }
+                    catch (OverflowException)
+                    {
+                        // We overflowed which means we tried to step past the end.
+                        break;
+                    }
+
+                    if (startToEnd < 0)
+                    {
+                        if (Compare(next, end) > 0) break; // We stepped past the end of the range.
+                        if (Compare(next, current) <= 0)
+                            throw new InvalidOperationException("The step must strictly increase.");
+                    }
+                    else
+                    {
+                        if (Compare(next, end) < 0) break; // We stepped past the end of the range.
+                        if (Compare(next, current) >= 0)
+                            throw new InvalidOperationException("The step must strictly decrease.");
+                    }
+
+                    current = next;
+                }
+            }
         }
 
         public sealed override IEnumerable GenerateRange(object start, object end, ValueGenerator.Step step)

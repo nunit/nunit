@@ -21,60 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-
 namespace NUnit.Framework.Internal
 {
     partial class ValueGenerator
     {
         private sealed class UInt16ValueGenerator : ValueGenerator<ushort>
         {
-            public override IEnumerable<ushort> GenerateRange(ushort start, ushort end, Step step)
-            {
-                if (start == end)
-                {
-                    yield return start;
-                }
-                else if ((start < end && !step.IsPositive) || (end < start))
-                {
-                    throw new ArgumentException("Step must be in the direction of the end.");
-                }
-                else
-                {
-                    for (var current = start;;)
-                    {
-                        yield return current;
-
-                        var next = step.Apply(current);
-
-                        if (start < end)
-                        {
-                            if (end < next) break; // We stepped past the end of the range.
-                            if (next < current) break; // We overflowed which means we tried to step past the end.
-                        }
-                        else
-                        {
-                            if (next < end) break; // We stepped past the end of the range.
-                            if (current < next) break; // We overflowed which means we tried to step past the end.
-                        }
-
-                        current = next;
-                    }
-                }
-            }
-
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
                 if (value is ushort)
                 {
-                    step = new ComparableStep<ushort>((ushort)value, (prev, stepValue) => unchecked((ushort)(prev + stepValue)));
+                    step = new ComparableStep<ushort>((ushort)value, (prev, stepValue) => checked((ushort)(prev + stepValue)));
                     return true;
                 }
 
                 if (value is int)
                 {
-                    step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked((ushort)(prev + stepValue)));
+                    step = new ComparableStep<int>((int)value, (prev, stepValue) => checked((ushort)(prev + stepValue)));
                     return true;
                 }
 
