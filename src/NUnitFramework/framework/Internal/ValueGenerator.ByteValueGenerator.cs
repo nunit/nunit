@@ -72,6 +72,9 @@ namespace NUnit.Framework.Internal
                     return true;
                 }
 
+                // ByteValueGenerator is unusual in this regard. We allow byte parameter ranges to start high and end low,
+                // and internally the step is represented as the Int32 value -1 since it can’t be represented as a Byte.
+                // -1 can be converted natively to Int16, SByte and Decimal, so we can fall back on the automatic conversion for them.
                 if (value is int)
                 {
                     step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked((byte)(prev + stepValue)));

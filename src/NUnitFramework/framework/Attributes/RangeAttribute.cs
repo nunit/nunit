@@ -182,15 +182,21 @@ namespace NUnit.Framework
             ValueGenerator.Step step;
             if (!valueGenerator.TryCreateStep(_step, out step))
             {
-                // ValueGenerator.CreateStep is responsible to enable incrementing bytes by (int)(-1),
-                // or perhaps in the future a DateTime by a TimeSpan, but the responsibility to convert
-                // attribute values from Double to Decimal is in ParamAttributeTypeConversions.
-                // (ParamAttributeTypeConversions tries to simulate what would happen in C# if the
-                // literal syntax used for the attribute value had been used as a parameter argument
-                // in a direct call to the test method.)
+                // ValueGenerator.CreateStep has the responsibility to enable Byte values to be incremented
+                // by the Int32 value -1. Or perhaps in the future, DateTime values to be incremented by a TimeSpan.
+                // It handles scenarios where the incrementing type is fundamentally different in its most natural form.
+
+                // However, ParamAttributeTypeConversions has the responsibility to convert attribute arguments
+                // that are only of a different type due to IL limitations or NUnit smoothing over overload differences.
+                // See the XML docs for the ParamAttributeTypeConversions class.
+
                 object stepValueToRequire;
                 if (!ParamAttributeTypeConversions.TryConvert(_step, parameter.ParameterType, out stepValueToRequire))
+                {
+                    // This will cause CreateStep to throw the same exception as it would throw if TryConvert
+                    // succeeded but the value generator still didn’t recognize the step value.
                     stepValueToRequire = _step;
+                }
 
                 step = valueGenerator.CreateStep(stepValueToRequire);
             }

@@ -30,7 +30,22 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Helper methods for converting parameters to numeric values to supported types
+    /// <para>
+    /// Examines an attribute argument and tries to simulate what that value would have been if the literal syntax
+    /// which might have defined the value in C# had instead been used as an argument to a given method parameter in a direct call.
+    /// </para>
+    /// <para>
+    /// For example, since you can’t apply attributes using <see cref="decimal"/> arguments, we allow the C# syntax
+    /// <c>10</c> (<see cref="int"/> value) or <c>0.1</c> (<see cref="double"/> value) to be specified.
+    /// NUnit then converts it to match the method’s <see cref="decimal"/> parameters, just as if you were actually
+    /// using the syntax <c>TestMethod(10)</c> or <c>TestMethod(0.1)</c>.
+    /// </para>
+    /// <para>
+    /// For another example, you might have written the syntax <c>10</c> and picked up the <see cref="int"/> attribute
+    /// constructor overload; however, the test method for which this value is intended only has a <see cref="byte"/>
+    /// signature. Again, NUnit simulates what would have happened if the inferred C# syntax was transplanted
+    /// and you were actually using the syntax <c>TestMethod(10)</c>.
+    /// </para>
     /// </summary>
     internal static class ParamAttributeTypeConversions
     {

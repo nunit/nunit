@@ -49,6 +49,7 @@ namespace NUnit.Framework.Attributes
             typeof(decimal)
         };
 
+        // See XML docs for the ParamAttributeTypeConversions class.
         private static readonly Type[] Int32RangeConvertibleToParameterTypes = { typeof(int), typeof(sbyte), typeof(byte), typeof(short), typeof(decimal) };
         private static readonly Type[] UInt32RangeConvertibleToParameterTypes = { typeof(uint) };
         private static readonly Type[] Int64RangeConvertibleToParameterTypes = { typeof(long) };
@@ -337,6 +338,7 @@ namespace NUnit.Framework.Attributes
 
         // The smallest distance from MaxValue or MinValue which results in a different number,
         // overcoming loss of precision.
+        // Calculated by hand by flipping bits. Used the round-trip format and double-checked.
         private const float SingleExtremaEpsilon = 2.028241E+31f;
         private const double DoubleExtremaEpsilon = 1.99584030953472E+292;
         private const double LargestDoubleConvertibleToDecimal = 7.9228162514264329E+28;
