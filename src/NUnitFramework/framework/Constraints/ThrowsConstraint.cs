@@ -112,7 +112,7 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        private class ThrowsConstraintResult : ConstraintResult
+        private sealed class ThrowsConstraintResult : ConstraintResult
         {
             private readonly ConstraintResult baseResult;
 
@@ -148,7 +148,7 @@ namespace NUnit.Framework.Constraints
 
         #region ExceptionInterceptor
 
-        internal class ExceptionInterceptor
+        internal sealed class ExceptionInterceptor
         {
             private ExceptionInterceptor() { }
 
@@ -230,7 +230,7 @@ namespace NUnit.Framework.Constraints
 
 #region InvocationDescriptor
 
-        internal class GenericInvocationDescriptor<T> : IInvocationDescriptor
+        internal sealed class GenericInvocationDescriptor<T> : IInvocationDescriptor
         {
             private readonly ActualValueDelegate<T> _del;
 
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Constraints
             object Invoke();
         }
 
-        private class VoidInvocationDescriptor : IInvocationDescriptor
+        private sealed class VoidInvocationDescriptor : IInvocationDescriptor
         {
             private readonly TestDelegate _del;
 

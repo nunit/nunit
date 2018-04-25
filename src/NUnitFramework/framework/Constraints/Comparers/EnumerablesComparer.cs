@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="IEnumerable"/>s.
     /// </summary>
-    internal class EnumerablesComparer : IChainComparer
+    internal sealed class EnumerablesComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
