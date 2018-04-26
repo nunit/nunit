@@ -29,53 +29,49 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Stream"/>s.
     /// </summary>
-    internal sealed class StreamsComparer : IChainComparer
+    internal sealed class StreamsComparer : ChainComparer<Stream>
     {
         private static readonly int BUFFER_SIZE = 4096;
 
-        private readonly NUnitEqualityComparer _equalityComparer;
+        private readonly NUnitEqualityComparer _defaultComparer;
 
-        internal StreamsComparer(NUnitEqualityComparer equalityComparer)
+        internal StreamsComparer(NUnitEqualityComparer defaultComparer)
         {
-            _equalityComparer = equalityComparer;
+            _defaultComparer = defaultComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(Stream x, Stream y, ref Tolerance tolerance)
         {
-            if (!(x is Stream) || !(y is Stream))
-                return null;
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
+                return false;
 
-            Stream xStream = (Stream)x;
-            Stream yStream = (Stream)y;
-
-            if (xStream == yStream) return true;
-
-            if (!xStream.CanRead)
+            if (!x.CanRead)
                 throw new ArgumentException("Stream is not readable", "expected");
-            if (!yStream.CanRead)
+            if (!y.CanRead)
                 throw new ArgumentException("Stream is not readable", "actual");
-            if (!xStream.CanSeek)
+            if (!x.CanSeek)
                 throw new ArgumentException("Stream is not seekable", "expected");
-            if (!yStream.CanSeek)
+            if (!y.CanSeek)
                 throw new ArgumentException("Stream is not seekable", "actual");
 
-            if (xStream.Length != yStream.Length) return false;
+            if (x.Length != y.Length) return false;
 
             byte[] bufferExpected = new byte[BUFFER_SIZE];
             byte[] bufferActual = new byte[BUFFER_SIZE];
 
-            BinaryReader binaryReaderExpected = new BinaryReader(xStream);
-            BinaryReader binaryReaderActual = new BinaryReader(yStream);
+            BinaryReader binaryReaderExpected = new BinaryReader(x);
+            BinaryReader binaryReaderActual = new BinaryReader(y);
 
-            long expectedPosition = xStream.Position;
-            long actualPosition = yStream.Position;
+            long expectedPosition = x.Position;
+            long actualPosition = y.Position;
 
             try
             {
                 binaryReaderExpected.BaseStream.Seek(0, SeekOrigin.Begin);
                 binaryReaderActual.BaseStream.Seek(0, SeekOrigin.Begin);
 
-                for (long readByte = 0; readByte < xStream.Length; readByte += BUFFER_SIZE)
+                for (long readByte = 0; readByte < x.Length; readByte += BUFFER_SIZE)
                 {
                     binaryReaderExpected.Read(bufferExpected, 0, BUFFER_SIZE);
                     binaryReaderActual.Read(bufferActual, 0, BUFFER_SIZE);
@@ -90,7 +86,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             fp.ExpectedValue = bufferExpected[count];
                             fp.ActualHasData = true;
                             fp.ActualValue = bufferActual[count];
-                            _equalityComparer.FailurePoints.Insert(0, fp);
+                            _defaultComparer.FailurePoints.Insert(0, fp);
                             return false;
                         }
                     }
@@ -98,11 +94,16 @@ namespace NUnit.Framework.Constraints.Comparers
             }
             finally
             {
-                xStream.Position = expectedPosition;
-                yStream.Position = actualPosition;
+                x.Position = expectedPosition;
+                y.Position = actualPosition;
             }
 
             return true;
+        }
+
+        public override int GetHashCode(Stream stream)
+        {
+            return stream.Length.GetHashCode();
         }
     }
 }

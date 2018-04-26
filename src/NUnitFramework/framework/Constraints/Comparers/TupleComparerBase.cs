@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -29,44 +31,54 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Base class for comparators for tuples (both regular Tuples and ValueTuples).
     /// </summary>
-    internal abstract class TupleComparerBase : IChainComparer
+    internal abstract class TupleComparerBase : ChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
-        internal TupleComparerBase(NUnitEqualityComparer equalityComparer)
+        protected TupleComparerBase(NUnitEqualityComparer equalityComparer)
         {
             _equalityComparer = equalityComparer;
         }
 
-        protected abstract bool IsCorrectType(Type type);
-
-        protected abstract object GetValue(Type type, string propertyName, object obj);
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool? Equals(object x, object y, ref Tolerance tolerance)
         {
-            Type xType = x.GetType();
-            Type yType = y.GetType();
+            if (!CanCompare(x) || !CanCompare(y)) return null;
 
-            if (!IsCorrectType(xType) || !IsCorrectType(yType))
-                return null;
+            using (var xValues = GetPropertyValues(x).GetEnumerator())
+            using (var yValues = GetPropertyValues(y).GetEnumerator())
+            {
+                while (xValues.MoveNext())
+                {
+                    if (!yValues.MoveNext())
+                        return false;
+                    if (!_equalityComparer.AreEqual(xValues.Current, yValues.Current, ref tolerance, topLevelComparison: false))
+                        return false;
+                }
 
-            int numberOfGenericArgs = xType.GetGenericArguments().Length;
+                return !yValues.MoveNext();
+            }
+        }
 
-            if (numberOfGenericArgs != yType.GetGenericArguments().Length)
-                return false;
+        public override int GetHashCode(object obj)
+        {
+            return new HashCodeBuilder(_equalityComparer)
+               .AppendAll(GetPropertyValues(obj))
+               .GetHashCode();
+        }
+
+        protected IEnumerable<object> GetPropertyValues(object obj)
+        {
+            Type type = obj.GetType();
+            int numberOfGenericArgs = type.GetGenericArguments().Length;
 
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
                 string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                object xItem = GetValue(xType, propertyName, x);
-                object yItem = GetValue(yType, propertyName, y);
-
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, false);
-                if (!comparison)
-                    return false;
+                PropertyInfo propertyInfo = type.GetProperty(propertyName);
+                yield return propertyInfo != null
+                    ? propertyInfo.GetValue(obj, null)
+                    : null;
             }
-
-            return true;
         }
     }
 }

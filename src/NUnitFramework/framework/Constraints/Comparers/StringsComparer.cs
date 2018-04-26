@@ -26,31 +26,27 @@ using System;
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Comparator for two <see cref="String"/>s.
+    /// Comparator for two <see cref="string"/>s.
     /// </summary>
-    internal sealed class StringsComparer : IChainComparer
+    internal sealed class StringsComparer : ChainComparer<string>
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
+        private readonly StringComparer _stringComparer;
 
-        internal StringsComparer(NUnitEqualityComparer equalityComparer)
+        internal StringsComparer(bool caseInsensitive)
         {
-            _equalityComparer = equalityComparer;
+            _stringComparer = caseInsensitive
+                ? StringComparer.OrdinalIgnoreCase
+                : StringComparer.Ordinal;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(string x, string y, ref Tolerance tolerance)
         {
-            if (!(x is string) || !(y is string))
-                return null;
+            return _stringComparer.Equals(x, y);
+        }
 
-            string xString = (string)x;
-            string yString = (string)y;
-
-            bool caseInsensitive = _equalityComparer.IgnoreCase;
-
-            string s1 = caseInsensitive ? xString.ToLower() : xString;
-            string s2 = caseInsensitive ? yString.ToLower() : yString;
-
-            return s1.Equals(s2);
+        public override int GetHashCode(string s)
+        {
+            return _stringComparer.GetHashCode(s);
         }
     }
 }

@@ -26,14 +26,24 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Numerics"/>s.
     /// </summary>
-    internal sealed class NumericsComparer : IChainComparer
+    internal sealed class NumericsComparer : ChainComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool CanCompare(object obj)
+        {
+            return Numerics.IsNumericType(obj);
+        }
+
+        public override bool? Equals(object x, object y, ref Tolerance tolerance)
         {
             if (!Numerics.IsNumericType(x) || !Numerics.IsNumericType(y))
                 return null;
 
             return Numerics.AreEqual(x, y, ref tolerance);
+        }
+
+        public override int GetHashCode(object obj)
+        {
+            return obj.GetHashCode();
         }
     }
 }

@@ -30,6 +30,8 @@ using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
+    using System.Linq;
+
     public class CollectionEquivalentConstraintTests
     {
         [Test]
@@ -274,6 +276,18 @@ namespace NUnit.Framework.Constraints
                 "  Extra (1): < \"hocusfocus\" >" + Environment.NewLine;
 
             Assert.That(writer.ToString(), Is.EqualTo(expectedMessage));
+        }
+#endif
+
+#if THREAD_ABORT
+        [Test, Timeout(100)]
+        public void LimitPerformanceDegradationForLargeOrderedCollections()
+        {
+            var list = new List<int>();
+            for (var i = 1000; i > 0; i--) list.Add(i);
+
+            var collection = new List<int>(list.OrderBy(i => i));
+            Assert.That(collection, Is.Ordered & Is.EquivalentTo(list));
         }
 #endif
     }

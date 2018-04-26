@@ -25,29 +25,35 @@ using System.IO;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
+    using System;
+
     /// <summary>
     /// Comparator for two <see cref="DirectoryInfo"/>s.
     /// </summary>
-    internal sealed class DirectoriesComparer : IChainComparer
+    internal sealed class DirectoriesComparer : ChainComparer<DirectoryInfo>
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(DirectoryInfo x, DirectoryInfo y, ref Tolerance tolerance)
         {
-            if (!(x is DirectoryInfo) || !(y is DirectoryInfo))
-                return null;
-
-            DirectoryInfo xDirectoryInfo = (DirectoryInfo)x;
-            DirectoryInfo yDirectoryInfo = (DirectoryInfo)y;
+            if (ReferenceEquals(x, y))
+                return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
+                return false;
 
             // Do quick compares first
-            if (xDirectoryInfo.Attributes != yDirectoryInfo.Attributes ||
-                xDirectoryInfo.CreationTime != yDirectoryInfo.CreationTime ||
-                xDirectoryInfo.LastAccessTime != yDirectoryInfo.LastAccessTime)
+            if (x.Attributes != y.Attributes || x.CreationTime != y.CreationTime || x.LastAccessTime != y.LastAccessTime)
             {
                 return false;
             }
 
             // TODO: Find a cleaner way to do this
-            return new SamePathConstraint(xDirectoryInfo.FullName).ApplyTo(yDirectoryInfo.FullName).IsSuccess;
+            return new SamePathConstraint(x.FullName).ApplyTo(y.FullName).IsSuccess;
+        }
+
+        public override int GetHashCode(DirectoryInfo directory)
+        {
+            return directory != null
+                ? StringComparer.CurrentCultureIgnoreCase.GetHashCode(directory.FullName)
+                : 0;
         }
     }
 }

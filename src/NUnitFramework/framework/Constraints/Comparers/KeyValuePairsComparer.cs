@@ -28,39 +28,60 @@ using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
+
     /// <summary>
     /// Comparator for two <see cref="KeyValuePair{TKey, TValue}"/>s.
     /// </summary>
-    internal sealed class KeyValuePairsComparer : IChainComparer
+    internal sealed class KeyValuePairsComparer : ChainComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
+        private readonly NUnitEqualityComparer _defaultComparer;
 
-        internal KeyValuePairsComparer(NUnitEqualityComparer equalityComparer)
+        internal KeyValuePairsComparer(NUnitEqualityComparer defaultComparer)
         {
-            _equalityComparer = equalityComparer;
+            _defaultComparer = defaultComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        /// <inheritdoc />
+        public override bool CanCompare(object obj)
+        {
+            Type type = obj.GetType();
+            return type.GetTypeInfo().IsGenericType 
+                && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
+        }
+
+        public override bool? Equals(object x, object y, ref Tolerance tolerance)
         {
             // IDictionary<,> will eventually try to compare its key value pairs when using CollectionTally
-            Type xType = x.GetType();
-            Type yType = y.GetType();
+            var xType = x.GetType();
+            var yType = y.GetType();
 
-            Type xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType ? xType.GetGenericTypeDefinition() : null;
-            Type yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType ? yType.GetGenericTypeDefinition() : null;
+            Type xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType
+                ? xType.GetGenericTypeDefinition()
+                : null;
+            Type yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType
+                ? yType.GetGenericTypeDefinition()
+                : null;
 
-            if (xGenericTypeDefinition != typeof(KeyValuePair<,>) ||
-                yGenericTypeDefinition != typeof(KeyValuePair<,>))
+            if (xGenericTypeDefinition != typeof(KeyValuePair<,>) || yGenericTypeDefinition != typeof(KeyValuePair<,>))
                 return null;
 
             var keyTolerance = Tolerance.Exact;
             object xKey = xType.GetProperty("Key").GetValue(x, null);
             object yKey = yType.GetProperty("Key").GetValue(y, null);
+            if (!_defaultComparer.AreEqual(xKey, yKey, ref keyTolerance, false)) return false;
+
             object xValue = xType.GetProperty("Value").GetValue(x, null);
             object yValue = yType.GetProperty("Value").GetValue(y, null);
+            return _defaultComparer.AreEqual(xValue, yValue, ref tolerance, false);
+        }
 
-            return _equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, false) 
-                && _equalityComparer.AreEqual(xValue, yValue, ref tolerance, false);
+        public override int GetHashCode(object obj)
+        {
+            var type = obj.GetType();
+            return new HashCodeBuilder(_defaultComparer)
+               .Append(type.GetProperty("Key").GetValue(obj, null))
+               .Append(type.GetProperty("Value").GetValue(obj, null))
+               .GetHashCode();
         }
     }
 }

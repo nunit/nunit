@@ -30,6 +30,8 @@ namespace NUnit.Framework.Constraints
     /// of each object in one or more enumerations.</summary>
     public sealed class CollectionTally
     {
+        private static readonly object NullKey = new object();
+
         /// <summary>The result of a <see cref="CollectionTally"/>.</summary>
         public sealed class CollectionTallyResult
         {
@@ -47,8 +49,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly NUnitEqualityComparer comparer;
-
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
         {
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly List<object> _missingItems = new List<object>();
+        private readonly MissingItemCollection _missingItems;
 
         private readonly List<object> _extraItems = new List<object>();
 
@@ -69,31 +69,14 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
-            this.comparer = comparer;
-
-            foreach (object o in c)
-                _missingItems.Add(o);
-        }
-
-        private bool ItemsEqual(object expected, object actual)
-        {
-            Tolerance tolerance = Tolerance.Default;
-            return comparer.AreEqual(expected, actual, ref tolerance);
+            _missingItems = new MissingItemCollection(comparer, c);
         }
 
         /// <summary>Try to remove an object from the tally.</summary>
         /// <param name="o">The object to remove.</param>
         public void TryRemove(object o)
         {
-            for (int index = _missingItems.Count - 1; index >= 0; index--)
-            {
-                if (ItemsEqual(_missingItems[index], o))
-                {
-                    _missingItems.RemoveAt(index);
-                    return;
-                }
-            }
-
+            if (_missingItems.Remove(o)) return;
             _extraItems.Add(o);
         }
 
@@ -103,6 +86,93 @@ namespace NUnit.Framework.Constraints
         {
             foreach (object o in c)
                 TryRemove(o);
+        }
+
+        private class MissingItemCollection : IEnumerable<object>
+        {
+            private readonly Dictionary<object, int> _items;
+            private readonly int _count;
+
+            public MissingItemCollection(NUnitEqualityComparer comparer, IEnumerable items)
+            {
+                _items = new Dictionary<object, int>(new TallyEqualityComparer(comparer));
+
+                foreach (object item in items)
+                {
+                    var key = item ?? NullKey;
+
+                    int occurrenceCount;
+                    if (_items.TryGetValue(key, out occurrenceCount))
+                    {
+                        _items[key] = occurrenceCount + 1;
+                    }
+                    else
+                    {
+                        _items.Add(key, 1);
+                    }
+
+                    _count++;
+                }
+            }
+
+            public bool Remove(object item)
+            {
+                var key = item ?? NullKey;
+
+                int occurrenceCount;
+                if (_items.TryGetValue(key, out occurrenceCount))
+                {
+                    if (occurrenceCount > 1)
+                    {
+                        _items[key] = occurrenceCount - 1;
+                    }
+                    else
+                    {
+                        _items.Remove(key);
+                    }
+                    return true;
+                }
+
+                return false;
+            }
+
+            public IEnumerator<object> GetEnumerator()
+            {
+                foreach (var pair in _items)
+                {
+                    var item = pair.Key == NullKey ? null : pair.Key;
+                    for (var i = 0; i < pair.Value; i++)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        private class TallyEqualityComparer : EqualityComparer<object>
+        {
+            private readonly NUnitEqualityComparer _comparer;
+            private Tolerance _tolerance = Tolerance.Default;
+
+            public TallyEqualityComparer(NUnitEqualityComparer comparer)
+            {
+                _comparer = comparer;
+            }
+
+            public override bool Equals(object x, object y)
+            {
+                return _comparer.AreEqual(x, y, ref _tolerance);
+            }
+
+            public override int GetHashCode(object obj)
+            {
+                return _comparer.GetHashCode(obj);
+            }
         }
     }
 }

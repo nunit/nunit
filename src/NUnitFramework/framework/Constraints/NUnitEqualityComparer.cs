@@ -23,10 +23,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using NUnit.Framework.Constraints.Comparers;
 
 namespace NUnit.Framework.Constraints
 {
+
     /// <summary>
     /// NUnitEqualityComparer encapsulates NUnit's handling of
     /// equality tests between objects.
@@ -34,21 +37,26 @@ namespace NUnit.Framework.Constraints
     public sealed class NUnitEqualityComparer
     {
         #region Static and Instance Fields
+
+        private bool _isFrozen;
+
         /// <summary>
         /// If true, all string comparisons will ignore case
         /// </summary>
-        private bool caseInsensitive;
+        private bool _caseInsensitive;
 
         /// <summary>
         /// If true, arrays will be treated as collections, allowing
         /// those of different dimensions to be compared
         /// </summary>
-        private bool compareAsCollection;
+        private bool _compareAsCollection;
+
+        private bool _withSameOffset;
 
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
-        private readonly List<EqualityAdapter> externalComparers = new List<EqualityAdapter>();
+        private IList<EqualityAdapter> _externalComparers = new List<EqualityAdapter>();
 
         /// <summary>
         /// List of points at which a failure occurred.
@@ -58,35 +66,9 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// List of comparers used to compare pairs of objects.
         /// </summary>
-        private readonly List<IChainComparer> _comparers;
+        private List<ChainComparer> _comparers;
 
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NUnitEqualityComparer"/> class.
-        /// </summary>
-        public NUnitEqualityComparer()
-        {
-            EnumerablesComparer _enumerablesComparer = new EnumerablesComparer(this);
-            _comparers = new List<IChainComparer>
-            {
-                new ArraysComparer(this, _enumerablesComparer),
-                new DictionariesComparer(this),
-                new DictionaryEntriesComparer(this),
-                new KeyValuePairsComparer(this),
-                new StringsComparer(this ),
-                new StreamsComparer(this),
-                new CharsComparer(this),
-                new DirectoriesComparer(),
-                new NumericsComparer(),
-                new DateTimeOffsetsComparer(this),
-                new TimeSpanToleranceComparer(),
-                new EquatablesComparer(this),
-                new TupleComparer(this),
-                new ValueTupleComparer(this),
-                _enumerablesComparer
-            };
-        }
 
         #region Properties
 
@@ -104,8 +86,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool IgnoreCase
         {
-            get { return caseInsensitive; }
-            set { caseInsensitive = value; }
+            get { return _caseInsensitive; }
+            set { SetProperty(ref _caseInsensitive, value); }
         }
 
         /// <summary>
@@ -114,8 +96,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool CompareAsCollection
         {
-            get { return compareAsCollection; }
-            set { compareAsCollection = value; }
+            get { return _compareAsCollection; }
+            set { SetProperty(ref _compareAsCollection, value); }
         }
 
         /// <summary>
@@ -125,7 +107,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public IList<EqualityAdapter> ExternalComparers
         {
-            get { return externalComparers; }
+            get { return _externalComparers; }
         }
 
         // TODO: Define some sort of FailurePoint struct or otherwise
@@ -150,10 +132,48 @@ namespace NUnit.Framework.Constraints
         /// Using this modifier does not allow to use the <see cref="Tolerance"/>
         /// modifier.
         /// </remarks>
-        public bool WithSameOffset { get; set; }
+        public bool WithSameOffset
+        {
+            get { return _withSameOffset; }
+            set { SetProperty(ref _withSameOffset, value); }
+        }
+
+        private IList<ChainComparer> Comparers
+        {
+            get
+            {
+                if (_comparers == null)
+                {
+                    _comparers = new List<ChainComparer>
+                    {
+                        new ArraysComparer(this),
+                        new DictionariesComparer(this),
+                        new DictionaryEntriesComparer(this),
+                        new KeyValuePairsComparer(this),
+                        new StringsComparer(_caseInsensitive),
+                        new StreamsComparer(this),
+                        new CharsComparer(_caseInsensitive),
+                        new DirectoriesComparer(),
+                        new NumericsComparer(),
+                        new DateTimesComparer(),
+                        new DateTimeOffsetsComparer(_withSameOffset),
+                        new TimeSpansComparer(),
+                        new EquatablesComparer(),
+                        new TupleComparer(this),
+                        new ValueTupleComparer(this),
+                        new EnumerablesComparer(this)
+                    };
+                    Freeze();
+                }
+
+                return _comparers;
+            }
+        }
+
         #endregion
 
         #region Public Methods
+
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
@@ -172,16 +192,39 @@ namespace NUnit.Framework.Constraints
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
-                return externalComparer.AreEqual(x, y);
+                return externalComparer.Equals(x, y);
 
-            foreach (IChainComparer comparer in _comparers)
+            foreach (ChainComparer comparer in SelectComparers(topLevelComparison))
             {
-                bool? result = comparer.Equal(x, y, ref tolerance, topLevelComparison);
+                bool? result = comparer.Equals(x, y, ref tolerance);
                 if (result.HasValue)
                     return result.Value;
             }
 
             return x.Equals(y);
+        }
+
+        public int GetHashCode(object obj, bool topLevelComparison = true)
+        {
+            if (obj == null) return 0;
+
+            foreach (EqualityAdapter adapter in _externalComparers)
+            {
+                if (adapter.CanCompare(obj))
+                {
+                    return adapter.GetHashCode(obj);
+                }
+            }
+
+            foreach (var comparer in SelectComparers(topLevelComparison))
+            {
+                if (comparer.CanCompare(obj))
+                {
+                    return comparer.GetHashCode(obj);
+                }
+            }
+
+            return obj.GetHashCode();
         }
 
         #endregion
@@ -190,11 +233,38 @@ namespace NUnit.Framework.Constraints
 
         private EqualityAdapter GetExternalComparer(object x, object y)
         {
-            foreach (EqualityAdapter adapter in externalComparers)
+            foreach (EqualityAdapter adapter in _externalComparers)
                 if (adapter.CanCompare(x, y))
                     return adapter;
 
             return null;
+        }
+
+        private IEnumerable<ChainComparer> SelectComparers(bool topLevelComparison)
+        {
+            return topLevelComparison && _compareAsCollection
+                ? SelectCollectionComparers()
+                : Comparers;
+        }
+
+        private IEnumerable<ChainComparer> SelectCollectionComparers()
+        {
+            return Comparers.Where(c => !(c is ArraysComparer) && !(c is EquatablesComparer));
+        }
+
+        private void SetProperty<T>(ref T field, T value)
+        {
+            if (_isFrozen)
+            {
+                throw new InvalidOperationException("Comparer is read-only after first comparison operation.");
+            }
+            field = value;
+        }
+
+        private void Freeze()
+        {
+            _externalComparers = new ReadOnlyCollection<EqualityAdapter>(_externalComparers);
+            _isFrozen = true;
         }
 
         #endregion

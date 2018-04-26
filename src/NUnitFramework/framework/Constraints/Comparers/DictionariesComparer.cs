@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="IDictionary"/>s.
     /// </summary>
-    internal sealed class DictionariesComparer : IChainComparer
+    internal sealed class DictionariesComparer : ChainComparer<IDictionary>
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -37,27 +37,33 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(IDictionary x, IDictionary y, ref Tolerance tolerance)
         {
-            if (!(x is IDictionary) || !(y is IDictionary))
-                return null;
-
-            IDictionary xDictionary = (IDictionary)x;
-            IDictionary yDictionary = (IDictionary)y;
-
-            if (xDictionary.Count != yDictionary.Count)
+            if (ReferenceEquals(x, y))
+                return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
                 return false;
 
-            CollectionTally tally = new CollectionTally(_equalityComparer, xDictionary.Keys);
-            tally.TryRemove(yDictionary.Keys);
-            if ((tally.Result.MissingItems.Count > 0) || (tally.Result.ExtraItems.Count > 0))
+            if (x.Count != y.Count)
                 return false;
 
-            foreach (object key in xDictionary.Keys)
-                if (!_equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance, topLevelComparison: false))
+            CollectionTally tally = new CollectionTally(_equalityComparer, x.Keys);
+            tally.TryRemove(y.Keys);
+            if (tally.Result.MissingItems.Count > 0 || tally.Result.ExtraItems.Count > 0)
+                return false;
+
+            foreach (DictionaryEntry xEntry in x)
+                if (!_equalityComparer.AreEqual(xEntry.Value, y[xEntry.Key], ref tolerance, topLevelComparison: false))
                     return false;
 
             return true;
+        }
+
+        public override int GetHashCode(IDictionary dictionary)
+        {
+            return new HashCodeBuilder(_equalityComparer)
+                .AppendAllUnordered(dictionary)
+                .GetHashCode();
         }
     }
 }

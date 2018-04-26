@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,29 +21,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
-    /// <summary>
-    /// Comparator for two <c>Tuple</c>s.
-    /// </summary>
     internal sealed class TupleComparer : TupleComparerBase
     {
-        internal TupleComparer(NUnitEqualityComparer equalityComparer)
+        internal TupleComparer(NUnitEqualityComparer equalityComparer) 
             : base(equalityComparer)
         { }
 
-        protected override bool IsCorrectType(Type type)
+        public override bool CanCompare(object obj)
         {
-            return TypeHelper.IsTuple(type);
-        }
-
-        protected override object GetValue(Type type, string propertyName, object obj)
-        {
-            return type.GetProperty(propertyName).GetValue(obj, null);
+            return TypeHelper.IsTuple(obj.GetType());
         }
     }
 }

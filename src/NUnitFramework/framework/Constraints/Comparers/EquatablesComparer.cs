@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
 
@@ -31,65 +30,70 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two types related by <see cref="IEquatable{T}"/>.
     /// </summary>
-    internal sealed class EquatablesComparer : IChainComparer
+    internal sealed class EquatablesComparer : ChainComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal EquatablesComparer(NUnitEqualityComparer equalityComparer)
+        public override bool CanCompare(object obj)
         {
-            _equalityComparer = equalityComparer;
+            return false;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool? Equals(object x, object y, ref Tolerance tolerance)
         {
-            if (_equalityComparer.CompareAsCollection && topLevelComparison)
-                return null;
-
             Type xType = x.GetType();
             Type yType = y.GetType();
 
             MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
             if (equals != null)
-                return InvokeFirstIEquatableEqualsSecond(x, y, equals);
+                return (bool)@equals.Invoke(x, new[] { y });
 
-            equals = FirstImplementsIEquatableOfSecond(yType, xType);
-            if (xType != yType && equals != null)
-                return InvokeFirstIEquatableEqualsSecond(y, x, equals);
+            if (xType != yType)
+            {
+                equals = FirstImplementsIEquatableOfSecond(yType, xType);
+                if (equals != null)
+                    return (bool)@equals.Invoke(y, new[] { x });
+            }
 
             return null;
         }
 
-        private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
+        public override int GetHashCode(object obj)
         {
-            var pair = new KeyValuePair<Type, MethodInfo>();
-
-            foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
-                if (xEquatableArgument.Key.IsAssignableFrom(second))
-                    if (pair.Key == null || pair.Key.IsAssignableFrom(xEquatableArgument.Key))
-                        pair = xEquatableArgument;
-
-            return pair.Value;
+            return obj != null ? 1 : 0;
         }
 
-        private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
+        private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
-            var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
+            Type bestMatchingInterface = null;
+            Type bestMatchingEquatableType = null;
 
-            foreach (Type @interface in type.GetInterfaces())
+            foreach (var @interface in first.GetInterfaces())
             {
-                if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
+                Type equatableType;
+                if (TryGetEquatableInterfaceArg(@interface, out equatableType) && equatableType.IsAssignableFrom(second))
                 {
-                    genericArgs.Add(new KeyValuePair<Type, MethodInfo>(
-                        @interface.GetGenericArguments()[0], @interface.GetMethod("Equals")));
+                    if (bestMatchingEquatableType == null || bestMatchingEquatableType.IsAssignableFrom(equatableType))
+                    {
+                        bestMatchingInterface = @interface;
+                        bestMatchingEquatableType = equatableType;
+                    }
                 }
             }
 
-            return genericArgs;
+            return bestMatchingInterface != null
+                ? bestMatchingInterface.GetMethod("Equals")
+                : null;
         }
 
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
+        private static bool TryGetEquatableInterfaceArg(Type @interface, out Type result)
         {
-            return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
+            if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEquatable<>))
+            {
+                result = @interface.GetGenericArguments()[0];
+                return true;
+            }
+
+            result = null;
+            return false;
         }
     }
 }

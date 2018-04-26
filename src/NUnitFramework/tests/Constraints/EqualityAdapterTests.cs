@@ -45,9 +45,9 @@ namespace NUnit.Framework.Constraints
         [TestCaseSource(nameof(EqualityAdapters))]
         public static void CanCompareWithNull(EqualityAdapter adapter)
         {
-            Assert.That(adapter.AreEqual(null, "a"), Is.False);
-            Assert.That(adapter.AreEqual("a", null), Is.False);
-            Assert.That(adapter.AreEqual(null, null), Is.True);
+            Assert.That(adapter.Equals(null, "a"), Is.False);
+            Assert.That(adapter.Equals("a", null), Is.False);
+            Assert.That(adapter.Equals(null, null), Is.True);
         }
     }
 }

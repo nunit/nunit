@@ -26,24 +26,22 @@ using System;
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Comparator for two <see cref="DateTime"/>s or <see cref="TimeSpan"/>s.
+    /// Comparator for two <see cref="TimeSpan"/>s.
     /// </summary>
-    internal sealed class TimeSpanToleranceComparer : IChainComparer
+    internal sealed class DateTimesComparer : ChainComparer<DateTime>
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(DateTime x, DateTime y, ref Tolerance tolerance)
         {
-            if (tolerance == null || !(tolerance.Amount is TimeSpan))
-                return null;
+            TimeSpan amount = tolerance != null && tolerance.Amount is TimeSpan
+                ? (TimeSpan)tolerance.Amount
+                : TimeSpan.Zero;
 
-            TimeSpan amount = (TimeSpan)tolerance.Amount;
+            return (x - y).Duration() <= amount;
+        }
 
-            if (x is DateTime && y is DateTime)
-                return ((DateTime)x - (DateTime)y).Duration() <= amount;
-
-            if (x is TimeSpan && y is TimeSpan)
-                return ((TimeSpan)x - (TimeSpan)y).Duration() <= amount;
-
-            return null;
+        public override int GetHashCode(DateTime dt)
+        {
+            return dt.GetHashCode();
         }
     }
 }

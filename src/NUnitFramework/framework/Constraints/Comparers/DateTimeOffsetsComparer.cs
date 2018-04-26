@@ -28,41 +28,42 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DateTimeOffset"/>s.
     /// </summary>
-    internal sealed class DateTimeOffsetsComparer : IChainComparer
+    internal sealed class DateTimeOffsetsComparer : ChainComparer<DateTimeOffset>
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
+        private readonly bool _withSameOffset;
 
-        internal DateTimeOffsetsComparer(NUnitEqualityComparer equalityComparer)
+        internal DateTimeOffsetsComparer(bool withSameOffset)
         {
-            _equalityComparer = equalityComparer;
+            _withSameOffset = withSameOffset;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(DateTimeOffset x, DateTimeOffset y, ref Tolerance tolerance)
         {
-            if (!(x is DateTimeOffset) || !(y is DateTimeOffset))
-                return null;
-
             bool result;
-
-            DateTimeOffset xOffset = (DateTimeOffset)x;
-            DateTimeOffset yOffset = (DateTimeOffset)y;
-
             if (tolerance != null && tolerance.Amount is TimeSpan)
             {
                 TimeSpan amount = (TimeSpan)tolerance.Amount;
-                result = (xOffset - yOffset).Duration() <= amount;
+                result = (x - y).Duration() <= amount;
             }
             else
             {
-                result = xOffset == yOffset;
+                result = x == y;
             }
 
-            if (result && _equalityComparer.WithSameOffset)
+            if (result && _withSameOffset)
             {
-                result = xOffset.Offset == yOffset.Offset;
+                result = x.Offset == y.Offset;
             }
 
             return result;
+        }
+
+        public override int GetHashCode(DateTimeOffset dto)
+        {
+            var hash = dto.GetHashCode();
+            return _withSameOffset
+                ? hash ^ dto.Offset.GetHashCode()
+                : hash;
         }
     }
 }

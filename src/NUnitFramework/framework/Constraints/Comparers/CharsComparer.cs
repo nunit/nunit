@@ -21,36 +21,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Comparator for two <see cref="Char"/>s.
+    /// Comparator for two <see cref="char"/>s.
     /// </summary>
-    internal sealed class CharsComparer : IChainComparer
+    internal sealed class CharsComparer : ChainComparer<char>
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
+        private readonly bool _caseInsensitive;
 
-        internal CharsComparer(NUnitEqualityComparer equalityComparer)
+        internal CharsComparer(bool caseInsensitive)
         {
-            _equalityComparer = equalityComparer;
+            _caseInsensitive = caseInsensitive;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(char x, char y, ref Tolerance tolerance)
         {
-            if (!(x is char) || !(y is char))
-                return null;
-
-            char xChar = (char)x;
-            char yChar = (char)y;
-
-            bool caseInsensitive = _equalityComparer.IgnoreCase;
-
-            char c1 = caseInsensitive ? Char.ToLower(xChar) : xChar;
-            char c2 = caseInsensitive ? Char.ToLower(yChar) : yChar;
-
+            char c1 = _caseInsensitive ? char.ToLower(x) : x;
+            char c2 = _caseInsensitive ? char.ToLower(y) : y;
             return c1 == c2;
+        }
+
+        public override int GetHashCode(char ch)
+        {
+            return _caseInsensitive ? char.ToLower(ch) : ch;
         }
     }
 }

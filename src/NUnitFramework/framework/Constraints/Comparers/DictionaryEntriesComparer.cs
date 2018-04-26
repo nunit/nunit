@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DictionaryEntry"/>s.
     /// </summary>
-    internal sealed class DictionaryEntriesComparer : IChainComparer
+    internal sealed class DictionaryEntriesComparer : ChainComparer<DictionaryEntry>
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -37,18 +37,20 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(DictionaryEntry x, DictionaryEntry y, ref Tolerance tolerance)
         {
             // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
-            if (!(x is DictionaryEntry) || !(y is DictionaryEntry))
-                return null;
-
-            DictionaryEntry xDictionaryEntry = (DictionaryEntry)x;
-            DictionaryEntry yDictionaryEntry = (DictionaryEntry)y;
-
             var keyTolerance = Tolerance.Exact;
-            return _equalityComparer.AreEqual(xDictionaryEntry.Key, yDictionaryEntry.Key, ref keyTolerance, false) 
-                && _equalityComparer.AreEqual(xDictionaryEntry.Value, yDictionaryEntry.Value, ref tolerance, false);
+            return _equalityComparer.AreEqual(x.Key, y.Key, ref keyTolerance, false) 
+                && _equalityComparer.AreEqual(x.Value, y.Value, ref tolerance, false);
+        }
+
+        public override int GetHashCode(DictionaryEntry entry)
+        {
+            return new HashCodeBuilder(_equalityComparer)
+                .Append(entry.Key)
+                .Append(entry.Value)
+                .GetHashCode();
         }
     }
 }

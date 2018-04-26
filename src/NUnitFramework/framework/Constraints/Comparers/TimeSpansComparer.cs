@@ -26,21 +26,22 @@ using System;
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Interface for comparing two <see cref="Object"/>s.
+    /// Comparator for two <see cref="TimeSpan"/>s.
     /// </summary>
-    internal interface IChainComparer
+    internal sealed class TimeSpansComparer : ChainComparer<TimeSpan>
     {
-        /// <summary>
-        /// Method for comparing two objects with a tolerance.
-        /// </summary>
-        /// <param name="x">The first object to compare.</param>
-        /// <param name="y">The second object to compare.</param>
-        /// <param name="tolerance">The tolerance to use when comparing the objects.</param>
-        /// <param name="topLevelComparison">Flag indicating whether or not this is the top level comparison.</param>
-        /// <returns>
-        ///     <c>null</c> if the objects cannot be compared using the method.
-        ///     Otherwise the result of the comparison is returned.
-        /// </returns>
-        bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true);
+        public override bool Equals(TimeSpan x, TimeSpan y, ref Tolerance tolerance)
+        {
+            TimeSpan amount = tolerance != null && tolerance.Amount is TimeSpan
+                ? (TimeSpan)tolerance.Amount
+                : TimeSpan.Zero;
+
+            return (x - y).Duration() <= amount;
+        }
+
+        public override int GetHashCode(TimeSpan timeSpan)
+        {
+            return timeSpan.GetHashCode();
+        }
     }
 }

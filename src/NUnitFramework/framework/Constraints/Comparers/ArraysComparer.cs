@@ -28,35 +28,36 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Array"/>s.
     /// </summary>
-    internal sealed class ArraysComparer : IChainComparer
+    internal sealed class ArraysComparer : ChainComparer<Array>
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
         private readonly EnumerablesComparer _enumerablesComparer;
 
-        internal ArraysComparer(NUnitEqualityComparer equalityComparer, EnumerablesComparer enumerablesComparer)
+        internal ArraysComparer(NUnitEqualityComparer equalityComparer)
         {
-            _equalityComparer = equalityComparer;
-            _enumerablesComparer = enumerablesComparer;
+            _enumerablesComparer = new EnumerablesComparer(equalityComparer);
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(Array x, Array y, ref Tolerance tolerance)
         {
-            if (!x.GetType().IsArray || !y.GetType().IsArray || _equalityComparer.CompareAsCollection)
-                return null;
+            if (ReferenceEquals(x, y))
+                return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
+                return false;
 
-            Array xArray = (Array)x;
-            Array yArray = (Array)y;
-
-            int rank = xArray.Rank;
-
-            if (rank != yArray.Rank)
+            int rank = x.Rank;
+            if (rank != y.Rank)
                 return false;
 
             for (int r = 1; r < rank; r++)
-                if (xArray.GetLength(r) != yArray.GetLength(r))
+                if (x.GetLength(r) != y.GetLength(r))
                     return false;
 
-            return _enumerablesComparer.Equal(xArray, yArray, ref tolerance);
+            return _enumerablesComparer.Equals(x, y, ref tolerance);
+        }
+
+        public override int GetHashCode(Array a)
+        {
+            return _enumerablesComparer.GetHashCode(a);
         }
     }
 }

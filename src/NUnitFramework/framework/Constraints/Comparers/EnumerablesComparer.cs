@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="IEnumerable"/>s.
     /// </summary>
-    internal sealed class EnumerablesComparer : IChainComparer
+    internal sealed class EnumerablesComparer : ChainComparer<IEnumerable>
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -38,43 +38,36 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public override bool Equals(IEnumerable x, IEnumerable y, ref Tolerance tolerance)
         {
-            if (!(x is IEnumerable) || !(y is IEnumerable))
-                return null;
+            if (ReferenceEquals(x, y))return true;
+            if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
+                return false;
 
-            IEnumerable xIEnumerable = (IEnumerable)x;
-            IEnumerable yIEnumerable = (IEnumerable)y;
-
-            IEnumerator expectedEnum = null;
-            IEnumerator actualEnum = null;
-
+            IEnumerator expectedEnum = x.GetEnumerator();
+            IEnumerator actualEnum = y.GetEnumerator();
             try
             {
-                expectedEnum = xIEnumerable.GetEnumerator();
-                actualEnum = yIEnumerable.GetEnumerator();
-
-                int count;
-                for (count = 0; ; count++)
+                for (int count = 0;; count++)
                 {
                     bool expectedHasData = expectedEnum.MoveNext();
                     bool actualHasData = actualEnum.MoveNext();
 
                     if (!expectedHasData && !actualHasData)
                         return true;
-                    
+
                     if (expectedHasData != actualHasData ||
                         !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, topLevelComparison: false))
                     {
-                        NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
-                        fp.Position = count;
-                        fp.ExpectedHasData = expectedHasData;
-                        if (expectedHasData)
-                            fp.ExpectedValue = expectedEnum.Current;
-                        fp.ActualHasData = actualHasData;
-                        if (actualHasData)
-                            fp.ActualValue = actualEnum.Current;
-                        _equalityComparer.FailurePoints.Insert(0, fp);
+                        _equalityComparer.FailurePoints.Insert(0, 
+                            new NUnitEqualityComparer.FailurePoint
+                            {
+                                Position = count,
+                                ExpectedHasData = expectedHasData,
+                                ExpectedValue = expectedHasData ? expectedEnum.Current : null,
+                                ActualHasData = actualHasData,
+                                ActualValue = actualHasData ? actualEnum.Current : null,
+                            });
                         return false;
                     }
                 }
@@ -87,6 +80,13 @@ namespace NUnit.Framework.Constraints.Comparers
                 var actualDisposable = actualEnum as IDisposable;
                 if (actualDisposable != null) actualDisposable.Dispose();
             }
+        }
+
+        public override int GetHashCode(IEnumerable enumerable)
+        {
+            return new HashCodeBuilder(_equalityComparer)
+               .AppendAll(enumerable)
+               .GetHashCode();
         }
     }
 }
