@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Builders
 
             return hasBuildersSpecified && method.Method.GetParameters().Length > 0 || 
                    tests.Count > 0 ||
-                   HasMethodGotDataAttributeParameters(method)
+                   MethodHasDataAttributeParameters(method)
                 ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, suite);
         }
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="fixtureMethod">The method for which a test is to be built.</param>
         /// <returns>True if the method signature contains DataAttribute arguments</returns>
-        private bool HasMethodGotDataAttributeParameters(FixtureMethod fixtureMethod)
+        private bool MethodHasDataAttributeParameters(FixtureMethod fixtureMethod)
         {
             foreach (var parameter in fixtureMethod.Method.GetParameters())
             {
