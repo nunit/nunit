@@ -310,7 +310,7 @@ namespace NUnit.Framework.Assertions
                 Assert.Fail(
                     $"Expected the number of lines to be no more than {maxLineCount}, but it was {lines.Length}:" + Environment.NewLine
                     + Environment.NewLine
-                    + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine))
+                    + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine).ToArray())
                     + "(end)");
 
                  // ^ Most of that is to differentiate it from the current method's stack trace
