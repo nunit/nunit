@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -29,6 +29,8 @@ using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {
+    using System.Linq;
+
     public class CollectionEquivalentConstraintTests
     {
         [Test]
@@ -259,6 +261,18 @@ namespace NUnit.Framework.Constraints
                 "  Extra (1): < \"hocusfocus\" >" + Environment.NewLine;
 
             Assert.That(writer.ToString(), Is.EqualTo(expectedMessage));
+        }
+#endif
+
+#if (!NETSTANDARD1_3 && !NETSTANDARD1_6)
+        [Test, Timeout(100)]
+        public void LimitPerformanceDegradationForLargeOrderedCollections()
+        {
+            var list = new List<int>();
+            for (var i = 1000; i > 0; i--) list.Add(i);
+
+            var collection = new List<int>(list.OrderBy(i => i));
+            Assert.That(collection, Is.Ordered & Is.EquivalentTo(list));
         }
 #endif
     }

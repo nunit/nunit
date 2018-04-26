@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -26,6 +26,8 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
+    using System.Linq;
+
     /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences 
     /// of each object in one or more enumerations.</summary>
     public class CollectionTally
@@ -47,8 +49,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly NUnitEqualityComparer comparer;
-
         /// <summary>The result of the comparision between the two collections.</summary>
         public CollectionTallyResult Result
         {
@@ -56,44 +56,33 @@ namespace NUnit.Framework.Constraints
             {
                 return new CollectionTallyResult()
                 {
-                    MissingItems = new List<object>(_missingItems),
+                    MissingItems = new List<object>(_missingItems.OrderBy(i => i.Value).Select(i => i.Key)),
                     ExtraItems = new List<object>(_extraItems)
                 };
             }
         }
 
-        private List<object> _missingItems = new List<object>();
+        private readonly Dictionary<object, int> _missingItems;
 
-        private List<object> _extraItems = new List<object>();
+        private readonly List<object> _extraItems = new List<object>();
 
         /// <summary>Construct a CollectionTally object from a comparer and a collection.</summary>
         /// <param name="comparer">The comparer to use for equality.</param>
         /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
-            this.comparer = comparer;
+            _missingItems = new Dictionary<object, int>(new TallyEqualityComparer(comparer));
 
+            var index = 0;
             foreach (object o in c)
-                _missingItems.Add(o);
-        }
-
-        private bool ItemsEqual(object expected, object actual)
-        {
-            Tolerance tolerance = Tolerance.Default;
-            return comparer.AreEqual(expected, actual, ref tolerance);
+                _missingItems.Add(o, index++);
         }
 
         /// <summary>Try to remove an object from the tally.</summary>
         /// <param name="o">The object to remove.</param>
         public void TryRemove(object o)
         {
-            for (int index = 0; index < _missingItems.Count; index++)
-                if (ItemsEqual(_missingItems[index], o))
-                {
-                    _missingItems.RemoveAt(index);
-                    return;
-                }
-
+            if (_missingItems.Remove(o)) return;
             _extraItems.Add(o);
         }
 
@@ -103,6 +92,27 @@ namespace NUnit.Framework.Constraints
         {
             foreach (object o in c)
                 TryRemove(o);
+        }
+
+        private class TallyEqualityComparer : EqualityComparer<object>
+        {
+            private readonly NUnitEqualityComparer _comparer;
+            private Tolerance _tolerance = Tolerance.Default;
+
+            public TallyEqualityComparer(NUnitEqualityComparer comparer)
+            {
+                _comparer = comparer;
+            }
+
+            public override bool Equals(object x, object y)
+            {
+                return _comparer.AreEqual(x, y, ref _tolerance);
+            }
+
+            public override int GetHashCode(object obj)
+            {
+                return Default.GetHashCode(obj);
+            }
         }
     }
 }
