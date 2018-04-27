@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -107,7 +107,8 @@ namespace NUnit.Framework.Internal.Builders
                 method.Method.GetAttributes<ITestBuilder>(false));
 
             // See if we need a CombinatorialAttribute added for parametarized data
-            if (MethodHasDataAttributeParameters(method) && !HasCombinatorialStrategy(builders))
+            if (method.Method.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
+                && !builders.Any(builder => builder is CombiningStrategyAttribute))
                 builders.Add(new CombinatorialAttribute());
 
             foreach (var attr in builders)
@@ -116,40 +117,9 @@ namespace NUnit.Framework.Internal.Builders
                     tests.Add(test); 
             }
 
-            return builders.Count > 0 && method.Method.GetParameters().Length > 0 || tests.Count > 0 
-                ? BuildParameterizedMethodSuite(method, tests) 
+            return builders.Count > 0 && method.Method.GetParameters().Length > 0 || tests.Count > 0
+                ? BuildParameterizedMethodSuite(method, tests)
                 : BuildSingleTestMethod(method, suite);
-        }
-
-        /// <summary>
-        /// Checks to see if the method has arguments with DataAttribute, 
-        /// if the argument has no data, the test should not run rather than fail.
-        /// </summary>
-        /// <param name="fixtureMethod">The method for which a test is to be built.</param>
-        /// <returns>True if the method signature contains DataAttribute arguments</returns>
-        private bool MethodHasDataAttributeParameters(FixtureMethod fixtureMethod)
-        {
-            foreach (var parameter in fixtureMethod.Method.GetParameters())
-            {
-                if (parameter.HasAttribute<IParameterDataSource>(false))
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Checks to see if CombiningStrategyAttribute is already present in the specified builders
-        /// </summary>
-        /// <param name="builders">Specified builders.</param>
-        /// <returns>True if CombiningStrategyAttribute is already present.</returns>
-        private bool HasCombinatorialStrategy(List<ITestBuilder> builders)
-        {
-            foreach (var builder in builders)
-            {
-                if (builder is CombiningStrategyAttribute)
-                    return true;
-            }
-            return false;
         }
 
         #endregion

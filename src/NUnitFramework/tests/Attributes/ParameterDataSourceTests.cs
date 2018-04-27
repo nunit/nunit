@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
-    public class DataAttributeTests
+    public class ParameterDataSourceTests
     {
         [Test]
         public void TestWithParameterizedArgumentsShouldRun([VariableValues(Count = 3)] string context, [Values] ValuesEnum values)
