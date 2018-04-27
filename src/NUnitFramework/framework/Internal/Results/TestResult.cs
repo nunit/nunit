@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         public ITest Test { get; }
 
         /// <summary>
-        /// Gets the ResultState of the test result, which 
+        /// Gets the ResultState of the test result, which
         /// indicates the success or failure of the test.
         /// </summary>
         public ResultState ResultState
@@ -493,15 +493,12 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
-            Guard.ArgumentNotNull(ex, nameof(ex));
-
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
-                ex = ex.InnerException;
+            ex = ValidateAndUnwrap(ex);
 
             if (ex is ResultStateException)
                 SetResult(
                     ((ResultStateException)ex).ResultState,
-                    ex.Message, 
+                    ex.Message,
                     StackFilter.DefaultFilter.Filter(ex.StackTrace));
 #if !NETSTANDARD1_6
             else if (ex is System.Threading.ThreadAbortException)
@@ -534,10 +531,7 @@ namespace NUnit.Framework.Internal
         /// <param name="site">The FailureSite to use in the result</param>
         public void RecordException(Exception ex, FailureSite site)
         {
-            Guard.ArgumentNotNull(ex, nameof(ex));
-
-            if (ex is NUnitException)
-                ex = ex.InnerException;
+            ex = ValidateAndUnwrap(ex);
 
             if (ex is ResultStateException)
                 SetResult(((ResultStateException)ex).ResultState.WithSite(site),
@@ -568,8 +562,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The Exception to be recorded</param>
         public void RecordTearDownException(Exception ex)
         {
-            if (ex is NUnitException)
-                ex = ex.InnerException;
+            ex = ValidateAndUnwrap(ex);
 
             ResultState resultState = ResultState == ResultState.Cancelled
                 ? ResultState.Cancelled
@@ -586,6 +579,16 @@ namespace NUnit.Framework.Internal
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
+        }
+
+        private static Exception ValidateAndUnwrap(Exception ex)
+        {
+            Guard.ArgumentNotNull(ex, nameof(ex));
+
+            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
+                return ex.InnerException;
+
+            return ex;
         }
 
         /// <summary>
