@@ -106,24 +106,8 @@ namespace NUnit.Framework.Internal.Builders
             List<ITestBuilder> builders = new List<ITestBuilder>(
                 method.Method.GetAttributes<ITestBuilder>(false));
 
-            // See if we need a CombinatorialAttribute added
-            bool needCombinatorial = true;
-            foreach (var attr in builders)
-            {
-                if (attr is CombiningStrategyAttribute)
-                    needCombinatorial = false;
-            }
-
-            // This check must be done before CombinatorialAttribute gets added to the builders collection
-            var hasBuildersSpecified = builders.Count > 0;
-
-            // We could check to see if here are any data attributes specified
-            // on the parameters but that's what CombinatorialAttribute does
-            // and it simply won't return any cases if it finds nothing.
-            // TODO: We need to add some other ITestBuilder than a combinatorial attribute
-            // because we want the attribute to generate an error if it's present on
-            // a generic method.
-            if (needCombinatorial)
+            // See if we need a CombinatorialAttribute added for parametarized data
+            if (MethodHasDataAttributeParameters(method) && !HasCombinatorialStrategy(builders))
                 builders.Add(new CombinatorialAttribute());
 
             foreach (var attr in builders)
@@ -132,10 +116,8 @@ namespace NUnit.Framework.Internal.Builders
                     tests.Add(test); 
             }
 
-            return hasBuildersSpecified && method.Method.GetParameters().Length > 0 || 
-                   tests.Count > 0 ||
-                   MethodHasDataAttributeParameters(method)
-                ? BuildParameterizedMethodSuite(method, tests)
+            return builders.Count > 0 && method.Method.GetParameters().Length > 0 || tests.Count > 0 
+                ? BuildParameterizedMethodSuite(method, tests) 
                 : BuildSingleTestMethod(method, suite);
         }
 
@@ -149,8 +131,22 @@ namespace NUnit.Framework.Internal.Builders
         {
             foreach (var parameter in fixtureMethod.Method.GetParameters())
             {
-                var dataAttributes = parameter.GetAttributes<DataAttribute>(true);
-                if (dataAttributes.Length > 0)
+                if (parameter.HasAttribute<IParameterDataSource>(false))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks to see if CombiningStrategyAttribute is already present in the specified builders
+        /// </summary>
+        /// <param name="builders">Specified builders.</param>
+        /// <returns>True if CombiningStrategyAttribute is already present.</returns>
+        private bool HasCombinatorialStrategy(List<ITestBuilder> builders)
+        {
+            foreach (var builder in builders)
+            {
+                if (builder is CombiningStrategyAttribute)
                     return true;
             }
             return false;

@@ -43,7 +43,6 @@ namespace NUnit.Framework.Attributes
             Assert.Pass();
         }
 
-
         [Test]
         public void TestWithParameterizedArgumentsShouldNotRunWhenNoParametersPassedIn([VariableValues(Count = 0)] string context, [Values] ValuesEnum values)
         {
@@ -64,7 +63,7 @@ namespace NUnit.Framework.Attributes
             ValueTwo
         }
 
-        public class VariableValues : DataAttribute, IParameterDataSource
+        public class VariableValues : Attribute, IParameterDataSource
         {
             public int Count { get; set; }
 
@@ -76,7 +75,7 @@ namespace NUnit.Framework.Attributes
                 }
             }
         }
-
+        
         #endregion
     }
 }
