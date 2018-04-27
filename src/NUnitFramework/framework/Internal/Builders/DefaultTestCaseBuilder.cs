@@ -106,7 +106,7 @@ namespace NUnit.Framework.Internal.Builders
             List<ITestBuilder> builders = new List<ITestBuilder>(
                 method.Method.GetAttributes<ITestBuilder>(false));
 
-            // See if we need a CombinatorialAttribute added for parametarized data
+            // See if we need to add a CombinatorialAttribute for parameterized data
             if (method.Method.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
                 && !builders.Any(builder => builder is CombiningStrategyAttribute))
                 builders.Add(new CombinatorialAttribute());
