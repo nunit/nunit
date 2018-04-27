@@ -493,34 +493,17 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
-            ex = ValidateAndUnwrap(ex);
+            var result = new ExceptionResult(ex, FailureSite.Test);
 
-            if (ex is ResultStateException)
-                SetResult(
-                    ((ResultStateException)ex).ResultState,
-                    ex.Message,
-                    StackFilter.DefaultFilter.Filter(ex.StackTrace));
-#if !NETSTANDARD1_6
-            else if (ex is System.Threading.ThreadAbortException)
-                SetResult(
-                    ResultState.Cancelled,
-                    "Test cancelled by user",
-                    ex.StackTrace);
-#endif
-            else
+            SetResult(result.ResultState, result.Message, result.StackTrace);
+
+            if (AssertionResults.Count > 0 && result.ResultState == ResultState.Error)
             {
-                string message = ExceptionHelper.BuildMessage(ex);
-                string stackTrace = ExceptionHelper.BuildStackTrace(ex);
-                SetResult(ResultState.Error, message, stackTrace);
+                // Add pending failures to the legacy result message
+                Message += CreateLegacyFailureMessage();
 
-                if (AssertionResults.Count > 0)
-                {
-                    // Add pending failures to the legacy result message
-                    Message += CreateLegacyFailureMessage();
-
-                    // Add to the list of assertion errors, so that newer runners will see it
-                    AssertionResults.Add(new AssertionResult(AssertionStatus.Error, message, stackTrace));
-                }
+                // Add to the list of assertion errors, so that newer runners will see it
+                AssertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));
             }
         }
 
@@ -531,22 +514,9 @@ namespace NUnit.Framework.Internal
         /// <param name="site">The FailureSite to use in the result</param>
         public void RecordException(Exception ex, FailureSite site)
         {
-            ex = ValidateAndUnwrap(ex);
+            var result = new ExceptionResult(ex, site);
 
-            if (ex is ResultStateException)
-                SetResult(((ResultStateException)ex).ResultState.WithSite(site),
-                    ex.Message,
-                    StackFilter.DefaultFilter.Filter(ex.StackTrace));
-#if !NETSTANDARD1_6
-            else if (ex is System.Threading.ThreadAbortException)
-                SetResult(ResultState.Cancelled.WithSite(site),
-                    "Test cancelled by user",
-                    ex.StackTrace);
-#endif
-            else
-                SetResult(ResultState.Error.WithSite(site),
-                    ExceptionHelper.BuildMessage(ex),
-                    ExceptionHelper.BuildStackTrace(ex));
+            SetResult(result.ResultState, result.Message, result.StackTrace);
         }
 
         /// <summary>
@@ -589,6 +559,39 @@ namespace NUnit.Framework.Internal
                 return ex.InnerException;
 
             return ex;
+        }
+
+        private struct ExceptionResult
+        {
+            public ResultState ResultState { get; }
+            public string Message { get; }
+            public string StackTrace { get; }
+
+            public ExceptionResult(Exception ex, FailureSite site)
+            {
+                ex = ValidateAndUnwrap(ex);
+
+                if (ex is ResultStateException)
+                {
+                    ResultState = ((ResultStateException)ex).ResultState.WithSite(site);
+                    Message = ex.Message;
+                    StackTrace = StackFilter.DefaultFilter.Filter(ex.StackTrace);
+                }
+#if !NETSTANDARD1_6
+                else if (ex is ThreadAbortException)
+                {
+                    ResultState = ResultState.Cancelled.WithSite(site);
+                    Message = "Test cancelled by user";
+                    StackTrace = ex.StackTrace;
+                }
+#endif
+                else
+                {
+                    ResultState = ResultState.Error.WithSite(site);
+                    Message = ExceptionHelper.BuildMessage(ex);
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                }
+            }
         }
 
         /// <summary>
