@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NUnit.TestData.TestCaseSourceAttributeFixture
@@ -147,7 +148,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        [TestCaseSource(nameof(ComplexArrayBasedTestInput))]
+        [TestCaseSource(nameof(ComplexArrayBasedTestInputTestCases))]
         public void MethodWithArrayArguments(object o)
         {
         }
@@ -184,7 +185,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        public static object[] ComplexArrayBasedTestInput = new[]
+        static object[] ComplexArrayBasedTestInput = new[]
         {
             new object[] { 1, "text", new object() },
             new object[0],
@@ -192,5 +193,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
+
+        static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
+        {
+            foreach (var argumentValue in ComplexArrayBasedTestInput)
+                yield return new TestCaseData(args: new object[] { argumentValue });
+        }
     }
 }
