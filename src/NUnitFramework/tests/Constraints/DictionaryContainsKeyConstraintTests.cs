@@ -101,14 +101,14 @@ namespace NUnit.Framework.Constraints
                 new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
         }
 
-        [Test]
+        [Test, Explicit("Demonstrates issue #2837")]
         public void SucceedsWhenKeyIsPresentWhenDictionaryUsingCustomComparer()
         {
             var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Hello", "World" }, { "Hola", "Mundo" } };
 
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello"));
         }
-        [Test]
+        [Test, Explicit("Demonstrates issue #2837")]
         public void SucceedsWhenKeyIsPresentUsingContainKeyWhenDictionaryUsingCustomComparer()
         {
             var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Hello", "World" }, { "Hola", "Mundo" } };
