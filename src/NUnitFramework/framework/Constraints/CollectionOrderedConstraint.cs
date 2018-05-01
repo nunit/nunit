@@ -279,7 +279,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// An OrderingStep represents one stage of the sort
         /// </summary>
-        private class OrderingStep
+        private sealed class OrderingStep
         {
             public OrderingStep(string propertyName)
             {

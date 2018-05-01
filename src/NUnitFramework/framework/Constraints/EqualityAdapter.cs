@@ -125,7 +125,7 @@ namespace NUnit.Framework.Constraints
             return new PredicateEqualityAdapter<TExpected, TActual>(comparison);
         }
 
-        internal class PredicateEqualityAdapter<TActual, TExpected> : EqualityAdapter
+        internal sealed class PredicateEqualityAdapter<TActual, TExpected> : EqualityAdapter
         {
             private readonly Func<TActual, TExpected, bool> _comparison;
 

@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// NUnitEqualityComparer encapsulates NUnit's handling of
     /// equality tests between objects.
     /// </summary>
-    public class NUnitEqualityComparer
+    public sealed class NUnitEqualityComparer
     {
         #region Static and Instance Fields
         /// <summary>
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Constraints
         /// FailurePoint class represents one point of failure
         /// in an equality test.
         /// </summary>
-        public class FailurePoint
+        public sealed class FailurePoint
         {
             /// <summary>
             /// The location of the failure
