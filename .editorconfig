@@ -61,14 +61,14 @@ dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 # Required
 dotnet_naming_symbols.namespaces_types_and_non_field_members.applicable_kinds = namespace, class, struct, enum, interface, delegate, type_parameter, method, property, event
-dotnet_naming_rule.namespaces_types_and_non_field_members.severity = suggestion
+dotnet_naming_rule.namespaces_types_and_non_field_members.severity = error
 dotnet_naming_rule.namespaces_types_and_non_field_members.symbols = namespaces_types_and_non_field_members
 dotnet_naming_rule.namespaces_types_and_non_field_members.style = pascal_case
 
 # Required
 dotnet_naming_symbols.visible_fields.applicable_kinds = field
 dotnet_naming_symbols.visible_fields.applicable_accessibilities = public, protected, protected_internal
-dotnet_naming_rule.visible_fields.severity = suggestion
+dotnet_naming_rule.visible_fields.severity = error
 dotnet_naming_rule.visible_fields.symbols = visible_fields
 dotnet_naming_rule.visible_fields.style = pascal_case
 
@@ -96,7 +96,7 @@ dotnet_naming_rule.constant_fields.style = pascal_case
 dotnet_naming_style.underscore_camel_case.capitalization = camel_case
 dotnet_naming_style.underscore_camel_case.required_prefix = _
 
-# Required
+# Required for newly added fields
 dotnet_naming_symbols.remaining_fields.applicable_kinds = field
 dotnet_naming_rule.remaining_fields.severity = suggestion
 dotnet_naming_rule.remaining_fields.symbols = remaining_fields
@@ -106,7 +106,7 @@ dotnet_naming_style.camel_case.capitalization = camel_case
 
 # Required
 dotnet_naming_symbols.parameters_and_locals.applicable_kinds = parameter, local
-dotnet_naming_rule.parameters_and_locals.severity = suggestion
+dotnet_naming_rule.parameters_and_locals.severity = error
 dotnet_naming_rule.parameters_and_locals.symbols = parameters_and_locals
 dotnet_naming_rule.parameters_and_locals.style = camel_case
 
