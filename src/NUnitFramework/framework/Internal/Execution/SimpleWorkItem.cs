@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -153,6 +154,14 @@ namespace NUnit.Framework.Internal.Execution
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout);
 #endif
+
+                // warn if we have more than one IWrapTestRepeat (Retry / Repeat) Attribute
+                if (method.GetCustomAttributes<IWrapTestRepeat>(true).Length > 1)
+                    return new WarnCommand(_testMethod, "Test case has both Retry and Repeat on test, which could give unpredictable results.");
+
+                // Add wrappers for repetable tests after timeout so the timeout is reset on each instance
+                foreach (var repeatableAttribute in method.GetCustomAttributes<IWrapTestRepeat>(true))
+                    command = repeatableAttribute.Wrap(command);
 
                 return command;
             }

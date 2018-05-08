@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -61,6 +61,15 @@ namespace NUnit.Framework.Interfaces
     /// the entire test, including SetUp and TearDown.
     /// </summary>
     public interface IWrapSetUpTearDown : ICommandWrapper
+    {
+    }
+
+    /// <summary>
+    /// Objects implementing this interface are used to wrap
+    /// tests that can repeat, it runs each time before the
+    /// test repeats.
+    /// </summary>
+    public interface IWrapTestRepeat : ICommandWrapper
     {
     }
 }
