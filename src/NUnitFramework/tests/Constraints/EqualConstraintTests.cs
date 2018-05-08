@@ -36,9 +36,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new EqualConstraint(4);
-            expectedDescription = "4";
-            stringRepresentation = "<equal 4>";
+            TheConstraint = new EqualConstraint(4);
+            ExpectedDescription = "4";
+            StringRepresentation = "<equal 4>";
         }
 
         static object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Constraints
         {
 
             [Datapoints]
-            public static readonly DateTimeOffset[] sameDateTimeOffsets =
+            public static readonly DateTimeOffset[] SameDateTimeOffsets =
                 {
                     new DateTimeOffset(new DateTime(2014, 1, 30, 12, 34, 56), new TimeSpan(6, 15, 0)),
                     new DateTimeOffset(new DateTime(2014, 1, 30, 9, 19, 56), new TimeSpan(3, 0, 0)),
@@ -664,8 +664,8 @@ namespace NUnit.Framework.Constraints
             get
             {
                 var ptr = new System.IntPtr(0);
-                var ExampleTestA = new ExampleTest.classA(0);
-                var ExampleTestB = new ExampleTest.classB(0);
+                var ExampleTestA = new ExampleTest.ClassA(0);
+                var ExampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 yield return new object[] { 0, ptr };
@@ -801,13 +801,13 @@ namespace NUnit.Framework.Constraints
 
     }
     namespace ExampleTest {
-        class baseTest {
+        class BaseTest {
             readonly int _value;
-            public baseTest()
+            public BaseTest()
             {
                 _value = 0;
             }
-            public baseTest(int value) {
+            public BaseTest(int value) {
                 _value = value;
             }
             public override bool Equals(object obj)
@@ -816,7 +816,7 @@ namespace NUnit.Framework.Constraints
                 {
                     return false;
                 }
-                return _value.Equals(((baseTest)obj)._value);
+                return _value.Equals(((BaseTest)obj)._value);
             }
 
             public override string ToString()
@@ -830,14 +830,14 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class classA : baseTest {
-            public classA(int x) : base(x) { }
+        class ClassA : BaseTest {
+            public ClassA(int x) : base(x) { }
 
         }
 
-        class classB : baseTest
+        class ClassB : BaseTest
         {
-             public classB(int x) : base(x) { }
+             public ClassB(int x) : base(x) { }
         }
     }
     #endregion

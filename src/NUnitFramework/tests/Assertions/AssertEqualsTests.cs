@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2004 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -373,19 +373,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void EnumsEqual()
         {
-            MyEnum actual = MyEnum.a;
-            Assert.AreEqual( MyEnum.a, actual );
+            MyEnum actual = MyEnum.A;
+            Assert.AreEqual(MyEnum.A, actual);
         }
 
         [Test]
         public void EnumsNotEqual()
         {
-            MyEnum actual = MyEnum.a;
+            MyEnum actual = MyEnum.A;
             var expectedMessage =
-                "  Expected: c" + Environment.NewLine +
-                "  But was:  a" + Environment.NewLine;
+                "  Expected: " + nameof(MyEnum.C) + Environment.NewLine +
+                "  But was:  " + nameof(MyEnum.A) + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual( MyEnum.c, actual ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(MyEnum.C, actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -445,7 +445,7 @@ namespace NUnit.Framework.Assertions
 
         private enum MyEnum
         {
-            a, b, c
+            A, B, C
         }
 
         [Test]

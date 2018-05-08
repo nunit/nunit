@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,9 +31,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<propertyexists X>";
-            staticSyntax = Has.Property("X");
-            builderSyntax = Builder().Property("X");
+            ParseTree = "<propertyexists X>";
+            StaticSyntax = Has.Property("X");
+            BuilderSyntax = Builder().Property("X");
         }
     }
 
@@ -42,9 +42,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<and <propertyexists X> <equal 7>>";
-            staticSyntax = Has.Property("X").And.EqualTo(7);
-            builderSyntax = Builder().Property("X").And.EqualTo(7);
+            ParseTree = "<and <propertyexists X> <equal 7>>";
+            StaticSyntax = Has.Property("X").And.EqualTo(7);
+            BuilderSyntax = Builder().Property("X").And.EqualTo(7);
         }
     }
 
@@ -53,9 +53,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<property X <greaterthan 5>>";
-            staticSyntax = Has.Property("X").GreaterThan(5);
-            builderSyntax = Builder().Property("X").GreaterThan(5);
+            ParseTree = "<property X <greaterthan 5>>";
+            StaticSyntax = Has.Property("X").GreaterThan(5);
+            BuilderSyntax = Builder().Property("X").GreaterThan(5);
         }
     }
 
@@ -64,9 +64,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<property X <not <greaterthan 5>>>";
-            staticSyntax = Has.Property("X").Not.GreaterThan(5);
-            builderSyntax = Builder().Property("X").Not.GreaterThan(5);
+            ParseTree = "<property X <not <greaterthan 5>>>";
+            StaticSyntax = Has.Property("X").Not.GreaterThan(5);
+            BuilderSyntax = Builder().Property("X").Not.GreaterThan(5);
         }
     }
 
@@ -75,9 +75,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<property Length <greaterthan 5>>";
-            staticSyntax = Has.Length.GreaterThan(5);
-            builderSyntax = Builder().Length.GreaterThan(5);
+            ParseTree = "<property Length <greaterthan 5>>";
+            StaticSyntax = Has.Length.GreaterThan(5);
+            BuilderSyntax = Builder().Length.GreaterThan(5);
         }
     }
 
@@ -86,9 +86,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<property Count <equal 5>>";
-            staticSyntax = Has.Count.EqualTo(5);
-            builderSyntax = Builder().Count.EqualTo(5);
+            ParseTree = "<property Count <equal 5>>";
+            StaticSyntax = Has.Count.EqualTo(5);
+            BuilderSyntax = Builder().Count.EqualTo(5);
         }
     }
 
@@ -97,9 +97,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<property Message <startswith ""Expected"">>";
-            staticSyntax = Has.Message.StartsWith("Expected");
-            builderSyntax = Builder().Message.StartsWith("Expected");
+            ParseTree = @"<property Message <startswith ""Expected"">>";
+            StaticSyntax = Has.Message.StartsWith("Expected");
+            BuilderSyntax = Builder().Message.StartsWith("Expected");
         }
     }
 

@@ -32,7 +32,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void SucceedsEveryTime()
         {
-            count++;
+            Count++;
             Assert.IsTrue(true);
         }
     }
@@ -42,7 +42,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void FailsEveryTime()
         {
-            count++;
+            Count++;
             Assert.IsFalse(true);
         }
     }
@@ -52,9 +52,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void SucceedsOnSecondTry()
         {
-            count++;
+            Count++;
 
-            if (count < 2)
+            if (Count < 2)
                 Assert.IsTrue(false);
         }
     }
@@ -64,9 +64,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void SucceedsOnThirdTry()
         {
-            count++;
+            Count++;
 
-            if (count < 3)
+            if (Count < 3)
                 Assert.IsTrue(false);
         }
     }
@@ -85,7 +85,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void Test()
         {
-            count++;
+            Count++;
             Assert.Ignore("Ignoring");
         }
     }
@@ -95,9 +95,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count < 2)
+            if (Count < 2)
                 Assert.Fail("Failed");
 
             Assert.Ignore("Ignoring");
@@ -109,9 +109,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count < 3)
+            if (Count < 3)
                 Assert.Fail("Failed");
 
             Assert.Ignore("Ignoring");
@@ -123,7 +123,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void Test()
         {
-            count++;
+            Count++;
             throw new Exception("Deliberate Exception");
         }
     }
@@ -133,9 +133,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count < 2)
+            if (Count < 2)
                 Assert.Fail("Failed");
 
             throw new Exception("Deliberate Exception");
@@ -147,9 +147,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count < 3)
+            if (Count < 3)
                 Assert.Fail("Failed");
 
             throw new Exception("Deliberate Exception");
@@ -161,7 +161,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3), Category("SAMPLE")]
         public void TestWithCategory()
         {
-            count++;
+            Count++;
             Assert.IsTrue(true);
         }
     }
@@ -172,7 +172,7 @@ namespace NUnit.TestData.RepeatingTests
         [TestCase(0)]
         public void FailsEveryTime(int unused)
         {
-            count++;
+            Count++;
             Assert.IsTrue(false);
         }
     }
@@ -210,17 +210,17 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Retry(3)]
         public void NeverPasses()
         {
-            count = TestContext.CurrentContext.CurrentRepeatCount;
+            Count = TestContext.CurrentContext.CurrentRepeatCount;
             Assert.Fail("forcing a failure so we retry maximum times");
         }
 
         [Test, Retry(3)]
         public void PassesOnLastRetry()
         {
-            Assert.That(count, Is.EqualTo(TestContext.CurrentContext.CurrentRepeatCount), "expected CurrentRepeatCount to be incremented only after first attempt");
-            if (count < 2) // second Repeat is 3rd Retry (i.e. end of attempts)
+            Assert.That(Count, Is.EqualTo(TestContext.CurrentContext.CurrentRepeatCount), "expected CurrentRepeatCount to be incremented only after first attempt");
+            if (Count < 2) // second Repeat is 3rd Retry (i.e. end of attempts)
             {
-                count++;
+                Count++;
                 Assert.Fail("forced failure so we will use maximum number of Retries for PassesOnLastRetry");
             }
         }

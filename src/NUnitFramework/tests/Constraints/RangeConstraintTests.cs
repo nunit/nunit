@@ -35,9 +35,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = rangeConstraint = new RangeConstraint(5, 42);
-            expectedDescription = "in range (5,42)";
-            stringRepresentation = "<range 5 42>";
+            TheConstraint = rangeConstraint = new RangeConstraint(5, 42);
+            ExpectedDescription = "in range (5,42)";
+            StringRepresentation = "<range 5 42>";
         }
 
         static object[] SuccessData = new object[] { 5, 23, 42 };
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         [TestCase("xxx")]
         public void InvalidDataThrowsArgumentException(object data)
         {
-            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }
 
         [Test]

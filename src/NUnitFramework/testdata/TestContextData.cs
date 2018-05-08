@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -30,39 +30,39 @@ namespace NUnit.TestData.TestContextData
     [TestFixture]
     public class TestStateRecordingFixture
     {
-        public string stateList;
+        public string StateList;
 
-        public bool testFailure;
-        public bool testInconclusive;
-        public bool setUpFailure;
-        public bool setUpIgnore;
+        public bool TestFailure;
+        public bool TestInconclusive;
+        public bool SetUpFailure;
+        public bool SetUpIgnore;
 
         [SetUp]
         public void SetUp()
         {
-            stateList = TestContext.CurrentContext.Result.Outcome + "=>";
+            StateList = TestContext.CurrentContext.Result.Outcome + "=>";
 
-            if (setUpFailure)
+            if (SetUpFailure)
                 Assert.Fail("Failure in SetUp");
-            if (setUpIgnore)
+            if (SetUpIgnore)
                 Assert.Ignore("Ignored in SetUp");
         }
 
         [Test]
         public void TheTest()
         {
-            stateList += TestContext.CurrentContext.Result.Outcome;
+            StateList += TestContext.CurrentContext.Result.Outcome;
 
-            if (testFailure)
+            if (TestFailure)
                 Assert.Fail("Deliberate failure");
-            if (testInconclusive)
+            if (TestInconclusive)
                 Assert.Inconclusive("Inconclusive test");
         }
 
         [TearDown]
         public void TearDown()
         {
-            stateList += "=>" + TestContext.CurrentContext.Result.Outcome;
+            StateList += "=>" + TestContext.CurrentContext.Result.Outcome;
         }
     }
 

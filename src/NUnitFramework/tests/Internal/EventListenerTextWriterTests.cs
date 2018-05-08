@@ -35,8 +35,12 @@ namespace NUnit.Framework.Internal
         private static readonly string STREAM_NAME = "EventListenerTextWriterTestsStream";
         private static readonly string NL = Environment.NewLine;
 
+#pragma warning disable IDE1006 // Naming Styles
         TestListenerIntercepter ListenerResult;
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning disable IDE1006 // Naming Styles
         TextWriter ListenerWriter;
+#pragma warning restore IDE1006 // Naming Styles
 
         [SetUp]
         public void SetUp()

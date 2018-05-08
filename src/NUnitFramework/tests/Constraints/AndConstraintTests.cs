@@ -29,9 +29,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
-            expectedDescription = "greater than 40 and less than 50";
-            stringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
+            TheConstraint = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
+            ExpectedDescription = "greater than 40 and less than 50";
+            StringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
         }
 
         static object[] SuccessData = new object[] { 42 };

@@ -33,10 +33,10 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new ThrowsConstraint(
+            TheConstraint = new ThrowsConstraint(
                 new ExceptionTypeConstraint(typeof(ArgumentException)));
-            expectedDescription = "<System.ArgumentException>";
-            stringRepresentation = "<throws <typeof System.ArgumentException>>";
+            ExpectedDescription = "<System.ArgumentException>";
+            StringRepresentation = "<throws <typeof System.ArgumentException>>";
         }
 
         static readonly object[] SuccessData =
@@ -58,10 +58,10 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new ThrowsConstraint(
+            TheConstraint = new ThrowsConstraint(
                 new InstanceOfTypeConstraint(typeof(TestDelegates.BaseException)));
-            expectedDescription = "instance of <NUnit.TestUtilities.TestDelegates+BaseException>";
-            stringRepresentation = "<throws <instanceof NUnit.TestUtilities.TestDelegates+BaseException>>";
+            ExpectedDescription = "instance of <NUnit.TestUtilities.TestDelegates+BaseException>";
+            StringRepresentation = "<throws <instanceof NUnit.TestUtilities.TestDelegates+BaseException>>";
         }
 
         static object[] SuccessData = new object[]
@@ -83,12 +83,12 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new ThrowsConstraint(
+            TheConstraint = new ThrowsConstraint(
                 new AndConstraint(
                     new ExceptionTypeConstraint(typeof(ArgumentException)),
                     new PropertyConstraint("ParamName", new EqualConstraint("myParam"))));
-            expectedDescription = @"<System.ArgumentException> and property ParamName equal to ""myParam""";
-            stringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>";
+            ExpectedDescription = @"<System.ArgumentException> and property ParamName equal to ""myParam""";
+            StringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>";
         }
 
         static readonly object[] SuccessData =
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("SuccessData")]
         public void SucceedsWithGoodValues(object value)
         {
-            var constraintResult = theConstraint.ApplyTo(value);
+            var constraintResult = TheConstraint.ApplyTo(value);
             if (!constraintResult.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter();
@@ -123,13 +123,13 @@ namespace NUnit.Framework.Constraints
         {
             string NL = Environment.NewLine;
 
-            var constraintResult = theConstraint.ApplyTo(badValue);
+            var constraintResult = TheConstraint.ApplyTo(badValue);
             Assert.IsFalse(constraintResult.IsSuccess);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
             Assert.That(writer.ToString(), Does.StartWith(
-                TextMessageWriter.Pfx_Expected + expectedDescription + NL +
+                TextMessageWriter.Pfx_Expected + ExpectedDescription + NL +
                 TextMessageWriter.Pfx_Actual + message));
         }
     }

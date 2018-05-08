@@ -53,7 +53,7 @@ namespace NUnit.TestData.AttributeInheritanceData
     public class When_collecting_test_fixtures
     {
         [Spec]
-        public void should_include_classes_with_an_attribute_derived_from_TestFixtureAttribute()
+        public void Should_include_classes_with_an_attribute_derived_from_TestFixtureAttribute()
         {
         }
     }

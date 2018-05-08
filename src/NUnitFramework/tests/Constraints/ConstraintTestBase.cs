@@ -28,20 +28,20 @@ namespace NUnit.Framework.Constraints
 {
     public abstract class ConstraintTestBaseNoData
     {
-        protected Constraint theConstraint;
-        protected string expectedDescription = "<NOT SET>";
-        protected string stringRepresentation = "<NOT SET>";
+        protected Constraint TheConstraint;
+        protected string ExpectedDescription = "<NOT SET>";
+        protected string StringRepresentation = "<NOT SET>";
 
         [Test]
         public void ProvidesProperDescription()
         {
-            Assert.That(theConstraint.Description, Is.EqualTo(expectedDescription));
+            Assert.That(TheConstraint.Description, Is.EqualTo(ExpectedDescription));
         }
 
         [Test]
         public void ProvidesProperStringRepresentation()
         {
-            Assert.That(theConstraint.ToString(), Is.EqualTo(stringRepresentation));
+            Assert.That(TheConstraint.ToString(), Is.EqualTo(StringRepresentation));
         }
     }
 
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource("SuccessData")]
         public void SucceedsWithGoodValues(object value)
         {
-            var constraintResult = theConstraint.ApplyTo(value);
+            var constraintResult = TheConstraint.ApplyTo(value);
             if (!constraintResult.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter();
@@ -64,13 +64,13 @@ namespace NUnit.Framework.Constraints
         {
             string NL = Environment.NewLine;
 
-            var constraintResult = theConstraint.ApplyTo(badValue);
+            var constraintResult = TheConstraint.ApplyTo(badValue);
             Assert.IsFalse(constraintResult.IsSuccess);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
             Assert.That( writer.ToString(), Is.EqualTo(
-                TextMessageWriter.Pfx_Expected + expectedDescription + NL +
+                TextMessageWriter.Pfx_Expected + ExpectedDescription + NL +
                 TextMessageWriter.Pfx_Actual + message + NL ));
         }
     }

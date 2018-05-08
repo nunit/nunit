@@ -51,9 +51,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
-            expectedDescription = "True after 500 milliseconds delay";
-            stringRepresentation = "<after 500 <equal True>>";
+            TheConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
+            ExpectedDescription = "True after 500 milliseconds delay";
+            StringRepresentation = "<after 500 <equal True>>";
 
             boolValue = false;
             list = new List<int>();
@@ -91,13 +91,13 @@ namespace NUnit.Framework.Constraints
         public void SucceedsWithGoodDelegates(ActualValueDelegate<object> del)
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(theConstraint.ApplyTo(del).IsSuccess);
+            Assert.That(TheConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test, TestCaseSource(nameof(FailureDelegates))]
         public void FailsWithBadDelegates(ActualValueDelegate<object> del)
         {
-            Assert.IsFalse(theConstraint.ApplyTo(del).IsSuccess);
+            Assert.IsFalse(TheConstraint.ApplyTo(del).IsSuccess);
         }
 
         [Test]

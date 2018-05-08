@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new XmlSerializableConstraint();
-            expectedDescription = "XML serializable";
-            stringRepresentation = "<xmlserializable>";
+            TheConstraint = new XmlSerializableConstraint();
+            ExpectedDescription = "XML serializable";
+            StringRepresentation = "<xmlserializable>";
         }
 
         static object[] SuccessData = new object[] { 1, "a", new List<string>() };
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
         public void NullArgumentThrowsException()
         {
             object o = null;
-            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(o));
+            Assert.Throws<ArgumentNullException>(() => TheConstraint.ApplyTo(o));
         }
     }
 

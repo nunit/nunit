@@ -38,8 +38,8 @@ namespace NUnit.Framework.Internal
             SetUpAndTearDownCounterFixture fixture = new SetUpAndTearDownCounterFixture();
             TestBuilder.RunTestFixture( fixture );
 
-            Assert.AreEqual(3, fixture.setUpCounter);
-            Assert.AreEqual(3, fixture.tearDownCounter);
+            Assert.AreEqual(3, fixture.SetUpCounter);
+            Assert.AreEqual(3, fixture.TearDownCounter);
         }
 
         
@@ -49,8 +49,8 @@ namespace NUnit.Framework.Internal
             SetUpAndTearDownFixture fixture = new SetUpAndTearDownFixture();
             TestBuilder.RunTestFixture( fixture );
 
-            Assert.IsTrue(fixture.wasSetUpCalled);
-            Assert.IsTrue(fixture.wasTearDownCalled);
+            Assert.IsTrue(fixture.WasSetUpCalled);
+            Assert.IsTrue(fixture.WasTearDownCalled);
         }
 
         [Test]
@@ -59,8 +59,8 @@ namespace NUnit.Framework.Internal
             InheritSetUpAndTearDown fixture = new InheritSetUpAndTearDown();
             TestBuilder.RunTestFixture( fixture );
 
-            Assert.IsTrue(fixture.wasSetUpCalled);
-            Assert.IsTrue(fixture.wasTearDownCalled);
+            Assert.IsTrue(fixture.WasSetUpCalled);
+            Assert.IsTrue(fixture.WasTearDownCalled);
         }
 
         [Test]
@@ -69,10 +69,10 @@ namespace NUnit.Framework.Internal
             DefineInheritSetUpAndTearDown fixture = new DefineInheritSetUpAndTearDown();
             TestBuilder.RunTestFixture( fixture );
 
-            Assert.IsFalse(fixture.wasSetUpCalled);
-            Assert.IsFalse(fixture.wasTearDownCalled);
-            Assert.IsTrue(fixture.derivedSetUpCalled);
-            Assert.IsTrue(fixture.derivedTearDownCalled);
+            Assert.IsFalse(fixture.WasSetUpCalled);
+            Assert.IsFalse(fixture.WasTearDownCalled);
+            Assert.IsTrue(fixture.DerivedSetUpCalled);
+            Assert.IsTrue(fixture.DerivedTearDownCalled);
         }
 
         [Test]
@@ -81,11 +81,11 @@ namespace NUnit.Framework.Internal
             MultipleSetUpTearDownFixture fixture = new MultipleSetUpTearDownFixture();
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.wasSetUp1Called, "SetUp1");
-            Assert.IsTrue(fixture.wasSetUp2Called, "SetUp2");
-            Assert.IsTrue(fixture.wasSetUp3Called, "SetUp3");
-            Assert.IsTrue(fixture.wasTearDown1Called, "TearDown1");
-            Assert.IsTrue(fixture.wasTearDown2Called, "TearDown2");
+            Assert.IsTrue(fixture.WasSetUp1Called, "SetUp1");
+            Assert.IsTrue(fixture.WasSetUp2Called, "SetUp2");
+            Assert.IsTrue(fixture.WasSetUp3Called, "SetUp3");
+            Assert.IsTrue(fixture.WasTearDown1Called, "TearDown1");
+            Assert.IsTrue(fixture.WasTearDown2Called, "TearDown2");
         }
 
         [Test]
@@ -94,25 +94,25 @@ namespace NUnit.Framework.Internal
             DerivedClassWithSeparateSetUp fixture = new DerivedClassWithSeparateSetUp();
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.wasSetUpCalled, "Base SetUp Called");
-            Assert.IsTrue(fixture.wasTearDownCalled, "Base TearDown Called");
-            Assert.IsTrue(fixture.wasDerivedSetUpCalled, "Derived SetUp Called");
-            Assert.IsTrue(fixture.wasDerivedTearDownCalled, "Derived TearDown Called");
-            Assert.IsTrue(fixture.wasBaseSetUpCalledFirst, "SetUp Order");
-            Assert.IsTrue(fixture.wasBaseTearDownCalledLast, "TearDown Order");
+            Assert.IsTrue(fixture.WasSetUpCalled, "Base SetUp Called");
+            Assert.IsTrue(fixture.WasTearDownCalled, "Base TearDown Called");
+            Assert.IsTrue(fixture.WasDerivedSetUpCalled, "Derived SetUp Called");
+            Assert.IsTrue(fixture.WasDerivedTearDownCalled, "Derived TearDown Called");
+            Assert.IsTrue(fixture.WasBaseSetUpCalledFirst, "SetUp Order");
+            Assert.IsTrue(fixture.WasBaseTearDownCalledLast, "TearDown Order");
         }
 
         [Test]
         public void FailureInBaseSetUpCausesDerivedSetUpAndTearDownToBeSkipped()
         {
             DerivedClassWithSeparateSetUp fixture = new DerivedClassWithSeparateSetUp();
-            fixture.throwInBaseSetUp = true;
+            fixture.ThrowInBaseSetUp = true;
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.IsTrue(fixture.wasSetUpCalled, "Base SetUp Called");
-            Assert.IsTrue(fixture.wasTearDownCalled, "Base TearDown Called");
-            Assert.IsFalse(fixture.wasDerivedSetUpCalled, "Derived SetUp Called");
-            Assert.IsFalse(fixture.wasDerivedTearDownCalled, "Derived TearDown Called");
+            Assert.IsTrue(fixture.WasSetUpCalled, "Base SetUp Called");
+            Assert.IsTrue(fixture.WasTearDownCalled, "Base TearDown Called");
+            Assert.IsFalse(fixture.WasDerivedSetUpCalled, "Derived SetUp Called");
+            Assert.IsFalse(fixture.WasDerivedTearDownCalled, "Derived TearDown Called");
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         {
             Exception e = new Exception("Test message for exception thrown from setup");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
-            fixture.setupException = e;
+            fixture.SetupException = e;
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.IsTrue(suiteResult.HasChildren, "Fixture test should have child result.");
             TestResult result = (TestResult)suiteResult.Children.ToArray()[0];
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Internal
         {
             Exception e = new Exception("Test message for exception thrown from tear down");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
-            fixture.tearDownException = e;
+            fixture.TearDownException = e;
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
@@ -152,8 +152,8 @@ namespace NUnit.Framework.Internal
             Exception e1 = new Exception("Test message for exception thrown from setup");
             Exception e2 = new Exception("Test message for exception thrown from tear down");
             SetupAndTearDownExceptionFixture fixture = new SetupAndTearDownExceptionFixture();
-            fixture.setupException = e1;
-            fixture.tearDownException = e2;
+            fixture.SetupException = e1;
+            fixture.TearDownException = e2;
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.That(suiteResult.HasChildren, "Fixture test should have child result.");
             ITestResult result = suiteResult.Children.ToArray()[0];
@@ -167,10 +167,10 @@ namespace NUnit.Framework.Internal
 
         public class SetupCallBase
         {
-            protected int setupCount = 0;
+            protected int SetupCount = 0;
             public virtual void Init()
             {
-                setupCount++;
+                SetupCount++;
             }
             public virtual void AssertCount()
             {
@@ -184,13 +184,13 @@ namespace NUnit.Framework.Internal
             [SetUp]
             public override void Init()
             {
-                setupCount++;
+                SetupCount++;
                 base.Init();
             }
             [Test]
             public override void AssertCount()
             {
-                Assert.AreEqual(2, setupCount);
+                Assert.AreEqual(2, SetupCount);
             }
         }
     }

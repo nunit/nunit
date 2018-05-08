@@ -31,9 +31,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new AnyOfConstraint(new object[] { 1, 2, 3 });
-            expectedDescription = "any of < 1, 2, 3 >";
-            stringRepresentation = "<anyof 1 2 3>";
+            TheConstraint = new AnyOfConstraint(new object[] { 1, 2, 3 });
+            ExpectedDescription = "any of < 1, 2, 3 >";
+            StringRepresentation = "<anyof 1 2 3>";
         }
 
         private static object[] SuccessData = new object[] { 1, 2, 3 };

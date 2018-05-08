@@ -37,15 +37,15 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new ThrowsExceptionConstraint();
-            expectedDescription = "an exception to be thrown";
-            stringRepresentation = "<throwsexception>";
+            TheConstraint = new ThrowsExceptionConstraint();
+            ExpectedDescription = "an exception to be thrown";
+            StringRepresentation = "<throwsexception>";
         }
 
         [Test]
         public void SucceedsWithNonVoidReturningFunction()
         {
-            var constraintResult = theConstraint.ApplyTo(TestDelegates.ThrowsInsteadOfReturns);
+            var constraintResult = TheConstraint.ApplyTo(TestDelegates.ThrowsInsteadOfReturns);
             if (!constraintResult.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter();

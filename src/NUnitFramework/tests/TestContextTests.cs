@@ -282,34 +282,34 @@ namespace NUnit.Framework
         {
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Passed"));
+            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>Inconclusive=>Passed"));
         }
 
         [Test]
         public void TestCanAccessTestState_FailureInSetUp()
         {
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.setUpFailure = true;
+            fixture.SetUpFailure = true;
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Failed"));
+            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Failed"));
         }
 
         [Test]
         public void TestCanAccessTestState_FailingTest()
         {
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.testFailure = true;
+            fixture.TestFailure = true;
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
+            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>Inconclusive=>Failed"));
         }
 
         [Test]
         public void TestCanAccessTestState_IgnoredInSetUp()
         {
             TestStateRecordingFixture fixture = new TestStateRecordingFixture();
-            fixture.setUpIgnore = true;
+            fixture.SetUpIgnore = true;
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.stateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
+            Assert.That(fixture.StateList, Is.EqualTo("Inconclusive=>=>Skipped:Ignored"));
         }
 
         [Test]
