@@ -511,27 +511,27 @@ namespace NUnitLite
             string fullName = result.FullName;
             string message = result.Message;
             string stackTrace = result.StackTrace;
-            string reportID = (++_reportIndex).ToString();
+            string reportId = (++_reportIndex).ToString();
             int numAsserts = result.AssertionResults.Count;
 
             if (numAsserts > 0)
             {
                 int assertionCounter = 0;
-                string assertID = reportID;
+                string assertId = reportId;
                 foreach (var assertion in result.AssertionResults)
                 {
                     if (numAsserts > 1)
-                        assertID = string.Format("{0}-{1}", reportID, ++assertionCounter);
+                        assertId = string.Format("{0}-{1}", reportId, ++assertionCounter);
                     ColorStyle style = GetColorStyle(resultState);
                     string status = assertion.Status.ToString();
-                    DisplayTestResult(style, assertID, status, fullName, assertion.Message, assertion.StackTrace);
+                    DisplayTestResult(style, assertId, status, fullName, assertion.Message, assertion.StackTrace);
                 }
             }
             else
             {
                 ColorStyle style = GetColorStyle(resultState);
                 string status = GetResultStatus(resultState);
-                DisplayTestResult(style, reportID, status, fullName, message, stackTrace);
+                DisplayTestResult(style, reportId, status, fullName, message, stackTrace);
             }
         }
 

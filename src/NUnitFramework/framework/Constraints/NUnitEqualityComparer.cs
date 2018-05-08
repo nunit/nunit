@@ -67,10 +67,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public NUnitEqualityComparer()
         {
-            EnumerablesComparer _enumerablesComparer = new EnumerablesComparer(this);
+            var enumerablesComparer = new EnumerablesComparer(this);
             _comparers = new List<IChainComparer>
             {
-                new ArraysComparer(this, _enumerablesComparer),
+                new ArraysComparer(this, enumerablesComparer),
                 new DictionariesComparer(this),
                 new DictionaryEntriesComparer(this),
                 new KeyValuePairsComparer(this),
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints
                 new EquatablesComparer(this),
                 new TupleComparer(this),
                 new ValueTupleComparer(this),
-                _enumerablesComparer
+                enumerablesComparer
             };
         }
 

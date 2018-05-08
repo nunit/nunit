@@ -45,7 +45,11 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The ConstraintBuilder holding the elements recognized so far
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected readonly ConstraintBuilder builder;
+#pragma warning restore IDE1006
 
         #endregion
 

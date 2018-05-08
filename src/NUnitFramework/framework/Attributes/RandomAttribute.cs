@@ -237,7 +237,7 @@ namespace NUnit.Framework
 
             private readonly List<T> previousValues = new List<T>();
 
-            protected Randomizer _randomizer;
+            protected Randomizer Randomizer;
 
             protected RandomDataSource(int count)
             {
@@ -261,7 +261,7 @@ namespace NUnit.Framework
             {
                 //Guard.ArgumentValid(parameter.ParameterType == typeof(T), "Parameter type must be " + typeof(T).Name, "parameter");
 
-                _randomizer = Randomizer.GetRandomizer(parameter);
+                Randomizer = Randomizer.GetRandomizer(parameter);
 
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min, _max, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
                 
@@ -350,12 +350,12 @@ namespace NUnit.Framework
 
             protected override int GetNext()
             {
-                return _randomizer.Next();
+                return Randomizer.Next();
             }
 
             protected override int GetNext(int min, int max)
             {
-                return _randomizer.Next(min, max);
+                return Randomizer.Next(min, max);
             }
 
             protected override bool CanBeDistinct(int min, int max, int count)
@@ -376,12 +376,12 @@ namespace NUnit.Framework
 
             protected override uint GetNext()
             {
-                return _randomizer.NextUInt();
+                return Randomizer.NextUInt();
             }
 
             protected override uint GetNext(uint min, uint max)
             {
-                return _randomizer.NextUInt(min, max);
+                return Randomizer.NextUInt(min, max);
             }
 
             protected override bool CanBeDistinct(uint min, uint max, int count)
@@ -402,12 +402,12 @@ namespace NUnit.Framework
 
             protected override long GetNext()
             {
-                return _randomizer.NextLong();
+                return Randomizer.NextLong();
             }
 
             protected override long GetNext(long min, long max)
             {
-                return _randomizer.NextLong(min, max);
+                return Randomizer.NextLong(min, max);
             }
 
             protected override bool CanBeDistinct(long min, long max, int count)
@@ -428,12 +428,12 @@ namespace NUnit.Framework
 
             protected override ulong GetNext()
             {
-                return _randomizer.NextULong();
+                return Randomizer.NextULong();
             }
 
             protected override ulong GetNext(ulong min, ulong max)
             {
-                return _randomizer.NextULong(min, max);
+                return Randomizer.NextULong(min, max);
             }
 
             protected override bool CanBeDistinct(ulong min, ulong max, int count)
@@ -454,12 +454,12 @@ namespace NUnit.Framework
 
             protected override short GetNext()
             {
-                return _randomizer.NextShort();
+                return Randomizer.NextShort();
             }
 
             protected override short GetNext(short min, short max)
             {
-                return _randomizer.NextShort(min, max);
+                return Randomizer.NextShort(min, max);
             }
 
             protected override bool CanBeDistinct(short min, short max, int count)
@@ -480,12 +480,12 @@ namespace NUnit.Framework
 
             protected override ushort GetNext()
             {
-                return _randomizer.NextUShort();
+                return Randomizer.NextUShort();
             }
 
             protected override ushort GetNext(ushort min, ushort max)
             {
-                return _randomizer.NextUShort(min, max);
+                return Randomizer.NextUShort(min, max);
             }
 
             protected override bool CanBeDistinct(ushort min, ushort max, int count)
@@ -506,12 +506,12 @@ namespace NUnit.Framework
 
             protected override double GetNext()
             {
-                return _randomizer.NextDouble();
+                return Randomizer.NextDouble();
             }
 
             protected override double GetNext(double min, double max)
             {
-                return _randomizer.NextDouble(min, max);
+                return Randomizer.NextDouble(min, max);
             }
 
             protected override bool CanBeDistinct(double min, double max, int count)
@@ -532,12 +532,12 @@ namespace NUnit.Framework
 
             protected override float GetNext()
             {
-                return _randomizer.NextFloat();
+                return Randomizer.NextFloat();
             }
 
             protected override float GetNext(float min, float max)
             {
-                return _randomizer.NextFloat(min, max);
+                return Randomizer.NextFloat(min, max);
             }
 
             protected override bool CanBeDistinct(float min, float max, int count)
@@ -558,12 +558,12 @@ namespace NUnit.Framework
 
             protected override byte GetNext()
             {
-                return _randomizer.NextByte();
+                return Randomizer.NextByte();
             }
 
             protected override byte GetNext(byte min, byte max)
             {
-                return _randomizer.NextByte(min, max);
+                return Randomizer.NextByte(min, max);
             }
 
             protected override bool CanBeDistinct(byte min, byte max, int count)
@@ -584,12 +584,12 @@ namespace NUnit.Framework
 
             protected override sbyte GetNext()
             {
-                return _randomizer.NextSByte();
+                return Randomizer.NextSByte();
             }
 
             protected override sbyte GetNext(sbyte min, sbyte max)
             {
-                return _randomizer.NextSByte(min, max);
+                return Randomizer.NextSByte(min, max);
             }
 
             protected override bool CanBeDistinct(sbyte min, sbyte max, int count)
@@ -661,12 +661,12 @@ namespace NUnit.Framework
 
             protected override decimal GetNext()
             {
-                return _randomizer.NextDecimal();
+                return Randomizer.NextDecimal();
             }
 
             protected override decimal GetNext(decimal min, decimal max)
             {
-                return _randomizer.NextDecimal(min, max);
+                return Randomizer.NextDecimal(min, max);
             }
 
             protected override bool CanBeDistinct(decimal min, decimal max, int count)

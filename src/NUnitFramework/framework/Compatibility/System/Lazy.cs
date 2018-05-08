@@ -1,3 +1,6 @@
+// ReSharper disable InconsistentNaming
+// Disregarding naming convention in polyfill code
+
 //
 // Lazy.cs
 //

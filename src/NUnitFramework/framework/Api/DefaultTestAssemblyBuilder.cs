@@ -265,7 +265,7 @@ namespace NUnit.Framework.Api
             testAssembly.ApplyAttributesToTest(assembly);
 
 #if !NETSTANDARD1_4
-            testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
+            testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 #endif
 

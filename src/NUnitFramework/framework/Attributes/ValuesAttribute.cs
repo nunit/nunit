@@ -45,7 +45,11 @@ namespace NUnit.Framework
         /// elements may have their type changed in GetData
         /// if necessary
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected object[] data;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// Constructs for use with an Enum parameter. Will pass every enum

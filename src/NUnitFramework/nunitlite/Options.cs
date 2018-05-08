@@ -515,7 +515,7 @@ namespace NUnit.Options
 
     public class OptionSet : KeyedCollection<string, Option>
     {
-        string localizer(string msg)
+        string Localizer(string msg)
         {
             return msg;
         }
@@ -742,7 +742,7 @@ namespace NUnit.Options
             return false;
         }
 
-        private readonly Regex ValueOption = new Regex (
+        private readonly static Regex ValueOption = new Regex(
             @"^(?<flag>--|-|/)(?<name>[^:=]+)((?<sep>[:=])(?<value>.*))?$");
 
         protected bool GetOptionParts (string argument, out string flag, out string name, out string sep, out string value)
@@ -814,7 +814,7 @@ namespace NUnit.Options
                     c.Option.OptionValueType == OptionValueType.Optional)
                 c.Option.Invoke (c);
             else if (c.OptionValues.Count > c.Option.MaxValueCount) {
-                throw new OptionException (localizer (string.Format (
+                throw new OptionException (Localizer (string.Format (
                                 "Error: Found {0} option values when expecting {1}.",
                                 c.OptionValues.Count, c.Option.MaxValueCount)),
                         c.OptionName);
@@ -849,7 +849,7 @@ namespace NUnit.Options
                 if (!Contains (rn)) {
                     if (i == 0)
                         return false;
-                    throw new OptionException (string.Format (localizer (
+                    throw new OptionException (string.Format (Localizer (
                                     "Cannot bundle unregistered option '{0}'."), opt), opt);
                 }
                 p = this [rn];
@@ -898,7 +898,7 @@ namespace NUnit.Options
 
                 bool indent = false;
                 string prefix = new string (' ', OptionWidth+2);
-                foreach (string line in GetLines (localizer (GetDescription (p.Description)))) {
+                foreach (string line in GetLines (Localizer (GetDescription (p.Description)))) {
                     if (indent)
                         o.Write (prefix);
                     o.WriteLine (line);
@@ -934,17 +934,17 @@ namespace NUnit.Options
             if (p.OptionValueType == OptionValueType.Optional ||
                     p.OptionValueType == OptionValueType.Required) {
                 if (p.OptionValueType == OptionValueType.Optional) {
-                    Write (o, ref written, localizer ("["));
+                    Write (o, ref written, Localizer ("["));
                 }
-                Write (o, ref written, localizer ("=" + GetArgumentName (0, p.MaxValueCount, p.Description)));
+                Write (o, ref written, Localizer ("=" + GetArgumentName (0, p.MaxValueCount, p.Description)));
                 string sep = p.ValueSeparators != null && p.ValueSeparators.Length > 0
                     ? p.ValueSeparators [0]
                     : " ";
                 for (int c = 1; c < p.MaxValueCount; ++c) {
-                    Write (o, ref written, localizer (sep + GetArgumentName (c, p.MaxValueCount, p.Description)));
+                    Write (o, ref written, Localizer (sep + GetArgumentName (c, p.MaxValueCount, p.Description)));
                 }
                 if (p.OptionValueType == OptionValueType.Optional) {
-                    Write (o, ref written, localizer ("]"));
+                    Write (o, ref written, Localizer ("]"));
                 }
             }
             return true;

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -249,7 +249,7 @@ namespace NUnitLite.Tests
         }
 
 #pragma warning disable 414
-        static TestCaseData[] ImmediateOutputData = new[] {
+        static readonly TestCaseData[] ImmediateOutputData = new[] {
             new TestCaseData("Off",
                 new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "OUTPUT\n"),
