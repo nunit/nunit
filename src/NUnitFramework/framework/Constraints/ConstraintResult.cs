@@ -147,10 +147,10 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Write some extra failure message.
+        /// Write some additional failure message.
         /// </summary>
         /// <param name="writer">The MessageWriter on which to display the message</param>
-        public virtual void WriteExtraChainableMessage(MessageWriter writer)
+        public virtual void WriteAdditionalLinesTo(MessageWriter writer)
         {
             //By default it does not write anything to writer but can be overriden in classes where needed. 
         }

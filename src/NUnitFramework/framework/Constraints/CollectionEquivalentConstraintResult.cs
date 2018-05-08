@@ -51,12 +51,10 @@ namespace NUnit.Framework.Constraints
             _tallyResult = tallyResult;
         }
 
-         /// <summary>Write the custom extra chainable message to the failure message for a failing constraint. <see cref="CollectionEquivalentConstraint"/>.</summary>
+         /// <summary>Write the custom additional chainable message to the failure message for a failing constraint. <see cref="CollectionEquivalentConstraint"/>.</summary>
         /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>
-        public override void WriteExtraChainableMessage(MessageWriter writer)
-        {            
-            base.WriteExtraChainableMessage(writer);
-
+        public override void WriteAdditionalLinesTo(MessageWriter writer)
+        { 
             if (_tallyResult.MissingItems.Count > 0)
             {
                 int missingItemsCount = _tallyResult.MissingItems.Count;

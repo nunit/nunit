@@ -193,8 +193,7 @@ namespace NUnit.Framework.Constraints
 
             //Property Constraint Message with chained Equivalent Constraint.
             var constraint = ((IResolveConstraint)Has.Property("Foo").EquivalentTo(new List<int> { 2, 3, 5, 8 })).Resolve();
-
-            //Assert.That(inputObject, constraint);
+            
             //Apply the constraint and write message.
             var result = constraint.ApplyTo(inputObject);
             var textMessageWriter = new TextMessageWriter();

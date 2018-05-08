@@ -25,13 +25,13 @@ namespace NUnit.Framework.Constraints
 
 
         /// <summary>
-        /// Write the extra failure message for a failing constraint to a
+        /// Write the additional failure message for a failing constraint to a
         /// MessageWriter.
         /// </summary>
         /// <param name="writer">The writer on which the actual value is displayed</param>
-        public override void WriteExtraChainableMessage(MessageWriter writer)
+        public override void WriteAdditionalLinesTo(MessageWriter writer)
         {
-            _baseResult.WriteExtraChainableMessage(writer);
+            _baseResult.WriteAdditionalLinesTo(writer);
         }
 
         #endregion

@@ -125,7 +125,7 @@ namespace NUnit.Framework.Internal
         {
             WriteExpectedLine(result);
             WriteActualLine(result);
-            WriteExtraChainableLine(result);
+            WriteAdditionalLine(result);
         }
 
         /// <summary>
@@ -276,8 +276,7 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-            if (_sameValDiffTypes) {
-            
+            if (_sameValDiffTypes) {            
                 Write(_expectedType);
             }
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
@@ -303,9 +302,9 @@ namespace NUnit.Framework.Internal
             //WriteLine(MsgUtils.FormatValue(result.ActualValue));
         }
 
-        private void WriteExtraChainableLine(ConstraintResult result)
+        private void WriteAdditionalLine(ConstraintResult result)
         {
-            result.WriteExtraChainableMessage(this);
+            result.WriteAdditionalLinesTo(this);
         }
 
         /// <summary>
