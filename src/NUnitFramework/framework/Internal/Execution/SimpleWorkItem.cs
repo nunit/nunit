@@ -156,7 +156,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // warn if we have more than one IRepeatTest (Retry / Repeat) Attribute
                 if (method.GetAttributes<IRepeatTest>(true).Length > 1)
-                    return new WarnCommand(_testMethod, "Test case has both RetryAttribute and RepeatAttribute, which could give unpredictable results.");
+                    return new WarnCommand(_testMethod, "Multiple attributes that repeat that repeat a test may cause issues.");
 
                 // Add wrappers for repetable tests after timeout so the timeout is reset on each instance
                 foreach (var repeatableAttribute in method.GetAttributes<IRepeatTest>(true))
