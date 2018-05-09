@@ -69,7 +69,7 @@ namespace NUnit.Framework.Interfaces
     /// tests that can repeat, it runs each time before the
     /// test repeats.
     /// </summary>
-    public interface IWrapTestRepeat : ICommandWrapper
+    public interface IRepeatTest : ICommandWrapper
     {
     }
 }

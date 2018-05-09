@@ -40,7 +40,7 @@ namespace NUnit.Framework
     /// to run it multiple times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class RepeatAttribute : PropertyAttribute, IWrapTestRepeat
+    public class RepeatAttribute : PropertyAttribute, IRepeatTest
     {
         private int _count;
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework
             _count = count;
         }
 
-        #region IWrapTestRepeat Members
+        #region IRepeatTest Members
 
         /// <summary>
         /// Wrap a command and return the result.

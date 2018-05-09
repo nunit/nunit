@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Execution;
+using NUnit.TestUtilities;
 
 #if (!NETCOREAPP1_1 || !NETCOREAPP2_0) && THREAD_ABORT
 
@@ -64,11 +64,19 @@ namespace NUnit.Framework.Attributes
             Assert.True(repeatTimeoutCount >= 1);
         }
 
-        [TestCase, Repeat(1), Retry(1), Explicit("This test has a warning as Repeat and Retry should not be used togather.")]
+        [Test]
         public void ShouldWarnOnMultipleRepeatableAttributes()
         {
-
+            var testCase = TestBuilder.MakeTestCase(GetType(), "TestMethodForRepeatAndRetryExpectedWarning");
+            var workItem = TestBuilder.CreateWorkItem(testCase);
+            var result = TestBuilder.ExecuteWorkItem(workItem);
+            
+            Assert.AreEqual(ResultState.Warning, result.ResultState);
+            Assert.AreEqual(1, result.WarningCount);
         }
+
+        [Repeat(1), Retry(1)]
+        public void TestMethodForRepeatAndRetryExpectedWarning() { }
     }
 }
 
