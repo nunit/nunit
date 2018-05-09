@@ -36,7 +36,9 @@ namespace NUnit.Framework.Syntax
             typeof(Is),
             typeof(Has),
             typeof(Does),
-            typeof(Contains)
+            typeof(Contains),
+            typeof(Throws),
+            typeof(Iz)
         };
 
         [TestCaseSource(nameof(ClassesExtensibleThroughInheritance))]
