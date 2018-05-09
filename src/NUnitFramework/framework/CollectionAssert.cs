@@ -31,6 +31,7 @@ namespace NUnit.Framework
     /// <summary>
     /// A set of Assert methods operating on one or more collections
     /// </summary>
+    // Abstract because we support syntax extension by inheriting and declaring new static members.
     public abstract class CollectionAssert
     {
         #region Equals and ReferenceEquals
