@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestWorker
     {
-        private static Logger log = InternalTrace.GetLogger("TestWorker");
+        private static readonly Logger log = InternalTrace.GetLogger("TestWorker");
 
         private Thread _workerThread;
 
@@ -84,12 +84,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The WorkItemQueue from which this worker pulls WorkItems
         /// </summary>
-        public WorkItemQueue WorkQueue { get; private set; }
+        public WorkItemQueue WorkQueue { get; }
 
         /// <summary>
         /// The name of this worker - also used for the thread
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Indicates whether the worker thread is running
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Start();
         }
 
-        private object cancelLock = new object();
+        private readonly object cancelLock = new object();
 
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem

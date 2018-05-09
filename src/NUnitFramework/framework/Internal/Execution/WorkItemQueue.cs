@@ -70,15 +70,15 @@ namespace NUnit.Framework.Internal.Execution
         private const int NORMAL_PRIORITY = 1;
         private const int PRIORITY_LEVELS = 2;
 
-        private Logger log = InternalTrace.GetLogger("WorkItemQueue");
+        private readonly Logger log = InternalTrace.GetLogger("WorkItemQueue");
 
         private ConcurrentQueue<WorkItem>[] _innerQueues;
 
         private class SavedState
         {
-            public ConcurrentQueue<WorkItem>[] InnerQueues;
-            public int AddId;
-            public int RemoveId;
+            public readonly ConcurrentQueue<WorkItem>[] InnerQueues;
+            public readonly int AddId;
+            public readonly int RemoveId;
 
             public SavedState(WorkItemQueue queue)
             {
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private Stack<SavedState> _savedState = new Stack<SavedState>();
+        private readonly Stack<SavedState> _savedState = new Stack<SavedState>();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
@@ -149,18 +149,18 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the name of the work item queue.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets a flag indicating whether this queue is used for parallel execution
         /// </summary>
-        public bool IsParallelQueue { get; private set; }
+        public bool IsParallelQueue { get; }
 
 #if APARTMENT_STATE
         /// <summary>
         /// Gets the target ApartmentState for work items on this queue
         /// </summary>
-        public ApartmentState TargetApartment { get; private set; }
+        public ApartmentState TargetApartment { get; }
 #endif
 
         private int _itemsProcessed;

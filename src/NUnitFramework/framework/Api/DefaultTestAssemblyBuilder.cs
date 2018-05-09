@@ -40,14 +40,14 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        static Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
+        static readonly Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
 
         #region Instance Fields
 
         /// <summary>
         /// The default suite builder used by the test assembly builder.
         /// </summary>
-        ISuiteBuilder _defaultSuiteBuilder;
+        readonly ISuiteBuilder _defaultSuiteBuilder;
 
         #endregion
 
@@ -199,13 +199,11 @@ namespace NUnit.Framework.Api
             int testcases = 0;
             foreach (Type testType in testTypes)
             {
-                var typeInfo = new TypeWrapper(testType);
-
                 try
                 {
-                    if (_defaultSuiteBuilder.CanBuildFrom(typeInfo))
+                    if (_defaultSuiteBuilder.CanBuildFrom(testType))
                     {
-                        Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo);
+                        Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
                         fixtures.Add(fixture);
                         testcases += fixture.TestCaseCount;
                     }

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,8 +29,9 @@ namespace NUnit.Framework.Syntax
 {
     internal class TestCompiler
     {
-        private readonly Microsoft.CSharp.CSharpCodeProvider provider;
-        CompilerParameters options;
+        private readonly Microsoft.CSharp.CSharpCodeProvider provider = new Microsoft.CSharp.CSharpCodeProvider();
+
+        public CompilerParameters Options { get; } = new CompilerParameters();
 
         public TestCompiler() : this( null, null ) { }
 
@@ -38,27 +39,19 @@ namespace NUnit.Framework.Syntax
 
         public TestCompiler( string[] assemblyNames, string outputName )
         {
-            this.provider = new Microsoft.CSharp.CSharpCodeProvider();
-            this.options = new CompilerParameters();
-
             if ( assemblyNames != null && assemblyNames.Length > 0 )
-                options.ReferencedAssemblies.AddRange( assemblyNames );
+                Options.ReferencedAssemblies.AddRange( assemblyNames );
             if ( outputName != null )
-                options.OutputAssembly = outputName;
+                Options.OutputAssembly = outputName;
 
-            options.IncludeDebugInformation = false;
-            options.TempFiles = new TempFileCollection( ".", false );
-            options.GenerateInMemory = false;
-        }
-
-        public CompilerParameters Options
-        {
-            get { return options; }
+            Options.IncludeDebugInformation = false;
+            Options.TempFiles = new TempFileCollection( ".", false );
+            Options.GenerateInMemory = false;
         }
 
         public CompilerResults CompileCode( string code )
         {
-            return provider.CompileAssemblyFromSource( options, code );
+            return provider.CompileAssemblyFromSource( Options, code );
         }
     }
 }

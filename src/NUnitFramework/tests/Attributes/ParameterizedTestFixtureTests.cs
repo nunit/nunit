@@ -68,9 +68,9 @@ namespace NUnit.Framework.Attributes
     [TestFixture((string)null, (string)null, "typed null test")]
     public class ParameterizedTestFixture
     {
-        private string eq1;
-        private string eq2;
-        private string neq;
+        private readonly string eq1;
+        private readonly string eq2;
+        private readonly string neq;
         
         public ParameterizedTestFixture(string eq1, string eq2, string neq)
         {

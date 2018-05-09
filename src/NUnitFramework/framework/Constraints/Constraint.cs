@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class Constraint : IConstraint
     {
-        Lazy<string> _displayName;
+        readonly Lazy<string> _displayName;
 
         #region Constructor
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint

@@ -61,7 +61,7 @@ namespace NUnit.Framework.Attributes
             public IEnumerator GetEnumerator()
             {
                 foreach (var method in typeof(RandomAttributeFixture).GetMethods())
-                    if (method.IsDefined(typeof(TestAttribute), false))
+                    if (method.HasAttribute<TestAttribute>(inherit: false))
                         yield return new TestCaseData(method.Name).SetName(method.Name);
             }
         }

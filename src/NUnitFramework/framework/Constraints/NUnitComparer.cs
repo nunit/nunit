@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// NUnitComparer encapsulates NUnit's default behavior
     /// in comparing two objects.
     /// </summary>
-    public class NUnitComparer : IComparer
+    public sealed class NUnitComparer : IComparer
     {
         /// <summary>
         /// Returns the default NUnitComparer.

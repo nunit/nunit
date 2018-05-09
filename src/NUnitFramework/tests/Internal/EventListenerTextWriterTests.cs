@@ -320,8 +320,8 @@ namespace NUnit.Framework.Internal
 
         private class TestListenerIntercepter : ITestListener
         {
-            public IList<string> Outputs { get; internal set; }
-            public ITestListener DefaultListener { get; internal set; }
+            public IList<string> Outputs { get; }
+            public ITestListener DefaultListener { get; }
 
             public TestListenerIntercepter(ITestListener defaultListener)
             {

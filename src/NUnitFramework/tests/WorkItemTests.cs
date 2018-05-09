@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateWorkItems()
         {
-            IMethodInfo method = new MethodWrapper(typeof(DummyFixture), "DummyTest");
+            FixtureMethod method = typeof(DummyFixture).GetFixtureMethod("DummyTest");
             ITest test = new TestMethod(method);
             _workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty);
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
         // Use static for simplicity
         static class DummyFixture
         {
-            public static int Delay = 0;
+            public static readonly int Delay = 0;
 
             public static void DummyTest()
             {

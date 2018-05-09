@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -37,12 +37,12 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            testMethod = new TestMethod(new MethodWrapper(typeof(DummyFixture), "DummyMethod"));
+            testMethod = new TestMethod(typeof(DummyFixture).GetFixtureMethod("DummyMethod"));
             testMethod.Properties.Set(PropertyNames.Description, "Test description");
             testMethod.Properties.Add(PropertyNames.Category, "Dubious");
             testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(new TypeWrapper(typeof(DummyFixture)));
+            testFixture = new TestFixture(typeof(DummyFixture));
             testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
             testFixture.Properties.Add(PropertyNames.Category, "Fast");
             testFixture.Properties.Add("Value", 3);
@@ -64,14 +64,14 @@ namespace NUnit.Framework.Internal
                 Is.EqualTo("TestSuite"));
             Assert.That(new TestAssembly("junk").TestType, 
                 Is.EqualTo("Assembly"));
-            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetFixtureMethod("GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));
-            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetFixtureMethod("ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
-            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(typeof(DummyFixture))).TestType,
+            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
                 Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(genericType)).TestType,
+            Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
                 Is.EqualTo("GenericFixture"));
         }
 
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
-            if (test.TypeInfo != null)
+            if (test.Type != null)
             {
                 Assert.NotNull(test.ClassName);
                 Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));

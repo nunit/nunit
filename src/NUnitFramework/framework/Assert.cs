@@ -415,7 +415,7 @@ namespace NUnit.Framework
         }
 
         // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
-        private static StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
+        private static readonly StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
 
         private static string GetStackTrace() =>
             StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(Environment.StackTrace));

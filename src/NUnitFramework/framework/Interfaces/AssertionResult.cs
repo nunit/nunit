@@ -20,13 +20,13 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary> The pass/fail status of the assertion</summary>
-        public AssertionStatus Status { get; private set; }
+        public AssertionStatus Status { get; }
 
         /// <summary>The message produced by the assertion, or null</summary>
-        public string Message { get; private set; }
+        public string Message { get; }
 
         /// <summary>The stack trace associated with the assertion, or null</summary>
-        public string StackTrace { get; private set; }
+        public string StackTrace { get; }
 
         /// <summary>
         /// ToString Override

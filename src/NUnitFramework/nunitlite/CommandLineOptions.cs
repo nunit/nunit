@@ -215,7 +215,7 @@ namespace NUnit.Common
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
 
-        private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
+        private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
             get

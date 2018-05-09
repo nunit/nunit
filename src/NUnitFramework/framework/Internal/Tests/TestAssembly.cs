@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Assembly represented by this instance.
         /// </summary>
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         /// <summary>
         /// Gets the name used for the top-level element in the
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
         public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
             return Assembly != null
-                ? Assembly.GetAttributes<TAttr>().ToArray()
+                ? Assembly.GetAttributes<TAttr>()
                 : new TAttr[0];
         }
     }

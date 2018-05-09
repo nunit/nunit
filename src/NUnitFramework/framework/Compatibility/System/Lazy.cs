@@ -48,9 +48,9 @@ namespace System
 	{
 		T value;
 		Func<T> factory;
-		object monitor;
+	    readonly object monitor;
 		Exception exception;
-		LazyThreadSafetyMode mode;
+	    readonly LazyThreadSafetyMode mode;
 		bool inited;
 
         /// <summary>

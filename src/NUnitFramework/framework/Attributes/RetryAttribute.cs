@@ -35,7 +35,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RetryAttribute : PropertyAttribute, IRepeatTest
     {
-        private int _tryCount;
+        private readonly int _tryCount;
 
         /// <summary>
         /// Construct a <see cref="RetryAttribute" />
@@ -67,7 +67,7 @@ namespace NUnit.Framework
         /// </summary>
         public class RetryCommand : DelegatingTestCommand
         {
-            private int _tryCount;
+            private readonly int _tryCount;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RetryCommand"/> class.

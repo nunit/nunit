@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Return a list of the composing filters.
         /// </summary>
-        public IList<ITestFilter> Filters { get; private set; }
+        public IList<ITestFilter> Filters { get; }
 
         /// <summary>
         /// Checks whether the CompositeFilter is matched by a test.

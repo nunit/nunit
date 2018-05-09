@@ -712,7 +712,8 @@ namespace NUnit.Framework.Constraints
 
         class DummyGenericClass<T>
         {
-            private object _obj;
+            private readonly object _obj;
+
             public DummyGenericClass(object obj)
             {
                 _obj = obj;

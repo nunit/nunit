@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     [TestFixture("Author", "Charlie", true)]
     public class PropertyFilterTests : TestFilterTests
     {
-        private TestFilter _filter;
+        private readonly TestFilter _filter;
 
         public PropertyFilterTests(string name, string value, bool isRegex)
         {

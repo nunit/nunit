@@ -36,7 +36,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class ExplicitAttribute : NUnitAttribute, IApplyToTest
     {
-        private string _reason;
+        private readonly string _reason;
 
         /// <summary>
         /// Default constructor

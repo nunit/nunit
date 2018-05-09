@@ -671,7 +671,7 @@ namespace NUnitLite.Tests
                 TeamCity = teamCity;
             }
 
-            public bool TeamCity { get; private set; }
+            public bool TeamCity { get; }
         }
     }
 }

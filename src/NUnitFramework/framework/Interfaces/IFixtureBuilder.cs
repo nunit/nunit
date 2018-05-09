@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2014–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,22 +30,17 @@ namespace NUnit.Framework.Interfaces
 
     /// <summary>
     /// The IFixtureBuilder interface is exposed by a class that knows how to
-    /// build a TestFixture from one or more Types. In general, it is exposed
-    /// by an attribute, but may be implemented in a helper class used by the
+    /// build test fixtures from a specified type. In general, it is exposed
+    /// by an attribute, but it may be implemented in a helper class used by the
     /// attribute in some cases.
     /// </summary>
     public interface IFixtureBuilder
     {
         /// <summary>
-        /// Build one or more TestFixtures from type provided. At least one
-        /// non-null TestSuite must always be returned, since the method is 
-        /// generally called because the user has marked the target class as 
-        /// a fixture. If something prevents the fixture from being used, it
-        /// will be returned nonetheless, labelled as non-runnable.
+        /// Builds any number of test fixtures from the specified type.
         /// </summary>
-        /// <param name="typeInfo">The type info of the fixture to be used.</param>
-        /// <returns>A TestSuite object or one derived from TestSuite.</returns>
+        /// <param name="type">The type to be used as a fixture.</param>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo);
+        IEnumerable<TestSuite> BuildFrom(Type type);
     }
 }

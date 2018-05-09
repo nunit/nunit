@@ -44,9 +44,9 @@ namespace NUnit.Framework.Internal.Filters
         {
             string containingNamespace = null;
 
-            if (test.TypeInfo != null)
+            if (test.Type != null)
             {
-                containingNamespace = test.TypeInfo.Namespace;
+                containingNamespace = test.Type.Namespace;
             }
 
             return Match(containingNamespace);

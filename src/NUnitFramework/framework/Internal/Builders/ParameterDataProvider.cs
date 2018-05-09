@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,7 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class ParameterDataProvider : IParameterDataProvider
     {
-        private List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
+        private readonly List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
 
         /// <summary>
         /// Construct with a collection of individual providers
@@ -46,31 +46,28 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Determine whether any data is available for a parameter.
+        /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
-        public bool HasDataFor(IParameterInfo parameter)
+        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
+        /// <param name="parameter">The parameter of a parameterized test</param>
+        public bool HasDataFor(Type fixtureType, ParameterInfo parameter)
         {
             foreach (var provider in _providers)
-                if (provider.HasDataFor(parameter))
+                if (provider.HasDataFor(fixtureType, parameter))
                     return true;
 
             return false;
         }
 
         /// <summary>
-        /// Return an IEnumerable providing data for use with the
-        /// supplied parameter.
+        /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>An IEnumerable providing the required data</returns>
-        public IEnumerable GetDataFor(IParameterInfo parameter)
+        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
+        /// <param name="parameter">The parameter of a parameterized test</param>
+        public IEnumerable GetDataFor(Type fixtureType, ParameterInfo parameter)
         {
             foreach (var provider in _providers)
-                foreach (object data in provider.GetDataFor(parameter))
+                foreach (object data in provider.GetDataFor(fixtureType, parameter))
                     yield return data;
         }
     }
