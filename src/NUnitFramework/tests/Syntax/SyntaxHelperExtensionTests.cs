@@ -21,69 +21,49 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using NUnit.Framework.Constraints;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Syntax
 {
-    public class SyntaxHelperExtensionTests
+    public static class SyntaxHelperExtensionTests
     {
-        [Test]
-        public void CanExtendIsHelper()
+        public static IEnumerable<Type> ClassesExtensibleThroughInheritance => new[]
         {
-            Assert.That(Is.Custom, Is.TypeOf<CustomConstraint>());
+            typeof(Is),
+            typeof(Has),
+            typeof(Does),
+            typeof(Contains)
+        };
+
+        [TestCaseSource(nameof(ClassesExtensibleThroughInheritance))]
+        public static void ClassShouldBeInheritable(Type type)
+        {
+            Assert.That(IsInheritable(type));
+        }
+        
+        private static bool IsInheritable(Type type)
+        {
+            if (type.GetTypeInfo().IsSealed) return false;
+
+            return type.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Any()
+                || type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Any(IsAccessibleFromExternalSubclass);
         }
 
-        [Test]
-        public void CanExtendHasHelper()
+        private static bool IsAccessibleFromExternalSubclass(MethodBase method)
         {
-            Assert.That(Has.Custom, Is.TypeOf<CustomConstraint>());
-        }
-
-        [Test]
-        public void CanExtendDoesHelper()
-        {
-            Assert.That(Does.Custom, Is.TypeOf<CustomConstraint>());
-        }
-
-        [Test]
-        public void CanExtendContainsHelper()
-        {
-            Assert.That(Contains.Custom, Is.TypeOf<CustomConstraint>());
-        }
-
-        #region Nested Syntax Helper Extensions
-
-        public class Is : Framework.Is
-        {
-            public static CustomConstraint Custom { get { return new CustomConstraint(); } }
-        }
-
-        public class Has : Framework.Has
-        {
-            public static CustomConstraint Custom { get { return new CustomConstraint(); } }
-        }
-
-        public class Does : Framework.Does
-        {
-            public static CustomConstraint Custom { get { return new CustomConstraint(); } }
-        }
-
-        public class Contains : Framework.Contains
-        {
-            public static CustomConstraint Custom { get { return new CustomConstraint(); } }
-        }
-
-        #endregion
-
-        #region Nested CustomConstraint used for tests
-
-        public class CustomConstraint : Constraint
-        {
-            public override ConstraintResult ApplyTo<TActual>(TActual actual)
+            switch (method.Attributes & MethodAttributes.MemberAccessMask)
             {
-                throw new System.NotImplementedException();
+                case MethodAttributes.Public:
+                case MethodAttributes.Family:
+                case MethodAttributes.FamORAssem:
+                    return true;
+                default:
+                    return false;
             }
         }
-        #endregion
     }
 }
