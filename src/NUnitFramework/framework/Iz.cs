@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -29,7 +29,7 @@ namespace NUnit.Framework
     /// The Iz class is a synonym for Is intended for use in VB,
     /// which regards Is as a keyword.
     /// </summary>
-    public class Iz : Is
+    public abstract class Iz : Is
     {
     }
 }

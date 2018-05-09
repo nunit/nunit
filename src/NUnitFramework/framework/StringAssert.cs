@@ -30,7 +30,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Basic Asserts on strings.
     /// </summary>
-    public class StringAssert
+    public abstract class StringAssert
     {
         #region Equals and ReferenceEquals
 

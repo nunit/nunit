@@ -31,7 +31,7 @@ namespace NUnit.Framework
     /// Helper class with properties and methods that supply
     /// constraints that operate on exceptions.
     /// </summary>
-    public class Throws
+    public abstract class Throws
     {
         #region Exception
 

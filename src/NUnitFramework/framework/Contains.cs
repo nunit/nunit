@@ -29,7 +29,7 @@ namespace NUnit.Framework
     /// Helper class with properties and methods that supply
     /// a number of constraints used in Asserts.
     /// </summary>
-    public class Contains
+    public abstract class Contains
     {
         #region Item
 
