@@ -27,7 +27,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
-using NUnit.TestData;
+
+#if !NET40
+using TaskEx = System.Threading.Tasks.Task;
+#endif
 
 namespace NUnit.Framework
 {
@@ -44,11 +47,7 @@ namespace NUnit.Framework
 
             apiAdapter.Execute(async () =>
             {
-#if NET40
                 await TaskEx.Yield();
-#else
-                await Task.Yield();
-#endif
                 Assert.That(Thread.CurrentThread, Is.SameAs(thread));
             });
         }
@@ -62,11 +61,7 @@ namespace NUnit.Framework
             apiAdapter.Execute(() =>
             {
                 Assert.That(Thread.CurrentThread, Is.SameAs(thread));
-#if NET40
                 return TaskEx.FromResult<object>(null);
-#else
-                return Task.FromResult<object>(null);
-#endif
             });
         }
 #endif
@@ -110,14 +105,7 @@ namespace NUnit.Framework
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                apiAdapter.Execute(async () =>
-                {
-#if NET40
-                    await TaskEx.Yield();
-#else
-                    await Task.Yield();
-#endif
-                });
+                apiAdapter.Execute(async () => await TaskEx.Yield());
             }
         }
 
@@ -133,11 +121,7 @@ namespace NUnit.Framework
                 apiAdapter.Execute(() =>
                 {
                     Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
-#if NET40
                     return TaskEx.FromResult<object>(null);
-#else
-                    return Task.FromResult<object>(null);
-#endif
                 });
             }
         }
@@ -151,14 +135,7 @@ namespace NUnit.Framework
 
             using (TemporarySynchronizationContext(createdOnThisThread))
             {
-                apiAdapter.Execute(async () =>
-                {
-#if NET40
-                    await TaskEx.Yield();
-#else
-                    await Task.Yield();
-#endif
-                });
+                apiAdapter.Execute(async () => await TaskEx.Yield());
 
                 Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
             }
