@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 #if ASYNC
-using System.Threading.Tasks;
+using System;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
@@ -30,26 +30,20 @@ namespace NUnit.Framework
 {
     partial class AsyncExecutionApiAdapter
     {
+        private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
+        {
+            TestBuilder.RunTest(
+                new NUnitTestFixtureBuilder().BuildFrom(fixtureType, new TestFixtureData(asyncUserCode))
+            ).AssertPassed();
+        }
+
         private sealed class TaskReturningTestMethodAdapter : AsyncExecutionApiAdapter
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                TestBuilder.RunTest(
-                    new NUnitTestFixtureBuilder().BuildFrom(typeof(Fixture), new TestFixtureData(asyncUserCode))
-                ).AssertPassed();
-            }
-
-            private sealed class Fixture
-            {
-                private readonly AsyncTestDelegate _asyncUserCode;
-
-                public Fixture(AsyncTestDelegate asyncUserCode)
-                {
-                    _asyncUserCode = asyncUserCode;
-                }
-
-                [Test]
-                public Task TestMethod() => _asyncUserCode.Invoke();
+                ExecuteFixture(
+                    typeof(TestData.AsyncExecutionApiAdapter.TaskReturningTestMethodFixture),
+                    asyncUserCode);
             }
 
             public override string ToString() => "[Test] Task TestMethod() { … }";
@@ -59,25 +53,9 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                TestBuilder.RunTest(
-                    new NUnitTestFixtureBuilder().BuildFrom(typeof(Fixture), new TestFixtureData(asyncUserCode))
-                ).AssertPassed();
-            }
-
-            private sealed class Fixture
-            {
-                private readonly AsyncTestDelegate _asyncUserCode;
-
-                public Fixture(AsyncTestDelegate asyncUserCode)
-                {
-                    _asyncUserCode = asyncUserCode;
-                }
-
-                [SetUp]
-                public Task SetUp() => _asyncUserCode.Invoke();
-
-                [Test]
-                public void DummyTest() { }
+                ExecuteFixture(
+                    typeof(TestData.AsyncExecutionApiAdapter.TaskReturningSetUpFixture),
+                    asyncUserCode);
             }
 
             public override string ToString() => "[SetUp] Task SetUp() { … }";
@@ -87,25 +65,9 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                TestBuilder.RunTest(
-                    new NUnitTestFixtureBuilder().BuildFrom(typeof(Fixture), new TestFixtureData(asyncUserCode))
-                ).AssertPassed();
-            }
-
-            private sealed class Fixture
-            {
-                private readonly AsyncTestDelegate _asyncUserCode;
-
-                public Fixture(AsyncTestDelegate asyncUserCode)
-                {
-                    _asyncUserCode = asyncUserCode;
-                }
-
-                [Test]
-                public void DummyTest() { }
-
-                [TearDown]
-                public Task TearDown() => _asyncUserCode.Invoke();
+                ExecuteFixture(
+                    typeof(TestData.AsyncExecutionApiAdapter.TaskReturningTearDownFixture),
+                    asyncUserCode);
             }
 
             public override string ToString() => "[TearDown] Task TearDown() { … }";
@@ -115,25 +77,9 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                TestBuilder.RunTest(
-                    new NUnitTestFixtureBuilder().BuildFrom(typeof(Fixture), new TestFixtureData(asyncUserCode))
-                ).AssertPassed();
-            }
-
-            private sealed class Fixture
-            {
-                private readonly AsyncTestDelegate _asyncUserCode;
-
-                public Fixture(AsyncTestDelegate asyncUserCode)
-                {
-                    _asyncUserCode = asyncUserCode;
-                }
-
-                [OneTimeSetUp]
-                public Task OneTimeSetUp() => _asyncUserCode.Invoke();
-
-                [Test]
-                public void DummyTest() { }
+                ExecuteFixture(
+                    typeof(TestData.AsyncExecutionApiAdapter.TaskReturningOneTimeSetUpFixture),
+                    asyncUserCode);
             }
 
             public override string ToString() => "[OneTimeSetUp] Task OneTimeSetUp() { … }";
@@ -143,25 +89,9 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                TestBuilder.RunTest(
-                    new NUnitTestFixtureBuilder().BuildFrom(typeof(Fixture), new TestFixtureData(asyncUserCode))
-                ).AssertPassed();
-            }
-
-            private sealed class Fixture
-            {
-                private readonly AsyncTestDelegate _asyncUserCode;
-
-                public Fixture(AsyncTestDelegate asyncUserCode)
-                {
-                    _asyncUserCode = asyncUserCode;
-                }
-
-                [Test]
-                public void DummyTest() { }
-
-                [OneTimeTearDown]
-                public Task OneTimeTearDown() => _asyncUserCode.Invoke();
+                ExecuteFixture(
+                    typeof(TestData.AsyncExecutionApiAdapter.TaskReturningOneTimeTearDownFixture),
+                    asyncUserCode);
             }
 
             public override string ToString() => "[OneTimeTearDown] Task OneTimeTearDown() { … }";
