@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
 using NUnit.Framework.Internal;
 
@@ -61,9 +60,16 @@ namespace NUnit.Framework.Constraints
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
+            int index = 0;
             foreach (object item in enumerable)
+            {
                 if (BaseConstraint.ApplyTo(item).IsSuccess)
-                    return new ConstraintResult(this, actual, ConstraintStatus.Failure);
+                {
+                    return new EachItemConstraintResult(this, actual, item, index);
+                }
+
+                index++;
+            }
 
             return new ConstraintResult(this, actual, ConstraintStatus.Success);
         }
