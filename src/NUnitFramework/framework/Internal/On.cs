@@ -24,12 +24,12 @@
 using System;
 using System.Threading;
 
-namespace NUnit.TestData
+namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Enables the <see cref="On.Dispose"/> syntax.
     /// </summary>
-    public static class On
+    internal static class On
     {
         /// <summary>
         /// Wraps an action so that it is executed when the returned object is disposed.

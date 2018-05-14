@@ -23,6 +23,7 @@
 
 #if ASYNC
 using System;
+using System.Security;
 using System.Threading;
 
 #if NET40 || NET45
@@ -38,9 +39,12 @@ namespace NUnit.Framework.Internal
 
         public static MessagePumpStrategy FromCurrentSynchronizationContext()
         {
-#if NET40 || NET45
             var context = SynchronizationContext.Current;
 
+            if (context is SingleThreadedTestSynchronizationContext)
+                return SingleThreadedTestMessagePumpStrategy.Instance;
+
+#if NET40 || NET45
             if (context is WindowsFormsSynchronizationContext)
                 return WindowsFormsMessagePumpStrategy.Instance;
 
@@ -68,6 +72,7 @@ namespace NUnit.Framework.Internal
             public static readonly WindowsFormsMessagePumpStrategy Instance = new WindowsFormsMessagePumpStrategy();
             private WindowsFormsMessagePumpStrategy() { }
 
+            [SecuritySafeCritical]
             public override void WaitForCompletion(AwaitAdapter awaitable)
             {
                 var context = SynchronizationContext.Current;
@@ -85,7 +90,14 @@ namespace NUnit.Framework.Internal
                     state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, Application.Exit),
                     state: awaitable);
 
-                Application.Run();
+                try
+                {
+                    Application.Run();
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(context);
+                }
             }
         }
 
@@ -114,6 +126,32 @@ namespace NUnit.Framework.Internal
                 Dispatcher.Run();
             }
         }
+#endif
+
+        private sealed class SingleThreadedTestMessagePumpStrategy : MessagePumpStrategy
+        {
+            public static readonly SingleThreadedTestMessagePumpStrategy Instance = new SingleThreadedTestMessagePumpStrategy();
+            private SingleThreadedTestMessagePumpStrategy() { }
+
+            public override void WaitForCompletion(AwaitAdapter awaitable)
+            {
+                var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext;
+
+                if (context == null)
+                    throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
+
+                if (awaitable.IsCompleted) return;
+
+                // Wait for a post rather than scheduling the continuation now. If there has been a race condition
+                // and it completed after the IsCompleted check, it will wait until the message loop runs *before*
+                // shutting it down. Otherwise context.ShutDown will throw.
+                context.Post(
+                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, context.ShutDown),
+                    state: awaitable);
+
+                context.Run();
+            }
+        }
 
         private static void ContinueOnSameSynchronizationContext(AwaitAdapter adapter, Action continuation)
         {
@@ -130,7 +168,6 @@ namespace NUnit.Framework.Internal
                     context.Post(state => ((Action)state).Invoke(), state: continuation);
             });
         }
-#endif
     }
 }
 #endif

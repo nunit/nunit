@@ -360,11 +360,7 @@ namespace NUnit.Framework
 
             try
             {
-                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testDelegate))
-                {
-                    var result = testDelegate();
-                    region.WaitForPendingOperationsToComplete(result);
-                }
+                AsyncToSyncAdapter.Await(testDelegate.Invoke);
             }
             finally
             {

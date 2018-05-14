@@ -162,7 +162,7 @@ namespace NUnit.Framework.Internal.Builders
             Type returnType = testMethod.Method.ReturnType;
 
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
+            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method))
             {
                 if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");

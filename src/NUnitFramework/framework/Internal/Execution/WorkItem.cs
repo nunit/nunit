@@ -259,14 +259,14 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
+        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
 
         /// <summary>
         /// Wait until the execution of this item is complete
         /// </summary>
         public void WaitForCompletion()
         {
-            _completionEvent.WaitOne();
+            _completionEvent.Wait();
         }
 
         /// <summary>
@@ -333,12 +333,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Dispose()
         {
-            if (_completionEvent != null)
-#if NET20 || NET35
-                _completionEvent.Close();
-#else
-                _completionEvent.Dispose();
-#endif
+            _completionEvent?.Dispose();
         }
 
 #endregion
