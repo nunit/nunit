@@ -50,19 +50,9 @@ namespace NUnit.Framework
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.
     /// </summary>
-    public partial class Assert
+    // Abstract because we support syntax extension by inheriting and declaring new static members.
+    public abstract partial class Assert
     {
-        #region Constructor
-
-        /// <summary>
-        /// We don't actually want any instances of this object, but some people
-        /// like to inherit from it to add other static methods. Hence, the
-        /// protected constructor disallows any instances of this object.
-        /// </summary>
-        protected Assert() { }
-
-        #endregion
-
         #region Equals and ReferenceEquals
 
         /// <summary>
