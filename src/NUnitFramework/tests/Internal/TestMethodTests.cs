@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Linq;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.TestFixtureTests;
 
@@ -68,8 +69,9 @@ namespace NUnit.Framework.Internal
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));
             Assert.That(test.Tests[0], Is.TypeOf<TestMethod>());
             Assert.That(test.Tests[1], Is.TypeOf<TestMethod>());
-            Assert.That(test.Tests[0].Arguments, Is.EqualTo(new object[] { 42, "abc" }));
-            Assert.That(test.Tests[1].Arguments, Is.EqualTo(new object[] { 24, "cba" }));
+            var expectedArguments = new[] { new object[] { 42, "abc" }, new object[] { 24, "cba" } };
+            var actualArguments = test.Tests.Select(t => t.Arguments);
+            Assert.That(actualArguments, Is.EquivalentTo(expectedArguments));
         }
     }
 }
