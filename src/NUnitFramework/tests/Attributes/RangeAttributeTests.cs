@@ -64,7 +64,8 @@ namespace NUnit.Framework.Attributes
         {
             Test test = TestBuilder.MakeParameterizedMethodSuite(typeof(RangeTestFixture), nameof(RangeTestFixture.MethodWithMultipleRanges));
 
-            Assert.That(from testCase in test.Tests select testCase.Arguments[0], Is.EqualTo(new[] { 1, 2, 3, 10, 11, 12 }));
+            var arguments = from testCase in test.Tests select testCase.Arguments[0];
+            Assert.That(arguments, Is.EquivalentTo(new[] { 1, 2, 3, 10, 11, 12 }));
         }
 
         #region Forward
