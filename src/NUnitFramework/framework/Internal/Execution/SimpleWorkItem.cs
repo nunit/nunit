@@ -154,10 +154,6 @@ namespace NUnit.Framework.Internal.Execution
                     command = new TimeoutCommand(command, timeout);
 #endif
 
-                // warn if we have more than one IRepeatTest (Retry / Repeat) Attribute
-                if (method.GetAttributes<IRepeatTest>(true).Length > 1)
-                    return new WarnCommand(_testMethod, "Multiple attributes that repeat that repeat a test may cause issues.");
-
                 // Add wrappers for repetable tests after timeout so the timeout is reset on each instance
                 foreach (var repeatableAttribute in method.GetAttributes<IRepeatTest>(true))
                     command = repeatableAttribute.Wrap(command);

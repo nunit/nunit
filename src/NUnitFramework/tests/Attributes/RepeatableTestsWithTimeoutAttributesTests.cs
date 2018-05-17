@@ -21,7 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Commands;
 using NUnit.TestUtilities;
 
 #if (!NETCOREAPP1_1 || !NETCOREAPP2_0) && THREAD_ABORT
@@ -65,18 +67,43 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void ShouldWarnOnMultipleRepeatableAttributes()
+        public void ShouldFailOnMultipleRepeatableAttributes()
         {
-            var testCase = TestBuilder.MakeTestCase(GetType(), "TestMethodForRepeatAndRetryExpectedWarning");
+            var testCase = TestBuilder.MakeTestCase(GetType(), "TestMethodForRepeatAndRetryExpectedFail");
             var workItem = TestBuilder.CreateWorkItem(testCase);
             var result = TestBuilder.ExecuteWorkItem(workItem);
             
-            Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Assert.AreEqual(1, result.WarningCount);
+            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
+            Assert.AreEqual(FailureSite.Test, result.ResultState.Site);
+            Assert.AreEqual("Invalid", result.ResultState.Label);
+        }
+
+        [Test]
+        public void ShouldFailOnMultipleRepeatableAttributesIncludingCustom()
+        {
+            var testCase = TestBuilder.MakeTestCase(GetType(), "TestMethodForRepeatAndCustomRepeatExpectedFail");
+            var workItem = TestBuilder.CreateWorkItem(testCase);
+            var result = TestBuilder.ExecuteWorkItem(workItem);
+
+            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
+            Assert.AreEqual(FailureSite.Test, result.ResultState.Site);
+            Assert.AreEqual("Invalid", result.ResultState.Label);
         }
 
         [Repeat(1), Retry(1)]
-        public void TestMethodForRepeatAndRetryExpectedWarning() { }
+        public void TestMethodForRepeatAndRetryExpectedFail() { }
+
+        [Repeat(1), CustomRepeater]
+        public void TestMethodForRepeatAndCustomRepeatExpectedFail() { }
+
+        #region TestCustomAttribute
+
+        internal class CustomRepeater : Attribute, IRepeatTest
+        {
+            public TestCommand Wrap(TestCommand command) { return null; }
+        }
+
+        #endregion
     }
 }
 
