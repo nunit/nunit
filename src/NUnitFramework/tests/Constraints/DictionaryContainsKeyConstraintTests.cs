@@ -21,9 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -98,6 +98,21 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary,
                 new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+        }
+
+        [Test]
+        public void SucceedsWhenKeyIsPresentWhenDictionaryUsingCustomComparer()
+        {
+            var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello"));
+        }
+
+        [Test]
+        public void SucceedsWhenKeyIsPresentUsingContainKeyWhenDictionaryUsingCustomComparer()
+        {
+            var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Hello", "World" }, { "Hola", "Mundo" } };
+            Assert.That(dictionary, Does.ContainKey("hola"));
         }
     }
 }

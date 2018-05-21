@@ -23,6 +23,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -70,13 +74,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override bool Matches(IEnumerable actual)
         {
-            var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
+            var method = GetContainsKeyMethod(actual);
+            if (method != null)
+            {
+                return (bool)method.Invoke(actual, new[] { Expected });
+            }
 
-            foreach (object obj in dictionary.Keys)
-                if (ItemsEqual(obj, Expected))
-                    return true;
-
-            return false;
+            throw new ArgumentException("Not a collection supporting ContainsKey method.");
         }
 
         /// <summary>
@@ -91,6 +95,77 @@ namespace NUnit.Framework.Constraints
 
             base.Using(EqualityAdapter.For(invertedComparison));
             return this;
+        }
+
+        /// <summary>
+        /// Checks if the key is contained in a "keyed item container".
+        /// </summary>
+        /// <param name="actual">Keyed container.</param>
+        /// <returns>method to call.</returns>
+        private MethodInfo GetContainsKeyMethod(object actual)
+        {
+            if (actual == null) throw new ArgumentNullException(nameof(actual));
+            var instanceType = actual.GetType();
+
+            var method = FindContainsKeyMethod(instanceType)
+                         ?? instanceType
+                            .GetInterfaces()
+                            .Concat(GetBaseTypes(instanceType))
+                            .Select(FindContainsKeyMethod)
+                            .FirstOrDefault(m => m != null);
+
+            return method;
+        }
+
+        /// <summary>
+        /// Looks for a base type that implements ContainsKey method
+        /// </summary>
+        /// <param name="type">Type to look for method ContainsKey</param>
+        /// <returns>Returns the method to call.</returns>
+        private MethodInfo FindContainsKeyMethod(Type type)
+        {
+            var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
+            var method = methods.FirstOrDefault(m =>
+                m.ReturnType == typeof(bool)
+                && m.Name == "ContainsKey"
+                && m.GetParameters().Length == 1);
+
+            if (method == null && type.GetTypeInfo().IsGenericType)
+            {
+                var definition = type.GetGenericTypeDefinition();
+                var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
+
+                if (tKeyGenericArg != null)
+                {
+                    method = definition
+                             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                             .FirstOrDefault(m =>
+                                 m.ReturnType == typeof(bool)
+                                 && m.Name == "Contains"
+                                 && m.GetParameters().Any()
+                                 && m.GetParameters().First()?.ParameterType == tKeyGenericArg);
+
+                    if (method != null)
+                        method = methods.Single(m => m.MetadataToken == method.MetadataToken);
+                }
+            }
+
+            return method;
+        }
+
+        /// <summary>
+        /// Returns all the base types of the class
+        /// </summary>
+        /// <param name="type">Type to search for base types implemeted.</param>
+        /// <returns>Base types / interfaces implemented by the class</returns>
+        private IEnumerable<Type> GetBaseTypes(Type type)
+        {
+            for (; ; )
+            {
+                type = type.GetTypeInfo().BaseType;
+                if (type == null) break;
+                yield return type;
+            }
         }
     }
 }
