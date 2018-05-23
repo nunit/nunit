@@ -125,6 +125,7 @@ namespace NUnit.Framework.Internal
         {
             WriteExpectedLine(result);
             WriteActualLine(result);
+            WriteAdditionalLine(result);
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace NUnit.Framework.Internal
         /// <param name="tolerance">The tolerance within which the test was made</param>
         public override void DisplayDifferences(object expected, object actual, Tolerance tolerance)
         {
-            if (expected != null && actual != null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual) )
+            if (expected != null && actual != null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual))
             {
                 _sameValDiffTypes = true;
                 ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
@@ -275,7 +276,7 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-            if (_sameValDiffTypes) {
+            if (_sameValDiffTypes) {            
                 Write(_expectedType);
             }
             if (tolerance != null && !tolerance.IsUnsetOrDefault)
@@ -299,6 +300,11 @@ namespace NUnit.Framework.Internal
             result.WriteActualValueTo(this);
             WriteLine();
             //WriteLine(MsgUtils.FormatValue(result.ActualValue));
+        }
+
+        private void WriteAdditionalLine(ConstraintResult result)
+        {
+            result.WriteAdditionalLinesTo(this);
         }
 
         /// <summary>

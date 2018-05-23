@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
     }
 
     /// <summary>
-    /// Contain the result of matching a <see cref="Constraint"/> against an actual value.
+    /// Contains the result of matching a <see cref="Constraint"/> against an actual value.
     /// </summary>
     public class ConstraintResult
     {
@@ -144,6 +144,15 @@ namespace NUnit.Framework.Constraints
         public virtual void WriteMessageTo(MessageWriter writer)
         {
             writer.DisplayDifferences(this);
+        }
+
+        /// <summary>
+        /// Write some additional failure message.
+        /// </summary>
+        /// <param name="writer">The MessageWriter on which to display the message</param>
+        public virtual void WriteAdditionalLinesTo(MessageWriter writer)
+        {
+            //By default it does not write anything to writer but can be overriden in classes where needed. 
         }
 
         /// <summary>
