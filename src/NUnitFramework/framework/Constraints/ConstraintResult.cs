@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
     }
 
     /// <summary>
-    /// Contain the result of matching a <see cref="Constraint"/> against an actual value.
+    /// Contains the result of matching a <see cref="Constraint"/> against an actual value.
     /// </summary>
     public class ConstraintResult
     {

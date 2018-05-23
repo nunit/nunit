@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
             _tallyResult = tallyResult;
         }
 
-         /// <summary>Write the custom additional chainable message to the failure message for a failing constraint. <see cref="CollectionEquivalentConstraint"/>.</summary>
+        /// <summary>Write any additional lines (following <c>Expected:</c> and <c>But was:</c>) for a failing constraint.</summary>
         /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>
         public override void WriteAdditionalLinesTo(MessageWriter writer)
         { 

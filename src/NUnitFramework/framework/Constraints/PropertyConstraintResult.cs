@@ -1,7 +1,7 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Contain the result of matching a <see cref="PropertyConstraint"/> against an actual value.
+    /// Contains the result of matching a <see cref="PropertyConstraint"/> against an actual value.
     /// </summary>
     internal sealed class PropertyConstraintResult : ConstraintResult
     {
