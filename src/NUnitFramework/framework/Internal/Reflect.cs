@@ -375,5 +375,13 @@ namespace NUnit.Framework.Internal
                 && !type.GetTypeInfo().IsGenericTypeDefinition
                 && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
         }
+
+        internal static IEnumerable<Type> TypeAndBaseTypes(this Type type)
+        {
+            for (; type != null; type = type.GetTypeInfo().BaseType)
+            {
+                yield return type;
+            }
+        }
     }
 }

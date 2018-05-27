@@ -23,8 +23,6 @@
 
 #if ASYNC
 using System;
-using System.Runtime.CompilerServices;
-using System.Security;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
@@ -46,82 +44,11 @@ namespace NUnit.Framework.Internal
 
 #if NET40
             // TODO: use the general reflection-based awaiter if net40 build is running against a newer BCL
-            return new Net40BclTaskAwaitAdapter(task);
+            return Net40BclTaskAwaitAdapter.Create(task);
 #else
-            return new TaskAwaitAdapter(task);
+            return TaskAwaitAdapter.Create(task);
 #endif
         }
-
-#if NET40
-        private sealed class Net40BclTaskAwaitAdapter : AwaitAdapter
-        {
-            private readonly Task _task;
-
-            public Net40BclTaskAwaitAdapter(Task task)
-            {
-                _task = task;
-            }
-
-            public override bool IsCompleted => _task.IsCompleted;
-
-            public override void OnCompleted(Action action)
-            {
-                if (action == null) return;
-
-                // Normally we would call TaskAwaiter.UnsafeOnCompleted (https://source.dot.net/#System.Private.CoreLib/src/System/Runtime/CompilerServices/TaskAwaiter.cs)
-                // We will have to polyfill on top of the TPL API.
-                // Compare TaskAwaiter.OnCompletedInternal from Microsoft.Threading.Tasks.dll in Microsoft.Bcl.Async.nupkg.
-
-                _task.ContinueWith(_ => action.Invoke(), TaskScheduler.FromCurrentSynchronizationContext());
-            }
-
-            public override void BlockUntilCompleted()
-            {
-                // Normally we would call TaskAwaiter.GetResult (https://source.dot.net/#System.Private.CoreLib/src/System/Runtime/CompilerServices/TaskAwaiter.cs)
-                // We will have to polyfill on top of the TPL API.
-                // Compare TaskAwaiter.ValidateEnd from Microsoft.Threading.Tasks.dll in Microsoft.Bcl.Async.nupkg.
-
-                try
-                {
-                    _task.Wait(); // Wait even if the task is completed so that an exception is thrown for cancellation or failure.
-                }
-                catch (AggregateException ex) when (ex.InnerExceptions.Count == 1) // Task.Wait wraps every exception
-                {
-                    ExceptionHelper.Rethrow(ex.InnerException);
-                }
-            }
-
-            public override object GetResult()
-            {
-                BlockUntilCompleted(); // Throw exceptions, if any
-                return null;
-            }
-        }
-#else
-        private sealed class TaskAwaitAdapter : AwaitAdapter
-        {
-            private readonly TaskAwaiter _awaiter;
-
-            public TaskAwaitAdapter(Task task)
-            {
-                _awaiter = task.GetAwaiter();
-            }
-
-            public override bool IsCompleted => _awaiter.IsCompleted;
-
-            [SecuritySafeCritical]
-            public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
-
-            // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
-            public override void BlockUntilCompleted() => _awaiter.GetResult();
-
-            public override object GetResult()
-            {
-                _awaiter.GetResult(); // Throw exceptions, if any
-                return null;
-            }
-        }
-#endif
     }
 }
 #endif
