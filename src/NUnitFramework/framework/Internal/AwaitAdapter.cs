@@ -36,18 +36,33 @@ namespace NUnit.Framework.Internal
 
         public static AwaitAdapter FromAwaitable(object awaitable)
         {
-            if (awaitable == null) throw new ArgumentNullException(nameof(awaitable));
+            if (awaitable == null)
+                throw new InvalidOperationException("A null reference cannot be awaited.");
 
+#if !NET40
+            // TaskAwaitAdapter is more efficient because it can rely on Task’s
+            // special quality of blocking until complete in GetResult.
+            // As long as the pattern-based adapters are reflection-based, this
+            // is much more efficient as well.
             var task = awaitable as Task;
-            if (task == null)
-                throw new NotImplementedException("Proper awaitable implementation to follow.");
+            if (task != null) return TaskAwaitAdapter.Create(task);
+#endif
+
+            // Await all the (C#) things
+            var patternBasedAdapter = CSharpPatternBasedAwaitAdapter.TryCreate(awaitable);
+            if (patternBasedAdapter != null) return patternBasedAdapter;
 
 #if NET40
-            // TODO: use the general reflection-based awaiter if net40 build is running against a newer BCL
-            return Net40BclTaskAwaitAdapter.Create(task);
-#else
-            return TaskAwaitAdapter.Create(task);
+            // If System.Threading.Tasks.Task does not have a GetAwaiter instance method
+            // (we don’t heuristically search for AsyncBridge-style extension methods),
+            // we still need to be able to await it to preserve NUnit behavior on machines
+            // which have a max .NET Framework version of 4.0 installed, such as the default
+            // for versions of Windows earlier than 8.
+            var task = awaitable as Task;
+            if (task != null) return Net40BclTaskAwaitAdapter.Create(task);
 #endif
+
+            throw new NotSupportedException("NUnit can only await objects which follow the C# specification for awaitable expressions.");
         }
     }
 }

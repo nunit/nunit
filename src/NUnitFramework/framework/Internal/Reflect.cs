@@ -383,5 +383,78 @@ namespace NUnit.Framework.Internal
                 yield return type;
             }
         }
+
+        /// <summary>
+        /// Same as <c>GetMethod(<paramref name="name"/>, <see cref="BindingFlags.Public"/> |
+        /// <see cref="BindingFlags.Instance"/>, <see langword="null"/>, <paramref name="parameterTypes"/>,
+        /// <see langword="null"/>)</c> except that it also chooses only non-generic methods.
+        /// Useful for avoiding the <see cref="AmbiguousMatchException"/> you can have with <c>GetMethod</c>.
+        /// </summary>
+        internal static MethodInfo GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
+        {
+            for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
+            {
+                var method = currentType
+                   .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                   .SingleOrDefault(candidate =>
+                   {
+                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0) return false;
+
+                       var parameters = candidate.GetParameters();
+                       if (parameters.Length != parameterTypes.Length) return false;
+
+                       for (var i = 0; i < parameterTypes.Length; i++)
+                           if (parameters[i].ParameterType != parameterTypes[i])
+                               return false;
+
+                       return true;
+                   });
+
+                if (method != null) return method;
+            }
+
+            return null;
+        }
+
+        internal static PropertyInfo GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
+        {
+            for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
+            {
+                var property = currentType
+                     .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                     .SingleOrDefault(candidate =>
+                     {
+                         if (candidate.Name != name) return false;
+
+                         var indexParameters = candidate.GetIndexParameters();
+                         if (indexParameters.Length != indexParameterTypes.Length) return false;
+
+                         for (var i = 0; i < indexParameterTypes.Length; i++)
+                             if (indexParameters[i].ParameterType != indexParameterTypes[i]) return false;
+
+                         return true;
+                     });
+
+                if (property != null) return property;
+            }
+
+            return null;
+        }
+
+        internal static object InvokeWithTransparentExceptions(this MethodBase methodBase, object instance)
+        {
+            // If we ever target .NET Core 2.1, we can keep from mucking with the exception stack trace
+            // using BindingFlags.DoNotWrapExceptions rather than try…catch.
+
+            try
+            {
+                return methodBase.Invoke(instance, null);
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionHelper.Rethrow(ex.InnerException);
+                throw null; // Rethrow’s return type would be `never` if C# could express that.
+            }
+        }
     }
 }

@@ -89,6 +89,14 @@ namespace NUnit.Compatibility
         {
             return Delegate.CreateDelegate(type, method);
         }
+
+        /// <summary>
+        /// See <see cref="Delegate.CreateDelegate(Type, object, MethodInfo)"/>.
+        /// </summary>
+        public static Delegate CreateDelegate(this MethodInfo method, Type type, object target)
+        {
+            return Delegate.CreateDelegate(type, target, method);
+        }
     }
 }
 #endif
