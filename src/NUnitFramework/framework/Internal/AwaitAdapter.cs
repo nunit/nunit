@@ -34,6 +34,7 @@ namespace NUnit.Framework.Internal
         public abstract bool IsCompleted { get; }
         public abstract void OnCompleted(Action action);
         public abstract void BlockUntilCompleted();
+        public abstract object GetResult();
 
         public static AwaitAdapter FromAwaitable(object awaitable)
         {
@@ -89,6 +90,12 @@ namespace NUnit.Framework.Internal
                     ExceptionHelper.Rethrow(ex.InnerException);
                 }
             }
+
+            public override object GetResult()
+            {
+                BlockUntilCompleted(); // Throw exceptions, if any
+                return null;
+            }
         }
 #else
         private sealed class TaskAwaitAdapter : AwaitAdapter
@@ -107,6 +114,12 @@ namespace NUnit.Framework.Internal
 
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
             public override void BlockUntilCompleted() => _awaiter.GetResult();
+
+            public override object GetResult()
+            {
+                _awaiter.GetResult(); // Throw exceptions, if any
+                return null;
+            }
         }
 #endif
     }
