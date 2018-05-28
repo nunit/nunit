@@ -446,5 +446,20 @@ namespace NUnit.Framework.Internal
                 throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
             }
         }
+
+        internal static bool IsFSharpOption(this Type type, out Type someType)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+
+            if (type.GetTypeInfo().IsGenericType
+                && type.GetGenericTypeDefinition().FullName == "Microsoft.FSharp.Core.FSharpOption`1")
+            {
+                someType = type.GetGenericArguments()[0];
+                return true;
+            }
+
+            someType = null;
+            return false;
+        }
     }
 }
