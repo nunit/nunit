@@ -384,6 +384,14 @@ namespace NUnit.Framework.Internal
             }
         }
 
+#if NETSTANDARD1_4
+        internal static Type GetInterface(this Type type, string name)
+        {
+            return type.GetTypeInfo().ImplementedInterfaces
+                .SingleOrDefault(implementedInterface => implementedInterface.FullName == name);
+        }
+#endif
+
         /// <summary>
         /// Same as <c>GetMethod(<paramref name="name"/>, <see cref="BindingFlags.Public"/> |
         /// <see cref="BindingFlags.Instance"/>, <see langword="null"/>, <paramref name="parameterTypes"/>,
@@ -449,6 +457,19 @@ namespace NUnit.Framework.Internal
             try
             {
                 return methodBase.Invoke(instance, null);
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionHelper.Rethrow(ex.InnerException);
+                throw null; // Rethrow’s return type would be `never` if C# could express that.
+            }
+        }
+
+        internal static object DynamicInvokeWithTransparentExceptions(this Delegate @delegate)
+        {
+            try
+            {
+                return @delegate.DynamicInvoke();
             }
             catch (TargetInvocationException ex)
             {

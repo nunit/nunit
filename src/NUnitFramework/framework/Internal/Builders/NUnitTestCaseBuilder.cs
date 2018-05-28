@@ -177,28 +177,24 @@ namespace NUnit.Framework.Internal.Builders
                     return false;
             }
 
-            ITypeInfo returnType = testMethod.Method.ReturnType;
+            var returnType = testMethod.Method.ReturnType.Type;
 
-#if ASYNC
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                if (returnType.IsType(typeof(void)))
+                if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
 
-                var returnsGenericTask = returnType.IsGenericType &&
-                    returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
+                var voidResult = AwaitAdapter.GetResultType(returnType) == typeof(void);
 
-                if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
+                if (!voidResult && (parms == null || !parms.HasExpectedResult))
                     return MarkAsNotRunnable(testMethod,
-                        "Async test method must have non-generic Task return type when no result is expected");
+                        "Async test method must return an awaitable with a void result when no result is expected");
 
-                if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
+                if (voidResult && parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod,
-                        "Async test method must have Task<T> return type when a result is expected");
+                        "Async test method must return an awaitable with a non-void result when a result is expected");
             }
-            else
-#endif
-            if (returnType.IsType(typeof(void)))
+            else if (returnType == typeof(void))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");

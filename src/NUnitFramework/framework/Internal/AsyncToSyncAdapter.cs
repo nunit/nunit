@@ -34,8 +34,8 @@ namespace NUnit.Framework.Internal
     {
         public static bool IsAsyncOperation(MethodInfo method)
         {
-            return IsTaskType(method.ReturnType) ||
-                   method.GetCustomAttributes(false).Any(attr => attr.GetType().FullName == "System.Runtime.CompilerServices.AsyncStateMachineAttribute");
+            return AwaitAdapter.IsAwaitable(method.ReturnType)
+                || method.GetCustomAttributes(false).Any(attr => attr.GetType().FullName == "System.Runtime.CompilerServices.AsyncStateMachineAttribute");
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
@@ -43,22 +43,6 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        private static bool IsTaskType(Type type)
-        {
-            for (; type != null; type = type.GetTypeInfo().BaseType)
-            {
-                if (type.GetTypeInfo().IsGenericType
-                    ? type.GetGenericTypeDefinition().FullName == "System.Threading.Tasks.Task`1"
-                    : type.FullName == "System.Threading.Tasks.Task")
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-#if ASYNC
         public static object Await(Func<object> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
@@ -104,6 +88,5 @@ namespace NUnit.Framework.Internal
         {
             SynchronizationContext.SetSynchronizationContext(syncContext);
         }
-#endif
     }
 }

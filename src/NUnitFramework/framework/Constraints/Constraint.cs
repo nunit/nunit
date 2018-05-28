@@ -116,10 +116,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-#if ASYNC
             if (AsyncToSyncAdapter.IsAsyncOperation(del))
                 return ApplyTo(AsyncToSyncAdapter.Await(() => del.Invoke()));
-#endif
+
             return ApplyTo(GetTestObject(del));
         }
 

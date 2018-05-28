@@ -21,9 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ASYNC
 using System;
-using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -34,17 +32,27 @@ namespace NUnit.Framework.Internal
         public abstract void BlockUntilCompleted();
         public abstract object GetResult();
 
+        public static bool IsAwaitable(Type awaitableType)
+        {
+            return CSharpPatternBasedAwaitAdapter.IsAwaitable(awaitableType);
+        }
+
+        public static Type GetResultType(Type awaitableType)
+        {
+            return CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType);
+        }
+
         public static AwaitAdapter FromAwaitable(object awaitable)
         {
             if (awaitable == null)
                 throw new InvalidOperationException("A null reference cannot be awaited.");
 
-#if !NET40
+#if !(NET35 || NET40)
             // TaskAwaitAdapter is more efficient because it can rely on Task’s
             // special quality of blocking until complete in GetResult.
             // As long as the pattern-based adapters are reflection-based, this
             // is much more efficient as well.
-            var task = awaitable as Task;
+            var task = awaitable as System.Threading.Tasks.Task;
             if (task != null) return TaskAwaitAdapter.Create(task);
 #endif
 
@@ -58,7 +66,7 @@ namespace NUnit.Framework.Internal
             // we still need to be able to await it to preserve NUnit behavior on machines
             // which have a max .NET Framework version of 4.0 installed, such as the default
             // for versions of Windows earlier than 8.
-            var task = awaitable as Task;
+            var task = awaitable as System.Threading.Tasks.Task;
             if (task != null) return Net40BclTaskAwaitAdapter.Create(task);
 #endif
 
@@ -66,4 +74,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-#endif

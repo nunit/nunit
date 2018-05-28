@@ -69,23 +69,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if an exception is thrown and the constraint succeeds, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            //TestDelegate code = actual as TestDelegate;
-            //if (code == null)
-            //    throw new ArgumentException(
-            //        string.Format("The actual value must be a TestDelegate but was {0}", actual.GetType().Name), "actual");
+            var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            //caughtException = null;
-
-            //try
-            //{
-            //    code();
-            //}
-            //catch (Exception ex)
-            //{
-            //    caughtException = ex;
-            //}
-
-            caughtException = ExceptionInterceptor.Intercept(actual);
+            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
             return new ThrowsConstraintResult(
                 this,
@@ -103,9 +89,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            //TestDelegate testDelegate = new TestDelegate(delegate { del(); });
-            //return ApplyTo((object)testDelegate);
-            return ApplyTo(new GenericInvocationDescriptor<TActual>(del));
+            return ApplyTo((Delegate)del);
         }
 
         #endregion
@@ -145,134 +129,5 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-
-        #region ExceptionInterceptor
-
-        internal sealed class ExceptionInterceptor
-        {
-            private ExceptionInterceptor() { }
-
-            internal static Exception Intercept(object invocation)
-            {
-                var invocationDescriptor = GetInvocationDescriptor(invocation);
-
-#if ASYNC
-                if (AsyncToSyncAdapter.IsAsyncOperation(invocationDescriptor.Delegate))
-                {
-                    try
-                    {
-                        AsyncToSyncAdapter.Await(invocationDescriptor.Invoke);
-                        return null;
-                    }
-                    catch (Exception ex)
-                    {
-                        return ex;
-                    }
-                }
-#endif
-                {
-                    using (new TestExecutionContext.IsolatedContext())
-                    {
-                        try
-                        {
-                            invocationDescriptor.Invoke();
-                            return null;
-                        }
-                        catch (Exception ex)
-                        {
-                            return ex;
-                        }
-                    }
-                }
-            }
-
-            private static IInvocationDescriptor GetInvocationDescriptor(object actual)
-            {
-                var invocationDescriptor = actual as IInvocationDescriptor;
-
-                if (invocationDescriptor == null)
-                {
-                    var testDelegate = actual as TestDelegate;
-
-                    if (testDelegate != null)
-                    {
-                        Guard.ArgumentNotAsyncVoid(testDelegate, nameof(actual));
-                        invocationDescriptor = new VoidInvocationDescriptor(testDelegate);
-                    }
-
-#if ASYNC
-                    else
-                    {
-                        var asyncTestDelegate = actual as AsyncTestDelegate;
-                        if (asyncTestDelegate != null)
-                        {
-                            invocationDescriptor = new GenericInvocationDescriptor<System.Threading.Tasks.Task>(() => asyncTestDelegate());
-                        }
-                    }
-#endif
-                }
-                if (invocationDescriptor == null)
-                    throw new ArgumentException(
-                        String.Format(
-                            "The actual value must be a TestDelegate or AsyncTestDelegate but was {0}",
-                            actual.GetType().Name),
-                        nameof(actual));
-
-                return invocationDescriptor;
-            }
-        }
-
-#endregion
-
-#region InvocationDescriptor
-
-        internal sealed class GenericInvocationDescriptor<T> : IInvocationDescriptor
-        {
-            private readonly ActualValueDelegate<T> _del;
-
-            public GenericInvocationDescriptor(ActualValueDelegate<T> del)
-            {
-                _del = del;
-            }
-
-            public object Invoke()
-            {
-                return _del();
-            }
-
-            public Delegate Delegate
-            {
-                get { return _del; }
-            }
-        }
-
-        private interface IInvocationDescriptor
-        {
-            Delegate Delegate { get; }
-            object Invoke();
-        }
-
-        private sealed class VoidInvocationDescriptor : IInvocationDescriptor
-        {
-            private readonly TestDelegate _del;
-
-            public VoidInvocationDescriptor(TestDelegate del)
-            {
-                _del = del;
-            }
-
-            public object Invoke()
-            {
-                _del();
-                return null;
-            }
-
-            public Delegate Delegate
-            {
-                get { return _del; }
-            }
-        }
-
-#endregion
     }
 }

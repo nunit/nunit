@@ -62,7 +62,6 @@ namespace NUnit.Framework
 
                 var stopwatch = new System.Diagnostics.Stopwatch();
 
-#if ASYNC
                 if (AsyncToSyncAdapter.IsAsyncOperation(@delegate))
                 {
                     stopwatch.Start();
@@ -70,7 +69,6 @@ namespace NUnit.Framework
                     stopwatch.Stop();
                 }
                 else
-#endif
                 {
                     stopwatch.Start();
                     @delegate.DynamicInvoke();

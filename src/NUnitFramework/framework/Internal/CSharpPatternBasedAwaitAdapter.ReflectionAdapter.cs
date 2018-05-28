@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,51 +22,33 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
     internal static partial class CSharpPatternBasedAwaitAdapter
     {
-#if NET35
-        private static readonly Dictionary<Type, AwaitShapeInfo> ShapeInfoByType = new Dictionary<Type, AwaitShapeInfo>();
-#else
-        private static readonly ConcurrentDictionary<Type, AwaitShapeInfo> ShapeInfoByType = new ConcurrentDictionary<Type, AwaitShapeInfo>();
-#endif
-
-        public static AwaitAdapter TryCreate(object awaitable)
+        private sealed class ReflectionAdapter : DefaultBlockingAwaitAdapter
         {
-            if (awaitable == null) return null;
+            private readonly object _awaiter;
+            private readonly Func<bool> _awaiterIsCompleted;
+            private readonly Action<Action> _awaiterOnCompleted;
+            private readonly MethodInfo _getResultMethod;
 
-            return GetShapeInfo(awaitable.GetType())?.CreateAwaitAdapter(awaitable);
-        }
-
-        public static bool IsAwaitable(Type awaitableType)
-        {
-            return GetShapeInfo(awaitableType) != null;
-        }
-
-        public static Type GetResultType(Type awaitableType)
-        {
-            return GetShapeInfo(awaitableType)?.ResultType;
-        }
-
-        private static AwaitShapeInfo GetShapeInfo(Type type)
-        {
-#if NET35
-            AwaitShapeInfo info;
-
-            lock (ShapeInfoByType)
+            public ReflectionAdapter(object awaiter, MethodInfo isCompletedGetter, MethodInfo onCompletedMethod, MethodInfo getResultMethod)
             {
-                if (!ShapeInfoByType.TryGetValue(type, out info))
-                    ShapeInfoByType.Add(type, info = AwaitShapeInfo.TryCreate(type));
+                _awaiter = awaiter;
+                _awaiterIsCompleted = (Func<bool>)isCompletedGetter.CreateDelegate(typeof(Func<bool>), awaiter);
+                _awaiterOnCompleted = (Action<Action>)onCompletedMethod.CreateDelegate(typeof(Action<Action>), awaiter);
+                _getResultMethod = getResultMethod;
             }
 
-            return info;
-#else
-            return ShapeInfoByType.GetOrAdd(type, AwaitShapeInfo.TryCreate);
-#endif
+            public override bool IsCompleted => _awaiterIsCompleted.Invoke();
+
+            public override void OnCompleted(Action action) => _awaiterOnCompleted.Invoke(action);
+
+            public override object GetResult() => _getResultMethod.InvokeWithTransparentExceptions(_awaiter);
         }
     }
 }
