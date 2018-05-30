@@ -70,5 +70,15 @@ namespace NUnitLite.Tests
             Assert.That(settings.ContainsKey("NumberOfTestWorkers"));
             Assert.AreEqual(8, settings["NumberOfTestWorkers"]);
         }
+
+        [Test]
+        public void WhenLoadIsSpecified_RunSettingsIncludeIt()
+        {
+            var options = new NUnitLiteOptions("test.dll", "--prefilter=A.B.C");
+            var settings = TextRunner.MakeRunSettings(options);
+
+            Assert.That(settings.ContainsKey("LOAD"));
+            Assert.AreEqual(new string[] { "A.B.C" }, settings["LOAD"]);
+        }
     }
 }

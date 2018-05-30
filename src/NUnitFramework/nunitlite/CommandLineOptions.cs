@@ -169,6 +169,7 @@ namespace NUnit.Common
         public string InputFile { get; private set; }
 
         public IList<string> TestList { get; } = new List<string>();
+        public IList<string> PreFilters { get; } = new List<string>();
 
         public IDictionary<string, string> TestParameters { get; } = new Dictionary<string, string>();
 
@@ -352,6 +353,9 @@ namespace NUnit.Common
                         }
                     }
                 });
+
+            this.Add("prefilter=", "Comma-separated list of {NAMES} of test classes or namespaces to be loaded. This option may be repeated.",
+                v => ((List<string>)PreFilters).AddRange(TestNameParser.Parse(RequiredValue(v, "--prefilter"))));
 
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));

@@ -221,6 +221,7 @@ namespace NUnitLite
                     _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
 
                 var runSettings = MakeRunSettings(_options);
+                LoadTests(runSettings);
 
                 // We display the filters at this point so that any exception message
                 // thrown by CreateTestFilter will be understandable.
@@ -228,7 +229,6 @@ namespace NUnitLite
 
                 TestFilter filter = CreateTestFilter(_options);
 
-                _runner.Load(_testAssembly, runSettings);
                 return _options.Explore ? ExploreTests(filter) : RunTests(filter, runSettings);
             }
             catch (FileNotFoundException ex)
@@ -251,6 +251,17 @@ namespace NUnitLite
         #endregion
 
         #region Helper Methods
+
+        private void LoadTests(IDictionary<string, object> runSettings)
+        {
+            DateTime startTime = DateTime.UtcNow;
+            long startTicks = Stopwatch.GetTimestamp();
+            _runner.Load(_testAssembly, runSettings);
+            DateTime endTime = DateTime.UtcNow;
+            double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
+
+            _textUI.DisplayDiscoveryReport(startTime, endTime, duration);
+        }
 
         public int RunTests(TestFilter filter, IDictionary<string, object> runSettings)
         {
@@ -319,6 +330,9 @@ namespace NUnitLite
         {
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
+
+            if (options.PreFilters != null)
+                runSettings[FrameworkPackageSettings.LOAD] = options.PreFilters;
 
             if (options.NumberOfTestWorkers >= 0)
                 runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;

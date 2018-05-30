@@ -181,6 +181,24 @@ namespace NUnitLite
 
         #endregion
 
+        #region Test Discovery Report
+
+        public void DisplayDiscoveryReport(DateTime startTime, DateTime endTime, double duration)
+        {
+            WriteSectionHeader("Test Discovery");
+
+            foreach (string filter in _options.PreFilters)
+                Writer.WriteLabelLine("  Pre-Filter: ", filter);
+
+            Writer.WriteLabelLine("  Start time: ", startTime.ToString("u"));
+            Writer.WriteLabelLine("    End time: ", endTime.ToString("u"));
+            Writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", duration));
+
+            Writer.WriteLine();
+        }
+
+        #endregion
+
         #region DisplayTestFilters
 
         public void DisplayTestFilters()
@@ -189,9 +207,8 @@ namespace NUnitLite
             {
                 WriteSectionHeader("Test Filters");
 
-                if (_options.TestList.Count > 0)
-                    foreach (string testName in _options.TestList)
-                        Writer.WriteLabelLine("    Test: ", testName);
+                foreach (string testName in _options.TestList)
+                    Writer.WriteLabelLine("    Test: ", testName);
 
                 if (_options.WhereClauseSpecified)
                     Writer.WriteLabelLine("    Where: ", _options.WhereClause.Trim());
