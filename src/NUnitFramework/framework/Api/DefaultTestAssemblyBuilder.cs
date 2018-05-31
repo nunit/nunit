@@ -234,20 +234,13 @@ namespace NUnit.Framework.Api
 
             var result = new List<Type>();
 
-            foreach (string name in names)
-            {
-                Type fixtureType = assembly.GetType(name);
-                if (fixtureType != null)
-                    result.Add(fixtureType);
-                else
-                {
-                    string prefix = name + ".";
-
-                    foreach (Type type in types)
-                        if (type.FullName.StartsWith(prefix))
-                            result.Add(type);
-                }
-            }
+            foreach (Type type in types)
+                foreach (string name in names)
+                    if (type.FullName == name || type.FullName.StartsWith(name + "."))
+                    {
+                        result.Add(type);
+                        break;
+                    }
 
             return result;
         }
