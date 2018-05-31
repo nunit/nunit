@@ -76,8 +76,8 @@ namespace NUnit.Framework.Assertions
         public void IsNotInstanceOfFails()
         {
             var expectedMessage =
-                "  Expected: not instance of <System.Exception>" + System.Environment.NewLine + 
-                "  But was:  <System.ArgumentException>" + System.Environment.NewLine;
+                "  Expected: not instance of <System.Exception>" + System.Environment.NewLine +
+                "  But was:  <System.ArgumentException: Value does not fall within the expected range.>" + System.Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.IsNotInstanceOf( typeof(System.Exception), new ArgumentException() ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
