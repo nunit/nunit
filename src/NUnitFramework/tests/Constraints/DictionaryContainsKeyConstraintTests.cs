@@ -599,5 +599,7 @@ namespace NUnit.Framework.Constraints
             public bool IsReadOnly { get; }
         }
 #endif
+    
+        #endregion
     }
 }
