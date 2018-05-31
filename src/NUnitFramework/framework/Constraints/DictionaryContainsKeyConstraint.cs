@@ -37,6 +37,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
+        private bool _deprecatedFlag = false;
+
         /// <summary>
         /// Construct a DictionaryContainsKeyConstraint
         /// </summary>
@@ -70,15 +72,36 @@ namespace NUnit.Framework.Constraints
         protected object Expected { get; private set; }
 
         /// <summary>
+        /// Flag the constraint to ignore case and return self.
+        /// </summary>
+        [Obsolete("Deprecated, use Does.ContainKey")]
+        public new CollectionItemsEqualConstraint IgnoreCase
+        {
+            get
+            {
+                _deprecatedFlag = true;
+                return base.IgnoreCase;
+            }
+        }
+
+        /// <summary>
         /// Test whether the expected key is contained in the dictionary
         /// </summary>
         protected override bool Matches(IEnumerable actual)
         {
+            if (_deprecatedFlag)
+            {
+                var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
+                foreach (object obj in dictionary.Keys)
+                    if (ItemsEqual(obj, Expected))
+                        return true;
+
+                return false;
+            }
+
             var method = GetContainsKeyMethod(actual);
             if (method != null)
-            {
                 return (bool)method.Invoke(actual, new[] { Expected });
-            }
 
             throw new ArgumentException("Not a collection supporting ContainsKey method.");
         }
@@ -88,13 +111,27 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
         /// <returns>Self.</returns>
+        [Obsolete("Deprecated, use Does.ContainKey")]
         public DictionaryContainsKeyConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             // reverse the order of the arguments to match expectations of PredicateEqualityComparer
             Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
 
+            _deprecatedFlag = true;
             base.Using(EqualityAdapter.For(invertedComparison));
             return this;
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied Comparison object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        /// <returns>Self.</returns>
+        [Obsolete("Deprecated, use Does.ContainKey")]
+        public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparer)
+        {
+            _deprecatedFlag = true;
+            return base.Using(comparer);
         }
 
         /// <summary>

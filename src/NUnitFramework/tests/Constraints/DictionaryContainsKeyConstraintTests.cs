@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        [Test, Ignore("Fix")]
+        [Test]
         public void IgnoreCaseIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
@@ -93,13 +93,12 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
         }
 
-        [Test, Ignore("Fix")]
+        [Test]
         public void UsingIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
 
-            Assert.That(dictionary,
-                new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
         }
 
         [Test]
@@ -184,13 +183,28 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, !Does.ContainKey(10));
         }
 
-        [Test, Ignore("Fails due to Contains and not ContainsKey")]
+        [Test]
         public void ShouldCallContainsKeysMethodOnPlainDictionary()
         {
             var dictionary = new TestPlainDictionary(99);
 
-            Assert.That(dictionary, Does.ContainKey(99));
-            Assert.That(dictionary, !Does.ContainKey(77));
+            Assert.Catch<ArgumentException>(() => Assert.That(dictionary, Does.ContainKey(99)));
+        }
+
+        [Test]
+        public void ShouldCallContainsKeysMethodOnObject()
+        {
+            var poco = new TestPlainObjectContainsKey("David");
+
+            Assert.Catch<ArgumentException>(() => Assert.That(poco, Does.ContainKey("David")));
+        }
+
+        [Test]
+        public void ShouldCallContainsMethodOnObject()
+        {
+            var poco = new TestPlainObjectContains("Peter");
+
+            Assert.Catch<ArgumentException>(() => Assert.That(poco, Does.ContainKey("Peter")));
         }
 
 #if NET45
@@ -202,6 +216,14 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary, Does.ContainKey("BOB"));
             Assert.That(dictionary, !Does.ContainKey("ALICE"));
+        }
+
+        [Test]
+        public void ShouldCallContainsKeysMethodOnSet()
+        {
+            var set = new TestSet();
+
+            Assert.Catch<ArgumentException>(() => Assert.That(set, Does.ContainKey("NotHappening")));
         }
 
 #endif
@@ -220,6 +242,36 @@ namespace NUnit.Framework.Constraints
 #endif
 
         #region Test Assets
+
+        public class TestPlainObjectContainsKey
+        {
+            private readonly string _key;
+
+            public TestPlainObjectContainsKey(string key)
+            {
+                _key = key;
+            }
+
+            public bool ContainsKey(string key)
+            {
+                return _key.Equals(key);
+            }
+        }
+
+        public class TestPlainObjectContains
+        {
+            private readonly string _key;
+
+            public TestPlainObjectContains(string key)
+            {
+                _key = key;
+            }
+
+            public bool Contains(string key)
+            {
+                return _key.Equals(key);
+            }
+        }
 
         public class TestKeyedCollection : KeyedCollection<string, string>
         {
@@ -241,7 +293,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        public class TestDictionary : object, IDictionary<int, string>
+        public class TestDictionary : IDictionary<int, string>
         {
             private readonly int _key;
 
@@ -317,7 +369,7 @@ namespace NUnit.Framework.Constraints
             public ICollection<string> Values { get; }
         }
 
-        public class TestPlainDictionary : object, IDictionary
+        public class TestPlainDictionary : IDictionary
         {
             private readonly int _key;
 
@@ -378,7 +430,7 @@ namespace NUnit.Framework.Constraints
         }
 
 #if !NET20
-        public class TestLookup : object, ILookup<int, string>
+        public class TestLookup : ILookup<int, string>
         {
             private readonly int _key;
 
@@ -412,7 +464,7 @@ namespace NUnit.Framework.Constraints
 #endif
 
 #if NET45
-        public class TestReadOnlyDictionary : object, IReadOnlyDictionary<string, string>
+        public class TestReadOnlyDictionary : IReadOnlyDictionary<string, string>
         {
             private readonly string _key;
 
@@ -450,8 +502,104 @@ namespace NUnit.Framework.Constraints
             public IEnumerable<string> Keys { get; }
             public IEnumerable<string> Values { get; }
         }
+
+        public class TestSet : ISet<int>
+        {
+            public IEnumerator<int> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            void ICollection<int>.Add(int item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void UnionWith(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void IntersectWith(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void ExceptWith(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SymmetricExceptWith(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsSubsetOf(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsSupersetOf(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsProperSupersetOf(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsProperSubsetOf(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Overlaps(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool SetEquals(IEnumerable<int> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool ISet<int>.Add(int item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Clear()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Contains(int item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CopyTo(int[] array, int arrayIndex)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Remove(int item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public int Count { get; }
+            public bool IsReadOnly { get; }
+        }
 #endif
 
-#endregion
+        #endregion
     }
 }
