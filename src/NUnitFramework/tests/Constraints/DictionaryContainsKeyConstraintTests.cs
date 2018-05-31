@@ -85,6 +85,22 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
+        [Test, Obsolete]
+        public void IgnoreCaseIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
+        }
+
+        [Test, Obsolete]
+        public void UsingIsHonored()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
+        }
+
         [Test]
         public void SucceedsWhenKeyIsPresentWhenDictionaryUsingCustomComparer()
         {
