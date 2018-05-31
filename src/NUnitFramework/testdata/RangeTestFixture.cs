@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,39 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
+using NUnit.Framework;
 
-namespace NUnit.Framework.Interfaces
+namespace NUnit.TestData
 {
-    /// <summary>
-    /// The IParameterInfo interface is an abstraction of a .NET parameter.
-    /// </summary>
-    public interface IParameterInfo : IReflectionInfo
+    public static class RangeTestFixture
     {
-        #region Properties
-
-        /// <summary>
-        /// Gets a value indicating whether the parameter is optional
-        /// </summary>
-        bool IsOptional { get; }
-
-        /// <summary>
-        /// Gets an IMethodInfo representing the method for which this is a parameter
-        /// </summary>
-        IMethodInfo Method { get; }
-
-        /// <summary>
-        /// Gets the underlying .NET ParameterInfo
-        /// </summary>
-        ParameterInfo ParameterInfo { get; }
-
-        /// <summary>
-        /// Gets the Type of the parameter
-        /// </summary>
-        Type ParameterType { get; }
-
-        #endregion
+        [Test]
+        public static void MethodWithMultipleRanges([Range(1, 3)] [Range(10, 12)] int x) { }
     }
 }

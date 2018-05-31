@@ -242,7 +242,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The type of this runtime framework
         /// </summary>
-        public RuntimeType Runtime { get; private set; }
+        public RuntimeType Runtime { get; }
 
         /// <summary>
         /// The framework version for this runtime framework

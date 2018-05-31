@@ -105,9 +105,9 @@ namespace NUnit.Framework.Internal.Results
 
         protected string _failureReason;
         protected string _stackTrace;
-        private Func<TNode, TNode> _xmlFailureNodeValidation;
-        private Action<TNode> _xmlMessageNodeValidation;
-        private Action<TNode> _xmlStackTraceNodeValidation;
+        private readonly Func<TNode, TNode> _xmlFailureNodeValidation;
+        private readonly Action<TNode> _xmlMessageNodeValidation;
+        private readonly Action<TNode> _xmlStackTraceNodeValidation;
 
         protected TestResultFailureTests(string failureReason,
             string stackTrace,

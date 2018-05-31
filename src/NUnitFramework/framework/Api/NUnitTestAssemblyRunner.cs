@@ -46,10 +46,10 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
-        private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
-        private ITestAssemblyBuilder _builder;
-        private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private readonly ITestAssemblyBuilder _builder;
+        private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
 
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;
@@ -250,7 +250,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-            return _runComplete.WaitOne(timeout);
+            return _runComplete.Wait(timeout);
         }
 
         /// <summary>

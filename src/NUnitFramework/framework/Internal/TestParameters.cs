@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         #endregion
 

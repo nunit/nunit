@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2014–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,11 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-
 namespace NUnit.Framework
 {
     using System;
-    using System.Collections.Generic;
     using NUnit.Framework.Interfaces;
     using NUnit.Framework.Internal;
     using NUnit.Framework.Internal.Builders;
@@ -113,12 +111,11 @@ namespace NUnit.Framework
         #region ISimpleTestBuilder Members
 
         /// <summary>
-        /// Construct a TestMethod from a given method.
+        /// Builds a single test from the specified method and context.
         /// </summary>
-        /// <param name="method">The method for which a test is to be constructed.</param>
-        /// <param name="suite">The suite to which the test will be added.</param>
-        /// <returns>A TestMethod</returns>
-        public TestMethod BuildFrom(IMethodInfo method, Test suite)
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="suite">The parent to which the test will be added.</param>
+        public TestMethod BuildFrom(FixtureMethod method, Test suite)
         {
             TestCaseParameters parms = null;
 

@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem : IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("WorkItem");
+        static readonly Logger log = InternalTrace.GetLogger("WorkItem");
 
         #region Construction and Initialization
 
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test being executed by the work item
         /// </summary>
-        public Test Test { get; private set; }
+        public Test Test { get; }
 
         /// <summary>
         /// The name of the work item - defaults to the Test name.
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Filter used to include or exclude child tests
         /// </summary>
-        public ITestFilter Filter { get; private set; }
+        public ITestFilter Filter { get; }
 
         /// <summary>
         /// The execution context
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets the ParallelScope associated with the test, if any,
         /// otherwise returning ParallelScope.Default;
         /// </summary>
-        public ParallelScope ParallelScope { get; private set; }
+        public ParallelScope ParallelScope { get; }
 
 #if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
@@ -259,14 +259,14 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
+        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
 
         /// <summary>
         /// Wait until the execution of this item is complete
         /// </summary>
         public void WaitForCompletion()
         {
-            _completionEvent.WaitOne();
+            _completionEvent.Wait();
         }
 
         /// <summary>
@@ -333,12 +333,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Dispose()
         {
-            if (_completionEvent != null)
-#if NET20 || NET35
-                _completionEvent.Close();
-#else
-                _completionEvent.Dispose();
-#endif
+            _completionEvent?.Dispose();
         }
 
 #endregion
@@ -398,11 +393,11 @@ namespace NUnit.Framework.Internal.Execution
 
             var list = new List<SetUpTearDownItem>();
 
-            Type fixtureType = Test.TypeInfo?.Type;
+            Type fixtureType = Test.Type;
             if (fixtureType == null)
                 return list;
 
-            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
+            while (fixtureType != null && fixtureType != typeof(object))
             {
                 var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
                 if (node.HasMethods)
@@ -515,7 +510,7 @@ namespace NUnit.Framework.Internal.Execution
             // If there is no fixture and so nothing to do but dispatch
             // grandchildren we run directly. This saves time that would
             // otherwise be spent enqueuing and dequeuing items.
-            if (Test.TypeInfo == null)
+            if (Test.Type == null)
                 return ParallelExecutionStrategy.Direct;
 
             // If the context is single-threaded we are required to run

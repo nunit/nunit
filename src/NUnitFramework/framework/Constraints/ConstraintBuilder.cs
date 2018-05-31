@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,18 +30,18 @@ namespace NUnit.Framework.Constraints
     /// ConstraintBuilder maintains the stacks that are used in
     /// processing a ConstraintExpression. An OperatorStack
     /// is used to hold operators that are waiting for their
-    /// operands to be reorganized. a ConstraintStack holds 
+    /// operands to be reorganized. a ConstraintStack holds
     /// input constraints as well as the results of each
     /// operator applied.
     /// </summary>
-    public class ConstraintBuilder : IResolveConstraint
+    public sealed class ConstraintBuilder : IResolveConstraint
     {
         #region Nested Operator Stack Class
 
         /// <summary>
         /// OperatorStack is a type-safe stack for holding ConstraintOperators
         /// </summary>
-        public class OperatorStack
+        private sealed class OperatorStack
         {
             private readonly Stack<ConstraintOperator> stack = new Stack<ConstraintOperator>();
 
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// ConstraintStack is a type-safe stack for holding Constraints
         /// </summary>
-        public class ConstraintStack
+        public sealed class ConstraintStack
         {
             private readonly Stack<IConstraint> stack = new Stack<IConstraint>();
             private readonly ConstraintBuilder builder;
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Constraints
 
             /// <summary>
             /// Pushes the specified constraint. As a side effect,
-            /// the constraint's Builder field is set to the 
+            /// the constraint's Builder field is set to the
             /// ConstraintBuilder owning this stack.
             /// </summary>
             /// <param name="constraint">The constraint to put onto the stack</param>
@@ -186,7 +186,7 @@ namespace NUnit.Framework.Constraints
 
             // Reduce any lower precedence operators
             ReduceOperatorStack(op.LeftPrecedence);
-            
+
             ops.Push(op);
             lastPushed = op;
         }

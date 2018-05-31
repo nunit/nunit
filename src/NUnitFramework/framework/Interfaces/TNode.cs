@@ -79,7 +79,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the name of the node
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the value of the node
@@ -89,17 +89,17 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets a flag indicating whether the value should be output using CDATA.
         /// </summary>
-        public bool ValueIsCDATA { get; private set; }
+        public bool ValueIsCDATA { get; }
 
         /// <summary>
         /// Gets the dictionary of attributes
         /// </summary>
-        public AttributeDictionary Attributes { get; private set; }
+        public AttributeDictionary Attributes { get; }
 
         /// <summary>
         /// Gets a list of child nodes
         /// </summary>
-        public NodeList ChildNodes { get; private set; }
+        public NodeList ChildNodes { get; }
 
         /// <summary>
         /// Gets the first ChildNode
@@ -362,9 +362,9 @@ namespace NUnit.Framework.Interfaces
 
         class NodeFilter
         {
-            private string _nodeName;
-            private string _propName;
-            private string _propValue;
+            private readonly string _nodeName;
+            private readonly string _propName;
+            private readonly string _propValue;
 
             public NodeFilter(string xpath)
             {

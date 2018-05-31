@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
         [TestCase(true, TestName = "Kill")]
         public void AbortOrKillThreadWithMessagePump(bool kill)
         {
-            using (var isThreadAboutToWait = new ManualResetEvent(false))
+            using (var isThreadAboutToWait = new ManualResetEventSlim())
             {
                 var nativeId = 0;
                 var thread = new Thread(() =>
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
                 });
                 thread.Start();
 
-                isThreadAboutToWait.WaitOne();
+                isThreadAboutToWait.Wait();
                 Thread.Sleep(1);
 
                 if (kill)

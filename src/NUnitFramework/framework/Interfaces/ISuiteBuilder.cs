@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,28 +28,26 @@ namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The ISuiteBuilder interface is exposed by a class that knows how to
-    /// build a suite from one or more Types. 
+    /// build a single test suite from a specified type.
     /// </summary>
     public interface ISuiteBuilder
     {
         /// <summary>
         /// Examine the type and determine if it is suitable for
         /// this builder to use in building a TestSuite.
-        /// 
-        /// Note that returning false will cause the type to be ignored 
+        ///
+        /// Note that returning false will cause the type to be ignored
         /// in loading the tests. If it is desired to load the suite
         /// but label it as non-runnable, ignored, etc., then this
         /// method must return true.
         /// </summary>
-        /// <param name="typeInfo">The type of the fixture to be used</param>
-        /// <returns>True if the type can be used to build a TestSuite</returns>
-        bool CanBuildFrom( ITypeInfo typeInfo );
+        /// <param name="type">The type to be used as a suite.</param>
+        bool CanBuildFrom(Type type);
 
         /// <summary>
-        /// Build a TestSuite from type provided.
+        /// Builds a single test suite from the specified type.
         /// </summary>
-        /// <param name="typeInfo">The type of the fixture to be used</param>
-        /// <returns>A TestSuite</returns>
-        TestSuite BuildFrom( ITypeInfo typeInfo );
+        /// <param name="type">The type to be used as a suite.</param>
+        TestSuite BuildFrom(Type type);
     }
 }

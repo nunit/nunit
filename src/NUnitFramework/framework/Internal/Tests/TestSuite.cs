@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Our collection of child tests
         /// </summary>
-        private List<ITest> tests = new List<ITest>();
+        private readonly List<ITest> tests = new List<ITest>();
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
-        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
+        public TestSuite(Type fixtureType, object[] arguments)
             : base(fixtureType)
         {
             Arguments = arguments ?? new object[0];
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestSuite(Type fixtureType)
-            : base(new TypeWrapper(fixtureType))
+            : base(fixtureType)
         {
             Arguments = new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];

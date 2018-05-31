@@ -34,10 +34,10 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class CountdownEvent
     {
-        int _initialCount;
+        readonly int _initialCount;
         int _remainingCount;
-        object _lock = new object();
-        ManualResetEvent _event = new ManualResetEvent(false);
+        readonly object _lock = new object();
+        readonly ManualResetEvent _event = new ManualResetEvent(false);
 
         /// <summary>
         /// Construct a CountdownEvent

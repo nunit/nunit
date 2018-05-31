@@ -35,7 +35,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class DefaultFloatingPointToleranceAttribute : NUnitAttribute, IApplyToContext
     {
-        private Tolerance _tolerance;
+        private readonly Tolerance _tolerance;
 
         /// <summary>
         /// Construct specifying an amount

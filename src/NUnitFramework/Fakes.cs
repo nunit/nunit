@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using BF = System.Reflection.BindingFlags;
@@ -94,7 +95,7 @@ namespace NUnit.TestUtilities
             : this(obj.GetType(), name) { }
 
         public FakeTestMethod(Type type, string name)
-            : base(new MethodWrapper(type, type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance))) { }
+            : base(new FixtureMethod(type, type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance))) { }
     }
 
     #endregion

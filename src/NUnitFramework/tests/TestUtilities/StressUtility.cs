@@ -24,6 +24,7 @@
 using System;
 using System.Reflection;
 using System.Threading;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
@@ -42,7 +43,7 @@ namespace NUnit.TestUtilities
             var exception = (Exception)null;
 
             var threadsToWaitFor = maxParallelism;
-            using (var noMoreThreadsEvent = new ManualResetEvent(false))
+            using (var noMoreThreadsEvent = new ManualResetEventSlim())
             {
                 for (var i = 0; i < maxParallelism; i++)
                 {
@@ -79,11 +80,7 @@ namespace NUnit.TestUtilities
                     }
                     else
                     {
-#if NETCOREAPP1_1
                         var actionMethod = action.GetMethodInfo();
-#else
-                        var actionMethod = action.Method;
-#endif
 
                         new Thread(work.Invoke)
                         {
@@ -92,7 +89,7 @@ namespace NUnit.TestUtilities
                     }
                 }
 
-                noMoreThreadsEvent.WaitOne();
+                noMoreThreadsEvent.Wait();
 
 #if NET20 || NET35 || NET40
                 Thread.MemoryBarrier();

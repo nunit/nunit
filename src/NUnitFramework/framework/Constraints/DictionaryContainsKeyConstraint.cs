@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets the expected object
         /// </summary>
-        protected object Expected { get; private set; }
+        protected object Expected { get; }
 
         /// <summary>
         /// Flag the constraint to ignore case and return self.

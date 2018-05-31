@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionEquivalentConstraintResult : ConstraintResult
     {
         /// <summary>Result of a <see cref="CollectionTally"/> of the collections to compare for equivalence.</summary>
-        private CollectionTally.CollectionTallyResult _tallyResult;
+        private readonly CollectionTally.CollectionTallyResult _tallyResult;
 
         /// <summary>Maximum amount of elements to write to the <see cref="MessageWriter"/> if there are
         /// extra/missing elements from the collection.</summary>
@@ -51,13 +51,10 @@ namespace NUnit.Framework.Constraints
             _tallyResult = tallyResult;
         }
 
-        /// <summary>Write the custom failure message for this object's <see cref="CollectionEquivalentConstraint"/>.</summary>
+        /// <summary>Write any additional lines (following <c>Expected:</c> and <c>But was:</c>) for a failing constraint.</summary>
         /// <param name="writer">The <see cref="MessageWriter"/> to write the failure message to.</param>
-        public override void WriteMessageTo(MessageWriter writer)
-        {
-            //Write the expected/actual message first.
-            base.WriteMessageTo(writer);
-            
+        public override void WriteAdditionalLinesTo(MessageWriter writer)
+        { 
             if (_tallyResult.MissingItems.Count > 0)
             {
                 int missingItemsCount = _tallyResult.MissingItems.Count;

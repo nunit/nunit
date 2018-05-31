@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "SetUpTearDownCommand may only apply to a TestMethod", nameof(innerCommand));
-            Guard.OperationValid(Test.TypeInfo != null, "TestMethod must have a non-null TypeInfo");
+            Guard.OperationValid(Test.Type != null, "TestMethod must have a non-null fixture type");
             Guard.ArgumentNotNull(setUpTearDown, nameof(setUpTearDown));
 
             BeforeTest = (context) =>

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2014–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,25 +21,23 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
 using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
 
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The ISimpleTestBuilder interface is exposed by a class that knows how to
-    /// build a single TestMethod from a suitable MethodInfo Types. In general, 
-    /// it is exposed by an attribute, but may be implemented in a helper class 
+    /// build a single tests from a specified method. In general,
+    /// it is exposed by an attribute, but it may be implemented in a helper class
     /// used by the attribute in some cases.
     /// </summary>
     public interface ISimpleTestBuilder
     {
         /// <summary>
-        /// Build a TestMethod from the provided MethodInfo.
+        /// Builds a single test from the specified method and context.
         /// </summary>
-        /// <param name="method">The method to be used as a test</param>
-        /// <param name="suite">The TestSuite to which the method will be added</param>
-        /// <returns>A TestMethod object</returns>
-        TestMethod BuildFrom(IMethodInfo method, Test suite);
+        /// <param name="method">The method to be used as a test.</param>
+        /// <param name="suite">The parent to which the test will be added.</param>
+        TestMethod BuildFrom(FixtureMethod method, Test suite);
     }
 }

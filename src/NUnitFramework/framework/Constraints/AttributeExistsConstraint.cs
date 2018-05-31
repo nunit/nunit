@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AttributeExistsConstraint : Constraint
     {
-        private Type expectedType;
+        private readonly Type expectedType;
 
         /// <summary>
         /// Constructs an AttributeExistsConstraint for a specific attribute Type

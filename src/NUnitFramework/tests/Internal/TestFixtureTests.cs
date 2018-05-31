@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestFixtureTests
     {
-        private static string dataAssembly = "nunit.testdata";
+        private static readonly string dataAssembly = "nunit.testdata";
 
         private static void CanConstructFrom(Type fixtureType)
         {
@@ -476,7 +476,7 @@ namespace NUnit.Framework.Internal
             {
                 Assert.That(test, Is.Not.Null, "ITest is null on a " + _location);
                 Assert.That(test.Fixture, Is.Not.Null, "ITest.Fixture is null on a " + _location);
-                Assert.That(test.Fixture.GetType(), Is.EqualTo(test.TypeInfo.Type), "ITest.Fixture is not the correct type on a " + _location);
+                Assert.That(test.Fixture.GetType(), Is.EqualTo(test.Type), "ITest.Fixture is not the correct type on a " + _location);
             }
         }
 

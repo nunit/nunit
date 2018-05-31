@@ -40,8 +40,8 @@ namespace NUnit.Framework.Internal.Execution
     {
         //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
 
-        private TestSuite _suite;
-        private TestSuiteResult _suiteResult;
+        private readonly TestSuite _suite;
+        private readonly TestSuiteResult _suiteResult;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
 
@@ -208,14 +208,14 @@ namespace NUnit.Framework.Internal.Execution
             while (--index >= 0)
                 command = new BeforeTestActionCommand(command, actions[index]);
 
-            if (Test.TypeInfo != null)
+            if (Test.Type != null)
             {
                 // Build the OneTimeSetUpCommands
                 foreach (SetUpTearDownItem item in setUpTearDown)
                     command = new OneTimeSetUpCommand(command, item);
 
                 // Construct the fixture if necessary
-                if (!Test.TypeInfo.IsStaticClass)
+                if (!Test.Type.IsStatic())
                     command = new ConstructFixtureCommand(command);
             }
 
@@ -244,7 +244,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.Type))
                 command = new DisposeFixtureCommand(command);
 
             return command;
@@ -350,7 +350,7 @@ namespace NUnit.Framework.Internal.Execution
             return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private object _childCompletionLock = new object();
+        private readonly object _childCompletionLock = new object();
 
         private void OnChildItemCompleted(object sender, EventArgs e)
         {
@@ -386,12 +386,7 @@ namespace NUnit.Framework.Internal.Execution
             Context.Dispatcher.Dispatch(teardown);
         }
 
-        private static bool IsStaticClass(Type type)
-        {
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
-        }
-
-        private object cancelLock = new object();
+        private readonly object cancelLock = new object();
 
         /// <summary>
         /// Cancel (abort or stop) a CompositeWorkItem and all of its children
@@ -423,9 +418,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public class OneTimeTearDownWorkItem : WorkItem
         {
-            private CompositeWorkItem _originalWorkItem;
+            private readonly CompositeWorkItem _originalWorkItem;
 
-            private object _teardownLock = new object();
+            private readonly object _teardownLock = new object();
 
             /// <summary>
             /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem

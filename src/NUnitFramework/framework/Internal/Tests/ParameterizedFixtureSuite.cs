@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2010–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,7 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Interfaces;
+using System.Reflection;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -32,15 +33,15 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedFixtureSuite : TestSuite
     {
-        private bool _genericFixture;
+        private readonly bool _genericFixture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterizedFixtureSuite"/> class.
         /// </summary>
-        /// <param name="typeInfo">The ITypeInfo for the type that represents the suite.</param>
-        public ParameterizedFixtureSuite(ITypeInfo typeInfo) : base(typeInfo.Namespace, typeInfo.GetDisplayName()) 
+        /// <param name="type">The type that represents the suite.</param>
+        public ParameterizedFixtureSuite(Type type) : base(type.Namespace, TypeHelper.GetDisplayName(type))
         {
-            _genericFixture = typeInfo.ContainsGenericParameters;
+            _genericFixture = type.GetTypeInfo().ContainsGenericParameters;
         }
 
         /// <summary>

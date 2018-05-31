@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <c>ValueTuple</c>s.
     /// </summary>
-    internal class ValueTupleComparer : TupleComparerBase
+    internal sealed class ValueTupleComparer : TupleComparerBase
     {
         internal ValueTupleComparer(NUnitEqualityComparer equalityComparer)
             : base(equalityComparer)

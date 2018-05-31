@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        private TestExecutionContext _priorContext;
+        private readonly TestExecutionContext _priorContext;
 
         /// <summary>
         /// Indicates that a stop has been requested
@@ -367,7 +367,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests
         /// </summary>
-        public List<ITestAction> UpstreamActions { get; private set; }
+        public List<ITestAction> UpstreamActions { get; }
 
         // TODO: Put in checks on all of these settings
         // with side effects so we only change them
@@ -546,7 +546,7 @@ namespace NUnit.Framework.Internal
         /// </example>
         public class IsolatedContext : IDisposable
         {
-            private TestExecutionContext _originalContext;
+            private readonly TestExecutionContext _originalContext;
 
             /// <summary>
             /// Save the original current TestExecutionContext and
@@ -575,7 +575,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed
         /// but not available in CurrentContext. This happens when tests are run
-        /// on an adoc basis or Asserts are used outside of tests.
+        /// on an ad-hoc basis or Asserts are used outside of tests.
         /// </summary>
         public class AdhocContext : TestExecutionContext
         {
@@ -588,7 +588,7 @@ namespace NUnit.Framework.Internal
                 var type = GetType();
                 var method = type.GetMethod("AdhocTestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                CurrentTest = new TestMethod(new MethodWrapper(type, method));
+                CurrentTest = new TestMethod(new FixtureMethod(type, method));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

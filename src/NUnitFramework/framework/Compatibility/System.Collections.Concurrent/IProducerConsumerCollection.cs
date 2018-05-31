@@ -91,7 +91,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of elements stored within.</typeparam>
     internal sealed class SystemCollectionsConcurrent_ProducerConsumerCollectionDebugView<T>
     {
-        private IProducerConsumerCollection<T> m_collection; // The collection being viewed.
+        private readonly IProducerConsumerCollection<T> m_collection; // The collection being viewed.
 
         /// <summary>
         /// Constructs a new debugger view object for the provided collection object.

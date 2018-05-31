@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Gets the base filter
         /// </summary>
-        public TestFilter BaseFilter { get; private set; }
+        public TestFilter BaseFilter { get; }
 
         /// <summary>
         /// Determine if a particular test passes the filter criteria. The default 

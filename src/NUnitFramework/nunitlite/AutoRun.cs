@@ -53,7 +53,7 @@ namespace NUnitLite
     /// </summary>
     public class AutoRun
     {
-        private Assembly _testAssembly;
+        private readonly Assembly _testAssembly;
 
         /// <summary>
         /// Constructor for use where GetCallingAssembly is not

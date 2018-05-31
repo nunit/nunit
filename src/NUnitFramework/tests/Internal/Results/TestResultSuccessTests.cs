@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal.Results
     public abstract class TestResultSuccessTests : TestResultTests
     {
         protected string _successMessage;
-        private Action<TNode> _xmlReasonNodeValidation;
+        private readonly Action<TNode> _xmlReasonNodeValidation;
 
         public const string TestPassedReason = "Test passed!";
 

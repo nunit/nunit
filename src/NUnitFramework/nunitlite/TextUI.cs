@@ -35,7 +35,7 @@ namespace NUnitLite
 {
     public class TextUI
     {
-        public ExtendedTextWriter Writer { get; private set; }
+        public ExtendedTextWriter Writer { get; }
 
         private readonly TextReader _reader;
         private readonly NUnitLiteOptions _options;

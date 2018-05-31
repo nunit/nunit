@@ -21,9 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Linq;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.TestFixtureTests;
-
 
 namespace NUnit.Framework.Internal
 {
@@ -41,7 +41,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureNoArgumentsForRegularTestMethod()
         {
-            var test = _builder.BuildFrom(new MethodWrapper(typeof(RegularFixtureWithOneTest), nameof(RegularFixtureWithOneTest.OneTest)));
+            var test = _builder.BuildFrom(typeof(RegularFixtureWithOneTest)
+                .GetFixtureMethod(nameof(RegularFixtureWithOneTest.OneTest)));
 
             Assert.That(test, Is.TypeOf<TestMethod>());
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));
@@ -50,7 +51,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureArgumentsForParameterizedTestMethod()
         {
-            var test = _builder.BuildFrom(new MethodWrapper(typeof(FixtureWithParameterizedTestAndArgsSupplied), nameof(FixtureWithParameterizedTestAndArgsSupplied.SomeTest)));
+            var test = _builder.BuildFrom(typeof(FixtureWithParameterizedTestAndArgsSupplied)
+                .GetFixtureMethod(nameof(FixtureWithParameterizedTestAndArgsSupplied.SomeTest)));
 
             Assert.That(test.HasChildren, Is.True);
             Assert.That(test.Tests[0], Is.TypeOf<TestMethod>());
@@ -60,14 +62,16 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureArgumentsForParameterizedTestMethodWithMultipleArguments()
         {
-            var test = _builder.BuildFrom(new MethodWrapper(typeof(FixtureWithParameterizedTestAndMultipleArgsSupplied), nameof(FixtureWithParameterizedTestAndMultipleArgsSupplied.SomeTest)));
+            var test = _builder.BuildFrom(typeof(FixtureWithParameterizedTestAndMultipleArgsSupplied)
+                .GetFixtureMethod(nameof(FixtureWithParameterizedTestAndMultipleArgsSupplied.SomeTest)));
 
             Assert.That(test.HasChildren, Is.True);
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));
             Assert.That(test.Tests[0], Is.TypeOf<TestMethod>());
             Assert.That(test.Tests[1], Is.TypeOf<TestMethod>());
-            Assert.That(test.Tests[0].Arguments, Is.EqualTo(new object[] { 42, "abc" }));
-            Assert.That(test.Tests[1].Arguments, Is.EqualTo(new object[] { 24, "cba" }));
+            var expectedArguments = new[] { new object[] { 42, "abc" }, new object[] { 24, "cba" } };
+            var actualArguments = test.Tests.Select(t => t.Arguments);
+            Assert.That(actualArguments, Is.EquivalentTo(expectedArguments));
         }
     }
 }

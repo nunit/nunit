@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,7 +26,6 @@ using System.Runtime.InteropServices;
 
 namespace NUnit.Framework.Constraints
 {
-
     /// <summary>Helper routines for working with floating point numbers</summary>
     /// <remarks>
     ///   <para>
@@ -45,9 +44,8 @@ namespace NUnit.Framework.Constraints
     ///     as low as 0.0000001 for small numbers or as high as 10.0 for large numbers.
     ///   </para>
     /// </remarks>
-    public class FloatingPointNumerics
+    internal static class FloatingPointNumerics
     {
-
         #region struct FloatIntUnion
 
         /// <summary>Union of a floating point variable and an integer</summary>
@@ -192,74 +190,6 @@ namespace NUnit.Framework.Constraints
 
             // Either they have the same sign or both are very close to zero
             return Math.Abs(leftUnion.Long - rightUnion.Long) <= maxUlps;
-        }
-
-        /// <summary>
-        ///   Reinterprets the memory contents of a floating point value as an integer value
-        /// </summary>
-        /// <param name="value">
-        ///   Floating point value whose memory contents to reinterpret
-        /// </param>
-        /// <returns>
-        ///   The memory contents of the floating point value interpreted as an integer
-        /// </returns>
-        public static int ReinterpretAsInt(float value)
-        {
-            FloatIntUnion union = new FloatIntUnion();
-            union.Float = value;
-            return union.Int;
-        }
-
-        /// <summary>
-        ///   Reinterprets the memory contents of a double precision floating point
-        ///   value as an integer value
-        /// </summary>
-        /// <param name="value">
-        ///   Double precision floating point value whose memory contents to reinterpret
-        /// </param>
-        /// <returns>
-        ///   The memory contents of the double precision floating point value
-        ///   interpreted as an integer
-        /// </returns>
-        public static long ReinterpretAsLong(double value)
-        {
-            DoubleLongUnion union = new DoubleLongUnion();
-            union.Double = value;
-            return union.Long;
-        }
-
-        /// <summary>
-        ///   Reinterprets the memory contents of an integer as a floating point value
-        /// </summary>
-        /// <param name="value">Integer value whose memory contents to reinterpret</param>
-        /// <returns>
-        ///   The memory contents of the integer value interpreted as a floating point value
-        /// </returns>
-        public static float ReinterpretAsFloat(int value)
-        {
-            FloatIntUnion union = new FloatIntUnion();
-            union.Int = value;
-            return union.Float;
-        }
-
-        /// <summary>
-        ///   Reinterprets the memory contents of an integer value as a double precision
-        ///   floating point value
-        /// </summary>
-        /// <param name="value">Integer whose memory contents to reinterpret</param>
-        /// <returns>
-        ///   The memory contents of the integer interpreted as a double precision
-        ///   floating point value
-        /// </returns>
-        public static double ReinterpretAsDouble(long value)
-        {
-            DoubleLongUnion union = new DoubleLongUnion();
-            union.Long = value;
-            return union.Double;
-        }
-
-        private FloatingPointNumerics()
-        {
         }
     }
 }

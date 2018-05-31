@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -69,37 +69,34 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
-        public string SourceName { get; private set; }
+        public string SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; private set; }
+        public Type SourceType { get; }
 
         #endregion
 
         #region IParameterDataSource Members
 
         /// <summary>
-        /// Gets an enumeration of data items for use as arguments
-        /// for a test method parameter.
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        /// <param name="parameter">The parameter for which data is needed</param>
-        /// <returns>
-        /// An enumeration containing individual data items
-        /// </returns>
-        public IEnumerable GetData(IParameterInfo parameter)
+        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
+        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
-            return GetDataSource(parameter);
+            return GetDataSource(fixtureType);
         }
 
         #endregion
 
         #region Helper Methods
 
-        private IEnumerable GetDataSource(IParameterInfo parameter)
+        private IEnumerable GetDataSource(Type fixtureType)
         {
-            Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
+            Type sourceType = SourceType ?? fixtureType;
 
             // TODO: Test this
             if (SourceName == null)
