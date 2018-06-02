@@ -83,11 +83,8 @@ namespace NUnit.Framework.Constraints
                 return base.IgnoreCase;
             }
         }
-
-        /// <summary>
-        /// Test whether the expected key is contained in the dictionary
-        /// </summary>
-        protected override bool Matches(IEnumerable actual)
+        
+        private bool Matches(object actual)
         {
             if (_isDeprecatedMode)
             {
@@ -103,10 +100,27 @@ namespace NUnit.Framework.Constraints
             if (method != null)
                 return (bool)method.Invoke(actual, new[] { Expected });
 
-            throw new ArgumentException("Not a collection supporting ContainsKey method.");
+            throw new ArgumentException("The actual value must have a ContainsKey or Contains(TKey) method.");
         }
 
         #region Shadow CollectionItemsEqualConstraint Methods
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            return new ConstraintResult(this, actual, Matches(actual));
+        }
+
+        /// <summary>
+        /// Test whether the expected key is contained in the dictionary
+        /// </summary>
+        protected override bool Matches(IEnumerable collection)
+        {
+            return Matches(collection);
+        }
 
         /// <summary>
         /// Flag the constraint to use the supplied predicate function
@@ -227,8 +241,7 @@ namespace NUnit.Framework.Constraints
                              .FirstOrDefault(m =>
                                  m.ReturnType == typeof(bool)
                                  && m.Name == "Contains"
-                                 && m.GetParameters().Any()
-                                 && m.GetParameters().First()?.ParameterType == tKeyGenericArg);
+                                 && m.GetParameters().FirstOrDefault()?.ParameterType == tKeyGenericArg);
 
                     if (method != null)
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);

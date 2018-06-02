@@ -110,14 +110,14 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsPresentUsingContainKeyWhenDictionaryUsingCustomComparer()
+        public void SucceedsWhenKeyIsPresentUsingContainsKeyWhenDictionaryUsingCustomComparer()
         {
             var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.ContainKey("hola"));
         }
 
         [Test]
-        public void SucceedsWhenKeyIsPresentUsingContainKeyWhenUsingLookupCustomComparer()
+        public void SucceedsWhenKeyIsPresentUsingContainsKeyWhenUsingLookupCustomComparer()
         {
             var list = new List<string> { "ALICE", "BOB", "CATHERINE" };
             ILookup<string, string> lookup = list.ToLookup(x => x, StringComparer.OrdinalIgnoreCase);
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsNotPresentUsingContainKeyUsingLookupDefaultComparer()
+        public void SucceedsWhenKeyIsNotPresentUsingContainsKeyUsingLookupDefaultComparer()
         {
             var list = new List<string> { "ALICE", "BOB", "CATHERINE" };
             ILookup<string, string> lookup = list.ToLookup(x => x);
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsPresentUsingContainKeyWhenUsingKeyedCollectionCustomComparer()
+        public void SucceedsWhenKeyIsPresentUsingContainsKeyWhenUsingKeyedCollectionCustomComparer()
         {
             var list = new TestKeyedCollection(StringComparer.OrdinalIgnoreCase) { "ALICE", "BOB", "CALUM" };
 
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsNotPresentUsingContainKeyUsingKeyedCollectionDefaultComparer()
+        public void SucceedsWhenKeyIsNotPresentUsingContainsKeyUsingKeyedCollectionDefaultComparer()
         {
             var list = new TestKeyedCollection {"ALICE", "BOB", "CALUM"};
             
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsPresentUsingContainKeyUsingHastableCustomComparer()
+        public void SucceedsWhenKeyIsPresentUsingContainsKeyUsingHashtableCustomComparer()
         {
             var table = new Hashtable(StringComparer.OrdinalIgnoreCase) { { "ALICE", "BOB" }, { "CALUM", "DENNIS" } };
 
@@ -159,9 +159,9 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsPresentUsingContainKeyUsingHastableDefaultComparer()
+        public void SucceedsWhenKeyIsPresentUsingContainsKeyUsingHashtableDefaultComparer()
         {
-            var table = new Hashtable {{ "ALICE", "BOB"}, {"CALUM", "DENNIS"} };
+            var table = new Hashtable { { "ALICE", "BOB"}, {"CALUM", "DENNIS"} };
 
             Assert.That(table, !Does.ContainKey("calum"));
         }
@@ -196,15 +196,23 @@ namespace NUnit.Framework.Constraints
         {
             var poco = new TestPlainContainsKey("David");
 
-            Assert.Catch<ArgumentException>(() => Assert.That(poco, Does.ContainKey("David")));
+            Assert.DoesNotThrow(() => Assert.That(poco, Does.ContainKey("David")));
         }
 
         [Test]
-        public void ShouldThrowWhenUsedOnObjectWithoutProperMethod()
+        public void ShouldThrowWhenUsedOnObjectWithNonGenericContains()
         {
-            var poco = new TestPlainObjectContains("Peter");
+            var poco = new TestPlainObjectContainsNonGeneric("Peter");
 
             Assert.Catch<ArgumentException>(() => Assert.That(poco, Does.ContainKey("Peter")));
+        }
+
+        [Test]
+        public void ShouldCallContainsWhenUsedOnObjectWithGenericContains()
+        {
+            var poco = new TestPlainObjectContainsGeneric<string>("Peter");
+
+            Assert.DoesNotThrow(() => Assert.That(poco, Does.ContainKey("Peter")));
         }
 
 #if NET45
@@ -306,16 +314,31 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        public class TestPlainObjectContains
+        public class TestPlainObjectContainsNonGeneric
         {
             private readonly string _key;
 
-            public TestPlainObjectContains(string key)
+            public TestPlainObjectContainsNonGeneric(string key)
             {
                 _key = key;
             }
 
             public bool Contains(string key)
+            {
+                return _key.Equals(key);
+            }
+        }
+
+        public class TestPlainObjectContainsGeneric<TKey>
+        {
+            private readonly TKey _key;
+
+            public TestPlainObjectContainsGeneric(TKey key)
+            {
+                _key = key;
+            }
+
+            public bool Contains(TKey key)
             {
                 return _key.Equals(key);
             }
