@@ -52,7 +52,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: all items instance of <System.String>" + Environment.NewLine +
                 "  But was:  < \"x\", \"y\", <System.Object> >" + Environment.NewLine +
-                "  Non-matching item at index [2]:  <System.Object>" + Environment.NewLine;
+                "  First non-matching item at index [2]:  <System.Object>" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreInstancesOfType(collection, typeof(string)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: all items not null" + Environment.NewLine +
                 "  But was:  < \"x\", null, \"z\" >" + Environment.NewLine +
-                "  Non-matching item at index [1]:  null" + Environment.NewLine;
+                "  First non-matching item at index [1]:  null" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreNotNull(collection));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));

@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "no item null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
-                "  Non-matching item at index [2]:  null" + NL;
+                "  First non-matching item at index [2]:  null" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new NoItemConstraint(Is.Null)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
