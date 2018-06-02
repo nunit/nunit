@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
             throw new ArgumentException("The actual value must have a ContainsKey or Contains(TKey) method.");
         }
 
-        #region Shadow CollectionItemsEqualConstraint Methods
+        #region Shadowing CollectionItemsEqualConstraint Methods
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
