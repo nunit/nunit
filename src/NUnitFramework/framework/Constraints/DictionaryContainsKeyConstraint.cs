@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
-        private bool _deprecatedFlag = false;
+        private bool _isDeprecatedMode = false;
 
         /// <summary>
         /// Construct a DictionaryContainsKeyConstraint
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                _deprecatedFlag = true;
+                _isDeprecatedMode = true;
                 return base.IgnoreCase;
             }
         }
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override bool Matches(IEnumerable actual)
         {
-            if (_deprecatedFlag)
+            if (_isDeprecatedMode)
             {
                 var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
                 foreach (object obj in dictionary.Keys)
@@ -110,14 +110,13 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
-        /// <returns>Self.</returns>
-        [Obsolete("Deprecated, use Does.ContainKey")]
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
         public DictionaryContainsKeyConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             // reverse the order of the arguments to match expectations of PredicateEqualityComparer
             Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
 
-            _deprecatedFlag = true;
+            _isDeprecatedMode = true;
             base.Using(EqualityAdapter.For(invertedComparison));
             return this;
         }
@@ -125,24 +124,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
-        [Obsolete("Deprecated, use Does.ContainKey")]
-        public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparer)
+        /// <param name="comparison">The Comparison object to use.</param>
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
         {
-            _deprecatedFlag = true;
-            return base.Using(comparer);
+            _isDeprecatedMode = true;
+            return base.Using(comparison);
         }
 
-        /// <summary>
-        /// Checks if the key is contained in a "keyed item container".
-        /// </summary>
-        /// <param name="actual">Keyed container.</param>
-        /// <returns>method to call.</returns>
-        private MethodInfo GetContainsKeyMethod(object actual)
+        private MethodInfo GetContainsKeyMethod(object keyedItemContainer)
         {
-            if (actual == null) throw new ArgumentNullException(nameof(actual));
-            var instanceType = actual.GetType();
+            if (keyedItemContainer == null) throw new ArgumentNullException(nameof(keyedItemContainer));
+            var instanceType = keyedItemContainer.GetType();
 
             var method = FindContainsKeyMethod(instanceType)
                          ?? instanceType
@@ -154,11 +147,6 @@ namespace NUnit.Framework.Constraints
             return method;
         }
 
-        /// <summary>
-        /// Looks for a base type that implements ContainsKey method
-        /// </summary>
-        /// <param name="type">Type to look for method ContainsKey</param>
-        /// <returns>Returns the method to call.</returns>
         private MethodInfo FindContainsKeyMethod(Type type)
         {
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
@@ -190,11 +178,6 @@ namespace NUnit.Framework.Constraints
             return method;
         }
 
-        /// <summary>
-        /// Returns all the base types of the class
-        /// </summary>
-        /// <param name="type">Type to search for base types implemeted.</param>
-        /// <returns>Base types / interfaces implemented by the class</returns>
         private IEnumerable<Type> GetBaseTypes(Type type)
         {
             for (; ; )

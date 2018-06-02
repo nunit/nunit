@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
         }
 
-        [Test, Obsolete]
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
         public void UsingIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
         }
 
-        [Test]
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
         public void SucceedsWhenKeyIsPresentWhenDictionaryUsingCustomComparer()
         {
             var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Hello", "World" }, { "Hola", "Mundo" } };
@@ -194,13 +194,13 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ShouldCallContainsKeysMethodOnObject()
         {
-            var poco = new TestPlainObjectContainsKey("David");
+            var poco = new TestNonGenericContainsKey("David");
 
             Assert.Catch<ArgumentException>(() => Assert.That(poco, Does.ContainKey("David")));
         }
 
         [Test]
-        public void ShouldCallContainsMethodOnObject()
+        public void ShouldThrowWhenUsedOnObjectWithoutProperMethod()
         {
             var poco = new TestPlainObjectContains("Peter");
 
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void ShouldCallContainsKeysMethodOnSet()
+        public void ShouldThrowWhenUsedWithISet()
         {
             var set = new TestSet();
 
@@ -243,11 +243,11 @@ namespace NUnit.Framework.Constraints
 
         #region Test Assets
 
-        public class TestPlainObjectContainsKey
+        public class TestNonGenericContainsKey
         {
             private readonly string _key;
 
-            public TestPlainObjectContainsKey(string key)
+            public TestNonGenericContainsKey(string key)
             {
                 _key = key;
             }
