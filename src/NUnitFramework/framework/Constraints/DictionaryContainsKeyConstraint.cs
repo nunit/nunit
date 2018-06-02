@@ -106,6 +106,8 @@ namespace NUnit.Framework.Constraints
             throw new ArgumentException("Not a collection supporting ContainsKey method.");
         }
 
+        #region Shadow CollectionItemsEqualConstraint Methods
+
         /// <summary>
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
@@ -131,6 +133,64 @@ namespace NUnit.Framework.Constraints
             _isDeprecatedMode = true;
             return base.Using(comparison);
         }
+
+
+        /// <summary>
+        /// Flag the constraint to use the supplied IComparer object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public new CollectionItemsEqualConstraint Using(IComparer comparer)
+        {
+            _isDeprecatedMode = true;
+            return base.Using(comparer);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied IComparer object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public new CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
+        {
+            _isDeprecatedMode = true;
+            return base.Using(comparer);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied IEqualityComparer object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public new CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
+        {
+            _isDeprecatedMode = true;
+            return base.Using(comparer);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied IEqualityComparer object.
+        /// </summary>
+        /// <param name="comparer">The IComparer object to use.</param>
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public new CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
+        {
+            _isDeprecatedMode = true;
+            return base.Using(comparer);
+        }
+
+        /// <summary>
+        /// Flag the constraint to use the supplied boolean-returning delegate.
+        /// </summary>
+        /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
+        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public new CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
+        {
+            _isDeprecatedMode = true;
+            return base.Using(comparer);
+        }
+
+        #endregion
 
         private MethodInfo GetContainsKeyMethod(object keyedItemContainer)
         {

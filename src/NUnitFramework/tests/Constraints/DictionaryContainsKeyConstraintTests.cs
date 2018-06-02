@@ -241,6 +241,54 @@ namespace NUnit.Framework.Constraints
 
 #endif
 
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public void UsingDictionaryContainsKeyConstraintComparisonFunc()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string, string>((x, y) => x.ToUpper().Equals(y.ToUpper())));
+        }
+
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public void UsingBaseCollectionItemsEqualConstraintNonGenericComparer()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hola").Using((IComparer)StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public void UsingBaseCollectionItemsEqualConstraintGenericComparer()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hola").Using((IComparer<string>)StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public void UsingBaseCollectionItemsEqualConstraintNonGenericEqualityComparer()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using((IEqualityComparer)StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public void UsingBaseCollectionItemsEqualConstraintGenericEqualityComparer()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using((IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase));
+        }
+
+        [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        public void UsingBaseCollectionItemsEqualConstraintComparerFunc()
+        {
+            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
+
+            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using<string>((x, y) => x.ToLower().Equals(y.ToLower())));
+        }
+
         #region Test Assets
 
         public class TestPlainContainsKey
