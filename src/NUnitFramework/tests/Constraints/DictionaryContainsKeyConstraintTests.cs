@@ -186,7 +186,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ShouldCallContainsKeysMethodOnPlainDictionary()
         {
-            var dictionary = new TestPlainDictionary(99);
+            var dictionary = new TestNonGenericDictionary(99);
 
             Assert.Catch<ArgumentException>(() => Assert.That(dictionary, Does.ContainKey(99)));
         }
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ShouldCallContainsKeysMethodOnObject()
         {
-            var poco = new TestNonGenericContainsKey("David");
+            var poco = new TestPlainContainsKey("David");
 
             Assert.Catch<ArgumentException>(() => Assert.That(poco, Does.ContainKey("David")));
         }
@@ -243,11 +243,11 @@ namespace NUnit.Framework.Constraints
 
         #region Test Assets
 
-        public class TestNonGenericContainsKey
+        public class TestPlainContainsKey
         {
             private readonly string _key;
 
-            public TestNonGenericContainsKey(string key)
+            public TestPlainContainsKey(string key)
             {
                 _key = key;
             }
@@ -369,11 +369,11 @@ namespace NUnit.Framework.Constraints
             public ICollection<string> Values { get; }
         }
 
-        public class TestPlainDictionary : IDictionary
+        public class TestNonGenericDictionary : IDictionary
         {
             private readonly int _key;
 
-            public TestPlainDictionary(int key)
+            public TestNonGenericDictionary(int key)
             {
                 _key = key;
             }

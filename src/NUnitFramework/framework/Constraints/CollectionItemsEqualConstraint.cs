@@ -109,11 +109,11 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
+        /// <param name="comparison">The IComparer object to use.</param>
         /// <returns>Self.</returns>
-        public CollectionItemsEqualConstraint Using<T>(Comparison<T> comparer)
+        public CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
         {
-            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;
         }
 
