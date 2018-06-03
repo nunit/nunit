@@ -64,19 +64,26 @@ namespace NUnit.Framework.Api
             _builder = new DefaultTestAssemblyBuilder();
         }
 
+        // No filter
         [TestCase(ExpectedResult = MockAssembly.Tests)]
+        // Namespace filters
         [TestCase("NUnit", ExpectedResult = MockAssembly.Tests)]
         [TestCase("NUnit.Tests", ExpectedResult = MockAssembly.Tests)]
         [TestCase("NUnit.Tests.Assemblies", ExpectedResult = MockTestFixture.Tests)]
-        [TestCase("NUnit.Tests.Assemblies.MockTestFixture", ExpectedResult = MockTestFixture.Tests)]
-        [TestCase("NUnit.Tests.FixtureWithTestCases", ExpectedResult = FixtureWithTestCases.Tests)]
-        [TestCase("NUnit.Tests.Assemblies.MockTestFixture", "NUnit.Tests.FixtureWithTestCases", ExpectedResult = MockTestFixture.Tests + FixtureWithTestCases.Tests)]
         [TestCase("NUnit.Tests.Singletons", ExpectedResult = OneTestCase.Tests)]
+        // Fixture filters
+        [TestCase("NUnit.Tests.FixtureWithTestCases", ExpectedResult = FixtureWithTestCases.Tests)]
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture", ExpectedResult = MockTestFixture.Tests)]
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture", "NUnit.Tests.FixtureWithTestCases", ExpectedResult = MockTestFixture.Tests + FixtureWithTestCases.Tests)]
         [TestCase("NUnit.Tests.Singletons.OneTestCase", ExpectedResult = OneTestCase.Tests)]
-        [TestCase("NUnit.Tests.Assemblies", "NUnit.Tests.Singletons", ExpectedResult = MockTestFixture.Tests + OneTestCase.Tests)]
+        // Method filters
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture.TestWithException", ExpectedResult = 1)]
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture.TestWithException", "NUnit.Tests.Singletons.OneTestCase.TestCase", ExpectedResult = 2)]
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture.TestWithException", "NUnit.Tests.Assemblies.MockTestFixture.WarningTest", "NUnit.Tests.Assemblies.MockTestFixture.FailingTest", ExpectedResult = 3)]
+        // Mixed filters
         [TestCase("NUnit.Tests.Assemblies", "NUnit.Tests.Singletons", "NUnit.Tests.FixtureWithTestCases", ExpectedResult = MockTestFixture.Tests + FixtureWithTestCases.Tests + OneTestCase.Tests)]
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture", "NUnit.Tests.Assemblies", ExpectedResult = MockTestFixture.Tests)]
-        public int LoadWithSinglePreFilter(params string[] filters)
+        public int LoadWithPreFilter(params string[] filters)
         {
             var settings = new Dictionary<string, object>();
             settings.Add("LOAD", filters);
@@ -85,7 +92,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
-            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable));
+            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason));
 
             return result.TestCaseCount;
         }

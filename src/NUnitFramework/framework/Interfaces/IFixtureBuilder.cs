@@ -28,6 +28,9 @@ namespace NUnit.Framework.Interfaces
 {
     using Internal;
 
+    // TODO: These methods should really return IEnumerable<TestFixture>, 
+    // but that requires changes to the Test hierarchy.
+
     /// <summary>
     /// The IFixtureBuilder interface is exposed by a class that knows how to
     /// build test fixtures from a specified type. In general, it is exposed
@@ -40,7 +43,20 @@ namespace NUnit.Framework.Interfaces
         /// Builds any number of test fixtures from the specified type.
         /// </summary>
         /// <param name="type">The type to be used as a fixture.</param>
-        // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
         IEnumerable<TestSuite> BuildFrom(Type type);
+    }
+
+    /// <summary>
+    /// The IFixtureBuilder2 interface extends IFixtureBuilder by allowing
+    /// use of a PreFilter, which is used to select methods as test cases.
+    /// </summary>
+    public interface IFixtureBuilder2 : IFixtureBuilder
+    {
+        /// <summary>
+        /// Builds any number of test fixtures from the specified type.
+        /// </summary>
+        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="filter">PreFilter to be used to select methods.</param>
+        IEnumerable<TestSuite> BuildFrom(Type type, PreFilter filter);
     }
 }

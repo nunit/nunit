@@ -331,8 +331,23 @@ namespace NUnitLite
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
 
-            if (options.PreFilters != null)
+            if (options.PreFilters.Count > 0)
                 runSettings[FrameworkPackageSettings.LOAD] = options.PreFilters;
+            else if (options.TestList.Count > 0)
+            {
+                var prefilters = new List<string>();
+
+                foreach (var testName in options.TestList)
+                {
+                    int end = testName.IndexOfAny(new char[] { '(', '<' });
+                    if (end > 0)
+                        prefilters.Add(testName.Substring(0, end));
+                    else
+                        prefilters.Add(testName);
+                }
+
+                runSettings[FrameworkPackageSettings.LOAD] = prefilters;
+            }
 
             if (options.NumberOfTestWorkers >= 0)
                 runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;

@@ -37,7 +37,7 @@ namespace NUnit.Framework
     /// provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder
+    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -110,7 +110,24 @@ namespace NUnit.Framework
             Type sourceType = SourceType ?? type;
 
             foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
-                yield return _builder.BuildFrom(type, parms);
+                yield return _builder.BuildFrom(type, PreFilter.Empty, parms);
+        }
+
+        #endregion
+
+        #region IFixtureBuilder2 Members
+
+        /// <summary>
+        /// Builds any number of test fixtures from the specified type.
+        /// </summary>
+        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="filter">PreFilter used to select methods as tests.</param>
+        public IEnumerable<TestSuite> BuildFrom(Type type, PreFilter filter)
+        {
+            Type sourceType = SourceType ?? type;
+
+            foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
+                yield return _builder.BuildFrom(type, filter, parms);
         }
 
         #endregion
