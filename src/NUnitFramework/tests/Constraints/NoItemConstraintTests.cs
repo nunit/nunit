@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,9 +28,9 @@ namespace NUnit.Framework.Constraints
 {
     [TestFixture]
     public class NoItemConstraintTests
-    {   
+    {
         private readonly string NL = Environment.NewLine;
-        
+
         [Test]
         public void NoItemsAreNotNull()
         {
@@ -44,11 +44,12 @@ namespace NUnit.Framework.Constraints
             object[] c = new object[] { 1, "hello", null, 3 };
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "no item null" + NL +
-                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
+                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
+                "  First non-matching item at index [2]:  null" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new NoItemConstraint(Is.Null)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-        
+
         [Test]
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {
