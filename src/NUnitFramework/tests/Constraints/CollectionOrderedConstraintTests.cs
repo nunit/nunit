@@ -23,9 +23,8 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
@@ -146,9 +145,25 @@ namespace NUnit.Framework.Constraints
         {
             var expectedMessage =
                 "  Expected: collection ordered" + NL +
-                "  But was:  < \"x\", \"z\", \"y\" >" + NL;
+                "  But was:  < \"x\", \"z\", \"y\" >" + NL +
+                "  Ordering breaks at index [2]:  \"y\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new[] { "x", "z", "y" }, Is.Ordered));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void IsOrdered_DisplaysBreakingItemForHugeCollections()
+        {
+            var actual = Enumerable.Range(0, 100).ToArray();
+            actual[90] = 1000;
+
+            var expectedMessage =
+                "  Expected: collection ordered" + NL +
+                "  But was:  < 83, 84, 85, 86, 87, 88, 89, 1000, 91, 92... >" + NL +
+                "  Ordering breaks at index [91]:  91" + NL;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.Ordered));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -261,7 +276,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IsOrdered_AtLeastOneArgMustImplementIComparable()
         {
-            Assert.Throws<ArgumentException>(() => Assert.That(new [] { new object(), new object() }, Is.Ordered));
+            Assert.Throws<ArgumentException>(() => Assert.That(new[] { new object(), new object() }, Is.Ordered));
         }
 
         [TestCaseSource(nameof(InvalidOrderedByData))]

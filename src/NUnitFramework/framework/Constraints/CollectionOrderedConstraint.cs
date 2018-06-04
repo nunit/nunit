@@ -23,10 +23,11 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using System.Collections.Generic;
 using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -180,16 +181,37 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+
+            int breakingIndex;
+            object breakingValue;
+            if (!Matches(enumerable, out breakingIndex, out breakingValue))
+            {
+                return new CollectionOrderedConstraintResult(this, enumerable, breakingIndex, breakingValue);
+            }
+            else
+            {
+                return new ConstraintResult(this, actual, ConstraintStatus.Success);
+            }
+        }
+
+        /// <summary>
         /// Test whether the collection is ordered
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
-        protected override bool Matches(IEnumerable actual)
+        private bool Matches(IEnumerable actual, out int index, out object value)
         {
             object previous = null;
-            int index = 0;
+            index = 0;
             foreach (object current in actual)
             {
+                value = current;
+
                 if (previous != null)
                 {
                     if (_steps[0].PropertyName != null)
@@ -239,7 +261,18 @@ namespace NUnit.Framework.Constraints
                 index++;
             }
 
+            value = null;
             return true;
+        }
+
+        /// <summary>
+        /// Test whether the collection is ordered
+        /// </summary>
+        protected override bool Matches(IEnumerable collection)
+        {
+            int _index;
+            object _value;
+            return Matches(collection, out _index, out _value);
         }
 
         /// <summary>
@@ -297,5 +330,38 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        #region Private CollectionOrderedConstraintResult Class
+
+        private sealed class CollectionOrderedConstraintResult : ConstraintResult
+        {
+            private const int MaxDisplayedItems = 10;
+
+            private readonly int _breakingIndex;
+            private readonly object _breakingValue;
+
+            public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue, int breakingIndex, object breakingValue)
+                : base(constraint, actualValue, ConstraintStatus.Failure)
+            {
+                _breakingIndex = breakingIndex;
+                _breakingValue = breakingValue;
+            }
+
+            public override void WriteActualValueTo(MessageWriter writer)
+            {
+                int startIndex = Math.Max(0, _breakingIndex - MaxDisplayedItems + 2);
+                var actualValueMessage = MsgUtils.FormatCollection((IEnumerable)ActualValue, startIndex, MaxDisplayedItems);
+                writer.Write(actualValueMessage);
+            }
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
+            {
+                var nonMatchingStr = $"  Ordering breaks at index [{_breakingIndex}]:  "
+                    + MsgUtils.FormatValue(_breakingValue);
+                writer.WriteLine(nonMatchingStr);
+            }
+        }
+
+        #endregion Private CollectionOrderedConstraintResult Class
     }
 }
