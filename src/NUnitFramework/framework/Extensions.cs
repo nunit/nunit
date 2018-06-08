@@ -25,6 +25,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -33,7 +34,23 @@ namespace NUnit.Framework
     /// </summary>
     internal static class Extensions
     {
-        public static bool IsStatic(this Type type)
+#if ASYNC
+        public static void ThrowAwaitExceptionOnFailure(this System.Threading.Tasks.Task task)
+        {
+#if NET40
+            var aggregateException = task.Exception;
+            if (aggregateException != null)
+            {
+                // Rethrow the first exception, just like GetAwaiter().GetResult()
+                ExceptionHelper.Rethrow(aggregateException.InnerException);
+            }
+#else
+            task.GetAwaiter().GetResult();
+#endif
+        }
+#endif
+
+            public static bool IsStatic(this Type type)
         {
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
