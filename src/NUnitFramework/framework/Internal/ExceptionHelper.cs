@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2010 Charlie Poole, Rob Prouse
+// Copyright (c) 2010–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,10 +22,12 @@
 // ***********************************************************************
 
 using System;
-using System.Globalization;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+#if ASYNC
+using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -182,5 +184,54 @@ namespace NUnit.Framework.Internal
 
             return result;
         }
+
+#if NET40
+        // Approximate TPL implementation since the types needed for the async keyword are not declared.
+        internal static Task<Exception> RecordExceptionAsync(AsyncTestDelegate asyncTestDelegate)
+        {
+            Guard.ArgumentNotNull(asyncTestDelegate, nameof(asyncTestDelegate));
+
+            var isolatedContext = new TestExecutionContext.IsolatedContext();
+
+            Task task;
+            try
+            {
+                task = asyncTestDelegate.Invoke();
+            }
+            catch (Exception ex) // Non-async exception
+            {
+                var source = new TaskCompletionSource<Exception>();
+                source.SetResult(ex);
+                return source.Task;
+            }
+
+            return task.ContinueWith(completedTask =>
+            {
+                isolatedContext.Dispose();
+
+                // Matches awaiting behavior which throws the first inner exception.
+                return completedTask.Exception?.InnerException;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+#elif ASYNC
+        internal static async Task<Exception> RecordExceptionAsync(AsyncTestDelegate asyncTestDelegate)
+        {
+            Guard.ArgumentNotNull(asyncTestDelegate, nameof(asyncTestDelegate));
+        
+            using (new TestExecutionContext.IsolatedContext())
+            {
+                try
+                {
+                    await asyncTestDelegate.Invoke().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            }
+
+            return null;
+        }
+#endif
     }
 }

@@ -22,13 +22,32 @@
 // ***********************************************************************
 
 #if ASYNC
+using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+
 namespace NUnit.Framework
 {
-    /// <summary>
-    /// True-async versions of the most common assertions used in NUnit.
-    /// </summary>
     public static partial class AsyncAssert
     {
+        /// <summary>
+        /// Verifies that an async delegate does not throw an exception
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static Task DoesNotThrowAsync(AsyncTestDelegate code, string message, params object[] args)
+        {
+            return That(code, new ThrowsNothingConstraint(), message, args);
+        }
+
+        /// <summary>
+        /// Verifies that an async delegate does not throw an exception.
+        /// </summary>
+        /// <param name="code">A TestDelegate</param>
+        public static Task DoesNotThrowAsync(AsyncTestDelegate code)
+        {
+            return DoesNotThrowAsync(code, string.Empty, null);
+        }
     }
 }
 #endif

@@ -22,13 +22,37 @@
 // ***********************************************************************
 
 #if ASYNC
+using System;
+using System.Threading.Tasks;
+using NUnit.Framework.Constraints;
+
 namespace NUnit.Framework
 {
-    /// <summary>
-    /// True-async versions of the most common assertions used in NUnit.
-    /// </summary>
     public static partial class AsyncAssert
     {
+        /// <summary>
+        /// Asserts that the code represented by a delegate throws an exception
+        /// that satisfies the constraint provided.
+        /// </summary>
+        /// <param name="code">A TestDelegate to be executed</param>
+        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        public static Task That(AsyncTestDelegate code, IResolveConstraint constraint)
+        {
+            return That(code, constraint, null, null);
+        }
+
+        /// <summary>
+        /// Asserts that the code represented by a delegate throws an exception
+        /// that satisfies the constraint provided.
+        /// </summary>
+        /// <param name="code">A TestDelegate to be executed</param>
+        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static Task That(AsyncTestDelegate code, IResolveConstraint constraint, string message, params object[] args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 #endif
