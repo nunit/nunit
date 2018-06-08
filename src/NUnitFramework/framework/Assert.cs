@@ -313,10 +313,9 @@ namespace NUnit.Framework
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
         public static void Multiple(TestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "Assert.Multiple called outside of a valid TestExecutionContext");
+            Guard.ArgumentNotNull(testDelegate, nameof(TestDelegate));
 
-            context.MultipleAssertLevel++;
+            var helper = AssertMultipleHelper.Start();
 
             try
             {
@@ -324,14 +323,10 @@ namespace NUnit.Framework
             }
             finally
             {
-                context.MultipleAssertLevel--;
+                helper.Finally();
             }
 
-            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
-            {
-                context.CurrentResult.RecordTestCompletion();
-                throw new MultipleAssertException(context.CurrentResult);
-            }
+            helper.OnSuccess();
         }
 
 #if ASYNC
@@ -343,25 +338,19 @@ namespace NUnit.Framework
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "Assert.Multiple called outside of a valid TestExecutionContext");
+            Guard.ArgumentNotNull(testDelegate, nameof(TestDelegate));
 
-            context.MultipleAssertLevel++;
-
+            var helper = AssertMultipleHelper.Start();
             try
             {
                 AsyncToSyncAdapter.Await(testDelegate.Invoke);
             }
             finally
             {
-                context.MultipleAssertLevel--;
+                helper.Finally();
             }
 
-            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
-            {
-                context.CurrentResult.RecordTestCompletion();
-                throw new MultipleAssertException(context.CurrentResult);
-            }
+            helper.OnSuccess();
         }
 #endif
 
