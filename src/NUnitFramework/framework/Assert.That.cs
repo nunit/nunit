@@ -138,11 +138,10 @@ namespace NUnit.Framework
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
         {
             var constraint = expr.Resolve();
-
-            IncrementAssertCount();
+            
+            AssertThatHelper.Start();
             var result = constraint.ApplyTo(del);
-            if (!result.IsSuccess)
-                ReportFailure(result, message, args);
+            AssertThatHelper.End(result, message, args);
         }
 
 #if !NET20
@@ -161,10 +160,9 @@ namespace NUnit.Framework
         {
             var constraint = expr.Resolve();
 
-            IncrementAssertCount();
+            AssertThatHelper.Start();
             var result = constraint.ApplyTo(del);
-            if (!result.IsSuccess)
-                ReportFailure(result, getExceptionMessage());
+            AssertThatHelper.End(result, getExceptionMessage);
         }
 #endif
 
@@ -241,10 +239,9 @@ namespace NUnit.Framework
         {
             var constraint = expression.Resolve();
 
-            IncrementAssertCount();
+            AssertThatHelper.Start();
             var result = constraint.ApplyTo(actual);
-            if (!result.IsSuccess)
-                ReportFailure(result, message, args);
+            AssertThatHelper.End(result, message, args);
         }
 
 #if !NET20
@@ -263,10 +260,9 @@ namespace NUnit.Framework
         {
             var constraint = expression.Resolve();
 
-            IncrementAssertCount();
+            AssertThatHelper.Start();
             var result = constraint.ApplyTo(actual);
-            if (!result.IsSuccess)
-                ReportFailure(result, getExceptionMessage());
+            AssertThatHelper.End(result, getExceptionMessage);
         }
 #endif
 

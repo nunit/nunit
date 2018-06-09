@@ -354,24 +354,11 @@ namespace NUnit.Framework
         }
 #endif
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
-        private static void ReportFailure(ConstraintResult result, string message)
-        {
-            ReportFailure(result, message, null);
-        }
-
-        private static void ReportFailure(ConstraintResult result, string message, params object[] args)
-        {
-            MessageWriter writer = new TextMessageWriter(message, args);
-            result.WriteMessageTo(writer);
-
-            ReportFailure(writer.ToString());
-        }
-
-        private static void ReportFailure(string message)
+        internal static void ReportFailure(string message)
         {
             // Record the failure in an <assertion> element
             var result = TestExecutionContext.CurrentContext.CurrentResult;
@@ -394,12 +381,6 @@ namespace NUnit.Framework
 
         private static string GetStackTrace() =>
             StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(Environment.StackTrace));
-
-        private static void IncrementAssertCount()
-        {
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-        }
-
 #endregion
     }
 }
