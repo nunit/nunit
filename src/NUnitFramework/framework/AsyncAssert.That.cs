@@ -31,27 +31,155 @@ namespace NUnit.Framework
     public static partial class AsyncAssert
     {
         /// <summary>
-        /// Asserts that the code represented by a delegate throws an exception
-        /// that satisfies the constraint provided.
+        /// Applies a constraint to an async delegate, succeeding if the constraint is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
-        public static Task That(AsyncTestDelegate code, IResolveConstraint constraint)
+        /// <param name="code">The async delegate to execute.</param>
+        /// <param name="expression">The constraint expression to apply to the delegate.</param>
+        public static Task That(AsyncTestDelegate code, IResolveConstraint expression)
         {
-            return That(code, constraint, null, null);
+           return That(code, expression, null, null);
         }
 
         /// <summary>
-        /// Asserts that the code represented by a delegate throws an exception
-        /// that satisfies the constraint provided.
+        /// Applies a constraint to an async delegate, succeeding if the constraint is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
-        /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static Task That(AsyncTestDelegate code, IResolveConstraint constraint, string message, params object[] args)
+        /// <param name="code">The async delegate to execute.</param>
+        /// <param name="expression">The constraint expression to apply to the delegate.</param>
+        /// <param name="message">The message that will be displayed on failure.</param>
+        /// <param name="args">Arguments to be used in formatting the message.</param>
+#if NET40
+        // Approximate TPL implementation since the types needed for the async keyword are not declared.
+        public static Task That(AsyncTestDelegate code, IResolveConstraint expression, string message, params object[] args)
         {
-            throw new NotImplementedException();
+            var constraint = ResolveAsyncConstraint(expression);
+
+            AssertThatHelper.Start();
+            return constraint.ApplyToAsync(code).ContinueWith(task =>
+            {
+                task.ThrowAwaitExceptionOnFailure(); // May be user code
+                AssertThatHelper.End(task.Result, message, args);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+#else
+        public static async Task That(AsyncTestDelegate code, IResolveConstraint expression, string message, params object[] args)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+
+            AssertThatHelper.Start();
+            var result = await constraint.ApplyToAsync(code).ConfigureAwait(true);
+            AssertThatHelper.End(result, message, args);
+        }
+#endif
+
+        /// <summary>
+        /// Applies a constraint to an async delegate, succeeding if the constraint is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <param name="code">The async delegate toexecute.</param>
+        /// <param name="expression">The constraint expression to apply to the delegate.</param>
+        /// <param name="getExceptionMessage">Builds the failure message if needed.</param>
+#if NET40
+        // Approximate TPL implementation since the types needed for the async keyword are not declared.
+        public static Task That(AsyncTestDelegate code, IResolveConstraint expression, Func<string> getExceptionMessage)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+
+            AssertThatHelper.Start();
+            return constraint.ApplyToAsync(code).ContinueWith(task =>
+            {
+                task.ThrowAwaitExceptionOnFailure(); // May be user code
+                AssertThatHelper.End(task.Result, getExceptionMessage);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+#else
+        public static async Task That(AsyncTestDelegate code, IResolveConstraint expression, Func<string> getExceptionMessage)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+
+            AssertThatHelper.Start();
+            var result = await constraint.ApplyToAsync(code).ConfigureAwait(true);
+            AssertThatHelper.End(result, getExceptionMessage);
+        }
+#endif
+
+        /// <summary>
+        /// Applies a constraint to an async delegate or its return value, succeeding if the constraint is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The type of the asynchronous return value.</typeparam>
+        /// <param name="del">The async delegate execute.</param>
+        /// <param name="expression">The constraint expression to apply to the delegate or its return value.</param>
+        public static Task That<TActual>(ActualValueDelegate<Task<TActual>> del, IResolveConstraint expression)
+        {
+            return That(del, expression.Resolve(), null, null);
+        }
+
+        /// <summary>
+        /// Applies a constraint to an async delegate or its return value, succeeding if the constraint is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The type of the asynchronous return value.</typeparam>
+        /// <param name="del">The async delegate execute.</param>
+        /// <param name="expression">The constraint expression to apply to the delegate or its return value.</param>
+        /// <param name="message">The message that will be displayed on failure.</param>
+        /// <param name="args">Arguments to be used in formatting the message.</param>
+#if NET40
+        // Approximate TPL implementation since the types needed for the async keyword are not declared.
+        public static Task That<TActual>(ActualValueDelegate<Task<TActual>> del, IResolveConstraint expression, string message, params object[] args)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+            
+            AssertThatHelper.Start();
+            return constraint.ApplyToAsync(del).ContinueWith(task =>
+            {
+                task.ThrowAwaitExceptionOnFailure(); // May be user code
+                AssertThatHelper.End(task.Result, message, args);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+#else
+        public static async Task That<TActual>(ActualValueDelegate<Task<TActual>> del, IResolveConstraint expression, string message, params object[] args)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+
+            AssertThatHelper.Start();
+            var result = await constraint.ApplyToAsync(del).ConfigureAwait(true);
+            AssertThatHelper.End(result, message, args);
+        }
+#endif
+
+        /// <summary>
+        /// Applies a constraint to an async delegate or its return value, succeeding if the constraint is satisfied and throwing an assertion exception on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The type of the asynchronous return value.</typeparam>
+        /// <param name="del">The async delegate execute.</param>
+        /// <param name="expression">The constraint expression to apply to the delegate or its return value.</param>
+        /// <param name="getExceptionMessage">Builds the failure message if needed.</param>
+#if NET40
+        // Approximate TPL implementation since the types needed for the async keyword are not declared.
+        public static Task That<TActual>(ActualValueDelegate<Task<TActual>> del, IResolveConstraint expression, Func<string> getExceptionMessage)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+
+            AssertThatHelper.Start();
+            return constraint.ApplyToAsync(del).ContinueWith(task =>
+            {
+                task.ThrowAwaitExceptionOnFailure(); // May be user code
+                AssertThatHelper.End(task.Result, getExceptionMessage);
+            }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+#else
+        public static async Task That<TActual>(ActualValueDelegate<Task<TActual>> del, IResolveConstraint expression, Func<string> getExceptionMessage)
+        {
+            var constraint = ResolveAsyncConstraint(expression);
+            
+            AssertThatHelper.Start();
+            var result = await constraint.ApplyToAsync(del).ConfigureAwait(true);
+            AssertThatHelper.End(result, getExceptionMessage);
+        }
+#endif
+
+        private static IAsyncConstraint ResolveAsyncConstraint(IResolveConstraint expression)
+        {
+            var constraint = expression.Resolve() as IAsyncConstraint;
+            Guard.ArgumentValid(constraint != null, $"The resolved constraint must implement {nameof(IAsyncConstraint)}.", nameof(expression));
+            return constraint;
         }
     }
 }

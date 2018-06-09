@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,9 +23,12 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Compatibility;
-using System.Collections;
 using System;
+using System.Linq;
 using System.Reflection;
+#if ASYNC
+using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -40,11 +43,15 @@ namespace NUnit.Framework.Constraints
     /// within NUnit. It provides the operator overloads used to combine
     /// constraints.
     /// </summary>
+#if ASYNC
+    public abstract class Constraint : IAsyncConstraint
+#else
     public abstract class Constraint : IConstraint
+#endif
     {
         readonly Lazy<string> _displayName;
 
-        #region Constructor
+#region Constructor
 
         /// <summary>
         /// Construct a constraint with optional arguments
@@ -66,9 +73,9 @@ namespace NUnit.Framework.Constraints
             });
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// The display name of this Constraint for use by ToString().
@@ -95,9 +102,9 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ConstraintBuilder Builder { get; set; }
 
-        #endregion
+#endregion
 
-        #region Abstract and Virtual Methods
+#region Abstract and Virtual Methods
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
@@ -122,6 +129,84 @@ namespace NUnit.Framework.Constraints
 #endif
             return ApplyTo(GetTestObject(del));
         }
+
+#if ASYNC
+        /// <summary>
+        /// Applies the constraint to an actual value, asynchronously returning a <see cref="ConstraintResult"/>.
+        /// </summary>
+        /// <param name="actual">The value to be tested.</param>
+#if NET40
+        // Approximate TPL implementation since the types needed for the async keyword are not declared.
+        public virtual Task<ConstraintResult> ApplyToAsync(object actual)
+        {
+            actual = UnwrapIfDelegate(actual);
+
+            Task<object> asyncResultValueTask;
+            if (GetTaskIfAsyncResultValue(actual, out asyncResultValueTask))
+            {
+                return asyncResultValueTask.ContinueWith(t =>
+                {
+                    t.ThrowAwaitExceptionOnFailure();
+                    return ApplyTo(t.Result);
+                }, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+
+            var source = new TaskCompletionSource<ConstraintResult>();
+            source.SetResult(ApplyTo(actual));
+            return source.Task;
+        }
+#else
+        public virtual async Task<ConstraintResult> ApplyToAsync(object actual)
+        {
+            actual = UnwrapIfDelegate(actual);
+
+            Task<object> asyncResultValueTask;
+            if (GetTaskIfAsyncResultValue(actual, out asyncResultValueTask))
+            {
+                actual = await asyncResultValueTask.ConfigureAwait(true);
+            }
+
+            return ApplyTo(actual);
+        }
+#endif
+
+        private object UnwrapIfDelegate(object actual)
+        {
+            var actualType = actual.GetType();
+            if (actualType.GetTypeInfo().IsGenericType && actualType.GetGenericTypeDefinition() == typeof(ActualValueDelegate<>))
+            {
+                return typeof(Constraint)
+                    .GetMethod(nameof(GetTestObject), BindingFlags.NonPublic | BindingFlags.Instance)
+                    .MakeGenericMethod(actualType.GetGenericArguments())
+                    .Invoke(this, new[] { actual });
+            }
+
+            return actual;
+        }
+
+        private static bool GetTaskIfAsyncResultValue(object actual, out Task<object> task)
+        {
+            // Other work in progress contains the capability to await non-Task types too.
+
+            var genericTaskType = actual
+                .GetType()
+                .TypeAndBaseTypes()
+                .FirstOrDefault(t => t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() == typeof(Task<>));
+
+            if (genericTaskType == null)
+            {
+                task = null;
+                return false;
+            }
+
+            task = ((Task)actual).ContinueWith(instance =>
+            {
+                instance.ThrowAwaitExceptionOnFailure();
+                return genericTaskType.GetProperty("Result").GetValue(instance, null);
+            });
+            return true;
+        }
+#endif
 
 #pragma warning disable 3006
         /// <summary>
@@ -149,9 +234,9 @@ namespace NUnit.Framework.Constraints
             return del();
         }
 
-        #endregion
+#endregion
 
-        #region ToString Override
+#region ToString Override
 
         /// <summary>
         /// Default override of ToString returns the constraint DisplayName
@@ -194,9 +279,9 @@ namespace NUnit.Framework.Constraints
             return string.Format(System.Globalization.CultureInfo.InvariantCulture, fmt, o);
         }
 
-        #endregion
+#endregion
 
-        #region Operator Overloads
+#region Operator Overloads
 
         /// <summary>
         /// This operator creates a constraint that is satisfied only if both
@@ -230,9 +315,9 @@ namespace NUnit.Framework.Constraints
             return new NotConstraint(r.Resolve());
         }
 
-        #endregion
+#endregion
 
-        #region Binary Operators
+#region Binary Operators
 
         /// <summary>
         /// Returns a ConstraintExpression by appending And
@@ -285,9 +370,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        #endregion
+#endregion
 
-        #region After Modifier
+#region After Modifier
 
         /// <summary>
         /// Returns a DelayedConstraint.WithRawDelayInterval with the specified delay time.
@@ -316,7 +401,7 @@ namespace NUnit.Framework.Constraints
                 pollingInterval);
         }
 
-        #endregion
+#endregion
 
 
         #region IResolveConstraint Members
@@ -329,6 +414,6 @@ namespace NUnit.Framework.Constraints
             return Builder == null ? this : Builder.Resolve();
         }
 
-        #endregion
+#endregion
     }
 }
