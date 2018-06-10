@@ -23,10 +23,11 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestUtilities;
 
-#if (!NETCOREAPP1_1 || !NETCOREAPP2_0) && THREAD_ABORT
+#if THREAD_ABORT
 
 namespace NUnit.Framework.Attributes
 {
@@ -36,18 +37,17 @@ namespace NUnit.Framework.Attributes
         private int retryOnlyCount;
         private int retryTimeoutCount;
         private int repeatTimeoutCount;
-        
+
         [Test]
         [Retry(3)]
-        public void ShouldPassAfter3Retires()
+        public void ShouldPassAfter3Retries()
         {
             retryOnlyCount++;
-            System.Threading.Thread.Sleep(20);
             Assert.True(retryOnlyCount >= 2);
         }
 
         [Test]
-        [Retry(3), Timeout(25)]
+        [Retry(3), Timeout(30)]
         public void ShouldPassAfter3RetiresAndTimeoutIsResetEachTime()
         {
             retryTimeoutCount++;
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ShouldFailOnMultipleRepeatableAttributes()
         {
-            var testCase = TestBuilder.MakeTestCase(GetType(), "TestMethodForRepeatAndRetryExpectedFail");
+            var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestMethodForRepeatAndRetryExpectedFail));
             var workItem = TestBuilder.CreateWorkItem(testCase);
             var result = TestBuilder.ExecuteWorkItem(workItem);
             
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ShouldFailOnMultipleRepeatableAttributesIncludingCustom()
         {
-            var testCase = TestBuilder.MakeTestCase(GetType(), "TestMethodForRepeatAndCustomRepeatExpectedFail");
+            var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestMethodForRepeatAndCustomRepeatExpectedFail));
             var workItem = TestBuilder.CreateWorkItem(testCase);
             var result = TestBuilder.ExecuteWorkItem(workItem);
 
@@ -90,11 +90,25 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("Invalid", result.ResultState.Label);
         }
 
+        [Test]
+        public void ShouldFailWithRepeatableAndSetupTearDownCustomAttributes()
+        {
+            CustomRepeaterAndSetupAndTearDown.AttributeCallCount = 0;
+            var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestMethodForRepeatableAndSetupTearDownCustomAttribute));
+            var workItem = TestBuilder.CreateWorkItem(testCase);
+            TestBuilder.ExecuteWorkItem(workItem);
+
+            Assert.That(CustomRepeaterAndSetupAndTearDown.AttributeCallCount, Is.EqualTo(2));
+        }
+
         [Repeat(1), Retry(1)]
         public void TestMethodForRepeatAndRetryExpectedFail() { }
 
         [Repeat(1), CustomRepeater]
         public void TestMethodForRepeatAndCustomRepeatExpectedFail() { }
+
+        [CustomRepeaterAndSetupAndTearDown]
+        public void TestMethodForRepeatableAndSetupTearDownCustomAttribute() { }
 
         #region TestCustomAttribute
 
@@ -103,7 +117,53 @@ namespace NUnit.Framework.Attributes
             public TestCommand Wrap(TestCommand command) { return null; }
         }
 
+        internal class CustomRepeaterAndSetupAndTearDown : Attribute, IRepeatTest, IWrapSetUpTearDown
+        {
+            public static int AttributeCallCount;
+
+            public TestCommand Wrap(TestCommand command)
+            {
+                AttributeCallCount++;
+                return new EmptyTestCommand(command.Test);
+            }
+        }
+
         #endregion
+    }
+
+    [TestFixture]
+    public class BaseRepeatableTestFixture
+    {
+        protected int RepeatCount = 0;
+
+        [Test, Retry(2)]
+        public virtual void ShouldBeOveridden()
+        {
+            RepeatCount++;
+            Assert.True(RepeatCount >= 1);
+        }
+    }
+
+    [TestFixture]
+    public class DerivedRepeatableTestFixture : BaseRepeatableTestFixture
+    {
+        [Test, Retry(3)]
+        public override void ShouldBeOveridden()
+        {
+            RepeatCount++;
+            Assert.True(RepeatCount >= 2);
+        }
+    }
+
+    [TestFixture]
+    public class DerivedRepeatableTestFixtureWithNoRepeat : BaseRepeatableTestFixture
+    {
+        [Test]
+        public override void ShouldBeOveridden()
+        {
+            RepeatCount++;
+            Assert.True(RepeatCount == 1);
+        }
     }
 }
 
