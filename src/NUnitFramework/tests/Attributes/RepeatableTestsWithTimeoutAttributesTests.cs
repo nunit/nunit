@@ -48,7 +48,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         [Retry(3), Timeout(30)]
-        public void ShouldPassAfter3RetiresAndTimeoutIsResetEachTime()
+        public void ShouldPassAfter3RetriesAndTimeoutIsResetEachTime()
         {
             retryTimeoutCount++;
 
@@ -90,42 +90,17 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("Invalid", result.ResultState.Label);
         }
 
-        [Test]
-        public void ShouldFailWithRepeatableAndSetupTearDownCustomAttributes()
-        {
-            CustomRepeaterAndSetupAndTearDown.AttributeCallCount = 0;
-            var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestMethodForRepeatableAndSetupTearDownCustomAttribute));
-            var workItem = TestBuilder.CreateWorkItem(testCase);
-            TestBuilder.ExecuteWorkItem(workItem);
-
-            Assert.That(CustomRepeaterAndSetupAndTearDown.AttributeCallCount, Is.EqualTo(2));
-        }
-
         [Repeat(1), Retry(1)]
         public void TestMethodForRepeatAndRetryExpectedFail() { }
 
         [Repeat(1), CustomRepeater]
         public void TestMethodForRepeatAndCustomRepeatExpectedFail() { }
 
-        [CustomRepeaterAndSetupAndTearDown]
-        public void TestMethodForRepeatableAndSetupTearDownCustomAttribute() { }
-
         #region TestCustomAttribute
 
         internal class CustomRepeater : Attribute, IRepeatTest
         {
             public TestCommand Wrap(TestCommand command) { return null; }
-        }
-
-        internal class CustomRepeaterAndSetupAndTearDown : Attribute, IRepeatTest, IWrapSetUpTearDown
-        {
-            public static int AttributeCallCount;
-
-            public TestCommand Wrap(TestCommand command)
-            {
-                AttributeCallCount++;
-                return new EmptyTestCommand(command.Test);
-            }
         }
 
         #endregion
