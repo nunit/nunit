@@ -66,8 +66,8 @@ namespace NUnit.Framework.Interfaces
 
     /// <summary>
     /// Objects implementing this interface are used to wrap
-    /// tests that can repeat. The implemeting command is run once,
-    /// invoking the chained commands as many times as defined.
+    /// tests that can repeat. The implementing command is run once,
+    /// invoking the chained commands any number of times.
     /// </summary>
     public interface IRepeatTest : ICommandWrapper
     {
