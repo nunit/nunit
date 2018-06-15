@@ -58,6 +58,8 @@ using System.Security;
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 3.5)")]
 #elif NET20
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 2.0)")]
+#elif NETSTANDARD1_4
+[assembly: AssemblyTitle("NUnit Framework (.NET Standard 1.4)")]
 #elif NETSTANDARD1_6
 [assembly: AssemblyTitle("NUnit Framework (.NET Standard 1.6)")]
 #elif NETSTANDARD2_0

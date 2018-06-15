@@ -170,9 +170,8 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region BinarySerializable
+#if SERIALIZATION
 
-#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -180,13 +179,7 @@ namespace NUnit.Framework
         {
             get { return new BinarySerializableConstraint(); }
         }
-#endif
 
-        #endregion
-
-        #region XmlSerializable
-
-#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
@@ -194,9 +187,8 @@ namespace NUnit.Framework
         {
             get { return new XmlSerializableConstraint(); }
         }
-#endif
 
-        #endregion
+#endif
 
         #region EqualTo
 

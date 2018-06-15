@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -29,7 +29,7 @@ namespace NUnit.Compatibility
     /// <summary>
     /// A MarshalByRefObject that lives forever
     /// </summary>
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4 || NETSTANDARD1_6
     public class LongLivedMarshalByRefObject
     {
     }

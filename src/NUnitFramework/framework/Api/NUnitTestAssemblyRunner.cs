@@ -347,10 +347,9 @@ namespace NUnit.Framework.Api
 
             // Set the listener - overriding runners may replace this
             Context.Listener = listener;
-#if NETSTANDARD1_6
+#if !PARALLEL
             Context.Dispatcher = new MainThreadWorkItemDispatcher();
 #else
-#if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
             if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
@@ -360,9 +359,6 @@ namespace NUnit.Framework.Api
                 Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
-#else
-            Context.Dispatcher = new SimpleWorkItemDispatcher();
-#endif
 #endif
         }
 

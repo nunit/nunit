@@ -21,13 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if PARALLEL
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
 {
-#if !NETSTANDARD1_6
     /// <summary>
     /// SimpleWorkItemDispatcher handles execution of WorkItems by
     /// directly executing them. It is provided so that a dispatcher
@@ -107,5 +107,5 @@ namespace NUnit.Framework.Internal.Execution
         }
         #endregion
     }
-#endif
 }
+#endif

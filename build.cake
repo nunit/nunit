@@ -34,6 +34,7 @@ var AllFrameworks = new string[]
     "net40",
     "net35",
     "net20",
+    "netstandard1.4",
     "netstandard1.6",
     "netstandard2.0",
     "netcoreapp1.1",
@@ -358,6 +359,7 @@ Task("PackageZip")
             GetFiles(CurrentImageDir + "bin/net35/*.*") +
             GetFiles(CurrentImageDir + "bin/net40/*.*") +
             GetFiles(CurrentImageDir + "bin/net45/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard1.4/*.*") +
             GetFiles(CurrentImageDir + "bin/netstandard1.6/*.*") +
             GetFiles(CurrentImageDir + "bin/netstandard2.0/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -40,6 +40,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 3.5)")]
 #elif NET20
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 2.0)")]
+#elif NETSTANDARD1_4
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 1.4)")]
 #elif NETSTANDARD1_6
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 1.6)")]
 #elif NETSTANDARD2_0

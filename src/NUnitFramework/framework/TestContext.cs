@@ -138,7 +138,7 @@ namespace NUnit.Framework
                 if (assembly != null)
                     return AssemblyHelper.GetDirectoryName(assembly);
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4 || NETSTANDARD1_6
                 // Test is null, we may be loading tests rather than executing.
                 // Assume that the NUnit framework is in the same directory as the tests
                 return AssemblyHelper.GetDirectoryName(typeof(TestContext).GetTypeInfo().Assembly);

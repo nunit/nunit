@@ -225,4 +225,4 @@ namespace NUnit.Compatibility
         }
     }
 #endif
-}
+        }

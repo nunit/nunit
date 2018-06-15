@@ -17,7 +17,7 @@ This package includes the NUnit 3 framework assembly, which is referenced by you
 
 Supported platforms:
 - .NET Framework 2.0+
-- .NET Standard 1.6+
+- .NET Standard 1.4+
 - .NET Core</description>
     <releaseNotes>This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports NUnit 3 in order to execute tests. Runners intended for use with NUnit 2.x will not run NUnit 3 tests correctly.</releaseNotes>
     <language>en-US</language>
@@ -28,6 +28,10 @@ Supported platforms:
       <group targetFramework="net35" />
       <group targetFramework="net40" />
       <group targetFramework="net45" />
+      <group targetFramework="netstandard1.4">
+        <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="compile" />
+      </group>
       <group targetFramework="netstandard1.6">
         <dependency id="NETStandard.Library" version="1.6.1" />
       </group>
@@ -53,6 +57,9 @@ Supported platforms:
     <file src="bin/net45/nunit.framework.dll" target="lib\net45" />
     <file src="bin/net45/nunit.framework.pdb" target="lib\net45" />
     <file src="bin/net45/nunit.framework.xml" target="lib\net45" />
+    <file src="bin/netstandard1.4/nunit.framework.dll" target="lib\netstandard1.4" />
+    <file src="bin/netstandard1.4/nunit.framework.pdb" target="lib\netstandard1.4" />
+    <file src="bin/netstandard1.4/nunit.framework.xml" target="lib\netstandard1.4" />
     <file src="bin/netstandard1.6/nunit.framework.dll" target="lib\netstandard1.6" />
     <file src="bin/netstandard1.6/nunit.framework.pdb" target="lib\netstandard1.6" />
     <file src="bin/netstandard1.6/nunit.framework.xml" target="lib\netstandard1.6" />

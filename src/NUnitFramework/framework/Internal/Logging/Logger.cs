@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008-2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
             writer.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4 || NETSTANDARD1_6
                 System.Environment.CurrentManagedThreadId,
 #else
                 System.Threading.Thread.CurrentThread.ManagedThreadId,

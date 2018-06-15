@@ -42,7 +42,7 @@ namespace NUnit.Framework.Interfaces
             Guard.ArgumentNotNull(fixtureType, nameof(fixtureType));
             Guard.ArgumentNotNull(method, nameof(method));
 
-            if (!method.DeclaringType.GetTypeInfo().IsAssignableFrom(fixtureType))
+            if (!method.DeclaringType.IsAssignableFrom(fixtureType))
                 throw new ArgumentException("The specified fixture type does not contain the specified method.");
 
             FixtureType = fixtureType;

@@ -246,7 +246,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !NET20 && !NET35 && !NETSTANDARD1_6
+#if !(NET20 || NET35 || NETSTANDARD1_4 || NETSTANDARD1_6)
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
                 {
                     // No need to wrap or rethrow ThreadAbortException
@@ -279,7 +279,24 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
+        /// <summary>
+        /// <para>
+        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
+        /// rather than throwing <see cref="AmbiguousMatchException"/>
+        /// for properties that shadow properties of a different property type
+        /// which is what <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/> does.
+        /// </para>
+        /// <para>
+        /// If you request both public and nonpublic properties, every public property is preferred
+        /// over every nonpublic property. It would violate the principle of least surprise for a
+        /// derived class’s implementation detail to be chosen over the public API for a type.
+        /// </para>
+        /// </summary>
+        /// <param name="type">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
+        /// <param name="name">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
+        /// <param name="bindingFlags">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
+#elif NETSTANDARD1_6
         /// <summary>
         /// <para>
         /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,

@@ -32,7 +32,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
 using System.Security;
 using System.Security.Principal;
 #endif
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
         /// <summary>
         /// The current Principal.
         /// </summary>
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal
 
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
             _currentPrincipal = other.CurrentPrincipal;
 #endif
 
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -397,13 +397,13 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
         }
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
@@ -448,7 +448,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -460,7 +460,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
@@ -514,7 +514,7 @@ namespace NUnit.Framework.Internal
 
 #region InitializeLifetimeService
 
-#if !NETSTANDARD1_6
+#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
         /// <summary>
         /// Obtain lifetime service object
         /// </summary>

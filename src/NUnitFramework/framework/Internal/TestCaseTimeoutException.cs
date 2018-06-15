@@ -24,7 +24,7 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-#if !NETSTANDARD1_6
+#if SERIALIZATION
     using System.Runtime.Serialization;
 #endif
 
@@ -32,9 +32,7 @@ namespace NUnit.Framework.Internal
     /// TestCaseTimeoutException is thrown when a test running directly
     /// on a TestWorker thread is cancelled due to timeout.
     /// </summary>
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class TestCaseTimeoutException : Exception
     {
         /// <summary>
@@ -57,7 +55,7 @@ namespace NUnit.Framework.Internal
         public TestCaseTimeoutException(string message, Exception inner) : base(message, inner)
         { }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>

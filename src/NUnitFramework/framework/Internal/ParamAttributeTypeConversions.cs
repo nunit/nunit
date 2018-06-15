@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static bool TryConvert(object value, Type targetType, out object convertedValue)
         {
-            if (targetType.GetTypeInfo().IsInstanceOfType(value))
+            if (targetType.IsInstanceOfType(value))
             {
                 convertedValue = value;
                 return true;

@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4 || NETSTANDARD1_6
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
@@ -577,7 +577,7 @@ namespace NUnit.Framework.Internal
                     Message = ex.Message;
                     StackTrace = StackFilter.DefaultFilter.Filter(ex.StackTrace);
                 }
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
                 else if (ex is ThreadAbortException)
                 {
                     ResultState = ResultState.Cancelled.WithSite(site);
