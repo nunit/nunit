@@ -42,8 +42,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 2.0 Debug")]
 #elif NETSTANDARD1_4
 [assembly: AssemblyConfiguration(".NET Standard 1.4 Debug")]
-#elif NETSTANDARD1_6
-[assembly: AssemblyConfiguration(".NET Standard 1.6 Debug")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
 #elif NETCOREAPP1_1
@@ -64,8 +62,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 2.0")]
 #elif NETSTANDARD1_4
 [assembly: AssemblyConfiguration(".NET Standard 1.4")]
-#elif NETSTANDARD1_6
-[assembly: AssemblyConfiguration(".NET Standard 1.6")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0")]
 #elif NETCOREAPP1_1

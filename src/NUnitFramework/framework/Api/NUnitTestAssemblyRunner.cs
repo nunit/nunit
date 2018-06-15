@@ -29,11 +29,8 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
-
-#if !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
-#endif
 
 #if NET20 || NET35 || NET40 || NET45
 using System.Windows.Forms;
@@ -305,13 +302,11 @@ namespace NUnit.Framework.Api
                 {
                     System.Diagnostics.Debugger.Launch();
                 }
-#if !NETSTANDARD1_6
                 catch (SecurityException)
                 {
                     TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
                     return;
                 }
-#endif
                 //System.Diagnostics.Debugger.Launch() not implemented on mono
                 catch (NotImplementedException)
                 {

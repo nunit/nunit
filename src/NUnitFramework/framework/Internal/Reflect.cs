@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if !NET20 && !NET35 && !NETSTANDARD1_6
+#if !(NET20 || NET35 || NETSTANDARD1_4)
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
@@ -246,7 +246,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !(NET20 || NET35 || NETSTANDARD1_4 || NETSTANDARD1_6)
+#if !(NET20 || NET35 || NETSTANDARD1_4)
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
@@ -296,23 +296,6 @@ namespace NUnit.Framework.Internal
         /// <param name="type">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
         /// <param name="name">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
         /// <param name="bindingFlags">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-#elif NETSTANDARD1_6
-        /// <summary>
-        /// <para>
-        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
-        /// rather than throwing <see cref="AmbiguousMatchException"/>
-        /// for properties that shadow properties of a different property type
-        /// which is what <see cref="TypeInfo.GetProperty(string, BindingFlags)"/> does.
-        /// </para>
-        /// <para>
-        /// If you request both public and nonpublic properties, every public property is preferred
-        /// over every nonpublic property. It would violate the principle of least surprise for a
-        /// derived class’s implementation detail to be chosen over the public API for a type.
-        /// </para>
-        /// </summary>
-        /// <param name="type">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
-        /// <param name="name">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
-        /// <param name="bindingFlags">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
 #else
         /// <summary>
         /// <para>

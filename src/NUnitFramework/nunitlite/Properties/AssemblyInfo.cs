@@ -42,8 +42,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 2.0)")]
 #elif NETSTANDARD1_4
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 1.4)")]
-#elif NETSTANDARD1_6
-[assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 1.6)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
 #else

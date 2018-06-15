@@ -118,7 +118,7 @@ namespace NUnitLite
             var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
             xmlWriter.WriteAttributeString("nunit-version",
                                            assemblyName.Version.ToString());
-#if NETSTANDARD1_4 || NETSTANDARD1_6
+#if NETSTANDARD1_4
             xmlWriter.WriteAttributeString("clr-version",
                                            System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
@@ -132,7 +132,7 @@ namespace NUnitLite
             xmlWriter.WriteAttributeString("os-version",
                                            OSPlatform.CurrentPlatform.ToString());
 #endif
-#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
+#if !NETSTANDARD1_4
             xmlWriter.WriteAttributeString("platform",
                 Environment.OSVersion.Platform.ToString());
 #endif
@@ -142,7 +142,7 @@ namespace NUnitLite
             xmlWriter.WriteAttributeString("machine-name",
                                            Environment.MachineName);
 #endif
-#if !(NETSTANDARD1_4 || NETSTANDARD1_6)
+#if !NETSTANDARD1_4
             xmlWriter.WriteAttributeString("user",
                                            Environment.UserName);
             xmlWriter.WriteAttributeString("user-domain",

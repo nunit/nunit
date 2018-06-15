@@ -29,7 +29,7 @@ namespace NUnit.Compatibility
     /// <summary>
     /// A MarshalByRefObject that lives forever
     /// </summary>
-#if NETSTANDARD1_4 || NETSTANDARD1_6
+#if NETSTANDARD1_4
     public class LongLivedMarshalByRefObject
     {
     }

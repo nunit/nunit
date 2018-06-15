@@ -171,7 +171,7 @@ namespace NUnitLite
 #else
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
 #endif
-#if NETSTANDARD1_4 || NETSTANDARD1_6
+#if NETSTANDARD1_4
             Writer.WriteLabelLine("  CLR Version: ", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);

@@ -35,7 +35,6 @@ var AllFrameworks = new string[]
     "net35",
     "net20",
     "netstandard1.4",
-    "netstandard1.6",
     "netstandard2.0",
     "netcoreapp1.1",
     "netcoreapp2.0"
@@ -226,8 +225,8 @@ Task("Test20")
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
-Task("TestNetStandard16")
-    .Description("Tests the .NET Standard 1.6 version of the framework")
+Task("TestNetStandard14")
+    .Description("Tests the .NET Standard 1.4 version of the framework")
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -360,7 +359,6 @@ Task("PackageZip")
             GetFiles(CurrentImageDir + "bin/net40/*.*") +
             GetFiles(CurrentImageDir + "bin/net45/*.*") +
             GetFiles(CurrentImageDir + "bin/netstandard1.4/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard1.6/*.*") +
             GetFiles(CurrentImageDir + "bin/netstandard2.0/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
@@ -500,7 +498,7 @@ Task("Test")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
     .IsDependentOn("Test20")
-    .IsDependentOn("TestNetStandard16")
+    .IsDependentOn("TestNetStandard14")
     .IsDependentOn("TestNetStandard20");
 
 Task("Package")

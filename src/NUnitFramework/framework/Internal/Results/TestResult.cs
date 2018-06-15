@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if NETSTANDARD1_4 || NETSTANDARD1_6
+#if NETSTANDARD1_4
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));

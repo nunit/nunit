@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-#if NETSTANDARD1_4 || NETSTANDARD1_6
+#if NETSTANDARD1_4
         const string UriSchemeFile = "file";
         const string SchemeDelimiter = "://";
 #else
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD1_4 || NETSTANDARD1_6 || NETSTANDARD2_0
+#if NETSTANDARD1_4 || NETSTANDARD2_0
         private sealed class ReflectionAssemblyLoader
         {
             private static ReflectionAssemblyLoader instance;

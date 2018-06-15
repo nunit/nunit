@@ -44,10 +44,6 @@ How to use this package:
         <dependency id="NETStandard.Library" version="1.6.1" />
         <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="compile" />
       </group>
-      <group targetFramework="netstandard1.6">
-        <dependency id="NUnit" version="[$version$]" />
-        <dependency id="NETStandard.Library" version="1.6.1" />
-      </group>
       <group targetFramework="netstandard2.0">
         <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="2.0.0" />
@@ -68,8 +64,6 @@ How to use this package:
     <file src="bin/net45/nunitlite.pdb" target="lib\net45" />
     <file src="bin/netstandard1.4/nunitlite.dll" target="lib\netstandard1.4" />
     <file src="bin/netstandard1.4/nunitlite.pdb" target="lib\netstandard1.4" />
-    <file src="bin/netstandard1.6/nunitlite.dll" target="lib\netstandard1.6" />
-    <file src="bin/netstandard1.6/nunitlite.pdb" target="lib\netstandard1.6" />
     <file src="bin/netstandard2.0/nunitlite.dll" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunitlite.pdb" target="lib\netstandard2.0" />
     <file src="bin/net20/nunitlite-runner.exe" target="tools\net20" />
