@@ -118,7 +118,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        [Test, TestCaseSource("FailureData")]
+        [Test, TestCaseSource("FailureData"), SetUICulture("en-US")]
         public void FailsWithBadValues(object badValue, string message)
         {
             string NL = Environment.NewLine;

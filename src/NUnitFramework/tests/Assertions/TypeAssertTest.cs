@@ -72,7 +72,7 @@ namespace NUnit.Framework.Assertions
             Assert.IsNotInstanceOf<System.Int32>("abc123");
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void IsNotInstanceOfFails()
         {
             var expectedMessage =
