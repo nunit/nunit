@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_4
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -54,10 +53,13 @@ namespace NUnit.Framework
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
+#if NETSTANDARD1_4
+            context.CurrentCulture = new System.Globalization.CultureInfo(_culture);
+#else
             context.CurrentCulture = new System.Globalization.CultureInfo(_culture, false);
+#endif
         }
 
         #endregion
     }
 }
-#endif
