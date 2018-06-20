@@ -108,8 +108,20 @@ namespace NUnit.Framework.Internal
         {
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
+#if NETSTANDARD1_4
+                // For .NET Standard 1.x, MethodInfo.IsDefined resolves to an extension method,
+                // CustomAttributeExtensions.IsDefined, which delegates to Attribute.IsDefined.
+                // On .NET Core and .NET Framework, Attribute.IsDefined throws ArgumentException
+                // for types which aren’t assignable to System.Attribute (such as interface types).
+                foreach (var attributeData in method.CustomAttributes)
+                {
+                    if (attributeType.IsAssignableFrom(attributeData.AttributeType))
+                        return true;
+                }
+#else
                 if (method.IsDefined(attributeType, false))
                     return true;
+#endif
             }
             return false;
         }
