@@ -112,7 +112,6 @@ namespace NUnit.Framework.Internal
             ExpectFailure( attr, "Not supported under culture fr-FR" );
         }
 
-#if !NETCOREAPP1_1
         [Test,SetCulture("fr-FR")]
         public void LoadWithFrenchCulture()
         {
@@ -158,6 +157,5 @@ namespace NUnit.Framework.Internal
                 Assert.AreEqual( "en-GB", CultureInfo.CurrentCulture.Name );
             }
         }
-#endif
     }
 }
