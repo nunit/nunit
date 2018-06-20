@@ -143,7 +143,7 @@ using NUnit.Compatibility;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 #endif
@@ -352,13 +352,13 @@ namespace NUnit.Options
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -468,9 +468,7 @@ namespace NUnit.Options
         }
     }
 
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class OptionException : Exception
     {
         private readonly string option;
@@ -491,7 +489,7 @@ namespace NUnit.Options
             this.option = optionName;
         }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -503,7 +501,7 @@ namespace NUnit.Options
             get {return this.option;}
         }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {

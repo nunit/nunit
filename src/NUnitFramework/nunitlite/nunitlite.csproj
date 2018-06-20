@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net20;net35;net40;net45;netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net20;net35;net40;net45;netstandard1.4;netstandard2.0</TargetFrameworks>
     <RootNamespace>NUnitLite</RootNamespace>
   </PropertyGroup>
 
@@ -11,6 +11,10 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net20'">
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" PrivateAssets="compile" />
   </ItemGroup>
 
 </Project>

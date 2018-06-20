@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Security;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -75,7 +74,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             log.Debug("Loading {0}", assembly.FullName);
 #else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
@@ -95,7 +94,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyName, IDictionary<string, object> options)
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             log.Debug("Loading {0}", assemblyName);
 #else
             log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
@@ -273,7 +272,7 @@ namespace NUnit.Framework.Api
 
             testAssembly.ApplyAttributesToTest(assembly);
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 #endif

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;

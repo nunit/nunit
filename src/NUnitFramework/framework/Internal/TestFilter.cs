@@ -203,9 +203,7 @@ namespace NUnit.Framework.Internal
         /// Nested class provides an empty filter - one that always
         /// returns true when called. It never matches explicitly.
         /// </summary>
-#if !NETSTANDARD1_6
         [Serializable]
-#endif
         private class EmptyFilter : TestFilter
         {
             public override bool Match( ITest test )

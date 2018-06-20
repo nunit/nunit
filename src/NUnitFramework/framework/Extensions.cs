@@ -38,16 +38,65 @@ namespace NUnit.Framework
             return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
         }
 
+#if NETSTANDARD1_4
+        public static bool HasAttribute<T>(this MemberInfo attributeProvider, bool inherit) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetCustomAttributes(inherit).OfType<T>().Any();
+        }
+
+        public static bool HasAttribute<T>(this ParameterInfo attributeProvider, bool inherit) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetCustomAttributes(inherit).OfType<T>().Any();
+        }
+
+        public static bool HasAttribute<T>(this Type attributeProvider, bool inherit) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetTypeInfo().GetCustomAttributes(inherit).OfType<T>().Any();
+        }
+
+        public static bool HasAttribute<T>(this Assembly attributeProvider) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetCustomAttributes().OfType<T>().Any();
+        }
+
+        public static T[] GetAttributes<T>(this MemberInfo attributeProvider, bool inherit) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetCustomAttributes(inherit).OfType<T>().ToArray();
+        }
+
+        public static T[] GetAttributes<T>(this ParameterInfo attributeProvider, bool inherit) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetCustomAttributes(inherit).OfType<T>().ToArray();
+        }
+
+        public static T[] GetAttributes<T>(this Type attributeProvider, bool inherit) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetTypeInfo().GetCustomAttributes(inherit).OfType<T>().ToArray();
+        }
+
+        public static T[] GetAttributes<T>(this Assembly attributeProvider) where T : class
+        {
+            // Filter manually for any targets that may run on .NET Core 1.1 or lower
+            // because only types derived from System.Attribute are allowed.
+            return attributeProvider.GetCustomAttributes().OfType<T>().ToArray();
+        }
+#else
         public static bool HasAttribute<T>(this ICustomAttributeProvider attributeProvider, bool inherit)
         {
-#if NETSTANDARD1_6
-            if (!typeof(Attribute).IsAssignableFrom(typeof(T)))
-            {
-                // Filter manually for any targets that may run on .NET Core 1.1 or lower
-                // because only types derived from System.Attribute are allowed.
-                return attributeProvider.GetCustomAttributes(inherit).OfType<T>().Any();
-            }
-#endif
             return attributeProvider.IsDefined(typeof(T), inherit);
         }
 
@@ -58,14 +107,6 @@ namespace NUnit.Framework
 
         public static T[] GetAttributes<T>(this ICustomAttributeProvider attributeProvider, bool inherit) where T : class
         {
-#if NETSTANDARD1_6
-            if (!typeof(Attribute).IsAssignableFrom(typeof(T)))
-            {
-                // Filter manually for any targets that may run on .NET Core 1.1 or lower
-                // because only types derived from System.Attribute are allowed.
-                return attributeProvider.GetCustomAttributes(inherit).OfType<T>().ToArray();
-            }
-#endif
             return (T[])attributeProvider.GetCustomAttributes(typeof(T), inherit);
         }
 
@@ -78,5 +119,6 @@ namespace NUnit.Framework
         {
             return ((ICustomAttributeProvider)type.GetTypeInfo()).GetAttributes<T>(inherit);
         }
+#endif
     }
 }

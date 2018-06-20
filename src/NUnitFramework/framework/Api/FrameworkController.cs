@@ -146,7 +146,7 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                     var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
                     var id = Process.GetCurrentProcess().Id;
@@ -367,7 +367,7 @@ namespace NUnit.Framework.Api
             targetNode.ChildNodes.Insert(0, env);
 
             env.AddAttribute("framework-version", typeof(FrameworkController).GetTypeInfo().Assembly.GetName().Version.ToString());
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             env.AddAttribute("clr-version", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
             env.AddAttribute("clr-version", Environment.Version.ToString());
@@ -377,12 +377,14 @@ namespace NUnit.Framework.Api
 #else
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
 #endif
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
 #endif
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
+#if !NETSTANDARD1_4
             env.AddAttribute("machine-name", Environment.MachineName);
-#if !NETSTANDARD1_6
+#endif
+#if !NETSTANDARD1_4
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
 #endif

@@ -52,14 +52,12 @@ namespace NUnit.Framework.Internal
         /// <param name="inner">The inner.</param>
         public InvalidPlatformException(string message, Exception inner) : base(message, inner) { }
 
-#if !NETSTANDARD1_6
         /// <summary>
         /// Serialization constructor for the <see cref="InvalidPlatformException"/> class
         /// </summary>
         protected InvalidPlatformException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         { }
-#endif
     }
 }
 #endif

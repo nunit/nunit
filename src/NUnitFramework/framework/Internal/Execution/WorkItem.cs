@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if !NETSTANDARD1_6
+#if PARALLEL
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -255,7 +255,7 @@ namespace NUnit.Framework.Internal.Execution
             else
                 RunOnCurrentThread();
 #else
-                RunOnCurrentThread();
+            RunOnCurrentThread();
 #endif
         }
 
@@ -459,7 +459,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-#if !NETSTANDARD1_6
+#if PARALLEL
         private Thread thread;
 
 #if APARTMENT_STATE
@@ -486,7 +486,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-                private void RunOnCurrentThread()
+        private void RunOnCurrentThread()
         {
             Context.CurrentTest = this.Test;
             Context.CurrentResult = this.Result;

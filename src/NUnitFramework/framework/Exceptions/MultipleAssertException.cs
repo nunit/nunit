@@ -30,9 +30,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when an assertion failed.
     /// </summary>
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class MultipleAssertException : ResultStateException
     {
         /// <summary>
@@ -64,7 +62,7 @@ namespace NUnit.Framework
             base(message, inner) 
         {}
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>

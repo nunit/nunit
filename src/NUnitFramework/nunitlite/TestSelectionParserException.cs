@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,7 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if !NETSTANDARD1_6
+#if SERIALIZATION
 using System.Runtime.Serialization;
 #endif
 
@@ -32,9 +32,7 @@ namespace NUnit.Common
     /// TestSelectionParserException is thrown when an error
     /// is found while parsing the selection expression.
     /// </summary>
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class TestSelectionParserException : Exception
     {
         /// <summary>
@@ -49,7 +47,7 @@ namespace NUnit.Common
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         /// <summary>
         /// Serialization constructor
         /// </summary>

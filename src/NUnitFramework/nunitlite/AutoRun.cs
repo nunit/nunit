@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -65,7 +65,7 @@ namespace NUnitLite
             _testAssembly = testAssembly;
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
         /// <summary>
         /// Default Constructor, only used where GetCallingAssembly is available
         /// </summary>

@@ -378,7 +378,7 @@ namespace NUnit.Common
                         }
                     }
                 });
-#if !NETSTANDARD1_6
+#if PARALLEL
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
 #endif
