@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" 
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+         IgnorableNamespaces="uap mp rescap">
+
+  <Identity Name="006dccdf-9cf3-4058-8461-7d576b95bb12" Publisher="CN=NUnit" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="006dccdf-9cf3-4058-8461-7d576b95bb12" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Properties>
+    <DisplayName>NUnit.AcceptanceTests.Universal.App</DisplayName>
+    <PublisherDisplayName>NUnit</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="NUnit.AcceptanceTests.Universal.App" Executable="$targetnametoken$.exe" EntryPoint="uap10_0.App">
+      <uap:VisualElements DisplayName="uap10.0" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="uap10.0" BackgroundColor="transparent" />
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
+    <rescap:Capability Name="broadFileSystemAccess" />
+  </Capabilities>
+</Package>

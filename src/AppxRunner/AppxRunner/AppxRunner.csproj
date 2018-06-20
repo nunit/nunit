@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net46</TargetFramework>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <LangVersion>latest</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Build" />
+    <Reference Include="System.Runtime.WindowsRuntime" HintPath="C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Runtime.WindowsRuntime.dll" />
+    <Reference Include="Windows" HintPath="$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\Windows.winmd" />
+  </ItemGroup>
+
+</Project>

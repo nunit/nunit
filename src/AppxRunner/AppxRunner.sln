@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppxRunner", "AppxRunner\AppxRunner.csproj", "{004B957A-45D2-4178-9A9D-60B67C3C5D8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{004B957A-45D2-4178-9A9D-60B67C3C5D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{004B957A-45D2-4178-9A9D-60B67C3C5D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{004B957A-45D2-4178-9A9D-60B67C3C5D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{004B957A-45D2-4178-9A9D-60B67C3C5D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04723B7C-599F-4C80-AF0A-31AA49E4B343}
+	EndGlobalSection
+EndGlobal

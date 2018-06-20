@@ -8,6 +8,8 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
+#load acceptance.cake
+
 //////////////////////////////////////////////////////////////////////
 // SET ERROR LEVELS
 //////////////////////////////////////////////////////////////////////
@@ -249,6 +251,7 @@ Task("TestNetStandard20")
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
+
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
 //////////////////////////////////////////////////////////////////////
@@ -466,22 +469,6 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
-public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
-{
-    if (settings == null) throw new ArgumentNullException(nameof(settings));
-
-    if (!string.IsNullOrEmpty(rawArgument))
-    {
-        var previousCustomizer = settings.ArgumentCustomization;
-        if (previousCustomizer != null)
-            settings.ArgumentCustomization = builder => previousCustomizer.Invoke(builder).Append(rawArgument);
-        else
-            settings.ArgumentCustomization = builder => builder.Append(rawArgument);
-    }
-
-    return settings;
-}
-
 //////////////////////////////////////////////////////////////////////
 // TASK TARGETS
 //////////////////////////////////////////////////////////////////////
@@ -512,6 +499,7 @@ Task("Appveyor")
     .IsDependentOn("Build")
     .IsDependentOn("Test")
     .IsDependentOn("Package")
+    .IsDependentOn("Acceptance")
     .IsDependentOn("UploadArtifacts");
 
 Task("Travis")

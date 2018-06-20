@@ -145,7 +145,17 @@ namespace NUnitLite
 
                 using (errWriter)
                 {
-                    _textUI = new TextUI(outWriter, Console.In, _options);
+                    TextReader reader;
+                    try
+                    {
+                        reader = Console.In;
+                    }
+                    catch (PlatformNotSupportedException) // UWP apps
+                    {
+                        reader = null;
+                    }
+
+                    _textUI = new TextUI(outWriter, reader, _options);
                     return Execute();
                 }
             }

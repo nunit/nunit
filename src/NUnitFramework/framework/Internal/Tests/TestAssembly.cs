@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
             : base(path)
         {
             this.Assembly = assembly;
-            this.Name = Path.GetFileName(path);
+            this.Name = TryGetFileName(path);
         }
 
         /// <summary>
@@ -57,7 +57,12 @@ namespace NUnit.Framework.Internal
         /// <param name="path">The path used to load the assembly.</param>
         public TestAssembly(string path) : base(path)
         {
-            this.Name = Path.GetFileName(path);
+            this.Name = TryGetFileName(path);
+        }
+
+        private static string TryGetFileName(string path)
+        {
+            return path == "<Unknown>" ? "<Unknown>" : Path.GetFileName(path);
         }
 
         /// <summary>
