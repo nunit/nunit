@@ -79,9 +79,20 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Gets a TextWriter that will send output directly to Console.Error
+        /// Gets a TextWriter that will send output directly to Console.Error as errors
         /// </summary>
         public static TextWriter Error = new EventListenerTextWriter("Error", Console.Error);
+
+        /// <summary>
+        /// Gets a TextWriter that will send output directly to Console.Error as information
+        /// </summary>
+        public static TextWriter Information = new EventListenerTextWriter("Information", Console.Error);
+
+        /// <summary>
+        /// Gets a TextWriter that will send output directly to Console.Error as warnings
+        /// </summary>
+        public static TextWriter Warning = new EventListenerTextWriter("Warning", Console.Error);
+
 
         /// <summary>
         /// Gets a TextWriter for use in displaying immediate progress messages

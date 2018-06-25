@@ -92,6 +92,8 @@ namespace NUnit.Framework
             // Test purely for display purposes
             TestContext.Progress.WriteLine("TestContext.Progress displays immediately");
             TestContext.Error.WriteLine("TestContext.Error displays immediately as well");
+            TestContext.Information.WriteLine("TestContext.Information displays immediately as well");
+            TestContext.Warning.WriteLine("TestContext.Warning displays immediately as well");
             Console.Error.WriteLine("Console.Error also displays immediately");
             Console.WriteLine("This line is added to the result and displayed when test ends");
             Console.WriteLine("As is this line");
