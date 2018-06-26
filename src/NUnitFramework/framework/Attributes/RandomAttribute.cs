@@ -38,7 +38,7 @@ namespace NUnit.Framework
     /// to a single parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class RandomAttribute : DataAttribute, IParameterDataSource
+    public class RandomAttribute : NUnitAttribute, IParameterDataSource
     {
         private RandomDataSource _source;
         private readonly int _count;

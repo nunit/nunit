@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// individual parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
-    public class RangeAttribute : DataAttribute, IParameterDataSource
+    public class RangeAttribute : NUnitAttribute, IParameterDataSource
     {
         private readonly object _from;
         private readonly object _to;
