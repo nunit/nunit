@@ -55,7 +55,7 @@ namespace NUnit.Framework.Attributes
             Assert.Fail("Test Should Not Run By Design.");
         }
 
-        #region DataAttribute TestClass
+        #region IParameterDataSource Attribute
 
         public enum ValuesEnum
         {
