@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework
 {
@@ -30,6 +31,8 @@ namespace NUnit.Framework
     /// defined by NUnit. Used to select all data sources for a 
     /// method, class or parameter.
     /// </summary>
+    [Obsolete("Holdover from NUnit v2. Please implement " + nameof(IParameterDataSource) +
+              " for your attribute instead.")]
     public abstract class DataAttribute : NUnitAttribute
     {
         /// <summary>

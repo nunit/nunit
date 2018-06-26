@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class ValuesAttribute : DataAttribute, IParameterDataSource
+    public class ValuesAttribute : NUnitAttribute, IParameterDataSource
     {
         /// <summary>
         /// The collection of data to be returned. Must
