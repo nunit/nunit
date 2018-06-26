@@ -38,20 +38,4 @@ namespace NUnit.TestData.CultureAttributeData
         [Test, Culture("fr-CA")]
         public void FrenchCanadaTest() { }
     }
-
-#if !NETCOREAPP1_1
-    [TestFixture, SetCulture("xx-XX")]
-    public class FixtureWithInvalidSetCultureAttribute
-    {
-        [Test]
-        public void SomeTest() { }
-    }
-
-    [TestFixture]
-    public class FixtureWithInvalidSetCultureAttributeOnTest
-    {
-        [Test, SetCulture("xx-XX")]
-        public void InvalidCultureSet() { }
-    }
-#endif
 }

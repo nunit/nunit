@@ -211,7 +211,7 @@ namespace NUnit.Framework.Assertions
                 "  But was:  <System.Exception: my message" + Environment.NewLine));
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void DerivedExceptionThrown()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentException));
@@ -222,7 +222,7 @@ namespace NUnit.Framework.Assertions
             CheckForSpuriousAssertionResults();
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void DerivedExceptionThrownAsync()
         {
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentExceptionAsync));

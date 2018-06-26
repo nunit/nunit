@@ -382,7 +382,9 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !NETSTANDARD1_4
+#if NETSTANDARD1_4
+                CultureInfo.CurrentCulture = _currentCulture;
+#else
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -397,7 +399,9 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !NETSTANDARD1_4
+#if NETSTANDARD1_4
+                CultureInfo.CurrentUICulture = _currentUICulture;
+#else
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
@@ -460,7 +464,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !NETSTANDARD1_4
+#if NETSTANDARD1_4
+            CultureInfo.CurrentCulture = _currentCulture;
+            CultureInfo.CurrentUICulture = _currentUICulture;
+#else
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
