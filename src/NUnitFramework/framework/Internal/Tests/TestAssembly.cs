@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
         /// specifying the Assembly and the name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly this test represents.</param>
-        /// <param name="name">The name of the assembly.</param>
+        /// <param name="name">The desired name for the test suite.</param>
         public TestAssembly(Assembly assembly, string name)
             : base(name)
         {
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestAssembly"/> class
         /// specifying the name of the assembly.
         /// </summary>
-        /// <param name="name">The name of the assembly.</param>
+        /// <param name="name">The desired name for the test suite.</param>
         public TestAssembly(string name) : base(name)
         {
             this.Name = name;
