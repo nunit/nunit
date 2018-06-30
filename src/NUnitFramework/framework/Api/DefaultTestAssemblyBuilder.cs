@@ -202,18 +202,17 @@ namespace NUnit.Framework.Api
             int testcases = 0;
             foreach (Type testType in testTypes)
             {
-                try
+                // Any exceptions from this call are fatal problems in NUnit itself,
+                // since this is always DefaultSuiteBuilder and the current implementation
+                // of DefaultSuiteBuilder.CanBuildFrom cannot invoke any user code.
+                if (_defaultSuiteBuilder.CanBuildFrom(testType))
                 {
-                    if (_defaultSuiteBuilder.CanBuildFrom(testType))
-                    {
-                        Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
-                        fixtures.Add(fixture);
-                        testcases += fixture.TestCaseCount;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    log.Error(ex.ToString());
+                    // Any exceptions from this call are fatal problems in NUnit itself,
+                    // since this is always DefaultSuiteBuilder and the current implementation
+                    // of DefaultSuiteBuilder.BuildFrom handles all exceptions from user code.
+                    Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
+                    fixtures.Add(fixture);
+                    testcases += fixture.TestCaseCount;
                 }
             }
 
