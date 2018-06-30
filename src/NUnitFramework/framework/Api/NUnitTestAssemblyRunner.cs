@@ -141,17 +141,17 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Loads the tests found in an Assembly
         /// </summary>
-        /// <param name="assemblyName">File name of the assembly to load</param>
+        /// <param name="assemblyNameOrPath">File name or path of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public ITest Load(string assemblyName, IDictionary<string, object> settings)
+        public ITest Load(string assemblyNameOrPath, IDictionary<string, object> settings)
         {
             Settings = settings;
 
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
-            return LoadedTest = _builder.Build(assemblyName, settings);
+            return LoadedTest = _builder.Build(assemblyNameOrPath, settings);
 
         }
 

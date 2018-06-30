@@ -81,42 +81,46 @@ namespace NUnit.Framework.Api
 #endif
 
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
-            return Build(assembly, assemblyPath, options);
+            string suiteName = assemblyPath.Equals("<Unknown>")
+                ? AssemblyHelper.GetAssemblyName(assembly).FullName
+                : Path.GetFileName(assemblyPath);
+
+            return Build(assembly, suiteName, options);
         }
 
         /// <summary>
-        /// Build a suite of tests given the filename of an assembly
+        /// Build a suite of tests given the name or the location of an assembly
         /// </summary>
-        /// <param name="assemblyName">The filename of the assembly from which tests are to be built</param>
+        /// <param name="assemblyNameOrPath">The name or the location of the assembly.</param>
         /// <param name="options">A dictionary of options to use in building the suite</param>
         /// <returns>
         /// A TestSuite containing the tests found in the assembly
         /// </returns>
-        public ITest Build(string assemblyName, IDictionary<string, object> options)
+        public ITest Build(string assemblyNameOrPath, IDictionary<string, object> options)
         {
 #if NETSTANDARD1_4
-            log.Debug("Loading {0}", assemblyName);
+            log.Debug("Loading {0}", assemblyNameOrPath);
 #else
-            log.Debug("Loading {0} in AppDomain {1}", assemblyName, AppDomain.CurrentDomain.FriendlyName);
+            log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
 #endif
 
             TestSuite testAssembly = null;
 
             try
             {
-                var assembly = AssemblyHelper.Load(assemblyName);
-                testAssembly = Build(assembly, assemblyName, options);
+                var assembly = AssemblyHelper.Load(assemblyNameOrPath);
+                testAssembly = Build(assembly, Path.GetFileName(assemblyNameOrPath), options);
             }
             catch (Exception ex)
             {
-                testAssembly = new TestAssembly(assemblyName);
+                testAssembly = new TestAssembly(Path.GetFileName(assemblyNameOrPath));
                 testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
             return testAssembly;
         }
 
-        private TestSuite Build(Assembly assembly, string assemblyPath, IDictionary<string, object> options)
+        private TestSuite Build(Assembly assembly, string suiteName, IDictionary<string, object> options)
         {
             TestSuite testAssembly = null;
 
@@ -168,11 +172,11 @@ namespace NUnit.Framework.Api
                     fixtureNames = options[FrameworkPackageSettings.LOAD] as IList;
                 var fixtures = GetFixtures(assembly, fixtureNames);
 
-                testAssembly = BuildTestAssembly(assembly, assemblyPath, fixtures);
+                testAssembly = BuildTestAssembly(assembly, suiteName, fixtures);
             }
             catch (Exception ex)
             {
-                testAssembly = new TestAssembly(assemblyPath);
+                testAssembly = new TestAssembly(suiteName);
                 testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
@@ -254,9 +258,9 @@ namespace NUnit.Framework.Api
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-        private TestSuite BuildTestAssembly(Assembly assembly, string assemblyName, IList<Test> fixtures)
+        private TestSuite BuildTestAssembly(Assembly assembly, string suiteName, IList<Test> fixtures)
         {
-            TestSuite testAssembly = new TestAssembly(assembly, assemblyName);
+            TestSuite testAssembly = new TestAssembly(assembly, suiteName);
 
             if (fixtures.Count == 0)
             {

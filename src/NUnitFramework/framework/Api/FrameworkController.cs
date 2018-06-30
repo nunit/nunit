@@ -128,9 +128,9 @@ namespace NUnit.Framework.Api
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-        private void Initialize(string assemblyPath, IDictionary settings)
+        private void Initialize(string assemblyNameOrPath, IDictionary settings)
         {
-            AssemblyNameOrPath = assemblyPath;
+            AssemblyNameOrPath = assemblyNameOrPath;
 
             var newSettings = settings as IDictionary<string, object>;
             Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Api
 #else
                     var id = Process.GetCurrentProcess().Id;
 #endif
-                    var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
+                    var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyNameOrPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
             }
