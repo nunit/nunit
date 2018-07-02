@@ -234,7 +234,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="type">The type to be used as a fixture.</param>
         /// <param name="filter">Filter used to select methods as tests.</param>
-        public IEnumerable<TestSuite> BuildFrom(Type type, PreFilter filter)
+        public IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter)
         {
             yield return _builder.BuildFrom(type, filter, this);
         }

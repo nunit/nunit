@@ -83,6 +83,9 @@ namespace NUnit.Framework.Api
         // Mixed filters
         [TestCase("NUnit.Tests.Assemblies", "NUnit.Tests.Singletons", "NUnit.Tests.FixtureWithTestCases", ExpectedResult = MockTestFixture.Tests + FixtureWithTestCases.Tests + OneTestCase.Tests)]
         [TestCase("NUnit.Tests.Assemblies.MockTestFixture", "NUnit.Tests.Assemblies", ExpectedResult = MockTestFixture.Tests)]
+        // Nested Filters (highest level one should be used)
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture", "NUnit.Tests.Assemblies.MockTestFixture.TestWithException", ExpectedResult = MockTestFixture.Tests)]
+        [TestCase("NUnit.Tests.Assemblies.MockTestFixture.TestWithException", "NUnit.Tests.Assemblies.MockTestFixture", ExpectedResult = MockTestFixture.Tests)]
         public int LoadWithPreFilter(params string[] filters)
         {
             var settings = new Dictionary<string, object>();

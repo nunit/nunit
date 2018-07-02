@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,41 +22,26 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {
-    using Internal;
-
-    // TODO: These methods should really return IEnumerable<TestFixture>, 
-    // but that requires changes to the Test hierarchy.
-
     /// <summary>
-    /// The IFixtureBuilder interface is exposed by a class that knows how to
-    /// build test fixtures from a specified type. In general, it is exposed
-    /// by an attribute, but it may be implemented in a helper class used by the
-    /// attribute in some cases.
+    /// Implemented by filters for use in deciding which
+    /// Types and Methods should be used to generate tests.
     /// </summary>
-    public interface IFixtureBuilder
+    public interface IPreFilter
     {
         /// <summary>
-        /// Builds any number of test fixtures from the specified type.
+        /// Use the filter on a Type, returning true if the type matches the filter
+        /// and should therefore be included in the discovery process.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
-        IEnumerable<TestSuite> BuildFrom(Type type);
-    }
+        bool IsMatch(Type type);
 
-    /// <summary>
-    /// The IFixtureBuilder2 interface extends IFixtureBuilder by allowing
-    /// use of a PreFilter, which is used to select methods as test cases.
-    /// </summary>
-    public interface IFixtureBuilder2 : IFixtureBuilder
-    {
         /// <summary>
-        /// Builds any number of test fixtures from the specified type.
+        /// Use the filter on a Type, returning true if the type matches the filter
+        /// and should therefore be included in the discovery process.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
-        /// <param name="filter">PreFilter to be used to select methods.</param>
-        IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter);
+        bool IsMatch(Type type, MethodInfo method);
     }
 }

@@ -57,6 +57,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="type">The Type to be used as a suite.</param>
         /// <param name="filter">A PreFilter for selecting methods.</param>
         /// <returns></returns>
-        TestSuite BuildFrom(Type type, PreFilter filter);
+        TestSuite BuildFrom(Type type, IPreFilter filter);
     }
 }

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2015-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -254,13 +254,11 @@ namespace NUnitLite
 
         private void LoadTests(IDictionary<string, object> runSettings)
         {
-            DateTime startTime = DateTime.UtcNow;
-            long startTicks = Stopwatch.GetTimestamp();
+            TimeStamp startTime = new TimeStamp();
             _runner.Load(_testAssembly, runSettings);
-            DateTime endTime = DateTime.UtcNow;
-            double duration = (double)(Stopwatch.GetTimestamp() - startTicks) / Stopwatch.Frequency;
+            TimeStamp endTime = new TimeStamp();
 
-            _textUI.DisplayDiscoveryReport(startTime, endTime, duration);
+            _textUI.DisplayDiscoveryReport(startTime, endTime);
         }
 
         public int RunTests(TestFilter filter, IDictionary<string, object> runSettings)

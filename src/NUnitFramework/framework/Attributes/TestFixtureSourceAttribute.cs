@@ -122,7 +122,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="type">The type to be used as a fixture.</param>
         /// <param name="filter">PreFilter used to select methods as tests.</param>
-        public IEnumerable<TestSuite> BuildFrom(Type type, PreFilter filter)
+        public IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter)
         {
             Type sourceType = SourceType ?? type;
 

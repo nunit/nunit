@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="type">The Type to be used as a suite.</param>
         /// <param name="filter">A PreFilter for selecting methods.</param>
         /// <returns></returns>
-        public TestSuite BuildFrom(Type type, PreFilter filter)
+        public TestSuite BuildFrom(Type type, IPreFilter filter)
         {
             var fixtures = new List<TestSuite>();
 

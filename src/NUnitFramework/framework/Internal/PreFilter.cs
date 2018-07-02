@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,19 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// The PreFilter class implements a simplified filter for use in deciding which
+    /// Implements a simplified filter for use in deciding which
     /// Types and Methods should be used to generate tests. It is consructed with a 
     /// list of strings, each of which may end up being interpreted in various ways.
     /// </summary>
-    public class PreFilter
+    internal class PreFilter : IPreFilter
     {
         private static readonly char[] ARG_START = new char[] { '(', '<' };
 
-        private List<FilterElement> _filters = new List<FilterElement>();
+        private readonly List<FilterElement> _filters = new List<FilterElement>();
 
         /// <summary>
         /// Return a new PreFilter, without elements, which is considered
@@ -48,7 +49,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return true if the filer is empty, in which case it
+        /// Return true if the filter is empty, in which case it
         /// always succeeds. Technically, this is just a filter and
         /// you can add elements but it's best to use Empty when
         /// you need an empty filter and new when you plan to add.
@@ -64,6 +65,24 @@ namespace NUnit.Framework.Internal
         /// <param name="filterText"></param>
         public void Add(string filterText)
         {
+            // First, make sure the new filter is not redundant
+            foreach (var filter in _filters)
+            {
+                if (filter.Text == filterText)
+                    return;
+
+                if (filterText.StartsWith(filter.Text + "."))
+                    return;
+            }
+
+            var newFilter = new FilterElement(filterText);
+
+            // Check to see if it makes any of the existing
+            // filter elements redundant.
+            for (int index = _filters.Count - 1; index >= 0; index--)
+                if (_filters[index].Text.StartsWith(filterText + "."))
+                    _filters.RemoveAt(index);
+
             _filters.Add(new FilterElement(filterText));
         }
 
@@ -71,7 +90,7 @@ namespace NUnit.Framework.Internal
         /// Use the filter on a Type, returning true if the type matches the filter
         /// and should therefore be included in the discovery process.
         /// </summary>
-        public bool Match(Type type)
+        public bool IsMatch(Type type)
         {
             if (IsEmpty)
                 return true;
@@ -91,7 +110,7 @@ namespace NUnit.Framework.Internal
         /// Use the filter on a Type, returning true if the type matches the filter
         /// and should therefore be included in the discovery process.
         /// </summary>
-        public bool Match(Type type, MethodInfo method)
+        public bool IsMatch(Type type, MethodInfo method)
         {
             if (IsEmpty)
                 return true;
@@ -127,7 +146,7 @@ namespace NUnit.Framework.Internal
 
         private class FilterElement
         {
-            public FilterElementType ElementType = FilterElementType.Unknown;
+            private FilterElementType ElementType = FilterElementType.Unknown;
             public string Text;
             public string ClassName;
             public string MethodName;

@@ -48,9 +48,6 @@ namespace NUnit.Framework.Api
         /// </summary>
         readonly ISuiteBuilder _defaultSuiteBuilder;
 
-        /// <summary>
-        /// The PreFilter used by this builder
-        /// </summary>
         private PreFilter _filter;
 
         #endregion
@@ -174,7 +171,7 @@ namespace NUnit.Framework.Api
 
                 _filter = new PreFilter();
                 if (options.ContainsKey(FrameworkPackageSettings.LOAD))
-                    foreach (string filterText in (IList<string>)options[FrameworkPackageSettings.LOAD])
+                    foreach (string filterText in (IList)options[FrameworkPackageSettings.LOAD])
                         _filter.Add(filterText);
 
                 var fixtures = GetFixtures(assembly);
@@ -238,7 +235,7 @@ namespace NUnit.Framework.Api
             var result = new List<Type>();
 
             foreach (Type type in assembly.GetTypes())
-                if (_filter.Match(type))
+                if (_filter.IsMatch(type))
                     result.Add(type);
 
             return result;

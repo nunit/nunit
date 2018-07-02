@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="filter">Filter used to select methods as tests.</param>
         /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        public TestSuite BuildFrom(Type type, PreFilter filter)
+        public TestSuite BuildFrom(Type type, IPreFilter filter)
         {
             var fixture = new TestFixture(type);
 
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="filter">Filter used to select methods as tests.</param>
         /// <param name="testFixtureData">An object implementing ITestFixtureData or null.</param>
         /// <returns></returns>
-        public TestSuite BuildFrom(Type type, PreFilter filter, ITestFixtureData testFixtureData)
+        public TestSuite BuildFrom(Type type, IPreFilter filter, ITestFixtureData testFixtureData)
         {
             Guard.ArgumentNotNull(testFixtureData, nameof(testFixtureData));
 
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Method to add test cases to the newly constructed fixture.
         /// </summary>
-        private void AddTestCasesToFixture(TestFixture fixture, PreFilter filter)
+        private void AddTestCasesToFixture(TestFixture fixture, IPreFilter filter)
         {
             // TODO: Check this logic added from Neil's build.
             if (fixture.Type.GetTypeInfo().ContainsGenericParameters)
@@ -181,7 +181,7 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (MethodInfo method in methods)
             {
-                if (filter.Match(fixture.Type, method))
+                if (filter.IsMatch(fixture.Type, method))
                 {
                     Test test = BuildTestCase(new FixtureMethod(fixture.Type, method), fixture);
 
