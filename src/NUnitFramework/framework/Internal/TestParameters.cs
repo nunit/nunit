@@ -109,12 +109,25 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object[] Arguments { get; internal set; }
 
+        private string _testName;
+
         /// <summary>
         /// A name to be used for this test case in lieu
         /// of the standard generated name containing
         /// the argument list.
         /// </summary>
-        public string TestName { get; set; }
+        public string TestName
+        {
+            get
+            {
+                return _testName;
+            }
+            set
+            {
+                Guard.OperationValid(ArgDisplayNames == null || value == null, "TestName cannot be set when argument display names are set.");
+                _testName = value;
+            }
+        }
 
         /// <summary>
         /// Gets the property dictionary for this test
@@ -149,10 +162,23 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object[] OriginalArguments { get; private set; }
 
+        private string[] _argDisplayNames;
+
         /// <summary>
         /// The list of display names to use as the parameters in the test name.
         /// </summary>
-        internal string[] ArgDisplayNames { get; set; }
+        internal string[] ArgDisplayNames
+        {
+            get
+            {
+                return _argDisplayNames;
+            }
+            set
+            {
+                Guard.OperationValid(TestName == null || value == null, "Argument display names cannot be set when TestName is set.");
+                _argDisplayNames = value;
+            }
+        }
 
         #endregion
     }
