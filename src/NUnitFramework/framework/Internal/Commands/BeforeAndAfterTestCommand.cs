@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Commands
             if (Test.Fixture == null)
                 Test.Fixture = context.TestObject;
 
-            ThreadAbortSafeRun(context, () =>
+            RunTestMethodInThreadAbortSafeZone(context, () =>
             {
                 BeforeTest(context);
                 context.CurrentResult = innerCommand.Execute(context);
@@ -60,13 +60,13 @@ namespace NUnit.Framework.Internal.Commands
 
             if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
             {
-                ThreadAbortSafeRun(context, () => { AfterTest(context); });
+                RunTestMethodInThreadAbortSafeZone(context, () => { AfterTest(context); });
             }
 
             return context.CurrentResult;
         }
 
-        private static void ThreadAbortSafeRun(TestExecutionContext context, Action action)
+        private static void RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
         {
             try
             {
