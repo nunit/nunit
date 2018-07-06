@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -25,6 +25,8 @@ using System.Collections;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {
@@ -249,6 +251,32 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return new TestFixtureData("MoreExplicitData").Explicit();
         }
     }
+
+    #region Test name tests
+
+    [TestFixtureSource(nameof(IndividualInstanceNameTestDataSource))]
+    public sealed class IndividualInstanceNameTestDataFixture
+    {
+        public IndividualInstanceNameTestDataFixture(params object[] args)
+        {
+        }
+
+        [Test]
+        public void Test() { }
+
+        public static IEnumerable<TestFixtureData> IndividualInstanceNameTestDataSource() =>
+            from spec in TestDataSpec.Specs
+            select new TestFixtureData(spec.Arguments)
+                {
+                    Properties = // SetProperty does not exist
+                    {
+                        ["ExpectedTestName"] = { spec.GetFixtureName(nameof(IndividualInstanceNameTestDataFixture)) }
+                    }
+                }
+                .SetArgDisplayNames(spec.ArgDisplayNames);
+    }
+
+    #endregion
 
     [TestFixture]
     public abstract class Issue1118_Root

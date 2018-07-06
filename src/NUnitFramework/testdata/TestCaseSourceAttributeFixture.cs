@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace NUnit.TestData.TestCaseSourceAttributeFixture
@@ -199,5 +200,18 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             foreach (var argumentValue in ComplexArrayBasedTestInput)
                 yield return new TestCaseData(args: new object[] { argumentValue });
         }
+
+        #region Test name tests
+
+        [TestCaseSource(nameof(TestCaseNameTestDataSource))]
+        public static void TestCaseNameTestDataMethod(params object[] args) { }
+
+        public static IEnumerable<TestCaseData> TestCaseNameTestDataSource() =>
+            from spec in TestDataSpec.Specs
+            select new TestCaseData(spec.Arguments)
+                .SetArgDisplayNames(spec.ArgDisplayNames)
+                .SetProperty("ExpectedTestName", spec.GetTestCaseName(nameof(TestCaseNameTestDataMethod)));
+
+        #endregion
     }
 }
