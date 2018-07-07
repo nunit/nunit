@@ -73,8 +73,8 @@ namespace NUnit.Framework.Attributes
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
 
-        /* TODO: Uncomment this test when issue #352 is fixed, ignoring causes build warnings
-        [Test, Ignore("Issue #352 - Test with infinite loop in TearDown cannot be aborted")]
+        [Test]
+        [Platform(Exclude = "Mono", Reason = "Test never aborts on Mono (tested 5.4–5.12)")]
         public void TearDownTimesOutAndNoFurtherTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
@@ -85,7 +85,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
         }
-        */
 
         [Test]
         [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
