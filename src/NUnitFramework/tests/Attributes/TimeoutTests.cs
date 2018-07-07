@@ -74,6 +74,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        [Platform(Exclude = "Mono", Reason = "Test never aborts on Mono (tested 5.4–5.12)")]
         public void TearDownTimesOutAndNoFurtherTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
