@@ -22,16 +22,30 @@
 // ***********************************************************************
 
 using NUnit.TestData;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
+    using Builders;
+
+    // NOTE: Because this fixture tests the IImplyFIxture interface, the attribute must be
+    // present. Otherwise, if implied fixture recognition did not work, the tests would not run.
     [TestFixture]
     public static class DefaultSuiteBuilderTests
     {
         [Test]
-        public static void ClassesCanBeImpliedToBeFixtures()
+        public static void CanBuildFromReturnsTrueForImpliedFixture()
         {
-            Assert.That(new Internal.Builders.DefaultSuiteBuilder().CanBuildFrom(typeof(ImpliedFixture)));
+            Assert.That(new DefaultSuiteBuilder().CanBuildFrom(typeof(ImpliedFixture)));
+        }
+
+        [Test]
+        public static void BuildFromReturnsImpliedFixture()
+        {
+            var suite = new DefaultSuiteBuilder().BuildFrom(typeof(ImpliedFixture)) as TestFixture;
+
+            Assert.NotNull(suite, "No test fixture was built");
+            Assert.That(suite.Name, Is.EqualTo(nameof(ImpliedFixture)));
         }
     }
 }
