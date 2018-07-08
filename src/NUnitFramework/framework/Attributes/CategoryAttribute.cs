@@ -40,13 +40,8 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Construct attribute for a given category based on
-        /// a name. The name may not contain the characters ',',
-        /// '+', '-' or '!'. However, this is not checked in the
-        /// constructor since it would cause an error to arise at
-        /// as the test was loaded without giving a clear indication
-        /// of where the problem is located. The error is handled
-        /// in NUnitFramework.cs by marking the test as not
-        /// runnable.
+        /// a name. Category name will be trimmed of any leading
+        /// or trailing white-space.
         /// </summary>
         /// <param name="name">The name of the category</param>
         public CategoryAttribute(string name)
