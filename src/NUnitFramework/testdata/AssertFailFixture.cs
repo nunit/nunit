@@ -45,5 +45,18 @@ namespace NUnit.TestData
         {
             Assert.Fail("MESSAGE: {0}+{1}={2}", 2, 2, 4);
         }
+
+        [Test]
+        public void HandleAssertionException()
+        {
+            try
+            {
+                Assert.Fail("Custom message");
+            }
+            catch
+            {
+                // Eat the exception
+            }
+        }
     }
 }

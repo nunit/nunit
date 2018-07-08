@@ -110,20 +110,16 @@ namespace NUnit.Framework.Assertions
             Assert.That(assertion.Message, Is.EqualTo("MESSAGE: 2+2=4"));
         }
 
-        [Test, Ignore("Currently Fails: Must use Assert.Catch or Assert.Throws")]
-        public void CatchingAssertionExceptionMakesTestPass()
+        [Test]
+        public void TestStillFailsIfAssertionExceptionIsHandled()
         {
-            try
-            {
-                Assert.Fail("This should not be seen");
-            }
-            catch
-            {
-                // Eat the exception
-            }
+            var result = TestBuilder.RunTestCase(
+                typeof(AssertFailFixture),
+                nameof(AssertFailFixture.HandleAssertionException));
 
-            // Ensure that no spurious info was recorded from the assertion
-            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults.Count, Is.EqualTo(0));
+            Assert.That(result.AssertionResults.Count, Is.EqualTo(1));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.Message, Is.EqualTo("Custom message"));
         }
 
         [Test]
