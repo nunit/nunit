@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2015-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -181,6 +181,25 @@ namespace NUnitLite
 
         #endregion
 
+        #region Test Discovery Report
+
+        public void DisplayDiscoveryReport(TimeStamp startTime, TimeStamp endTime)
+        {
+            WriteSectionHeader("Test Discovery");
+
+            foreach (string filter in _options.PreFilters)
+                Writer.WriteLabelLine("  Pre-Filter: ", filter);
+
+            Writer.WriteLabelLine("  Start time: ", startTime.DateTime.ToString("u"));
+            Writer.WriteLabelLine("    End time: ", endTime.DateTime.ToString("u"));
+            double elapsedSeconds = TimeStamp.TicksToSeconds(endTime.Ticks - startTime.Ticks);
+            Writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", elapsedSeconds));
+
+            Writer.WriteLine();
+        }
+
+        #endregion
+
         #region DisplayTestFilters
 
         public void DisplayTestFilters()
@@ -189,9 +208,8 @@ namespace NUnitLite
             {
                 WriteSectionHeader("Test Filters");
 
-                if (_options.TestList.Count > 0)
-                    foreach (string testName in _options.TestList)
-                        Writer.WriteLabelLine("    Test: ", testName);
+                foreach (string testName in _options.TestList)
+                    Writer.WriteLabelLine("    Test: ", testName);
 
                 if (_options.WhereClauseSpecified)
                     Writer.WriteLabelLine("    Where: ", _options.WhereClause.Trim());

@@ -48,6 +48,8 @@ namespace NUnit.Framework.Api
         /// </summary>
         readonly ISuiteBuilder _defaultSuiteBuilder;
 
+        private PreFilter _filter;
+
         #endregion
 
         #region Constructor
@@ -167,10 +169,12 @@ namespace NUnit.Framework.Api
                     }
                 }
 
-                IList fixtureNames = null;
+                _filter = new PreFilter();
                 if (options.ContainsKey(FrameworkPackageSettings.LOAD))
-                    fixtureNames = options[FrameworkPackageSettings.LOAD] as IList;
-                var fixtures = GetFixtures(assembly, fixtureNames);
+                    foreach (string filterText in (IList)options[FrameworkPackageSettings.LOAD])
+                        _filter.Add(filterText);
+
+                var fixtures = GetFixtures(assembly);
 
                 testAssembly = BuildTestAssembly(assembly, suiteName, fixtures);
             }
@@ -187,12 +191,12 @@ namespace NUnit.Framework.Api
 
         #region Helper Methods
 
-        private IList<Test> GetFixtures(Assembly assembly, IList names)
+        private IList<Test> GetFixtures(Assembly assembly)
         {
             var fixtures = new List<Test>();
             log.Debug("Examining assembly for test fixtures");
 
-            var testTypes = GetCandidateFixtureTypes(assembly, names);
+            var testTypes = GetCandidateFixtureTypes(assembly);
 
             log.Debug("Found {0} classes to examine", testTypes.Count);
 #if LOAD_TIMING
@@ -207,10 +211,11 @@ namespace NUnit.Framework.Api
                 // of DefaultSuiteBuilder.CanBuildFrom cannot invoke any user code.
                 if (_defaultSuiteBuilder.CanBuildFrom(testType))
                 {
+                    // We pass the filter for use in selecting methods of the type.
                     // Any exceptions from this call are fatal problems in NUnit itself,
                     // since this is always DefaultSuiteBuilder and the current implementation
                     // of DefaultSuiteBuilder.BuildFrom handles all exceptions from user code.
-                    Test fixture = _defaultSuiteBuilder.BuildFrom(testType);
+                    Test fixture = _defaultSuiteBuilder.BuildFrom(testType, _filter);
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }
@@ -225,29 +230,13 @@ namespace NUnit.Framework.Api
             return fixtures;
         }
 
-        private IList<Type> GetCandidateFixtureTypes(Assembly assembly, IList names)
+        private IList<Type> GetCandidateFixtureTypes(Assembly assembly)
         {
-            var types = assembly.GetTypes();
-
-            if (names == null || names.Count == 0)
-                return types;
-
             var result = new List<Type>();
 
-            foreach (string name in names)
-            {
-                Type fixtureType = assembly.GetType(name);
-                if (fixtureType != null)
-                    result.Add(fixtureType);
-                else
-                {
-                    string prefix = name + ".";
-
-                    foreach (Type type in types)
-                        if (type.FullName.StartsWith(prefix))
-                            result.Add(type);
-                }
-            }
+            foreach (Type type in assembly.GetTypes())
+                if (_filter.IsMatch(type))
+                    result.Add(type);
 
             return result;
         }

@@ -49,5 +49,14 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="type">The type to be used as a suite.</param>
         TestSuite BuildFrom(Type type);
+
+        /// <summary>
+        /// Builds a single test suite from the specified type, subject
+        /// to a filter that decides which methods are included.
+        /// </summary>
+        /// <param name="type">The Type to be used as a suite.</param>
+        /// <param name="filter">A PreFilter for selecting methods.</param>
+        /// <returns></returns>
+        TestSuite BuildFrom(Type type, IPreFilter filter);
     }
 }

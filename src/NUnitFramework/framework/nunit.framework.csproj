@@ -6,6 +6,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net20|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net20'">
     <PackageReference Include="NUnit.System.Linq" Version="0.6.0" />
   </ItemGroup>

@@ -73,6 +73,18 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="type">The type to be used as a suite.</param>
         public TestSuite BuildFrom(Type type)
         {
+            return BuildFrom(type, PreFilter.Empty);
+        }
+
+        /// <summary>
+        /// Builds a single test suite from the specified type, subject
+        /// to a filter that decides which methods are included.
+        /// </summary>
+        /// <param name="type">The Type to be used as a suite.</param>
+        /// <param name="filter">A PreFilter for selecting methods.</param>
+        /// <returns></returns>
+        public TestSuite BuildFrom(Type type, IPreFilter filter)
+        {
             var fixtures = new List<TestSuite>();
 
             try
@@ -80,8 +92,13 @@ namespace NUnit.Framework.Internal.Builders
                 IFixtureBuilder[] builders = GetFixtureBuilderAttributes(type);
 
                 foreach (var builder in builders)
-                    foreach (var fixture in builder.BuildFrom(type))
+                {
+                    // See if this is an enhanced attribute, accepting a filter
+                    var builder2 = builder as IFixtureBuilder2;
+
+                    foreach (var fixture in builder2?.BuildFrom(type, filter) ?? builder.BuildFrom(type))
                         fixtures.Add(fixture);
+                }
 
                 if (type.GetTypeInfo().IsGenericType)
                     return BuildMultipleFixtures(type, fixtures);
@@ -89,7 +106,7 @@ namespace NUnit.Framework.Internal.Builders
                 switch (fixtures.Count)
                 {
                     case 0:
-                        return _defaultBuilder.BuildFrom(type);
+                        return _defaultBuilder.BuildFrom(type, filter);
                     case 1:
                         return fixtures[0];
                     default:
@@ -107,6 +124,7 @@ namespace NUnit.Framework.Internal.Builders
                 return fixture;
             }
         }
+
         #endregion
 
         #region Helper Methods

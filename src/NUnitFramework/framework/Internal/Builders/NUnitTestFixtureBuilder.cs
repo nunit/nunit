@@ -64,9 +64,10 @@ namespace NUnit.Framework.Internal.Builders
         /// be returned nonetheless, labelled as non-runnable.
         /// </summary>
         /// <param name="type">An Type for the fixture to be used.</param>
+        /// <param name="filter">Filter used to select methods as tests.</param>
         /// <returns>A TestSuite object or one derived from TestSuite.</returns>
         // TODO: This should really return a TestFixture, but that requires changes to the Test hierarchy.
-        public TestSuite BuildFrom(Type type)
+        public TestSuite BuildFrom(Type type, IPreFilter filter)
         {
             var fixture = new TestFixture(type);
 
@@ -75,7 +76,7 @@ namespace NUnit.Framework.Internal.Builders
 
             fixture.ApplyAttributesToTest(type.GetTypeInfo());
 
-            AddTestCasesToFixture(fixture);
+            AddTestCasesToFixture(fixture, filter);
 
             return fixture;
         }
@@ -86,9 +87,10 @@ namespace NUnit.Framework.Internal.Builders
         /// in the ITestFixtureData object.
         /// </summary>
         /// <param name="type">The Type for which to construct a fixture.</param>
+        /// <param name="filter">Filter used to select methods as tests.</param>
         /// <param name="testFixtureData">An object implementing ITestFixtureData or null.</param>
         /// <returns></returns>
-        public TestSuite BuildFrom(Type type, ITestFixtureData testFixtureData)
+        public TestSuite BuildFrom(Type type, IPreFilter filter, ITestFixtureData testFixtureData)
         {
             Guard.ArgumentNotNull(testFixtureData, nameof(testFixtureData));
 
@@ -153,7 +155,7 @@ namespace NUnit.Framework.Internal.Builders
 
             fixture.ApplyAttributesToTest(type.GetTypeInfo());
 
-            AddTestCasesToFixture(fixture);
+            AddTestCasesToFixture(fixture, filter);
 
             return fixture;
         }
@@ -165,8 +167,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Method to add test cases to the newly constructed fixture.
         /// </summary>
-        /// <param name="fixture">The fixture to which cases should be added</param>
-        private void AddTestCasesToFixture(TestFixture fixture)
+        private void AddTestCasesToFixture(TestFixture fixture, IPreFilter filter)
         {
             // TODO: Check this logic added from Neil's build.
             if (fixture.Type.GetTypeInfo().ContainsGenericParameters)
@@ -180,13 +181,16 @@ namespace NUnit.Framework.Internal.Builders
 
             foreach (MethodInfo method in methods)
             {
-                Test test = BuildTestCase(new FixtureMethod(fixture.Type, method), fixture);
+                if (filter.IsMatch(fixture.Type, method))
+                {
+                    Test test = BuildTestCase(new FixtureMethod(fixture.Type, method), fixture);
 
-                if (test != null)
-                    fixture.Add(test);
-                else // it's not a test, check for disallowed attributes
-                    if (method.HasAttribute<ParallelizableAttribute>(false))
+                    if (test != null)
+                        fixture.Add(test);
+                    else // it's not a test, check for disallowed attributes
+                        if (method.HasAttribute<ParallelizableAttribute>(false))
                         fixture.MakeInvalid(PARALLEL_NOT_ALLOWED_MSG);
+                }
             }
         }
 

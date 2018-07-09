@@ -23,6 +23,7 @@
 
 #if ASYNC
 using System;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
@@ -33,7 +34,7 @@ namespace NUnit.Framework
         private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
         {
             TestBuilder.RunTest(
-                new NUnitTestFixtureBuilder().BuildFrom(fixtureType, new TestFixtureData(asyncUserCode))
+                new NUnitTestFixtureBuilder().BuildFrom(fixtureType, PreFilter.Empty, new TestFixtureData(asyncUserCode))
             ).AssertPassed();
         }
 
