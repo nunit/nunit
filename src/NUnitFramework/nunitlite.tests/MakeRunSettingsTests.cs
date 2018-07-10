@@ -52,8 +52,5 @@ namespace NUnitLite.Tests
             Assert.That(settings.ContainsKey(key));
             Assert.AreEqual(value, settings[key]);
         }
-
-        //[Test]
-        //public void WhenTestFixtureIsSpecified_RunSettingsIncludeIt)
     }
 }
