@@ -85,6 +85,10 @@ namespace NUnit.Framework.Internal.Builders
                         ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                         : parms.TestName;
                 }
+                else if (parms.ArgDisplayNames != null)
+                {
+                    testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                }
                 else
                 {
                     testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
