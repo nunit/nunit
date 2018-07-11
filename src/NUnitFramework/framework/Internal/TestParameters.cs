@@ -32,8 +32,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestParameters : ITestData, IApplyToTest
     {
-        #region Constructors
-
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
@@ -94,10 +92,6 @@ namespace NUnit.Framework.Internal
             Array.Copy(args, Arguments, numArgs);
         }
 
-        #endregion
-
-        #region ITestData Members
-
         /// <summary>
         /// The RunState for this set of parameters.
         /// </summary>
@@ -134,10 +128,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public IPropertyBag Properties { get; }
 
-        #endregion
-
-        #region IApplyToTest Members
-
         /// <summary>
         /// Applies ParameterSet values to the test itself.
         /// </summary>
@@ -151,10 +141,6 @@ namespace NUnit.Framework.Internal
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
         }
-
-        #endregion
-
-        #region Other Public Properties
 
         /// <summary>
         /// The original arguments provided by the user,
@@ -179,7 +165,5 @@ namespace NUnit.Framework.Internal
                 _argDisplayNames = value;
             }
         }
-
-        #endregion
     }
 }
