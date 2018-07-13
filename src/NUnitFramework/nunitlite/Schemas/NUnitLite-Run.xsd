@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:documentation>This is document is descriptive, rather than a guarantee of future decisions.</xs:documentation>
+  </xs:annotation>
+
+  <xs:include schemaLocation="TestResult.xsd" />
+  <xs:include schemaLocation="TestFilter.xsd" />
+
+  <!-- NUnitLite.NUnit3XmlOutputWriter.WriteXmlResultOutput -->
+  <!-- NUnitLite.NUnit3XmlOutputWriter.MakeTestRunElement -->
+  <xs:element name="test-run">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- NUnitLite.NUnit3XmlOutputWriter.MakeCommandLineElement -->
+        <xs:element name="command-line" minOccurs="0" type="xs:string" />
+        <!-- NUnitLite.NUnit3XmlOutputWriter.MakeTestFilterElement -->
+        <xs:element name="filter">
+          <xs:complexType>
+            <xs:all>
+              <xs:element ref="TestFilterElementBase" minOccurs="0" />
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+        <xs:group ref="ContainedTestGroup" />
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required" />
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="fullname" type="xs:string" use="required" />
+      <xs:attribute name="testcasecount" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="result" use="required">
+        <xs:simpleType>
+          <!-- NUnit.Framework.Interfaces.TestStatus -->
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Inconclusive" />
+            <xs:enumeration value="Skipped" />
+            <xs:enumeration value="Passed" />
+            <xs:enumeration value="Warning" />
+            <xs:enumeration value="Failed" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="label" type="xs:string" />
+      <xs:attribute name="start-time" type="xs:string"/>
+      <xs:attribute name="end-time" type="xs:string" />
+      <xs:attribute name="duration" type="TestDurationType" />
+      <xs:attribute name="total" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="passed" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="failed" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="inconclusive" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="skipped" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="asserts" type="NonnegativeInt32" use="required" />
+      <xs:attribute name="random-seed" type="xs:int" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

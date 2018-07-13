@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:annotation>
+    <xs:documentation>This is document is descriptive, rather than a guarantee of future decisions.</xs:documentation>
+  </xs:annotation>
+
+  <xs:element name="TestFilterElementBase" abstract="true" />
+
+  <!-- NUnit.Framework.Internal.TestFilter.EmptyFilter.AddToXml -->
+  <xs:element name="filter" substitutionGroup="TestFilterElementBase">
+    <xs:complexType />
+  </xs:element>
+
+  <!-- NUnit.Framework.Internal.Filters.NotFilter.AddToXml -->
+  <xs:element name="not" substitutionGroup="TestFilterElementBase">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="TestFilterElementBase" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- NUnit.Framework.Internal.Filters.CompositeFilter.AddToXml -->
+  <xs:complexType name="CompositeFilterType">
+    <xs:sequence>
+      <xs:element ref="TestFilterElementBase" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- NUnit.Framework.Internal.Filters.AndFilter.ElementName -->
+  <xs:element name="and" type="CompositeFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.OrFilter.ElementName -->
+  <xs:element name="or" type="CompositeFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.ValueMatchFilter.AddToXml -->
+  <xs:complexType name="ValueMatchFilterType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="re" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- NUnit.Framework.Internal.Filters.CategoryFilter.ElementName -->
+  <xs:element name="cat" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.ClassNameFilter.ElementName -->
+  <xs:element name="class" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.FullNameFilter.ElementName -->
+  <xs:element name="test" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.IdFilter.ElementName -->
+  <xs:element name="id" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.MethodNameFilter.ElementName -->
+  <xs:element name="method" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.NamespaceFilter.ElementName -->
+  <xs:element name="namespace" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+  <!-- NUnit.Framework.Internal.Filters.TestNameFilter.AddToXml -->
+  <xs:element name="prop" substitutionGroup="TestFilterElementBase">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ValueMatchFilterType">
+          <xs:attribute name="name" type="xs:string" use="required" />
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- NUnit.Framework.Internal.Filters.TestNameFilter.ElementName -->
+  <xs:element name="name" type="ValueMatchFilterType" substitutionGroup="TestFilterElementBase" />
+
+</xs:schema>
