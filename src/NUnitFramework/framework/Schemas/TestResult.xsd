@@ -36,6 +36,15 @@
     <xs:sequence>
       <xs:group ref="RootResultElementGroup" minOccurs="0" />
       <xs:group ref="TestBaseElementGroup" />
+      <!-- NUnit.Framework.Internal.TestResult.AddFailureElement -->
+      <xs:element name="failure" minOccurs="0">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="message" minOccurs="0" type="xs:string"/>
+            <xs:element name="stack-trace" minOccurs="0" type="xs:string"/>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
       <!-- NUnit.Framework.Internal.TestResult.AddReasonElement -->
       <xs:element name="reason" minOccurs="0">
         <xs:complexType>
