@@ -22,22 +22,17 @@
 // ***********************************************************************
 
 #if !NETCOREAPP1_1
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Xml;
-using System.Xml.Schema;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
 {
     public static class SchemaTests
     {
-        private static string GetSchemasPath() => Path.Combine(TestContext.CurrentContext.TestDirectory, "Schemas");
-
         [Test]
         public static void TestSchemaIsValid()
         {
-            Assert.Multiple(() => AssertValidXsd("Test.xsd"));
+            Assert.Multiple(() => SchemaTestUtils.AssertValidXsd("Test.xsd"));
         }
 
         [Test]
@@ -49,15 +44,15 @@ namespace NUnit.Framework.Api
                 var loadXml = controller.LoadTests();
                 var exploreXml = controller.ExploreTests(null);
 
-                AssertValidXml(loadXml, "Test.xsd");
-                AssertValidXml(exploreXml, "Test.xsd");
+                SchemaTestUtils.AssertValidXml(loadXml, "Test.xsd");
+                SchemaTestUtils.AssertValidXml(exploreXml, "Test.xsd");
             });
         }
 
         [Test]
         public static void TestResultSchemaIsValid()
         {
-            Assert.Multiple(() => AssertValidXsd("TestResult.xsd"));
+            Assert.Multiple(() => SchemaTestUtils.AssertValidXsd("TestResult.xsd"));
         }
 
         [Test]
@@ -68,15 +63,15 @@ namespace NUnit.Framework.Api
                 var controller = new FrameworkController("mock-assembly", null, new Dictionary<string, string>());
                 controller.LoadTests();
                 var resultXml = controller.RunTests(null);
-                
-                AssertValidXml(resultXml, "TestResult.xsd");
+
+                SchemaTestUtils.AssertValidXml(resultXml, "TestResult.xsd");
             });
         }
 
         [Test]
         public static void TestFilterSchemaIsValid()
         {
-            Assert.Multiple(() => AssertValidXsd("TestFilter.xsd"));
+            Assert.Multiple(() => SchemaTestUtils.AssertValidXsd("TestFilter.xsd"));
         }
 
         [Test]
@@ -84,7 +79,7 @@ namespace NUnit.Framework.Api
         {
             Assert.Multiple(() =>
             {
-                AssertValidXml(@"
+                SchemaTestUtils.AssertValidXml(@"
                     <or>
                       <not>
                         <class>c</class>
@@ -109,49 +104,6 @@ namespace NUnit.Framework.Api
                     </or>",
                     "TestFilter.xsd");
             });
-        }
-
-        private static XmlSchema AssertValidXsd(string schemaFile)
-        {
-            using (var testXsd = File.OpenRead(Path.Combine(GetSchemasPath(), schemaFile)))
-            {
-                return XmlSchema.Read(testXsd,
-                    validationEventHandler: (sender, e) => Assert.Fail(e.Message));
-            }
-        }
-
-        private static void AssertValidXml(string xml, string schemaFileName)
-        {
-            var schemaSet = new XmlSchemaSet { XmlResolver = new SchemaResolver(GetSchemasPath()) };
-            schemaSet.Add(AssertValidXsd(schemaFileName));
-
-            var settings = new XmlReaderSettings
-            {
-                Schemas = schemaSet,
-                ValidationType = ValidationType.Schema
-            };
-
-            settings.ValidationEventHandler += (sender, e) => Assert.Fail(e.Message);
-
-            using (var reader = XmlReader.Create(new StringReader(xml), settings))
-            {
-                while (reader.Read()) { }
-            }
-        }
-
-        private sealed class SchemaResolver : XmlUrlResolver
-        {
-            private readonly string _schemasPath;
-
-            public SchemaResolver(string schemasPath)
-            {
-                _schemasPath = schemasPath;
-            }
-
-            public override Uri ResolveUri(Uri baseUri, string relativeUri)
-            {
-                return new Uri(Path.Combine(_schemasPath, relativeUri));
-            }
         }
     }
 }
