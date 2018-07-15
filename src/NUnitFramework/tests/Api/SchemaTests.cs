@@ -80,28 +80,30 @@ namespace NUnit.Framework.Api
             Assert.Multiple(() =>
             {
                 SchemaTestUtils.AssertValidXml(@"
-                    <or>
-                      <not>
-                        <class>c</class>
-                      </not>
-                      <and>
-                        <class re='1'>c</class>
-                        <cat>c</cat>
-                        <cat re='1'>c</cat>
-                        <id>i</id>
-                        <id re='1'>i</id>
-                        <method>m</method>
-                        <method re='1'>m</method>
-                        <name>n</name>
-                        <name re='1'>n</name>
-                        <namespace>n</namespace>
-                        <namespace re='1'>n</namespace>
-                        <prop name='p'>v</prop>
-                        <prop name='p' re='1'>v</prop>
-                        <test>t</test>
-                        <test re='1'>t</test>
-                      </and>
-                    </or>",
+                    <filter>
+                      <class>c</class>
+                      <or>
+                        <not>
+                          <class re='1'>c</class>
+                        </not>
+                        <and>
+                          <cat>c</cat>
+                          <cat re='1'>c</cat>
+                          <id>i</id>
+                          <id re='1'>i</id>
+                          <method>m</method>
+                          <method re='1'>m</method>
+                          <name>n</name>
+                          <name re='1'>n</name>
+                          <namespace>n</namespace>
+                          <namespace re='1'>n</namespace>
+                          <prop name='p'>v</prop>
+                          <prop name='p' re='1'>v</prop>
+                          <test>t</test>
+                          <test re='1'>t</test>
+                        </and>
+                      </or>
+                    </filter>",
                     "TestFilter.xsd");
             });
         }

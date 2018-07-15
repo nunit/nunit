@@ -15,13 +15,7 @@
         <!-- NUnitLite.NUnit3XmlOutputWriter.MakeCommandLineElement -->
         <xs:element name="command-line" minOccurs="0" type="xs:string" />
         <!-- NUnitLite.NUnit3XmlOutputWriter.MakeTestFilterElement -->
-        <xs:element name="filter">
-          <xs:complexType>
-            <xs:all>
-              <xs:element ref="TestFilterElementBase" minOccurs="0" />
-            </xs:all>
-          </xs:complexType>
-        </xs:element>
+        <xs:element ref="filter" />
         <xs:group ref="ContainedTestGroup" />
       </xs:sequence>
       <xs:attribute name="id" type="xs:string" use="required" />

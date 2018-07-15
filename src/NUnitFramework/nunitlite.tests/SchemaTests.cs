@@ -58,7 +58,7 @@ namespace NUnitLite.Tests
                             ["ValuelessKey"] = null
                         }
                     },
-                    filter: TestFilter.FromXml("<filter><or><not><cat re='1'>c</cat></not><and><prop name='x'>v</prop></and></or></filter>"));
+                    filter: TestFilter.FromXml("<filter><id>x</id><or><not><cat re='1'>c</cat></not><and><prop name='x'>v</prop></and></or></filter>"));
                
                 SchemaTestUtils.AssertValidXml(xml.ToString(), "NUnitLite-Run.xsd");
             });
