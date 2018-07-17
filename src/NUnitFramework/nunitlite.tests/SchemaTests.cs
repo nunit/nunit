@@ -52,8 +52,8 @@ namespace NUnitLite.Tests
 
                 var xml = new StringWriter();
                 new NUnit3XmlOutputWriter().WriteResultFile(
-                    result, 
-                    xml, 
+                    result,
+                    xml,
                     runSettings: new Dictionary<string, object>
                     {
                         ["TestDictionary"] = new Dictionary<string, string>
@@ -63,8 +63,8 @@ namespace NUnitLite.Tests
                         }
                     },
                     filter: TestFilter.FromXml("<filter><id>x</id><or><not><cat re='1'>c</cat></not><and><prop name='x'>v</prop></and></or></filter>"));
-               
-                SchemaTestUtils.AssertValidXml(xml.ToString(), "NUnitLite-Run.xsd");
+
+                SchemaTestUtils.AssertValidXml(xml.ToString(), "TestResult.xsd");
             });
         }
     }
