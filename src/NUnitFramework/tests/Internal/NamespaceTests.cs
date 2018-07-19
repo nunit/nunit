@@ -24,6 +24,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal
@@ -34,11 +35,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AllExportedNameSpacesAreNotSystem()
         {
-#if !NETCOREAPP1_1
-            var exportedTypes = Assembly.GetAssembly(typeof(FrameworkController)).GetExportedTypes();
-#else
             var exportedTypes = typeof(FrameworkController).GetTypeInfo().Assembly.GetExportedTypes();
-#endif
 
             var exportedTypesWhitelist = new[] 
             {
