@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
                 {
                     Assert.IsFalse(
                         type.Namespace.StartsWith("System", StringComparison.OrdinalIgnoreCase),
-                        $"Type {type.FullName} is publically visible in the System namespace but should not be.");
+                        $"Type {type.FullName} is publicly visible in the System namespace but should not be.");
                 }
             });
         }
