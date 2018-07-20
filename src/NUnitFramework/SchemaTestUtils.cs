@@ -48,6 +48,20 @@ namespace NUnit.TestUtilities
 
         public static void AssertValidXml(string xml, string schemaFileName)
         {
+            RunValidation(xml, schemaFileName, (sender, e) => Assert.Fail(e.Message));
+        }
+
+        public static void AssertInvalidXml(string xml, string schemaFileName)
+        {
+            var isInvalid = false;
+
+            RunValidation(xml, schemaFileName, (sender, e) => isInvalid = true);
+
+            if (!isInvalid) Assert.Fail("Validation did not fail.");
+        }
+
+        private static void RunValidation(string xml, string schemaFileName, ValidationEventHandler validationHandler)
+        {
             var schemaSet = new XmlSchemaSet { XmlResolver = new SchemaResolver(GetSchemasPath()) };
             schemaSet.Add(AssertValidXsd(schemaFileName));
 
@@ -57,7 +71,7 @@ namespace NUnit.TestUtilities
                 ValidationType = ValidationType.Schema
             };
 
-            settings.ValidationEventHandler += (sender, e) => Assert.Fail(e.Message);
+            settings.ValidationEventHandler += validationHandler;
 
             using (var reader = XmlReader.Create(new StringReader(xml), settings))
             {

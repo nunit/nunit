@@ -110,6 +110,12 @@ namespace NUnit.Framework.Api
                     "TestFilter.xsd");
             });
         }
+
+        [Test]
+        public static void TestFilterSchemaDisallowsRootElement_And()
+        {
+            SchemaTestUtils.AssertInvalidXml("<and><class>x</class></and>", "TestFilter.xsd");
+        }
     }
 }
 #endif
