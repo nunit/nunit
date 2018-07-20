@@ -72,6 +72,49 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
+        public static void TestResultSchemaDisallowsRootElement_Filter()
+        {
+            SchemaTestUtils.AssertInvalidXml("<filter />", "TestResult.xsd");
+        }
+
+        [Test]
+        public static void TestResultSchemaDisallowsRootElement_TestSuite()
+        {
+            SchemaTestUtils.AssertInvalidXml(@"
+                <test-suite
+                  result='Passed'
+                  asserts='0'
+                  total='0'
+                  passed='0'
+                  failed='0'
+                  warnings='0'
+                  inconclusive='0'
+                  skipped='0'
+                  id='0'
+                  name='0'
+                  fullname='0'
+                  runstate='Runnable'
+                  type='TestMethod'
+                  testcasecount='0' />",
+                "TestResult.xsd");
+        }
+
+        [Test]
+        public static void TestResultSchemaDisallowsRootElement_TestCase()
+        {
+            SchemaTestUtils.AssertInvalidXml(@"
+                <test-case
+                  result='Passed'
+                  asserts='0'
+                  id='0'
+                  name='0'
+                  fullname='0'
+                  runstate='Runnable'
+                  seed='0' />",
+                "TestResult.xsd");
+        }
+
+        [Test]
         public static void TestFilterSchemaIsValid()
         {
             Assert.Multiple(() => SchemaTestUtils.AssertValidXsd("TestFilter.xsd"));
