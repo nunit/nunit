@@ -7,7 +7,7 @@
   <xs:include schemaLocation="TestFilterDefinitions.xsd" />
 
   <!-- NUnit.Framework.Internal.TestResult.AddToXml -->
-  <xs:redefine schemaLocation="Test.xsd">
+  <xs:redefine schemaLocation="TestDefinitions.xsd">
     <xs:complexType name="TestCaseElementType">
       <xs:complexContent>
         <xs:extension base="TestCaseElementType">
@@ -21,7 +21,7 @@
         <xs:extension base="TestSuiteElementType">
           <xs:sequence>
             <xs:group ref="TestResultBaseElementGroup" />
-            <xs:group ref="ContainedTestGroup" />
+            <xs:group ref="ContainedTestGroup" minOccurs="0" maxOccurs="unbounded" />
           </xs:sequence>
           <xs:attributeGroup ref="TestResultBaseAttributeGroup" />
           <xs:attribute name="total" type="NonnegativeInt32" use="required" />
@@ -187,7 +187,7 @@
         <xs:element name="command-line" minOccurs="0" type="xs:string" />
         <!-- NUnitLite.NUnit3XmlOutputWriter.MakeTestFilterElement -->
         <xs:element name="filter" type="TestFilterType" />
-        <xs:group ref="ContainedTestGroup" />
+        <xs:group ref="ContainedTestGroup" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
       <xs:attribute name="id" type="xs:string" use="required" />
       <xs:attribute name="name" type="xs:string" use="required" />

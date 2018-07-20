@@ -26,6 +26,7 @@
                       // We don’t really need these tests to run on more than one platform.
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
@@ -65,9 +66,27 @@ namespace NUnit.Framework.Api
             {
                 var controller = new FrameworkController("mock-assembly", null, new Dictionary<string, string>());
                 controller.LoadTests();
-                var resultXml = controller.RunTests(null);
 
-                SchemaTestUtils.AssertValidXml(resultXml, "TestResult.xsd");
+                var frameworkXml = XElement.Parse(controller.RunTests(null));
+
+                var fullXml = new XElement("test-run",
+                    new XElement("command-line"),
+                    new XElement("filter"),
+                    frameworkXml,
+                    new XAttribute("id", 0),
+                    new XAttribute("name", 0),
+                    new XAttribute("fullname", 0),
+                    new XAttribute("testcasecount", 0),
+                    new XAttribute("result", "Passed"),
+                    new XAttribute("total", 0),
+                    new XAttribute("passed", 0),
+                    new XAttribute("failed", 0),
+                    new XAttribute("inconclusive", 0),
+                    new XAttribute("skipped", 0),
+                    new XAttribute("asserts", 0),
+                    new XAttribute("random-seed", 0));
+
+                SchemaTestUtils.AssertValidXml(fullXml.ToString(), "TestResult.xsd");
             });
         }
 
