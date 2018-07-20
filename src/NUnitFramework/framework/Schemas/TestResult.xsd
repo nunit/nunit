@@ -4,7 +4,7 @@
     <xs:documentation>This is document is descriptive, rather than a guarantee of future decisions.</xs:documentation>
   </xs:annotation>
 
-  <xs:include schemaLocation="TestFilter.xsd" />
+  <xs:include schemaLocation="TestFilterDefinitions.xsd" />
 
   <!-- NUnit.Framework.Internal.TestResult.AddToXml -->
   <xs:redefine schemaLocation="Test.xsd">
@@ -186,7 +186,7 @@
         <!-- NUnitLite.NUnit3XmlOutputWriter.MakeCommandLineElement -->
         <xs:element name="command-line" minOccurs="0" type="xs:string" />
         <!-- NUnitLite.NUnit3XmlOutputWriter.MakeTestFilterElement -->
-        <xs:element ref="filter" />
+        <xs:element name="filter" type="TestFilterType" />
         <xs:group ref="ContainedTestGroup" />
       </xs:sequence>
       <xs:attribute name="id" type="xs:string" use="required" />
