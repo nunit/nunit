@@ -47,8 +47,8 @@ namespace NUnit.Framework.Internal
                 foreach (var type in exportedTypes.Except(exportedTypesWhitelist))
                 {
                     Assert.IsFalse(
-                        type.Namespace.StartsWith("System", StringComparison.CurrentCultureIgnoreCase),
-                        $"Type {type.FullName} is in the System namespace but should not be.");
+                        type.Namespace.StartsWith("System", StringComparison.OrdinalIgnoreCase),
+                        $"Type {type.FullName} is publically visible in the System namespace but should not be.");
                 }
             });
         }
