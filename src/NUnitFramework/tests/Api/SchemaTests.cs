@@ -91,6 +91,24 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
+        public static void MultipleTestsAreAllowedInsideTestRun()
+        {
+            Assert.Multiple(() =>
+            {
+                SchemaTestUtils.AssertValidXml(@"
+                    <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                      <command-line />
+                      <filter />
+                      <test-case result='Passed' asserts='0' id='1' name='0' fullname='0' runstate='Runnable' seed='0' />
+                      <test-suite result='Passed' asserts='0' total='0' passed='0' failed='0' warnings='0' inconclusive='0' skipped='0' id='2' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0' />
+                      <test-case result='Passed' asserts='0' id='3' name='0' fullname='0' runstate='Runnable' seed='0' />
+                    </test-run>",
+                    "TestResult.xsd");
+            });
+        }
+
+
+        [Test]
         public static void TestResultSchemaDisallowsRootElement_Filter()
         {
             SchemaTestUtils.AssertInvalidXml("<filter />", "TestResult.xsd");
