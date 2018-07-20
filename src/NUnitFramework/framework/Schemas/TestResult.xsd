@@ -189,7 +189,13 @@
         <xs:element name="filter" type="TestFilterType" />
         <xs:group ref="ContainedTestGroup" minOccurs="0" maxOccurs="unbounded" />
       </xs:sequence>
-      <xs:attribute name="id" type="xs:string" use="required" />
+      <xs:attribute name="id" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="2" />
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
       <xs:attribute name="name" type="xs:string" use="required" />
       <xs:attribute name="fullname" type="xs:string" use="required" />
       <xs:attribute name="testcasecount" type="NonnegativeInt32" use="required" />

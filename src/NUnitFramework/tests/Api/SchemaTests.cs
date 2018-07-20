@@ -73,7 +73,7 @@ namespace NUnit.Framework.Api
                     new XElement("command-line"),
                     new XElement("filter"),
                     frameworkXml,
-                    new XAttribute("id", 0),
+                    new XAttribute("id", 2),
                     new XAttribute("name", 0),
                     new XAttribute("fullname", 0),
                     new XAttribute("testcasecount", 0),
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Api
             Assert.Multiple(() =>
             {
                 SchemaTestUtils.AssertValidXml(@"
-                    <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                    <test-run id='2' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
                       <command-line />
                       <filter />
                       <test-case result='Passed' asserts='0' id='1' name='0' fullname='0' runstate='Runnable' seed='0' />
