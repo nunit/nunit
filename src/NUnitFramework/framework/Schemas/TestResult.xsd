@@ -217,6 +217,10 @@
       <xs:attribute name="asserts" type="NonnegativeInt32" use="required" />
       <xs:attribute name="random-seed" type="xs:int" use="required" />
     </xs:complexType>
+    <xs:unique name="UniqueId">
+      <xs:selector xpath=". | .//test-case | .//test-suite" />
+      <xs:field xpath="@id" />
+    </xs:unique>
   </xs:element>
 
   <xs:simpleType name="TestDurationType">

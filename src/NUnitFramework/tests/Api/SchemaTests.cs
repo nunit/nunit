@@ -54,6 +54,19 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
+        public static void TestSchemaDisallowsDuplicateIds()
+        {
+            SchemaTestUtils.AssertInvalidXml(@"
+                <test-suite id='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                  <test-suite id='1' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                    <test-case id='0' name='0' fullname='0' runstate='Runnable' seed='0' />
+                  </test-suite>
+                </test-suite>",
+                "Test.xsd");
+        }
+
+
+        [Test]
         public static void TestResultSchemaIsValid()
         {
             Assert.Multiple(() => SchemaTestUtils.AssertValidXsd("TestResult.xsd"));
@@ -150,6 +163,33 @@ namespace NUnit.Framework.Api
                   seed='0' />",
                 "TestResult.xsd");
         }
+
+        [Test]
+        public static void TestResultSchemaDisallowsDuplicateIds()
+        {
+            SchemaTestUtils.AssertInvalidXml(@"
+                <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                  <command-line />
+                  <filter />
+                  <test-suite id='1' result='Passed' asserts='0' total='0' passed='0' failed='0' warnings='0' inconclusive='0' skipped='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                    <test-case id='0' result='Passed' asserts='0' name='0' fullname='0' runstate='Runnable' seed='0' />
+                  </test-suite>
+                </test-run>",
+                "TestResult.xsd");
+
+            SchemaTestUtils.AssertInvalidXml(@"
+                <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                  <command-line />
+                  <filter />
+                  <test-suite id='1' result='Passed' asserts='0' total='0' passed='0' failed='0' warnings='0' inconclusive='0' skipped='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                    <test-suite id='2' result='Passed' asserts='0' total='0' passed='0' failed='0' warnings='0' inconclusive='0' skipped='0' name='0' fullname='0' runstate='Runnable' type='TestMethod' testcasecount='0'>
+                      <test-case id='1' result='Passed' asserts='0' name='0' fullname='0' runstate='Runnable' seed='0' />
+                    </test-suite>
+                  </test-suite>
+                </test-run>",
+                "TestResult.xsd");
+        }
+
 
         [Test]
         public static void TestFilterSchemaIsValid()
