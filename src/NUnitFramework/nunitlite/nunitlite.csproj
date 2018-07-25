@@ -22,4 +22,9 @@
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" PrivateAssets="compile" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\framework\Schemas\*.xsd" LinkBase="Schemas" CopyToOutputDirectory="Always" />
+    <None Update="Schemas\*.xsd" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
 </Project>

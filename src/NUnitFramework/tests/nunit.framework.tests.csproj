@@ -39,6 +39,7 @@
 
   <ItemGroup>
     <Compile Include="..\Fakes.cs" Link="TestUtilities\Fakes.cs" />
+    <Compile Include="..\SchemaTestUtils.cs" Link="TestUtilities\SchemaTestUtils.cs" />
     <Compile Include="..\TestBuilder.cs" Link="TestUtilities\TestBuilder.cs" />
     <Compile Include="..\TestFile.cs" Link="TestUtilities\TestFile.cs" />
     <Compile Include="..\TestSuiteExtensions.cs" Link="TestUtilities\TestSuiteExtensions.cs" />
