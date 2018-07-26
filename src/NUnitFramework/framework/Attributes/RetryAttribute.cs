@@ -109,8 +109,12 @@ namespace NUnit.Framework
                     // Clear result for retry
                     if (count > 0)
                     {
+                        var carryOverTestOutput = context.CurrentResult.Output;
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+
+                        context.CurrentResult.OutWriter.Write(carryOverTestOutput);
+                        context.CurrentResult.OutWriter.WriteLine();
                     }
                 }
 

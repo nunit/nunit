@@ -177,6 +177,16 @@ namespace NUnit.TestData.RepeatingTests
         }
     }
 
+    public class RetryTestCaseWithPrintFixture : RepeatingTestsFixtureBase
+    {
+        [Test, Retry(3)]
+        public void FailsEveryTimeAndLogsMessage()
+        {
+            TestContext.Write(".");
+            Assert.IsTrue(false);
+        }
+    }
+
     public sealed class RetryWithoutSetUpOrTearDownFixture
     {
         public int Count { get; private set; }
