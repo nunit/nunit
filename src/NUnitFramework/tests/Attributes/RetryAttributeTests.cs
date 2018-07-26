@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -100,6 +101,15 @@ namespace NUnit.Framework.Attributes
             Assert.IsNotNull(categories);
             Assert.AreEqual(1, categories.Count);
             Assert.AreEqual("SAMPLE", categories[0]);
+        }
+
+        [Test]
+        public void CollectingWritesWorksWithRetry()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RetryTestCaseWithPrintFixture));
+            ITestResult result = TestBuilder.RunTestFixture(fixture);
+            var testOutput = result.Children.First().Output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            Assert.AreEqual(3, testOutput.Count());
         }
 
         [Test]
