@@ -177,7 +177,7 @@ namespace NUnit.Framework
         /// that satisfies the constraint provided.
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
         public static void That(TestDelegate code, IResolveConstraint constraint)
         {
             Assert.That(code, constraint, null, null);
@@ -188,7 +188,7 @@ namespace NUnit.Framework
         /// that satisfies the constraint provided.
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void That(TestDelegate code, IResolveConstraint constraint, string message, params object[] args)
@@ -202,7 +202,7 @@ namespace NUnit.Framework
         /// that satisfies the constraint provided.
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(TestDelegate code, IResolveConstraint constraint, Func<string> getExceptionMessage)
         {
