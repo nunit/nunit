@@ -222,7 +222,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
@@ -281,7 +281,7 @@ namespace NUnit.Framework
         /// causes a Visual Basic compilation error.
         /// </summary>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         public static void ByVal(object actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
