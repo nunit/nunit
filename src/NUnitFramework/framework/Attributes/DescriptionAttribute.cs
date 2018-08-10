@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Attribute used to provide descriptive text about a 
+    /// <see cref="DescriptionAttribute"/> provides the descriptive text about a 
     /// test case or fixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]

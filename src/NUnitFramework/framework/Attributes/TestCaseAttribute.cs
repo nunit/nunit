@@ -32,7 +32,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseAttribute is used to mark parameterized test cases
+    /// <see cref="TestCaseAttribute"/> marks parameterized test cases
     /// and provide them with their arguments.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]

@@ -28,7 +28,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Defines the order that the test will run in
+    /// <see cref="OrderAttribute"/> defines the order that the test will run in
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class OrderAttribute : NUnitAttribute, IApplyToTest

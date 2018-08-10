@@ -32,7 +32,7 @@ namespace NUnit.Framework
     using Internal;
 
     /// <summary>
-    /// Attribute used to identify a class that contains
+    /// <see cref="SetUpFixtureAttribute"/> identifies a class that contains
     /// <see cref="OneTimeSetUpAttribute" /> or <see cref="OneTimeTearDownAttribute" />
     /// methods for all the test fixtures under a given namespace.
     /// </summary>

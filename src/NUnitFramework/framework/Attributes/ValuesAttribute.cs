@@ -31,7 +31,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// ValuesAttribute is used to provide literal arguments for
+    /// <see cref="ValuesAttribute"/> provides literal arguments for
     /// an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]

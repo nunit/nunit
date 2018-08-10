@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// DefaultFloatingPointToleranceAttribute sets the tolerance used
+    /// <see cref="DefaultFloatingPointToleranceAttribute"/> sets the tolerance used
     /// by default when checking the equality of floating point values.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

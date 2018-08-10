@@ -28,11 +28,11 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// SingleThreadedAttribute applies to a test fixture and indicates
-    /// that all the child tests must be run on the same thread as the
-    /// OneTimeSetUp and OneTimeTearDown. It sets a flag in the
-    /// TestExecutionContext and forces all tests to be run sequentially
-    /// on the current thread. Any ParallelScope setting is ignored.
+    /// <see cref="SingleThreadedAttribute"/> applies to a test fixture and indicates
+    /// that all child tests must be run on the same thread as the
+    /// <see cref="OneTimeSetUp"/> and <see cref="OneTimeTearDown"/>. A flag in the
+    /// <see cref="TestExecutionContext"/> is set and forces all tests to be run sequentially
+    /// on the current thread. Any <see cref="ParallelScope"/> setting is ignored.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SingleThreadedAttribute : NUnitAttribute, IApplyToContext

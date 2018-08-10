@@ -29,7 +29,7 @@ namespace NUnit.Framework
     using NUnit.Framework.Internal.Builders;
 
     /// <summary>
-    /// Adding this attribute to a method makes the method callable from the NUnit test runner.
+    /// <see cref="TestAttribute"/> makes the method callable from the NUnit test runner.
     /// </summary>
     /// 
     /// <example>

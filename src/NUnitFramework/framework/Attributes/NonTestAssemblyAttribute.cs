@@ -27,7 +27,7 @@ using System.ComponentModel;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// The NonTestAssemblyAttribute may be used by third-party frameworks
+    /// <see cref="NonTestAssemblyAttribute"/> may be used by third-party frameworks
     /// or other software that references the NUnit framework but does not
     /// contain tests. Applying the attribute indicates that the assembly
     /// is not a test assembly and may prevent errors if certain runners

@@ -36,7 +36,7 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RepeatAttribute may be applied to test case in order
+    /// <see cref="RepeatAttribute"/> may be applied to test case in order
     /// to run it multiple times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]

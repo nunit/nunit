@@ -32,7 +32,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// ValueSourceAttribute indicates the source to be used to
+    /// <see cref="ValueSourceAttribute"/> indicates the source used to
     /// provide data for one parameter of a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]

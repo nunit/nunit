@@ -30,9 +30,10 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Used on a method, marks the test with a timeout value in milliseconds. 
+    /// <see cref="TimeoutAttribute"/> applies a timeout to a test.
+    /// When used on a method it marks the test with a timeout value in milliseconds. 
     /// The test will be run in a separate thread and is cancelled if the timeout 
-    /// is exceeded. Used on a class or assembly, sets the default timeout 
+    /// is exceeded. When used on a class or assembly it sets the default timeout 
     /// for all contained test methods.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]

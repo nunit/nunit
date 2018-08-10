@@ -27,9 +27,9 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// The abstract base class for all data-providing attributes 
-    /// defined by NUnit. Used to select all data sources for a 
-    /// method, class or parameter.
+    /// <see cref="DataAttribute"/> is the abstract base class for all 
+    /// data-providing attributes defined by NUnit. Used to select all data 
+    /// sources for a method, class or parameter.
     /// </summary>
     [Obsolete("Holdover from NUnit v2. Please implement " + nameof(IParameterDataSource) +
               " for your attribute instead.")]

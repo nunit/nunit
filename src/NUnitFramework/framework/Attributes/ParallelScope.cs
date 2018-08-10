@@ -27,7 +27,7 @@ using System.ComponentModel;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// The ParallelScope enumeration permits specifying the degree to
+    /// <see cref="ParallelScope"/> enumeration permits specifying the degree to
     /// which a test and its descendants may be run in parallel.
     /// </summary>
     [Flags]

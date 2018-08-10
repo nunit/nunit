@@ -31,7 +31,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RangeAttribute is used to supply a range of values to an
+    /// <see cref="RangeAttribute"/> supplies a range of values to an
     /// individual parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]

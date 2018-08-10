@@ -26,7 +26,7 @@ namespace NUnit.Framework
 	using System;
 
 	/// <summary>
-	/// Attribute used to identify a method that is called 
+	/// <see cref="TearDownAttribute"/> identifies a method that is called 
 	/// immediately after each test is run. The method is 
 	/// guaranteed to be called, even if an exception is thrown.
 	/// </summary>

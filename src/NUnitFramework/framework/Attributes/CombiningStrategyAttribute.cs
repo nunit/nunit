@@ -33,9 +33,9 @@ namespace NUnit.Framework
     using Internal.Builders;
 
     /// <summary>
-    /// Marks a test to use a particular CombiningStrategy to join
-    /// any parameter data provided. Since this is the default, the
-    /// attribute is optional.
+    /// <see cref="CombiningStrategyAttribute"/> marks a test to use a particular
+    /// CombiningStrategy to join any parameter data provided. Since this is the 
+    /// default, the attribute is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest

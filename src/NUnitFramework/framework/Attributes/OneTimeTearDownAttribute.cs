@@ -26,8 +26,8 @@ namespace NUnit.Framework
 	using System;
 
 	/// <summary>
-	/// Attribute used to identify a method that is called once
-	/// after all the child tests have run. The method is 
+	/// <see cref="OneTimeTearDownAttribute"/> identifies a method 
+	/// that is called once after all the child tests have run. The method is 
 	/// guaranteed to be called, even if an exception is thrown.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]

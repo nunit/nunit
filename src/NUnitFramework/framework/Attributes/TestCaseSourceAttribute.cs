@@ -33,7 +33,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseSourceAttribute indicates the source to be used to
+    /// <see cref="TestCaseSourceAttribute"/> indicates the source to be used to
     /// provide test cases for a test method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]

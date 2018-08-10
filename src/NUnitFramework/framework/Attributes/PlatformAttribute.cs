@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// PlatformAttribute is used to mark a test fixture or an
+    /// <see cref="PlatformAttribute"/> marks a test fixture or an
     /// individual method as applying to a particular platform only.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited=false)]

@@ -29,7 +29,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test to use a Sequential join of any argument 
+    /// <see cref="SequentialAttribute"/> marks a test to use a Sequential join of any argument 
     /// data provided. Arguments will be combined into test cases,
     /// taking the next value of each argument until all are used.
     /// </summary>
