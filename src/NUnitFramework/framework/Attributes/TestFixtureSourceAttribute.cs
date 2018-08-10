@@ -34,7 +34,7 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// <see cref="TestFixtureSourceAttribute"/> indicates the source to be used to
-    /// provide test fixture instances for a test class.      
+    /// provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
     public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
