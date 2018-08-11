@@ -57,12 +57,12 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [Repeat(2), Timeout(50)]
+        [Repeat(2), Timeout(75)]
         public void ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime()
         {
             repeatTimeoutCount++;
 
-            System.Threading.Thread.Sleep(35);
+            System.Threading.Thread.Sleep(50);
             Assert.True(repeatTimeoutCount >= 1);
         }
 
