@@ -47,22 +47,22 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [Retry(3), Timeout(30)]
+        [Retry(3), Timeout(85)]
         public void ShouldPassAfter3RetriesAndTimeoutIsResetEachTime()
         {
             retryTimeoutCount++;
 
-            System.Threading.Thread.Sleep(15);
+            System.Threading.Thread.Sleep(30);
             Assert.True(retryTimeoutCount >= 2);
         }
 
         [Test]
-        [Repeat(2), Timeout(75)]
+        [Repeat(3), Timeout(85)]
         public void ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime()
         {
             repeatTimeoutCount++;
 
-            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread.Sleep(30);
             Assert.True(repeatTimeoutCount >= 1);
         }
 
