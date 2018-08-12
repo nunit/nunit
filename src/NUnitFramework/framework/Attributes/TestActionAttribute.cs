@@ -30,7 +30,7 @@ namespace NUnit.Framework
     using Interfaces;
 
     /// <summary>
-    /// <see cref="TestActionAttribute"/> provide actions to execute before and after tests.
+    /// <see cref="TestActionAttribute"/> provides actions to execute before and after tests.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public abstract class TestActionAttribute : Attribute, ITestAction
