@@ -29,7 +29,7 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="RetryAttribute" /> specified that a test method should
+    /// <see cref="RetryAttribute" /> specifies that a test method should
     /// be rerun if it fails, up to a maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
