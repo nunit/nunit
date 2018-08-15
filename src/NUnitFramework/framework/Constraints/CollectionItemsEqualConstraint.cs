@@ -88,7 +88,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using(IComparer comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -99,7 +98,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -109,11 +107,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
-        public CollectionItemsEqualConstraint Using<T>(Comparison<T> comparer)
+        /// <param name="comparison">The Comparison object to use.</param>
+        public CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
         {
-            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;
         }
 
@@ -121,7 +118,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
@@ -132,7 +128,6 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        /// <returns>Self.</returns>
         public CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
