@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
             // NOTE: actual is string will fail for a null typed as string           
             Type actualType = typeof(TActual);
             
-            if (typeof(TActual) == typeof(string))
+            if (actualType == typeof(string))
                 realConstraint = new EmptyStringConstraint();
             else if (actual == null)
                 throw new System.ArgumentException($"The actual value of type - {actualType} must be a string or a non-null IEnumerable or DirectoryInfo", nameof(actual));
