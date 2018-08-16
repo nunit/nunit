@@ -32,7 +32,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
 using System.Security;
 using System.Security.Principal;
 #endif
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        private TestExecutionContext _priorContext;
+        private readonly TestExecutionContext _priorContext;
 
         /// <summary>
         /// Indicates that a stop has been requested
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private TestResult _currentResult;
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
         /// <summary>
         /// The current Principal.
         /// </summary>
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
 
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal
 
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             _currentPrincipal = other.CurrentPrincipal;
 #endif
 
@@ -367,7 +367,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests
         /// </summary>
-        public List<ITestAction> UpstreamActions { get; private set; }
+        public List<ITestAction> UpstreamActions { get; }
 
         // TODO: Put in checks on all of these settings
         // with side effects so we only change them
@@ -382,7 +382,9 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentCulture = value;
-#if !NETSTANDARD1_6
+#if NETSTANDARD1_4
+                CultureInfo.CurrentCulture = _currentCulture;
+#else
                 Thread.CurrentThread.CurrentCulture = _currentCulture;
 #endif
             }
@@ -397,13 +399,15 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentUICulture = value;
-#if !NETSTANDARD1_6
+#if NETSTANDARD1_4
+                CultureInfo.CurrentUICulture = _currentUICulture;
+#else
                 Thread.CurrentThread.CurrentUICulture = _currentUICulture;
 #endif
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
@@ -448,7 +452,7 @@ namespace NUnit.Framework.Internal
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             _currentPrincipal = Thread.CurrentPrincipal;
 #endif
         }
@@ -460,7 +464,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void EstablishExecutionEnvironment()
         {
-#if !NETSTANDARD1_6
+#if NETSTANDARD1_4
+            CultureInfo.CurrentCulture = _currentCulture;
+            CultureInfo.CurrentUICulture = _currentUICulture;
+#else
             Thread.CurrentThread.CurrentCulture = _currentCulture;
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
@@ -514,7 +521,7 @@ namespace NUnit.Framework.Internal
 
 #region InitializeLifetimeService
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
         /// <summary>
         /// Obtain lifetime service object
         /// </summary>
@@ -546,7 +553,7 @@ namespace NUnit.Framework.Internal
         /// </example>
         public class IsolatedContext : IDisposable
         {
-            private TestExecutionContext _originalContext;
+            private readonly TestExecutionContext _originalContext;
 
             /// <summary>
             /// Save the original current TestExecutionContext and

@@ -33,11 +33,11 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseSourceAttribute indicates the source to be used to
+    /// <see cref="TestFixtureSourceAttribute"/> indicates the source to be used to
     /// provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder
+    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -84,12 +84,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
-        public string SourceName { get; private set; }
+        public string SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; private set; }
+        public Type SourceType { get; }
 
         /// <summary>
         /// Gets or sets the category associated with every fixture created from 
@@ -110,7 +110,24 @@ namespace NUnit.Framework
             Type sourceType = SourceType ?? type;
 
             foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
-                yield return _builder.BuildFrom(type, parms);
+                yield return _builder.BuildFrom(type, PreFilter.Empty, parms);
+        }
+
+        #endregion
+
+        #region IFixtureBuilder2 Members
+
+        /// <summary>
+        /// Builds any number of test fixtures from the specified type.
+        /// </summary>
+        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="filter">PreFilter used to select methods as tests.</param>
+        public IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter)
+        {
+            Type sourceType = SourceType ?? type;
+
+            foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
+                yield return _builder.BuildFrom(type, filter, parms);
         }
 
         #endregion

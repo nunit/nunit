@@ -33,9 +33,9 @@ namespace NUnit.TestUtilities
     public class TestFile : IDisposable
     {
         private bool _disposedValue = false;
-        private string _resourceName;
-        private FileInfo _fileInfo;
-        private long _fileLength;
+        private readonly string _resourceName;
+        private readonly FileInfo _fileInfo;
+        private readonly long _fileLength;
 
         public TestFile(string resourceName)
             : this(Path.GetTempFileName(), resourceName, false)

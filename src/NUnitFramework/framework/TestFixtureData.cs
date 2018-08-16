@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -88,6 +88,15 @@ namespace NUnit.Framework
         internal TestFixtureData SetName(string name)
         {
             TestName = name;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the list of display names to use as the parameters in the test name.
+        /// </summary>
+        public TestFixtureData SetArgDisplayNames(params string[] displayNames)
+        {
+            ArgDisplayNames = displayNames;
             return this;
         }
 

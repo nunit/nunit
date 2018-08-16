@@ -21,38 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Threading;
-
-namespace NUnit.TestData
+namespace NUnit.Framework.Internal
 {
-    /// <summary>
-    /// Enables the <see cref="On.Dispose"/> syntax.
-    /// </summary>
-    public static class On
+    partial class ValueGenerator
     {
-        /// <summary>
-        /// Wraps an action so that it is executed when the returned object is disposed.
-        /// This disposal is thread-safe and the action will be executed at most once.
-        /// </summary>
-        public static IDisposable Dispose(Action action)
+        private sealed class Int16ValueGenerator : ValueGenerator<short>
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
-            return new DisposableAction(action);
-        }
-
-        private sealed class DisposableAction : IDisposable
-        {
-            private Action action;
-
-            public DisposableAction(Action action)
+            public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
-                this.action = action;
-            }
+                if (value is short)
+                {
+                    step = new ComparableStep<short>((short)value, (prev, stepValue) => checked((short)(prev + stepValue)));
+                    return true;
+                }
 
-            public void Dispose()
-            {
-                Interlocked.Exchange(ref action, null)?.Invoke();
+                return base.TryCreateStep(value, out step);
             }
         }
     }

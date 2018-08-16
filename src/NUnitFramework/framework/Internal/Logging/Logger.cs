@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008-2013 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,10 +34,10 @@ namespace NUnit.Framework.Internal
         private readonly static string TIME_FMT = "HH:mm:ss.fff";
         private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
-        private string name;
-        private string fullname;
-        private InternalTraceLevel maxLevel;
-        private TextWriter writer;
+        private readonly string name;
+        private readonly string fullname;
+        private readonly InternalTraceLevel maxLevel;
+        private readonly TextWriter writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Internal
             writer.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                 System.Environment.CurrentManagedThreadId,
 #else
                 System.Threading.Thread.CurrentThread.ManagedThreadId,

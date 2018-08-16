@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "no item equal to \"Charlie\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "2 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(0, Is.EqualTo("Charlie"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "2 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1, Is.EqualTo("Charlie"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly 2 items equal to \"Fred\"" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "1 item < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Constraints
         {
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly one item" + Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "< \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
+                TextMessageWriter.Pfx_Actual + "4 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -135,6 +135,51 @@ namespace NUnit.Framework.Constraints
             var notEnumerable = 42;
             TestDelegate act = () => Assert.That(notEnumerable, new ExactCountConstraint(1));
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable"));
+        }
+
+        [Test]
+        [Description("Test that the " + nameof(ExactCountConstraint) + " returns all ten elements of the given list without a triple dot")]
+        public void OutputStringTestWithTenItems()
+        {
+            var longElementList = new string[]
+            {
+                "Alfa", "Bravo", "Charlie", "Delta", "Echo",
+                "Foxtrot", "Golf", "Hotel", "India", "Juliett",
+            };
+
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected
+                + "exactly 5 items"
+                + Environment.NewLine
+                + TextMessageWriter.Pfx_Actual
+                + "10 items < \"Alfa\", \"Bravo\", \"Charlie\", \"Delta\", \"Echo\", \"Foxtrot\", \"Golf\", \"Hotel\", \"India\", \"Juliett\" >"
+                + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(longElementList, Has.Exactly(5).Items));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        [Description("Test that the " + nameof(ExactCountConstraint) + " returns only ten elements of the given list with a triple dot")]
+        public void OutputStringTestWithMoreAsTenItems()
+        {
+            var longElementList = new string[]
+            {
+                "Alfa", "Bravo", "Charlie", "Delta", "Echo",
+                "Foxtrot", "Golf", "Hotel", "India", "Juliett",
+                "Kilo", "Lima", "Mike", "November", "Oscar"
+            };
+
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected
+                + "exactly 10 items"
+                + Environment.NewLine
+                + TextMessageWriter.Pfx_Actual
+                + "15 items < \"Alfa\", \"Bravo\", \"Charlie\", \"Delta\", \"Echo\", \"Foxtrot\", \"Golf\", \"Hotel\", \"India\", \"Juliett\"... >"
+                + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(longElementList, Has.Exactly(10).Items));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }
 }

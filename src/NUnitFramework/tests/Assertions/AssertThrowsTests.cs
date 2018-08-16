@@ -168,7 +168,7 @@ namespace NUnit.Framework.Assertions
             CheckForSpuriousAssertionResults();
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void DerivedExceptionThrown()
         {
             var ex = CatchException(() => 

@@ -43,7 +43,7 @@ namespace System.Collections.Concurrent
     [DebuggerTypeProxy(typeof(SystemCollectionsConcurrent_ProducerConsumerCollectionDebugView<>))]
     [HostProtection(Synchronization = true, ExternalThreading = true)]
     [Serializable]
-    public class ConcurrentQueue<T> : IProducerConsumerCollection<T>//, IReadOnlyCollection<T>
+    internal class ConcurrentQueue<T> : IProducerConsumerCollection<T>//, IReadOnlyCollection<T>
     {
         //fields of ConcurrentQueue
         [NonSerialized]

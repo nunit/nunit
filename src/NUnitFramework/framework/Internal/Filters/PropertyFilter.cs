@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     internal class PropertyFilter : ValueMatchFilter
     {
-        private string _propertyName;
+        private readonly string _propertyName;
 
         /// <summary>
         /// Construct a PropertyFilter using a property name and expected value

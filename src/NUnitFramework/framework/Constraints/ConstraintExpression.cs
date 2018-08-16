@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The ConstraintBuilder holding the elements recognized so far
         /// </summary>
-        protected ConstraintBuilder builder;
+        protected readonly ConstraintBuilder builder;
 
         #endregion
 
@@ -54,9 +54,8 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstraintExpression"/> class.
         /// </summary>
-        public ConstraintExpression()
+        public ConstraintExpression() : this(new ConstraintBuilder())
         {
-            this.builder = new ConstraintBuilder();
         }
 
         /// <summary>
@@ -66,6 +65,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="builder">The builder.</param>
         public ConstraintExpression(ConstraintBuilder builder)
         {
+            Guard.ArgumentNotNull(builder, nameof(builder));
             this.builder = builder;
         }
 
@@ -455,9 +455,8 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        #region BinarySerializable
+#if SERIALIZATION
 
-#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -465,13 +464,7 @@ namespace NUnit.Framework.Constraints
         {
             get { return (BinarySerializableConstraint)this.Append(new BinarySerializableConstraint()); }
         }
-#endif
 
-        #endregion
-
-        #region XmlSerializable
-
-#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
@@ -479,9 +472,8 @@ namespace NUnit.Framework.Constraints
         {
             get { return (XmlSerializableConstraint)this.Append(new XmlSerializableConstraint()); }
         }
-#endif
 
-        #endregion
+#endif
 
         #region EqualTo
 

@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
     {
         internal static void BlockingDelay(int milliseconds)
         {
-#if NETSTANDARD1_6
+#if !PARALLEL
             System.Threading.Tasks.Task.Delay(milliseconds).GetAwaiter().GetResult();
 #else
             Thread.Sleep(milliseconds);

@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class Constraint : IConstraint
     {
-        Lazy<string> _displayName;
+        readonly Lazy<string> _displayName;
 
         #region Constructor
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint
@@ -117,9 +117,8 @@ namespace NUnit.Framework.Constraints
         public virtual ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(del))
-                using (var region = AsyncInvocationRegion.Create(del))
-                    return ApplyTo(region.WaitForPendingOperationsToComplete(del()));
+            if (AsyncToSyncAdapter.IsAsyncOperation(del))
+                return ApplyTo(AsyncToSyncAdapter.Await(() => del.Invoke()));
 #endif
             return ApplyTo(GetTestObject(del));
         }

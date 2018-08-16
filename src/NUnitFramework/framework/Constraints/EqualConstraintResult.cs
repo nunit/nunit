@@ -34,11 +34,11 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EqualConstraintResult : ConstraintResult
     {
-        private object expectedValue;
-        private Tolerance tolerance;
-        private bool caseInsensitive;
-        private bool clipStrings;
-        private IList<NUnitEqualityComparer.FailurePoint> failurePoints;
+        private readonly object expectedValue;
+        private readonly Tolerance tolerance;
+        private readonly bool caseInsensitive;
+        private readonly bool clipStrings;
+        private readonly IList<NUnitEqualityComparer.FailurePoint> failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =

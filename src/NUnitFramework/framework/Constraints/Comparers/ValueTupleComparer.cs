@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
@@ -30,7 +31,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <c>ValueTuple</c>s.
     /// </summary>
-    internal class ValueTupleComparer : TupleComparerBase
+    internal sealed class ValueTupleComparer : TupleComparerBase
     {
         internal ValueTupleComparer(NUnitEqualityComparer equalityComparer)
             : base(equalityComparer)

@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="KeyValuePair{TKey, TValue}"/>s.
     /// </summary>
-    internal class KeyValuePairsComparer : IChainComparer
+    internal sealed class KeyValuePairsComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 

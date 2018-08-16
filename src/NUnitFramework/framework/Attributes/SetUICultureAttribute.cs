@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETSTANDARD1_6
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -39,7 +38,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
     public class SetUICultureAttribute : PropertyAttribute, IApplyToContext
     {
-        private string _culture;
+        private readonly string _culture;
 
         /// <summary>
         /// Construct given the name of a culture
@@ -54,10 +53,13 @@ namespace NUnit.Framework
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
+#if NETSTANDARD1_4
+            context.CurrentUICulture = new System.Globalization.CultureInfo(_culture);
+#else
             context.CurrentUICulture = new System.Globalization.CultureInfo(_culture, false);
+#endif
         }
 
         #endregion
     }
 }
-#endif

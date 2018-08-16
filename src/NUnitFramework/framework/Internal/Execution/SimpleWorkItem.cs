@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
-        TestMethod _testMethod;
+        readonly TestMethod _testMethod;
 
         /// <summary>
         /// Construct a simple work item for a test.
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal.Execution
                 // users may create their own command wrappers, etc.
                 // we have to protect against unhandled exceptions.
 
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif

@@ -70,17 +70,13 @@ namespace NUnit.Framework.Constraints
             AsyncTestDelegate asyncCode = actual as AsyncTestDelegate;
             if (asyncCode != null)
             {
-                using (var region = AsyncInvocationRegion.Create(asyncCode))
+                try
                 {
-                    try
-                    {
-                        var task = asyncCode();
-                        region.WaitForPendingOperationsToComplete(task);
-                    }
-                    catch (Exception ex)
-                    {
-                        caughtException = ex;
-                    }
+                    AsyncToSyncAdapter.Await(asyncCode.Invoke);
+                }
+                catch (Exception ex)
+                {
+                    caughtException = ex;
                 }
             }
             if (code == null && asyncCode == null)

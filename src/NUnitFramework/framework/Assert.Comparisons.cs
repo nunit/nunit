@@ -25,7 +25,7 @@ using System;
 
 namespace NUnit.Framework
 {
-    public partial class Assert
+    public abstract partial class Assert
     {
         #region Greater
 

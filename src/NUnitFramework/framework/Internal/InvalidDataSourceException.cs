@@ -24,7 +24,7 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-#if !NETSTANDARD1_6
+#if SERIALIZATION
     using System.Runtime.Serialization;
 #endif
 
@@ -32,9 +32,7 @@ namespace NUnit.Framework.Internal
     /// InvalidTestFixtureException is thrown when an appropriate test
     /// fixture constructor using the provided arguments cannot be found.
     /// </summary>
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class InvalidDataSourceException : Exception
     {
         /// <summary>
@@ -57,7 +55,7 @@ namespace NUnit.Framework.Internal
         public InvalidDataSourceException(string message, Exception inner) : base(message, inner)
         { }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>

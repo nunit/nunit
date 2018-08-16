@@ -72,8 +72,8 @@ namespace NUnit.Framework.Constraints
 
         class AndConstraintResult : ConstraintResult
         {
-            private ConstraintResult leftResult;
-            private ConstraintResult rightResult;
+            private readonly ConstraintResult leftResult;
+            private readonly ConstraintResult rightResult;
 
             public AndConstraintResult(AndConstraint constraint, object actual, ConstraintResult leftResult, ConstraintResult rightResult)
                 : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess) 

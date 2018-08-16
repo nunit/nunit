@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2015–2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,8 +32,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestParameters : ITestData, IApplyToTest
     {
-        #region Constructors
-
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
@@ -94,10 +92,6 @@ namespace NUnit.Framework.Internal
             Array.Copy(args, Arguments, numArgs);
         }
 
-        #endregion
-
-        #region ITestData Members
-
         /// <summary>
         /// The RunState for this set of parameters.
         /// </summary>
@@ -109,21 +103,30 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object[] Arguments { get; internal set; }
 
+        private string _testName;
+
         /// <summary>
         /// A name to be used for this test case in lieu
         /// of the standard generated name containing
         /// the argument list.
         /// </summary>
-        public string TestName { get; set; }
+        public string TestName
+        {
+            get
+            {
+                return _testName;
+            }
+            set
+            {
+                Guard.OperationValid(ArgDisplayNames == null || value == null, "TestName cannot be set when argument display names are set.");
+                _testName = value;
+            }
+        }
 
         /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
-
-        #endregion
-
-        #region IApplyToTest Members
+        public IPropertyBag Properties { get; }
 
         /// <summary>
         /// Applies ParameterSet values to the test itself.
@@ -139,16 +142,28 @@ namespace NUnit.Framework.Internal
                     test.Properties.Add(key, value);
         }
 
-        #endregion
-
-        #region Other Public Properties
-
         /// <summary>
         /// The original arguments provided by the user,
         /// used for display purposes.
         /// </summary>
         public object[] OriginalArguments { get; private set; }
 
-        #endregion
+        private string[] _argDisplayNames;
+
+        /// <summary>
+        /// The list of display names to use as the parameters in the test name.
+        /// </summary>
+        internal string[] ArgDisplayNames
+        {
+            get
+            {
+                return _argDisplayNames;
+            }
+            set
+            {
+                Guard.OperationValid(TestName == null || value == null, "Argument display names cannot be set when TestName is set.");
+                _argDisplayNames = value;
+            }
+        }
     }
 }

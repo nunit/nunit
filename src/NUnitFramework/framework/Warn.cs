@@ -221,7 +221,7 @@ namespace NUnit.Framework
         /// that satisfies the constraint provided.
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
         public static void Unless(TestDelegate code, IResolveConstraint constraint)
         {
             Warn.Unless((object)code, constraint);
@@ -237,7 +237,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         public static void Unless<TActual>(TActual actual, IResolveConstraint expression)
         {
             Warn.Unless(actual, expression, null, null);
@@ -272,7 +272,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless<TActual>(
             TActual actual,
@@ -448,7 +448,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         public static void If<TActual>(TActual actual, IResolveConstraint expression)
         {
             Warn.If(actual, expression, null, null);
@@ -483,7 +483,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If<TActual>(
             TActual actual,

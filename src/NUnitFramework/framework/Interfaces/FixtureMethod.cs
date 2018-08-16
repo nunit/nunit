@@ -42,7 +42,7 @@ namespace NUnit.Framework.Interfaces
             Guard.ArgumentNotNull(fixtureType, nameof(fixtureType));
             Guard.ArgumentNotNull(method, nameof(method));
 
-            if (!method.DeclaringType.GetTypeInfo().IsAssignableFrom(fixtureType))
+            if (!method.DeclaringType.IsAssignableFrom(fixtureType))
                 throw new ArgumentException("The specified fixture type does not contain the specified method.");
 
             FixtureType = fixtureType;
@@ -96,7 +96,6 @@ namespace NUnit.Framework.Interfaces
         public override int GetHashCode()
         {
             var hashCode = 662238274;
-            hashCode = hashCode * -1521134295 + base.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(FixtureType);
             hashCode = hashCode * -1521134295 + EqualityComparer<MethodInfo>.Default.GetHashCode(Method);
             return hashCode;

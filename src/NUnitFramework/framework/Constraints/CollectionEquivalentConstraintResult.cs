@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionEquivalentConstraintResult : ConstraintResult
     {
         /// <summary>Result of a <see cref="CollectionTally"/> of the collections to compare for equivalence.</summary>
-        private CollectionTally.CollectionTallyResult _tallyResult;
+        private readonly CollectionTally.CollectionTallyResult _tallyResult;
 
         /// <summary>Maximum amount of elements to write to the <see cref="MessageWriter"/> if there are
         /// extra/missing elements from the collection.</summary>

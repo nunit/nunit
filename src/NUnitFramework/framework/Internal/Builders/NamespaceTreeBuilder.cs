@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Builders
         /// NamespaceDictionary of all test suites we have created to represent 
         /// namespaces. Used to locate namespace parent suites for fixtures.
         /// </summary>
-        Dictionary<string, TestSuite> _namespaceIndex  = new Dictionary<string, TestSuite>();
+        readonly Dictionary<string, TestSuite> _namespaceIndex  = new Dictionary<string, TestSuite>();
 
         /// <summary>
         /// Point in the tree where items in the global namespace are added

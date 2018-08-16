@@ -6,7 +6,7 @@ namespace NUnit.Framework.Constraints
     /// Keeps track of an interval time which can be represented in
     /// Minutes, Seconds or Milliseconds
     /// </summary>
-    public class Interval
+    public sealed class Interval
     {
         private readonly int _value;
         private IntervalUnit _mode;

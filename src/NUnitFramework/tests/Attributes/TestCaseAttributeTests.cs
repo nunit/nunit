@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
@@ -403,14 +404,14 @@ namespace NUnit.Framework.Attributes
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodWithArrayArguments));
 
             Assert.That(suite.TestCaseCount, Is.EqualTo(4));
-
-            Assert.Multiple(() =>
+            var expectedNames = new[]
             {
-                Assert.That(suite.Tests[0].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
-                Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([1, ""text"", null])"));
-                Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([1, Int32[], 4])"));
-                Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"));
-            });
+                @"MethodWithArrayArguments([])",
+                @"MethodWithArrayArguments([1, ""text"", null])",
+                @"MethodWithArrayArguments([1, Int32[], 4])",
+                @"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"
+            };
+            Assert.That(suite.Tests.Select(t => t.Name), Is.EquivalentTo(expectedNames));
         }
 
 

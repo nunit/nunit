@@ -35,7 +35,7 @@ namespace NUnit.TestData.RepeatingTests
         private int fixtureTeardownCount;
         private int setupCount;
         private int teardownCount;
-        private List<string> tearDownResults = new List<string>();
+        private readonly List<string> tearDownResults = new List<string>();
         protected int count;
 
         [OneTimeSetUp]

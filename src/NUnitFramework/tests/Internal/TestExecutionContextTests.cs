@@ -56,8 +56,8 @@ namespace NUnit.Framework.Internal
         IPrincipal originalPrincipal;
 #endif
 
-        DateTime _fixtureCreateTime = DateTime.UtcNow;
-        long _fixtureCreateTicks = Stopwatch.GetTimestamp();
+        readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
+        readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
 
         [OneTimeSetUp]
         public void OneTimeSetUp()

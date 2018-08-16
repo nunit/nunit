@@ -528,8 +528,6 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if PARALLEL
-
         #region SetCultureAttribute
 
         public void SetCultureAttributeSetsSetCultureProperty()
@@ -563,7 +561,5 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
-
-#endif
     }
 }

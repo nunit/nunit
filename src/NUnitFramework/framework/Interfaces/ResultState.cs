@@ -167,19 +167,19 @@ namespace NUnit.Framework.Interfaces
         /// Gets the TestStatus for the test.
         /// </summary>
         /// <value>The status.</value>
-        public TestStatus Status { get; private set; }
+        public TestStatus Status { get; }
 
         /// <summary>
         /// Gets the label under which this test result is
         /// categorized, if any.
         /// </summary>
-        public string Label { get; private set; }
+        public string Label { get; }
 
         /// <summary>
         /// Gets the stage of test execution in which
         /// the failure or other result took place.
         /// </summary>
-        public FailureSite Site { get; private set; }
+        public FailureSite Site { get; }
 
         /// <summary>
         /// Get a new ResultState, which is the same as the current

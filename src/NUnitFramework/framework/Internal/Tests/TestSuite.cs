@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Our collection of child tests
         /// </summary>
-        private List<ITest> tests = new List<ITest>();
+        private readonly List<ITest> tests = new List<ITest>();
 
         #endregion
 

@@ -29,11 +29,8 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
-
-#if !NETSTANDARD1_6
 using System.Diagnostics;
 using System.Security;
-#endif
 
 #if NET20 || NET35 || NET40 || NET45
 using System.Windows.Forms;
@@ -46,10 +43,10 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
-        private static Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
-        private ITestAssemblyBuilder _builder;
-        private ManualResetEvent _runComplete = new ManualResetEvent(false);
+        private readonly ITestAssemblyBuilder _builder;
+        private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
 
         // Saved Console.Out and Console.Error
         private TextWriter _savedOut;
@@ -144,17 +141,17 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Loads the tests found in an Assembly
         /// </summary>
-        /// <param name="assemblyName">File name of the assembly to load</param>
+        /// <param name="assemblyNameOrPath">File name or path of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
         /// <returns>True if the load was successful</returns>
-        public ITest Load(string assemblyName, IDictionary<string, object> settings)
+        public ITest Load(string assemblyNameOrPath, IDictionary<string, object> settings)
         {
             Settings = settings;
 
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
-            return LoadedTest = _builder.Build(assemblyName, settings);
+            return LoadedTest = _builder.Build(assemblyNameOrPath, settings);
 
         }
 
@@ -250,7 +247,7 @@ namespace NUnit.Framework.Api
         /// <returns>True if the run completed, otherwise false</returns>
         public bool WaitForCompletion(int timeout)
         {
-            return _runComplete.WaitOne(timeout);
+            return _runComplete.Wait(timeout);
         }
 
         /// <summary>
@@ -305,13 +302,11 @@ namespace NUnit.Framework.Api
                 {
                     System.Diagnostics.Debugger.Launch();
                 }
-#if !NETSTANDARD1_6
                 catch (SecurityException)
                 {
                     TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
                     return;
                 }
-#endif
                 //System.Diagnostics.Debugger.Launch() not implemented on mono
                 catch (NotImplementedException)
                 {
@@ -347,10 +342,9 @@ namespace NUnit.Framework.Api
 
             // Set the listener - overriding runners may replace this
             Context.Listener = listener;
-#if NETSTANDARD1_6
+#if !PARALLEL
             Context.Dispatcher = new MainThreadWorkItemDispatcher();
 #else
-#if PARALLEL
             int levelOfParallelism = GetLevelOfParallelism();
 
             if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
@@ -360,9 +354,6 @@ namespace NUnit.Framework.Api
                 Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
-#else
-            Context.Dispatcher = new SimpleWorkItemDispatcher();
-#endif
 #endif
         }
 

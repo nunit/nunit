@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
-        private List<OrderingStep> _steps;
+        private readonly List<OrderingStep> _steps = new List<OrderingStep>();
         // The step we are currently building
         private OrderingStep _activeStep;
 
@@ -51,8 +51,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint()
         {
-            _steps = new List<OrderingStep>();
-
             // Ensure there is an active specification
             CreateNextStep(null);
         }
@@ -281,7 +279,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// An OrderingStep represents one stage of the sort
         /// </summary>
-        private class OrderingStep
+        private sealed class OrderingStep
         {
             public OrderingStep(string propertyName)
             {

@@ -77,33 +77,22 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
-                return RunAsyncTestMethod(context);
-            else
-#endif
-                return RunNonAsyncTestMethod(context);
-        }
-
-#if ASYNC
-        private object RunAsyncTestMethod(TestExecutionContext context)
-        {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method))
+            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method))
             {
-                object result = Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
-
                 try
                 {
-                    return region.WaitForPendingOperationsToComplete(result);
+                    return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
                 }
                 catch (Exception e)
                 {
                     throw new NUnitException("Rethrown", e);
                 }
             }
-        }
 #endif
+            return InvokeTestMethod(context);
+        }
 
-        private object RunNonAsyncTestMethod(TestExecutionContext context)
+        private object InvokeTestMethod(TestExecutionContext context)
         {
             return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
         }

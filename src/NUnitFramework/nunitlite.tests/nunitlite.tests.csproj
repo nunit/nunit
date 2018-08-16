@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Compile Include="..\Fakes.cs" Link="TestUtilities\Fakes.cs" />
+    <Compile Include="..\SchemaTestUtils.cs" Link="TestUtilities\SchemaTestUtils.cs" />
     <Compile Include="..\TestBuilder.cs" Link="TestUtilities\TestBuilder.cs" />
     <Compile Include="..\TestFile.cs" Link="TestUtilities\TestFile.cs" />
 

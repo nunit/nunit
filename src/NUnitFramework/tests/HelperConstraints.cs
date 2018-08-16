@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -62,14 +63,11 @@ namespace NUnit.Framework
                 var stopwatch = new System.Diagnostics.Stopwatch();
 
 #if ASYNC
-                if (Internal.AsyncInvocationRegion.IsAsyncOperation(@delegate))
+                if (AsyncToSyncAdapter.IsAsyncOperation(@delegate))
                 {
-                    using (var async = Internal.AsyncInvocationRegion.Create(@delegate))
-                    {
-                        stopwatch.Start();
-                        async.WaitForPendingOperationsToComplete(@delegate.DynamicInvoke());
-                        stopwatch.Stop();
-                    }
+                    stopwatch.Start();
+                    AsyncToSyncAdapter.Await(() => @delegate.DynamicInvoke());
+                    stopwatch.Stop();
                 }
                 else
 #endif
