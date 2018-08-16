@@ -38,7 +38,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public class TimeoutAttribute : PropertyAttribute, IApplyToContext
     {
-        private int _timeout;
+        private readonly int _timeout;
 
         /// <summary>
         /// Construct a TimeoutAttribute given a time in milliseconds

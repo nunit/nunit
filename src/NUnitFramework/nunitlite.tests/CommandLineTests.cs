@@ -286,6 +286,22 @@ namespace NUnitLite.Tests
             }
         }
 
+        [TestCase("TestList", "--test=Some.Name.Space.TestFixture", "Some.Name.Space.TestFixture")]
+        [TestCase("TestList", "--test=A.B.C,E.F.G", "A.B.C", "E.F.G")]
+        [TestCase("TestList", "--test=A.B.C|--test=E.F.G", "A.B.C", "E.F.G")]
+        [TestCase("PreFilters", "--prefilter=Some.Name.Space.TestFixture", "Some.Name.Space.TestFixture")]
+        [TestCase("PreFilters", "--prefilter=A.B.C,E.F.G", "A.B.C", "E.F.G")]
+        [TestCase("PreFilters", "--prefilter=A.B.C|--prefilter=E.F.G", "A.B.C", "E.F.G")]
+        public void CanRecognizeTestSelectionOptions(string propertyName, string args, params string[] expected)
+        {
+            var property = GetPropertyInfo(propertyName);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(IList<string>)));
+
+            var options = new NUnitLiteOptions(args.Split(new char[] { '|' }));
+            var list = (IList<string>)property.GetValue(options, null);
+            Assert.That(list, Is.EqualTo(expected));
+        }
+
         // [TestCase("InternalTraceLevel", "trace", typeof(InternalTraceLevel))]
         // public void CanRecognizeEnumOptions(string propertyName, string pattern, Type enumType)
         // {
@@ -313,6 +329,8 @@ namespace NUnitLite.Tests
         [TestCase("--err")]
         [TestCase("--work")]
         [TestCase("--trace")]
+        [TestCase("--test")]
+        [TestCase("--prefilter")]
 #if !NETCOREAPP1_1
         [TestCase("--timeout")]
 #endif
@@ -671,7 +689,7 @@ namespace NUnitLite.Tests
                 TeamCity = teamCity;
             }
 
-            public bool TeamCity { get; private set; }
+            public bool TeamCity { get; }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Execution
         private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
 
         private WorkItem _topLevelWorkItem;
-        private Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
+        private readonly Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
 
         #region Events
 
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal.Execution
                 shift.Cancel(force);
         }
 
-        private object _queueLock = new object();
+        private readonly object _queueLock = new object();
         private int _isolationLevel = 0;
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -52,27 +52,34 @@ namespace NUnit.Framework.Internal.Commands
             if (Test.Fixture == null)
                 Test.Fixture = context.TestObject;
 
-            try
+            RunTestMethodInThreadAbortSafeZone(context, () =>
             {
                 BeforeTest(context);
-
                 context.CurrentResult = innerCommand.Execute(context);
+            });
+
+            if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+            {
+                RunTestMethodInThreadAbortSafeZone(context, () => { AfterTest(context); });
+            }
+
+            return context.CurrentResult;
+        }
+
+        private static void RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+        {
+            try
+            {
+                action();
             }
             catch (Exception ex)
             {
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
                 if (ex is ThreadAbortException)
                     Thread.ResetAbort();
 #endif
                 context.CurrentResult.RecordException(ex);
             }
-            finally
-            {
-                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
-                    AfterTest(context);
-            }
-
-            return context.CurrentResult;
         }
         
         /// <summary>

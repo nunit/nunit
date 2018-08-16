@@ -45,9 +45,9 @@ namespace NUnit.Framework.Internal
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
 #if PARALLEL
-        private ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
+        private readonly ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
 #else
-        private List<ITestResult> _children = new List<ITestResult>();
+        private readonly List<ITestResult> _children = new List<ITestResult>();
 #endif
 
         /// <summary>

@@ -21,12 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NET20 || NET35 || NET40
 using System;
 using System.Reflection;
 
 namespace NUnit.Compatibility
 {
-#if NET20 || NET35 || NET40
     /// <summary>
     /// Provides NUnit specific extensions to aid in Reflection
     /// across multiple frameworks
@@ -48,6 +48,14 @@ namespace NUnit.Compatibility
         public static Type GetTypeInfo(this Type type)
         {
             return type;
+        }
+
+        /// <summary>
+        /// See <see cref="Delegate.CreateDelegate(Type, MethodInfo)"/>.
+        /// </summary>
+        public static MethodInfo GetMethodInfo(this Delegate @delegate)
+        {
+            return @delegate.Method;
         }
     }
 
@@ -82,147 +90,5 @@ namespace NUnit.Compatibility
             return Delegate.CreateDelegate(type, method);
         }
     }
-
-#elif NETSTANDARD1_6
-
-    /// <summary>
-    /// Provides NUnit specific extensions to aid in Reflection
-    /// across multiple frameworks
-    /// </summary>
-    /// <remarks>
-    /// This version of the class allows direct calls on Type on
-    /// those platforms that would normally require use of
-    /// GetTypeInfo().
-    /// </remarks>
-    public static class TypeExtensions
-    {
-        /// <summary>
-        /// Returns an array of <see cref="Type"/> objects that represent the type arguments of a closed generic type or the type parameters of a generic type definition.
-        /// </summary>
-        public static Type[] GetGenericArguments(this Type type)
-        {
-            return type.GetTypeInfo().GetGenericArguments();
-        }
-
-        /// <summary>
-        /// Searches for a public instance constructor whose parameters match the types in the specified array.
-        /// </summary>
-        public static ConstructorInfo GetConstructor(this Type type, Type[] types)
-        {
-            return type.GetTypeInfo().GetConstructor(types);
-        }
-
-        /// <summary>
-        /// Returns all the public constructors defined for the current <see cref="Type"/>.
-        /// </summary>
-        public static ConstructorInfo[] GetConstructors(this Type type)
-        {
-            return type.GetTypeInfo().GetConstructors();
-        }
-
-        /// <summary>
-        /// Determines whether an instance of a specified type can be assigned to an instance of the current type.
-        /// </summary>
-        public static bool IsAssignableFrom(this Type type, Type c)
-        {
-            return type.GetTypeInfo().IsAssignableFrom(c?.GetTypeInfo());
-        }
-
-        /// <summary>
-        /// Determines whether the specified object is an instance of the current <see cref="Type"/>.
-        /// </summary>
-        public static bool IsInstanceOfType(this Type type, object o)
-        {
-            return type.GetTypeInfo().IsInstanceOfType(o);
-        }
-
-        /// <summary>
-        /// When overridden in a derived class, gets all the interfaces implemented or inherited by the current <see cref="Type"/>.
-        /// </summary>
-        public static Type[] GetInterfaces(this Type type)
-        {
-            return type.GetTypeInfo().GetInterfaces();
-        }
-
-        /// <summary>
-        /// Searches for the specified members, using the specified binding constraints.
-        /// </summary>
-        public static MemberInfo[] GetMember(this Type type, string name, BindingFlags bindingAttr)
-        {
-            return type.GetTypeInfo().GetMember(name, bindingAttr);
-        }
-
-        /// <summary>
-        /// Searches for the members defined for the current <see cref="Type"/>, using the specified binding constraints.
-        /// </summary>
-        public static MemberInfo[] GetMembers(this Type type, BindingFlags bindingAttr)
-        {
-            return type.GetTypeInfo().GetMembers(bindingAttr);
-        }
-
-        /// <summary>
-        /// Searches for the public field with the specified name.
-        /// </summary>
-        public static FieldInfo GetField(this Type type, string name)
-        {
-            return type.GetTypeInfo().GetField(name);
-        }
-
-        /// <summary>
-        /// Searches for the public property with the specified name.
-        /// </summary>
-        public static PropertyInfo GetProperty(this Type type, string name)
-        {
-            return type.GetTypeInfo().GetProperty(name);
-        }
-
-        /// <summary>
-        /// Searches for the specified property, using the specified binding constraints.
-        /// </summary>
-        public static PropertyInfo GetProperty(this Type type, string name, BindingFlags bindingAttr)
-        {
-            return type.GetTypeInfo().GetProperty(name, bindingAttr);
-        }
-
-        /// <summary>
-        /// Searches for the public method with the specified name.
-        /// </summary>
-        public static MethodInfo GetMethod(this Type type, string name)
-        {
-            return type.GetTypeInfo().GetMethod(name);
-        }
-
-        /// <summary>
-        /// GSearches for the specified method, using the specified binding constraints.
-        /// </summary>
-        public static MethodInfo GetMethod(this Type type, string name, BindingFlags bindingAttr)
-        {
-            return type.GetTypeInfo().GetMethod(name, bindingAttr);
-        }
-
-        /// <summary>
-        /// Searches for the specified public method whose parameters match the specified argument types.
-        /// </summary>
-        public static MethodInfo GetMethod(this Type type, string name, Type[] types)
-        {
-            return type.GetTypeInfo().GetMethod(name, types);
-        }
-
-        /// <summary>
-        /// Searches for the methods defined for the current <see cref="Type"/>, using the specified binding constraints.
-        /// </summary>
-        public static MethodInfo[] GetMethods(this Type type, BindingFlags flags)
-        {
-            return type.GetTypeInfo().GetMethods(flags);
-        }
-    }
-#endif
-
-    /// <summary>
-    /// This class is used as a flag when we get a parameter list for a method/constructor, but
-    /// we do not know one of the types because null was passed in.
-    /// </summary>
-    public class NUnitNullType
-    {
-    }
 }
+#endif

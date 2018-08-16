@@ -39,7 +39,7 @@ namespace NUnitLite
     /// </summary>
     public class OutputManager
     {
-        private string _workDirectory;
+        private readonly string _workDirectory;
 
         /// <summary>
         /// Construct an OutputManager

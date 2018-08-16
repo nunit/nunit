@@ -30,9 +30,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class InconclusiveException : ResultStateException
     {
         /// <param name="message">The error message that explains 
@@ -50,7 +48,7 @@ namespace NUnit.Framework
             base(message, inner)
         { }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>

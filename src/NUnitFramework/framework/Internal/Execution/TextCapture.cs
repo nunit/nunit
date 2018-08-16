@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TextCapture : TextWriter
     {
-        private TextWriter _defaultWriter;
+        private readonly TextWriter _defaultWriter;
 
         /// <summary>
         /// Construct a TextCapture object

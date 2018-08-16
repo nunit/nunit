@@ -23,6 +23,7 @@
 
 using System;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Syntax
@@ -143,6 +144,44 @@ namespace NUnit.Framework.Syntax
                 () => new MyClass(null),
                 Throws.InstanceOf<ArgumentNullException>()
                 .And.Message.EqualTo(expectedExceptionMessage));
+        }
+
+        [Test]
+        public void LambdaThrowsException_TestOutput()
+        {
+            var ex = CatchException(() =>
+                Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.TypeOf<ArgumentException>()));
+
+            Assert.That(ex.Message, Does.StartWith(
+                "  Expected: <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
+        }
+
+        [Test]
+        public void LambdaThrowsExceptionInstanceOf_TestOutput()
+        {
+            var ex = CatchException(() =>
+                Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.InstanceOf<ArgumentException>()));
+
+            Assert.That(ex.Message, Does.StartWith(
+                "  Expected: instance of <System.ArgumentException>" + Environment.NewLine +
+                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
+        }
+
+        private Exception CatchException(TestDelegate del)
+        {
+            using (new TestExecutionContext.IsolatedContext())
+            {
+                try
+                {
+                    del();
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            }
         }
 
         internal class MyClass

@@ -22,15 +22,8 @@
 // ***********************************************************************
 
 #if PARALLEL
-using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Globalization;
-using System.Runtime.Serialization;
 using System.Threading;
-#if NET20 || NET35
-using ManualResetEventSlim = System.Threading.ManualResetEvent;
-#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
@@ -149,7 +142,7 @@ namespace NUnit.Framework.Internal.Execution
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
+        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim();
 
         /* The whole idea is to use these two values in a transactional
          * way to track and manage the actual data inside the underlying lock-free collection

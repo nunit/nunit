@@ -39,25 +39,25 @@ namespace NUnit.Framework.Internal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// specifying the Assembly and the path from which it was loaded.
+        /// specifying the Assembly and the suite name.
         /// </summary>
         /// <param name="assembly">The assembly this test represents.</param>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(Assembly assembly, string path)
-            : base(path)
+        /// <param name="name">The desired name for the test suite.</param>
+        public TestAssembly(Assembly assembly, string name)
+            : base(name)
         {
             this.Assembly = assembly;
-            this.Name = Path.GetFileName(path);
+            this.Name = name;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// for a path which could not be loaded.
+        /// specifying the suite name for an assembly that could not be loaded.
         /// </summary>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(string path) : base(path)
+        /// <param name="name">The desired name for the test suite.</param>
+        public TestAssembly(string name) : base(name)
         {
-            this.Name = Path.GetFileName(path);
+            this.Name = name;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Assembly represented by this instance.
         /// </summary>
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         /// <summary>
         /// Gets the name used for the top-level element in the

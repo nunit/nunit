@@ -16,7 +16,8 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class SetUpFixtureTests
     {
-        private static readonly string testAssembly = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).GetTypeInfo().Assembly);
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).GetTypeInfo().Assembly);
+        private static readonly string SUITE_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
         ITestAssemblyBuilder builder;
         ITestAssemblyRunner runner;
@@ -45,7 +46,7 @@ namespace NUnit.Framework.Internal
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            if (runner.Load(testAssembly, options) != null)
+            if (runner.Load(ASSEMBLY_PATH, options) != null)
                 return runner.Run(TestListener.NULL, filter);
 
             return null;
@@ -63,11 +64,11 @@ namespace NUnit.Framework.Internal
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
             IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { nameSpace };
-            ITest suite = builder.Build(testAssembly, options);
+            ITest suite = builder.Build(ASSEMBLY_PATH, options);
 
             Assert.IsNotNull(suite);
 
-            Assert.AreEqual(testAssembly, suite.FullName);
+            Assert.AreEqual(SUITE_NAME, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
 
             string[] nameSpaceBits = nameSpace.Split('.');
@@ -96,7 +97,7 @@ namespace NUnit.Framework.Internal
         public void AssemblySetUpFixtureFollowsAssemblyNodeInTree()
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
-            var rootSuite = builder.Build(testAssembly, options);
+            var rootSuite = builder.Build(ASSEMBLY_PATH, options);
             Assert.That(rootSuite, Is.TypeOf<TestAssembly>());
             var setupFixture = rootSuite.Tests[0];
             Assert.That(setupFixture, Is.TypeOf<SetUpFixture>());
@@ -112,11 +113,11 @@ namespace NUnit.Framework.Internal
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace6";
             IDictionary<string, object> options = new Dictionary<string, object>();
             options["LOAD"] = new string[] { nameSpace };
-            ITest suite = builder.Build(testAssembly, options);
+            ITest suite = builder.Build(ASSEMBLY_PATH, options);
 
             Assert.IsNotNull(suite);
 
-            Assert.AreEqual(testAssembly, suite.FullName);
+            Assert.AreEqual(SUITE_NAME, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
             Assert.AreEqual(RunState.Runnable, suite.RunState);
 

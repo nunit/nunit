@@ -85,6 +85,10 @@ namespace NUnit.Framework.Internal.Builders
                         ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                         : parms.TestName;
                 }
+                else if (parms.ArgDisplayNames != null)
+                {
+                    testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                }
                 else
                 {
                     testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
@@ -135,7 +139,7 @@ namespace NUnit.Framework.Internal.Builders
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
-                // IsOptional is supported since .NET 1.1 
+                // IsOptional is supported since .NET 1.1
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }
@@ -162,7 +166,7 @@ namespace NUnit.Framework.Internal.Builders
             Type returnType = testMethod.Method.ReturnType;
 
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method))
+            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method))
             {
                 if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
@@ -202,11 +206,9 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                var typeArguments = new GenericMethodHelper(testMethod.Method).GetTypeArguments(arglist);
-                foreach (Type o in typeArguments)
-                    if (o == null || o == TypeHelper.NonmatchingType)
-                        return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
-
+                Type[] typeArguments;
+                if (!new GenericMethodHelper(testMethod.Method).TryGetTypeArguments(arglist, out typeArguments))
+                    return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();

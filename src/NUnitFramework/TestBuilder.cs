@@ -171,11 +171,7 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunAsTestCase(Action action)
         {
-#if NETCOREAPP1_1
             var method = action.GetMethodInfo();
-#else
-            var method = action.Method;
-#endif
             var testMethod = MakeTestCase(method.DeclaringType, method.Name);
             return RunTest(testMethod);
         }

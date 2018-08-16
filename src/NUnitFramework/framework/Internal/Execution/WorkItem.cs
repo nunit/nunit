@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem : IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("WorkItem");
+        static readonly Logger log = InternalTrace.GetLogger("WorkItem");
 
         #region Construction and Initialization
 
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test being executed by the work item
         /// </summary>
-        public Test Test { get; private set; }
+        public Test Test { get; }
 
         /// <summary>
         /// The name of the work item - defaults to the Test name.
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Filter used to include or exclude child tests
         /// </summary>
-        public ITestFilter Filter { get; private set; }
+        public ITestFilter Filter { get; }
 
         /// <summary>
         /// The execution context
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets the ParallelScope associated with the test, if any,
         /// otherwise returning ParallelScope.Default;
         /// </summary>
-        public ParallelScope ParallelScope { get; private set; }
+        public ParallelScope ParallelScope { get; }
 
 #if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if !NETSTANDARD1_6
+#if PARALLEL
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -255,18 +255,18 @@ namespace NUnit.Framework.Internal.Execution
             else
                 RunOnCurrentThread();
 #else
-                RunOnCurrentThread();
+            RunOnCurrentThread();
 #endif
         }
 
-        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
+        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
 
         /// <summary>
         /// Wait until the execution of this item is complete
         /// </summary>
         public void WaitForCompletion()
         {
-            _completionEvent.WaitOne();
+            _completionEvent.Wait();
         }
 
         /// <summary>
@@ -333,12 +333,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Dispose()
         {
-            if (_completionEvent != null)
-#if NET20 || NET35
-                _completionEvent.Close();
-#else
-                _completionEvent.Dispose();
-#endif
+            _completionEvent?.Dispose();
         }
 
 #endregion
@@ -464,7 +459,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-#if !NETSTANDARD1_6
+#if PARALLEL
         private Thread thread;
 
 #if APARTMENT_STATE
@@ -491,7 +486,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-                private void RunOnCurrentThread()
+        private void RunOnCurrentThread()
         {
             Context.CurrentTest = this.Test;
             Context.CurrentResult = this.Result;

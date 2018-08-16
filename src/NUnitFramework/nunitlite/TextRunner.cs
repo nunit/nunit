@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2015-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -116,7 +116,7 @@ namespace NUnitLite
             if (_options.OutFile != null)
             {
                 var outFile = Path.Combine(_options.WorkDirectory, _options.OutFile);
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                 var textWriter = File.CreateText(outFile);
 #else
                 var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
@@ -135,7 +135,7 @@ namespace NUnitLite
                 if (_options.ErrFile != null)
                 {
                     var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                     errWriter = File.CreateText(errFile);
 #else
                     errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
@@ -221,6 +221,7 @@ namespace NUnitLite
                     _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
 
                 var runSettings = MakeRunSettings(_options);
+                LoadTests(runSettings);
 
                 // We display the filters at this point so that any exception message
                 // thrown by CreateTestFilter will be understandable.
@@ -228,7 +229,6 @@ namespace NUnitLite
 
                 TestFilter filter = CreateTestFilter(_options);
 
-                _runner.Load(_testAssembly, runSettings);
                 return _options.Explore ? ExploreTests(filter) : RunTests(filter, runSettings);
             }
             catch (FileNotFoundException ex)
@@ -251,6 +251,15 @@ namespace NUnitLite
         #endregion
 
         #region Helper Methods
+
+        private void LoadTests(IDictionary<string, object> runSettings)
+        {
+            TimeStamp startTime = new TimeStamp();
+            _runner.Load(_testAssembly, runSettings);
+            TimeStamp endTime = new TimeStamp();
+
+            _textUI.DisplayDiscoveryReport(startTime, endTime);
+        }
 
         public int RunTests(TestFilter filter, IDictionary<string, object> runSettings)
         {
@@ -319,6 +328,24 @@ namespace NUnitLite
         {
             // Transfer command line options to run settings
             var runSettings = new Dictionary<string, object>();
+
+            if (options.PreFilters.Count > 0)
+                runSettings[FrameworkPackageSettings.LOAD] = options.PreFilters;
+            else if (options.TestList.Count > 0)
+            {
+                var prefilters = new List<string>();
+
+                foreach (var testName in options.TestList)
+                {
+                    int end = testName.IndexOfAny(new char[] { '(', '<' });
+                    if (end > 0)
+                        prefilters.Add(testName.Substring(0, end));
+                    else
+                        prefilters.Add(testName);
+                }
+
+                runSettings[FrameworkPackageSettings.LOAD] = prefilters;
+            }
 
             if (options.NumberOfTestWorkers >= 0)
                 runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;
@@ -412,7 +439,7 @@ namespace NUnitLite
                     ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
             var id = Process.GetCurrentProcess().Id;

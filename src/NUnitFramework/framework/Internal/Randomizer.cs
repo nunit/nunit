@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal
         private static int _initialSeed;
 
         // Lookup Dictionary used to find randomizers for each member
-        private static Dictionary<MemberInfo, Randomizer> Randomizers;
+        private static readonly Dictionary<MemberInfo, Randomizer> Randomizers;
 
         /// <summary>
         /// Get a Randomizer for a particular member, returning

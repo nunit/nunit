@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// </summary>
     public class ListMapper
     {
-        ICollection original;
+        readonly ICollection original;
 
         /// <summary>
         /// Construct a ListMapper based on a collection

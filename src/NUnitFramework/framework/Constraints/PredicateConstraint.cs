@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -50,11 +51,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-#if NETSTANDARD1_6
                 var name = predicate.GetMethodInfo().Name;
-#else
-                var name = predicate.Method.Name;
-#endif
                 return name.StartsWith("<")
                     ? "value matching lambda expression"
                     : "value matching " + name;

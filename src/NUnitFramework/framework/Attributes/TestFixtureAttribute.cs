@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// TestFixtureAttribute is used to mark a class that represents a TestFixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, ITestFixtureData
+    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -76,12 +76,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The arguments originally provided to the attribute
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// Properties pertaining to this fixture
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         #endregion
 
@@ -222,7 +222,21 @@ namespace NUnit.Framework
         /// <param name="type">The type to be used as a fixture.</param>
         public IEnumerable<TestSuite> BuildFrom(Type type)
         {
-            yield return _builder.BuildFrom(type, this);
+            yield return _builder.BuildFrom(type, PreFilter.Empty, this);
+        }
+
+        #endregion
+
+        #region IFixtureBuilder2 Members
+
+        /// <summary>
+        /// Builds a single test fixture from the specified type.
+        /// </summary>
+        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="filter">Filter used to select methods as tests.</param>
+        public IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter)
+        {
+            yield return _builder.BuildFrom(type, filter, this);
         }
 
         #endregion

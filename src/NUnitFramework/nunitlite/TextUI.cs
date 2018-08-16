@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2015-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -35,7 +35,7 @@ namespace NUnitLite
 {
     public class TextUI
     {
-        public ExtendedTextWriter Writer { get; private set; }
+        public ExtendedTextWriter Writer { get; }
 
         private readonly TextReader _reader;
         private readonly NUnitLiteOptions _options;
@@ -171,11 +171,30 @@ namespace NUnitLite
 #else
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
 #endif
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             Writer.WriteLabelLine("  CLR Version: ", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
 #endif
+            Writer.WriteLine();
+        }
+
+        #endregion
+
+        #region Test Discovery Report
+
+        public void DisplayDiscoveryReport(TimeStamp startTime, TimeStamp endTime)
+        {
+            WriteSectionHeader("Test Discovery");
+
+            foreach (string filter in _options.PreFilters)
+                Writer.WriteLabelLine("  Pre-Filter: ", filter);
+
+            Writer.WriteLabelLine("  Start time: ", startTime.DateTime.ToString("u"));
+            Writer.WriteLabelLine("    End time: ", endTime.DateTime.ToString("u"));
+            double elapsedSeconds = TimeStamp.TicksToSeconds(endTime.Ticks - startTime.Ticks);
+            Writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", elapsedSeconds));
+
             Writer.WriteLine();
         }
 
@@ -189,9 +208,8 @@ namespace NUnitLite
             {
                 WriteSectionHeader("Test Filters");
 
-                if (_options.TestList.Count > 0)
-                    foreach (string testName in _options.TestList)
-                        Writer.WriteLabelLine("    Test: ", testName);
+                foreach (string testName in _options.TestList)
+                    Writer.WriteLabelLine("    Test: ", testName);
 
                 if (_options.WhereClauseSpecified)
                     Writer.WriteLabelLine("    Where: ", _options.WhereClause.Trim());

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class ValuesAttribute : DataAttribute, IParameterDataSource
+    public class ValuesAttribute : NUnitAttribute, IParameterDataSource
     {
         /// <summary>
         /// The collection of data to be returned. Must
@@ -44,7 +44,6 @@ namespace NUnit.Framework
         /// elements may have their type changed in GetData
         /// if necessary
         /// </summary>
-        // TODO: This causes a lot of boxing so we should eliminate it
         protected object[] data;
 
         /// <summary>

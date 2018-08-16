@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedMethodSuite : TestSuite
     {
-        private bool _isTheory;
+        private readonly bool _isTheory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParameterizedMethodSuite"/> class.

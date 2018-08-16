@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class ParameterDataProvider : IParameterDataProvider
     {
-        private List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
+        private readonly List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
 
         /// <summary>
         /// Construct with a collection of individual providers

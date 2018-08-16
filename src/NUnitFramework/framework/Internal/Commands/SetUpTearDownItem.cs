@@ -33,8 +33,8 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownItem
     {
-        private IList<MethodInfo> _setUpMethods;
-        private IList<MethodInfo> _tearDownMethods;
+        private readonly IList<MethodInfo> _setUpMethods;
+        private readonly IList<MethodInfo> _tearDownMethods;
         private bool _setUpWasRun;
 
         /// <summary>
@@ -100,24 +100,18 @@ namespace NUnit.Framework.Internal.Commands
                 }
         }
 
-        private void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
+        private static void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
         {
+            Guard.ArgumentNotAsyncVoid(method, nameof(method));
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(method))
-                RunAsyncMethod(method, context);
+            if (AsyncToSyncAdapter.IsAsyncOperation(method))
+                AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
             else
 #endif
-                RunNonAsyncMethod(method, context);
+                InvokeMethod(method, context);
         }
 
-#if ASYNC
-        private void RunAsyncMethod(MethodInfo method, TestExecutionContext context)
-        {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(method))
-                region.WaitForPendingOperationsToComplete(RunNonAsyncMethod(method, context));
-        }
-#endif
-        private object RunNonAsyncMethod(MethodInfo method, TestExecutionContext context)
+        private static object InvokeMethod(MethodInfo method, TestExecutionContext context)
         {
             return Reflect.InvokeMethod(method, method.IsStatic ? null : context.TestObject);
         }

@@ -59,22 +59,22 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Get the text 
         /// </summary>
-		public string Text { get; private set; }
+		public string Text { get; }
 
         /// <summary>
         /// Get the output type
         /// </summary>
-		public string Stream { get; private set; }
+		public string Stream { get; }
 
         /// <summary>
         /// Get the name of the test that created the output
         /// </summary>
-        public string TestName { get; private set; }
+        public string TestName { get; }
 
         /// <summary>
         /// Get the id of the test that created the output
         /// </summary>
-        public string TestId { get; private set; }
+        public string TestId { get; }
 
         /// <summary>
         /// Convert the TestOutput object to an XML string

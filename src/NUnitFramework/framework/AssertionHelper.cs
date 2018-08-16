@@ -97,7 +97,7 @@ namespace NUnit.Framework
         /// that satisfies the constraint provided.
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A ThrowsConstraint used in the test</param>
+        /// <param name="constraint">A Constraint expression to be applied</param>
         public void Expect(TestDelegate code, IResolveConstraint constraint)
         {
             Assert.That((object)code, constraint);
@@ -113,7 +113,7 @@ namespace NUnit.Framework
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
         /// </summary>
-        /// <param name="expression">A Constraint to be applied</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="actual">The actual value to test</param>
         static public void Expect<TActual>(TActual actual, IResolveConstraint expression)
         {
@@ -421,10 +421,9 @@ namespace NUnit.Framework
         }
 
         #endregion
+        
+#if SERIALIZATION
 
-        #region BinarySerializable
-
-#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -432,13 +431,7 @@ namespace NUnit.Framework
         {
             get { return new BinarySerializableConstraint(); }
         }
-#endif
 
-        #endregion
-
-        #region XmlSerializable
-
-#if !NETSTANDARD1_6
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
@@ -446,9 +439,8 @@ namespace NUnit.Framework
         {
             get { return new XmlSerializableConstraint(); }
         }
-#endif
 
-        #endregion
+#endif
 
         #region EqualTo
 

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -38,14 +37,6 @@ namespace NUnit.Framework.Internal
         private const int STRING_MAX = 40;
         private const int STRING_LIMIT = STRING_MAX - 3;
         private const string THREE_DOTS = "...";
-
-        internal sealed class NonmatchingTypeClass { }
-
-        /// <summary>
-        /// A special value, which is used to indicate that BestCommonType() method
-        /// was unable to find a common type for the specified arguments.
-        /// </summary>
-        public static readonly Type NonmatchingType = typeof(NonmatchingTypeClass);
 
         /// <summary>
         /// Gets the display name for a Type as used by NUnit.
@@ -158,58 +149,53 @@ namespace NUnit.Framework.Internal
         /// Returns the best fit for a common type to be used in
         /// matching actual arguments to a methods Type parameters.
         /// </summary>
-        /// <param name="type1">The first type.</param>
-        /// <param name="type2">The second type.</param>
-        /// <returns>Either type1 or type2, depending on which is more general.</returns>
-        public static Type BestCommonType(Type type1, Type type2)
+        public static bool TryGetBestCommonType(Type type1, Type type2, out Type bestCommonType)
         {
-            if (type1 == TypeHelper.NonmatchingType) return TypeHelper.NonmatchingType;
-            if (type2 == TypeHelper.NonmatchingType) return TypeHelper.NonmatchingType;
-
-            if (type1 == type2) return type1;
-            if (type1 == null) return type2;
-            if (type2 == null) return type1;
+            if (type1 == type2) { bestCommonType = type1; return true; }
+            if (type1 == null) { bestCommonType = type2; return true; }
+            if (type2 == null) { bestCommonType = type1; return true; }
 
             if (TypeHelper.IsNumeric(type1) && TypeHelper.IsNumeric(type2))
             {
-                if (type1 == typeof(double)) return type1;
-                if (type2 == typeof(double)) return type2;
+                if (type1 == typeof(double)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(double)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(float)) return type1;
-                if (type2 == typeof(float)) return type2;
+                if (type1 == typeof(float)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(float)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(decimal)) return type1;
-                if (type2 == typeof(decimal)) return type2;
+                if (type1 == typeof(decimal)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(decimal)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(UInt64)) return type1;
-                if (type2 == typeof(UInt64)) return type2;
+                if (type1 == typeof(UInt64)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(UInt64)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(Int64)) return type1;
-                if (type2 == typeof(Int64)) return type2;
+                if (type1 == typeof(Int64)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(Int64)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(UInt32)) return type1;
-                if (type2 == typeof(UInt32)) return type2;
+                if (type1 == typeof(UInt32)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(UInt32)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(Int32)) return type1;
-                if (type2 == typeof(Int32)) return type2;
+                if (type1 == typeof(Int32)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(Int32)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(UInt16)) return type1;
-                if (type2 == typeof(UInt16)) return type2;
+                if (type1 == typeof(UInt16)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(UInt16)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(Int16)) return type1;
-                if (type2 == typeof(Int16)) return type2;
+                if (type1 == typeof(Int16)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(Int16)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(byte)) return type1;
-                if (type2 == typeof(byte)) return type2;
+                if (type1 == typeof(byte)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(byte)) { bestCommonType = type2; return true; }
 
-                if (type1 == typeof(sbyte)) return type1;
-                if (type2 == typeof(sbyte)) return type2;
+                if (type1 == typeof(sbyte)) { bestCommonType = type1; return true; }
+                if (type2 == typeof(sbyte)) { bestCommonType = type2; return true; }
             }
 
-            if (type1.IsAssignableFrom(type2)) return type1;
-            if (type2.IsAssignableFrom(type1)) return type2;
+            if (type1.IsAssignableFrom(type2)) { bestCommonType = type1; return true; }
+            if (type2.IsAssignableFrom(type1)) { bestCommonType = type2; return true; }
 
-            return TypeHelper.NonmatchingType;
+            bestCommonType = null;
+            return false;
         }
 
         /// <summary>
@@ -298,9 +284,16 @@ namespace NUnit.Framework.Internal
                     for (int j = 0; j < arglist.Length; j++)
                     {
                         if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
-                            typeArgs[i] = TypeHelper.BestCommonType(
+                        {
+                            if (!TypeHelper.TryGetBestCommonType(
                                 typeArgs[i],
-                                arglist[j].GetType());
+                                arglist[j].GetType(),
+                                out typeArgs[i]))
+                            {
+                                typeArgs[i] = null;
+                                break;
+                            }
+                        }
                     }
 
                     if (typeArgs[i] == null)
@@ -367,7 +360,7 @@ namespace NUnit.Framework.Internal
         private static bool IsTupleInternal(Type type, string tupleName)
         {
             string typeName = type.FullName;
-            
+
             if (typeName.EndsWith("[]"))
                 return false;
 

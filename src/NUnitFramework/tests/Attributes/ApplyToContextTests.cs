@@ -45,7 +45,6 @@ namespace NUnit.Framework.Attributes
             Assert.True(_context.IsSingleThreaded);
         }
 
-#if !NETCOREAPP1_1
         [Test]
         public void SetCultureAttribute()
         {
@@ -61,7 +60,6 @@ namespace NUnit.Framework.Attributes
             attr.ApplyToContext(_context);
             Assert.That(_context.CurrentUICulture, Is.EqualTo(new CultureInfo("fr-FR")));
         }
-#endif
 
 #if THREAD_ABORT
         [Test]

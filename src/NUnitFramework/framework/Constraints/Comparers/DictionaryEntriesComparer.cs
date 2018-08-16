@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DictionaryEntry"/>s.
     /// </summary>
-    internal class DictionaryEntriesComparer : IChainComparer
+    internal sealed class DictionaryEntriesComparer : IChainComparer
     {
         private readonly NUnitEqualityComparer _equalityComparer;
 

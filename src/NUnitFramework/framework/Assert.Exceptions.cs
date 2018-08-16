@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-    public partial class Assert
+    public abstract partial class Assert
     {
         #region Throws
         /// <summary>
@@ -41,25 +41,8 @@ namespace NUnit.Framework
         {
             Exception caughtException = null;
 
-#if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(code))
-            {
-                using (var region = AsyncInvocationRegion.Create(code))
-                {
-                    code();
-
-                    try
-                    {
-                        region.WaitForPendingOperationsToComplete(null);
-                    }
-                    catch (Exception e)
-                    {
-                        caughtException = e;
-                    }
-                }
-            }
-            else
-#endif
+            // Since TestDelegate returns void, it’s always async void if it’s async at all.
+            Guard.ArgumentNotAsyncVoid(code, nameof(code));
 
             using (new TestExecutionContext.IsolatedContext())
             {

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
 
         //        static Logger log = InternalTrace.GetLogger("TestResult");
 
-        private StringBuilder _output = new StringBuilder();
+        private readonly StringBuilder _output = new StringBuilder();
         private double _duration;
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if NETSTANDARD1_6
+#if !PARALLEL
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
@@ -117,10 +117,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the test with which this result is associated.
         /// </summary>
-        public ITest Test { get; private set; }
+        public ITest Test { get; }
 
         /// <summary>
-        /// Gets the ResultState of the test result, which 
+        /// Gets the ResultState of the test result, which
         /// indicates the success or failure of the test.
         /// </summary>
         public ResultState ResultState
@@ -323,14 +323,24 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a TextWriter, which will write output to be included in the result.
         /// </summary>
-        public TextWriter OutWriter { get; private set; }
+        public TextWriter OutWriter { get; }
 
         /// <summary>
         /// Gets any text output written to this result.
         /// </summary>
         public string Output
         {
-            get { return _output.ToString(); }
+            get
+            {
+#if PARALLEL
+                lock (OutWriter)
+                {
+                    return _output.ToString();
+                }
+#else
+                return _output.ToString();
+#endif
+            }
         }
 
         /// <summary>
@@ -493,35 +503,17 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The exception that was thrown</param>
         public void RecordException(Exception ex)
         {
-            if (ex is NUnitException || ex is TargetInvocationException)
-                ex = ex.InnerException;
+            var result = new ExceptionResult(ex, FailureSite.Test);
 
-            if (ex is ResultStateException)
-                SetResult(
-                    ((ResultStateException)ex).ResultState,
-                    ex.Message, 
-                    StackFilter.DefaultFilter.Filter(ex.StackTrace));
-#if !NETSTANDARD1_6
-            else if (ex is System.Threading.ThreadAbortException)
-                SetResult(
-                    ResultState.Cancelled,
-                    "Test cancelled by user",
-                    ex.StackTrace);
-#endif
-            else
+            SetResult(result.ResultState, result.Message, result.StackTrace);
+
+            if (AssertionResults.Count > 0 && result.ResultState == ResultState.Error)
             {
-                string message = ExceptionHelper.BuildMessage(ex);
-                string stackTrace = ExceptionHelper.BuildStackTrace(ex);
-                SetResult(ResultState.Error, message, stackTrace);
+                // Add pending failures to the legacy result message
+                Message += CreateLegacyFailureMessage();
 
-                if (AssertionResults.Count > 0)
-                {
-                    // Add pending failures to the legacy result message
-                    Message += CreateLegacyFailureMessage();
-
-                    // Add to the list of assertion errors, so that newer runners will see it
-                    AssertionResults.Add(new AssertionResult(AssertionStatus.Error, message, stackTrace));
-                }
+                // Add to the list of assertion errors, so that newer runners will see it
+                AssertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));
             }
         }
 
@@ -532,23 +524,9 @@ namespace NUnit.Framework.Internal
         /// <param name="site">The FailureSite to use in the result</param>
         public void RecordException(Exception ex, FailureSite site)
         {
-            if (ex is NUnitException)
-                ex = ex.InnerException;
+            var result = new ExceptionResult(ex, site);
 
-            if (ex is ResultStateException)
-                SetResult(((ResultStateException)ex).ResultState.WithSite(site),
-                    ex.Message,
-                    StackFilter.DefaultFilter.Filter(ex.StackTrace));
-#if !NETSTANDARD1_6
-            else if (ex is System.Threading.ThreadAbortException)
-                SetResult(ResultState.Cancelled.WithSite(site),
-                    "Test cancelled by user",
-                    ex.StackTrace);
-#endif
-            else
-                SetResult(ResultState.Error.WithSite(site),
-                    ExceptionHelper.BuildMessage(ex),
-                    ExceptionHelper.BuildStackTrace(ex));
+            SetResult(result.ResultState, result.Message, result.StackTrace);
         }
 
         /// <summary>
@@ -564,8 +542,7 @@ namespace NUnit.Framework.Internal
         /// <param name="ex">The Exception to be recorded</param>
         public void RecordTearDownException(Exception ex)
         {
-            if (ex is NUnitException)
-                ex = ex.InnerException;
+            ex = ValidateAndUnwrap(ex);
 
             ResultState resultState = ResultState == ResultState.Cancelled
                 ? ResultState.Cancelled
@@ -582,6 +559,49 @@ namespace NUnit.Framework.Internal
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
+        }
+
+        private static Exception ValidateAndUnwrap(Exception ex)
+        {
+            Guard.ArgumentNotNull(ex, nameof(ex));
+
+            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
+                return ex.InnerException;
+
+            return ex;
+        }
+
+        private struct ExceptionResult
+        {
+            public ResultState ResultState { get; }
+            public string Message { get; }
+            public string StackTrace { get; }
+
+            public ExceptionResult(Exception ex, FailureSite site)
+            {
+                ex = ValidateAndUnwrap(ex);
+
+                if (ex is ResultStateException)
+                {
+                    ResultState = ((ResultStateException)ex).ResultState.WithSite(site);
+                    Message = ex.Message;
+                    StackTrace = StackFilter.DefaultFilter.Filter(ex.StackTrace);
+                }
+#if THREAD_ABORT
+                else if (ex is ThreadAbortException)
+                {
+                    ResultState = ResultState.Cancelled.WithSite(site);
+                    Message = "Test cancelled by user";
+                    StackTrace = ex.StackTrace;
+                }
+#endif
+                else
+                {
+                    ResultState = ResultState.Error.WithSite(site);
+                    Message = ExceptionHelper.BuildMessage(ex);
+                    StackTrace = ExceptionHelper.BuildStackTrace(ex);
+                }
+            }
         }
 
         /// <summary>

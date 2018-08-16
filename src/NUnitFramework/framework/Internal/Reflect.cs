@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007-2012 Charlie Poole, Rob Prouse
+// Copyright (c) 2007-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if !NET20 && !NET35 && !NETSTANDARD1_6
+#if !(NET20 || NET35 || NETSTANDARD1_4)
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
@@ -108,8 +108,20 @@ namespace NUnit.Framework.Internal
         {
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
+#if NETSTANDARD1_4
+                // For .NET Standard 1.x, MethodInfo.IsDefined resolves to an extension method,
+                // CustomAttributeExtensions.IsDefined, which delegates to Attribute.IsDefined.
+                // On .NET Core and .NET Framework, Attribute.IsDefined throws ArgumentException
+                // for types which aren’t assignable to System.Attribute (such as interface types).
+                foreach (var attributeData in method.CustomAttributes)
+                {
+                    if (attributeType.IsAssignableFrom(attributeData.AttributeType))
+                        return true;
+                }
+#else
                 if (method.IsDefined(attributeType, false))
                     return true;
+#endif
             }
             return false;
         }
@@ -152,7 +164,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Returns an array of types from an array of objects.
-        /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see cref="NUnitNullType"/>
+        /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see langword="null"/>
         /// for null elements rather than throwing <see cref="ArgumentNullException"/>.
         /// </summary>
         internal static Type[] GetTypeArray(object[] objects)
@@ -161,8 +173,7 @@ namespace NUnit.Framework.Internal
             int index = 0;
             foreach (object o in objects)
             {
-                // NUnitNullType is a marker to indicate null since we can't do typeof(null) or null.GetType()
-                types[index++] = o == null ? typeof(NUnitNullType) : o.GetType();
+                types[index++] = o?.GetType();
             }
             return types;
         }
@@ -194,7 +205,7 @@ namespace NUnit.Framework.Internal
         }
 
         // §6.1.2 (Implicit numeric conversions) of the specification
-        private static Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
+        private static readonly Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
             { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
             { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
             { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
@@ -215,7 +226,7 @@ namespace NUnit.Framework.Internal
                 return true;
 
             // Look for the marker that indicates from was null
-            if (from == typeof(NUnitNullType) && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
+            if (from == null && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
                 return true;
 
             if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
@@ -247,7 +258,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !NET20 && !NET35 && !NETSTANDARD1_6
+#if !(NET20 || NET35 || NETSTANDARD1_4)
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
@@ -258,7 +269,7 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if !NETSTANDARD1_6
+#if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
                 {
                     // No need to wrap or rethrow ThreadAbortException
@@ -280,13 +291,13 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
         /// <summary>
         /// <para>
         /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
         /// rather than throwing <see cref="AmbiguousMatchException"/>
         /// for properties that shadow properties of a different property type
-        /// which is what <see cref="TypeInfo.GetProperty(string, BindingFlags)"/> does.
+        /// which is what <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/> does.
         /// </para>
         /// <para>
         /// If you request both public and nonpublic properties, every public property is preferred
@@ -294,9 +305,9 @@ namespace NUnit.Framework.Internal
         /// derived class’s implementation detail to be chosen over the public API for a type.
         /// </para>
         /// </summary>
-        /// <param name="type">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
-        /// <param name="name">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
-        /// <param name="bindingFlags">See <see cref="TypeInfo.GetProperty(string, BindingFlags)"/>.</param>
+        /// <param name="type">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
+        /// <param name="name">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
+        /// <param name="bindingFlags">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
 #else
         /// <summary>
         /// <para>
@@ -349,6 +360,20 @@ namespace NUnit.Framework.Internal
             }
 
             return null;
+        }
+
+        internal static bool IsAssignableFromNull(Type type)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+            return !type.GetTypeInfo().IsValueType || IsNullable(type);
+        }
+
+        private static bool IsNullable(Type type)
+        {
+            // Compare with https://github.com/dotnet/coreclr/blob/bb01fb0d954c957a36f3f8c7aad19657afc2ceda/src/mscorlib/src/System/Nullable.cs#L152-L157
+            return type.GetTypeInfo().IsGenericType
+                && !type.GetTypeInfo().IsGenericTypeDefinition
+                && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
         }
     }
 }

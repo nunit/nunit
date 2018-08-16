@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,6 +22,9 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
+using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -39,7 +42,7 @@ namespace NUnit.Framework
         public static void ArgumentNotNull(object value, string name)
         {
             if (value == null)
-                throw new ArgumentNullException("Argument " + name + " must not be null", name);
+                throw new ArgumentNullException(name, "Argument " + name + " must not be null");
         }
 
         /// <summary>
@@ -88,6 +91,25 @@ namespace NUnit.Framework
         {
             if (!condition)
                 throw new InvalidOperationException(message);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the specified delegate is <c>async void</c>.
+        /// </summary>
+        public static void ArgumentNotAsyncVoid(Delegate @delegate, string paramName)
+        {
+            ArgumentNotAsyncVoid(@delegate.GetMethodInfo(), paramName);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if the specified delegate is <c>async void</c>.
+        /// </summary>
+        public static void ArgumentNotAsyncVoid(MethodInfo method, string paramName)
+        {
+            if (method.ReturnType != typeof(void)) return;
+            if (!AsyncToSyncAdapter.IsAsyncOperation(method)) return;
+
+            throw new ArgumentException("Async void methods are not supported. Please use 'async Task' instead.", paramName);
         }
     }
 }

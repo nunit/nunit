@@ -55,7 +55,7 @@ namespace NUnit.Framework.Api
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 
         // Preloaded test assembly, if passed in constructor
-        private Assembly _testAssembly;
+        private readonly Assembly _testAssembly;
 
         #region Constructors
 
@@ -128,9 +128,9 @@ namespace NUnit.Framework.Api
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-        private void Initialize(string assemblyPath, IDictionary settings)
+        private void Initialize(string assemblyNameOrPath, IDictionary settings)
         {
-            AssemblyNameOrPath = assemblyPath;
+            AssemblyNameOrPath = assemblyNameOrPath;
 
             var newSettings = settings as IDictionary<string, object>;
             Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
@@ -146,12 +146,12 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                     var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
 #else
                     var id = Process.GetCurrentProcess().Id;
 #endif
-                    var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyPath));
+                    var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyNameOrPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
             }
@@ -165,13 +165,13 @@ namespace NUnit.Framework.Api
         /// Gets the ITestAssemblyBuilder used by this controller instance.
         /// </summary>
         /// <value>The builder.</value>
-        public ITestAssemblyBuilder Builder { get; private set; }
+        public ITestAssemblyBuilder Builder { get; }
 
         /// <summary>
         /// Gets the ITestAssemblyRunner used by this controller instance.
         /// </summary>
         /// <value>The runner.</value>
-        public ITestAssemblyRunner Runner { get; private set; }
+        public ITestAssemblyRunner Runner { get; }
 
         /// <summary>
         /// Gets the AssemblyName or the path for which this FrameworkController was created
@@ -367,7 +367,7 @@ namespace NUnit.Framework.Api
             targetNode.ChildNodes.Insert(0, env);
 
             env.AddAttribute("framework-version", typeof(FrameworkController).GetTypeInfo().Assembly.GetName().Version.ToString());
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             env.AddAttribute("clr-version", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
 #else
             env.AddAttribute("clr-version", Environment.Version.ToString());
@@ -377,12 +377,14 @@ namespace NUnit.Framework.Api
 #else
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
 #endif
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
 #endif
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
+#if !NETSTANDARD1_4
             env.AddAttribute("machine-name", Environment.MachineName);
-#if !NETSTANDARD1_6
+#endif
+#if !NETSTANDARD1_4
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
 #endif

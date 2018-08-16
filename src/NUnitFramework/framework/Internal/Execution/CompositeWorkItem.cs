@@ -40,8 +40,8 @@ namespace NUnit.Framework.Internal.Execution
     {
         //        static Logger log = InternalTrace.GetLogger("CompositeWorkItem");
 
-        private TestSuite _suite;
-        private TestSuiteResult _suiteResult;
+        private readonly TestSuite _suite;
+        private readonly TestSuiteResult _suiteResult;
         private TestCommand _setupCommand;
         private TestCommand _teardownCommand;
 
@@ -350,7 +350,7 @@ namespace NUnit.Framework.Internal.Execution
             return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private object _childCompletionLock = new object();
+        private readonly object _childCompletionLock = new object();
 
         private void OnChildItemCompleted(object sender, EventArgs e)
         {
@@ -386,7 +386,7 @@ namespace NUnit.Framework.Internal.Execution
             Context.Dispatcher.Dispatch(teardown);
         }
 
-        private object cancelLock = new object();
+        private readonly object cancelLock = new object();
 
         /// <summary>
         /// Cancel (abort or stop) a CompositeWorkItem and all of its children
@@ -418,9 +418,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public class OneTimeTearDownWorkItem : WorkItem
         {
-            private CompositeWorkItem _originalWorkItem;
+            private readonly CompositeWorkItem _originalWorkItem;
 
-            private object _teardownLock = new object();
+            private readonly object _teardownLock = new object();
 
             /// <summary>
             /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem

@@ -34,7 +34,7 @@ namespace NUnit.Framework
     [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
     public sealed class MaxTimeAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
-        private int _milliseconds;
+        private readonly int _milliseconds;
         /// <summary>
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
         /// </summary>

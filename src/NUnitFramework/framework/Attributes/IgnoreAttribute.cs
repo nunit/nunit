@@ -36,7 +36,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
     {
-        private string _reason;
+        private readonly string _reason;
         private DateTime? _untilDate;
         private string _until;
 

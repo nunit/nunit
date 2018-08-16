@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     [TestFixture("Dummy", true)]
     public class ClassNameFilterTests : TestFilterTests
     {
-        private TestFilter _filter;
+        private readonly TestFilter _filter;
 
         public ClassNameFilterTests(string value, bool isRegex)
         {

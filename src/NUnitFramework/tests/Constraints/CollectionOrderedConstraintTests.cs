@@ -292,7 +292,7 @@ namespace NUnit.Framework.Constraints
 
         public class TestClass1
         {
-            public int Value { get; private set; }
+            public int Value { get; }
 
             public TestClass1(int value)
             {
@@ -307,7 +307,7 @@ namespace NUnit.Framework.Constraints
 
         class TestClass2
         {
-            public int Value { get; private set; }
+            public int Value { get; }
 
             public TestClass2(int value)
             {
@@ -322,8 +322,8 @@ namespace NUnit.Framework.Constraints
 
         public class TestClass3
         {
-            public string A { get; private set; }
-            public int B { get; private set; }
+            public string A { get; }
+            public int B { get; }
 
             public TestClass3(string a, int b)
             {
