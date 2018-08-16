@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if NETSTANDARD1_4
+#if !PARALLEL
             OutWriter = new StringWriter(_output);
 #else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
@@ -330,7 +330,17 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string Output
         {
-            get { return _output.ToString(); }
+            get
+            {
+#if PARALLEL
+                lock (OutWriter)
+                {
+                    return _output.ToString();
+                }
+#else
+                return _output.ToString();
+#endif
+            }
         }
 
         /// <summary>
