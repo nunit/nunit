@@ -51,10 +51,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // NOTE: actual is string will fail for a null typed as string
-            Type actualType = actual as Type;
-            if (actual == null)
-                actualType = GetDeclaredType(actual);
+            // NOTE: actual is string will fail for a null typed as string           
+            Type actualType = typeof(TActual);           
             if (actualType == null)
                 actualType = actual.GetType();          
 
@@ -68,17 +66,6 @@ namespace NUnit.Framework.Constraints
                 realConstraint = new EmptyCollectionConstraint();
 
             return realConstraint.ApplyTo(actual);
-        }
-
-        /// <summary>
-        /// Get the Declared Type of Null Object.
-        /// </summary>
-        /// <typeparam name="TSelf"></typeparam>
-        /// <param name="self"></param>
-        /// <returns></returns>
-        private Type GetDeclaredType<TSelf>(TSelf self)
-        {
-            return typeof(TSelf);
-        }
+        }      
     }
 }
