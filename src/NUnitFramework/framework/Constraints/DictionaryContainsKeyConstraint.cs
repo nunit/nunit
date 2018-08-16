@@ -23,10 +23,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -37,8 +33,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
-        private bool _isDeprecatedMode = false;
-
         /// <summary>
         /// Construct a DictionaryContainsKeyConstraint
         /// </summary>
@@ -72,193 +66,31 @@ namespace NUnit.Framework.Constraints
         protected object Expected { get; }
 
         /// <summary>
-        /// Flag the constraint to ignore case and return self.
-        /// </summary>
-        [Obsolete("Deprecated, use Does.ContainKey")]
-        public new CollectionItemsEqualConstraint IgnoreCase
-        {
-            get
-            {
-                _isDeprecatedMode = true;
-                return base.IgnoreCase;
-            }
-        }
-        
-        private bool Matches(object actual)
-        {
-            if (_isDeprecatedMode)
-            {
-                var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-                foreach (object obj in dictionary.Keys)
-                    if (ItemsEqual(obj, Expected))
-                        return true;
-
-                return false;
-            }
-
-            var method = GetContainsKeyMethod(actual);
-            if (method != null)
-                return (bool)method.Invoke(actual, new[] { Expected });
-
-            throw new ArgumentException("The actual value must have a ContainsKey or Contains(TKey) method.");
-        }
-
-        #region Shadowing CollectionItemsEqualConstraint Methods
-
-        /// <summary>
-        /// Test whether the constraint is satisfied by a given value
-        /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        public override ConstraintResult ApplyTo<TActual>(TActual actual)
-        {
-            return new ConstraintResult(this, actual, Matches(actual));
-        }
-
-        /// <summary>
         /// Test whether the expected key is contained in the dictionary
         /// </summary>
-        protected override bool Matches(IEnumerable collection)
+        protected override bool Matches(IEnumerable actual)
         {
-            return Matches(collection);
+            var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
+
+            foreach (object obj in dictionary.Keys)
+                if (ItemsEqual(obj, Expected))
+                    return true;
+
+            return false;
         }
 
         /// <summary>
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        /// <returns>Self.</returns>
         public DictionaryContainsKeyConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             // reverse the order of the arguments to match expectations of PredicateEqualityComparer
             Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
 
-            _isDeprecatedMode = true;
             base.Using(EqualityAdapter.For(invertedComparison));
             return this;
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied Comparison object.
-        /// </summary>
-        /// <param name="comparison">The Comparison object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
-        public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparison);
-        }
-
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
-        public new CollectionItemsEqualConstraint Using(IComparer comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
-        public new CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IEqualityComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
-        public new CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IEqualityComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
-        public new CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied boolean-returning delegate.
-        /// </summary>
-        /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
-        public new CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        #endregion
-
-        private MethodInfo GetContainsKeyMethod(object keyedItemContainer)
-        {
-            if (keyedItemContainer == null) throw new ArgumentNullException(nameof(keyedItemContainer));
-            var instanceType = keyedItemContainer.GetType();
-
-            var method = FindContainsKeyMethod(instanceType)
-                         ?? instanceType
-                            .GetInterfaces()
-                            .Concat(GetBaseTypes(instanceType))
-                            .Select(FindContainsKeyMethod)
-                            .FirstOrDefault(m => m != null);
-
-            return method;
-        }
-
-        private MethodInfo FindContainsKeyMethod(Type type)
-        {
-            var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
-            var method = methods.FirstOrDefault(m =>
-                m.ReturnType == typeof(bool)
-                && m.Name == "ContainsKey"
-                && m.GetParameters().Length == 1);
-
-            if (method == null && type.GetTypeInfo().IsGenericType)
-            {
-                var definition = type.GetGenericTypeDefinition();
-                var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
-
-                if (tKeyGenericArg != null)
-                {
-                    method = definition
-                             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
-                             .FirstOrDefault(m =>
-                                 m.ReturnType == typeof(bool)
-                                 && m.Name == "Contains"
-                                 && m.GetParameters().FirstOrDefault()?.ParameterType == tKeyGenericArg);
-
-                    if (method != null)
-                        method = methods.Single(m => m.MetadataToken == method.MetadataToken);
-                }
-            }
-
-            return method;
-        }
-
-        private IEnumerable<Type> GetBaseTypes(Type type)
-        {
-            for (; ; )
-            {
-                type = type.GetTypeInfo().BaseType;
-                if (type == null) break;
-                yield return type;
-            }
         }
     }
 }
