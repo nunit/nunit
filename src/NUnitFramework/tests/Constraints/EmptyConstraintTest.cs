@@ -70,6 +70,14 @@ namespace NUnit.Framework.Constraints
             var result = theConstraint.ApplyTo(actual);
             Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
         }
+
+        [Test]
+        public void NullArgumentExceptionMessageContainsTypeName()
+        {
+            int? testInput = null;          
+            Assert.That(() => theConstraint.ApplyTo(testInput),
+               Throws.ArgumentException.With.Message.Contains("System.Int32"));          
+        }
     }
 
     [TestFixture]
