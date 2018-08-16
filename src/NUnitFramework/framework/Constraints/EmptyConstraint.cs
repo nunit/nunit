@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-
 using System;
 
 namespace NUnit.Framework.Constraints
@@ -51,13 +50,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // NOTE: actual is string will fail for a null typed as string
-            Type actualType = actual as Type;
-            if (actual == null)
-                actualType = GetDeclaredType(actual);
-            if (actualType == null)
-                actualType = actual.GetType();
-
+            // NOTE: actual is string will fail for a null typed as string           
+            Type actualType = typeof(TActual);
+            
             if (typeof(TActual) == typeof(string))
                 realConstraint = new EmptyStringConstraint();
             else if (actual == null)
@@ -68,17 +63,6 @@ namespace NUnit.Framework.Constraints
                 realConstraint = new EmptyCollectionConstraint();
 
             return realConstraint.ApplyTo(actual);
-        }
-
-        /// <summary>
-        /// Get the Declared Type of Null Object.
-        /// </summary>
-        /// <typeparam name="TSelf"></typeparam>
-        /// <param name="self"></param>
-        /// <returns></returns>
-        private Type GetDeclaredType<TSelf>(TSelf self)
-        {
-            return typeof(TSelf);
         }
     }
 }
