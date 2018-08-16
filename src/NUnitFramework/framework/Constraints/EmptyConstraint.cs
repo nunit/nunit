@@ -70,6 +70,12 @@ namespace NUnit.Framework.Constraints
             return realConstraint.ApplyTo(actual);
         }
 
+        /// <summary>
+        /// Get the Declared Type of Null Object.
+        /// </summary>
+        /// <typeparam name="TSelf"></typeparam>
+        /// <param name="self"></param>
+        /// <returns></returns>
         private Type GetDeclaredType<TSelf>(TSelf self)
         {
             return typeof(TSelf);
