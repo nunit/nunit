@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
             if (actualType == typeof(string))
                 realConstraint = new EmptyStringConstraint();
             else if (actual == null)
-                throw new System.ArgumentException($"The actual value of type - {actualType} must be a string or a non-null IEnumerable or DirectoryInfo", nameof(actual));
+                throw new System.ArgumentException($"The actual value must be a string, non-null IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
             else if (actual is System.IO.DirectoryInfo)
                 realConstraint = new EmptyDirectoryConstraint();
             else
