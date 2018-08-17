@@ -30,7 +30,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="RequiresThreadAttribute"/> marks a test that must run on a separate thread.
+    /// Marks a test that must run on a separate thread.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
     public class RequiresThreadAttribute : PropertyAttribute, IApplyToTest

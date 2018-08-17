@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="ApartmentAttribute"/> marks a test that must run in a particular threading apartment state, causing it
+    /// Marks a test as needing to be run in a particular threading apartment state. This will cause it
     /// to run in a separate thread if necessary.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true)]

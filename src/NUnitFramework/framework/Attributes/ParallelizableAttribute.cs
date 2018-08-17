@@ -29,7 +29,7 @@ using NUnit.Framework.Internal.Execution;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="ParallelizableAttribute"/> marks tests that may be run in parallel.
+    /// Marks tests that may be run in parallel.
     /// </summary>
     [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
     public class ParallelizableAttribute : PropertyAttribute, IApplyToContext

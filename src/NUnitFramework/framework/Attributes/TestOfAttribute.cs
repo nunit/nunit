@@ -33,7 +33,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="TestOfAttribute"/> indicates which class the test or test fixture is testing
+    /// Indicates the method or class the test or test fixture is testing
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class TestOfAttribute : PropertyAttribute

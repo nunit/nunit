@@ -29,9 +29,8 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="CombinatorialAttribute"/> marks a test to use a combinatorial 
-    /// join of any argument data provided. Since this is the default, the 
-    /// attribute is optional.
+    /// Marks a test to use a combinatorial join of any argument data provided. 
+    /// Since this is the default, the attribute is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class CombinatorialAttribute : CombiningStrategyAttribute

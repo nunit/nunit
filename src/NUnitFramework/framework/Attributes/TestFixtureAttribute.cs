@@ -30,7 +30,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="TestFixtureAttribute"/> marks a class that represents a TestFixture.
+    /// Marks the class as a TestFixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
     public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData

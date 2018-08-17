@@ -26,8 +26,8 @@ namespace NUnit.Framework
 	using System;
 
 	/// <summary>
-	/// <see cref="OneTimeSetUpAttribute"/> identifies a method 
-	/// that is called once to perform setup before any child tests are run.
+	/// Identifies a method to be called once, prior to the child tests executing, 
+	/// to perform any setup requirements for the proceding tests.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
 	public class OneTimeSetUpAttribute : NUnitAttribute

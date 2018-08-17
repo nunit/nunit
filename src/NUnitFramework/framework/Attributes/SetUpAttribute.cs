@@ -26,8 +26,7 @@ namespace NUnit.Framework
     using System;
 
     /// <summary>
-    /// <see cref="SetUpAttribute"/> identifies a method that is called 
-    /// immediately before each test is run.
+    /// Identifies a method to be called prior to the running of each test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class SetUpAttribute : NUnitAttribute

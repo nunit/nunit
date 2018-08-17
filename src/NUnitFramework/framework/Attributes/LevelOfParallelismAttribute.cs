@@ -26,8 +26,8 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="LevelOfParallelismAttribute"/> sets the number of worker threads
-    /// that may be allocated by the framework for running tests.
+    /// Sets the number of worker threads that may be allocated by the framework 
+    /// for running tests.
     /// </summary>
     [AttributeUsage( AttributeTargets.Assembly, AllowMultiple=false, Inherited=false )]
     public sealed class LevelOfParallelismAttribute : PropertyAttribute

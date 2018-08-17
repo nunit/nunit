@@ -36,8 +36,7 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="RepeatAttribute"/> may be applied to test case in order
-    /// to run it multiple times.
+    /// Specified that a test should be run multiple times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class RepeatAttribute : PropertyAttribute, IWrapSetUpTearDown

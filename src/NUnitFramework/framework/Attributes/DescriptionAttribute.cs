@@ -27,8 +27,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="DescriptionAttribute"/> provides the descriptive text about a 
-    /// test case or fixture.
+    /// Provides the descriptive text relating to the test case or fixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public sealed class DescriptionAttribute : PropertyAttribute

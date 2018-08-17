@@ -29,8 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="IgnoreAttribute"/> marks a test that is to be ignored.
-    /// Ignored tests result in a warning message when the tests are run.
+    /// Marks a test as being ignored.  Ignored tests result in a warning message when the tests are run.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest

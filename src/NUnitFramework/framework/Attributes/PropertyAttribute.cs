@@ -28,7 +28,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="PropertyAttribute"/> attaches information to a test as a name/value pair..
+    /// Attaches information to a test as a name/value pair..
     /// </summary>
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
     public class PropertyAttribute : NUnitAttribute, IApplyToTest

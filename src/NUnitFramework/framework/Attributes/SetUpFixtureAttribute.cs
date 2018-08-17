@@ -32,9 +32,9 @@ namespace NUnit.Framework
     using Internal;
 
     /// <summary>
-    /// <see cref="SetUpFixtureAttribute"/> identifies a class that contains
-    /// <see cref="OneTimeSetUpAttribute" /> or <see cref="OneTimeTearDownAttribute" />
-    /// methods for all the test fixtures under a given namespace.
+    /// Identifies a class as containing <see cref="OneTimeSetUpAttribute" /> or 
+    /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
+    /// under a given namespace.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder

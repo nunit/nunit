@@ -31,8 +31,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="ValuesAttribute"/> provides literal arguments for
-    /// an individual parameter of a test.
+    /// Provides literal arguments for an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class ValuesAttribute : NUnitAttribute, IParameterDataSource
