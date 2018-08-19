@@ -161,7 +161,17 @@ namespace NUnit.Framework
 
             try
             {
-                IEnumerable source = GetTestCaseSource(method.FixtureType);
+                IEnumerable source;
+
+                var restorePrevious = new TestExecutionContext();
+                try
+                {
+                    source = GetTestCaseSource(method.FixtureType);
+                }
+                finally
+                {
+                    restorePrevious.EstablishExecutionEnvironment();
+                }
 
                 if (source != null)
                 {
