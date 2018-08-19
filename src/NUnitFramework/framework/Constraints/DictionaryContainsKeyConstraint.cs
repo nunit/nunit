@@ -37,6 +37,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
+        private const string ObsoleteMessage = "DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.";
         private bool _isDeprecatedMode = false;
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to ignore case and return self.
         /// </summary>
-        [Obsolete("Deprecated, use Does.ContainKey")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint IgnoreCase
         {
             get
@@ -103,8 +104,6 @@ namespace NUnit.Framework.Constraints
             throw new ArgumentException("The actual value must have a ContainsKey or Contains(TKey) method.");
         }
 
-        #region Shadowing CollectionItemsEqualConstraint Methods
-
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
         /// </summary>
@@ -122,11 +121,13 @@ namespace NUnit.Framework.Constraints
             return Matches(collection);
         }
 
+        #region Shadowing CollectionItemsEqualConstraint Methods
+
         /// <summary>
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public DictionaryContainsKeyConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             // reverse the order of the arguments to match expectations of PredicateEqualityComparer
@@ -141,7 +142,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparison">The Comparison object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
         {
             _isDeprecatedMode = true;
@@ -153,7 +154,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint Using(IComparer comparer)
         {
             _isDeprecatedMode = true;
@@ -164,7 +165,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
         {
             _isDeprecatedMode = true;
@@ -175,7 +176,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
         {
             _isDeprecatedMode = true;
@@ -186,7 +187,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             _isDeprecatedMode = true;
@@ -197,7 +198,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied boolean-returning delegate.
         /// </summary>
         /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
-        [Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
+        [Obsolete(ObsoleteMessage)]
         public new CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
         {
             _isDeprecatedMode = true;
@@ -206,7 +207,7 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-        private MethodInfo GetContainsKeyMethod(object keyedItemContainer)
+        private static MethodInfo GetContainsKeyMethod(object keyedItemContainer)
         {
             if (keyedItemContainer == null) throw new ArgumentNullException(nameof(keyedItemContainer));
             var instanceType = keyedItemContainer.GetType();
@@ -221,7 +222,7 @@ namespace NUnit.Framework.Constraints
             return method;
         }
 
-        private MethodInfo FindContainsKeyMethod(Type type)
+        private static MethodInfo FindContainsKeyMethod(Type type)
         {
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
@@ -262,7 +263,7 @@ namespace NUnit.Framework.Constraints
         //
         // This is for missing MetadataToken in NetStandard 1.4, matched by method signature
         //
-        private bool Matched(MethodInfo methodInfo, MethodInfo matchedMethodInfo)
+        private static bool Matched(MethodInfo methodInfo, MethodInfo matchedMethodInfo)
         {
             return methodInfo.Name == matchedMethodInfo.Name &&
                    methodInfo.Attributes == matchedMethodInfo.Attributes &&
@@ -273,7 +274,7 @@ namespace NUnit.Framework.Constraints
                    Matched(methodInfo.GetGenericArguments(), matchedMethodInfo.GetGenericArguments());
         }
 
-        private bool Matched(ParameterInfo[] parameterInfos, ParameterInfo[] matchedParameterInfos)
+        private static bool Matched(ParameterInfo[] parameterInfos, ParameterInfo[] matchedParameterInfos)
         {
             if (parameterInfos.Length != matchedParameterInfos.Length) return false;
 
@@ -286,7 +287,7 @@ namespace NUnit.Framework.Constraints
             return true;
         }
 
-        private bool Matched(Type[] types, Type[] matchedTypes)
+        private static bool Matched(Type[] types, Type[] matchedTypes)
         {
             if (types.Length != matchedTypes.Length) return false;
 
@@ -300,7 +301,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-        private IEnumerable<Type> GetBaseTypes(Type type)
+        private static IEnumerable<Type> GetBaseTypes(Type type)
         {
             for (; ; )
             {
