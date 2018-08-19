@@ -85,28 +85,11 @@ namespace NUnit.Framework.Internal
         private Randomizer _randomGenerator;
 
         /// <summary>
-        /// The current culture
-        /// </summary>
-        private CultureInfo _currentCulture;
-
-        /// <summary>
-        /// The current UI culture
-        /// </summary>
-        private CultureInfo _currentUICulture;
-
-        private SynchronizationContext _synchronizationContext;
-
-        /// <summary>
         /// The current test result
         /// </summary>
         private TestResult _currentResult;
 
-#if !NETSTANDARD1_4
-        /// <summary>
-        /// The current Principal.
-        /// </summary>
-        private IPrincipal _currentPrincipal;
-#endif
+        private SandboxedThreadState _sandboxedThreadState;
 
 #endregion
 
@@ -121,13 +104,7 @@ namespace NUnit.Framework.Internal
             TestCaseTimeout = 0;
             UpstreamActions = new List<ITestAction>();
 
-            _currentCulture = CultureInfo.CurrentCulture;
-            _currentUICulture = CultureInfo.CurrentUICulture;
-            _synchronizationContext = SynchronizationContext.Current;
-
-#if !NETSTANDARD1_4
-            _currentPrincipal = Thread.CurrentPrincipal;
-#endif
+            UpdateContextFromEnvironment();
 
             CurrentValueFormatter = (val) => MsgUtils.DefaultValueFormatter(val);
             IsSingleThreaded = false;
@@ -150,15 +127,9 @@ namespace NUnit.Framework.Internal
             TestCaseTimeout = other.TestCaseTimeout;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
-            _currentCulture = other.CurrentCulture;
-            _currentUICulture = other.CurrentUICulture;
-            _synchronizationContext = other._synchronizationContext;
+            _sandboxedThreadState = other._sandboxedThreadState;
 
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
-
-#if !NETSTANDARD1_4
-            _currentPrincipal = other.CurrentPrincipal;
-#endif
 
             CurrentValueFormatter = other.CurrentValueFormatter;
 
@@ -382,14 +353,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentCulture
         {
-            get { return _currentCulture; }
+            get { return _sandboxedThreadState.Culture; }
             set
             {
-                _currentCulture = value;
+                _sandboxedThreadState = _sandboxedThreadState.WithCulture(value);
 #if NETSTANDARD1_4
-                CultureInfo.CurrentCulture = _currentCulture;
+                CultureInfo.CurrentCulture = value;
 #else
-                Thread.CurrentThread.CurrentCulture = _currentCulture;
+                Thread.CurrentThread.CurrentCulture = value;
 #endif
             }
         }
@@ -399,14 +370,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentUICulture
         {
-            get { return _currentUICulture; }
+            get { return _sandboxedThreadState.UICulture; }
             set
             {
-                _currentUICulture = value;
+                _sandboxedThreadState = _sandboxedThreadState.WithUICulture(value);
 #if NETSTANDARD1_4
-                CultureInfo.CurrentUICulture = _currentUICulture;
+                CultureInfo.CurrentUICulture = value;
 #else
-                Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+                Thread.CurrentThread.CurrentUICulture = value;
 #endif
             }
         }
@@ -417,11 +388,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public IPrincipal CurrentPrincipal
         {
-            get { return _currentPrincipal; }
+            get { return _sandboxedThreadState.Principal; }
             set
             {
-                _currentPrincipal = value;
-                Thread.CurrentPrincipal = _currentPrincipal;
+                _sandboxedThreadState = _sandboxedThreadState.WithPrincipal(value);
+                Thread.CurrentPrincipal = value;
             }
         }
 #endif
@@ -453,13 +424,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void UpdateContextFromEnvironment()
         {
-            _currentCulture = CultureInfo.CurrentCulture;
-            _currentUICulture = CultureInfo.CurrentUICulture;
-            _synchronizationContext = SynchronizationContext.Current;
-
-#if !NETSTANDARD1_4
-            _currentPrincipal = Thread.CurrentPrincipal;
-#endif
+            _sandboxedThreadState = SandboxedThreadState.Capture();
         }
 
         /// <summary>
@@ -474,17 +439,7 @@ namespace NUnit.Framework.Internal
                                // we’ll need to thoroughly review more than just this instance.
         public void EstablishExecutionEnvironment()
         {
-#if NETSTANDARD1_4
-            CultureInfo.CurrentCulture = _currentCulture;
-            CultureInfo.CurrentUICulture = _currentUICulture;
-#else
-            Thread.CurrentThread.CurrentCulture = _currentCulture;
-            Thread.CurrentThread.CurrentUICulture = _currentUICulture;
-            Thread.CurrentPrincipal = _currentPrincipal;
-#endif
-
-            SynchronizationContext.SetSynchronizationContext(_synchronizationContext);
-
+            _sandboxedThreadState.Restore();
             CurrentContext = this;
         }
 
