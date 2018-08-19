@@ -152,12 +152,12 @@ namespace NUnit.Framework.Constraints
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
-                    writer.WriteCollectionElements(SkipItems(actual, failurePoint.Position), 0, 3);
+                    writer.WriteCollectionElements(actual.Skip(failurePoint.Position), 0, 3);
                 }
                 else
                 {
                     writer.Write("  Missing:  ");
-                    writer.WriteCollectionElements(SkipItems(expected, failurePoint.Position), 0, 3);
+                    writer.WriteCollectionElements(expected.Skip(failurePoint.Position), 0, 3);
                 }
             }
         }
@@ -242,18 +242,6 @@ namespace NUnit.Framework.Constraints
             return null;
         }
 
-        private static IEnumerable SkipItems(IEnumerable enumerable, long skip)
-        {
-            var iterator = enumerable.GetEnumerator();
-            while (skip-- > 0)
-            {
-                iterator.MoveNext();
-            }
-            while (iterator.MoveNext())
-            {
-                yield return iterator.Current;
-            }
-        }
         #endregion
 
         #region DisplayEnumerableDifferences
