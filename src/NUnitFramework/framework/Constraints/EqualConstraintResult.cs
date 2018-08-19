@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints
         /// Construct an EqualConstraintResult
         /// </summary>
         public EqualConstraintResult(EqualConstraint constraint, object actual, bool hasSucceeded)
-            : base(constraint, actual, hasSucceeded) 
+            : base(constraint, actual, hasSucceeded)
         {
             this.expectedValue = constraint.Arguments[0];
             this.tolerance = constraint.Tolerance;
@@ -152,12 +152,12 @@ namespace NUnit.Framework.Constraints
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
-                    writer.WriteCollectionElements(actual, failurePoint.Position, 3);
+                    writer.WriteCollectionElements(SkipItems(actual, failurePoint.Position), 0, 3);
                 }
                 else
                 {
                     writer.Write("  Missing:  ");
-                    writer.WriteCollectionElements(expected, failurePoint.Position, 3);
+                    writer.WriteCollectionElements(SkipItems(expected, failurePoint.Position), 0, 3);
                 }
             }
         }
@@ -240,6 +240,19 @@ namespace NUnit.Framework.Constraints
                     return obj;
 
             return null;
+        }
+
+        private static IEnumerable SkipItems(IEnumerable enumerable, long skip)
+        {
+            var iterator = enumerable.GetEnumerator();
+            while (skip-- > 0)
+            {
+                iterator.MoveNext();
+            }
+            while (iterator.MoveNext())
+            {
+                yield return iterator.Current;
+            }
         }
         #endregion
 

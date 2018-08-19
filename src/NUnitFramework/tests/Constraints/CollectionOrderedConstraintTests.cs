@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(collection, constraint);
         }
 
-        static readonly object[] OrderedByData = new[]
+        private static readonly object[] OrderedByData = new[]
         {
             // Simple Ordering
             new TestCaseData(
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Constraints
 
             var expectedMessage =
                 "  Expected: collection ordered" + NL +
-                "  But was:  < 83, 84, 85, 86, 87, 88, 89, 1000, 91, 92... >" + NL +
+                "  But was:  < ...83, 84, 85, 86, 87, 88, 89, 1000, 91, 92... >" + NL +
                 "  Ordering breaks at index [91]:  91" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.Ordered));
@@ -285,7 +285,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(() => Assert.That(collection, Is.Ordered.By(property)), Throws.ArgumentException.With.Message.Contain(expectedIndex));
         }
 
-        static readonly object[] InvalidOrderedByData = new[]
+        private static readonly object[] InvalidOrderedByData = new[]
         {
             new TestCaseData(
                 new object [] { "a", "b" },
@@ -320,7 +320,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class TestClass2
+        private class TestClass2
         {
             public int Value { get; }
 
