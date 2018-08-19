@@ -488,20 +488,28 @@ namespace NUnit.Framework.Internal.Execution
 
         private void RunOnCurrentThread()
         {
-            Context.CurrentTest = this.Test;
-            Context.CurrentResult = this.Result;
-            Context.Listener.TestStarted(this.Test);
-            Context.StartTime = DateTime.UtcNow;
-            Context.StartTicks = Stopwatch.GetTimestamp();
+            var restorePrevious = new TestExecutionContext();
+            try
+            {
+                Context.CurrentTest = this.Test;
+                Context.CurrentResult = this.Result;
+                Context.Listener.TestStarted(this.Test);
+                Context.StartTime = DateTime.UtcNow;
+                Context.StartTicks = Stopwatch.GetTimestamp();
 #if PARALLEL
-            Context.TestWorker = this.TestWorker;
+                Context.TestWorker = this.TestWorker;
 #endif
 
-            Context.EstablishExecutionEnvironment();
+                Context.EstablishExecutionEnvironment();
 
-            State = WorkItemState.Running;
+                State = WorkItemState.Running;
 
-            PerformWork();
+                PerformWork();
+            }
+            finally
+            {
+                restorePrevious.EstablishExecutionEnvironment();
+            }
         }
 
 #if PARALLEL

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
@@ -33,7 +34,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
 #if !NETSTANDARD1_4
-using System.Security;
 using System.Security.Principal;
 #endif
 
@@ -94,6 +94,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private CultureInfo _currentUICulture;
 
+        private SynchronizationContext _synchronizationContext;
+
         /// <summary>
         /// The current test result
         /// </summary>
@@ -121,6 +123,7 @@ namespace NUnit.Framework.Internal
 
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
+            _synchronizationContext = SynchronizationContext.Current;
 
 #if !NETSTANDARD1_4
             _currentPrincipal = Thread.CurrentPrincipal;
@@ -149,6 +152,7 @@ namespace NUnit.Framework.Internal
 
             _currentCulture = other.CurrentCulture;
             _currentUICulture = other.CurrentUICulture;
+            _synchronizationContext = other._synchronizationContext;
 
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
 
@@ -451,6 +455,7 @@ namespace NUnit.Framework.Internal
         {
             _currentCulture = CultureInfo.CurrentCulture;
             _currentUICulture = CultureInfo.CurrentUICulture;
+            _synchronizationContext = SynchronizationContext.Current;
 
 #if !NETSTANDARD1_4
             _currentPrincipal = Thread.CurrentPrincipal;
@@ -462,6 +467,11 @@ namespace NUnit.Framework.Internal
         /// Note that we may be running on the same thread where the
         /// context was initially created or on a different thread.
         /// </summary>
+        [SecuritySafeCritical] // This gives partial trust code the ability to capture an existing
+                               // SynchronizationContext.Current and restore it at any time.
+                               // This simply unblocks us on .NET Framework and is not in the spirit
+                               // of partial trust. If we choose to make partial trust a design priority,
+                               // we’ll need to thoroughly review more than just this instance.
         public void EstablishExecutionEnvironment()
         {
 #if NETSTANDARD1_4
@@ -472,6 +482,8 @@ namespace NUnit.Framework.Internal
             Thread.CurrentThread.CurrentUICulture = _currentUICulture;
             Thread.CurrentPrincipal = _currentPrincipal;
 #endif
+
+            SynchronizationContext.SetSynchronizationContext(_synchronizationContext);
 
             CurrentContext = this;
         }
