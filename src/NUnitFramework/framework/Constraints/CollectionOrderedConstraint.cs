@@ -39,8 +39,12 @@ namespace NUnit.Framework.Constraints
         private readonly List<OrderingStep> _steps = new List<OrderingStep>();
         // The step we are currently building
         private OrderingStep _activeStep;
+        // If not ordered, index where ordering breaks
+        private int _breakingIndex;
+        // If not ordered, value on which ordering breaks
+        private object _breakingValue;
 
-        enum OrderDirection
+        private enum OrderDirection
         {
             Unspecified,
             Ascending,
@@ -189,35 +193,31 @@ namespace NUnit.Framework.Constraints
         {
             IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
-            int breakingIndex;
-            object breakingValue;
-            if (!Matches(enumerable, out breakingIndex, out breakingValue))
+            if (!Matches(enumerable))
             {
-                return new CollectionOrderedConstraintResult(this, enumerable, breakingIndex, breakingValue);
+                return new CollectionOrderedConstraintResult(this, enumerable, _breakingIndex, _breakingValue);
             }
-            else
-            {
-                return new ConstraintResult(this, actual, ConstraintStatus.Success);
-            }
+
+            return new CollectionOrderedConstraintResult(this, enumerable);
         }
 
         /// <summary>
         /// Test whether the collection is ordered
         /// </summary>
-        private bool Matches(IEnumerable actual, out int index, out object value)
+        protected override bool Matches(IEnumerable actual)
         {
             object previous = null;
-            index = 0;
+            _breakingIndex = 0;
             foreach (object current in actual)
             {
-                value = current;
+                _breakingValue = current;
 
                 if (previous != null)
                 {
                     if (_steps[0].PropertyName != null)
                     {
                         if (current == null)
-                            throw new ArgumentNullException(nameof(actual), "Null value at index " + index.ToString());
+                            throw new ArgumentNullException(nameof(actual), "Null value at index " + _breakingIndex.ToString());
 
                         foreach (var step in _steps)
                         {
@@ -225,12 +225,12 @@ namespace NUnit.Framework.Constraints
 
                             PropertyInfo previousProp = previous.GetType().GetProperty(propertyName);
                             if (previousProp == null)
-                                throw new ArgumentException($"Property {propertyName} not found at index {index - 1}", nameof(actual));
+                                throw new ArgumentException($"Property {propertyName} not found at index {_breakingIndex - 1}", nameof(actual));
                             var previousValue = previousProp.GetValue(previous, null);
 
                             PropertyInfo prop = current.GetType().GetProperty(propertyName);
                             if (prop == null)
-                                throw new ArgumentException($"Property {propertyName} not found at index {index}", nameof(actual));
+                                throw new ArgumentException($"Property {propertyName} not found at index {_breakingIndex}", nameof(actual));
                             var currentValue = prop.GetValue(current, null);
 
                             int comparisonResult = step.Comparer.Compare(previousValue, currentValue);
@@ -258,21 +258,11 @@ namespace NUnit.Framework.Constraints
                 }
 
                 previous = current;
-                index++;
+                _breakingIndex++;
             }
 
-            value = null;
+            _breakingValue = null;
             return true;
-        }
-
-        /// <summary>
-        /// Test whether the collection is ordered
-        /// </summary>
-        protected override bool Matches(IEnumerable collection)
-        {
-            int _index;
-            object _value;
-            return Matches(collection, out _index, out _value);
         }
 
         /// <summary>
@@ -340,6 +330,23 @@ namespace NUnit.Framework.Constraints
             private readonly int _breakingIndex;
             private readonly object _breakingValue;
 
+            /// <summary>
+            /// Constructor for success result.
+            /// </summary>
+            /// <param name="constraint">The Constraint to which this result applies.</param>
+            /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
+            public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue)
+                : base(constraint, actualValue, ConstraintStatus.Success)
+            {
+            }
+
+            /// <summary>
+            /// Constructor for failure result.
+            /// </summary>
+            /// <param name="constraint">The Constraint to which this result applies.</param>
+            /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
+            /// <param name="breakingIndex">Index at which collection order breaks.</param>
+            /// <param name="breakingValue">Value at which collection order breaks.</param>
             public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue, int breakingIndex, object breakingValue)
                 : base(constraint, actualValue, ConstraintStatus.Failure)
             {
@@ -356,9 +363,12 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                var nonMatchingStr = $"  Ordering breaks at index [{_breakingIndex}]:  "
-                    + MsgUtils.FormatValue(_breakingValue);
-                writer.WriteLine(nonMatchingStr);
+                if (Status == ConstraintStatus.Failure)
+                {
+                    var nonMatchingStr = $"  Ordering breaks at index [{_breakingIndex}]:  "
+                        + MsgUtils.FormatValue(_breakingValue);
+                    writer.WriteLine(nonMatchingStr);
+                }
             }
         }
 
