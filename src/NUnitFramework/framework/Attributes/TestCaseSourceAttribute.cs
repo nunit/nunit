@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Security;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -155,6 +156,7 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
+        [SecuritySafeCritical]
         private IEnumerable<ITestCaseData> GetTestCasesFor(FixtureMethod method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
@@ -163,14 +165,14 @@ namespace NUnit.Framework
             {
                 IEnumerable source;
 
-                var restorePrevious = new TestExecutionContext();
+                var previousState = SandboxedThreadState.Capture();
                 try
                 {
                     source = GetTestCaseSource(method.FixtureType);
                 }
                 finally
                 {
-                    restorePrevious.EstablishExecutionEnvironment();
+                    previousState.Restore();
                 }
 
                 if (source != null)

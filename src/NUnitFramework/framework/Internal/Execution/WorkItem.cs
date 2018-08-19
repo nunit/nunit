@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -486,9 +487,10 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
+        [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            var restorePrevious = new TestExecutionContext();
+            var previousState = SandboxedThreadState.Capture();
             try
             {
                 Context.CurrentTest = this.Test;
@@ -508,7 +510,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             finally
             {
-                restorePrevious.EstablishExecutionEnvironment();
+                previousState.Restore();
             }
         }
 
