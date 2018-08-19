@@ -257,6 +257,7 @@ namespace NUnit.Framework.Constraints
                     method = methods.FirstOrDefault(m => 
                         m.ReturnType == typeof(bool)
                         && m.Name == "Contains"
+                        && m.IsGenericMethod
                         && m.GetParameters().Length == 1
                         && m.GetParameters()[0].ParameterType == type.GetGenericTypeDefinition());
 #endif
