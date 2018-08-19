@@ -24,6 +24,7 @@
 #if ASYNC
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
@@ -47,6 +48,25 @@ namespace NUnit.Framework
                     nameof(SynchronizationContextFixture.TestCasesThatSetSynchronizationContext));
 
                 result.AssertPassed();
+            }
+        }
+
+        [Test]
+        public static void SynchronizationContextIsRestoredBetweenTestCaseSources()
+        {
+            using (RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(SynchronizationContextFixture));
+
+                foreach (var name in new[]
+                {
+                    nameof(SynchronizationContextFixture.TestMethodWithSourceThatSetsSynchronizationContext1),
+                    nameof(SynchronizationContextFixture.TestMethodWithSourceThatSetsSynchronizationContext2)
+                })
+                {
+                    var parameterizedSuite = fixture.Tests.Single(t => t.Method.Name == name);
+                    Assert.That(parameterizedSuite.Tests.Single().Arguments.Single(), Is.True);
+                }
             }
         }
 
