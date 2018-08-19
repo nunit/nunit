@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -48,11 +50,13 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // NOTE: actual is string will fail for a null typed as string
-            if (typeof(TActual) == typeof(string))
+            // NOTE: actual is string will fail for a null typed as string           
+            Type actualType = typeof(TActual);
+            
+            if (actualType == typeof(string))
                 realConstraint = new EmptyStringConstraint();
             else if (actual == null)
-                throw new System.ArgumentException("The actual value must be a string or a non-null IEnumerable or DirectoryInfo", nameof(actual));
+                throw new System.ArgumentException($"The actual value must be a string, non-null IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
             else if (actual is System.IO.DirectoryInfo)
                 realConstraint = new EmptyDirectoryConstraint();
             else
