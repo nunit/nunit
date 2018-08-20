@@ -29,7 +29,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Specifies the maximum time for a test case to succeed.
+    /// Specifies the maximum time (in milliseconds) for a test case to succeed.
     /// </summary>
     [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
     public sealed class MaxTimeAttribute : PropertyAttribute, IWrapSetUpTearDown

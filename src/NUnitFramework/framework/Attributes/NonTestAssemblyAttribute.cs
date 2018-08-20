@@ -28,7 +28,7 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// Used by third-party frameworks, or other software, that reference 
-    /// the NUnit framework but does not contain any tests. Applying the 
+    /// the NUnit framework but do not contain any tests. Applying the 
     /// attribute indicates that the assembly is not a test assembly and 
     /// may prevent errors if certain runners attempt to load the assembly. 
     /// Note that recognition of the attribute depends on each individual runner.
