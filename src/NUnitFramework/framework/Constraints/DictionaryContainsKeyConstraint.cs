@@ -233,7 +233,6 @@ namespace NUnit.Framework.Constraints
 
             if (method == null && type.GetTypeInfo().IsGenericType)
             {
-#if !NETSTANDARD1_4
                 var definition = type.GetGenericTypeDefinition();
                 var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
 
@@ -245,21 +244,18 @@ namespace NUnit.Framework.Constraints
                                  m.ReturnType == typeof(bool)
                                  && m.Name == "Contains"
                                  && !m.IsGenericMethod
-                                 && m.GetParameters().Length == 1 
+                                 && m.GetParameters().Length == 1
                                  && m.GetParameters()[0].ParameterType == tKeyGenericArg);
 
                     if (method != null)
                     {
+#if NETSTANDARD1_4
+                        method = methods.Single(m => Matched(method, m));
+#else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
+#endif
                     }
                 }
-#else
-                method = methods.FirstOrDefault(m => 
-                    m.ReturnType == typeof(bool)
-                    && m.Name == "Contains"
-                    && !m.IsGenericMethod
-                    && m.GetParameters().Length == 1);
-#endif
             }
 
             return method;
