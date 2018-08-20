@@ -25,6 +25,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Security;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -57,7 +58,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method. 
+        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method.
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName, object[] methodParams)
         {
@@ -80,7 +81,7 @@ namespace NUnit.Framework
         /// Construct with a name
         /// </summary>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method. 
+        /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method.
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(string sourceName, object[] methodParams)
         {
@@ -100,7 +101,7 @@ namespace NUnit.Framework
 
         #region Properties
         /// <summary>
-        /// A set of parameters passed to the method, works only if the Source Name is a method. 
+        /// A set of parameters passed to the method, works only if the Source Name is a method.
         /// If the source name is a field or property has no effect.
         /// </summary>
         public object[] MethodParams { get; }
@@ -146,7 +147,7 @@ namespace NUnit.Framework
                 var parms = new TestCaseParameters();
                 parms.RunState = RunState.NotRunnable;
                 parms.Properties.Set(PropertyNames.SkipReason, "TestCaseSourceAttribute may not be used on a method without parameters");
-                    
+
                 yield return _builder.BuildTestMethod(method, suite, parms);
             }
         }
@@ -155,13 +156,24 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
+        [SecuritySafeCritical]
         private IEnumerable<ITestCaseData> GetTestCasesFor(FixtureMethod method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
 
             try
             {
-                IEnumerable source = GetTestCaseSource(method.FixtureType);
+                IEnumerable source;
+
+                var previousState = SandboxedThreadState.Capture();
+                try
+                {
+                    source = GetTestCaseSource(method.FixtureType);
+                }
+                finally
+                {
+                    previousState.Restore();
+                }
 
                 if (source != null)
                 {
@@ -171,7 +183,7 @@ namespace NUnit.Framework
                         // 1. Source is null. This is really an error but if we
                         //    throw an exception we simply get an invalid fixture
                         //    without good info as to what caused it. Passing a
-                        //    single null argument will cause an error to be 
+                        //    single null argument will cause an error to be
                         //    reported at the test level, in most cases.
                         // 2. User provided an ITestCaseData and we just use it.
                         ITestCaseData parms = item == null
@@ -250,30 +262,29 @@ namespace NUnit.Framework
                 var field = member as FieldInfo;
                 if (field != null)
                     return field.IsStatic
-                        ? (MethodParams == null ? (IEnumerable)field.GetValue(null) 
+                        ? (MethodParams == null ? (IEnumerable)field.GetValue(null)
                                                 : ReturnErrorAsParameter(ParamGivenToField))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var property = member as PropertyInfo;
                 if (property != null)
                     return property.GetGetMethod(true).IsStatic
-                        ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null) 
+                        ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null)
                                                 : ReturnErrorAsParameter(ParamGivenToProperty))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var m = member as MethodInfo;
-                
-
-                    if (m != null)
+                if (m != null)
                     return m.IsStatic
-                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length ? (IEnumerable)m.Invoke(null, MethodParams) 
-                                                              : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
+                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length
+                            ? (IEnumerable)m.Invoke(null, MethodParams)
+                            : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
             }
 
             return null;
         }
-        
+
         private static IEnumerable ReturnErrorAsParameter(string errorMessage)
         {
             var parms = new TestCaseParameters();
