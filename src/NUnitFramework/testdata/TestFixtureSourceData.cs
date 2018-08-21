@@ -354,9 +354,10 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    public class GenericFixtureWithConstructorArgumentsSource
+    public class GenericFixtureWithTypeAndConstructorArgsSource
     {
-        public static readonly ITestFixtureData[] Source = {
+        public static readonly ITestFixtureData[] Source =
+        {
             new TypedTestFixture<int>(5),
             new TypedTestFixture<object>(new object())
         };
@@ -373,12 +374,38 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource(typeof(GenericFixtureWithConstructorArgumentsSource), "Source")]
+    [TestFixtureSource(typeof(GenericFixtureWithTypeAndConstructorArgsSource), "Source")]
     public class GenerixFixtureSourceWithTypeAndConstructorArgs<T>
     {
         private readonly T _arg;
 
         public GenerixFixtureSourceWithTypeAndConstructorArgs(T arg)
+        {
+            _arg = arg;
+        }
+
+        [Test]
+        public void SomeTest()
+        {
+            Assert.That(!EqualityComparer<T>.Default.Equals(_arg, default(T)), "constructor argument was not injected");
+        }
+    }
+
+    public class GenericFixtureWithConstructorArgsSource
+    {
+        public static readonly TestFixtureData[] Source =
+        {
+            new TestFixtureData(5),
+            new TestFixtureData(new object())
+        };
+    }
+
+    [TestFixtureSource(typeof(GenericFixtureWithConstructorArgsSource), "Source")]
+    public class GenericFixtureSourceWithConstructorArgs<T>
+    {
+        private readonly T _arg;
+
+        public GenericFixtureSourceWithConstructorArgs(T arg)
         {
             _arg = arg;
         }

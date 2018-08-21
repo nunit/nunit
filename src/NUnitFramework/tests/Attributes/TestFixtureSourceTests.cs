@@ -166,5 +166,14 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
         }
+
+        [Test]
+        public void CanRunGenericFixtureSourceWithConstructorArgsProvidedAndTypeArgsDeduced()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithConstructorArgs<>));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
+        }
     }
 }
