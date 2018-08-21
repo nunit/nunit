@@ -23,10 +23,8 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Filters;
 using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
 
@@ -164,7 +162,7 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenerixFixtureSourceWithTypeAndConstructorArgs<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithTypeAndConstructorArgsSource.Source.Length));
         }
 
         [Test]
@@ -173,7 +171,7 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithConstructorArgs<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
         }
     }
 }
