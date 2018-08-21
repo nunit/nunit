@@ -23,6 +23,7 @@
 
 using System.Collections;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
@@ -92,9 +93,9 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     [TestFixtureSource("StaticProperty")]
-    public class StaticProperty_InheritedClass : StaticProperty_SameClass 
+    public class StaticProperty_InheritedClass : StaticProperty_SameClass
     {
-        public StaticProperty_InheritedClass (string arg) : base(arg, "StaticPropertyInClass") { }
+        public StaticProperty_InheritedClass(string arg) : base(arg, "StaticPropertyInClass") { }
     }
 
     [TestFixtureSource("StaticMethod")]
@@ -267,12 +268,12 @@ namespace NUnit.TestData.TestFixtureSourceData
         public static IEnumerable<TestFixtureData> IndividualInstanceNameTestDataSource() =>
             from spec in TestDataSpec.Specs
             select new TestFixtureData(spec.Arguments)
-                {
-                    Properties = // SetProperty does not exist
+            {
+                Properties = // SetProperty does not exist
                     {
                         ["ExpectedTestName"] = { spec.GetFixtureName(nameof(IndividualInstanceNameTestDataFixture)) }
                     }
-                }
+            }
                 .SetArgDisplayNames(spec.ArgDisplayNames);
     }
 
@@ -350,6 +351,42 @@ namespace NUnit.TestData.TestFixtureSourceData
         [Test]
         public void SomeTest()
         {
+        }
+    }
+
+    public class GenericFixtureWithConstructorArgumentsSource
+    {
+        public static readonly ITestFixtureData[] Source = {
+            new TypedTestFixture<int>(5),
+            new TypedTestFixture<object>(new object())
+        };
+
+        public class TypedTestFixture<T> : Framework.Internal.TestParameters, ITestFixtureData
+        {
+            public TypedTestFixture(params object[] arguments)
+                : base(arguments)
+            {
+                TypeArgs = new[] { typeof(T) };
+            }
+
+            public Type[] TypeArgs { get; }
+        }
+    }
+
+    [TestFixtureSource(typeof(GenericFixtureWithConstructorArgumentsSource), "Source")]
+    public class GenerixFixtureSourceWithTypeAndConstructorArgs<T>
+    {
+        private readonly T _arg;
+
+        public GenerixFixtureSourceWithTypeAndConstructorArgs(T arg)
+        {
+            _arg = arg;
+        }
+
+        [Test]
+        public void SomeTest()
+        {
+            Assert.That(!EqualityComparer<T>.Default.Equals(_arg, default(T)), "constructor argument was not injected");
         }
     }
 
