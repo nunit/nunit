@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Type arguments used to create a generic fixture instance
         /// </summary>
-        public Type[] TypeArgs { get; internal set; }
+        public Type[] TypeArgs { get; }
 
         #endregion
     }
