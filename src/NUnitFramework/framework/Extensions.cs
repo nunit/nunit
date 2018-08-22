@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -120,5 +121,23 @@ namespace NUnit.Framework
             return ((ICustomAttributeProvider)type.GetTypeInfo()).GetAttributes<T>(inherit);
         }
 #endif
+
+        public static IEnumerable Skip(this IEnumerable enumerable, long skip)
+        {
+            var iterator = enumerable.GetEnumerator();
+            using (iterator as IDisposable)
+            {
+                while (skip-- > 0)
+                {
+                    if (!iterator.MoveNext())
+                        yield break;
+                }
+
+                while (iterator.MoveNext())
+                {
+                    yield return iterator.Current;
+                }
+            }
+        }
     }
 }
