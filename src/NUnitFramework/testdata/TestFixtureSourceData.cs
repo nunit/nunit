@@ -375,11 +375,11 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     [TestFixtureSource(typeof(GenericFixtureWithTypeAndConstructorArgsSource), "Source")]
-    public class GenerixFixtureSourceWithTypeAndConstructorArgs<T>
+    public class GenericFixtureSourceWithTypeAndConstructorArgs<T>
     {
         private readonly T _arg;
 
-        public GenerixFixtureSourceWithTypeAndConstructorArgs(T arg)
+        public GenericFixtureSourceWithTypeAndConstructorArgs(T arg)
         {
             _arg = arg;
         }
