@@ -22,11 +22,11 @@
 // ***********************************************************************
 
 using System;
-using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
@@ -146,7 +146,12 @@ namespace NUnit.Framework.Constraints
         {
             int count = 0;
             int index = 0;
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("< ");
+
+            if (start > 0)
+                sb.Append("...");
 
             foreach (object obj in collection)
             {
@@ -154,7 +159,8 @@ namespace NUnit.Framework.Constraints
                 {
                     if (++count > max)
                         break;
-                    sb.Append(count == 1 ? "< " : ", ");
+                    if (count > 1)
+                        sb.Append(", ");
                     sb.Append(FormatValue(obj));
                 }
             }
@@ -318,7 +324,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static string FormatDecimal(Decimal d)
+        private static string FormatDecimal(decimal d)
         {
             return d.ToString("G29", CultureInfo.InvariantCulture) + "m";
         }

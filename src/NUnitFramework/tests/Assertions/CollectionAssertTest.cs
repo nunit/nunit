@@ -680,7 +680,8 @@ namespace NUnit.Framework.Assertions
 
             var expectedMessage =
                 "  Expected: collection ordered" + Environment.NewLine +
-                "  But was:  < \"x\", \"z\", \"y\" >" + Environment.NewLine;
+                "  But was:  < \"x\", \"z\", \"y\" >" + Environment.NewLine +
+                "  Ordering breaks at index [2]:  \"y\"" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsOrdered(list));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
