@@ -263,9 +263,8 @@ namespace NUnit.Framework.Constraints
 
 #if NETSTANDARD1_4
         
-        //
         // This is for missing MetadataToken in NetStandard 1.4, matched by method signature
-        //
+
         private static bool Matched(MethodInfo methodInfo, MethodInfo matchedMethodInfo)
         {
             return methodInfo.Name == matchedMethodInfo.Name &&
@@ -273,7 +272,7 @@ namespace NUnit.Framework.Constraints
                    methodInfo.IsHideBySig == matchedMethodInfo.IsHideBySig &&
                    methodInfo.IsGenericMethod == matchedMethodInfo.IsGenericMethod &&
                    methodInfo.ReturnParameter.ParameterType == matchedMethodInfo.ReturnParameter.ParameterType &&
-                   Matched(methodInfo.GetParameters(), matchedMethodInfo.GetParameters())&&
+                   Matched(methodInfo.GetParameters(), matchedMethodInfo.GetParameters()) &&
                    Matched(methodInfo.GetGenericArguments(), matchedMethodInfo.GetGenericArguments());
         }
 
