@@ -55,16 +55,7 @@ namespace NUnit.Framework.Internal
         public static IEnumerable ConvertData(object[] data, Type targetType)
         {
             Guard.ArgumentNotNull(data, nameof(data));
-            Guard.ArgumentNotNull(targetType, nameof(targetType));
-
-            if (targetType.GetTypeInfo().IsEnum && data.Length == 0)
-            {
-                return Enum.GetValues(targetType);
-            }
-            if (targetType == typeof(bool) && data.Length == 0)
-            {
-                return new object[] { true, false };
-            }
+            Guard.ArgumentNotNull(targetType, nameof(targetType));          
             return GetData(data, targetType);
         }
 
