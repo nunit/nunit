@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 #if ASYNC
@@ -95,6 +95,61 @@ namespace NUnit.TestData.AssertMultipleData
         }
 
         [Test]
+        public void ThreeAssertWarns()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Warn("WARNING1");
+                Assert.Warn("WARNING2");
+                Assert.Warn("WARNING3");
+            });
+        }
+
+        [Test]
+        public void ThreeWarnIf_AllPass()
+        {
+            Assert.Multiple(() =>
+            {
+                Warn.If(false, "WARNING1");
+                Warn.If(false, "WARNING2");
+                Warn.If(false, "WARNING3");
+            });
+        }
+
+        [Test]
+        public void ThreeWarnIf_TwoFail()
+        {
+            Assert.Multiple(() =>
+            {
+                Warn.If(true, "WARNING1");
+                Warn.If(false, "WARNING2");
+                Warn.If(true, "WARNING3");
+            });
+        }
+
+        [Test]
+        public void ThreeWarnUnless_AllPass()
+        {
+            Assert.Multiple(() =>
+            {
+                Warn.Unless(true, "WARNING1");
+                Warn.Unless(true, "WARNING2");
+                Warn.Unless(true, "WARNING3");
+            });
+        }
+
+        [Test]
+        public void ThreeWarnUnless_TwoFail()
+        {
+            Assert.Multiple(() =>
+            {
+                Warn.Unless(false, "WARNING1");
+                Warn.Unless(true, "WARNING2");
+                Warn.Unless(false, "WARNING3");
+            });
+        }
+
+        [Test]
         public void MethodCallsFail()
         {
             Assert.Multiple(() =>
@@ -111,6 +166,28 @@ namespace NUnit.TestData.AssertMultipleData
                 Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
                 Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 Assert.Fail("Message from Assert.Fail");
+            });
+        }
+
+        [Test]
+        public void WarningAfterTwoAssertsFail()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.Warn("WARNING");
+            });
+        }
+
+        [Test]
+        public void TwoAssertsFailAfterWarning()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Warn("WARNING");
+                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
             });
         }
 
@@ -226,6 +303,16 @@ namespace NUnit.TestData.AssertMultipleData
             {
                 Assert.AreEqual(5, 2 + 2, "Failure 1");
                 Assert.True(1 == 0, "Failure 2");
+                throw new Exception("Simulated Error");
+            });
+        }
+
+        [Test]
+        public void ExceptionThrownAfterWarning()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.Warn("WARNING");
                 throw new Exception("Simulated Error");
             });
         }

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2016 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -93,8 +93,6 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = expr.Resolve();
 
             IncrementAssertCount();
@@ -125,8 +123,6 @@ namespace NUnit.Framework
             IResolveConstraint expr,
             Func<string> getExceptionMessage)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = expr.Resolve();
 
             IncrementAssertCount();
@@ -254,8 +250,6 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Unless<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = expression.Resolve();
 
             IncrementAssertCount();
@@ -279,8 +273,6 @@ namespace NUnit.Framework
             IResolveConstraint expression,
             Func<string> getExceptionMessage)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = expression.Resolve();
 
             IncrementAssertCount();
@@ -322,8 +314,6 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = new NotConstraint(expr.Resolve());
 
             IncrementAssertCount();
@@ -354,8 +344,6 @@ namespace NUnit.Framework
             IResolveConstraint expr,
             Func<string> getExceptionMessage)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = new NotConstraint(expr.Resolve());
 
             IncrementAssertCount();
@@ -465,8 +453,6 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void If<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = new NotConstraint(expression.Resolve());
 
             IncrementAssertCount();
@@ -490,8 +476,6 @@ namespace NUnit.Framework
             IResolveConstraint expression,
             Func<string> getExceptionMessage)
         {
-            CheckMultipleAssertLevel();
-
             var constraint = new NotConstraint(expression.Resolve());
 
             IncrementAssertCount();
@@ -507,12 +491,6 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
-
-        private static void CheckMultipleAssertLevel()
-        {
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
-                throw new Exception("Warn.If may not be used in a multiple assertion block.");
-        }
 
         private static void IncrementAssertCount()
         {
