@@ -74,29 +74,7 @@ namespace NUnit.Framework.Internal
             IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, typeof(DateTime));
 
             Assert.That(result, Is.EquivalentTo(expected).And.All.TypeOf<DateTime>());
-        }
-
-        [Test]
-        public void TestEmtpyDataToBool()
-        {
-            var data = new object[] { };
-            var expected = new bool[] { true, false };
-
-            IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, typeof(bool));
-
-            Assert.That(result, Is.EquivalentTo(expected));
-        }
-
-        [Test]
-        public void TestEmtpyDataToEnum()
-        {
-            var data = new object[] { };
-            var expected = new TestEnum[] { TestEnum.Value1, TestEnum.Value2, TestEnum.value3 };
-
-            IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, typeof(TestEnum));
-
-            Assert.That(result, Is.EquivalentTo(expected));
-        }
+        }       
     }
 
     public enum TestEnum

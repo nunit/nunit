@@ -27,6 +27,7 @@ using System.Reflection;
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
@@ -101,7 +102,47 @@ namespace NUnit.Framework
         /// <param name="parameter">The parameter of a parameterized test.</param>
         public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
-            return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
+            if (data.Length == 0)           
+                return GenerateData(parameter.ParameterType);
+            else           
+                return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
+        }
+
+        /// <summary>
+        /// To generate data for Values attribute, in case no data is provided.
+        /// </summary>       
+        private static IEnumerable GenerateData(Type targetType)
+        {
+            if (IsNullableEnum(targetType))
+            {
+                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(targetType));
+                var enumValuesWithNull = new object[enumValues.Length + 1];
+                Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
+                return enumValuesWithNull;
+            }
+            if (targetType.GetTypeInfo().IsEnum)
+            {
+                return Enum.GetValues(targetType);
+            }
+            if (targetType == typeof(bool?))
+            {
+                return new object[] { null, true, false };
+            }
+            if (targetType == typeof(bool))
+            {
+                return new object[] { true, false };
+            }
+
+            return new object[] { };
+        }      
+
+        /// <summary>
+        /// To Check if type is nullable enum.
+        /// </summary>       
+        private static bool IsNullableEnum(Type t)
+        {
+            Type u = Nullable.GetUnderlyingType(t);
+            return (u != null) && u.GetTypeInfo().IsEnum;
         }
     }
 }
