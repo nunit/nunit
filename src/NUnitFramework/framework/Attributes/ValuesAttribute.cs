@@ -8,10 +8,8 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -44,8 +42,7 @@ namespace NUnit.Framework
         /// We use an object[] so that the individual
         /// elements may have their type changed in GetData
         /// if necessary
-        /// </summary>
-       
+        /// </summary>       
         protected object[] data;
 
         /// <summary>
@@ -103,17 +100,15 @@ namespace NUnit.Framework
         /// <param name="parameter">The parameter of a parameterized test.</param>
         public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
         {
-            if(data.Length == 0)           
+            if (data.Length == 0)           
                 return GenerateData(parameter.ParameterType);
             else           
-            return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
+                return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
         }
 
         /// <summary>
         /// To generate data for Values attribute, in case no data is provided.
-        /// </summary>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
+        /// </summary>       
         private static IEnumerable GenerateData(Type targetType)
         {
             if (IsNullableEnum(targetType))
@@ -141,9 +136,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// To Check if type is nullable enum.
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
+        /// </summary>       
         private static bool IsNullableEnum(Type t)
         {
             Type u = Nullable.GetUnderlyingType(t);
