@@ -101,7 +101,7 @@ namespace NUnit.Framework.Constraints
             if (method != null)
                 return (bool)method.Invoke(actual, new[] { Expected });
 
-            throw new ArgumentException("The actual value must have a ContainsKey or Contains(TKey) method.");
+            throw new ArgumentException($"The {actual.GetType().Name} value must have a ContainsKey or Contains(TKey) method.");
         }
 
         /// <summary>
