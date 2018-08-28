@@ -8,6 +8,7 @@
     <owners>Charlie Poole, Rob Prouse</owners>
     <licenseUrl>https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
+    <repository type="git" url="https://github.com/nunit/nunit"/>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>

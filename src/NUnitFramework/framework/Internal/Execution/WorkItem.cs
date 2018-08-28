@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -486,22 +487,31 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
+        [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            Context.CurrentTest = this.Test;
-            Context.CurrentResult = this.Result;
-            Context.Listener.TestStarted(this.Test);
-            Context.StartTime = DateTime.UtcNow;
-            Context.StartTicks = Stopwatch.GetTimestamp();
+            var previousState = SandboxedThreadState.Capture();
+            try
+            {
+                Context.CurrentTest = this.Test;
+                Context.CurrentResult = this.Result;
+                Context.Listener.TestStarted(this.Test);
+                Context.StartTime = DateTime.UtcNow;
+                Context.StartTicks = Stopwatch.GetTimestamp();
 #if PARALLEL
-            Context.TestWorker = this.TestWorker;
+                Context.TestWorker = this.TestWorker;
 #endif
 
-            Context.EstablishExecutionEnvironment();
+                Context.EstablishExecutionEnvironment();
 
-            State = WorkItemState.Running;
+                State = WorkItemState.Running;
 
-            PerformWork();
+                PerformWork();
+            }
+            finally
+            {
+                previousState.Restore();
+            }
         }
 
 #if PARALLEL

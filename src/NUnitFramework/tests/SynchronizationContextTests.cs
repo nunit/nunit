@@ -24,10 +24,12 @@
 #if ASYNC
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Internal;
-
+using NUnit.TestData;
+using NUnit.TestUtilities;
 #if !NET40
 using TaskEx = System.Threading.Tasks.Task;
 #endif
@@ -36,6 +38,38 @@ namespace NUnit.Framework
 {
     public static class SynchronizationContextTests
     {
+        [Test]
+        public static void SynchronizationContextIsRestoredBetweenTestCases()
+        {
+            using (RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
+            {
+                var result = TestBuilder.RunParameterizedMethodSuite(
+                    typeof(SynchronizationContextFixture),
+                    nameof(SynchronizationContextFixture.TestCasesThatSetSynchronizationContext));
+
+                result.AssertPassed();
+            }
+        }
+
+        [Test]
+        public static void SynchronizationContextIsRestoredBetweenTestCaseSources()
+        {
+            using (RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
+            {
+                var fixture = TestBuilder.MakeFixture(typeof(SynchronizationContextFixture));
+
+                foreach (var name in new[]
+                {
+                    nameof(SynchronizationContextFixture.TestMethodWithSourceThatSetsSynchronizationContext1),
+                    nameof(SynchronizationContextFixture.TestMethodWithSourceThatSetsSynchronizationContext2)
+                })
+                {
+                    var parameterizedSuite = fixture.Tests.Single(t => t.Method.Name == name);
+                    Assert.That(parameterizedSuite.Tests.Single().Arguments.Single(), Is.True);
+                }
+            }
+        }
+
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
 #if APARTMENT_STATE
@@ -144,8 +178,14 @@ namespace NUnit.Framework
 
         private static IDisposable TemporarySynchronizationContext(SynchronizationContext synchronizationContext)
         {
-            var originalContext = SynchronizationContext.Current;
+            var restore = RestoreSynchronizationContext();
             SynchronizationContext.SetSynchronizationContext(synchronizationContext);
+            return restore;
+        }
+
+        private static IDisposable RestoreSynchronizationContext()
+        {
+            var originalContext = SynchronizationContext.Current;
             return On.Dispose(() => SynchronizationContext.SetSynchronizationContext(originalContext));
         }
     }

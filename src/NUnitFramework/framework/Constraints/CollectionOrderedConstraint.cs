@@ -23,10 +23,11 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using System.Collections.Generic;
 using NUnit.Compatibility;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -38,8 +39,12 @@ namespace NUnit.Framework.Constraints
         private readonly List<OrderingStep> _steps = new List<OrderingStep>();
         // The step we are currently building
         private OrderingStep _activeStep;
+        // If not ordered, index where ordering breaks
+        private int _breakingIndex;
+        // If not ordered, value on which ordering breaks
+        private object _breakingValue;
 
-        enum OrderDirection
+        private enum OrderDirection
         {
             Unspecified,
             Ascending,
@@ -180,22 +185,39 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// Test whether the constraint is satisfied by a given value
+        /// </summary>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>True for success, false for failure</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+
+            if (!Matches(enumerable))
+            {
+                return new CollectionOrderedConstraintResult(this, enumerable, _breakingIndex, _breakingValue);
+            }
+
+            return new CollectionOrderedConstraintResult(this, enumerable);
+        }
+
+        /// <summary>
         /// Test whether the collection is ordered
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
             object previous = null;
-            int index = 0;
+            _breakingIndex = 0;
             foreach (object current in actual)
             {
+                _breakingValue = current;
+
                 if (previous != null)
                 {
                     if (_steps[0].PropertyName != null)
                     {
                         if (current == null)
-                            throw new ArgumentNullException(nameof(actual), "Null value at index " + index.ToString());
+                            throw new ArgumentNullException(nameof(actual), "Null value at index " + _breakingIndex.ToString());
 
                         foreach (var step in _steps)
                         {
@@ -203,12 +225,12 @@ namespace NUnit.Framework.Constraints
 
                             PropertyInfo previousProp = previous.GetType().GetProperty(propertyName);
                             if (previousProp == null)
-                                throw new ArgumentException($"Property {propertyName} not found at index {index - 1}", nameof(actual));
+                                throw new ArgumentException($"Property {propertyName} not found at index {_breakingIndex - 1}", nameof(actual));
                             var previousValue = previousProp.GetValue(previous, null);
 
                             PropertyInfo prop = current.GetType().GetProperty(propertyName);
                             if (prop == null)
-                                throw new ArgumentException($"Property {propertyName} not found at index {index}", nameof(actual));
+                                throw new ArgumentException($"Property {propertyName} not found at index {_breakingIndex}", nameof(actual));
                             var currentValue = prop.GetValue(current, null);
 
                             int comparisonResult = step.Comparer.Compare(previousValue, currentValue);
@@ -236,9 +258,10 @@ namespace NUnit.Framework.Constraints
                 }
 
                 previous = current;
-                index++;
+                _breakingIndex++;
             }
 
+            _breakingValue = null;
             return true;
         }
 
@@ -297,5 +320,58 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+
+        #region Private CollectionOrderedConstraintResult Class
+
+        private sealed class CollectionOrderedConstraintResult : ConstraintResult
+        {
+            private const int MaxDisplayedItems = 10;
+
+            private readonly int _breakingIndex;
+            private readonly object _breakingValue;
+
+            /// <summary>
+            /// Constructor for success result.
+            /// </summary>
+            /// <param name="constraint">The Constraint to which this result applies.</param>
+            /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
+            public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue)
+                : base(constraint, actualValue, ConstraintStatus.Success)
+            {
+            }
+
+            /// <summary>
+            /// Constructor for failure result.
+            /// </summary>
+            /// <param name="constraint">The Constraint to which this result applies.</param>
+            /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
+            /// <param name="breakingIndex">Index at which collection order breaks.</param>
+            /// <param name="breakingValue">Value at which collection order breaks.</param>
+            public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue, int breakingIndex, object breakingValue)
+                : base(constraint, actualValue, ConstraintStatus.Failure)
+            {
+                _breakingIndex = breakingIndex;
+                _breakingValue = breakingValue;
+            }
+
+            public override void WriteActualValueTo(MessageWriter writer)
+            {
+                int startIndex = Math.Max(0, _breakingIndex - MaxDisplayedItems + 2);
+                var actualValueMessage = MsgUtils.FormatCollection((IEnumerable)ActualValue, startIndex, MaxDisplayedItems);
+                writer.Write(actualValueMessage);
+            }
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
+            {
+                if (Status == ConstraintStatus.Failure)
+                {
+                    var nonMatchingStr = $"  Ordering breaks at index [{_breakingIndex}]:  "
+                        + MsgUtils.FormatValue(_breakingValue);
+                    writer.WriteLine(nonMatchingStr);
+                }
+            }
+        }
+
+        #endregion Private CollectionOrderedConstraintResult Class
     }
 }
