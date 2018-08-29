@@ -27,6 +27,7 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
@@ -44,7 +45,7 @@ namespace NUnit.Framework.Api
         {
             Assert.Multiple(() =>
             {
-                var controller = new FrameworkController("mock-assembly", null, new Dictionary<string, string>());
+                var controller = new FrameworkController("mock-assembly", Test.IdPrefix, new Dictionary<string, string>());
                 var loadXml = controller.LoadTests();
                 var exploreXml = controller.ExploreTests(null);
 
@@ -77,7 +78,7 @@ namespace NUnit.Framework.Api
         {
             Assert.Multiple(() =>
             {
-                var controller = new FrameworkController("mock-assembly", null, new Dictionary<string, string>());
+                var controller = new FrameworkController("mock-assembly", Test.IdPrefix, new Dictionary<string, string>());
                 controller.LoadTests();
 
                 var frameworkXml = XElement.Parse(controller.RunTests(null));
