@@ -47,14 +47,14 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
-        public TestMethod(FixtureMethod method) : base(method) { }
+        public TestMethod(string id, FixtureMethod method) : base(id, method) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
-        public TestMethod(FixtureMethod method, Test parentSuite) : base(method)
+        public TestMethod(string id, FixtureMethod method, Test parentSuite) : base(id, method)
         {
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.

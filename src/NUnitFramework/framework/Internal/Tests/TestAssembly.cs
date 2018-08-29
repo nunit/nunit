@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,6 +28,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -43,8 +44,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="assembly">The assembly this test represents.</param>
         /// <param name="name">The desired name for the test suite.</param>
-        public TestAssembly(Assembly assembly, string name)
-            : base(name)
+        public TestAssembly(string id, Assembly assembly, string name)
+            : base(id, name)
         {
             this.Assembly = assembly;
             this.Name = name;
@@ -55,7 +56,7 @@ namespace NUnit.Framework.Internal
         /// specifying the suite name for an assembly that could not be loaded.
         /// </summary>
         /// <param name="name">The desired name for the test suite.</param>
-        public TestAssembly(string name) : base(name)
+        public TestAssembly(string id, string name) : base(id, name)
         {
             this.Name = name;
         }
@@ -66,8 +67,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="assembly"></param>
         /// <param name="filter"></param>
-        public TestAssembly(TestAssembly assembly, ITestFilter filter)
-            : base(assembly as TestSuite, filter)
+        public TestAssembly(TestIdProvider idProvider, TestAssembly assembly, ITestFilter filter)
+            : base(idProvider, assembly, filter)
         {
             this.Name     = assembly.Name;
             this.Assembly = assembly.Assembly;

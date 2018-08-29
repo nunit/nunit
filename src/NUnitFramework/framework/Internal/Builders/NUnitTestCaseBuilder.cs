@@ -34,14 +34,17 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestCaseBuilder
     {
+        private readonly TestIdProvider _idProvider;
         private readonly Randomizer _randomizer = Randomizer.CreateRandomizer();
         private readonly TestNameGenerator _nameGenerator;
 
         /// <summary>
         /// Constructs an <see cref="NUnitTestCaseBuilder"/>
         /// </summary>
-        public NUnitTestCaseBuilder()
+        public NUnitTestCaseBuilder(TestIdProvider idProvider)
         {
+            Guard.ArgumentNotNull(idProvider, nameof(idProvider));
+            _idProvider = idProvider;
             _nameGenerator = new TestNameGenerator();
         }
 
@@ -54,7 +57,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parms">The ParameterSet to be used, or null</param>
         public TestMethod BuildTestMethod(FixtureMethod method, Test parentSuite, TestCaseParameters parms)
         {
-            var testMethod = new TestMethod(method, parentSuite)
+            var testMethod = new TestMethod(_idProvider.CreateId(), method, parentSuite)
             {
                 Seed = _randomizer.Next()
             };

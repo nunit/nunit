@@ -43,6 +43,8 @@ namespace NUnit.Framework.Api
 
         #region Instance Fields
 
+        private readonly TestIdProvider _idProvider;
+
         /// <summary>
         /// The default suite builder used by the test assembly builder.
         /// </summary>
@@ -57,9 +59,12 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultTestAssemblyBuilder"/> class.
         /// </summary>
-        public DefaultTestAssemblyBuilder()
+        public DefaultTestAssemblyBuilder(TestIdProvider idProvider)
         {
-            _defaultSuiteBuilder = new DefaultSuiteBuilder();
+            Guard.ArgumentNotNull(idProvider, nameof(idProvider));
+
+            _idProvider = idProvider;
+            _defaultSuiteBuilder = new DefaultSuiteBuilder(idProvider);
         }
 
         #endregion
@@ -115,7 +120,7 @@ namespace NUnit.Framework.Api
             }
             catch (Exception ex)
             {
-                testAssembly = new TestAssembly(Path.GetFileName(assemblyNameOrPath));
+                testAssembly = new TestAssembly(_idProvider.CreateId(), Path.GetFileName(assemblyNameOrPath));
                 testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
@@ -180,7 +185,7 @@ namespace NUnit.Framework.Api
             }
             catch (Exception ex)
             {
-                testAssembly = new TestAssembly(suiteName);
+                testAssembly = new TestAssembly(_idProvider.CreateId(), suiteName);
                 testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
@@ -248,7 +253,7 @@ namespace NUnit.Framework.Api
         [SecuritySafeCritical]
         private TestSuite BuildTestAssembly(Assembly assembly, string suiteName, IList<Test> fixtures)
         {
-            TestSuite testAssembly = new TestAssembly(assembly, suiteName);
+            TestSuite testAssembly = new TestAssembly(_idProvider.CreateId(), assembly, suiteName);
 
             if (fixtures.Count == 0)
             {
@@ -257,7 +262,7 @@ namespace NUnit.Framework.Api
             else
             {
                 NamespaceTreeBuilder treeBuilder =
-                    new NamespaceTreeBuilder(testAssembly);
+                    new NamespaceTreeBuilder(_idProvider, testAssembly);
                 treeBuilder.Add(fixtures);
                 testAssembly = treeBuilder.RootSuite;
             }

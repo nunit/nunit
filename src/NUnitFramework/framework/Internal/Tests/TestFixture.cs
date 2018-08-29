@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used</param>
-        public TestFixture(Type fixtureType, object[] arguments = null) : base(fixtureType, arguments)
+        public TestFixture(string id, Type fixtureType, object[] arguments = null) : base(id, fixtureType, arguments)
         {
             SetUpMethods = Reflect.GetMethodsWithAttribute(Type, typeof(SetUpAttribute), true);
             TearDownMethods = Reflect.GetMethodsWithAttribute(Type, typeof(TearDownAttribute), true);

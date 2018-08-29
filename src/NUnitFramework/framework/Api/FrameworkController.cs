@@ -34,6 +34,7 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Api
 {
@@ -57,6 +58,8 @@ namespace NUnit.Framework.Api
         // Preloaded test assembly, if passed in constructor
         private readonly Assembly _testAssembly;
 
+        private readonly TestIdProvider idProvider;
+
         #region Constructors
 
         /// <summary>
@@ -67,12 +70,12 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
         {
+            idProvider = new TestIdProvider(idPrefix, 1000);
+
             Initialize(assemblyNameOrPath, settings);
 
-            this.Builder = new DefaultTestAssemblyBuilder();
-            this.Runner = new NUnitTestAssemblyRunner(this.Builder);
-
-            Test.IdPrefix = idPrefix;
+            this.Builder = new DefaultTestAssemblyBuilder(idProvider);
+            this.Runner = new NUnitTestAssemblyRunner(idProvider, this.Builder);
         }
 
         /// <summary>
@@ -99,12 +102,12 @@ namespace NUnit.Framework.Api
         /// <param name="builderType">The Type of the test builder</param>
         public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
         {
+            idProvider = new TestIdProvider(idPrefix, 1000);
+
             Initialize(assemblyNameOrPath, settings);
 
             Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
             Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
-
-            Test.IdPrefix = idPrefix ?? "";
         }
 
         /// <summary>

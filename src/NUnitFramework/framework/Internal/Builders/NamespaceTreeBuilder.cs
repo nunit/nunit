@@ -34,6 +34,8 @@ namespace NUnit.Framework.Internal.Builders
     {
         #region Instance Variables
 
+        private readonly TestIdProvider idProvider;
+
         /// <summary>
         /// NamespaceDictionary of all test suites we have created to represent
         /// namespaces. Used to locate namespace parent suites for fixtures.
@@ -53,9 +55,12 @@ namespace NUnit.Framework.Internal.Builders
         /// Initializes a new instance of the <see cref="NamespaceTreeBuilder"/> class.
         /// </summary>
         /// <param name="rootSuite">The root suite.</param>
-        public NamespaceTreeBuilder(TestSuite rootSuite)
+        internal NamespaceTreeBuilder(TestIdProvider idProvider, TestSuite rootSuite)
         {
+            Guard.ArgumentNotNull(idProvider, nameof(idProvider));
             Guard.ArgumentNotNull(rootSuite, nameof(rootSuite));
+
+            this.idProvider = idProvider;
             RootSuite = _globalInsertionPoint = rootSuite;
         }
 
@@ -126,7 +131,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (index == -1)
             {
-                suite = new TestSuite(ns);
+                suite = new TestSuite(idProvider.CreateId(), ns);
                 _globalInsertionPoint.Add(suite);
             }
             else
@@ -134,7 +139,7 @@ namespace NUnit.Framework.Internal.Builders
                 string parentNamespace = ns.Substring(0, index);
                 TestSuite parent = GetNamespaceSuite(parentNamespace);
                 string suiteName = ns.Substring(index + 1);
-                suite = new TestSuite(parentNamespace, suiteName);
+                suite = new TestSuite(idProvider.CreateId(), parentNamespace, suiteName);
                 parent.Add(suite);
             }
 

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,7 +41,14 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DefaultTestCaseBuilder : ITestCaseBuilder
     {
-        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder;
+
+        public DefaultTestCaseBuilder(TestIdProvider idProvider)
+        {
+            Guard.ArgumentNotNull(idProvider, nameof(idProvider));
+
+            _nunitTestCaseBuilder = new NUnitTestCaseBuilder(idProvider);
+        }
 
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
@@ -114,7 +121,7 @@ namespace NUnit.Framework.Internal.Builders
             foreach (var attr in builders)
             {
                 foreach (var test in attr.BuildFrom(method, suite))
-                    tests.Add(test); 
+                    tests.Add(test);
             }
 
             return builders.Count > 0 && method.Method.GetParameters().Length > 0 || tests.Count > 0

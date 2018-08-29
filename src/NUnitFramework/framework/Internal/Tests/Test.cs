@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -35,27 +34,17 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class Test : ITest, IComparable
     {
-        #region Fields
-
-        /// <summary>
-        /// Static value to seed ids. It's started at 1000 so any
-        /// uninitialized ids will stand out.
-        /// </summary>
-        private static int _nextID = 1000;
-
-        #endregion
-
         #region Construction
 
         /// <summary>
         /// Constructs a test given its name
         /// </summary>
         /// <param name="name">The name of the test</param>
-        protected Test( string name )
+        protected Test(string id, string name)
         {
             Guard.ArgumentNotNullOrEmpty(name, nameof(name));
 
-            Initialize(name);
+            Initialize(id, name);
         }
 
         /// <summary>
@@ -64,9 +53,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
-        protected Test( string pathName, string name )
+        protected Test(string id, string pathName, string name)
         {
-            Initialize(name);
+            Initialize(id, name);
 
             if (!string.IsNullOrEmpty(pathName))
                 FullName = pathName + "." + name;
@@ -75,9 +64,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Constructs a test for a specific type.
         /// </summary>
-        protected Test(Type type)
+        protected Test(string id, Type type)
         {
-            Initialize(TypeHelper.GetDisplayName(type));
+            Initialize(id, TypeHelper.GetDisplayName(type));
 
             string nspace = type.Namespace;
             if (nspace != null && nspace != "")
@@ -88,28 +77,24 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Constructs a test for a specific method.
         /// </summary>
-        protected Test(FixtureMethod method)
+        protected Test(string id, FixtureMethod method)
         {
-            Initialize(method.Method.Name);
+            Initialize(id, method.Method.Name);
 
             Method = method.Method;
             Type = method.FixtureType;
             FullName = Type.FullName + "." + Name;
         }
 
-        private void Initialize(string name)
+        private void Initialize(string id, string name)
         {
+            Guard.ArgumentNotNullOrEmpty(id, nameof(id));
+            Id = id;
             FullName = Name = name;
-            Id = GetNextId();
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
             SetUpMethods = new MethodInfo[0];
             TearDownMethods = new MethodInfo[0];
-        }
-
-        private static string GetNextId()
-        {
-            return IdPrefix + unchecked(_nextID++);
         }
 
         #endregion
@@ -247,12 +232,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Other Public Properties
-
-        /// <summary>
-        /// Static prefix used for ids in this AppDomain.
-        /// Set by FrameworkController.
-        /// </summary>
-        public static string IdPrefix { get; set; }
 
         /// <summary>
         /// Gets or Sets the Int value representing the seed for the RandomGenerator

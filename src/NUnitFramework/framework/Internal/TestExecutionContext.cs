@@ -562,7 +562,7 @@ namespace NUnit.Framework.Internal
                 var type = GetType();
                 var method = type.GetMethod("AdhocTestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                CurrentTest = new TestMethod(new FixtureMethod(type, method));
+                CurrentTest = new TestMethod(nameof(AdhocContext), new FixtureMethod(type, method));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,8 +34,18 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DefaultSuiteBuilder : ISuiteBuilder
     {
+        private readonly TestIdProvider _idProvider;
+
         // Builder we use for fixtures without any fixture attribute specified
-        private readonly NUnitTestFixtureBuilder _defaultBuilder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _defaultBuilder;
+
+        public DefaultSuiteBuilder(TestIdProvider idProvider)
+        {
+            Guard.ArgumentNotNull(idProvider, nameof(idProvider));
+
+            _idProvider = idProvider;
+            _defaultBuilder = new NUnitTestFixtureBuilder(idProvider);
+        }
 
         #region ISuiteBuilder Methods
 
@@ -115,7 +125,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             catch (Exception ex)
             {
-                var fixture = new TestFixture(type);
+                var fixture = new TestFixture(_idProvider.CreateId(), type);
                 if (ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
 
@@ -140,8 +150,8 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// We look for attributes implementing IFixtureBuilder at one level 
-        /// of inheritance at a time. Attributes on base classes are not used 
+        /// We look for attributes implementing IFixtureBuilder at one level
+        /// of inheritance at a time. Attributes on base classes are not used
         /// unless there are no fixture builder attributes at all on the derived
         /// class. This is by design.
         /// </summary>
@@ -174,7 +184,7 @@ namespace NUnit.Framework.Internal.Builders
                     // If none of them have args, return the first one
                     if (withArgs == 0)
                         return new IFixtureBuilder[] { attrs[0] };
-                    
+
                     // Some of each - extract those with args
                     var result = new IFixtureBuilder[withArgs];
                     int count = 0;

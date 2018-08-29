@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 
 #if ASYNC
@@ -53,7 +54,7 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite(string name) : base(name)
+        public TestSuite(string id, string name) : base(id, name)
         {
             Arguments = new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];
@@ -65,8 +66,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite(string parentSuiteName, string name)
-            : base(parentSuiteName, name)
+        public TestSuite(string id, string parentSuiteName, string name)
+            : base(id, parentSuiteName, name)
         {
             Arguments = new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];
@@ -78,8 +79,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
-        public TestSuite(Type fixtureType, object[] arguments)
-            : base(fixtureType)
+        public TestSuite(string id, Type fixtureType, object[] arguments)
+            : base(id, fixtureType)
         {
             Arguments = arguments ?? new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];
@@ -90,8 +91,8 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestSuite"/> class.
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
-        public TestSuite(Type fixtureType)
-            : base(fixtureType)
+        public TestSuite(string id, Type fixtureType)
+            : base(id, fixtureType)
         {
             Arguments = new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];
@@ -103,8 +104,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="suite">Test Suite to copy</param>
         /// <param name="filter">Filter to be applied</param>
-        public TestSuite(TestSuite suite, ITestFilter filter)
-            : base(suite.Name)
+        public TestSuite(TestIdProvider idProvider, TestSuite suite, ITestFilter filter)
+            : base(idProvider.CreateId(), suite.Name)
         {
             this.FullName = suite.FullName;
             this.Method   = suite.Method;
@@ -115,9 +116,9 @@ namespace NUnit.Framework.Internal
             {
                 if(filter.Pass(child))
                 {
-                    if(child.IsSuite)
+                    if (child.IsSuite)
                     {
-                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        TestSuite childSuite = new TestSuite(idProvider, child as TestSuite, filter);
                         childSuite.Parent    = this;
                         this.tests.Add(childSuite);
                     }

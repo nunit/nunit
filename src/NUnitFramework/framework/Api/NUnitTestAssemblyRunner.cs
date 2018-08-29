@@ -31,7 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using System.Security;
-
+using NUnit.Framework.Internal.Builders;
 #if NET20 || NET35 || NET40 || NET45
 using System.Windows.Forms;
 #endif
@@ -45,6 +45,7 @@ namespace NUnit.Framework.Api
     {
         private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
+        private readonly TestIdProvider _idProvider;
         private readonly ITestAssemblyBuilder _builder;
         private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
 
@@ -63,8 +64,12 @@ namespace NUnit.Framework.Api
         /// Initializes a new instance of the <see cref="NUnitTestAssemblyRunner"/> class.
         /// </summary>
         /// <param name="builder">The builder.</param>
-        public NUnitTestAssemblyRunner(ITestAssemblyBuilder builder)
+        public NUnitTestAssemblyRunner(TestIdProvider idProvider, ITestAssemblyBuilder builder)
         {
+            Guard.ArgumentNotNull(idProvider, nameof(idProvider));
+            Guard.ArgumentNotNull(builder, nameof(builder));
+
+            _idProvider = idProvider;
             _builder = builder;
         }
 
@@ -197,7 +202,7 @@ namespace NUnit.Framework.Api
             if (filter == TestFilter.Empty)
                 return LoadedTest;
 
-            return new TestAssembly(LoadedTest as TestAssembly, filter);
+            return new TestAssembly(_idProvider, LoadedTest as TestAssembly, filter);
         }
 
         /// <summary>
@@ -351,7 +356,7 @@ namespace NUnit.Framework.Api
                 (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
                 Context.Dispatcher = new MainThreadWorkItemDispatcher();
             else if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
