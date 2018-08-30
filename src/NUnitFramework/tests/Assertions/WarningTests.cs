@@ -280,9 +280,9 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarningSynchronous), 1)]
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
 #if !PLATFORM_DETECTION
-        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4)]
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5)]
 #else
-        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 4, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
+        [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
 #endif
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
 #if ASYNC
