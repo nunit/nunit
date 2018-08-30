@@ -76,11 +76,4 @@ namespace NUnit.Framework.Internal
             Assert.That(result, Is.EquivalentTo(expected).And.All.TypeOf<DateTime>());
         }       
     }
-
-    public enum TestEnum
-    {
-        Value1,
-        Value2,
-        value3
-    }
 }
