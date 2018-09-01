@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Commands;
@@ -152,6 +153,10 @@ namespace NUnit.Framework.Internal.Execution
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout);
 #endif
+
+                // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
+                foreach (var repeatableAttribute in method.GetAttributes<IRepeatTest>(true))
+                    command = repeatableAttribute.Wrap(command);
 
                 return command;
             }
