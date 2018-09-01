@@ -143,7 +143,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWhenKeyIsNotPresentUsingContainsKeyUsingKeyedCollectionDefaultComparer()
+        public void KeyIsNotPresentUsingContainsKeyUsingKeyedCollectionDefaultComparer()
         {
             var list = new TestKeyedCollection { "ALICE", "BOB", "CALUM" };
 

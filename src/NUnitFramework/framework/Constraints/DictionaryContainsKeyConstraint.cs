@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
@@ -224,6 +225,8 @@ namespace NUnit.Framework.Constraints
 
         private static MethodInfo FindContainsKeyMethod(Type type)
         {
+            if (type == null) return null;
+
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
                 m.ReturnType == typeof(bool)
@@ -240,17 +243,17 @@ namespace NUnit.Framework.Constraints
                 {
                     method = definition
                              .GetMethods(BindingFlags.Instance | BindingFlags.Public)
-                             .FirstOrDefault(m =>
-                                 m.ReturnType == typeof(bool)
-                                 && m.Name == "Contains"
-                                 && !m.IsGenericMethod
-                                 && m.GetParameters().Length == 1
-                                 && m.GetParameters()[0].ParameterType == tKeyGenericArg);
+                             .FirstOrDefault(m => m.ReturnType == typeof(bool) &&
+                                                  m.Name == "Contains" &&
+                                                  !m.IsGenericMethod &&
+                                                  m.GetParameters().Length == 1 &&
+                                                  m.GetParameters()[0].ParameterType == tKeyGenericArg);
 
                     if (method != null)
                     {
 #if NETSTANDARD1_4
-                        method = methods.Single(m => Matched(method, m));
+                        var signature = CreateGenericContainsSignature(method, tKeyGenericArg);
+                        method = methods.Single(m => CreateGenericContainsSignature(m, tKeyGenericArg) == signature);
 #else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
 #endif
@@ -262,45 +265,22 @@ namespace NUnit.Framework.Constraints
         }
 
 #if NETSTANDARD1_4
-        
-        // This is for missing MetadataToken in NetStandard 1.4, matched by method signature
 
-        private static bool Matched(MethodInfo methodInfo, MethodInfo matchedMethodInfo)
+        private static string CreateGenericContainsSignature(MethodInfo methodInfo, Type keyGenericArg)
         {
-            return methodInfo.Name == matchedMethodInfo.Name &&
-                   methodInfo.Attributes == matchedMethodInfo.Attributes &&
-                   methodInfo.IsHideBySig == matchedMethodInfo.IsHideBySig &&
-                   methodInfo.IsGenericMethod == matchedMethodInfo.IsGenericMethod &&
-                   methodInfo.ReturnParameter.ParameterType == matchedMethodInfo.ReturnParameter.ParameterType &&
-                   Matched(methodInfo.GetParameters(), matchedMethodInfo.GetParameters()) &&
-                   Matched(methodInfo.GetGenericArguments(), matchedMethodInfo.GetGenericArguments());
+            var signature = new StringBuilder(methodInfo.Name);
+            signature.Append("(");
+
+            if (keyGenericArg != null)
+                signature.Append($"{keyGenericArg.Name} ");
+
+            if (methodInfo.GetParameters().Length == 1)
+                signature.Append($"{methodInfo.GetParameters()[0].Name}");
+
+            signature.Append(")");
+            return signature.ToString();
         }
 
-        private static bool Matched(ParameterInfo[] parameterInfos, ParameterInfo[] matchedParameterInfos)
-        {
-            if (parameterInfos.Length != matchedParameterInfos.Length) return false;
-
-            for (var index = 0; index < parameterInfos.Length; index++)
-            {
-                if (parameterInfos[index].ParameterType == matchedParameterInfos[index].ParameterType)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool Matched(Type[] types, Type[] matchedTypes)
-        {
-            if (types.Length != matchedTypes.Length) return false;
-
-            for (var index = 0; index < types.Length; index++)
-            {
-                if (types[index] == matchedTypes[index])
-                    return false;
-            }
-
-            return true;
-        }
 #endif
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
