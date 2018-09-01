@@ -253,7 +253,7 @@ namespace NUnit.Framework.Constraints
                     {
 #if NETSTANDARD1_4
                         var signature = CreateGenericContainsSignature(method, tKeyGenericArg);
-                        method = methods.Single(m => CreateGenericContainsSignature(m, tKeyGenericArg) == signature);
+                        method = methods.Where(x => x.Name == "Contains").Single(m => CreateGenericContainsSignature(m, tKeyGenericArg) == signature);
 #else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
 #endif
