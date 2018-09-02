@@ -39,6 +39,7 @@ namespace NUnit.Framework.Constraints
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
         private const string ObsoleteMessage = "DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.";
+        private const string ContainsMethodName = "Contains";
         private bool _isDeprecatedMode = false;
 
         /// <summary>
@@ -244,7 +245,7 @@ namespace NUnit.Framework.Constraints
                     method = definition
                              .GetMethods(BindingFlags.Instance | BindingFlags.Public)
                              .FirstOrDefault(m => m.ReturnType == typeof(bool) &&
-                                                  m.Name == "Contains" &&
+                                                  m.Name == ContainsMethodName &&
                                                   !m.IsGenericMethod &&
                                                   m.GetParameters().Length == 1 &&
                                                   m.GetParameters()[0].ParameterType == tKeyGenericArg);
@@ -253,7 +254,7 @@ namespace NUnit.Framework.Constraints
                     {
 #if NETSTANDARD1_4
                         var signature = CreateGenericContainsSignature(method, tKeyGenericArg);
-                        method = methods.Where(x => x.Name == "Contains").Single(m => CreateGenericContainsSignature(m, tKeyGenericArg) == signature);
+                        method = methods.Where(x => x.Name == ContainsMethodName).Single(m => CreateGenericContainsSignature(m, tKeyGenericArg) == signature);
 #else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
 #endif
