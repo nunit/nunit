@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
             CheckPlatforms(
                 new PlatformHelper( OSPlatform.CurrentPlatform, runtimeFramework ),
                 expectedPlatforms,
-                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH" );
+                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH,NETCORE-2.0,NETCORE-2.1,NETCORE-2.2,NETCORE-3.0");
         }
 
         private void CheckPlatforms( PlatformHelper helper, 
@@ -319,6 +319,14 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void DetectNet45()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Net, new Version(4, 5, 0, 0)),
+                "Net,Net-4.0,Net-4.5");
+        }
+
+        [Test]
         public void DetectSSCLI()
         {
             CheckRuntimePlatforms(
@@ -372,6 +380,38 @@ namespace NUnit.Framework.Internal
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.MonoTouch, new Version(4, 0, 30319)),
                 "MonoTouch");
+        }
+
+        [Test]
+        public void DetectNetCore20()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(2, 0, 0)),
+                "NetCore,NetCore-2.0");
+        }
+
+        [Test]
+        public void DetectNetCore21()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(2, 1, 0)),
+                "NetCore,NetCore-2.0,NetCore-2.1");
+        }
+
+        [Test]
+        public void DetectNetCore22()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(2, 2, 0)),
+                "NetCore,NetCore-2.0,NetCore-2.1,NetCore-2.2");
+        }
+
+        [Test]
+        public void DetectNetCore30()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(3, 0, 0)),
+                "NetCore,NetCore-2.0,NetCore-2.1,NetCore-2.2,NetCore-3.0");
         }
 
         [Test]

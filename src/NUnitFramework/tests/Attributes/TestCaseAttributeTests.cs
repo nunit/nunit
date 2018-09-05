@@ -328,14 +328,15 @@ namespace NUnit.Framework.Attributes
         {
             bool isLinux = OSPlatform.CurrentPlatform.IsUnix;
             bool isMacOSX = OSPlatform.CurrentPlatform.IsMacOSX;
-            
-            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
-                typeof(TestCaseAttributeFixture), "MethodWithIncludePlatform");
 
-            Test testCase1 = TestFinder.Find("MethodWithIncludePlatform(1)", suite, false);
-            Test testCase2 = TestFinder.Find("MethodWithIncludePlatform(2)", suite, false);
-            Test testCase3 = TestFinder.Find("MethodWithIncludePlatform(3)", suite, false);
-            Test testCase4 = TestFinder.Find("MethodWithIncludePlatform(4)", suite, false);
+            const string methodName = nameof(TestCaseAttributeFixture.MethodWithIncludePlatform);
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName);
+
+            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            Test testCase4 = TestFinder.Find($"{methodName}(4)", suite, false);
             if (isLinux)
             {
                 Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
@@ -393,6 +394,84 @@ namespace NUnit.Framework.Attributes
                 Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
                 Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
                 Assert.That(testCase4.RunState, Is.EqualTo(RunState.Runnable));
+            }
+        }
+
+        [Test]
+        public void CanIncludeRuntime()
+        {
+            bool isNetCore;
+            Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
+            bool isMono = monoRuntimeType != null;
+#if NETCOREAPP2_0
+            isNetCore = true;
+#else
+            isNetCore = false;
+#endif
+
+            const string methodName = nameof(TestCaseAttributeFixture.MethodWithIncludeRuntime);
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName);
+
+            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            if (isNetCore)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+            }
+            else if (isMono)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+            }
+            else
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+            }
+        }
+
+        [Test]
+        public void CanExcludeRuntime()
+        {
+            bool isNetCore;
+            Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
+            bool isMono = monoRuntimeType != null;
+#if NETCOREAPP2_0
+            isNetCore = true;
+#else
+            isNetCore = false;
+#endif
+
+            const string methodName = nameof(TestCaseAttributeFixture.MethodWithExcludeRuntime);
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName);
+
+            Test testCase1 = TestFinder.Find($"{methodName}(1)", suite, false);
+            Test testCase2 = TestFinder.Find($"{methodName}(2)", suite, false);
+            Test testCase3 = TestFinder.Find($"{methodName}(3)", suite, false);
+            if (isNetCore)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
+            }
+            else if (isMono)
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Skipped));
+            }
+            else
+            {
+                Assert.That(testCase1.RunState, Is.EqualTo(RunState.Skipped));
+                Assert.That(testCase2.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
             }
         }
 #endif
