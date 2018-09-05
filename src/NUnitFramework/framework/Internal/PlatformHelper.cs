@@ -248,7 +248,7 @@ namespace NUnit.Framework.Internal
                     isSupported = IntPtr.Size == 4;
                     break;
 
-#if NET40 || NET45
+#if NET40 || NET45 || NETSTANDARD2_0
                 // We only support bitness tests of the OS in .NET 4.0 and up
                 case "64-BIT-OS":
                     isSupported = Environment.Is64BitOperatingSystem;
