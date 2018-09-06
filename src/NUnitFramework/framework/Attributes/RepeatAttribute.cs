@@ -40,7 +40,7 @@ namespace NUnit.Framework
     /// to run it multiple times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class RepeatAttribute : PropertyAttribute, IWrapSetUpTearDown
+    public class RepeatAttribute : PropertyAttribute, IRepeatTest
     {
         private readonly int _count;
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework
             _count = count;
         }
 
-        #region IWrapSetUpTearDown Members
+        #region IRepeatTest Members
 
         /// <summary>
         /// Wrap a command and return the result.

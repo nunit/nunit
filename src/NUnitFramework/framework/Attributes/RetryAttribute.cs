@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// be rerun if it fails, up to a maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class RetryAttribute : PropertyAttribute, IWrapSetUpTearDown
+    public class RetryAttribute : PropertyAttribute, IRepeatTest
     {
         private readonly int _tryCount;
 
@@ -46,7 +46,7 @@ namespace NUnit.Framework
             _tryCount = tryCount;
         }
 
-        #region IWrapSetUpTearDown Members
+        #region IRepeatTest Members
 
         /// <summary>
         /// Wrap a command and return the result.

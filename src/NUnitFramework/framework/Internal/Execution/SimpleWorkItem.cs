@@ -153,6 +153,10 @@ namespace NUnit.Framework.Internal.Execution
                     command = new TimeoutCommand(command, timeout);
 #endif
 
+                // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
+                foreach (var repeatableAttribute in method.GetAttributes<IRepeatTest>(true))
+                    command = repeatableAttribute.Wrap(command);
+
                 return command;
             }
             else

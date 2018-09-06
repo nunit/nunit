@@ -59,6 +59,8 @@ namespace NUnit.Framework.Internal.Builders
                 Seed = _randomizer.Next()
             };
 
+            CheckTestMethodAttributes(testMethod);
+
             CheckTestMethodSignature(testMethod, parms);
 
             if (parms == null || parms.Arguments == null)
@@ -105,6 +107,20 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Checks to see if we have valid combinations of attributes.
+        /// </summary>
+        /// <param name="testMethod">The TestMethod to be checked. If it
+        /// is found to be non-runnable, it will be modified.</param>
+        /// <returns>True if the method signature is valid, false if not</returns>
+        private static bool CheckTestMethodAttributes(TestMethod testMethod)
+        {
+            if (testMethod.Method.GetAttributes<IRepeatTest>(true).Length > 1)
+                return MarkAsNotRunnable(testMethod, "Multiple attributes that repeat a test may cause issues.");
+
+            return true;
+        }
 
         /// <summary>
         /// Helper method that checks the signature of a TestMethod and
