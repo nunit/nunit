@@ -63,4 +63,13 @@ namespace NUnit.Framework.Interfaces
     public interface IWrapSetUpTearDown : ICommandWrapper
     {
     }
+
+    /// <summary>
+    /// Objects implementing this interface are used to wrap
+    /// tests that can repeat. The implementing command is run once,
+    /// invoking the chained commands any number of times.
+    /// </summary>
+    public interface IRepeatTest : ICommandWrapper
+    {
+    }
 }
