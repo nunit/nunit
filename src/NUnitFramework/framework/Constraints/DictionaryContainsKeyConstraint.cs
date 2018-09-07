@@ -226,8 +226,6 @@ namespace NUnit.Framework.Constraints
 
         private static MethodInfo FindContainsKeyMethod(Type type)
         {
-            if (type == null) return null;
-
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
                 m.ReturnType == typeof(bool)
@@ -253,8 +251,7 @@ namespace NUnit.Framework.Constraints
                     if (method != null)
                     {
 #if NETSTANDARD1_4
-                        var signature = CreateGenericContainsSignature(method, tKeyGenericArg);
-                        method = methods.Where(x => x.Name == ContainsMethodName).Single(m => CreateGenericContainsSignature(m, tKeyGenericArg) == signature);
+                        method = methods.Where(x => x.Name == ContainsMethodName).Single(m => MatchedContainsMethod(m, method));
 #else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
 #endif
@@ -266,6 +263,14 @@ namespace NUnit.Framework.Constraints
         }
 
 #if NETSTANDARD1_4
+
+        private static bool MatchedContainsMethod(MethodInfo methodInfo, MethodInfo compareToMethodInfo)
+        {
+            return methodInfo.Name == compareToMethodInfo.Name &&
+                   methodInfo.GetParameters().Length == 1 &&
+                   compareToMethodInfo.GetParameters().Length == 1 &&
+                   methodInfo.GetParameters()[0].Name == compareToMethodInfo.GetParameters()[0].Name;
+        }
 
         private static string CreateGenericContainsSignature(MethodInfo methodInfo, Type keyGenericArg)
         {
