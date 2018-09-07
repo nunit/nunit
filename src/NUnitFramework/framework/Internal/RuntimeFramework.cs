@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 #if NETSTANDARD2_0
 using System.Runtime.Versioning;
 #endif
@@ -413,10 +414,11 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool IsNetCore_Internal()
         {
 #if NETSTANDARD2_0
-            //Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
+            // Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
             // so we wrap it in a try/catch block in IsNetCore to catch it in case it ever gets this far
             if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase))
             {
