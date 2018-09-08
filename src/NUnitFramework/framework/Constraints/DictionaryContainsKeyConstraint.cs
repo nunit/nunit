@@ -272,21 +272,6 @@ namespace NUnit.Framework.Constraints
                    methodInfo.GetParameters()[0].Name == compareToMethodInfo.GetParameters()[0].Name;
         }
 
-        private static string CreateGenericContainsSignature(MethodInfo methodInfo, Type keyGenericArg)
-        {
-            var signature = new StringBuilder(methodInfo.Name);
-            signature.Append("(");
-
-            if (keyGenericArg != null)
-                signature.Append($"{keyGenericArg.Name} ");
-
-            if (methodInfo.GetParameters().Length == 1)
-                signature.Append($"{methodInfo.GetParameters()[0].Name}");
-
-            signature.Append(")");
-            return signature.ToString();
-        }
-
 #endif
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
