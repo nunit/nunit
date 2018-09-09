@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
+#if PLATFORM_DETECTION && THREAD_ABORT
 using System;
 using System.Linq;
 using System.Threading;
@@ -169,4 +169,58 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
+#else
+
+using System;
+using System.Linq;
+using System.Threading;
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.TestData;
+using NUnit.TestUtilities;
+
+namespace NUnit.Framework.Attributes
+{
+    [TestFixture]
+    public class TimeoutTests
+    {
+        [Timeout(50)]
+        public void TestTimesOutWhichThrowsTimeoutException()
+        {
+            while (true) { }
+        }
+
+        [Test, Timeout(80)]
+        public void TestTimesOutDoesNotStopCompletion()
+        {
+            Thread.Sleep(20);
+            Assert.True(true);
+        }
+
+        [Test]
+        public void TestTimesOut()
+        {
+            ITestResult testResult = null;
+            try
+            {
+                var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestTimesOutWhichThrowsTimeoutException));
+                var workItem = TestBuilder.CreateWorkItem(testCase);
+                testResult = TestBuilder.ExecuteWorkItem(workItem);
+            }
+            catch (TimeoutException)
+            {
+                Assert.AreEqual(TestStatus.Inconclusive, testResult?.ResultState.Status);
+                Assert.AreEqual(FailureSite.Test, testResult?.ResultState.Site);
+                Assert.AreEqual("Invalid", testResult?.ResultState.Label);
+            }
+            catch (Exception e)
+            {
+                Assert.Fail($"{nameof(TimeoutException)} is expected but exception type {e.GetType().Name} thrown.");
+            }
+        }
+    }
+}
+
+
 #endif
