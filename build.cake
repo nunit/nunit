@@ -1,4 +1,4 @@
-#tool nuget:https://www.myget.org/F/nunit/api/v3/index.json?package=NUnit.ConsoleRunner&version=3.9.0-dev-03938
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
 #tool GitLink
 
 //////////////////////////////////////////////////////////////////////
