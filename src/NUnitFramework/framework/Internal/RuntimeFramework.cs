@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal
                 string frameworkName = Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
                 if (frameworkName != null)
                 {
-                    string[] versionSplit = frameworkName.Split(new string[1] { "=v" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] versionSplit = frameworkName.Split(new [] { "=v" }, StringSplitOptions.RemoveEmptyEntries);
                     Version frameworkVersion;
                     if (versionSplit.Length == 2 &&
                         Version.TryParse(versionSplit[1], out frameworkVersion))

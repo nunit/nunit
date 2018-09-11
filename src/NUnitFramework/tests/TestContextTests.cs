@@ -396,20 +396,11 @@ namespace NUnit.Framework
 
         [TestCase(null)]
 #if PLATFORM_DETECTION
-        [TestCase("bad<>path.png", IncludePlatform = "Win")]
+        [TestCase("bad|path.png", IncludePlatform = "Win")]
 #endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
         {
-#if NETCOREAPP2_0
-            // Due to changes in .NET Core 2.0 around file path verification, this test does not match
-            // behavior on .NET Core vs .NET Framework - https://github.com/dotnet/corefx/pull/8669
-            if (filePath == null)
-                Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
-            else
-                Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<FileNotFoundException>());
-#else
             Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());
-#endif
         }
 
         [Test]
