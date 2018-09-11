@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -107,10 +106,7 @@ namespace NUnit.Framework
         /// <param name="type">The type to be used as a fixture.</param>
         public IEnumerable<TestSuite> BuildFrom(Type type)
         {
-            Type sourceType = SourceType ?? type;
-
-            foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
-                yield return _builder.BuildFrom(type, PreFilter.Empty, parms);
+            return BuildFrom(type, PreFilter.Empty);
         }
 
         #endregion
@@ -126,7 +122,7 @@ namespace NUnit.Framework
         {
             Type sourceType = SourceType ?? type;
 
-            foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
+            foreach (ITestFixtureData parms in GetParametersFor(sourceType))
                 yield return _builder.BuildFrom(type, filter, parms);
         }
 

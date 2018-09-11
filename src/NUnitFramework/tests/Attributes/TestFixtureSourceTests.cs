@@ -23,10 +23,8 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Filters;
 using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
 
@@ -150,12 +148,30 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void CanRunGenericFixtureSourceWithProperArgsProvided()
+        public void CanRunGenericFixtureSourceWithProperTypeArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithProperArgsProvided<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
+        }
+
+        [Test]
+        public void CanRunGenericFixtureSourceWithProperTypeAndConstructorArgsProvided()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithTypeAndConstructorArgs<>));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithTypeAndConstructorArgsSource.Source.Length));
+        }
+
+        [Test]
+        public void CanRunGenericFixtureSourceWithConstructorArgsProvidedAndTypeArgsDeduced()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithConstructorArgs<>));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
         }
     }
 }
