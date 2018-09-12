@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION && THREAD_ABORT
+#if PLATFORM_DETECTION
 using System;
 using System.Linq;
 using System.Threading;
@@ -169,15 +169,15 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#else
+#endif
+
+#if !THREAD_ABORT
 
 using System;
-using System.Linq;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -221,6 +221,5 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-
 
 #endif
