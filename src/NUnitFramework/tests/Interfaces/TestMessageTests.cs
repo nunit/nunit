@@ -32,16 +32,12 @@ namespace NUnit.Framework.Tests.Interfaces
     {
         [TestCase("destination", "text", "testId")]
         [TestCase("destination", "text", null)]
-        [TestCase(null, "text", "testId")]
         public void ToXml_IncludeAttributesInProperFormatting(string destination, string message, string testId)
         {
             var testMessage = new TestMessage(destination, message, testId);
             var expected = new StringBuilder("<test-message");
 
-            if (destination != null)
-            {
-                expected.AppendFormat(" destination=\"{0}\"", destination);
-            }
+            expected.AppendFormat(" destination=\"{0}\"", destination);
 
             if (testId != null)
             {
@@ -56,6 +52,12 @@ namespace NUnit.Framework.Tests.Interfaces
         public void TextParameterCannotBeNull()
         {
             Assert.Throws(typeof(ArgumentNullException), () => { new TestMessage("destination", null, "testId"); });
+        }
+
+        [Test]
+        public void DestinationParameterCannotBeNull()
+        {
+            Assert.Throws(typeof(ArgumentNullException), () => { new TestMessage(null, "text", "testId"); });
         }
     }
 }

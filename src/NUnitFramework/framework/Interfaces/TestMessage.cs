@@ -39,6 +39,11 @@ namespace NUnit.Framework.Interfaces
         /// <param name="testId">Id of the test that produced the message</param>
         public TestMessage(string destination, string text, string testId)
         {
+            if (destination == null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
             if (text == null)
             {
                 throw new ArgumentNullException(nameof(text));
