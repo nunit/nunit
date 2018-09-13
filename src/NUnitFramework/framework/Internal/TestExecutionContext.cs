@@ -484,9 +484,19 @@ namespace NUnit.Framework.Internal
             return context;
         }
 
-#endregion
+        /// <summary>
+        /// Send a test message to listeners
+        /// </summary>
+        /// <param name="destination">Destination of test message to be handled by listeners</param>
+        /// <param name="message">A message to be sent</param>
+        public void SendMessage(string destination, string message)
+        {
+            Listener?.SendMessage(new TestMessage(destination, message, CurrentContext.CurrentTest.Id));
+        }
 
-#region InitializeLifetimeService
+        #endregion
+
+        #region InitializeLifetimeService
 
 #if !NETSTANDARD1_4
         /// <summary>

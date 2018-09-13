@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -104,7 +104,13 @@ namespace NUnitLite
         /// <param name="output">A TestOutput object containing the text to display</param>
         public void TestOutput(TestOutput output) { }
 
-#region Helper Methods
+        /// <summary>
+        /// Called when a test produces message to be sent to listeners
+        /// </summary>
+        /// <param name="message">A TestMessage object containing the text to send</param>
+        public void SendMessage(TestMessage message) { }
+
+        #region Helper Methods
 
         private void TC_TestSuiteStarted(string name)
         {

@@ -167,6 +167,11 @@ namespace NUnit.Framework
             _testOutput = output;
         }
 
+        public void SendMessage(TestMessage message)
+        {
+            
+        }
+
         #endregion
     }
 }

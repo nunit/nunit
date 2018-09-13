@@ -464,9 +464,14 @@ namespace NUnit.Framework.Internal.Execution
 
         }
 
-#endregion
+        public void SendMessage(TestMessage message)
+        {
+            
+        }
 
-#region Helper Methods
+        #endregion
+
+        #region Helper Methods
 
         private static TestSuite Suite(string name)
         {

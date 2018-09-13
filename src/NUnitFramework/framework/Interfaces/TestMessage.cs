@@ -21,69 +21,67 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
-using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// QueuingEventListener uses an EventQueue to store any
-    /// events received on its EventListener interface.
+    /// The TestMessage class holds a unit of message from test
     /// </summary>
-    public class QueuingEventListener : ITestListener
-    {
+	public class TestMessage
+	{
         /// <summary>
-        /// The EventQueue created and filled by this listener
+        /// Construct with text, destination type and
+        /// the name of the test that produced the message.
         /// </summary>
-        public EventQueue Events { get; }
-
-        /// <summary>
-        /// Construct a QueuingEventListener
-        /// </summary>
-        public QueuingEventListener()
+        /// <param name="destination">Destination of message</param>
+        /// <param name="text">Text to be sent</param>
+        /// <param name="testId">Id of the test that produced the message</param>
+        public TestMessage(string destination, string text, string testId)
         {
-            Events = new EventQueue();
-        }
-
-        #region EventListener Methods
-        /// <summary>
-        /// A test has started
-        /// </summary>
-        /// <param name="test">The test that is starting</param>
-        public void TestStarted(ITest test)
-        {
-            Events.Enqueue( new TestStartedEvent( test ) );
+            Destination = destination;
+            Text = text;
+            TestId = testId;
         }
 
         /// <summary>
-        /// A test case finished
+        /// Return string representation of the object for debugging
         /// </summary>
-        /// <param name="result">Result of the test case</param>
-        public void TestFinished(ITestResult result)
-        {
-            Events.Enqueue( new TestFinishedEvent( result ) );
-        }
+        /// <returns></returns>
+		public override string ToString()
+		{
+			return Destination + ": " + Text;
+		}
 
         /// <summary>
-        /// Called when a test produces output for immediate display
+        /// Get the text 
         /// </summary>
-        /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output)
-        {
-            Events.Enqueue(new TestOutputEvent(output));
-        }
+		public string Text { get; }
 
         /// <summary>
-        /// Called when a test produces message to be sent to listeners
+        /// Get the destination of the test that created the message
         /// </summary>
-        /// <param name="message">A TestMessage object containing the text to send</param>
-        public void SendMessage(TestMessage message)
-        {
-            Events.Enqueue(new TestMessageEvent(message));
-        }
+        public string Destination { get; }
 
-        #endregion
+        /// <summary>
+        /// Get the id of the test that created the output
+        /// </summary>
+        public string TestId { get; }
+
+        /// <summary>
+        /// Convert the TestMessage object to an XML string
+        /// </summary>
+        public string ToXml()
+        {
+            TNode tnode = new TNode("test-message", Text, true);
+
+            if (TestId != null)
+                tnode.AddAttribute("testid", TestId);
+
+            if (Destination != null)
+                tnode.AddAttribute("destination", Destination);
+
+            return tnode.OuterXml;
+        }
     }
 }
-#endif
