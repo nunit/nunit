@@ -39,6 +39,11 @@ namespace NUnit.Framework.Interfaces
         /// <param name="testId">Id of the test that produced the message</param>
         public TestMessage(string destination, string text, string testId)
         {
+            if (text == null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
             Destination = destination;
             Text = text;
             TestId = testId;
@@ -75,11 +80,11 @@ namespace NUnit.Framework.Interfaces
         {
             TNode tnode = new TNode("test-message", Text, true);
 
-            if (TestId != null)
-                tnode.AddAttribute("testid", TestId);
-
             if (Destination != null)
                 tnode.AddAttribute("destination", Destination);
+
+            if (TestId != null)
+                tnode.AddAttribute("testid", TestId);
 
             return tnode.OuterXml;
         }
