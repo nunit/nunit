@@ -31,8 +31,8 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// Applies a timeout in milliseconds to a test. 
-    /// When applied to a method the test is cancelled if the timeout is exceeded. 
-    /// When applied to a class or assembly it sets the default timeout for all contained test methods.
+    /// When applied to a method, the test is cancelled if the timeout is exceeded. 
+    /// When applied to a class or assembly, the default timeout is set for all contained test methods.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public class TimeoutAttribute : PropertyAttribute, IApplyToContext

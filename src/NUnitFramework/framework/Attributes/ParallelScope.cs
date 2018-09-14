@@ -27,7 +27,7 @@ using System.ComponentModel;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Enumeration specifying the degree to which a test and its descendants 
+    /// Specifies the degree to which a test, and its descendants, 
     /// may be run in parallel.
     /// </summary>
     [Flags]
