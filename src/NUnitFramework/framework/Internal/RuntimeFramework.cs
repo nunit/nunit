@@ -30,8 +30,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 #if NETSTANDARD2_0
 using System.Runtime.Versioning;
-#endif
+#else
 using Microsoft.Win32;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -110,13 +111,14 @@ namespace NUnit.Framework.Internal
             else if (isNetCore)
             {
 #if NETSTANDARD2_0
-                string frameworkName = Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
-                if (frameworkName != null)
+                var assembly = typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly;
+                var assemblyPath = assembly.CodeBase.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
+                int netCoreAppIndex = Array.IndexOf(assemblyPath, "Microsoft.NETCore.App");
+                if (netCoreAppIndex > 0 && netCoreAppIndex < assemblyPath.Length - 2)
                 {
-                    string[] versionSplit = frameworkName.Split(new [] { "=v" }, StringSplitOptions.RemoveEmptyEntries);
+                    string version = assemblyPath[netCoreAppIndex + 1];
                     Version frameworkVersion;
-                    if (versionSplit.Length == 2 &&
-                        Version.TryParse(versionSplit[1], out frameworkVersion))
+                    if (Version.TryParse(version, out frameworkVersion))
                     {
                         major = frameworkVersion.Major;
                         minor = frameworkVersion.Minor;
@@ -125,6 +127,11 @@ namespace NUnit.Framework.Internal
 #endif
             }
             else /* It's windows */
+#if NETSTANDARD2_0
+            {
+                minor = 5;
+            }
+#else
             if (major == 2)
             {
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework"))
@@ -152,6 +159,7 @@ namespace NUnit.Framework.Internal
             {
                 minor = 5;
             }
+#endif
 
             var currentFramework = new RuntimeFramework( runtime, new Version (major, minor) )
             {
@@ -407,7 +415,7 @@ namespace NUnit.Framework.Internal
                 {
                     return IsNetCore_Internal();
                 }
-                catch { }
+                catch(TypeLoadException) { }
             }
 #endif
 
