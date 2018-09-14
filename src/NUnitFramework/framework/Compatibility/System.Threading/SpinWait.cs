@@ -142,14 +142,19 @@ namespace System.Threading
                 {
                     Thread.Sleep(1);
                 }
-                else // if ((yieldsSoFar % SLEEP_0_EVERY_HOW_MANY_TIMES) == (SLEEP_0_EVERY_HOW_MANY_TIMES - 1))
+                else if ((yieldsSoFar % SLEEP_0_EVERY_HOW_MANY_TIMES) == (SLEEP_0_EVERY_HOW_MANY_TIMES - 1))
                 {
                     Thread.Sleep(0);
                 }
-                //else
-                //{
-                //    Thread.Yield();
-                //}
+                else
+                {
+                    // Polyfill note:
+                    // Thread.Yield() is not available in the 2.0 CLR, and the native implementation
+                    // is much more nuanced than p/invoking SwitchToThread.
+                    // Replace with Thread.Sleep(1) since Thread.Sleep(0) kills performance by often not actually yielding.
+                    // http://joeduffyblog.com/2006/08/22/priorityinduced-starvation-why-sleep1-is-better-than-sleep0-and-the-windows-balance-set-manager/
+                    Thread.Sleep(1);
+                }
             }
             else
             {
