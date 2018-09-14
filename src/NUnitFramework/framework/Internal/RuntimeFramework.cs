@@ -415,7 +415,7 @@ namespace NUnit.Framework.Internal
                 {
                     return IsNetCore_Internal();
                 }
-                catch(TypeLoadException) { }
+                catch (TypeLoadException) { }
             }
 #endif
 
