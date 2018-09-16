@@ -51,20 +51,10 @@ namespace NUnit.Framework
 
         #region IApplyToContext Members
 
-#if PLATFORM_DETECTION
-
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
             context.TestCaseTimeout = _timeout;
         }
-#else
-
-        void IApplyToContext.ApplyToContext(TestExecutionContext context)
-        {
-            
-        }
-
-#endif
 
         #endregion
     }

@@ -20,8 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
-#if PLATFORM_DETECTION && THREAD_ABORT
+#if PLATFORM_DETECTION
 using System;
 using System.Linq;
 using System.Threading;
@@ -169,20 +168,19 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#else
+#endif
+
+#if !THREAD_ABORT
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-using NUnit.TestData;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
-    [TestFixture]
+    [TestFixture, NonParallelizable]
     public class TimeoutTests
     {
         [Timeout(50)]
@@ -201,26 +199,28 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestTimesOut()
         {
-            ITestResult testResult = null;
             try
             {
                 var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestTimesOutWhichThrowsTimeoutException));
                 var workItem = TestBuilder.CreateWorkItem(testCase);
-                testResult = TestBuilder.ExecuteWorkItem(workItem);
+                var testResult = TestBuilder.ExecuteWorkItem(workItem);
+
+                Assert.AreEqual(TestStatus.Failed, testResult?.ResultState.Status);
+                Assert.AreEqual(FailureSite.Test, testResult?.ResultState.Site);
+                StringAssert.Contains("Test exceeded Timeout value 50.", testResult?.ResultState.Label);
             }
             catch (TimeoutException)
             {
-                Assert.AreEqual(TestStatus.Inconclusive, testResult?.ResultState.Status);
-                Assert.AreEqual(FailureSite.Test, testResult?.ResultState.Site);
-                Assert.AreEqual("Invalid", testResult?.ResultState.Label);
+                Assert.Fail();
+                return;
             }
             catch (Exception e)
             {
                 Assert.Fail($"{nameof(TimeoutException)} is expected but exception type {e.GetType().Name} thrown.");
             }
+            Assert.Fail($"Failed as test should be marked invalid.");
         }
     }
 }
-
 
 #endif
