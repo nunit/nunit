@@ -110,21 +110,8 @@ namespace NUnit.Framework.Internal
             }
             else if (isNetCore)
             {
-#if NETSTANDARD2_0
-                var assembly = typeof(System.Runtime.GCSettings).GetTypeInfo().Assembly;
-                var assemblyPath = assembly.CodeBase.Split(new[] { '/', '\\' }, StringSplitOptions.RemoveEmptyEntries);
-                int netCoreAppIndex = Array.IndexOf(assemblyPath, "Microsoft.NETCore.App");
-                if (netCoreAppIndex > 0 && netCoreAppIndex < assemblyPath.Length - 2)
-                {
-                    string version = assemblyPath[netCoreAppIndex + 1];
-                    Version frameworkVersion;
-                    if (Version.TryParse(version, out frameworkVersion))
-                    {
-                        major = frameworkVersion.Major;
-                        minor = frameworkVersion.Minor;
-                    }
-                }
-#endif
+                major = 0;
+                minor = 0;
             }
             else /* It's windows */
 #if NETSTANDARD2_0
@@ -406,7 +393,7 @@ namespace NUnit.Framework.Internal
         private static bool IsNetCore()
         {
 #if NETSTANDARD2_0
-            //Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch 
+            // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch 
             // block to stop any inlining in release builds and check whether the type exists
             Type runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
             if (runtimeInfoType != null)
