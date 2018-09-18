@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
@@ -38,6 +39,7 @@ namespace NUnit.Framework.Constraints
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
         private const string ObsoleteMessage = "DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.";
+        private const string ContainsMethodName = "Contains";
         private bool _isDeprecatedMode = false;
 
         /// <summary>
@@ -240,17 +242,19 @@ namespace NUnit.Framework.Constraints
                 {
                     method = definition
                              .GetMethods(BindingFlags.Instance | BindingFlags.Public)
-                             .FirstOrDefault(m =>
-                                 m.ReturnType == typeof(bool)
-                                 && m.Name == "Contains"
-                                 && !m.IsGenericMethod
-                                 && m.GetParameters().Length == 1
-                                 && m.GetParameters()[0].ParameterType == tKeyGenericArg);
+                             .FirstOrDefault(m => m.ReturnType == typeof(bool) &&
+                                                  m.Name == ContainsMethodName &&
+                                                  !m.IsGenericMethod &&
+                                                  m.GetParameters().Length == 1 &&
+                                                  m.GetParameters()[0].ParameterType == tKeyGenericArg);
 
                     if (method != null)
                     {
 #if NETSTANDARD1_4
-                        method = methods.Single(m => Matched(method, m));
+                        method = methods.Single(m => m.Name == method.Name &&
+                                                     m.GetParameters().Length == 1 &&
+                                                     method.GetParameters().Length == 1 &&
+                                                     m.GetParameters()[0].Name == method.GetParameters()[0].Name);
 #else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
 #endif
@@ -260,48 +264,6 @@ namespace NUnit.Framework.Constraints
 
             return method;
         }
-
-#if NETSTANDARD1_4
-        
-        // This is for missing MetadataToken in NetStandard 1.4, matched by method signature
-
-        private static bool Matched(MethodInfo methodInfo, MethodInfo matchedMethodInfo)
-        {
-            return methodInfo.Name == matchedMethodInfo.Name &&
-                   methodInfo.Attributes == matchedMethodInfo.Attributes &&
-                   methodInfo.IsHideBySig == matchedMethodInfo.IsHideBySig &&
-                   methodInfo.IsGenericMethod == matchedMethodInfo.IsGenericMethod &&
-                   methodInfo.ReturnParameter.ParameterType == matchedMethodInfo.ReturnParameter.ParameterType &&
-                   Matched(methodInfo.GetParameters(), matchedMethodInfo.GetParameters()) &&
-                   Matched(methodInfo.GetGenericArguments(), matchedMethodInfo.GetGenericArguments());
-        }
-
-        private static bool Matched(ParameterInfo[] parameterInfos, ParameterInfo[] matchedParameterInfos)
-        {
-            if (parameterInfos.Length != matchedParameterInfos.Length) return false;
-
-            for (var index = 0; index < parameterInfos.Length; index++)
-            {
-                if (parameterInfos[index].ParameterType == matchedParameterInfos[index].ParameterType)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool Matched(Type[] types, Type[] matchedTypes)
-        {
-            if (types.Length != matchedTypes.Length) return false;
-
-            for (var index = 0; index < types.Length; index++)
-            {
-                if (types[index] == matchedTypes[index])
-                    return false;
-            }
-
-            return true;
-        }
-#endif
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
         {
