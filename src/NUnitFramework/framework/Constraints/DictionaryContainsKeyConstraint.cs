@@ -251,7 +251,10 @@ namespace NUnit.Framework.Constraints
                     if (method != null)
                     {
 #if NETSTANDARD1_4
-                        method = methods.Where(x => x.Name == ContainsMethodName).Single(m => MatchedContainsMethod(m, method));
+                        method = methods.Single(m => m.Name == method.Name &&
+                                                     m.GetParameters().Length == 1 &&
+                                                     method.GetParameters().Length == 1 &&
+                                                     m.GetParameters()[0].Name == method.GetParameters()[0].Name);
 #else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
 #endif
@@ -261,18 +264,6 @@ namespace NUnit.Framework.Constraints
 
             return method;
         }
-
-#if NETSTANDARD1_4
-
-        private static bool MatchedContainsMethod(MethodInfo methodInfo, MethodInfo compareToMethodInfo)
-        {
-            return methodInfo.Name == compareToMethodInfo.Name &&
-                   methodInfo.GetParameters().Length == 1 &&
-                   compareToMethodInfo.GetParameters().Length == 1 &&
-                   methodInfo.GetParameters()[0].Name == compareToMethodInfo.GetParameters()[0].Name;
-        }
-
-#endif
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
         {
