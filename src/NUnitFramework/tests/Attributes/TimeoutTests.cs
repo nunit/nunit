@@ -190,7 +190,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test, Timeout(100)]
-        public void TestTimesoutDoesNotStopCompletion()
+        public void TestTimeoutDoesNotStopCompletion()
         {
             Thread.Sleep(20);
             Assert.True(true);
