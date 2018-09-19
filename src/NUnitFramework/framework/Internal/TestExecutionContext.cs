@@ -485,9 +485,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Send a test message to listeners
+        /// Sends a message from test to listeners. This message is not kind of test output and doesn't go to test result.
         /// </summary>
-        /// <param name="destination">Destination of test message to be handled by listeners</param>
+        /// <param name="destination">A name recognized by the intended listeners.</param>
         /// <param name="message">A message to be sent</param>
         public void SendMessage(string destination, string message)
         {

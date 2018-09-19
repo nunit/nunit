@@ -110,7 +110,7 @@ namespace NUnitLite
         /// <param name="message">A TestMessage object containing the text to send</param>
         public void SendMessage(TestMessage message) { }
 
-        #region Helper Methods
+#region Helper Methods
 
         private void TC_TestSuiteStarted(string name)
         {

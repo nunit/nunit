@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,21 +22,23 @@
 // ***********************************************************************
 
 using System;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The TestMessage class holds a unit of message from test
+    /// The TestMessage class holds a message sent by a test to all listeners
     /// </summary>
-	public class TestMessage
-	{
+    [DebuggerDisplay("{ToString(),nq}")]
+    public sealed class TestMessage : IXmlNodeBuilder
+    {
         /// <summary>
         /// Construct with text, destination type and
         /// the name of the test that produced the message.
         /// </summary>
         /// <param name="destination">Destination of message</param>
         /// <param name="text">Text to be sent</param>
-        /// <param name="testId">Id of the test that produced the message</param>
+        /// <param name="testId">ID of the test that produced the message</param>
         public TestMessage(string destination, string text, string testId)
         {
             if (destination == null)
@@ -50,40 +52,50 @@ namespace NUnit.Framework.Interfaces
             }
 
             Destination = destination;
-            Text = text;
+            Message = text;
             TestId = testId;
         }
 
         /// <summary>
-        /// Return string representation of the object for debugging
+        /// Converts <see cref="TestMessage"/> object to string
         /// </summary>
-        /// <returns></returns>
-		public override string ToString()
-		{
-			return Destination + ": " + Text;
-		}
+        public override string ToString()
+        {
+            return Destination + ": " + Message;
+        }
 
         /// <summary>
-        /// Get the text 
+        /// A message to send to listeners
         /// </summary>
-		public string Text { get; }
+        public string Message { get; }
 
         /// <summary>
-        /// Get the destination of the test that created the message
+        /// Destination of a message.
         /// </summary>
         public string Destination { get; }
 
         /// <summary>
-        /// Get the id of the test that created the output
+        /// ID of the test that sent a message
         /// </summary>
         public string TestId { get; }
 
         /// <summary>
-        /// Convert the TestMessage object to an XML string
+        /// Returns the XML representation of the <see cref="TestMessage"/> object.
         /// </summary>
-        public string ToXml()
+        public TNode ToXml(bool recursive)
         {
-            TNode tnode = new TNode("test-message", Text, true);
+            return AddToXml(new TNode("dummy"), recursive);
+        }
+
+        /// <summary>
+        /// Adds the XML representation of the test message as a child of the
+        /// supplied parent node..
+        /// </summary>
+        /// <param name="parentNode">The parent node.</param>
+        /// <param name="recursive">If true, descendant results are included</param>
+        public TNode AddToXml(TNode parentNode, bool recursive)
+        {
+            TNode tnode = parentNode.AddElementWithCDATA("test-message", Message);
 
             if (Destination != null)
                 tnode.AddAttribute("destination", Destination);
@@ -91,7 +103,7 @@ namespace NUnit.Framework.Interfaces
             if (TestId != null)
                 tnode.AddAttribute("testid", TestId);
 
-            return tnode.OuterXml;
+            return tnode;
         }
     }
 }

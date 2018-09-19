@@ -50,9 +50,9 @@ namespace NUnit.Framework.Interfaces
         void TestOutput(TestOutput output);
 
         /// <summary>
-        /// Called when a test produces message to be sent to listeners
+        /// Called when a test produces a message to be sent to listeners
         /// </summary>
-        /// <param name="message">A TestMessage object containing the text to send</param>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
         void SendMessage(TestMessage message);
     }
 }

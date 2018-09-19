@@ -469,9 +469,9 @@ namespace NUnit.Framework.Internal.Execution
             
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private static TestSuite Suite(string name)
         {
