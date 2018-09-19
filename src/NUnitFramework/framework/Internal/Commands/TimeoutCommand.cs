@@ -20,20 +20,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-
-using System;
-using System.Collections.Generic;
-
+#if THREAD_ABORT
 using System.Threading;
-#if !NET20 && !NET35
-using System.Threading.Tasks;
-#endif
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
-    using Execution;
-    using Interfaces;
-
     /// <summary>
     /// TimeoutCommand creates a timer in order to cancel
     /// a test if it exceeds a specified time and adjusts
@@ -41,23 +33,18 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TimeoutCommand : BeforeAndAfterTestCommand
     {
-        private readonly int _timeout;
         Timer _commandTimer;
-        private bool _commandTimedOut = false;
+        private bool _commandTimedOut;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
         /// </summary>
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
-        public TimeoutCommand(TestCommand innerCommand, int timeout)
-            : base(innerCommand)
+        public TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand)
         {
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
-            _timeout = timeout;
-
-#if THREAD_ABORT
 
             BeforeTest = (context) =>
             {
@@ -84,12 +71,45 @@ namespace NUnit.Framework.Internal.Commands
                 // If the timer cancelled the current thread, change the result
                 if (_commandTimedOut)
                 {
-                    context.CurrentResult.SetResult(ResultState.Failure,
-                        string.Format("Test exceeded Timeout value of {0}ms", timeout));
+                    context.CurrentResult.SetResult(ResultState.Failure, $"Test exceeded Timeout value of {timeout}ms");
                 }
             };
-       
+        }
+    }
+}
 #endif
+
+#if !THREAD_ABORT && !NET20 && !NET35
+
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using NUnit.Framework.Interfaces;
+
+namespace NUnit.Framework.Internal.Commands
+{
+    /// <summary>
+    /// TimeoutCommand uses Task.Wait() for .NetCore, 
+    /// if a test exceeds a specified time and adjusts
+    /// the test result if it did time out.
+    /// </summary>
+    public class TimeoutCommand : TestCommand
+    {
+        private readonly TestCommand _innerCommand;
+        private readonly int _timeout;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
+        /// </summary>
+        /// <param name="innerCommand">The inner command</param>
+        /// <param name="timeout">Timeout value</param>
+        public TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand.Test)
+        {
+            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
+            Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
+
+            _innerCommand = innerCommand;
+            _timeout = timeout;
         }
 
         /// <summary>
@@ -99,35 +119,42 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-
-#if THREAD_ABORT
-
-            return base.Execute(context);
-
-#endif
-
-#if !THREAD_ABORT && !NET20 && !NET35
-
             try
             {
-                if (!Task.Run(() => context.CurrentResult = base.Execute(context)).Wait(_timeout))
+                if (!Task.Run(() => context.CurrentResult = _innerCommand.Execute(context)).Wait(_timeout))
                 {
                     context.CurrentResult.SetResult(new ResultState(
                         TestStatus.Failed,
-                        $"Test exceeded Timeout value {_timeout}.",
+                        $"Test exceeded Timeout value {_timeout}ms.",
                         FailureSite.Test));
                 }
+            }
+            catch (AggregateException ae)
+            {
+                var message = string.Empty;
+
+                ae.Handle(x => 
+                {
+                    message += x.InnerException != null ? x.InnerException.Message : x.Message;
+                    return true;
+                });
+
+                context.CurrentResult.SetResult(new ResultState(
+                    TestStatus.Failed,
+                    message,
+                    FailureSite.Test));
             }
             catch (Exception exception)
             {
                 context.CurrentResult.SetResult(new ResultState(
-                    TestStatus.Failed, 
-                    exception.ToString(), 
+                    TestStatus.Failed,
+                    exception.InnerException != null ? exception.InnerException.Message : exception.Message,
                     FailureSite.Test));
             }
 
             return context.CurrentResult;
-#endif
         }
     }
 }
+
+#endif

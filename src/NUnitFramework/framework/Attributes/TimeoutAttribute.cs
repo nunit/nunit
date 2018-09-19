@@ -20,6 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+#if THREAD_ABORT
 
 using System;
 using NUnit.Framework.Internal;
@@ -49,14 +50,60 @@ namespace NUnit.Framework
             _timeout = timeout;
         }
 
-        #region IApplyToContext Members
+#region IApplyToContext Members
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
             context.TestCaseTimeout = _timeout;
         }
 
-        #endregion
+#endregion
     }
 }
+
+#endif
+
+#if !THREAD_ABORT && !NET20 && !NET35
+
+using System;
+using System.Threading.Tasks;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Interfaces;
+
+namespace NUnit.Framework
+{
+    /// <summary>
+    /// Used on a method, marks the test with a timeout value in milliseconds. 
+    /// The test will be run in a separate thread and is cancelled if the timeout 
+    /// is exceeded. Used on a class or assembly, sets the default timeout 
+    /// for all contained test methods.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, Inherited = false)]
+    public class TimeoutAttribute : PropertyAttribute, IWrapTestMethod
+    {
+        private readonly int _timeout;
+
+        /// <summary>
+        /// Construct a TimeoutAttribute given a time in milliseconds
+        /// </summary>
+        /// <param name="timeout">The timeout value in milliseconds</param>
+        public TimeoutAttribute(int timeout) : base(timeout)
+        {
+            _timeout = timeout;
+        }
+
+        /// <summary>
+        /// Wrap a command and return the result.
+        /// </summary>
+        /// <param name="command">The command to be wrapped</param>
+        /// <returns>The wrapped command</returns>
+        public TestCommand Wrap(TestCommand command)
+        {
+            return new TimeoutCommand(command, _timeout);
+        }
+    }
+}
+
+#endif
 
