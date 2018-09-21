@@ -22,4 +22,4 @@ matrix:
       osx_image: xcode9.1
 
 script:
-  - travis_wait ./build.sh --target=Travis --configuration=Release 
+  - travis_wait ./build.sh --target=Travis --configuration=Release
