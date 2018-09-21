@@ -295,7 +295,7 @@ namespace NUnit.Framework.Internal
                     return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
 
                 case "NETCORE":
-                    return IsRuntimeSupported(RuntimeType.NetCore, versionSpecification);
+                    return IsNetCoreRuntimeSupported(RuntimeType.NetCore, versionSpecification);
 
                 case "SSCLI":
                 case "ROTOR":
@@ -319,6 +319,18 @@ namespace NUnit.Framework.Internal
                 : new Version(versionSpecification);
 
             RuntimeFramework target = new RuntimeFramework(runtime, version);
+
+            return _rt.Supports(target);
+        }
+
+        private bool IsNetCoreRuntimeSupported(RuntimeType runtime, string versionSpecification)
+        {
+            if (versionSpecification != null)
+            {
+                throw new PlatformNotSupportedException("Detection versions of .NET Core is not supported - " + runtime.ToString() + "-" + versionSpecification);
+            }
+
+            RuntimeFramework target = new RuntimeFramework(runtime, RuntimeFramework.DefaultVersion);
 
             return _rt.Supports(target);
         }

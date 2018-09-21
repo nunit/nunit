@@ -85,6 +85,27 @@ namespace NUnit.Framework.Internal
             Assert.That(RuntimeFramework.CurrentFramework.ClrVersion.Build, Is.GreaterThan(0));
         }
 
+        [Test]
+        [TestCaseSource(nameof(netcoreRuntimes))]
+        public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
+        {
+            PlatformHelper platformHelper = new PlatformHelper();
+            Assert.Throws<PlatformNotSupportedException>(() => platformHelper.IsPlatformSupported(netcoreRuntime));
+        }
+
+        [Test]
+        public void SpecifyingNetCoreWithoutVersioningSucceeds()
+        {
+            PlatformHelper platformHelper = new PlatformHelper();
+            bool isNetCore;
+#if NETCOREAPP2_0
+            isNetCore = true;
+#else
+            isNetCore = false;
+#endif
+            Assert.AreEqual(isNetCore, platformHelper.IsPlatformSupported("netcore"));
+        }
+
         [TestCaseSource(nameof(frameworkData))]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
@@ -338,6 +359,14 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.Any, new Version(3,5), new Version(2,0,50727), "v3.5", "v3.5"),
             new FrameworkData(RuntimeType.Any, new Version(4,0), new Version(4,0,30319), "v4.0", "v4.0"),
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
+        };
+
+        internal static string[] netcoreRuntimes = new string[] {
+            "netcore-1.0",
+            "netcore-1.1",
+            "netcore-2.0",
+            "netcore-2.1",
+            "netcore-2.2"
         };
     }
 }
