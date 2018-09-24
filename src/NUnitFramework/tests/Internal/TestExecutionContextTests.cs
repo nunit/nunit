@@ -482,7 +482,7 @@ namespace NUnit.Framework.Internal
             TestExecutionContext.CurrentContext.SendMessage("destination", "message");
 
 #if !NETCOREAPP1_1
-            var listener = _fixtureContext.Listener as QueuingEventListener;
+            var listener = TestExecutionContext.CurrentContext.Listener as QueuingEventListener;
             Assert.That(listener.Events.Count, Is.EqualTo(1));
 
             var testMessageEvent = listener.Events.Dequeue(false) as TestMessageEvent;
