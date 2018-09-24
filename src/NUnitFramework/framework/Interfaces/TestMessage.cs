@@ -27,7 +27,7 @@ using System.Diagnostics;
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The TestMessage class holds a message sent by a test to all listeners
+    /// The <see cref="TestMessage"/> class holds a message sent by a test to all listeners
     /// </summary>
     [DebuggerDisplay("{ToString(),nq}")]
     public sealed class TestMessage
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Interfaces
         /// Construct with text, destination type and
         /// the name of the test that produced the message.
         /// </summary>
-        /// <param name="destination">Destination of message</param>
+        /// <param name="destination">Destination of the message</param>
         /// <param name="text">Text to be sent</param>
         /// <param name="testId">ID of the test that produced the message</param>
         public TestMessage(string destination, string text, string testId)
@@ -65,17 +65,17 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
-        /// A message to send to listeners
+        /// The message to send to listeners
         /// </summary>
         public string Message { get; }
 
         /// <summary>
-        /// Destination of a message.
+        /// The Destination of the message.
         /// </summary>
         public string Destination { get; }
 
         /// <summary>
-        /// ID of the test that sent a message
+        /// The ID of the test that sent the message
         /// </summary>
         public string TestId { get; }
 

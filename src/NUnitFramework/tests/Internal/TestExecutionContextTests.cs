@@ -480,6 +480,17 @@ namespace NUnit.Framework.Internal
         public void CanSendMessage()
         {
             TestExecutionContext.CurrentContext.SendMessage("destination", "message");
+
+#if !NETCOREAPP1_1
+            var listener = _fixtureContext.Listener as QueuingEventListener;
+            Assert.That(listener.Events.Count, Is.EqualTo(1));
+
+            var testMessageEvent = listener.Events.Dequeue(false) as TestMessageEvent;
+            Assert.That(testMessageEvent, Is.Not.Null);
+            Assert.That(testMessageEvent.TestMessage, Is.Not.Null);
+            Assert.That(testMessageEvent.TestMessage.Destination, Is.EqualTo("destination"));
+            Assert.That(testMessageEvent.TestMessage.Message, Is.EqualTo("message"));
+#endif
         }
 #endregion
 

@@ -75,9 +75,9 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Called when a test produces message to be sent to listeners
+        /// Called when a test produces a message to be sent to listeners
         /// </summary>
-        /// <param name="message">A TestMessage object containing the text to send</param>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
         public void SendMessage(TestMessage message)
         {
             Events.Enqueue(new TestMessageEvent(message));

@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Called when a test produces a message to be sent to listeners
         /// </summary>
-        /// <param name="message">A TestMessage object containing the message to send</param>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the message to send</param>
         public void SendMessage(TestMessage message) { }
 
         /// <summary>

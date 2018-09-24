@@ -130,25 +130,28 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestMessageEvent : Event
     {
-        private readonly TestMessage _testMessage;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMessageEvent"/> class.
         /// </summary>
         /// <param name="testMessage">The test message object.</param>
         public TestMessageEvent(TestMessage testMessage)
         {
-            _testMessage = testMessage;
+            TestMessage = testMessage;
         }
 
         /// <summary>
-        /// Calls SenMessage on the specified listener.
+        /// Calls <see cref="Send(ITestListener)"/> on the specified listener.
         /// </summary>
         /// <param name="listener">The listener.</param>
         public override void Send(ITestListener listener)
         {
-            listener.SendMessage(_testMessage);
+            listener.SendMessage(TestMessage);
         }
+
+        /// <summary>
+        /// Holds <see cref="TestMessage"/> object for sending to all listeners
+        /// </summary>
+        public TestMessage TestMessage { get; }
     }
 
     #endregion
