@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                handler.RaiseCallbackEvent(message.ToXml(false).OuterXml);
+                handler.RaiseCallbackEvent(message.ToXml());
             }
             catch (Exception ex)
             {

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Interfaces
     /// The TestMessage class holds a message sent by a test to all listeners
     /// </summary>
     [DebuggerDisplay("{ToString(),nq}")]
-    public sealed class TestMessage : IXmlNodeBuilder
+    public sealed class TestMessage
     {
         /// <summary>
         /// Construct with text, destination type and
@@ -82,20 +82,9 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Returns the XML representation of the <see cref="TestMessage"/> object.
         /// </summary>
-        public TNode ToXml(bool recursive)
+        public string ToXml()
         {
-            return AddToXml(new TNode("dummy"), recursive);
-        }
-
-        /// <summary>
-        /// Adds the XML representation of the test message as a child of the
-        /// supplied parent node..
-        /// </summary>
-        /// <param name="parentNode">The parent node.</param>
-        /// <param name="recursive">If true, descendant results are included</param>
-        public TNode AddToXml(TNode parentNode, bool recursive)
-        {
-            TNode tnode = parentNode.AddElementWithCDATA("test-message", Message);
+            TNode tnode = new TNode("test-message", Message, true);
 
             if (Destination != null)
                 tnode.AddAttribute("destination", Destination);
@@ -103,7 +92,7 @@ namespace NUnit.Framework.Interfaces
             if (TestId != null)
                 tnode.AddAttribute("testid", TestId);
 
-            return tnode;
+            return tnode.OuterXml;
         }
     }
 }

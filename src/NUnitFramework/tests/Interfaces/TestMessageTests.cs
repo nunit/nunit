@@ -45,7 +45,7 @@ namespace NUnit.Framework.Tests.Interfaces
             }
 
             expected.AppendFormat("><![CDATA[{0}]]></test-message>", message);
-            Assert.That(testMessage.ToXml(false).OuterXml, Is.EqualTo(expected.ToString()));
+            Assert.That(testMessage.ToXml(), Is.EqualTo(expected.ToString()));
         }
 
         [Test]
