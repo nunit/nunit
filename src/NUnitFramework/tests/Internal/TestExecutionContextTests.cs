@@ -475,14 +475,6 @@ namespace NUnit.Framework.Internal
 
 #endregion
 
-#region SendMessage
-        [Test]
-        public void CanSendMessage()
-        {
-            TestExecutionContext.CurrentContext.SendMessage("destination", "message");
-        }
-#endregion
-
 #region TestObject
 
         [Test]
