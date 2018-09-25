@@ -327,7 +327,7 @@ namespace NUnit.Framework.Internal
         {
             if (versionSpecification != null)
             {
-                throw new PlatformNotSupportedException("Detection versions of .NET Core is not supported - " + runtime.ToString() + "-" + versionSpecification);
+                throw new PlatformNotSupportedException($"Detecting versions of .NET Core is not supported - {runtime.ToString()}-{versionSpecification}");
             }
 
             RuntimeFramework target = new RuntimeFramework(runtime, RuntimeFramework.DefaultVersion);
