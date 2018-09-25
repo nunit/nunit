@@ -476,20 +476,18 @@ namespace NUnit.Framework.Internal
 #endregion
 
 #region SendMessage
-        [Test]
+        [Test, NonParallelizable]
         public void CanSendMessage()
         {
+#if !NETCOREAPP1_1
+            var listener = TestExecutionContext.CurrentContext.Listener as QueuingEventListener;
+
+            var previousEventsCount = listener.Events.Count;
+#endif
             TestExecutionContext.CurrentContext.SendMessage("destination", "message");
 
 #if !NETCOREAPP1_1
-            var listener = TestExecutionContext.CurrentContext.Listener as QueuingEventListener;
-            Assert.That(listener.Events.Count, Is.EqualTo(1));
-
-            var testMessageEvent = listener.Events.Dequeue(false) as TestMessageEvent;
-            Assert.That(testMessageEvent, Is.Not.Null);
-            Assert.That(testMessageEvent.TestMessage, Is.Not.Null);
-            Assert.That(testMessageEvent.TestMessage.Destination, Is.EqualTo("destination"));
-            Assert.That(testMessageEvent.TestMessage.Message, Is.EqualTo("message"));
+            Assert.That(listener.Events.Count, Is.EqualTo(previousEventsCount + 1));
 #endif
         }
 #endregion
