@@ -491,7 +491,7 @@ namespace NUnit.Framework.Internal
         /// <param name="message">A message to be sent</param>
         public void SendMessage(string destination, string message)
         {
-            Listener?.SendMessage(new TestMessage(destination, message, CurrentContext.CurrentTest.Id));
+            Listener?.SendMessage(new TestMessage(destination, message, CurrentTest.Id));
         }
 
         #endregion
