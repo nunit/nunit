@@ -484,9 +484,19 @@ namespace NUnit.Framework.Internal
             return context;
         }
 
-#endregion
+        /// <summary>
+        /// Sends a message from test to listeners. This message is not kind of test output and doesn't go to test result.
+        /// </summary>
+        /// <param name="destination">A name recognized by the intended listeners.</param>
+        /// <param name="message">A message to be sent</param>
+        public void SendMessage(string destination, string message)
+        {
+            Listener?.SendMessage(new TestMessage(destination, message, CurrentTest.Id));
+        }
 
-#region InitializeLifetimeService
+        #endregion
+
+        #region InitializeLifetimeService
 
 #if !NETSTANDARD1_4
         /// <summary>

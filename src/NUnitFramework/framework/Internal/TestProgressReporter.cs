@@ -115,6 +115,22 @@ namespace NUnit.Framework.Internal
             }
         }
 
+        /// <summary>
+        /// Called when a test produces a message to be sent to listeners
+        /// </summary>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
+        public void SendMessage(TestMessage message)
+        {
+            try
+            {
+                handler.RaiseCallbackEvent(message.ToXml());
+            }
+            catch (Exception ex)
+            {
+                log.Error("Exception processing SendMessage event" + Environment.NewLine + ex.ToString());
+            }
+        }
+
         #endregion
 
         #region Helper Methods

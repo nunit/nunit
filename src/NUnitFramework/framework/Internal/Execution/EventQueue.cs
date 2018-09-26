@@ -125,6 +125,35 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
+    /// <summary>
+    /// TestMessageEvent holds information needed to call the SendMessage method.
+    /// </summary>
+    public class TestMessageEvent : Event
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestMessageEvent"/> class.
+        /// </summary>
+        /// <param name="testMessage">The test message object.</param>
+        public TestMessageEvent(TestMessage testMessage)
+        {
+            TestMessage = testMessage;
+        }
+
+        /// <summary>
+        /// Calls <see cref="Send(ITestListener)"/> on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            listener.SendMessage(TestMessage);
+        }
+
+        /// <summary>
+        /// Holds <see cref="TestMessage"/> object for sending to all listeners
+        /// </summary>
+        public TestMessage TestMessage { get; }
+    }
+
     #endregion
 
     /// <summary>

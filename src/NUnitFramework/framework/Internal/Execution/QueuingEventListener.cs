@@ -74,6 +74,15 @@ namespace NUnit.Framework.Internal.Execution
             Events.Enqueue(new TestOutputEvent(output));
         }
 
+        /// <summary>
+        /// Called when a test produces a message to be sent to listeners
+        /// </summary>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
+        public void SendMessage(TestMessage message)
+        {
+            Events.Enqueue(new TestMessageEvent(message));
+        }
+
         #endregion
     }
 }

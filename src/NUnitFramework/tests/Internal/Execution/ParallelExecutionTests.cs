@@ -464,6 +464,11 @@ namespace NUnit.Framework.Internal.Execution
 
         }
 
+        public void SendMessage(TestMessage message)
+        {
+            
+        }
+
 #endregion
 
 #region Helper Methods
