@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
             CheckPlatforms(
                 new PlatformHelper( OSPlatform.CurrentPlatform, runtimeFramework ),
                 expectedPlatforms,
-                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH" );
+                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH");
         }
 
         private void CheckPlatforms( PlatformHelper helper, 
@@ -319,6 +319,14 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void DetectNet45()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.Net, new Version(4, 5, 0, 0)),
+                "Net,Net-4.0,Net-4.5");
+        }
+
+        [Test]
         public void DetectSSCLI()
         {
             CheckRuntimePlatforms(
@@ -374,6 +382,14 @@ namespace NUnit.Framework.Internal
                 "MonoTouch");
         }
 
+        [Test]
+        public void DetectNetCore()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(0, 0, 0)),
+                "NetCore");
+        }
+        
         [Test]
         public void DetectExactVersion()
         {

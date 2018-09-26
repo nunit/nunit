@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
+#if PLATFORM_DETECTION && THREAD_ABORT
 using System;
 using System.Linq;
 using System.Threading;

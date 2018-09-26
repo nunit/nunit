@@ -125,7 +125,7 @@ namespace NUnitLite
             xmlWriter.WriteAttributeString("clr-version",
                 Environment.Version.ToString());
 #endif
-#if !PLATFORM_DETECTION
+#if NETSTANDARD1_4 || NETSTANDARD2_0
             xmlWriter.WriteAttributeString("os-version",
                                            System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else

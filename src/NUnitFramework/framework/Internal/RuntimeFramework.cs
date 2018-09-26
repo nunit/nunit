@@ -27,7 +27,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+#if NETSTANDARD2_0
+using System.Runtime.Versioning;
+#else
 using Microsoft.Win32;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -46,7 +51,9 @@ namespace NUnit.Framework.Internal
         /// <summary>Mono</summary>
         Mono,
         /// <summary>MonoTouch</summary>
-        MonoTouch
+        MonoTouch,
+        /// <summary>Microsoft .NET Core</summary>
+        NetCore
     }
 
     /// <summary>
@@ -75,12 +82,15 @@ namespace NUnit.Framework.Internal
             Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
             bool isMonoTouch = monoTouchType != null;
             bool isMono = monoRuntimeType != null;
+            bool isNetCore = !isMono && !isMonoTouch && IsNetCore();
 
             RuntimeType runtime = isMonoTouch
                 ? RuntimeType.MonoTouch
                 : isMono
                     ? RuntimeType.Mono
-                    : RuntimeType.Net;
+                    : isNetCore
+                        ? RuntimeType.NetCore
+                        : RuntimeType.Net;
 
             int major = Environment.Version.Major;
             int minor = Environment.Version.Minor;
@@ -98,7 +108,17 @@ namespace NUnit.Framework.Internal
                         break;
                 }
             }
+            else if (isNetCore)
+            {
+                major = 0;
+                minor = 0;
+            }
             else /* It's windows */
+#if NETSTANDARD2_0
+            {
+                minor = 5;
+            }
+#else
             if (major == 2)
             {
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework"))
@@ -126,6 +146,7 @@ namespace NUnit.Framework.Internal
             {
                 minor = 5;
             }
+#endif
 
             var currentFramework = new RuntimeFramework( runtime, new Version (major, minor) )
             {
@@ -173,6 +194,10 @@ namespace NUnit.Framework.Internal
             if (version.Major > 0) // 0 means any version
                 switch (Runtime)
                 {
+                    case RuntimeType.NetCore:
+                        ClrVersion = new Version(4, 0, 30319);
+                        break;
+
                     case RuntimeType.Net:
                     case RuntimeType.Mono:
                     case RuntimeType.Any:
@@ -222,6 +247,10 @@ namespace NUnit.Framework.Internal
             ClrVersion = version;
             if (Runtime == RuntimeType.Mono && version.Major == 1)
                 FrameworkVersion = new Version(1, 0);
+            if (Runtime == RuntimeType.Net && version.Major == 4 && version.Minor == 5)
+                ClrVersion = new Version(4, 0, 30319);
+            if (Runtime == RuntimeType.NetCore)
+                ClrVersion = new Version(4, 0, 30319);
         }
 
         #endregion
@@ -352,12 +381,47 @@ namespace NUnit.Framework.Internal
             if (!VersionsMatch(ClrVersion, target.ClrVersion))
                 return false;
 
-            return FrameworkVersion.Major >= target.FrameworkVersion.Major && FrameworkVersion.Minor >= target.FrameworkVersion.Minor;
+            if (FrameworkVersion.Major > target.FrameworkVersion.Major)
+                return true;
+            return FrameworkVersion.Major == target.FrameworkVersion.Major && FrameworkVersion.Minor >= target.FrameworkVersion.Minor;
         }
 
         #endregion
 
         #region Helper Methods
+
+        private static bool IsNetCore()
+        {
+#if NETSTANDARD2_0
+            // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch 
+            // block to stop any inlining in release builds and check whether the type exists
+            Type runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
+            if (runtimeInfoType != null)
+            {
+                try
+                {
+                    return IsNetCore_Internal();
+                }
+                catch (TypeLoadException) { }
+            }
+#endif
+
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static bool IsNetCore_Internal()
+        {
+#if NETSTANDARD2_0
+            // Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
+            // so we wrap it in a try/catch block in IsNetCore to catch it in case it ever gets this far
+            if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+#endif
+            return false;
+        }
 
         private static bool IsRuntimeTypeName(string name)
         {
