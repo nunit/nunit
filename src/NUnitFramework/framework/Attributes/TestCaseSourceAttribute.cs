@@ -34,8 +34,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseSourceAttribute indicates the source to be used to
-    /// provide test cases for a test method.
+    /// Indicates the source to be used to provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture

@@ -34,8 +34,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RandomAttribute is used to supply a set of random values
-    /// to a single parameter of a parameterized test.
+    /// Supplies a set of random values to a single parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class RandomAttribute : NUnitAttribute, IParameterDataSource

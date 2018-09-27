@@ -26,7 +26,7 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// The abstract base class for all custom attributes defined by NUnit.
+    /// Abstract base class for all custom attributes defined by NUnit.
     /// </summary>
     public abstract class NUnitAttribute : Attribute
     {

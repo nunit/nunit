@@ -29,8 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// CultureAttribute is used to mark a test fixture or an
-    /// individual method as applying to a particular Culture only.
+    /// Marks an assembly, test fixture or test method as applying to a specific Culture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest

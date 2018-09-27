@@ -32,8 +32,7 @@ using NUnit.Compatibility;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// ValuesAttribute is used to provide literal arguments for
-    /// an individual parameter of a test.
+    /// Provides literal arguments for an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class ValuesAttribute : NUnitAttribute, IParameterDataSource
