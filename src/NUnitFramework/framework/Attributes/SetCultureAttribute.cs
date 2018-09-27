@@ -28,9 +28,9 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Sets the current Culture for the duration of a test. The culture remains set until 
-    /// the test or fixture completes and is then reset to its original value.
-    /// It may be specified at either the test or fixture level. 
+    /// Sets the current Culture on an assembly, test fixture or test method for 
+    /// the duration of a test. The culture remains set until the test or fixture
+    /// completes and is then reset to its original value.    
     /// </summary>
     /// <seealso cref="SetUICultureAttribute"/>
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]

@@ -26,7 +26,7 @@ namespace NUnit.Framework
     using System;
 
     /// <summary>
-    /// Identifies a method to be called prior to the running of each test.
+    /// Identifies a method to be called immediately before each test is run.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
     public class SetUpAttribute : NUnitAttribute
