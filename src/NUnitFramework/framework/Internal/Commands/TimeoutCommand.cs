@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2017-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -20,8 +20,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if THREAD_ABORT
+
+using System;
 using System.Threading;
+#if !THREAD_ABORT
+using System.Threading.Tasks;
+#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -33,8 +37,11 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TimeoutCommand : BeforeAndAfterTestCommand
     {
+        private readonly int _timeout;
+#if THREAD_ABORT
         Timer _commandTimer;
         private bool _commandTimedOut;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
@@ -43,9 +50,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="timeout">Timeout value</param>
         public TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand)
         {
+            _timeout = timeout;
             Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
             Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
 
+#if THREAD_ABORT
             BeforeTest = (context) =>
             {
                 var testThread = Thread.CurrentThread;
@@ -74,44 +83,13 @@ namespace NUnit.Framework.Internal.Commands
                     context.CurrentResult.SetResult(ResultState.Failure, $"Test exceeded Timeout value of {timeout}ms");
                 }
             };
-        }
-    }
-}
+#else
+            BeforeTest = _ => { };
+            AfterTest = _ => { };
 #endif
-
-#if !THREAD_ABORT && !NET20 && !NET35
-
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using NUnit.Framework.Interfaces;
-
-namespace NUnit.Framework.Internal.Commands
-{
-    /// <summary>
-    /// TimeoutCommand uses Task.Wait() for .NetCore, 
-    /// if a test exceeds a specified time and adjusts
-    /// the test result if it did time out.
-    /// </summary>
-    public class TimeoutCommand : TestCommand
-    {
-        private readonly TestCommand _innerCommand;
-        private readonly int _timeout;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
-        /// </summary>
-        /// <param name="innerCommand">The inner command</param>
-        /// <param name="timeout">Timeout value</param>
-        public TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand.Test)
-        {
-            Guard.ArgumentValid(innerCommand.Test is TestMethod, "TimeoutCommand may only apply to a TestMethod", nameof(innerCommand));
-            Guard.ArgumentValid(timeout > 0, "Timeout value must be greater than zero", nameof(timeout));
-
-            _innerCommand = innerCommand;
-            _timeout = timeout;
         }
 
+#if !THREAD_ABORT
         /// <summary>
         /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
         /// </summary>
@@ -121,7 +99,11 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                if (!Task.Run(() => context.CurrentResult = _innerCommand.Execute(context)).Wait(_timeout))
+                if (!Task.Run(() =>
+                {
+                    context.CurrentResult = innerCommand.Execute(context);
+
+                }).Wait(_timeout))
                 {
                     context.CurrentResult.SetResult(new ResultState(
                         TestStatus.Failed,
@@ -129,32 +111,13 @@ namespace NUnit.Framework.Internal.Commands
                         FailureSite.Test));
                 }
             }
-            catch (AggregateException ae)
-            {
-                var message = string.Empty;
-
-                ae.Handle(x => 
-                {
-                    message += x.InnerException != null ? x.InnerException.Message : x.Message;
-                    return true;
-                });
-
-                context.CurrentResult.SetResult(new ResultState(
-                    TestStatus.Failed,
-                    message,
-                    FailureSite.Test));
-            }
             catch (Exception exception)
             {
-                context.CurrentResult.SetResult(new ResultState(
-                    TestStatus.Failed,
-                    exception.InnerException != null ? exception.InnerException.Message : exception.Message,
-                    FailureSite.Test));
+                context.CurrentResult.RecordException(exception);
             }
 
             return context.CurrentResult;
         }
+#endif
     }
 }
-
-#endif
