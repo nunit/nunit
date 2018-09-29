@@ -32,7 +32,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a method as a parameterized test case and provides them with their arguments.
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
     public class TestCaseAttribute : NUnitAttribute, ITestBuilder, ITestCaseData, IImplyFixture

@@ -29,7 +29,7 @@ using NUnit.Framework.Internal.Execution;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks tests that may be run in parallel.
+    /// Marks a test assembly, fixture or method that may be run in parallel.
     /// </summary>
     [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
     public class ParallelizableAttribute : PropertyAttribute, IApplyToContext
