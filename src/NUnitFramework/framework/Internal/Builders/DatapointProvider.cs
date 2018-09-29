@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -40,19 +40,18 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
         /// <param name="parameter">The parameter of a parameterized test</param>
-        public bool HasDataFor(Type fixtureType, ParameterInfo parameter)
+        public bool HasDataFor(IParameterInfo parameter)
         {
-            var method = parameter.Member;
-            if (!method.HasAttribute<TheoryAttribute>(true))
+            var method = parameter.Method;
+            if (!method.IsDefined<TheoryAttribute>(true))
                 return false;
 
             Type parameterType = parameter.ParameterType;
             if (parameterType == typeof(bool) || parameterType.GetTypeInfo().IsEnum)
                 return true;
 
-            Type containingType = method.DeclaringType;
+            Type containingType = method.TypeInfo.Type;
             foreach (MemberInfo member in containingType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
@@ -69,16 +68,13 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
         /// <param name="parameter">The parameter of a parameterized test</param>
-        public IEnumerable GetDataFor(Type fixtureType, ParameterInfo parameter)
+        public IEnumerable GetDataFor(IParameterInfo parameter)
         {
-            Guard.ArgumentNotNull(fixtureType, nameof(fixtureType));
-            Guard.ArgumentNotNull(parameter, nameof(parameter));
-
             var datapoints = new List<object>();
 
             Type parameterType = parameter.ParameterType;
+            Type fixtureType = parameter.Method.TypeInfo.Type;
 
             foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
             {
@@ -86,7 +82,7 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     var field = member as FieldInfo;
                     if (GetTypeFromMemberInfo(member) == parameterType && field != null)
-                    {                        
+                    {
                         if (field.IsStatic)
                             datapoints.Add(field.GetValue(null));
                         else

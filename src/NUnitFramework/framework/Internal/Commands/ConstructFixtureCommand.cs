@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,8 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -36,20 +35,20 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="innerCommand">The inner command to which the command applies</param>
         public ConstructFixtureCommand(TestCommand innerCommand)
-            : base(innerCommand) 
+            : base(innerCommand)
         {
             Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {
-                Type type = Test.Type;
+                ITypeInfo typeInfo = Test.TypeInfo;
 
-                if (type != null)
+                if (typeInfo != null)
                 {
                     // Use preconstructed fixture if available, otherwise construct it
-                    if (!type.IsStatic())
+                    if (!typeInfo.IsStaticClass)
                     {
-                        context.TestObject = Test.Fixture ?? Reflect.Construct(type, ((TestSuite)Test).Arguments);
+                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
                         if (Test.Fixture == null)
                             Test.Fixture = context.TestObject;
                     }

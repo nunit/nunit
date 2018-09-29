@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -90,7 +90,7 @@ namespace NUnit.Framework
         public Type SourceType { get; }
 
         /// <summary>
-        /// Gets or sets the category associated with every fixture created from 
+        /// Gets or sets the category associated with every fixture created from
         /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
         public string Category { get; set; }
@@ -102,10 +102,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Builds any number of test fixtures from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
-        public IEnumerable<TestSuite> BuildFrom(Type type)
+        /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            return BuildFrom(type, PreFilter.Empty);
+            return BuildFrom(typeInfo, PreFilter.Empty);
         }
 
         #endregion
@@ -115,14 +115,14 @@ namespace NUnit.Framework
         /// <summary>
         /// Builds any number of test fixtures from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
         /// <param name="filter">PreFilter used to select methods as tests.</param>
-        public IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter)
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            Type sourceType = SourceType ?? type;
+            Type sourceType = SourceType ?? typeInfo.Type;
 
             foreach (ITestFixtureData parms in GetParametersFor(sourceType))
-                yield return _builder.BuildFrom(type, filter, parms);
+                yield return _builder.BuildFrom(typeInfo, filter, parms);
         }
 
         #endregion

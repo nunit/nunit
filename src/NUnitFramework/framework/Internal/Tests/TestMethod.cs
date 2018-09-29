@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -47,14 +47,14 @@ namespace NUnit.Framework.Internal
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
-        public TestMethod(FixtureMethod method) : base(method) { }
+        public TestMethod(IMethodInfo method) : base(method) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
-        public TestMethod(FixtureMethod method, Test parentSuite) : base(method)
+        public TestMethod(IMethodInfo method, Test parentSuite) : base(method)
         {
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.

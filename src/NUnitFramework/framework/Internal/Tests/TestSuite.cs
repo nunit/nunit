@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
-        public TestSuite(Type fixtureType, object[] arguments)
+        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
             Arguments = arguments ?? new object[0];
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestSuite(Type fixtureType)
-            : base(fixtureType)
+            : base(new TypeWrapper(fixtureType))
         {
             Arguments = new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];

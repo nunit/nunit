@@ -552,9 +552,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested AdhocTestExecutionContext
+        #region Nested AdhocTestExecutionContext
 
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed
@@ -572,7 +572,7 @@ namespace NUnit.Framework.Internal
                 var type = GetType();
                 var method = type.GetMethod("AdhocTestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                CurrentTest = new TestMethod(new FixtureMethod(type, method));
+                CurrentTest = new TestMethod(new MethodWrapper(type, method));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

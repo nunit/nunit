@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -34,7 +32,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SetUpFixtureCanBeIgnored()
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(typeof(IgnoredSetUpFixture));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(typeof(IgnoredSetUpFixture)));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.Ignored));
         }
@@ -47,7 +45,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SetUpFixtureMayBeParallelizable()
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(typeof(ParallelizableSetUpFixture));
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(typeof(ParallelizableSetUpFixture)));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.Self));
         }
@@ -61,7 +59,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(TestTearDownClass))]
         public void CertainAttributesAreNotAllowed(Type type)
         {
-            var fixtures = new SetUpFixtureAttribute().BuildFrom(type);
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(type));
             foreach (var fixture in fixtures)
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }

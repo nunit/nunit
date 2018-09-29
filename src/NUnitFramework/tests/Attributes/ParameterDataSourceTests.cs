@@ -67,7 +67,7 @@ namespace NUnit.Framework.Attributes
         {
             public int Count { get; set; }
 
-            public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
+            public IEnumerable GetData(IParameterInfo parameter)
             {
                 for (var i = 0; i < Count; i++)
                 {
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Attributes
                 }
             }
         }
-        
+
         #endregion
     }
 }

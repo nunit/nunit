@@ -36,13 +36,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void CanBuildFromReturnsTrueForImpliedFixture()
         {
-            Assert.That(new DefaultSuiteBuilder().CanBuildFrom(typeof(ImpliedFixture)));
+            Assert.That(new DefaultSuiteBuilder().CanBuildFrom(new TypeWrapper(typeof(ImpliedFixture))));
         }
 
         [Test]
         public static void BuildFromReturnsImpliedFixture()
         {
-            var suite = new DefaultSuiteBuilder().BuildFrom(typeof(ImpliedFixture)) as TestFixture;
+            var suite = new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(typeof(ImpliedFixture))) as TestFixture;
 
             Assert.NotNull(suite, "No test fixture was built");
             Assert.That(suite.Name, Is.EqualTo(nameof(ImpliedFixture)));
