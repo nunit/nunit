@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     [TestFixture("D.mmy", true)]
     public class CategoryFilterTests : TestFilterTests
     {
-        private TestFilter _filter;
+        private readonly TestFilter _filter;
 
         public CategoryFilterTests(string value, bool isRegex)
         {

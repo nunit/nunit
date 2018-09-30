@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Filters
     [TestFixture("T.st", true)]
     public class MethodNameFilterTests : TestFilterTests
     {
-        private TestFilter _filter;
+        private readonly TestFilter _filter;
 
         public MethodNameFilterTests(string value, bool isRegex)
         {

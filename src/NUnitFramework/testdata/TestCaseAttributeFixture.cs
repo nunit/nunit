@@ -99,6 +99,19 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithExcludePlatform(int num)
         {
         }
+        [TestCase(1, IncludePlatform = "Net")]
+        [TestCase(2, IncludePlatform = "NetCore")]
+        [TestCase(3, IncludePlatform = "Mono")]
+        public void MethodWithIncludeRuntime(int num)
+        {
+        }
+
+        [TestCase(1, ExcludePlatform = "Net")]
+        [TestCase(2, ExcludePlatform = "NetCore")]
+        [TestCase(3, ExcludePlatform = "Mono")]
+        public void MethodWithExcludeRuntime(int num)
+        {
+        }
 #endif
 
         [TestCase((object)new object[] { })]

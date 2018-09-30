@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -33,11 +32,10 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseSourceAttribute indicates the source to be used to
-    /// provide test fixture instances for a test class.
+    /// Identifies the source used to provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder
+    public class TestFixtureSourceAttribute : NUnitAttribute, IFixtureBuilder2
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -84,15 +82,15 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of a the method, property or fiend to be used as a source
         /// </summary>
-        public string SourceName { get; private set; }
+        public string SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; private set; }
+        public Type SourceType { get; }
 
         /// <summary>
-        /// Gets or sets the category associated with every fixture created from 
+        /// Gets or sets the category associated with every fixture created from
         /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
         public string Category { get; set; }
@@ -102,17 +100,29 @@ namespace NUnit.Framework
         #region IFixtureBuilder Members
 
         /// <summary>
-        /// Construct one or more TestFixtures from a given Type,
-        /// using available parameter data.
+        /// Builds any number of test fixtures from the specified type.
         /// </summary>
         /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
-        /// <returns>One or more TestFixtures as TestSuite</returns>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
+        {
+            return BuildFrom(typeInfo, PreFilter.Empty);
+        }
+
+        #endregion
+
+        #region IFixtureBuilder2 Members
+
+        /// <summary>
+        /// Builds any number of test fixtures from the specified type.
+        /// </summary>
+        /// <param name="typeInfo">The TypeInfo for which fixtures are to be constructed.</param>
+        /// <param name="filter">PreFilter used to select methods as tests.</param>
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
             Type sourceType = SourceType ?? typeInfo.Type;
 
-            foreach (TestFixtureParameters parms in GetParametersFor(sourceType))
-                yield return _builder.BuildFrom(typeInfo, parms);
+            foreach (ITestFixtureData parms in GetParametersFor(sourceType))
+                yield return _builder.BuildFrom(typeInfo, filter, parms);
         }
 
         #endregion

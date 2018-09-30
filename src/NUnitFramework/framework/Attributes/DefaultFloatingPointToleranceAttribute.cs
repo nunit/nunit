@@ -29,13 +29,13 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// DefaultFloatingPointToleranceAttribute sets the tolerance used
-    /// by default when checking the equality of floating point values.
+    /// Sets the tolerance used by default when checking the equality of floating point values
+    /// within the test assembly, fixture or method.
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class DefaultFloatingPointToleranceAttribute : NUnitAttribute, IApplyToContext
     {
-        private Tolerance _tolerance;
+        private readonly Tolerance _tolerance;
 
         /// <summary>
         /// Construct specifying an amount

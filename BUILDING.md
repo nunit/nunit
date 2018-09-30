@@ -23,7 +23,7 @@ Other test projects contain tests designed to fail purposely for integration tes
 
 ## Build Script
 
-We use **Cake** (http://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is build.cake. We modify build.cake when we need to add new targets or change the way the build is done. Normally build.cake is not invoked directly but through build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script. This helps the build to work on CI servers using newly created agents to run the build and we generally run it the same way on our own machines.
+We use [Cake](http://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is build.cake. We modify build.cake when we need to add new targets or change the way the build is done. Normally build.cake is not invoked directly but through build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script. This helps the build to work on CI servers using newly created agents to run the build and we generally run it the same way on our own machines.
 
 The build shell script and build.cmd script are provided as an easy way to run the above commands. In addition to passing their arguments through to build.cake, they can supply added arguments through the CAKE_ARGS environment variable. The rest of this document will assume use of these commands.
 

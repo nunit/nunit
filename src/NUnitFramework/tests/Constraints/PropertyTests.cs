@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -183,6 +184,26 @@ namespace NUnit.Framework.Constraints
             Assert.That(r.Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(r.Description, Is.EqualTo("property Foo and property Bar property Length equal to 5"));
             Assert.That(r.ActualValue, Is.EqualTo(inputObject));
+        }   
+
+        [Test]
+        public void FailureMessageContainsChainedConstraintMessage()
+        {
+            var inputObject = new { Foo = new List<int> { 2, 3, 5, 7 } };
+
+            //Property Constraint Message with chained Equivalent Constraint.
+            var constraint = ((IResolveConstraint)Has.Property("Foo").EquivalentTo(new List<int> { 2, 3, 5, 8 })).Resolve();
+            
+            //Apply the constraint and write message.
+            var result = constraint.ApplyTo(inputObject);
+            var textMessageWriter = new TextMessageWriter();
+            result.WriteMessageTo(textMessageWriter);
+
+            //Verify message contains "Equivalent Constraint" message too.
+            Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
+            Assert.That(result.GetType().Name, Is.EqualTo("PropertyConstraintResult"));
+            Assert.IsTrue(textMessageWriter.ToString().Contains("Missing"));
+            Assert.IsTrue(textMessageWriter.ToString().Contains("Extra"));
         }
     }
 }

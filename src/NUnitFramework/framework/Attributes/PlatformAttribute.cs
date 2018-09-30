@@ -29,13 +29,12 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// PlatformAttribute is used to mark a test fixture or an
-    /// individual method as applying to a particular platform only.
+    /// Marks an assembly, test fixture or test method as applying to a specific platform.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited=false)]
     public class PlatformAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private PlatformHelper platformHelper = new PlatformHelper();
+        private readonly PlatformHelper platformHelper = new PlatformHelper();
 
         /// <summary>
         /// Constructor with no platforms specified, for use

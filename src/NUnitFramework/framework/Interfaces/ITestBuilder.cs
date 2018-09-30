@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,18 +28,17 @@ namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The ITestBuilder interface is exposed by a class that knows how to
-    /// build one or more TestMethods from a MethodInfo. In general, it is exposed
-    /// by an attribute, which has additional information available to provide
+    /// build tests from a specified method. In general, it is exposed
+    /// by an attribute which has additional information available to provide
     /// the necessary test parameters to distinguish the test cases built.
     /// </summary>
     public interface ITestBuilder
     {
         /// <summary>
-        /// Build one or more TestMethods from the provided MethodInfo.
+        /// Builds any number of tests from the specified method and context.
         /// </summary>
         /// <param name="method">The method to be used as a test</param>
         /// <param name="suite">The TestSuite to which the method will be added</param>
-        /// <returns>A TestMethod object</returns>
         IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite);
     }
 }

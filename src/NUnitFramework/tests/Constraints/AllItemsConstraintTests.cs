@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -45,7 +45,8 @@ namespace NUnit.Framework.Constraints
             object[] c = new object[] { 1, "hello", null, 3 };
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
-                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL;
+                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
+                "  First non-matching item at index [2]:  null" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null)))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -90,7 +91,8 @@ namespace NUnit.Framework.Constraints
             int[] c = new int[] { 12, 27, 19, 32, 107, 99, 26 };
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items in range (10,100)" + NL +
-                TextMessageWriter.Pfx_Actual + "< 12, 27, 19, 32, 107, 99, 26 >" + NL;
+                TextMessageWriter.Pfx_Actual + "< 12, 27, 19, 32, 107, 99, 26 >" + NL +
+                "  First non-matching item at index [4]:  107" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -108,7 +110,8 @@ namespace NUnit.Framework.Constraints
             object[] c = new object[] { 'a', "b", 'c' };
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items instance of <System.Char>" + NL +
-                TextMessageWriter.Pfx_Actual + "< 'a', \"b\", 'c' >" + NL;
+                TextMessageWriter.Pfx_Actual + "< 'a', \"b\", 'c' >" + NL +
+                "  First non-matching item at index [1]:  \"b\"" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char)))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -119,7 +122,7 @@ namespace NUnit.Framework.Constraints
             var c = new NUnit.TestUtilities.Collections.SimpleObjectCollection(1, 2, 3);
             Assert.That(c, Is.All.Not.Null);
         }
-        
+
         [Test]
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {

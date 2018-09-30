@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -32,9 +32,9 @@ namespace NUnit.Framework
     using Internal;
 
     /// <summary>
-    /// Attribute used to identify a class that contains
-    /// <see cref="OneTimeSetUpAttribute" /> or <see cref="OneTimeTearDownAttribute" />
-    /// methods for all the test fixtures under a given namespace.
+    /// Identifies a class as containing <see cref="OneTimeSetUpAttribute" /> or
+    /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
+    /// under a given namespace.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
@@ -42,11 +42,9 @@ namespace NUnit.Framework
         #region ISuiteBuilder Members
 
         /// <summary>
-        /// Build a SetUpFixture from type provided. Normally called for a Type
-        /// on which the attribute has been placed.
+        /// Builds a <see cref="SetUpFixture"/> from the specified type.
         /// </summary>
         /// <param name="typeInfo">The type info of the fixture to be used.</param>
-        /// <returns>A SetUpFixture object as a TestSuite.</returns>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
             SetUpFixture fixture = new SetUpFixture(typeInfo);
@@ -67,7 +65,7 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private bool IsValidFixtureType(ITypeInfo typeInfo, ref string reason)
+        private static bool IsValidFixtureType(ITypeInfo typeInfo, ref string reason)
         {
             if (typeInfo.IsAbstract)
             {
@@ -81,8 +79,8 @@ namespace NUnit.Framework
                 return false;
             }
 
-            var invalidAttributes = new Type[] { 
-                typeof(SetUpAttribute), 
+            var invalidAttributes = new Type[] {
+                typeof(SetUpAttribute),
                 typeof(TearDownAttribute)
             };
 

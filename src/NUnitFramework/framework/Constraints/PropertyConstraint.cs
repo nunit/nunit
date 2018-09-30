@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
 
             propValue = property.GetValue(actual, null);
             var baseResult = BaseConstraint.ApplyTo(propValue);
-            return new ConstraintResult(this, baseResult.ActualValue, baseResult.IsSuccess);
+            return new PropertyConstraintResult(this, baseResult);              
         }
 
         /// <summary>

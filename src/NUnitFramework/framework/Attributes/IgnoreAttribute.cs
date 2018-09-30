@@ -29,14 +29,12 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Attribute used to mark a test that is to be ignored.
-    /// Ignored tests result in a warning message when the
-    /// tests are run.
+    /// Marks an assembly, test fixture or test method as being ignored. Ignored tests result in a warning message when the tests are run.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method|AttributeTargets.Class|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class IgnoreAttribute : NUnitAttribute, IApplyToTest
     {
-        private string _reason;
+        private readonly string _reason;
         private DateTime? _untilDate;
         private string _until;
 

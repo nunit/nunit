@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,8 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -54,15 +52,15 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the base type of this type as an ITypeInfo
         /// </summary>
-        public ITypeInfo BaseType 
+        public ITypeInfo BaseType
         {
-            get 
+            get
             {
                 var baseType = Type.GetTypeInfo().BaseType;
 
                 return baseType != null
                     ? new TypeWrapper(baseType)
-                    : null; 
+                    : null;
             }
         }
 
@@ -149,10 +147,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether this type represents a static class.
         /// </summary>
-        public bool IsStaticClass
-        {
-            get { return Type.GetTypeInfo().IsSealed && Type.GetTypeInfo().IsAbstract; }
-        }
+        public bool IsStaticClass => Type.IsStatic();
 
         /// <summary>
         /// Get the display name for this type
@@ -191,7 +186,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public T[] GetCustomAttributes<T>(bool inherit) where T : class
         {
-            return Type.GetTypeInfo().GetAttributes<T>(inherit).ToArray();
+            return Type.GetAttributes<T>(inherit);
         }
 
         /// <summary>
@@ -200,13 +195,9 @@ namespace NUnit.Framework.Internal
         /// <typeparam name="T"></typeparam>
         /// <param name="inherit"></param>
         /// <returns></returns>
-        public bool IsDefined<T>(bool inherit)
+        public bool IsDefined<T>(bool inherit) where T : class
         {
-#if NETSTANDARD1_6
-            return Type.GetTypeInfo().GetCustomAttributes(inherit).Any(typeof(T).IsInstanceOfType);
-#else
-            return Type.GetTypeInfo().IsDefined(typeof(T), inherit);
-#endif
+            return Type.HasAttribute<T>(inherit);
         }
 
         /// <summary>
@@ -239,9 +230,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public ConstructorInfo GetConstructor(Type[] argTypes)
         {
-            return Type.GetConstructors()
-                .Where(c => c.GetParameters().ParametersMatch(argTypes))
-                .FirstOrDefault();
+            return Type.GetConstructor(argTypes);
         }
 
         /// <summary>

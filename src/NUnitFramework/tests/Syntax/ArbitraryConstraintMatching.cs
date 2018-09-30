@@ -30,8 +30,8 @@ namespace NUnit.Framework.Syntax
     [TestFixture]
     public class ArbitraryConstraintMatching
     {
-        Constraint custom = new CustomConstraint();
-        Constraint another = new AnotherConstraint();
+        readonly Constraint custom = new CustomConstraint();
+        readonly Constraint another = new AnotherConstraint();
 
         [Test]
         public void CanMatchCustomConstraint()
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Syntax
 
         private class Unit
         {
-            public List<int> Items { get; private set; }
+            public List<int> Items { get; }
             public Unit()
             {
                 Items = new List<int>(new int[] { 1, 2, 3, 4, 5 });

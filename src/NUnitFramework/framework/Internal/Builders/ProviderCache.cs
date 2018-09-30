@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal.Builders
 {
     class ProviderCache
     {
-        private static Dictionary<CacheEntry, object> instances = new Dictionary<CacheEntry, object>();
+        private static readonly Dictionary<CacheEntry, object> instances = new Dictionary<CacheEntry, object>();
 
         public static object GetInstanceOf(Type providerType)
         {
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal.Builders
 
         class CacheEntry
         {
-            private Type providerType;
+            private readonly Type providerType;
 
             public CacheEntry(Type providerType, object[] providerArgs)
             {

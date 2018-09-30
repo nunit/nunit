@@ -26,7 +26,7 @@ using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-    public partial class Assert
+    public abstract partial class Assert
     {
         #region AreEqual
 

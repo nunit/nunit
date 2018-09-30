@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -138,7 +137,7 @@ namespace NUnit.Framework
                 if (assembly != null)
                     return AssemblyHelper.GetDirectoryName(assembly);
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                 // Test is null, we may be loading tests rather than executing.
                 // Assume that the NUnit framework is in the same directory as the tests
                 return AssemblyHelper.GetDirectoryName(typeof(TestContext).GetTypeInfo().Assembly);
@@ -183,7 +182,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the number of times the current Test has been repeated. This is currently only 
+        /// Get the number of times the current Test has been repeated. This is currently only
         /// set when using the <see cref="RetryAttribute"/>.
         /// TODO: add this to the RepeatAttribute as well
         /// </summary>
@@ -558,8 +557,8 @@ namespace NUnit.Framework
         /// </summary>
         public class PropertyBagAdapter
         {
-            private IPropertyBag _source;
-            
+            private readonly IPropertyBag _source;
+
             /// <summary>
             /// Construct a <see cref="PropertyBagAdapter"/> from a source
             /// <see cref="IPropertyBag"/>.

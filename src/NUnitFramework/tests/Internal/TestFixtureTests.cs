@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestFixtureTests
     {
-        private static string dataAssembly = "nunit.testdata";
+        private static readonly string dataAssembly = "nunit.testdata";
 
         private static void CanConstructFrom(Type fixtureType)
         {
@@ -189,7 +189,7 @@ namespace NUnit.Framework.Internal
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureWithParallelizableOnOneTimeSetUp));
             Assert.AreEqual(RunState.NotRunnable, suite.RunState);
-            Assert.AreEqual("ParallelizableAttribute is only allowed on test methods and fixtures", 
+            Assert.AreEqual("ParallelizableAttribute is only allowed on test methods and fixtures",
                 suite.Properties.Get(PropertyNames.SkipReason));
         }
 

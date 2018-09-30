@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,17 +26,14 @@ using System.Collections;
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The IParameterDataSource interface is implemented by types
-    /// that can provide data for a test method parameter.
+    /// Provides data for a single test parameter.
     /// </summary>
     public interface IParameterDataSource
     {
         /// <summary>
-        /// Gets an enumeration of data items for use as arguments
-        /// for a test method parameter.
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        /// <param name="parameter">The parameter for which data is needed</param>
-        /// <returns>An enumeration containing individual data items</returns>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         IEnumerable GetData(IParameterInfo parameter);
     }
 }

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -46,7 +47,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem : IDisposable
     {
-        static Logger log = InternalTrace.GetLogger("WorkItem");
+        static readonly Logger log = InternalTrace.GetLogger("WorkItem");
 
         #region Construction and Initialization
 
@@ -134,7 +135,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The test being executed by the work item
         /// </summary>
-        public Test Test { get; private set; }
+        public Test Test { get; }
 
         /// <summary>
         /// The name of the work item - defaults to the Test name.
@@ -147,7 +148,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Filter used to include or exclude child tests
         /// </summary>
-        public ITestFilter Filter { get; private set; }
+        public ITestFilter Filter { get; }
 
         /// <summary>
         /// The execution context
@@ -191,7 +192,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets the ParallelScope associated with the test, if any,
         /// otherwise returning ParallelScope.Default;
         /// </summary>
-        public ParallelScope ParallelScope { get; private set; }
+        public ParallelScope ParallelScope { get; }
 
 #if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
@@ -208,7 +209,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if !NETSTANDARD1_6
+#if PARALLEL
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -255,18 +256,18 @@ namespace NUnit.Framework.Internal.Execution
             else
                 RunOnCurrentThread();
 #else
-                RunOnCurrentThread();
+            RunOnCurrentThread();
 #endif
         }
 
-        private readonly ManualResetEvent _completionEvent = new ManualResetEvent(false);
+        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
 
         /// <summary>
         /// Wait until the execution of this item is complete
         /// </summary>
         public void WaitForCompletion()
         {
-            _completionEvent.WaitOne();
+            _completionEvent.Wait();
         }
 
         /// <summary>
@@ -333,12 +334,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Dispose()
         {
-            if (_completionEvent != null)
-#if NET20 || NET35
-                _completionEvent.Close();
-#else
-                _completionEvent.Dispose();
-#endif
+            _completionEvent?.Dispose();
         }
 
 #endregion
@@ -402,7 +398,7 @@ namespace NUnit.Framework.Internal.Execution
             if (fixtureType == null)
                 return list;
 
-            while (fixtureType != null && !fixtureType.Equals(typeof(object)))
+            while (fixtureType != null && fixtureType != typeof(object))
             {
                 var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
                 if (node.HasMethods)
@@ -464,7 +460,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-#if !NETSTANDARD1_6
+#if PARALLEL
         private Thread thread;
 
 #if APARTMENT_STATE
@@ -491,22 +487,31 @@ namespace NUnit.Framework.Internal.Execution
         }
 #endif
 
-                private void RunOnCurrentThread()
+        [SecuritySafeCritical]
+        private void RunOnCurrentThread()
         {
-            Context.CurrentTest = this.Test;
-            Context.CurrentResult = this.Result;
-            Context.Listener.TestStarted(this.Test);
-            Context.StartTime = DateTime.UtcNow;
-            Context.StartTicks = Stopwatch.GetTimestamp();
+            var previousState = SandboxedThreadState.Capture();
+            try
+            {
+                Context.CurrentTest = this.Test;
+                Context.CurrentResult = this.Result;
+                Context.Listener.TestStarted(this.Test);
+                Context.StartTime = DateTime.UtcNow;
+                Context.StartTicks = Stopwatch.GetTimestamp();
 #if PARALLEL
-            Context.TestWorker = this.TestWorker;
+                Context.TestWorker = this.TestWorker;
 #endif
 
-            Context.EstablishExecutionEnvironment();
+                Context.EstablishExecutionEnvironment();
 
-            State = WorkItemState.Running;
+                State = WorkItemState.Running;
 
-            PerformWork();
+                PerformWork();
+            }
+            finally
+            {
+                previousState.Restore();
+            }
         }
 
 #if PARALLEL

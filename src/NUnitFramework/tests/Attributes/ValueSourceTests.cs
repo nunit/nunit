@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,15 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using NUnit.Compatibility;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -133,8 +130,8 @@ namespace NUnit.Framework.Attributes
 
         [Test, Sequential]
         public void MultipleArguments(
-            [ValueSource(nameof(Numerators))] int n, 
-            [ValueSource(nameof(Denominators))] int d, 
+            [ValueSource(nameof(Numerators))] int n,
+            [ValueSource(nameof(Denominators))] int d,
             [ValueSource(nameof(Quotients))] int q)
         {
             Assert.AreEqual(q, n / d);
@@ -219,7 +216,7 @@ namespace NUnit.Framework.Attributes
             foreach (var parameter in parameters)
             {
                 var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
-                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter)); 
+                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter));
             }
         }
 
@@ -233,7 +230,8 @@ namespace NUnit.Framework.Attributes
             new object[] { 1, "text", new object() },
             new object[0],
             new object[] { 1, new int[] { 2, 3 }, 4 },
-            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+            new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
 
         [Test]
@@ -242,7 +240,7 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 GetType(), nameof(MethodWithArrayArguments));
 
-            Assert.That(suite.TestCaseCount, Is.EqualTo(4));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(5));
 
             Assert.Multiple(() =>
             {
@@ -250,6 +248,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
                 Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([1, Int32[], 4])"));
                 Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"));
+                Assert.That(suite.Tests[4].Name, Is.EqualTo(@"MethodWithArrayArguments([System.Byte[,]])"));
             });
         }
     }

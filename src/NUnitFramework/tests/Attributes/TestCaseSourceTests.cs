@@ -335,13 +335,45 @@ namespace NUnit.Framework.Attributes
 
         static string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
 
+        #region Test name tests
+
+        public static IEnumerable<TestCaseData> IndividualInstanceNameTestDataSource()
+        {
+            var suite = (ParameterizedMethodSuite)TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture),
+                nameof(TestCaseSourceAttributeFixture.TestCaseNameTestDataMethod));
+
+            foreach (var test in suite.Tests)
+            {
+                var expectedName = (string)test.Properties.Get("ExpectedTestName");
+
+                yield return new TestCaseData(test, expectedName)
+                    .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests
+            }
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceName(ITest test, string expectedName)
+        {
+            Assert.That(test.Name, Is.EqualTo(expectedName));
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceFullName(ITest test, string expectedName)
+        {
+            var expectedFullName = typeof(TestCaseSourceAttributeFixture).FullName + "." + expectedName;
+            Assert.That(test.FullName, Is.EqualTo(expectedFullName));
+        }
+
+        #endregion
+
         [Test]
         public void TestNameIntrospectsArrayValues()
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithArrayArguments));
 
-            Assert.That(suite.TestCaseCount, Is.EqualTo(4));
+            Assert.That(suite.TestCaseCount, Is.EqualTo(5));
 
             Assert.Multiple(() =>
             {
@@ -349,6 +381,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(suite.Tests[1].Name, Is.EqualTo(@"MethodWithArrayArguments([])"));
                 Assert.That(suite.Tests[2].Name, Is.EqualTo(@"MethodWithArrayArguments([1, Int32[], 4])"));
                 Assert.That(suite.Tests[3].Name, Is.EqualTo(@"MethodWithArrayArguments([1, 2, 3, 4, 5, ...])"));
+                Assert.That(suite.Tests[4].Name, Is.EqualTo(@"MethodWithArrayArguments([System.Byte[,]])"));
             });
         }
 

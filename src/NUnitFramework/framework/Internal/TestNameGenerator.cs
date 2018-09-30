@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         public static string DefaultTestNamePattern = "{m}{a}";
 
         // The name pattern used by this TestNameGenerator
-        private string _pattern;
+        private readonly string _pattern;
 
         // The list of NameFragments used to generate names
         private List<NameFragment> _fragments;
@@ -221,7 +221,7 @@ namespace NUnit.Framework.Internal
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
                 var argArray = arg as Array;
-                if (argArray != null)
+                if (argArray != null && argArray.Rank == 1)
                 {
                     if (argArray.Length == 0)
                         display = "[]";
@@ -416,7 +416,7 @@ namespace NUnit.Framework.Internal
 
                 return EscapeControlChar(c);
             }
-            
+
             private static string EscapeControlChar(char c)
             {
                 switch (c)
@@ -466,7 +466,7 @@ namespace NUnit.Framework.Internal
 
         private class FixedTextFragment : NameFragment
         {
-            private string _text;
+            private readonly string _text;
 
             public FixedTextFragment(string text)
             {
@@ -537,7 +537,7 @@ namespace NUnit.Framework.Internal
 
         private class ArgListFragment : NameFragment
         {
-            private int _maxStringLength;
+            private readonly int _maxStringLength;
 
             public ArgListFragment(int maxStringLength)
             {
@@ -557,7 +557,7 @@ namespace NUnit.Framework.Internal
                         if (i > 0) sb.Append(",");
                         sb.Append(GetDisplayString(arglist[i], _maxStringLength));
                     }
-                    
+
                     sb.Append(')');
                 }
 
@@ -567,8 +567,8 @@ namespace NUnit.Framework.Internal
 
         private class ArgumentFragment : NameFragment
         {
-            private int _index;
-            private int _maxStringLength;
+            private readonly int _index;
+            private readonly int _maxStringLength;
 
             public ArgumentFragment(int index, int maxStringLength)
             {

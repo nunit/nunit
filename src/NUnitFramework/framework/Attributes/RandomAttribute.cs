@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -34,14 +33,13 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RandomAttribute is used to supply a set of random values
-    /// to a single parameter of a parameterized test.
+    /// Supplies a set of random values to a single parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class RandomAttribute : DataAttribute, IParameterDataSource
+    public class RandomAttribute : NUnitAttribute, IParameterDataSource
     {
         private RandomDataSource _source;
-        private int _count;
+        private readonly int _count;
 
         /// <summary>
         /// If true, no value will be repeated.
@@ -51,7 +49,7 @@ namespace NUnit.Framework
         #region Constructors
 
         /// <summary>
-        /// Construct a random set of values appropriate for the Type of the 
+        /// Construct a random set of values appropriate for the Type of the
         /// parameter on which the attribute appears, specifying only the count.
         /// </summary>
         /// <param name="count"></param>
@@ -149,14 +147,15 @@ namespace NUnit.Framework
         #region IParameterDataSource Interface
 
         /// <summary>
-        /// Get the collection of values to be used as arguments.
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         public IEnumerable GetData(IParameterInfo parameter)
         {
             // Since a separate Randomizer is used for each parameter,
             // we can't fill in the data in the constructor of the
             // attribute. Only now, when GetData is called, do we have
-            // sufficient information to create the values in a 
+            // sufficient information to create the values in a
             // repeatable manner.
 
             Type parmType = parameter.ParameterType;
@@ -199,15 +198,6 @@ namespace NUnit.Framework
             _source.Distinct = Distinct;
 
             return _source.GetData(parameter);
-
-            //// Copy the random values into the data array
-            //// and call the base class which may need to
-            //// convert them to another type.
-            //this.data = new object[values.Count];
-            //for (int i = 0; i < values.Count; i++)
-            //    this.data[i] = values[i];
-
-            //return base.GetData(parameter);
         }
 
         private bool WeConvert(Type sourceType, Type targetType)
@@ -237,12 +227,12 @@ namespace NUnit.Framework
 
         abstract class RandomDataSource<T> : RandomDataSource
         {
-            private T _min;
-            private T _max;
-            private int _count;
-            private bool _inRange;
+            private readonly T _min;
+            private readonly T _max;
+            private readonly int _count;
+            private readonly bool _inRange;
 
-            private List<T> previousValues = new List<T>();
+            private readonly List<T> previousValues = new List<T>();
 
             protected Randomizer _randomizer;
 
@@ -271,7 +261,7 @@ namespace NUnit.Framework
                 _randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
 
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min, _max, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
-                
+
 
                 for (int i = 0; i < _count; i++)
                 {
@@ -287,7 +277,7 @@ namespace NUnit.Framework
                         } while (previousValues.Contains(next));
 
                         previousValues.Add(next);
-                        
+
                         yield return next;
                     }
                     else
@@ -308,7 +298,7 @@ namespace NUnit.Framework
 
         class RandomDataConverter : RandomDataSource
         {
-            IParameterDataSource _source;
+            readonly IParameterDataSource _source;
 
             public RandomDataConverter(IParameterDataSource source)
             {
@@ -611,9 +601,9 @@ namespace NUnit.Framework
 
         class EnumDataSource : RandomDataSource
         {
-            private int _count;
+            private readonly int _count;
 
-            private List<object> previousValues = new List<object>();
+            private readonly List<object> previousValues = new List<object>();
 
             public EnumDataSource(int count)
             {

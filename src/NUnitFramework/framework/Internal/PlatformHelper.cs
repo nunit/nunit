@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal
         /// Comma-delimited list of all supported Runtime platform constants
         /// </summary>
         public static readonly string RuntimePlatforms =
-            "Net,SSCLI,Rotor,Mono,MonoTouch";
+            "Net,NetCore,SSCLI,Rotor,Mono,MonoTouch";
 
         /// <summary>
         /// Default constructor uses the operating system and
@@ -248,7 +248,7 @@ namespace NUnit.Framework.Internal
                     isSupported = IntPtr.Size == 4;
                     break;
 
-#if NET40 || NET45
+#if NET40 || NET45 || NETSTANDARD2_0
                 // We only support bitness tests of the OS in .NET 4.0 and up
                 case "64-BIT-OS":
                     isSupported = Environment.Is64BitOperatingSystem;
@@ -294,6 +294,9 @@ namespace NUnit.Framework.Internal
                 case "NET":
                     return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
 
+                case "NETCORE":
+                    return IsNetCoreRuntimeSupported(RuntimeType.NetCore, versionSpecification);
+
                 case "SSCLI":
                 case "ROTOR":
                     return IsRuntimeSupported(RuntimeType.SSCLI, versionSpecification);
@@ -316,6 +319,18 @@ namespace NUnit.Framework.Internal
                 : new Version(versionSpecification);
 
             RuntimeFramework target = new RuntimeFramework(runtime, version);
+
+            return _rt.Supports(target);
+        }
+
+        private bool IsNetCoreRuntimeSupported(RuntimeType runtime, string versionSpecification)
+        {
+            if (versionSpecification != null)
+            {
+                throw new PlatformNotSupportedException($"Detecting versions of .NET Core is not supported - {runtime.ToString()}-{versionSpecification}");
+            }
+
+            RuntimeFramework target = new RuntimeFramework(runtime, RuntimeFramework.DefaultVersion);
 
             return _rt.Supports(target);
         }

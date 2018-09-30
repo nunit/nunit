@@ -29,14 +29,13 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// CultureAttribute is used to mark a test fixture or an
-    /// individual method as applying to a particular Culture only.
+    /// Marks an assembly, test fixture or test method as applying to a specific Culture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private CultureDetector cultureDetector = new CultureDetector();
-        private CultureInfo currentCulture = CultureInfo.CurrentCulture;
+        private readonly CultureDetector cultureDetector = new CultureDetector();
+        private readonly CultureInfo currentCulture = CultureInfo.CurrentCulture;
 
         /// <summary>
         /// Constructor with no cultures specified, for use

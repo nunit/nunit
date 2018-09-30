@@ -169,6 +169,7 @@ namespace NUnit.Common
         public string InputFile { get; private set; }
 
         public IList<string> TestList { get; } = new List<string>();
+        public IList<string> PreFilters { get; } = new List<string>();
 
         public IDictionary<string, string> TestParameters { get; } = new Dictionary<string, string>();
 
@@ -215,7 +216,7 @@ namespace NUnit.Common
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
 
-        private List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
+        private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
             get
@@ -353,6 +354,9 @@ namespace NUnit.Common
                     }
                 });
 
+            this.Add("prefilter=", "Comma-separated list of {NAMES} of test classes or namespaces to be loaded. This option may be repeated.",
+                v => ((List<string>)PreFilters).AddRange(TestNameParser.Parse(RequiredValue(v, "--prefilter"))));
+
             this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
 
@@ -378,7 +382,7 @@ namespace NUnit.Common
                         }
                     }
                 });
-#if !NETSTANDARD1_6
+#if PARALLEL
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
 #endif

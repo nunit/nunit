@@ -23,6 +23,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace NUnit.TestData.TestCaseSourceAttributeFixture
@@ -147,7 +149,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        [TestCaseSource(nameof(ComplexArrayBasedTestInput))]
+        [TestCaseSource(nameof(ComplexArrayBasedTestInputTestCases))]
         public void MethodWithArrayArguments(object o)
         {
         }
@@ -184,12 +186,32 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        public static object[] ComplexArrayBasedTestInput = new[]
+        static object[] ComplexArrayBasedTestInput = new[]
         {
             new object[] { 1, "text", new object() },
             new object[0],
             new object[] { 1, new int[] { 2, 3 }, 4 },
-            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+            new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
+            new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
+
+        static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
+        {
+            foreach (var argumentValue in ComplexArrayBasedTestInput)
+                yield return new TestCaseData(args: new object[] { argumentValue });
+        }
+
+        #region Test name tests
+
+        [TestCaseSource(nameof(TestCaseNameTestDataSource))]
+        public static void TestCaseNameTestDataMethod(params object[] args) { }
+
+        public static IEnumerable<TestCaseData> TestCaseNameTestDataSource() =>
+            from spec in TestDataSpec.Specs
+            select new TestCaseData(spec.Arguments)
+                .SetArgDisplayNames(spec.ArgDisplayNames)
+                .SetProperty("ExpectedTestName", spec.GetTestCaseName(nameof(TestCaseNameTestDataMethod)));
+
+        #endregion
     }
 }

@@ -94,7 +94,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void Load_FileNotFound_ReturnsNonRunnableSuite()
         {
             var result = _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Api
                 Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void Load_BadFile_ReturnsNonRunnableSuite()
         {
             var result = _runner.Load(BAD_FILE, EMPTY_SETTINGS);
@@ -263,7 +263,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void Run_FileNotFound_ReturnsNonRunnableSuite()
         {
             _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
@@ -315,7 +315,7 @@ namespace NUnit.Framework.Api
             CheckParameterOutput(result);
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void Run_BadFile_ReturnsNonRunnableSuite()
         {
             _runner.Load(BAD_FILE, EMPTY_SETTINGS);
@@ -377,7 +377,7 @@ namespace NUnit.Framework.Api
             Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void RunAsync_FileNotFound_ReturnsNonRunnableSuite()
         {
             _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
@@ -394,7 +394,7 @@ namespace NUnit.Framework.Api
                 Does.StartWith(COULD_NOT_LOAD_MSG));
         }
 
-        [Test]
+        [Test, SetUICulture("en-US")]
         public void RunAsync_BadFile_ReturnsNonRunnableSuite()
         {
             _runner.Load(BAD_FILE, EMPTY_SETTINGS);
@@ -513,9 +513,18 @@ namespace NUnit.Framework.Api
             _testOutputCount++;
         }
 
-#endregion
+        /// <summary>
+        /// Called when a test produces message to be sent to listeners
+        /// </summary>
+        /// <param name="message">A TestMessage object containing the text to send</param>
+        public void SendMessage(TestMessage message)
+        {
+            
+        }
 
-#region Helper Methods
+        #endregion
+
+        #region Helper Methods
 
         private ITest LoadMockAssembly()
         {

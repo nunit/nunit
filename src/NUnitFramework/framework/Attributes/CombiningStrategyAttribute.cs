@@ -32,17 +32,16 @@ namespace NUnit.Framework
     using Internal.Builders;
 
     /// <summary>
-    /// Marks a test to use a particular CombiningStrategy to join
-    /// any parameter data provided. Since this is the default, the
-    /// attribute is optional.
+    /// Marks a test as using a particular CombiningStrategy to join any supplied parameter data.
+    /// Since this is the default, the attribute is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
     {
-        private NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
 
-        private ICombiningStrategy _strategy;
-        private IParameterDataProvider _dataProvider;
+        private readonly ICombiningStrategy _strategy;
+        private readonly IParameterDataProvider _dataProvider;
 
         /// <summary>
         /// Construct a CombiningStrategyAttribute incorporating an
@@ -71,16 +70,14 @@ namespace NUnit.Framework
         #region ITestBuilder Members
 
         /// <summary>
-        /// Construct one or more TestMethods from a given MethodInfo,
-        /// using available parameter data.
+        /// Builds any number of tests from the specified method and context.
         /// </summary>
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
-            
+
             IParameterInfo[] parameters = method.GetParameters();
 
             if (parameters.Length > 0)

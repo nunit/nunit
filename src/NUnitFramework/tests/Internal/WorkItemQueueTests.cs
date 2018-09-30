@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal.Execution
             _queue.Start();
             var names = new string[] { "Test1", "Test2", "Test3" };
 
-            new Thread(new ThreadStart(() => 
+            new Thread(new ThreadStart(() =>
             {
                 Thread.Sleep(10);
                 EnqueueWorkItems(names);

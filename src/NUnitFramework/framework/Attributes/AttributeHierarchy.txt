@@ -5,10 +5,10 @@ NUnitAttribute
 		TestCaseActionAttribute       : 
 		TestSuiteActionAttribute      : 
 	DataAttribute
-		ValuesAttribute               : IParameterDataSource
-			RandomAttribute           : IParameterDataSource
-		RangeAttribute                : IParameterDataSource
-		ValueSourceAttribute          : IParameterDataSource
+	ValuesAttribute                   : IParameterDataSource
+	RandomAttribute                   : IParameterDataSource
+	RangeAttribute                    : IParameterDataSource
+	ValueSourceAttribute              : IParameterDataSource
 	DatapointAttribute
 	DatapointSourceAttribute
 		DatapointsAttribute

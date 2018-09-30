@@ -73,7 +73,7 @@ namespace System.Threading
     /// </para>
     /// </remarks>
     [HostProtection(Synchronization = true, ExternalThreading = true)]
-    public struct SpinWait
+    internal struct SpinWait
     {
 
         // These constants determine the frequency of yields versus spinning. The

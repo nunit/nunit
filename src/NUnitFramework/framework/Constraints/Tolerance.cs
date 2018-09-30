@@ -32,10 +32,8 @@ namespace NUnit.Framework.Constraints
     /// type that supports taking a difference between two 
     /// objects and comparing that difference to a value.
     /// </summary>
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
-    public class Tolerance
+    public sealed class Tolerance
     {
         #region Constants and Static Properties
 
@@ -324,7 +322,7 @@ namespace NUnit.Framework.Constraints
         /// Tolerance.Range represents the range of values that match
         /// a specific tolerance, when applied to a specific value.
         /// </summary>
-        public class Range
+        public struct Range
         {
             /// <summary>
             /// The lower bound of the range
@@ -332,12 +330,12 @@ namespace NUnit.Framework.Constraints
             public readonly object LowerBound;
 
             /// <summary>
-            /// The Upper bound of the range
+            /// The upper bound of the range
             /// </summary>
             public readonly object UpperBound;
 
             /// <summary>
-            ///  Construct a Range
+            /// Constructs a range
             /// </summary>
             public Range(object lowerBound, object upperBound)
             {

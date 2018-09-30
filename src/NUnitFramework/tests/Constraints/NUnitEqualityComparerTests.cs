@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -52,6 +52,9 @@ namespace NUnit.Framework.Constraints
         [TestCase(4.0f, 4)]
         [TestCase(4.0f, 4.0d)]
         [TestCase(null, null)]
+        [TestCase((char)4, (char)4)]
+        [TestCase((char)4, 4)]
+        [TestCase(4, (char)4)]
         public void EqualItems(object x, object y)
         {
             Assert.That(comparer.AreEqual(x, y, ref tolerance));
@@ -67,6 +70,9 @@ namespace NUnit.Framework.Constraints
         [TestCase(4.0f, 2)]
         [TestCase(4.0f, 2.0d)]
         [TestCase(4, null)]
+        [TestCase((char)4, (char)2)]
+        [TestCase((char)4, 2)]
+        [TestCase(4, (char)2)]
         public void UnequalItems(object greater, object lesser)
         {
             Assert.False(comparer.AreEqual(greater, lesser, ref tolerance));
@@ -519,7 +525,7 @@ namespace NUnit.Framework.Constraints
             SomeProperty = someProperty;
         }
 
-        public int SomeProperty { get; private set; }
+        public int SomeProperty { get; }
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
@@ -546,7 +552,7 @@ namespace NUnit.Framework.Constraints
             OtherProperty = otherProperty;
         }
 
-        public int OtherProperty { get; private set; }
+        public int OtherProperty { get; }
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>

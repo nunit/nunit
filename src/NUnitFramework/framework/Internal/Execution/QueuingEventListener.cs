@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The EventQueue created and filled by this listener
         /// </summary>
-        public EventQueue Events { get; private set; }
+        public EventQueue Events { get; }
 
         /// <summary>
         /// Construct a QueuingEventListener
@@ -72,6 +72,15 @@ namespace NUnit.Framework.Internal.Execution
         public void TestOutput(TestOutput output)
         {
             Events.Enqueue(new TestOutputEvent(output));
+        }
+
+        /// <summary>
+        /// Called when a test produces a message to be sent to listeners
+        /// </summary>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
+        public void SendMessage(TestMessage message)
+        {
+            Events.Enqueue(new TestMessageEvent(message));
         }
 
         #endregion

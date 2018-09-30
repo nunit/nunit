@@ -22,15 +22,8 @@
 // ***********************************************************************
 
 #if PARALLEL
-using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Globalization;
-using System.Runtime.Serialization;
 using System.Threading;
-#if NET20 || NET35
-using ManualResetEventSlim = System.Threading.ManualResetEvent;
-#endif
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
@@ -132,6 +125,35 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 
+    /// <summary>
+    /// TestMessageEvent holds information needed to call the SendMessage method.
+    /// </summary>
+    public class TestMessageEvent : Event
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestMessageEvent"/> class.
+        /// </summary>
+        /// <param name="testMessage">The test message object.</param>
+        public TestMessageEvent(TestMessage testMessage)
+        {
+            TestMessage = testMessage;
+        }
+
+        /// <summary>
+        /// Calls <see cref="Send(ITestListener)"/> on the specified listener.
+        /// </summary>
+        /// <param name="listener">The listener.</param>
+        public override void Send(ITestListener listener)
+        {
+            listener.SendMessage(TestMessage);
+        }
+
+        /// <summary>
+        /// Holds <see cref="TestMessage"/> object for sending to all listeners
+        /// </summary>
+        public TestMessage TestMessage { get; }
+    }
+
     #endregion
 
     /// <summary>
@@ -149,7 +171,7 @@ namespace NUnit.Framework.Internal.Execution
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim(false);
+        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim();
 
         /* The whole idea is to use these two values in a transactional
          * way to track and manage the actual data inside the underlying lock-free collection

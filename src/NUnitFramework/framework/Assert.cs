@@ -50,19 +50,9 @@ namespace NUnit.Framework
     /// The Assert class contains a collection of static methods that
     /// implement the most common assertions used in NUnit.
     /// </summary>
-    public partial class Assert
+    // Abstract because we support syntax extension by inheriting and declaring new static members.
+    public abstract partial class Assert
     {
-        #region Constructor
-
-        /// <summary>
-        /// We don't actually want any instances of this object, but some people
-        /// like to inherit from it to add other static methods. Hence, the
-        /// protected constructor disallows any instances of this object.
-        /// </summary>
-        protected Assert() { }
-
-        #endregion
-
         #region Equals and ReferenceEquals
 
         /// <summary>
@@ -360,11 +350,7 @@ namespace NUnit.Framework
 
             try
             {
-                using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testDelegate))
-                {
-                    var result = testDelegate();
-                    region.WaitForPendingOperationsToComplete(result);
-                }
+                AsyncToSyncAdapter.Await(testDelegate.Invoke);
             }
             finally
             {
@@ -415,7 +401,7 @@ namespace NUnit.Framework
         }
 
         // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
-        private static StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
+        private static readonly StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
 
         private static string GetStackTrace() =>
             StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(Environment.StackTrace));

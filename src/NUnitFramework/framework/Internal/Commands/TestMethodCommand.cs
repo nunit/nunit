@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -77,35 +77,23 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
-                return RunAsyncTestMethod(context);
-            else
-#endif
-                return RunNonAsyncTestMethod(context);
-        }
-
-#if ASYNC
-        private object RunAsyncTestMethod(TestExecutionContext context)
-        {
-            using (AsyncInvocationRegion region = AsyncInvocationRegion.Create(testMethod.Method.MethodInfo))
+            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                object result = Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
-
                 try
                 {
-                    return region.WaitForPendingOperationsToComplete(result);
+                    return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
                 }
                 catch (Exception e)
                 {
                     throw new NUnitException("Rethrown", e);
                 }
             }
-        }
 #endif
+            return InvokeTestMethod(context);
+        }
 
-        private object RunNonAsyncTestMethod(TestExecutionContext context)
+        private object InvokeTestMethod(TestExecutionContext context)
         {
-            //return Reflect.InvokeMethod(testMethod.Method.MethodInfo, context.TestObject, arguments);
             return testMethod.Method.Invoke(context.TestObject, arguments);
         }
     }

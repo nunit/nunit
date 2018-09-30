@@ -26,14 +26,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if !NETSTANDARD1_6
-using System.Security;
+#if !NETSTANDARD1_4
 using System.Security.Principal;
 #endif
 
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        private TestExecutionContext _priorContext;
+        private readonly TestExecutionContext _priorContext;
 
         /// <summary>
         /// Indicates that a stop has been requested
@@ -85,26 +85,11 @@ namespace NUnit.Framework.Internal
         private Randomizer _randomGenerator;
 
         /// <summary>
-        /// The current culture
-        /// </summary>
-        private CultureInfo _currentCulture;
-
-        /// <summary>
-        /// The current UI culture
-        /// </summary>
-        private CultureInfo _currentUICulture;
-
-        /// <summary>
         /// The current test result
         /// </summary>
         private TestResult _currentResult;
 
-#if !NETSTANDARD1_6
-        /// <summary>
-        /// The current Principal.
-        /// </summary>
-        private IPrincipal _currentPrincipal;
-#endif
+        private SandboxedThreadState _sandboxedThreadState;
 
 #endregion
 
@@ -119,12 +104,7 @@ namespace NUnit.Framework.Internal
             TestCaseTimeout = 0;
             UpstreamActions = new List<ITestAction>();
 
-            _currentCulture = CultureInfo.CurrentCulture;
-            _currentUICulture = CultureInfo.CurrentUICulture;
-
-#if !NETSTANDARD1_6
-            _currentPrincipal = Thread.CurrentPrincipal;
-#endif
+            UpdateContextFromEnvironment();
 
             CurrentValueFormatter = (val) => MsgUtils.DefaultValueFormatter(val);
             IsSingleThreaded = false;
@@ -147,14 +127,9 @@ namespace NUnit.Framework.Internal
             TestCaseTimeout = other.TestCaseTimeout;
             UpstreamActions = new List<ITestAction>(other.UpstreamActions);
 
-            _currentCulture = other.CurrentCulture;
-            _currentUICulture = other.CurrentUICulture;
+            _sandboxedThreadState = other._sandboxedThreadState;
 
             DefaultFloatingPointTolerance = other.DefaultFloatingPointTolerance;
-
-#if !NETSTANDARD1_6
-            _currentPrincipal = other.CurrentPrincipal;
-#endif
 
             CurrentValueFormatter = other.CurrentValueFormatter;
 
@@ -367,7 +342,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests
         /// </summary>
-        public List<ITestAction> UpstreamActions { get; private set; }
+        public List<ITestAction> UpstreamActions { get; }
 
         // TODO: Put in checks on all of these settings
         // with side effects so we only change them
@@ -378,12 +353,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentCulture
         {
-            get { return _currentCulture; }
+            get { return _sandboxedThreadState.Culture; }
             set
             {
-                _currentCulture = value;
-#if !NETSTANDARD1_6
-                Thread.CurrentThread.CurrentCulture = _currentCulture;
+                _sandboxedThreadState = _sandboxedThreadState.WithCulture(value);
+#if NETSTANDARD1_4
+                CultureInfo.CurrentCulture = value;
+#else
+                Thread.CurrentThread.CurrentCulture = value;
 #endif
             }
         }
@@ -393,27 +370,29 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentUICulture
         {
-            get { return _currentUICulture; }
+            get { return _sandboxedThreadState.UICulture; }
             set
             {
-                _currentUICulture = value;
-#if !NETSTANDARD1_6
-                Thread.CurrentThread.CurrentUICulture = _currentUICulture;
+                _sandboxedThreadState = _sandboxedThreadState.WithUICulture(value);
+#if NETSTANDARD1_4
+                CultureInfo.CurrentUICulture = value;
+#else
+                Thread.CurrentThread.CurrentUICulture = value;
 #endif
             }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
         public IPrincipal CurrentPrincipal
         {
-            get { return _currentPrincipal; }
+            get { return _sandboxedThreadState.Principal; }
             set
             {
-                _currentPrincipal = value;
-                Thread.CurrentPrincipal = _currentPrincipal;
+                _sandboxedThreadState = _sandboxedThreadState.WithPrincipal(value);
+                Thread.CurrentPrincipal = value;
             }
         }
 #endif
@@ -445,12 +424,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void UpdateContextFromEnvironment()
         {
-            _currentCulture = CultureInfo.CurrentCulture;
-            _currentUICulture = CultureInfo.CurrentUICulture;
-
-#if !NETSTANDARD1_6
-            _currentPrincipal = Thread.CurrentPrincipal;
-#endif
+            _sandboxedThreadState = SandboxedThreadState.Capture();
         }
 
         /// <summary>
@@ -458,14 +432,14 @@ namespace NUnit.Framework.Internal
         /// Note that we may be running on the same thread where the
         /// context was initially created or on a different thread.
         /// </summary>
+        [SecuritySafeCritical] // This gives partial trust code the ability to capture an existing
+                               // SynchronizationContext.Current and restore it at any time.
+                               // This simply unblocks us on .NET Framework and is not in the spirit
+                               // of partial trust. If we choose to make partial trust a design priority,
+                               // we’ll need to thoroughly review more than just this instance.
         public void EstablishExecutionEnvironment()
         {
-#if !NETSTANDARD1_6
-            Thread.CurrentThread.CurrentCulture = _currentCulture;
-            Thread.CurrentThread.CurrentUICulture = _currentUICulture;
-            Thread.CurrentPrincipal = _currentPrincipal;
-#endif
-
+            _sandboxedThreadState.Restore();
             CurrentContext = this;
         }
 
@@ -510,11 +484,21 @@ namespace NUnit.Framework.Internal
             return context;
         }
 
-#endregion
+        /// <summary>
+        /// Sends a message from test to listeners. This message is not kind of test output and doesn't go to test result.
+        /// </summary>
+        /// <param name="destination">A name recognized by the intended listeners.</param>
+        /// <param name="message">A message to be sent</param>
+        public void SendMessage(string destination, string message)
+        {
+            Listener?.SendMessage(new TestMessage(destination, message, CurrentTest.Id));
+        }
 
-#region InitializeLifetimeService
+        #endregion
 
-#if !NETSTANDARD1_6
+        #region InitializeLifetimeService
+
+#if !NETSTANDARD1_4
         /// <summary>
         /// Obtain lifetime service object
         /// </summary>
@@ -546,7 +530,7 @@ namespace NUnit.Framework.Internal
         /// </example>
         public class IsolatedContext : IDisposable
         {
-            private TestExecutionContext _originalContext;
+            private readonly TestExecutionContext _originalContext;
 
             /// <summary>
             /// Save the original current TestExecutionContext and
@@ -568,14 +552,14 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested AdhocTestExecutionContext
+        #region Nested AdhocTestExecutionContext
 
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed
         /// but not available in CurrentContext. This happens when tests are run
-        /// on an adoc basis or Asserts are used outside of tests.
+        /// on an ad-hoc basis or Asserts are used outside of tests.
         /// </summary>
         public class AdhocContext : TestExecutionContext
         {

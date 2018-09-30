@@ -45,6 +45,7 @@ namespace NUnit.Framework.Internal.Execution
             new TestFinishedEvent(null),
             new TestStartedEvent(null),
             new TestOutputEvent(null),
+            new TestMessageEvent(null),
             new TestFinishedEvent(null),
             new TestFinishedEvent(null),
         };

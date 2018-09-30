@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -35,7 +33,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class ParameterDataProvider : IParameterDataProvider
     {
-        private List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
+        private readonly List<IParameterDataProvider> _providers = new List<IParameterDataProvider>();
 
         /// <summary>
         /// Construct with a collection of individual providers
@@ -46,11 +44,9 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Determine whether any data is available for a parameter.
+        /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
+        /// <param name="parameter">The parameter of a parameterized test</param>
         public bool HasDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)
@@ -61,12 +57,9 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Return an IEnumerable providing data for use with the
-        /// supplied parameter.
+        /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>An IEnumerable providing the required data</returns>
+        /// <param name="parameter">The parameter of a parameterized test</param>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)

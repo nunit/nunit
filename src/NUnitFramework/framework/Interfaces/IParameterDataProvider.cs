@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,26 +26,20 @@ using System.Collections;
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The IDataPointProvider interface is used by extensions
-    /// that provide data for a single test parameter.
+    /// Provides data for a single test parameter.
     /// </summary>
     public interface IParameterDataProvider
     {
         /// <summary>
-        /// Determine whether any data is available for a parameter.
+        /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>True if any data is available, otherwise false.</returns>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         bool HasDataFor(IParameterInfo parameter);
 
         /// <summary>
-        /// Return an IEnumerable providing data for use with the
-        /// supplied parameter.
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>An IEnumerable providing the required data</returns>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         IEnumerable GetDataFor(IParameterInfo parameter);
     }
 }

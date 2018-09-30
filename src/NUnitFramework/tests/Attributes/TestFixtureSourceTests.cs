@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -22,10 +22,9 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
+using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Filters;
 using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
 
@@ -87,6 +86,36 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Tests[2].RunState, Is.EqualTo(RunState.Explicit));
         }
 
+        #region Test name tests
+
+        public static IEnumerable<TestCaseData> IndividualInstanceNameTestDataSource()
+        {
+            var suite = (ParameterizedFixtureSuite)TestBuilder.MakeFixture(typeof(IndividualInstanceNameTestDataFixture));
+
+            foreach (var testFixture in suite.Tests)
+            {
+                var expectedName = (string)testFixture.Properties.Get("ExpectedTestName");
+
+                yield return new TestCaseData((TestFixture)testFixture, expectedName)
+                    .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests
+            }
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceName(TestFixture testFixture, string expectedName)
+        {
+            Assert.That(testFixture.Name, Is.EqualTo(expectedName));
+        }
+
+        [TestCaseSource(nameof(IndividualInstanceNameTestDataSource))]
+        public static void IndividualInstanceFullName(TestFixture testFixture, string expectedName)
+        {
+            var expectedFullName = typeof(IndividualInstanceNameTestDataFixture).Namespace + "." + expectedName;
+            Assert.That(testFixture.FullName, Is.EqualTo(expectedFullName));
+        }
+
+        #endregion
+
         [Test]
         public void Issue1118()
         {
@@ -119,12 +148,30 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void CanRunGenericFixtureSourceWithProperArgsProvided()
+        public void CanRunGenericFixtureSourceWithProperTypeArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithProperArgsProvided<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
+        }
+
+        [Test]
+        public void CanRunGenericFixtureSourceWithProperTypeAndConstructorArgsProvided()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithTypeAndConstructorArgs<>));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithTypeAndConstructorArgsSource.Source.Length));
+        }
+
+        [Test]
+        public void CanRunGenericFixtureSourceWithConstructorArgsProvidedAndTypeArgsDeduced()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithConstructorArgs<>));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
         }
     }
 }

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,19 +21,17 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
-    using System;
-    using System.Collections.Generic;
-    using NUnit.Framework.Interfaces;
-    using NUnit.Framework.Internal;
-    using NUnit.Framework.Internal.Builders;
-
     /// <summary>
-    /// Adding this attribute to a method makes the method callable from the NUnit test runner.
+    /// Marks the method as callable from the NUnit test runner.
     /// </summary>
-    /// 
+    ///
     /// <example>
     /// [TestFixture]
     /// public class Fixture
@@ -41,13 +39,13 @@ namespace NUnit.Framework
     ///   [Test]
     ///   public void MethodToTest()
     ///   {}
-    ///   
+    ///
     ///   [Test(Description = "more detailed description")]
     ///   public void TestDescriptionMethod()
     ///   {}
     /// }
     /// </example>
-    /// 
+    ///
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
     public class TestAttribute : NUnitAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
@@ -105,7 +103,7 @@ namespace NUnit.Framework
 
             if (_hasExpectedResult && test.Method.GetParameters().Length > 0)
                 test.MakeInvalid("The 'TestAttribute.ExpectedResult' property may not be used on parameterized methods.");
-            
+
         }
 
         #endregion
@@ -113,11 +111,10 @@ namespace NUnit.Framework
         #region ISimpleTestBuilder Members
 
         /// <summary>
-        /// Construct a TestMethod from a given method.
+        /// Builds a single test from the specified method and context.
         /// </summary>
         /// <param name="method">The method for which a test is to be constructed.</param>
         /// <param name="suite">The suite to which the test will be added.</param>
-        /// <returns>A TestMethod</returns>
         public TestMethod BuildFrom(IMethodInfo method, Test suite)
         {
             TestCaseParameters parms = null;
@@ -130,7 +127,7 @@ namespace NUnit.Framework
 
             return _builder.BuildTestMethod(method, suite, parms);
         }
-        
+
         #endregion
     }
 }

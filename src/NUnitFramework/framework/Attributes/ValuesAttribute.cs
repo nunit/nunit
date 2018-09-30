@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -27,15 +27,15 @@ using System.Reflection;
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
     /// <summary>
-    /// ValuesAttribute is used to provide literal arguments for
-    /// an individual parameter of a test.
+    /// Provides literal arguments for an individual parameter of a test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public class ValuesAttribute : DataAttribute, IParameterDataSource
+    public class ValuesAttribute : NUnitAttribute, IParameterDataSource
     {
         /// <summary>
         /// The collection of data to be returned. Must
@@ -44,7 +44,6 @@ namespace NUnit.Framework
         /// elements may have their type changed in GetData
         /// if necessary
         /// </summary>
-        // TODO: This causes a lot of boxing so we should eliminate it
         protected object[] data;
 
         /// <summary>
@@ -96,11 +95,52 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the collection of values to be used as arguments
+        /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         public IEnumerable GetData(IParameterInfo parameter)
         {
-            return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
+            if (data.Length == 0)
+                return GenerateData(parameter.ParameterType);
+            else
+                return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
+        }
+
+        /// <summary>
+        /// To generate data for Values attribute, in case no data is provided.
+        /// </summary>
+        private static IEnumerable GenerateData(Type targetType)
+        {
+            if (IsNullableEnum(targetType))
+            {
+                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(targetType));
+                var enumValuesWithNull = new object[enumValues.Length + 1];
+                Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
+                return enumValuesWithNull;
+            }
+            if (targetType.GetTypeInfo().IsEnum)
+            {
+                return Enum.GetValues(targetType);
+            }
+            if (targetType == typeof(bool?))
+            {
+                return new object[] { null, true, false };
+            }
+            if (targetType == typeof(bool))
+            {
+                return new object[] { true, false };
+            }
+
+            return new object[] { };
+        }
+
+        /// <summary>
+        /// To Check if type is nullable enum.
+        /// </summary>
+        private static bool IsNullableEnum(Type t)
+        {
+            Type u = Nullable.GetUnderlyingType(t);
+            return (u != null) && u.GetTypeInfo().IsEnum;
         }
     }
 }

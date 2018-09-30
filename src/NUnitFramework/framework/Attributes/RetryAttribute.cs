@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,13 +29,13 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// <see cref="RetryAttribute" /> is used on a test method to specify that it should
-    /// be rerun if it fails, up to a maximum number of times.
+    /// Specifies that a test method should be rerun on failure up to the specified 
+    /// maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class RetryAttribute : PropertyAttribute, IWrapSetUpTearDown
+    public class RetryAttribute : PropertyAttribute, IRepeatTest
     {
-        private int _tryCount;
+        private readonly int _tryCount;
 
         /// <summary>
         /// Construct a <see cref="RetryAttribute" />
@@ -46,7 +46,7 @@ namespace NUnit.Framework
             _tryCount = tryCount;
         }
 
-        #region IWrapSetUpTearDown Members
+        #region IRepeatTest Members
 
         /// <summary>
         /// Wrap a command and return the result.
@@ -67,7 +67,7 @@ namespace NUnit.Framework
         /// </summary>
         public class RetryCommand : DelegatingTestCommand
         {
-            private int _tryCount;
+            private readonly int _tryCount;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="RetryCommand"/> class.

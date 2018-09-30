@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -34,11 +34,11 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EqualConstraintResult : ConstraintResult
     {
-        private object expectedValue;
-        private Tolerance tolerance;
-        private bool caseInsensitive;
-        private bool clipStrings;
-        private IList<NUnitEqualityComparer.FailurePoint> failurePoints;
+        private readonly object expectedValue;
+        private readonly Tolerance tolerance;
+        private readonly bool caseInsensitive;
+        private readonly bool clipStrings;
+        private readonly IList<NUnitEqualityComparer.FailurePoint> failurePoints;
 
         #region Message Strings
         private static readonly string StringsDiffer_1 =
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Constraints
         /// Construct an EqualConstraintResult
         /// </summary>
         public EqualConstraintResult(EqualConstraint constraint, object actual, bool hasSucceeded)
-            : base(constraint, actual, hasSucceeded) 
+            : base(constraint, actual, hasSucceeded)
         {
             this.expectedValue = constraint.Arguments[0];
             this.tolerance = constraint.Tolerance;
@@ -152,12 +152,12 @@ namespace NUnit.Framework.Constraints
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
-                    writer.WriteCollectionElements(actual, failurePoint.Position, 3);
+                    writer.WriteCollectionElements(actual.Skip(failurePoint.Position), 0, 3);
                 }
                 else
                 {
                     writer.Write("  Missing:  ");
-                    writer.WriteCollectionElements(expected, failurePoint.Position, 3);
+                    writer.WriteCollectionElements(expected.Skip(failurePoint.Position), 0, 3);
                 }
             }
         }
@@ -241,6 +241,7 @@ namespace NUnit.Framework.Constraints
 
             return null;
         }
+
         #endregion
 
         #region DisplayEnumerableDifferences

@@ -19,16 +19,19 @@
     <!-- netcoreapp1.1 tests currently pull the netstandard1.6 framework, and
          netcoreapp2.0 tests currently pull the netstandard2.0 framework -->
 
-    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.6'
-                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PARALLEL</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
+                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PARALLEL;SERIALIZATION</DefineConstants>
 
     <DefineConstants Condition="'$(TargetFramework)' != 'net20'
                             and '$(TargetFramework)' != 'net35'">$(DefineConstants);ASYNC</DefineConstants>
 
-    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.6'
+    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
                             and '$(TargetFramework)' != 'netcoreapp1.1'
                             and '$(TargetFramework)' != 'netstandard2.0'
-                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);PLATFORM_DETECTION;THREAD_ABORT;APARTMENT_STATE</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);THREAD_ABORT;APARTMENT_STATE</DefineConstants>
+
+    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
+                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PLATFORM_DETECTION</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

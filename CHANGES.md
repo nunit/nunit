@@ -1,3 +1,8 @@
+### NUnit 3.10.1 - March 12, 2018
+
+Added a namespace to the props file included in the NuGet package to make it
+compatible with versions of Visual Studio prior to VS 2017.
+
 ### NUnit 3.10 - March 12, 2018
 
 This release adds a .NET Standard 2.0 version of the framework which re-enables
@@ -6,14 +11,14 @@ like parallelism, timeouts, directory and path based asserts, etc. It also conta
 numerous bug fixes and smaller enhancements. We've improved our XML docs,
 fixed performance issues and added more detail to Multiple Asserts.
 
-This release also contains source linked PDB files allowing developers to debug
+This release also contains source-indexed PDB files allowing developers to debug
 into the NUnit Framework. This allows you to track down errors or see how the
 framework works.
 
 In order to support the .NET Standard 2.0 version, the NUnit project switched to
 the new CSPROJ format and now requires Visual Studio 2017 to compile. This only
 effects people contributing to the project. NUnit still supports building and
-compiling your tests in older .NET IDE's and NUnit still supports older versions
+compiling your tests in older .NET IDEs and NUnit still supports older versions
 of the .NET Framework back to 2.0. For contributors, NUnit can now compile all
 supported targets on Windows, Linux and Mac using the Cake command line build.
 

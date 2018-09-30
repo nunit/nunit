@@ -28,7 +28,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Attribute used to apply a category to a test
+    /// Applies a category to a test
     /// </summary>
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
     public class CategoryAttribute : NUnitAttribute, IApplyToTest

@@ -143,7 +143,7 @@ using NUnit.Compatibility;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
 using System.Security.Permissions;
 using System.Runtime.Serialization;
 #endif
@@ -151,9 +151,8 @@ using System.Runtime.Serialization;
 namespace NUnit.Options
 {
     public class OptionValueCollection : IList, IList<string> {
-
-        List<string> values = new List<string> ();
-        OptionContext c;
+        readonly List<string> values = new List<string>();
+        readonly OptionContext c;
 
         internal OptionValueCollection (OptionContext c)
         {
@@ -244,8 +243,8 @@ namespace NUnit.Options
         private Option                option;
         private string                name;
         private int                   index;
-        private OptionSet             set;
-        private OptionValueCollection c;
+        private readonly OptionSet             set;
+        private readonly OptionValueCollection c;
 
         public OptionContext (OptionSet set)
         {
@@ -284,10 +283,11 @@ namespace NUnit.Options
     }
 
     public abstract class Option {
-        string prototype, description;
-        string[] names;
-        OptionValueType type;
-        int count;
+        readonly string prototype;
+        readonly string description;
+        readonly string[] names;
+        readonly OptionValueType type;
+        readonly int count;
         string[] separators;
 
         protected Option (string prototype, string description)
@@ -352,13 +352,13 @@ namespace NUnit.Options
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
 #endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
                     t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
 #else
                     t = (T) conv.ConvertFromString (value);
@@ -468,12 +468,10 @@ namespace NUnit.Options
         }
     }
 
-#if !NETSTANDARD1_6
     [Serializable]
-#endif
     public class OptionException : Exception
     {
-        private string option;
+        private readonly string option;
 
         public OptionException ()
         {
@@ -491,7 +489,7 @@ namespace NUnit.Options
             this.option = optionName;
         }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
@@ -503,7 +501,7 @@ namespace NUnit.Options
             get {return this.option;}
         }
 
-#if !NETSTANDARD1_6
+#if SERIALIZATION
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {
@@ -600,7 +598,7 @@ namespace NUnit.Options
         }
 
         sealed class ActionOption : Option {
-            Action<OptionValueCollection> action;
+            readonly Action<OptionValueCollection> action;
 
             public ActionOption (string prototype, string description, int count, Action<OptionValueCollection> action)
                 : base (prototype, description, count)
@@ -647,7 +645,7 @@ namespace NUnit.Options
         }
 
         sealed class ActionOption<T> : Option {
-            Action<T> action;
+            readonly Action<T> action;
 
             public ActionOption (string prototype, string description, Action<T> action)
                 : base (prototype, description, 1)
@@ -664,7 +662,7 @@ namespace NUnit.Options
         }
 
         sealed class ActionOption<TKey, TValue> : Option {
-            OptionAction<TKey, TValue> action;
+            readonly OptionAction<TKey, TValue> action;
 
             public ActionOption (string prototype, string description, OptionAction<TKey, TValue> action)
                 : base (prototype, description, 2)

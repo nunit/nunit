@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -32,8 +32,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseAttribute is used to mark parameterized test cases
-    /// and provide them with their arguments.
+    /// Marks a method as a parameterized test suite and provides arguments for each test case.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited=false)]
     public class TestCaseAttribute : NUnitAttribute, ITestBuilder, ITestCaseData, IImplyFixture
@@ -48,7 +47,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(params object[] arguments)
         {
             RunState = RunState.Runnable;
-            
+
             if (arguments == null)
                 Arguments = new object[] { null };
             else
@@ -63,7 +62,7 @@ namespace NUnit.Framework
         /// <param name="arg"></param>
         public TestCaseAttribute(object arg)
         {
-            RunState = RunState.Runnable;			
+            RunState = RunState.Runnable;
             Arguments = new object[] { arg };
             Properties = new PropertyBag();
         }
@@ -75,7 +74,7 @@ namespace NUnit.Framework
         /// <param name="arg2"></param>
         public TestCaseAttribute(object arg1, object arg2)
         {
-            RunState = RunState.Runnable;			
+            RunState = RunState.Runnable;
             Arguments = new object[] { arg1, arg2 };
             Properties = new PropertyBag();
         }
@@ -88,7 +87,7 @@ namespace NUnit.Framework
         /// <param name="arg3"></param>
         public TestCaseAttribute(object arg1, object arg2, object arg3)
         {
-            RunState = RunState.Runnable;			
+            RunState = RunState.Runnable;
             Arguments = new object[] { arg1, arg2, arg3 };
             Properties = new PropertyBag();
         }
@@ -111,12 +110,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the list of arguments to a test case
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// Gets the properties of the test case
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         #endregion
 
@@ -182,10 +181,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets or sets the reason for ignoring the test
         /// </summary>
-        public string Ignore 
-        { 
+        public string Ignore
+        {
             get { return IgnoreReason; }
-            set { IgnoreReason = value; } 
+            set { IgnoreReason = value; }
         }
 
         /// <summary>
@@ -204,8 +203,8 @@ namespace NUnit.Framework
         /// Gets or sets the reason for not running the test.
         /// </summary>
         /// <value>The reason.</value>
-        public string Reason 
-        { 
+        public string Reason
+        {
             get { return Properties.Get(PropertyNames.SkipReason) as string; }
             set { Properties.Set(PropertyNames.SkipReason, value); }
         }
@@ -244,13 +243,13 @@ namespace NUnit.Framework
         public string Category
         {
             get { return Properties.Get(PropertyNames.Category) as string; }
-            set 
-            { 
+            set
+            {
                 foreach (string cat in value.Split(new char[] { ',' }) )
-                    Properties.Add(PropertyNames.Category, cat); 
+                    Properties.Add(PropertyNames.Category, cat);
             }
         }
- 
+
         #endregion
 
         #region Helper Methods
@@ -329,7 +328,7 @@ namespace NUnit.Framework
                             else
                                 throw new TargetParameterCountException(string.Format(
                                     "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
-                                    argsNeeded, 
+                                    argsNeeded,
                                     argsProvided));
                         }
                     }
@@ -446,12 +445,10 @@ namespace NUnit.Framework
         #region ITestBuilder Members
 
         /// <summary>
-        /// Construct one or more TestMethods from a given MethodInfo,
-        /// using available parameter data.
+        /// Builds a single test from the specified method and context.
         /// </summary>
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
-        /// <returns>One or more TestMethods</returns>
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
@@ -461,7 +458,7 @@ namespace NUnit.Framework
                 test.RunState != RunState.Ignored)
             {
                 PlatformHelper platformHelper = new PlatformHelper();
-                
+
                 if (!platformHelper.IsPlatformSupported(this))
                 {
                     test.RunState = RunState.Skipped;

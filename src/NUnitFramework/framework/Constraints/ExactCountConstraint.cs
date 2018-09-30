@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -64,26 +65,33 @@ namespace NUnit.Framework.Constraints
         /// Apply the item constraint to each item in the collection,
         /// succeeding only if the expected number of items pass.
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
+        /// <param name="actual">The value to be tested</param>
+        /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            var itemList = new Collection<object>();
+            var matchCount = 0;
 
-            int count = 0;
-            if (_itemConstraint == null)
+            foreach (var item in enumerable)
             {
-                foreach (object item in enumerable)
-                    count++;
-            }
-            else
-            {
-                foreach (object item in enumerable)
+                if (_itemConstraint != null)
+                {
                     if (_itemConstraint.ApplyTo(item).IsSuccess)
-                        count++;
+                        matchCount++;
+                }
+                else
+                {
+                    matchCount++;
+                }
+
+                // We intentionally add one item too many because we use it to trigger
+                // the ellipsis when we call "MsgUtils.FormatCollection" later on.
+                if (itemList.Count <= ExactCountConstraintResult.MaxDisplayCount)
+                    itemList.Add(item);
             }
 
-            return new ConstraintResult(this, actual, count == _expectedCount);
+            return new ExactCountConstraintResult(this, actual, matchCount == _expectedCount, matchCount, itemList);
         }
 
         /// <summary>

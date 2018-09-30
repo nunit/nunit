@@ -145,7 +145,7 @@ namespace NUnit.TestUtilities
             var suite = MakeParameterizedMethodSuite(type, methodName);
 
             object testObject = null;
-            if (!IsStaticClass(type))
+            if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
             return RunTest(suite, testObject);
@@ -156,7 +156,7 @@ namespace NUnit.TestUtilities
             var testMethod = MakeTestCase(type, methodName);
 
             object testObject = null;
-            if (!IsStaticClass(type))
+            if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
             return RunTest(testMethod, testObject);
@@ -171,11 +171,7 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunAsTestCase(Action action)
         {
-#if NETCOREAPP1_1
             var method = action.GetMethodInfo();
-#else
-            var method = action.Method;
-#endif
             var testMethod = MakeTestCase(method.DeclaringType, method.Name);
             return RunTest(testMethod);
         }
@@ -201,19 +197,6 @@ namespace NUnit.TestUtilities
             }
 
             return work.Result;
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        private static bool IsStaticClass(Type type)
-        {
-#if NET40
-            return type.IsAbstract && type.IsSealed;
-#else
-            return type.GetTypeInfo().IsAbstract && type.GetTypeInfo().IsSealed;
-#endif
         }
 
         #endregion

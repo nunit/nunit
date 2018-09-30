@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -37,27 +36,18 @@ namespace NUnit.Framework.Internal.Builders
         #region IParameterDataProvider Members
 
         /// <summary>
-        /// Determine whether any data is available for a parameter.
+        /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">A ParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>
-        /// True if any data is available, otherwise false.
-        /// </returns>
+        /// <param name="parameter">The parameter of a parameterized test</param>
         public bool HasDataFor(IParameterInfo parameter)
         {
             return parameter.IsDefined<IParameterDataSource>(false);
         }
 
         /// <summary>
-        /// Return an IEnumerable providing data for use with the
-        /// supplied parameter.
+        /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="parameter">An IParameterInfo representing one
-        /// argument to a parameterized test</param>
-        /// <returns>
-        /// An IEnumerable providing the required data
-        /// </returns>
+        /// <param name="parameter">The parameter of a parameterized test</param>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var data = new List<object>();

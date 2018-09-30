@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,11 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 
 using NUnit.Framework.Interfaces;
 
@@ -39,25 +35,25 @@ namespace NUnit.Framework.Internal
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// specifying the Assembly and the path from which it was loaded.
+        /// specifying the Assembly and the suite name.
         /// </summary>
         /// <param name="assembly">The assembly this test represents.</param>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(Assembly assembly, string path)
-            : base(path)
+        /// <param name="name">The desired name for the test suite.</param>
+        public TestAssembly(Assembly assembly, string name)
+            : base(name)
         {
             this.Assembly = assembly;
-            this.Name = Path.GetFileName(path);
+            this.Name = name;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestAssembly"/> class
-        /// for a path which could not be loaded.
+        /// specifying the suite name for an assembly that could not be loaded.
         /// </summary>
-        /// <param name="path">The path used to load the assembly.</param>
-        public TestAssembly(string path) : base(path)
+        /// <param name="name">The desired name for the test suite.</param>
+        public TestAssembly(string name) : base(name)
         {
-            this.Name = Path.GetFileName(path);
+            this.Name = name;
         }
 
         /// <summary>
@@ -76,7 +72,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Assembly represented by this instance.
         /// </summary>
-        public Assembly Assembly { get; private set; }
+        public Assembly Assembly { get; }
 
         /// <summary>
         /// Gets the name used for the top-level element in the
@@ -96,7 +92,7 @@ namespace NUnit.Framework.Internal
         public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
             return Assembly != null
-                ? Assembly.GetAttributes<TAttr>().ToArray()
+                ? Assembly.GetAttributes<TAttr>()
                 : new TAttr[0];
         }
     }

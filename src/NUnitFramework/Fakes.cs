@@ -22,7 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Compatibility;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using BF = System.Reflection.BindingFlags;

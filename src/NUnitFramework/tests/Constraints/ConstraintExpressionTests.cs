@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class ConstraintExpressionTests
     {
-        static Func<int, int, bool> myIntComparer = (x, y) => x == y;
+        static readonly Func<int, int, bool> myIntComparer = (x, y) => x == y;
 
         [Test]
         public void ConstraintExpressionMemberAnd()
@@ -98,6 +98,14 @@ namespace NUnit.Framework.Constraints
             var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             var result = containsConstraint.ApplyTo(collection1);
             Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void ConstraintExpressionAnyOfType()
+        {
+            var constraintExpression = new ConstraintExpression();
+            var constraint = constraintExpression.AnyOf(new string[] { "RED", "GREEN" }).IgnoreCase;
+            Assert.That("red", constraint);
         }
     }
 }

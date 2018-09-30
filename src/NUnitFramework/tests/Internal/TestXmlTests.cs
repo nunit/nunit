@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -56,13 +56,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestTypeTests()
         {
-            Assert.That(testMethod.TestType, 
+            Assert.That(testMethod.TestType,
                 Is.EqualTo("TestMethod"));
-            Assert.That(testFixture.TestType, 
+            Assert.That(testFixture.TestType,
                 Is.EqualTo("TestFixture"));
-            Assert.That(testSuite.TestType, 
+            Assert.That(testSuite.TestType,
                 Is.EqualTo("TestSuite"));
-            Assert.That(new TestAssembly("junk").TestType, 
+            Assert.That(new TestAssembly("junk").TestType,
                 Is.EqualTo("Assembly"));
             Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));

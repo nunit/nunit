@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal
 {
@@ -32,12 +31,11 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ParameterizedMethodSuite : TestSuite
     {
-        private bool _isTheory;
+        private readonly bool _isTheory;
 
         /// <summary>
-        /// Construct from a MethodInfo
+        /// Initializes a new instance of the <see cref="ParameterizedMethodSuite"/> class.
         /// </summary>
-        /// <param name="method"></param>
         public ParameterizedMethodSuite(IMethodInfo method)
             : base(method.TypeInfo.FullName, method.Name)
         {
@@ -49,7 +47,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a string representing the type of test
         /// </summary>
-        /// <value></value>
         public override string TestType
         {
             get

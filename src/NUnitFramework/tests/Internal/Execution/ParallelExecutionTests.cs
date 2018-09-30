@@ -464,6 +464,11 @@ namespace NUnit.Framework.Internal.Execution
 
         }
 
+        public void SendMessage(TestMessage message)
+        {
+            
+        }
+
 #endregion
 
 #region Helper Methods
@@ -588,7 +593,7 @@ namespace NUnit.Framework.Internal.Execution
 
         public class Expectations
         {
-            private Dictionary<string, Expectation> _expectations = new Dictionary<string, Expectation>();
+            private readonly Dictionary<string, Expectation> _expectations = new Dictionary<string, Expectation>();
 
             public Expectations(params Expectation[] expectations)
             {

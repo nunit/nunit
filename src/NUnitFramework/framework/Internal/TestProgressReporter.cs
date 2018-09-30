@@ -34,9 +34,9 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class TestProgressReporter : ITestListener
     {
-        static Logger log = InternalTrace.GetLogger("TestProgressReporter");
+        static readonly Logger log = InternalTrace.GetLogger("TestProgressReporter");
 
-        private ICallbackEventHandler handler;
+        private readonly ICallbackEventHandler handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProgressReporter"/> class.
@@ -112,6 +112,22 @@ namespace NUnit.Framework.Internal
             catch (Exception ex)
             {
                 log.Error("Exception processing TestOutput event" + Environment.NewLine + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Called when a test produces a message to be sent to listeners
+        /// </summary>
+        /// <param name="message">A <see cref="TestMessage"/> object containing the text to send</param>
+        public void SendMessage(TestMessage message)
+        {
+            try
+            {
+                handler.RaiseCallbackEvent(message.ToXml());
+            }
+            catch (Exception ex)
+            {
+                log.Error("Exception processing SendMessage event" + Environment.NewLine + ex.ToString());
             }
         }
 

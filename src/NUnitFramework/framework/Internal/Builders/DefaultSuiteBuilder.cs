@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,18 +33,20 @@ namespace NUnit.Framework.Internal.Builders
     public class DefaultSuiteBuilder : ISuiteBuilder
     {
         // Builder we use for fixtures without any fixture attribute specified
-        private NUnitTestFixtureBuilder _defaultBuilder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _defaultBuilder = new NUnitTestFixtureBuilder();
 
         #region ISuiteBuilder Methods
+
         /// <summary>
-        /// Checks to see if the provided Type is a fixture.
-        /// To be considered a fixture, it must be a non-abstract
-        /// class with one or more attributes implementing the
-        /// IFixtureBuilder interface or one or more methods
-        /// marked as tests.
+        /// Examine the type and determine if it is suitable for
+        /// this builder to use in building a TestSuite.
+        ///
+        /// Note that returning false will cause the type to be ignored
+        /// in loading the tests. If it is desired to load the suite
+        /// but label it as non-runnable, ignored, etc., then this
+        /// method must return true.
         /// </summary>
         /// <param name="typeInfo">The fixture type to check</param>
-        /// <returns>True if the fixture can be built, false if not</returns>
         public bool CanBuildFrom(ITypeInfo typeInfo)
         {
             if (typeInfo.IsAbstract && !typeInfo.IsSealed)
@@ -64,11 +66,21 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// Build a TestSuite from TypeInfo provided.
+        /// Builds a single test suite from the specified type.
         /// </summary>
         /// <param name="typeInfo">The fixture type to build</param>
-        /// <returns>A TestSuite built from that type</returns>
         public TestSuite BuildFrom(ITypeInfo typeInfo)
+        {
+            return BuildFrom(typeInfo, PreFilter.Empty);
+        }
+
+        /// <summary>
+        /// Builds a single test suite from the specified type, subject
+        /// to a filter that decides which methods are included.
+        /// </summary>
+        /// <param name="typeInfo">The fixture type to build</param>
+        /// <param name="filter">A PreFilter for selecting methods.</param>
+        public TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
             var fixtures = new List<TestSuite>();
 
@@ -77,8 +89,13 @@ namespace NUnit.Framework.Internal.Builders
                 IFixtureBuilder[] builders = GetFixtureBuilderAttributes(typeInfo);
 
                 foreach (var builder in builders)
-                    foreach (var fixture in builder.BuildFrom(typeInfo))
+                {
+                    // See if this is an enhanced attribute, accepting a filter
+                    var builder2 = builder as IFixtureBuilder2;
+
+                    foreach (var fixture in builder2?.BuildFrom(typeInfo, filter) ?? builder.BuildFrom(typeInfo))
                         fixtures.Add(fixture);
+                }
 
                 if (typeInfo.IsGenericType)
                     return BuildMultipleFixtures(typeInfo, fixtures);
@@ -86,7 +103,7 @@ namespace NUnit.Framework.Internal.Builders
                 switch (fixtures.Count)
                 {
                     case 0:
-                        return _defaultBuilder.BuildFrom(typeInfo);
+                        return _defaultBuilder.BuildFrom(typeInfo, filter);
                     case 1:
                         return fixtures[0];
                     default:
@@ -104,6 +121,7 @@ namespace NUnit.Framework.Internal.Builders
                 return fixture;
             }
         }
+
         #endregion
 
         #region Helper Methods
@@ -119,13 +137,12 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         /// <summary>
-        /// We look for attributes implementing IFixtureBuilder at one level 
-        /// of inheritance at a time. Attributes on base classes are not used 
+        /// We look for attributes implementing IFixtureBuilder at one level
+        /// of inheritance at a time. Attributes on base classes are not used
         /// unless there are no fixture builder attributes at all on the derived
         /// class. This is by design.
         /// </summary>
         /// <param name="typeInfo">The type being examined for attributes</param>
-        /// <returns>A list of the attributes found.</returns>
         private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo typeInfo)
         {
             IFixtureBuilder[] attrs = new IFixtureBuilder[0];
@@ -154,7 +171,7 @@ namespace NUnit.Framework.Internal.Builders
                     // If none of them have args, return the first one
                     if (withArgs == 0)
                         return new IFixtureBuilder[] { attrs[0] };
-                    
+
                     // Some of each - extract those with args
                     var result = new IFixtureBuilder[withArgs];
                     int count = 0;

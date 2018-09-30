@@ -25,7 +25,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
 using System.Xml.Linq;
 #endif
 
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the name of the node
         /// </summary>
-        public string Name { get; private set; }
+        public string Name { get; }
 
         /// <summary>
         /// Gets the value of the node
@@ -89,17 +89,17 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets a flag indicating whether the value should be output using CDATA.
         /// </summary>
-        public bool ValueIsCDATA { get; private set; }
+        public bool ValueIsCDATA { get; }
 
         /// <summary>
         /// Gets the dictionary of attributes
         /// </summary>
-        public AttributeDictionary Attributes { get; private set; }
+        public AttributeDictionary Attributes { get; }
 
         /// <summary>
         /// Gets a list of child nodes
         /// </summary>
-        public NodeList ChildNodes { get; private set; }
+        public NodeList ChildNodes { get; }
 
         /// <summary>
         /// Gets the first ChildNode
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
             return FromXml(XElement.Parse(xmlText));
 #else
             var doc = new XmlDocument();
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Interfaces
 
         #region Helper Methods
 
-#if NETSTANDARD1_6
+#if NETSTANDARD1_4
         private static TNode FromXml(XElement xElement)
         {
             TNode tNode = new TNode(xElement.Name.ToString(), xElement.Value);
@@ -362,9 +362,9 @@ namespace NUnit.Framework.Interfaces
 
         class NodeFilter
         {
-            private string _nodeName;
-            private string _propName;
-            private string _propValue;
+            private readonly string _nodeName;
+            private readonly string _propName;
+            private readonly string _propValue;
 
             public NodeFilter(string xpath)
             {

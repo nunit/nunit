@@ -48,11 +48,13 @@ A great place to start is by going through the [NUnit release notes](https://git
 
 We love pull requests, but would prefer that new contributors start with smaller issues and let us know before you contribute to prevent duplication of work.
 
-To help new contributors get their feet wet, we have marked a number of issues with the `easyfix` label. These are great places to start.
+To help new contributors get their feet wet, we have marked a number of issues with the `good first issue` label. These are great places to start.
 
 It is also a good idea to add a comment to an issue that you are working on to let everyone know. If you stop working on it, also please let us know.
 
 Please read through the [developer docs](https://github.com/nunit/docs/wiki/Team-Practices#technical-practices) before contributing to understand our coding standards and contribution guidelines.
+
+Note: Instructions on how to build and run tests can be found under [building](https://github.com/nunit/nunit/blob/master/BUILDING.md)
 
 ## License
 

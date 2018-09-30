@@ -50,13 +50,14 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The MethodInfo from which to construct the TestMethod</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
-        /// <returns></returns>
         public TestMethod BuildTestMethod(IMethodInfo method, Test parentSuite, TestCaseParameters parms)
         {
             var testMethod = new TestMethod(method, parentSuite)
             {
                 Seed = _randomizer.Next()
             };
+
+            CheckTestMethodAttributes(testMethod);
 
             CheckTestMethodSignature(testMethod, parms);
 
@@ -84,6 +85,10 @@ namespace NUnit.Framework.Internal.Builders
                         ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                         : parms.TestName;
                 }
+                else if (parms.ArgDisplayNames != null)
+                {
+                    testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                }
                 else
                 {
                     testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
@@ -100,6 +105,20 @@ namespace NUnit.Framework.Internal.Builders
         }
 
         #region Helper Methods
+
+        /// <summary>
+        /// Checks to see if we have valid combinations of attributes.
+        /// </summary>
+        /// <param name="testMethod">The TestMethod to be checked. If it
+        /// is found to be non-runnable, it will be modified.</param>
+        /// <returns>True if the method signature is valid, false if not</returns>
+        private static bool CheckTestMethodAttributes(TestMethod testMethod)
+        {
+            if (testMethod.Method.MethodInfo.GetAttributes<IRepeatTest>(true).Length > 1)
+                return MarkAsNotRunnable(testMethod, "Multiple attributes that repeat a test may cause issues.");
+
+            return true;
+        }
 
         /// <summary>
         /// Helper method that checks the signature of a TestMethod and
@@ -134,7 +153,7 @@ namespace NUnit.Framework.Internal.Builders
             int minArgsNeeded = 0;
             foreach (var parameter in parameters)
             {
-                // IsOptional is supported since .NET 1.1 
+                // IsOptional is supported since .NET 1.1
                 if (!parameter.IsOptional)
                     minArgsNeeded++;
             }
@@ -161,7 +180,7 @@ namespace NUnit.Framework.Internal.Builders
             ITypeInfo returnType = testMethod.Method.ReturnType;
 
 #if ASYNC
-            if (AsyncInvocationRegion.IsAsyncOperation(testMethod.Method.MethodInfo))
+            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
                 if (returnType.IsType(typeof(void)))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
@@ -201,11 +220,9 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                var typeArguments = new GenericMethodHelper(testMethod.Method.MethodInfo).GetTypeArguments(arglist);
-                foreach (Type o in typeArguments)
-                    if (o == null || o == TypeHelper.NonmatchingType)
-                        return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
-
+                Type[] typeArguments;
+                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out typeArguments))
+                    return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();

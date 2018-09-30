@@ -8,6 +8,7 @@
     <owners>Charlie Poole, Rob Prouse</owners>
     <licenseUrl>https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt</licenseUrl>
     <projectUrl>http://nunit.org</projectUrl>
+    <repository type="git" url="https://github.com/nunit/nunit"/>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
@@ -15,7 +16,7 @@
 
 Supported platforms:
 - .NET Framework 2.0+
-- .NET Standard 1.6+
+- .NET Standard 1.4+
 - .NET Core
 
 How to use this package:
@@ -39,9 +40,10 @@ How to use this package:
       <group targetFramework="net45">
         <dependency id="NUnit" version="[$version$]" />
       </group>
-      <group targetFramework="netstandard1.6">
+      <group targetFramework="netstandard1.4">
         <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="compile" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="NUnit" version="[$version$]" />
@@ -61,8 +63,8 @@ How to use this package:
     <file src="bin/net40/nunitlite.pdb" target="lib\net40" />
     <file src="bin/net45/nunitlite.dll" target="lib\net45" />
     <file src="bin/net45/nunitlite.pdb" target="lib\net45" />
-    <file src="bin/netstandard1.6/nunitlite.dll" target="lib\netstandard1.6" />
-    <file src="bin/netstandard1.6/nunitlite.pdb" target="lib\netstandard1.6" />
+    <file src="bin/netstandard1.4/nunitlite.dll" target="lib\netstandard1.4" />
+    <file src="bin/netstandard1.4/nunitlite.pdb" target="lib\netstandard1.4" />
     <file src="bin/netstandard2.0/nunitlite.dll" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunitlite.pdb" target="lib\netstandard2.0" />
     <file src="bin/net20/nunitlite-runner.exe" target="tools\net20" />

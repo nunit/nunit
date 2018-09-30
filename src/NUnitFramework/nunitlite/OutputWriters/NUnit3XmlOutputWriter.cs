@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2011 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -86,7 +86,7 @@ namespace NUnitLite
 
             TNode testRun = MakeTestRunElement(result);
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
             testRun.ChildNodes.Add(MakeCommandLineElement());
 #endif
             testRun.ChildNodes.Add(MakeTestFilterElement(filter));
@@ -128,7 +128,7 @@ namespace NUnitLite
             return testRun;
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD1_4
         private static TNode MakeCommandLineElement()
         {
             return new TNode("command-line", Environment.CommandLine, true);

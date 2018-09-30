@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         class ComparerAdapter : EqualityAdapter
         {
-            private IComparer comparer;
+            private readonly IComparer comparer;
 
             public ComparerAdapter(IComparer comparer)
             {
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Constraints
 
         class EqualityComparerAdapter : EqualityAdapter
         {
-            private IEqualityComparer comparer;
+            private readonly IEqualityComparer comparer;
 
             public EqualityComparerAdapter(IEqualityComparer comparer)
             {
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Constraints
             return new PredicateEqualityAdapter<TExpected, TActual>(comparison);
         }
 
-        internal class PredicateEqualityAdapter<TActual, TExpected> : EqualityAdapter
+        internal sealed class PredicateEqualityAdapter<TActual, TExpected> : EqualityAdapter
         {
             private readonly Func<TActual, TExpected, bool> _comparison;
 
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Constraints
 
         class EqualityComparerAdapter<T> : GenericEqualityAdapter<T>
         {
-            private IEqualityComparer<T> comparer;
+            private readonly IEqualityComparer<T> comparer;
 
             public EqualityComparerAdapter(IEqualityComparer<T> comparer)
             {
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         class ComparerAdapter<T> : GenericEqualityAdapter<T>
         {
-            private IComparer<T> comparer;
+            private readonly IComparer<T> comparer;
 
             public ComparerAdapter(IComparer<T> comparer)
             {
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Constraints
 
         class ComparisonAdapter<T> : GenericEqualityAdapter<T>
         {
-            private Comparison<T> comparer;
+            private readonly Comparison<T> comparer;
 
             public ComparisonAdapter(Comparison<T> comparer)
             {

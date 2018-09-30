@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class CultureDetector
     {
-        private CultureInfo currentCulture;
+        private readonly CultureInfo currentCulture;
 
         // Set whenever we fail to support a list of platforms
         private string reason = string.Empty;

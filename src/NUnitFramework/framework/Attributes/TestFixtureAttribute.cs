@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,10 +30,10 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestFixtureAttribute is used to mark a class that represents a TestFixture.
+    /// Marks the class as a TestFixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
-    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder, ITestFixtureData
+    public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
     {
         private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
 
@@ -43,9 +43,9 @@ namespace NUnit.Framework
         /// Default constructor
         /// </summary>
         public TestFixtureAttribute() : this( new object[0] ) { }
-        
+
         /// <summary>
-        /// Construct with a object[] representing a set of arguments. 
+        /// Construct with a object[] representing a set of arguments.
         /// In .NET 2.0, the arguments may later be separated into
         /// type arguments and constructor arguments.
         /// </summary>
@@ -76,12 +76,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The arguments originally provided to the attribute
         /// </summary>
-        public object[] Arguments { get; private set; }
+        public object[] Arguments { get; }
 
         /// <summary>
         /// Properties pertaining to this fixture
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         #endregion
 
@@ -119,7 +119,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The type that this fixture is testing
         /// </summary>
-        public Type TestOf 
+        public Type TestOf
         {
             get { return _testOf;  }
             set
@@ -183,8 +183,8 @@ namespace NUnit.Framework
         /// </summary>
         public string Category
         {
-            get 
-            { 
+            get
+            {
                 //return Properties.Get(PropertyNames.Category) as string;
                 var catList = Properties[PropertyNames.Category];
                 if (catList == null)
@@ -211,20 +211,31 @@ namespace NUnit.Framework
                     Properties.Add(PropertyNames.Category, cat);
             }
         }
- 
+
         #endregion
 
         #region IFixtureBuilder Members
 
         /// <summary>
-        /// Build a fixture from type provided. Normally called for a Type
-        /// on which the attribute has been placed.
+        /// Builds a single test fixture from the specified type.
         /// </summary>
-        /// <param name="typeInfo">The type info of the fixture to be used.</param>
-        /// <returns>A an IEnumerable holding one TestFixture object.</returns>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            yield return _builder.BuildFrom(typeInfo, this);
+            yield return _builder.BuildFrom(typeInfo, PreFilter.Empty, this);
+        }
+
+        #endregion
+
+        #region IFixtureBuilder2 Members
+
+        /// <summary>
+        /// Builds a single test fixture from the specified type.
+        /// </summary>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
+        /// <param name="filter">Filter used to select methods as tests.</param>
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
+        {
+            yield return _builder.BuildFrom(typeInfo, filter, this);
         }
 
         #endregion

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,9 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Linq;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.TestFixtureTests;
-
 
 namespace NUnit.Framework.Internal
 {
@@ -66,8 +66,9 @@ namespace NUnit.Framework.Internal
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));
             Assert.That(test.Tests[0], Is.TypeOf<TestMethod>());
             Assert.That(test.Tests[1], Is.TypeOf<TestMethod>());
-            Assert.That(test.Tests[0].Arguments, Is.EqualTo(new object[] { 42, "abc" }));
-            Assert.That(test.Tests[1].Arguments, Is.EqualTo(new object[] { 24, "cba" }));
+            var expectedArguments = new[] { new object[] { 42, "abc" }, new object[] { 24, "cba" } };
+            var actualArguments = test.Tests.Select(t => t.Arguments);
+            Assert.That(actualArguments, Is.EquivalentTo(expectedArguments));
         }
     }
 }
