@@ -24,6 +24,7 @@
 #if PARALLEL
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -40,6 +41,8 @@ namespace NUnit.Framework.Internal.Execution
         private int _workItemCount = 0;
 
         private bool _running;
+
+        private bool _queueNotSupportedDueToApartmentState;
 
         #region Events
 
@@ -131,9 +134,18 @@ namespace NUnit.Framework.Internal.Execution
                     // worrying about competing workers.
                     Busy(this, _currentWorkItem);
 
-                    // Because we execute the current item AFTER the queue state
-                    // is saved, its children end up in the new queue set.
-                    _currentWorkItem.Execute();
+                    if (_queueNotSupportedDueToApartmentState)
+                    {
+                        string msg = "Apartment state cannot be set on non-windows platforms.";
+                        log.Error(msg);
+                        _currentWorkItem.Result.SetResult(ResultState.NotRunnable, msg);
+                    }
+                    else
+                    {
+                        // Because we execute the current item AFTER the queue state
+                        // is saved, its children end up in the new queue set.
+                        _currentWorkItem.Execute();
+                    }
 
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
@@ -157,7 +169,16 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
 #if APARTMENT_STATE
-            _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+#if NETSTANDARD2_0
+            if (OSPlatform.CurrentPlatform.IsWindows)
+            {
+                _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+            }
+            else
+            {
+                _queueNotSupportedDueToApartmentState = true;
+            }
+#endif
 #endif
             log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();

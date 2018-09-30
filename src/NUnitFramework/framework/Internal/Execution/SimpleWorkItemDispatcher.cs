@@ -60,7 +60,16 @@ namespace NUnit.Framework.Internal.Execution
 
 #if APARTMENT_STATE
             if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
+            {
+#if NETSTANDARD2_0
+                if (!OSPlatform.CurrentPlatform.IsWindows)
+                {
+                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on non-windows platforms.");
+                    return;
+                }
+#endif
                 _runnerThread.SetApartmentState(ApartmentState.STA);
+            }
 #endif
 
             _runnerThread.Start();

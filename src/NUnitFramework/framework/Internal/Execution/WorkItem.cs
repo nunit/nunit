@@ -248,6 +248,16 @@ namespace NUnit.Framework.Internal.Execution
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
 #if APARTMENT_STATE
+#if NETSTANDARD2_0
+                if (!OSPlatform.CurrentPlatform.IsWindows)
+                {
+                    string msg = "Apartment state cannot be set on non-windows platforms.";
+                    log.Error(msg);
+                    Result.SetResult(ResultState.NotRunnable, msg);
+                    WorkItemComplete();
+                    return;
+                }
+#endif
                 RunOnSeparateThread(targetApartment);
 #else
                 RunOnSeparateThread();

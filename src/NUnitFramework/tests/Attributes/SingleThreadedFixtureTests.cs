@@ -79,6 +79,9 @@ namespace NUnit.Framework.Attributes
     }
 
 #if APARTMENT_STATE
+#if PLATFORM_DETECTION
+    [Platform(Include = "Windows")]
+#endif
     [SingleThreaded, Apartment(ApartmentState.STA)]
     public class SingleThreadedFixtureRunInSTA : ThreadingTests
     {
