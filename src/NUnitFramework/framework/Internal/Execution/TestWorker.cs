@@ -42,7 +42,9 @@ namespace NUnit.Framework.Internal.Execution
 
         private bool _running;
 
+#if NETSTANDARD2_0
         private bool _queueNotSupportedDueToApartmentState;
+#endif
 
         #region Events
 
@@ -63,9 +65,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public event TestWorkerEventHandler Idle;
 
-        #endregion
+#endregion
 
-        #region Constructor
+#region Constructor
 
         /// <summary>
         /// Construct a new TestWorker.
@@ -80,9 +82,9 @@ namespace NUnit.Framework.Internal.Execution
             Name = name;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// The WorkItemQueue from which this worker pulls WorkItems
@@ -102,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
             get { return _workerThread.IsAlive; }
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
@@ -134,6 +136,7 @@ namespace NUnit.Framework.Internal.Execution
                     // worrying about competing workers.
                     Busy(this, _currentWorkItem);
 
+#if NETSTANDARD2_0
                     if (_queueNotSupportedDueToApartmentState)
                     {
                         string msg = "Apartment state cannot be set on non-windows platforms.";
@@ -142,10 +145,13 @@ namespace NUnit.Framework.Internal.Execution
                     }
                     else
                     {
+#endif
                         // Because we execute the current item AFTER the queue state
                         // is saved, its children end up in the new queue set.
                         _currentWorkItem.Execute();
+#if NETSTANDARD2_0
                     }
+#endif
 
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
