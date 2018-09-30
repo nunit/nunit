@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,8 +41,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureNoArgumentsForRegularTestMethod()
         {
-            var test = _builder.BuildFrom(typeof(RegularFixtureWithOneTest)
-                .GetFixtureMethod(nameof(RegularFixtureWithOneTest.OneTest)));
+            var test = _builder.BuildFrom(new MethodWrapper(typeof(RegularFixtureWithOneTest), nameof(RegularFixtureWithOneTest.OneTest)));
 
             Assert.That(test, Is.TypeOf<TestMethod>());
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));
@@ -51,8 +50,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureArgumentsForParameterizedTestMethod()
         {
-            var test = _builder.BuildFrom(typeof(FixtureWithParameterizedTestAndArgsSupplied)
-                .GetFixtureMethod(nameof(FixtureWithParameterizedTestAndArgsSupplied.SomeTest)));
+            var test = _builder.BuildFrom(new MethodWrapper(typeof(FixtureWithParameterizedTestAndArgsSupplied), nameof(FixtureWithParameterizedTestAndArgsSupplied.SomeTest)));
 
             Assert.That(test.HasChildren, Is.True);
             Assert.That(test.Tests[0], Is.TypeOf<TestMethod>());
@@ -62,8 +60,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CaptureArgumentsForParameterizedTestMethodWithMultipleArguments()
         {
-            var test = _builder.BuildFrom(typeof(FixtureWithParameterizedTestAndMultipleArgsSupplied)
-                .GetFixtureMethod(nameof(FixtureWithParameterizedTestAndMultipleArgsSupplied.SomeTest)));
+            var test = _builder.BuildFrom(new MethodWrapper(typeof(FixtureWithParameterizedTestAndMultipleArgsSupplied), nameof(FixtureWithParameterizedTestAndMultipleArgsSupplied.SomeTest)));
 
             Assert.That(test.HasChildren, Is.True);
             Assert.That(test.Arguments, Is.EqualTo(new object[0]));

@@ -25,7 +25,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
@@ -54,7 +53,7 @@ namespace NUnit.Framework.Attributes
             /// </summary>
             public void AssertCoercionErrorOrMatchingSequence(Type parameterType, IEnumerable valuesToConvert)
             {
-                var param = StubParameterInfo.OfType(parameterType);
+                var param = new StubParameterInfo(parameterType);
 
                 if (ExpectedConversions.Contains(parameterType))
                 {
@@ -63,12 +62,12 @@ namespace NUnit.Framework.Attributes
                     // new byte[] { 1, 2, 3 }, new sbyte { 1, 2, 3 }, etc.
                     var convertedValues = valuesToConvert.Cast<object>().Select(value => Convert.ChangeType(value, parameterType));
 
-                    Assert.That(Attribute.GetData(null, param),
+                    Assert.That(Attribute.GetData(param),
                         Is.EqualTo(convertedValues).AsCollection.Using((IEqualityComparer)EqualityComparer<object>.Default));
                 }
                 else
                 {
-                    Assert.That(() => Attribute.GetData(null, param),
+                    Assert.That(() => Attribute.GetData(param),
                         Throws.Exception.Message.Contains("cannot be passed to a parameter of type"));
                 }
             }

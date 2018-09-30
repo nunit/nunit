@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -41,16 +41,16 @@ namespace NUnit.Framework.Interfaces
         /// but label it as non-runnable, ignored, etc., then this
         /// method must return true.
         /// </summary>
-        /// <param name="method">The method to be used as a test.</param>
-        /// <param name="suite">The parent to which the test will be added.</param>
-        bool CanBuildFrom(FixtureMethod method, Test suite);
+        /// <param name="method">The test method to examine</param>
+        /// <param name="suite">The suite being populated</param>
+        bool CanBuildFrom(IMethodInfo method, Test suite);
 
         /// <summary>
         /// Builds a single test from the specified method and context,
         /// possibly containing child test cases.
         /// </summary>
-        /// <param name="method">The method to be used as a test.</param>
-        /// <param name="suite">The parent to which the test will be added.</param>
-        Test BuildFrom(FixtureMethod method, Test suite);
+        /// <param name="method">The method to be used as a test case</param>
+        /// <param name="suite">The test suite being populated, or null</param>
+        Test BuildFrom(IMethodInfo method, Test suite);
     }
 }

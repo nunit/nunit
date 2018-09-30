@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal.Execution
             _queue.Start();
             var names = new string[] { "Test1", "Test2", "Test3" };
 
-            new Thread(new ThreadStart(() => 
+            new Thread(new ThreadStart(() =>
             {
                 Thread.Sleep(10);
                 EnqueueWorkItems(names);
@@ -166,7 +166,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void OneTimeTearDownGetsPriority()
         {
-            var testFixture = new TestFixture(typeof(MyFixture));
+            var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty) as CompositeWorkItem;
             var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem);
             EnqueueWorkItem("Test1");

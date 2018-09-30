@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,23 +22,33 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Interfaces;
+using System.Reflection;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// Contains this assembly's general extension methods.
+    /// The IParameterInfo interface is an abstraction of a .NET parameter.
     /// </summary>
-    internal static class Extensions
+    public interface IParameterInfo : IReflectionInfo
     {
         /// <summary>
-        /// Asserts that the result state has <see cref="TestStatus.Passed"/>.
+        /// Gets a value indicating whether the parameter is optional
         /// </summary>
-        public static void AssertPassed(this ITestResult result)
-        {
-            if (result == null) throw new ArgumentNullException(nameof(result));
+        bool IsOptional { get; }
 
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
-        }
+        /// <summary>
+        /// Gets an IMethodInfo representing the method for which this is a parameter
+        /// </summary>
+        IMethodInfo Method { get; }
+
+        /// <summary>
+        /// Gets the underlying .NET ParameterInfo
+        /// </summary>
+        ParameterInfo ParameterInfo { get; }
+
+        /// <summary>
+        /// Gets the Type of the parameter
+        /// </summary>
+        Type ParameterType { get; }
     }
 }

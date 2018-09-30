@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -130,8 +130,8 @@ namespace NUnit.Framework.Attributes
 
         [Test, Sequential]
         public void MultipleArguments(
-            [ValueSource(nameof(Numerators))] int n, 
-            [ValueSource(nameof(Denominators))] int d, 
+            [ValueSource(nameof(Numerators))] int n,
+            [ValueSource(nameof(Denominators))] int d,
             [ValueSource(nameof(Quotients))] int q)
         {
             Assert.AreEqual(q, n / d);
@@ -210,13 +210,13 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ValueSourceAttributeShouldThrowInsteadOfReturningNull()
         {
-            var method = GetType().GetMethod("ValueSourceMayNotBeNull");
+            var method = new MethodWrapper(GetType(), "ValueSourceMayNotBeNull");
             var parameters = method.GetParameters();
 
             foreach (var parameter in parameters)
             {
-                var dataSource = parameter.GetAttributes<IParameterDataSource>(false)[0];
-                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(GetType(), parameter));
+                var dataSource = parameter.GetCustomAttributes<IParameterDataSource>(false)[0];
+                Assert.Throws<InvalidDataSourceException>(() => dataSource.GetData(parameter));
             }
         }
 
