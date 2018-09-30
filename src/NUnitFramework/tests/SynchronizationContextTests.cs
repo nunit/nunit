@@ -73,6 +73,9 @@ namespace NUnit.Framework
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
 #if APARTMENT_STATE
+#if PLATFORM_DETECTION
+        [Platform(Include = "Win")]
+#endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]
         public static void ContinuationStaysOnStaThread(AsyncExecutionApiAdapter apiAdapter)

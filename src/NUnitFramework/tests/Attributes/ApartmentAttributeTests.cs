@@ -27,6 +27,9 @@ using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
+#if PLATFORM_DETECTION
+    [Platform(Include = "Win")]
+#endif
     [TestFixture]
     public class ApartmentAttributeTests : ThreadingTests
     {
