@@ -30,10 +30,14 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 #endif
 
+using NUnit.Framework.Interfaces;
+
 namespace NUnit.Framework.Internal
 {
-    internal abstract class MessagePumpStrategy
+    internal abstract class MessagePumpStrategy : IAsyncCompletionStrategy
     {
+        void IAsyncCompletionStrategy.WaitForCompletion(IAwaiterObject obj) => WaitForCompletion ((AwaitAdapter)obj);
+
         public abstract void WaitForCompletion(AwaitAdapter awaitable);
 
         public static MessagePumpStrategy FromCurrentSynchronizationContext()

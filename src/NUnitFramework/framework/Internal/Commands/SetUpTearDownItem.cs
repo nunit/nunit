@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotAsyncVoid(method, nameof(method));
 
             if (AsyncToSyncAdapter.IsAsyncOperation(method))
-                AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
+                AsyncToSyncAdapter.Await(() => InvokeMethod(method, context), context.CurrentTest.GetWaitStrategy ());
             else
                 InvokeMethod(method, context);
         }

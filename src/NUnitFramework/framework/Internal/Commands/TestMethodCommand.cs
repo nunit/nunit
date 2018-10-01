@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
+                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context), testMethod.GetWaitStrategy ());
             }
 
             return InvokeTestMethod(context);

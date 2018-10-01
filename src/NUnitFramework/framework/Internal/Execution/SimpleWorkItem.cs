@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Execution
                 var method = _testMethod.Method;
 
                 // Add any wrappers to the TestMethodCommand
-                foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
+                foreach (IWrapTestMethod wrapper in _testMethod.GetCombinedCustomAttributes<IWrapTestMethod>(true))
                     command = wrapper.Wrap(command);
 
                 // Create TestActionCommands using attributes of the method
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
+                foreach (ICommandWrapper decorator in _testMethod.GetCombinedCustomAttributes<IWrapSetUpTearDown>(true))
                     command = decorator.Wrap(command);
 
                 // Add command to set up context using attributes that implement IApplyToContext
