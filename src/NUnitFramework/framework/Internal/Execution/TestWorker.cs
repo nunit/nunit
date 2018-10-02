@@ -65,9 +65,9 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public event TestWorkerEventHandler Idle;
 
-#endregion
+        #endregion
 
-#region Constructor
+        #region Constructor
 
         /// <summary>
         /// Construct a new TestWorker.
@@ -82,9 +82,9 @@ namespace NUnit.Framework.Internal.Execution
             Name = name;
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// The WorkItemQueue from which this worker pulls WorkItems
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
             get { return _workerThread.IsAlive; }
         }
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
@@ -178,7 +178,9 @@ namespace NUnit.Framework.Internal.Execution
 #if NETSTANDARD2_0
             if (OSPlatform.CurrentPlatform.IsWindows)
             {
+#endif
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+#if NETSTANDARD2_0
             }
             else
             {
