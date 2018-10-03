@@ -25,6 +25,9 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+#if NETSTANDARD2_0
+using System.Runtime.InteropServices;
+#endif
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -176,15 +179,18 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Name = Name;
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-            if (OSPlatform.CurrentPlatform.IsWindows)
+            if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            {
+                if (WorkQueue.TargetApartment != ApartmentState.STA)
+                {
+                    _queueNotSupportedDueToApartmentState = true;
+                }
+            }
+            else
             {
 #endif
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
 #if NETSTANDARD2_0
-            }
-            else
-            {
-                _queueNotSupportedDueToApartmentState = true;
             }
 #endif
 #endif
