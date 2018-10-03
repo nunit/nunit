@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
+// Copyright (c) 2012-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -141,7 +141,6 @@ namespace NUnit.Framework.Internal.Execution
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // If a timeout is specified, create a TimeoutCommand
-#if THREAD_ABORT
                 // Timeout set at a higher level
                 int timeout = Context.TestCaseTimeout;
 
@@ -151,7 +150,6 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout);
-#endif
 
                 return command;
             }

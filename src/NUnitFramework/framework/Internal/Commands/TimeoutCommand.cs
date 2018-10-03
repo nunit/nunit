@@ -99,11 +99,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                if (!Task.Run(() =>
-                {
-                    context.CurrentResult = innerCommand.Execute(context);
-
-                }).Wait(_timeout))
+                if (!Task.Run(() => context.CurrentResult = innerCommand.Execute(context)).Wait(_timeout))
                 {
                     context.CurrentResult.SetResult(new ResultState(
                         TestStatus.Failed,
@@ -113,7 +109,7 @@ namespace NUnit.Framework.Internal.Commands
             }
             catch (Exception exception)
             {
-                context.CurrentResult.RecordException(exception);
+                context.CurrentResult.RecordException(exception, FailureSite.Test);
             }
 
             return context.CurrentResult;

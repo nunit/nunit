@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// for all contained test methods.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
-    public class TimeoutAttribute : PropertyAttribute, IApplyToContext, IWrapTestMethod
+    public class TimeoutAttribute : PropertyAttribute, IApplyToContext
     {
         private readonly int _timeout;
 
@@ -57,19 +57,5 @@ namespace NUnit.Framework
         }
 
         #endregion
-
-        /// <summary>
-        /// Wrap a command and return the result.
-        /// </summary>
-        /// <param name="command">The command to be wrapped</param>
-        /// <returns>The wrapped command</returns>
-        public TestCommand Wrap(TestCommand command)
-        {
-#if !THREAD_ABORT && !(NET20 || NET35)
-            return new TimeoutCommand(command, _timeout);
-#else
-            return command;
-#endif
-        }
     }
 }

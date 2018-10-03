@@ -192,9 +192,8 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestTimesOut()
         {
-            var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestTimeoutAndReportsTimeoutFailure));
-            var workItem = TestBuilder.CreateWorkItem(testCase, this);
-            var testResult = TestBuilder.ExecuteWorkItem(workItem);
+            var testMethod = TestBuilder.MakeTestCase(GetType(), nameof(TestTimeoutAndReportsTimeoutFailure));
+            var testResult = TestBuilder.RunTest(testMethod, this);
 
             Assert.That(testResult?.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(testResult?.ResultState.Site, Is.EqualTo(FailureSite.Test));
@@ -204,13 +203,12 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestTimeoutWithExceptionThrown()
         {
-            var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestTimeoutWhichThrowsTestException));
-            var workItem = TestBuilder.CreateWorkItem(testCase, this);
-            var testResult = TestBuilder.ExecuteWorkItem(workItem);
+            var testMethod = TestBuilder.MakeTestCase(GetType(), nameof(TestTimeoutWhichThrowsTestException));
+            var testResult = TestBuilder.RunTest(testMethod, this);
 
             Assert.That(testResult?.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(testResult?.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(testResult?.ResultState.Label, Is.EqualTo("Test exceeded Timeout value 50ms."));
+            Assert.That(testResult?.ResultState.Label, Is.EqualTo("Error"));
         }
 #endif
     }
