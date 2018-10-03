@@ -29,6 +29,9 @@ using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
+#if NETSTANDARD2_0
+using System.Runtime.InteropServices;
+#endif
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -249,13 +252,16 @@ namespace NUnit.Framework.Internal.Execution
 
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-                if (!OSPlatform.CurrentPlatform.IsWindows)
+                if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                 {
-                    string msg = "Apartment state cannot be set on non-windows platforms.";
-                    log.Error(msg);
-                    Result.SetResult(ResultState.NotRunnable, msg);
-                    WorkItemComplete();
-                    return;
+                    if(targetApartment != ApartmentState.Unknown)
+                    {
+                        string msg = "Apartment state cannot be set on platforms other than Windows.";
+                        log.Error(msg);
+                        Result.SetResult(ResultState.NotRunnable, msg);
+                        WorkItemComplete();
+                        return;
+                    }
                 }
 #endif
                 RunOnSeparateThread(targetApartment);
