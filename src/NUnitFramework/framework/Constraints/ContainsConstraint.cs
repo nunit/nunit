@@ -55,9 +55,17 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                return _realConstraint != null ?
-                  _realConstraint.Description :
-                  "containing " + MsgUtils.FormatValue(_expected);
+                if (_realConstraint != null)
+                {
+                    return _realConstraint.Description;
+                }
+
+                var description = "containing " + MsgUtils.FormatValue(_expected);
+
+                if (_ignoreCase)
+                    description += ", ignoring case";
+
+                return description;
             }
         }
 

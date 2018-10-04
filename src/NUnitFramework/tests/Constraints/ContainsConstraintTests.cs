@@ -21,10 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework.Constraints
 {
     public class ContainsConstraintTests
     {
+        private readonly string NL = Environment.NewLine;
+
         [Test]
         public void HonorsIgnoreCaseForStringCollection()
         {
@@ -45,6 +50,62 @@ namespace NUnit.Framework.Constraints
             var result = constraint.ApplyTo(actualString);
 
             Assert.That(result.IsSuccess);
+        }
+
+        [Test]
+        public void ContainsSubstringErrorMessage()
+        {
+            var actualString = "abc";
+            var expected = "bcd";
+
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "String containing \"bcd\"" + NL +
+                TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actualString, Does.Contain(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsSubstringIgnoreCaseErrorMessage()
+        {
+            var actualString = "abc";
+            var expected = "bcd";
+
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "String containing \"bcd\", ignoring case" + NL +
+                TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actualString, Does.Contain(expected).IgnoreCase));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsItemErrorMessage()
+        {
+            var actualItems = new[] { "a", "b" };
+            var expected = "c";
+
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "some item equal to \"c\"" + NL +
+                TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected)));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsItemIgnoreCaseErrorMessage()
+        {
+            var actualItems = new[] { "a", "b" };
+            var expected = "c";
+
+            var expectedMessage =
+                TextMessageWriter.Pfx_Expected + "some item equal to \"c\", ignoring case" + NL +
+                TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected).IgnoreCase));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }
 }
