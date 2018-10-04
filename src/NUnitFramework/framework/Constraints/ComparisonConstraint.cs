@@ -78,6 +78,25 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder(DisplayMessageBase);
+                sb.Append(MsgUtils.FormatValue(_expected));
+                return sb.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Protected field overriden by derived class to provide basis for Description construction
+        /// </summary>
+        protected abstract string DisplayMessageBase { get; }
+
+        /// <summary>
         /// Protected function overridden by derived class to actually perform the comparison
         /// </summary>
         protected abstract bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance);

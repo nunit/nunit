@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -32,9 +34,14 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="GreaterThanOrEqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public GreaterThanOrEqualConstraint(object expected) : base(expected)
+        public GreaterThanOrEqualConstraint(object expected) : base(expected) {}
+
+        /// <summary>
+        /// Description basis
+        /// </summary>
+        protected override string DisplayMessageBase
         {
-            Description = "greater than or equal to " + MsgUtils.FormatValue(expected);
+            get { return "greater than or equal to "; }
         }
 
         /// <summary>

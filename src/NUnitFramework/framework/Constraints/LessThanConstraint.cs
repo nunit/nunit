@@ -32,9 +32,14 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="LessThanConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public LessThanConstraint(object expected) : base(expected)
+        public LessThanConstraint(object expected) : base(expected) {}
+
+        /// <summary>
+        /// Description basis
+        /// </summary>
+        protected override string DisplayMessageBase
         {
-            Description = "less than " + MsgUtils.FormatValue(expected);
+            get { return "less than "; }
         }
 
         /// <summary>

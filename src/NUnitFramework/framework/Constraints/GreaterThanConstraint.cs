@@ -34,9 +34,14 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="GreaterThanConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public GreaterThanConstraint(object expected) : base(expected)
+        public GreaterThanConstraint(object expected) : base(expected) {}
+
+        /// <summary>
+        /// Description basis
+        /// </summary>
+        protected override string DisplayMessageBase
         {
-            Description = "greater than " + MsgUtils.FormatValue(expected);
+            get { return "greater than "; }
         }
 
         /// <summary>
