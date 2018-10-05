@@ -252,7 +252,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-                if(targetApartment != ApartmentState.STA)
+                if(targetApartment == ApartmentState.STA)
                 {
                     if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                     {

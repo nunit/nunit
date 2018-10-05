@@ -179,7 +179,7 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Name = Name;
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-            if (WorkQueue.TargetApartment != ApartmentState.STA)
+            if (WorkQueue.TargetApartment == ApartmentState.STA)
             {
                 if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                 {
