@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal.Execution
 #if NETSTANDARD2_0
                     if (_queueNotSupportedDueToApartmentState)
                     {
-                        string msg = "Apartment state cannot be set on non-windows platforms.";
+                        string msg = "Apartment state cannot be set on platforms other than Windows.";
                         log.Error(msg);
                         _currentWorkItem.Result.SetResult(ResultState.NotRunnable, msg);
                     }
@@ -179,9 +179,9 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Name = Name;
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-            if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            if (WorkQueue.TargetApartment != ApartmentState.STA)
             {
-                if (WorkQueue.TargetApartment != ApartmentState.STA)
+                if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                 {
                     _queueNotSupportedDueToApartmentState = true;
                 }
@@ -189,7 +189,7 @@ namespace NUnit.Framework.Internal.Execution
             else
             {
 #endif
-                _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+            _workerThread.SetApartmentState(WorkQueue.TargetApartment);
 #if NETSTANDARD2_0
             }
 #endif

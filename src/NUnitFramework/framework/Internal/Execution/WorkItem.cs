@@ -252,9 +252,9 @@ namespace NUnit.Framework.Internal.Execution
 
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-                if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                if(targetApartment != ApartmentState.STA)
                 {
-                    if(targetApartment != ApartmentState.Unknown)
+                    if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                     {
                         string msg = "Apartment state cannot be set on platforms other than Windows.";
                         log.Error(msg);
