@@ -87,6 +87,18 @@ namespace NUnit.Framework.Constraints
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(DisplayMessageBase);
                 sb.Append(MsgUtils.FormatValue(_expected));
+                
+                if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+                {
+                    sb.Append(" within ");
+                    sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
+
+                    if (_tolerance.Mode == ToleranceMode.Percent)
+                    {
+                        sb.Append(" percent");
+                    }
+                }
+                
                 return sb.ToString();
             }
         }
@@ -147,7 +159,6 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
 
             _tolerance = new Tolerance(amount);
-            Description += " within " + MsgUtils.FormatValue(amount);
             return this;
         }
 
@@ -162,7 +173,6 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _tolerance = _tolerance.Percent;
-                Description += " percent";
                 return this;
             }
         }
