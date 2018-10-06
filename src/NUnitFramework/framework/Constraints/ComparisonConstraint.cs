@@ -78,37 +78,6 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public override string Description
-        {
-            get
-            {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(DisplayMessageBase);
-                sb.Append(MsgUtils.FormatValue(_expected));
-                
-                if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
-                {
-                    sb.Append(" within ");
-                    sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
-
-                    if (_tolerance.Mode == ToleranceMode.Percent)
-                    {
-                        sb.Append(" percent");
-                    }
-                }
-                
-                return sb.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Protected field overriden by derived class to provide basis for Description construction
-        /// </summary>
-        protected abstract string DisplayMessageBase { get; }
-
-        /// <summary>
         /// Protected function overridden by derived class to actually perform the comparison
         /// </summary>
         protected abstract bool PerformComparison(ComparisonAdapter comparer, object actual, object expected, Tolerance tolerance);
@@ -177,6 +146,39 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+        #endregion
+        
+        #region Protected Methods
+        
+        /// <summary>
+        /// Provides standard description of what the constraint tests
+        /// based on comparison text.
+        /// </summary>
+        /// <param name="comparisonText">Describes, what constraint tests, throws <see cref="ArgumentNullException"/>
+        /// if null</param>
+        /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
+        protected string DefaultDescription(string comparisonText)
+        {
+            if (comparisonText == null)
+                throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
+            
+            System.Text.StringBuilder sb = new System.Text.StringBuilder(comparisonText);
+            sb.Append(MsgUtils.FormatValue(_expected));
+                
+            if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+            {
+                sb.Append(" within ");
+                sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
+
+                if (_tolerance.Mode == ToleranceMode.Percent)
+                {
+                    sb.Append(" percent");
+                }
+            }
+                
+            return sb.ToString();
+        }
+        
         #endregion
     }
 }

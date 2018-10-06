@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -37,11 +35,12 @@ namespace NUnit.Framework.Constraints
         public GreaterThanOrEqualConstraint(object expected) : base(expected) {}
 
         /// <summary>
-        /// Description basis
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
         /// </summary>
-        protected override string DisplayMessageBase
+        public override string Description
         {
-            get { return "greater than or equal to "; }
+            get { return DefaultDescription("greater than or equal to "); }
         }
 
         /// <summary>

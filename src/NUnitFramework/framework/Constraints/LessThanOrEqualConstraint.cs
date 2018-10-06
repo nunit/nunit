@@ -35,11 +35,12 @@ namespace NUnit.Framework.Constraints
         public LessThanOrEqualConstraint(object expected) : base(expected) {}
 
         /// <summary>
-        /// Description basis
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
         /// </summary>
-        protected override string DisplayMessageBase
+        public override string Description
         {
-            get { return "less than or equal to "; }
+            get { return DefaultDescription("less than or equal to "); }
         }
 
         /// <summary>
