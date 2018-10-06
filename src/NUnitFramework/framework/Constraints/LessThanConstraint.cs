@@ -29,6 +29,12 @@ namespace NUnit.Framework.Constraints
     public class LessThanConstraint : ComparisonConstraint
     {
         /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        private string _description;
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="LessThanConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
@@ -40,7 +46,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return DefaultDescription("less than "); }
+            get
+            {
+                if (System.String.IsNullOrEmpty(_description))
+                    _description = DefaultDescription("less than ");
+                return _description;
+            }
         }
 
         /// <summary>
