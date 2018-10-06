@@ -185,6 +185,10 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     _queueNotSupportedDueToApartmentState = true;
                 }
+                else
+                {
+                    _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+                }
             }
             else
             {

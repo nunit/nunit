@@ -39,6 +39,9 @@ namespace NUnit.Framework.Attributes
             Assert.That(() => new ApartmentAttribute(ApartmentState.Unknown), Throws.ArgumentException);
         }
 
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [Test, Apartment(ApartmentState.STA)]
         public void TestWithRequiresSTARunsInSTA()
         {
@@ -51,6 +54,9 @@ namespace NUnit.Framework.Attributes
 #if THREAD_ABORT
         [Timeout(10000)]
 #endif
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
         {
@@ -60,6 +66,9 @@ namespace NUnit.Framework.Attributes
         [TestFixture]
 #if THREAD_ABORT
         [Timeout(10000)]
+#endif
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
 #endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
@@ -71,6 +80,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [TestFixture, Apartment(ApartmentState.STA)]
         public class FixtureRequiresSTA
         {
@@ -128,6 +140,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.Children)]
@@ -147,6 +162,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.Children)]
@@ -168,6 +186,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.None)]
@@ -187,6 +208,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if PLATFORM_DETECTION && NETCOREAPP2_0
+        [Platform(Include = "Win")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.None)]

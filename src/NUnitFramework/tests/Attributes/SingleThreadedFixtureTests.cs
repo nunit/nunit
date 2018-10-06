@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
     }
 
 #if APARTMENT_STATE
-#if PLATFORM_DETECTION
+#if PLATFORM_DETECTION && NETCOREAPP2_0
     [Platform(Include = "Win")]
 #endif
     [SingleThreaded, Apartment(ApartmentState.STA)]
