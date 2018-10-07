@@ -61,6 +61,9 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("may not specify a different apartment");
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [Test, Apartment(ApartmentState.MTA)]
         public void TestWithSameApartmentIsValid()
         {
