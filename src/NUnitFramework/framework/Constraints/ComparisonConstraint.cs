@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
         /// Provides standard description of what the constraint tests
         /// based on comparison text.
         /// </summary>
-        /// <param name="comparisonText">Describes, what constraint tests, throws <see cref="ArgumentNullException"/>
+        /// <param name="comparisonText">Describes the comparison being tested, throws <see cref="ArgumentNullException"/>
         /// if null</param>
         /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
         protected string DefaultDescription(string comparisonText)
