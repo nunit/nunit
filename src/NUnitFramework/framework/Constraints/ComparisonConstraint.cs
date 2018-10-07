@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -162,7 +163,7 @@ namespace NUnit.Framework.Constraints
             if (comparisonText == null)
                 throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
             
-            System.Text.StringBuilder sb = new System.Text.StringBuilder(comparisonText);
+            StringBuilder sb = new StringBuilder(comparisonText);
             sb.Append(MsgUtils.FormatValue(_expected));
                 
             if (_tolerance != null && !_tolerance.IsUnsetOrDefault)

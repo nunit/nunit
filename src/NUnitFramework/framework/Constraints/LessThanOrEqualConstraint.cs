@@ -28,12 +28,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class LessThanOrEqualConstraint : ComparisonConstraint
     {
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
         private string _description;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LessThanOrEqualConstraint"/> class.
         /// </summary>
@@ -48,8 +44,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                if (System.String.IsNullOrEmpty(_description))
+                if (_description == null)
                     _description = DefaultDescription("less than or equal to ");
+                
                 return _description;
             }
         }

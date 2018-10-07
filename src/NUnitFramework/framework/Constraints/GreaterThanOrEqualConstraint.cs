@@ -28,10 +28,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class GreaterThanOrEqualConstraint : ComparisonConstraint
     {
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
         private string _description;
         
         /// <summary>
@@ -48,8 +44,9 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                if (System.String.IsNullOrEmpty(_description))
+                if (_description == null)
                     _description = DefaultDescription("greater than or equal to ");
+                
                 return _description;
             }
         }
