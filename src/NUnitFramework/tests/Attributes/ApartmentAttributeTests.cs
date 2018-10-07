@@ -28,7 +28,7 @@ using System.Threading;
 namespace NUnit.Framework.Attributes
 {
 #if PLATFORM_DETECTION
-    [Platform(Include = "Win")]
+    [Platform(Include = "Win, Mono")]
 #endif
     [TestFixture]
     public class ApartmentAttributeTests : ThreadingTests
@@ -39,8 +39,8 @@ namespace NUnit.Framework.Attributes
             Assert.That(() => new ApartmentAttribute(ApartmentState.Unknown), Throws.ArgumentException);
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [Test, Apartment(ApartmentState.STA)]
         public void TestWithRequiresSTARunsInSTA()
@@ -54,8 +54,8 @@ namespace NUnit.Framework.Attributes
 #if THREAD_ABORT
         [Timeout(10000)]
 #endif
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
@@ -67,8 +67,8 @@ namespace NUnit.Framework.Attributes
 #if THREAD_ABORT
         [Timeout(10000)]
 #endif
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
@@ -80,8 +80,8 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture, Apartment(ApartmentState.STA)]
         public class FixtureRequiresSTA
@@ -140,8 +140,8 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
@@ -162,8 +162,8 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
@@ -186,8 +186,8 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
@@ -208,8 +208,8 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]

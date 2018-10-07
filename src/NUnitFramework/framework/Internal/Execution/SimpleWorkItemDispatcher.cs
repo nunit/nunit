@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Execution
 #if NETSTANDARD2_0
                 if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                 {
-                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on platforms other than Windows.");
+                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
                     return;
                 }
 #endif

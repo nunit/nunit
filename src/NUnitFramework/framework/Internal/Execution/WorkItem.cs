@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                     {
-                        string msg = "Apartment state cannot be set on platforms other than Windows.";
+                        string msg = "Apartment state cannot be set on this platform.";
                         log.Error(msg);
                         Result.SetResult(ResultState.NotRunnable, msg);
                         WorkItemComplete();

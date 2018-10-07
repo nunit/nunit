@@ -43,8 +43,8 @@ namespace NUnit.Framework.Attributes
         }
 
 #if APARTMENT_STATE
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [Test, RequiresThread( ApartmentState.STA )]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
@@ -53,8 +53,8 @@ namespace NUnit.Framework.Attributes
             Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
         }
 
-#if PLATFORM_DETECTION && NETCOREAPP2_0
-        [Platform(Include = "Win")]
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [Test, RequiresThread( ApartmentState.MTA )]
         public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
