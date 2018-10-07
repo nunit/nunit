@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -128,7 +129,6 @@ namespace NUnit.Framework.Constraints
                 throw new InvalidOperationException("Within modifier may appear only once in a constraint expression");
 
             _tolerance = new Tolerance(amount);
-            Description += " within " + MsgUtils.FormatValue(amount);
             return this;
         }
 
@@ -143,11 +143,43 @@ namespace NUnit.Framework.Constraints
             get
             {
                 _tolerance = _tolerance.Percent;
-                Description += " percent";
                 return this;
             }
         }
 
+        #endregion
+        
+        #region Protected Methods
+        
+        /// <summary>
+        /// Provides standard description of what the constraint tests
+        /// based on comparison text.
+        /// </summary>
+        /// <param name="comparisonText">Describes the comparison being tested, throws <see cref="ArgumentNullException"/>
+        /// if null</param>
+        /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
+        protected string DefaultDescription(string comparisonText)
+        {
+            if (comparisonText == null)
+                throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
+            
+            StringBuilder sb = new StringBuilder(comparisonText);
+            sb.Append(MsgUtils.FormatValue(_expected));
+                
+            if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+            {
+                sb.Append(" within ");
+                sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
+
+                if (_tolerance.Mode == ToleranceMode.Percent)
+                {
+                    sb.Append(" percent");
+                }
+            }
+                
+            return sb.ToString();
+        }
+        
         #endregion
     }
 }
