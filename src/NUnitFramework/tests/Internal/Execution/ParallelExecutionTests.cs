@@ -423,7 +423,7 @@ namespace NUnit.Framework.Internal.Execution
                 .SetName("Issue-2464");
 
 #if APARTMENT_STATE
-#if NETSTANDARD2_0
+#if NETCOREAPP2_0
             if (new PlatformHelper().IsPlatformSupported(new PlatformAttribute { Include = "Win, Mono" }))
 #endif
             {
