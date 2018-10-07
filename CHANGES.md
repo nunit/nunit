@@ -1,7 +1,7 @@
 ### NUnit 3.11 - October 6, 2018
 
  * More informative assertion messages
- * PlatformAttribute is available on and now detects .NET Core
+ * PlatformAttribute is available on .NET Standard and now detects .NET Core
  * ValuesAttribute now works with nullable types
  * Async tests detecting and running Windows Forms or WPF message pumps rather than deadlocking
  * Support for UWP 10.0 is back via .NET Standard 1.4
