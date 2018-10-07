@@ -35,7 +35,11 @@ var AllFrameworks = new string[]
     "net35",
     "net20",
     "netstandard1.4",
-    "netstandard2.0",
+    "netstandard2.0"
+};
+
+var NetCoreTests = new String[]
+{
     "netcoreapp1.1",
     "netcoreapp2.0"
 };
@@ -316,6 +320,16 @@ Task("CreateImage")
                 if (FileExists(sourcePath))
                     CopyFileToDirectory(sourcePath, targetDir);
             }
+            var schemaPath = sourceDir + "/Schemas";
+            if (DirectoryExists(schemaPath))
+                CopyDirectory(sourceDir, targetDir);
+        }
+
+        foreach (var dir in NetCoreTests)
+        {
+            var targetDir = imageBinDir + Directory(dir);
+            var sourceDir = BIN_DIR + Directory(dir);
+            CopyDirectory(sourceDir, targetDir);
         }
     });
 
@@ -354,12 +368,14 @@ Task("PackageZip")
 
         var zipFiles =
             GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net20/*.*") +
-            GetFiles(CurrentImageDir + "bin/net35/*.*") +
-            GetFiles(CurrentImageDir + "bin/net40/*.*") +
-            GetFiles(CurrentImageDir + "bin/net45/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard1.4/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard2.0/*.*");
+            GetFiles(CurrentImageDir + "bin/net20/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/net35/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/net40/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard1.4/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
