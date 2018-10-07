@@ -95,5 +95,23 @@ namespace NUnit.Framework.Attributes
             var testCase = (Test)parameterizedMethodSuite.Tests[0];
             Assert.AreEqual("NUnit.Framework.TestCaseAttribute", testCase.Properties.Get(PropertyNames.TestOf));
         }
+
+        [Test]
+        public void TestOfAttributeMultipleTimes()
+        {
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, "TestOfMultipleAttributesMethod");
+            Assert.That(testCase.Properties[PropertyNames.TestOf], Is.EquivalentTo(
+                new[] { "NUnit.Framework.TestOfAttribute", "NUnit.Framework.TestAttribute" }));
+        }
+
+        [Test]
+        public void TestFixtureMultipleTestOfAttributes()
+        {
+            var suite = new TestSuite("suite");
+            suite.Add(TestBuilder.MakeFixture(typeof(TestOfFixture)));
+            var mockFixtureSuite = (TestSuite)suite.Tests[0];
+            Assert.That(mockFixtureSuite.Properties[PropertyNames.TestOf], Is.EquivalentTo(
+                new[] { "NUnit.Framework.TestOfAttribute", "NUnit.Framework.TestOfAttribute", "NUnit.Framework.TestFixtureAttribute" }));
+        }
     }
 }
