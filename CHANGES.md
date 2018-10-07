@@ -1,4 +1,4 @@
-### NUnit 3.11 - October 11, 2018
+### NUnit 3.11 - October 6, 2018
 
  * More informative assertion messages
  * PlatformAttribute is available on and now detects .NET Core
