@@ -25,12 +25,15 @@
 #region Using Directives
 
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 #endregion
 
 namespace NUnit.TestData
 {
     [TestFixture(TestOf = typeof(TestOfAttribute))]
+    [TestOf(typeof(TestOfAttribute))]
+    [TestOf(typeof(TestFixtureAttribute))]
     public class TestOfFixture
     {
         [Test(TestOf = typeof(TestOfAttribute))]
@@ -54,6 +57,11 @@ namespace NUnit.TestData
         [Test, TestOf(typeof(TestAttribute))]
         [TestCase(5, TestOf = typeof(TestCaseAttribute))]
         public void TestCaseWithTestOf(int x)
+        { }
+
+        [Test]
+        [TestOf(typeof(TestOfAttribute))][TestOf(typeof(TestAttribute))]
+        public void TestOfMultipleAttributesMethod()
         { }
     }
 }
