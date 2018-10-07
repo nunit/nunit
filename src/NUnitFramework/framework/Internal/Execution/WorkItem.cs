@@ -228,8 +228,9 @@ namespace NUnit.Framework.Internal.Execution
 #if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
+            var needsNewThreadToSetApartmentState = targetApartment != CurrentApartment;
 
-            if (Test.RequiresThread || targetApartment != CurrentApartment)
+            if (Test.RequiresThread || needsNewThreadToSetApartmentState)
 #else
             if (Test.RequiresThread)
 #endif
@@ -247,12 +248,8 @@ namespace NUnit.Framework.Internal.Execution
                     return;
                 }
 
-                log.Debug("Running on separate thread because {0} is specified.",
-                    Test.RequiresThread ? "RequiresThread" : "different Apartment");
-
-#if APARTMENT_STATE
-#if NETSTANDARD2_0
-                if(targetApartment == ApartmentState.STA)
+#if APARTMENT_STATE && NETSTANDARD2_0
+                if (needsNewThreadToSetApartmentState)
                 {
                     if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
                     {
@@ -264,6 +261,11 @@ namespace NUnit.Framework.Internal.Execution
                     }
                 }
 #endif
+
+                log.Debug("Running on separate thread because {0} is specified.",
+                    Test.RequiresThread ? "RequiresThread" : "different Apartment");
+
+#if APARTMENT_STATE
                 RunOnSeparateThread(targetApartment);
 #else
                 RunOnSeparateThread();

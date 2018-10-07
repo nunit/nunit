@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Execution
             _runnerThread = new Thread(RunnerThreadProc);
 
 #if APARTMENT_STATE
-            if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
+            if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
 #if NETSTANDARD2_0
                 if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal.Execution
                     return;
                 }
 #endif
-                _runnerThread.SetApartmentState(ApartmentState.STA);
+                _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
             }
 #endif
 

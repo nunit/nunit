@@ -45,10 +45,6 @@ namespace NUnit.Framework.Internal.Execution
 
         private bool _running;
 
-#if NETSTANDARD2_0
-        private bool _queueNotSupportedDueToApartmentState;
-#endif
-
         #region Events
 
         /// <summary>
@@ -131,30 +127,17 @@ namespace NUnit.Framework.Internal.Execution
                     _currentWorkItem.TestWorker = this;
 
                     // During this Busy call, the queue state may be saved.
-                    // This gives us a new set of queues, which are initially 
+                    // This gives us a new set of queues, which are initially
                     // empty. The intention is that only children of the current
                     // executing item should make use of the new set of queues.
-                    // TODO: If we had a separate NonParallelTestWorker, it 
+                    // TODO: If we had a separate NonParallelTestWorker, it
                     // could simply create the isolated queue without any
                     // worrying about competing workers.
                     Busy(this, _currentWorkItem);
 
-#if NETSTANDARD2_0
-                    if (_queueNotSupportedDueToApartmentState)
-                    {
-                        string msg = "Apartment state cannot be set on platforms other than Windows.";
-                        log.Error(msg);
-                        _currentWorkItem.Result.SetResult(ResultState.NotRunnable, msg);
-                    }
-                    else
-                    {
-#endif
-                        // Because we execute the current item AFTER the queue state
-                        // is saved, its children end up in the new queue set.
-                        _currentWorkItem.Execute();
-#if NETSTANDARD2_0
-                    }
-#endif
+                    // Because we execute the current item AFTER the queue state
+                    // is saved, its children end up in the new queue set.
+                    _currentWorkItem.Execute();
 
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
@@ -179,21 +162,11 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread.Name = Name;
 #if APARTMENT_STATE
 #if NETSTANDARD2_0
-            if (WorkQueue.TargetApartment == ApartmentState.STA)
-            {
-                if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-                {
-                    _queueNotSupportedDueToApartmentState = true;
-                }
-                else
-                {
-                    _workerThread.SetApartmentState(WorkQueue.TargetApartment);
-                }
-            }
-            else
+            if (WorkQueue.TargetApartment != ApartmentState.Unknown
+                && RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
             {
 #endif
-            _workerThread.SetApartmentState(WorkQueue.TargetApartment);
+                _workerThread.SetApartmentState(WorkQueue.TargetApartment);
 #if NETSTANDARD2_0
             }
 #endif
