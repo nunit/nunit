@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -34,8 +33,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// RandomAttribute is used to supply a set of random values
-    /// to a single parameter of a parameterized test.
+    /// Supplies a set of random values to a single parameter of a parameterized test.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class RandomAttribute : NUnitAttribute, IParameterDataSource
@@ -51,7 +49,7 @@ namespace NUnit.Framework
         #region Constructors
 
         /// <summary>
-        /// Construct a random set of values appropriate for the Type of the 
+        /// Construct a random set of values appropriate for the Type of the
         /// parameter on which the attribute appears, specifying only the count.
         /// </summary>
         /// <param name="count"></param>
@@ -151,14 +149,13 @@ namespace NUnit.Framework
         /// <summary>
         /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
         /// <param name="parameter">The parameter of a parameterized test.</param>
-        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
+        public IEnumerable GetData(IParameterInfo parameter)
         {
             // Since a separate Randomizer is used for each parameter,
             // we can't fill in the data in the constructor of the
             // attribute. Only now, when GetData is called, do we have
-            // sufficient information to create the values in a 
+            // sufficient information to create the values in a
             // repeatable manner.
 
             Type parmType = parameter.ParameterType;
@@ -200,7 +197,7 @@ namespace NUnit.Framework
 
             _source.Distinct = Distinct;
 
-            return _source.GetData(fixtureType, parameter);
+            return _source.GetData(parameter);
         }
 
         private bool WeConvert(Type sourceType, Type targetType)
@@ -225,7 +222,7 @@ namespace NUnit.Framework
             public Type DataType { get; protected set; }
             public bool Distinct { get; set; }
 
-            public abstract IEnumerable GetData(Type fixtureType, ParameterInfo parameter);
+            public abstract IEnumerable GetData(IParameterInfo parameter);
         }
 
         abstract class RandomDataSource<T> : RandomDataSource
@@ -257,14 +254,14 @@ namespace NUnit.Framework
                 DataType = typeof(T);
             }
 
-            public override IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
+            public override IEnumerable GetData(IParameterInfo parameter)
             {
                 //Guard.ArgumentValid(parameter.ParameterType == typeof(T), "Parameter type must be " + typeof(T).Name, "parameter");
 
-                Randomizer = Randomizer.GetRandomizer(parameter);
+                Randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
 
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min, _max, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
-                
+
 
                 for (int i = 0; i < _count; i++)
                 {
@@ -280,7 +277,7 @@ namespace NUnit.Framework
                         } while (previousValues.Contains(next));
 
                         previousValues.Add(next);
-                        
+
                         yield return next;
                     }
                     else
@@ -308,11 +305,11 @@ namespace NUnit.Framework
                 _source = source;
             }
 
-            public override IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
+            public override IEnumerable GetData(IParameterInfo parameter)
             {
                 Type parmType = parameter.ParameterType;
 
-                foreach (object obj in _source.GetData(fixtureType, parameter))
+                foreach (object obj in _source.GetData(parameter))
                 {
                     if (obj is int)
                     {
@@ -614,11 +611,11 @@ namespace NUnit.Framework
                 DataType = typeof(Enum);
             }
 
-            public override IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
+            public override IEnumerable GetData(IParameterInfo parameter)
             {
                 Guard.ArgumentValid(parameter.ParameterType.GetTypeInfo().IsEnum, "EnumDataSource requires an enum parameter", nameof(parameter));
 
-                Randomizer randomizer = Randomizer.GetRandomizer(parameter);
+                Randomizer randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
                 DataType = parameter.ParameterType;
 
                 int valueCount = Enum.GetValues(DataType).Cast<int>().Distinct().Count();

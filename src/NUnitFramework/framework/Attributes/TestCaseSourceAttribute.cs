@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,8 +34,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestCaseSourceAttribute indicates the source to be used to
-    /// provide test cases for a test method.
+    /// Indicates the source to be used to provide test fixture instances for a test class.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
@@ -128,9 +127,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Builds any number of tests from the specified method and context.
         /// </summary>
-        /// <param name="method">The method to be used as a test.</param>
-        /// <param name="suite">The parent to which the test will be added.</param>
-        public IEnumerable<TestMethod> BuildFrom(FixtureMethod method, Test suite)
+        /// <param name="method">The IMethod for which tests are to be constructed.</param>
+        /// <param name="suite">The suite to which the tests will be added.</param>
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             int count = 0;
 
@@ -142,7 +141,7 @@ namespace NUnit.Framework
 
             // If count > 0, error messages will be shown for each case
             // but if it's 0, we need to add an extra "test" to show the message.
-            if (count == 0 && method.Method.GetParameters().Length == 0)
+            if (count == 0 && method.GetParameters().Length == 0)
             {
                 var parms = new TestCaseParameters();
                 parms.RunState = RunState.NotRunnable;
@@ -157,7 +156,7 @@ namespace NUnit.Framework
         #region Helper Methods
 
         [SecuritySafeCritical]
-        private IEnumerable<ITestCaseData> GetTestCasesFor(FixtureMethod method)
+        private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
 
@@ -168,7 +167,7 @@ namespace NUnit.Framework
                 var previousState = SandboxedThreadState.Capture();
                 try
                 {
-                    source = GetTestCaseSource(method.FixtureType);
+                    source = GetTestCaseSource(method);
                 }
                 finally
                 {
@@ -204,7 +203,7 @@ namespace NUnit.Framework
                                 // and it does not fit exactly into single existing parameter
                                 // we believe that this array contains arguments, not is a bare
                                 // argument itself.
-                                var parameters = method.Method.GetParameters();
+                                var parameters = method.GetParameters();
                                 var argsNeeded = parameters.Length;
                                 if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
                                 {
@@ -244,9 +243,9 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(Type type)
+        private IEnumerable GetTestCaseSource(IMethodInfo method)
         {
-            Type sourceType = SourceType ?? type;
+            Type sourceType = SourceType ?? method.TypeInfo.Type;
 
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2014-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace NUnit.Framework
 {
@@ -33,9 +32,8 @@ namespace NUnit.Framework
     using Internal.Builders;
 
     /// <summary>
-    /// Marks a test to use a particular CombiningStrategy to join
-    /// any parameter data provided. Since this is the default, the
-    /// attribute is optional.
+    /// Marks a test as using a particular CombiningStrategy to join any supplied parameter data.
+    /// Since this is the default, the attribute is optional.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public abstract class CombiningStrategyAttribute : NUnitAttribute, ITestBuilder, IApplyToTest
@@ -74,13 +72,13 @@ namespace NUnit.Framework
         /// <summary>
         /// Builds any number of tests from the specified method and context.
         /// </summary>
-        /// <param name="method">The method to be used as a test.</param>
-        /// <param name="suite">The parent to which the test will be added.</param>
-        public IEnumerable<TestMethod> BuildFrom(FixtureMethod method, Test suite)
+        /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
+        /// <param name="suite">The suite to which the tests will be added.</param>
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
 
-            ParameterInfo[] parameters = method.Method.GetParameters();
+            IParameterInfo[] parameters = method.GetParameters();
 
             if (parameters.Length > 0)
             {
@@ -89,7 +87,7 @@ namespace NUnit.Framework
                 try
                 {
                     for (int i = 0; i < parameters.Length; i++)
-                        sources[i] = _dataProvider.GetDataFor(method.FixtureType, parameters[i]);
+                        sources[i] = _dataProvider.GetDataFor(parameters[i]);
                 }
                 catch (InvalidDataSourceException ex)
                 {

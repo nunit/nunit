@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -39,13 +38,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used</param>
-        public TestFixture(Type fixtureType, object[] arguments = null) : base(fixtureType, arguments)
+        public TestFixture(ITypeInfo fixtureType, object[] arguments = null) : base(fixtureType, arguments)
         {
-            SetUpMethods = Reflect.GetMethodsWithAttribute(Type, typeof(SetUpAttribute), true);
-            TearDownMethods = Reflect.GetMethodsWithAttribute(Type, typeof(TearDownAttribute), true);
-            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(Type, typeof(OneTimeSetUpAttribute), true);
-            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(Type, typeof(OneTimeTearDownAttribute), true);
-
+            SetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(SetUpAttribute), true);
+            TearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(TearDownAttribute), true); 
+            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeSetUpAttribute), true);
+            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeTearDownAttribute), true);
+            
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
             CheckSetUpTearDownMethods(SetUpMethods);

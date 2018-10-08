@@ -26,8 +26,8 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Used to mark a field for use as a datapoint when executing a theory
-    /// within the same fixture that requires an argument of the field's Type.
+    /// Marks a field for use as a datapoint when executing a theory within 
+    /// the same fixture that requires an argument of the field's Type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
     public class DatapointAttribute : NUnitAttribute

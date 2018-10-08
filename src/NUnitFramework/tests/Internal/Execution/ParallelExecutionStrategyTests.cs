@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             _context = new TestExecutionContext();
             _testMethod = Fakes.GetTestMethod(GetType(), "TestMethod");
-            _testFixture = new TestFixture(typeof(MyFixture));
+            _testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
         }
 
         [TestCase(ParallelScope.Default, ParallelScope.Default, ParallelExecutionStrategy.Direct)]

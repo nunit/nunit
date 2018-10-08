@@ -33,9 +33,9 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Indicates which class the test or test fixture is testing
+    /// Indicates the method or class the assembly, test fixture or test method is testing.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
     public class TestOfAttribute : PropertyAttribute
     {
         /// <summary>

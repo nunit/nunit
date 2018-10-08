@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
@@ -511,7 +513,42 @@ namespace NUnit.Framework.Attributes
 
         private static object[] GetData(RangeAttribute rangeAttribute, Type parameterType)
         {
-            return rangeAttribute.GetData(null, StubParameterInfo.OfType(parameterType)).Cast<object>().ToArray();
+            return rangeAttribute.GetData(new StubParameterInfo(parameterType)).Cast<object>().ToArray();
+        }
+
+        private sealed class StubParameterInfo : IParameterInfo
+        {
+            public StubParameterInfo(Type parameterType)
+            {
+                ParameterType = parameterType;
+            }
+
+            public Type ParameterType { get; }
+
+            public bool IsOptional
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public IMethodInfo Method
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public ParameterInfo ParameterInfo
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            public T[] GetCustomAttributes<T>(bool inherit) where T : class
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool IsDefined<T>(bool inherit) where T : class
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

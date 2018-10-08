@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2009-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,7 +30,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// TestFixtureAttribute is used to mark a class that represents a TestFixture.
+    /// Marks the class as a TestFixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
     public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
@@ -43,9 +43,9 @@ namespace NUnit.Framework
         /// Default constructor
         /// </summary>
         public TestFixtureAttribute() : this( new object[0] ) { }
-        
+
         /// <summary>
-        /// Construct with a object[] representing a set of arguments. 
+        /// Construct with a object[] representing a set of arguments.
         /// In .NET 2.0, the arguments may later be separated into
         /// type arguments and constructor arguments.
         /// </summary>
@@ -119,7 +119,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The type that this fixture is testing
         /// </summary>
-        public Type TestOf 
+        public Type TestOf
         {
             get { return _testOf;  }
             set
@@ -183,8 +183,8 @@ namespace NUnit.Framework
         /// </summary>
         public string Category
         {
-            get 
-            { 
+            get
+            {
                 //return Properties.Get(PropertyNames.Category) as string;
                 var catList = Properties[PropertyNames.Category];
                 if (catList == null)
@@ -219,10 +219,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Builds a single test fixture from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
-        public IEnumerable<TestSuite> BuildFrom(Type type)
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            yield return _builder.BuildFrom(type, PreFilter.Empty, this);
+            yield return _builder.BuildFrom(typeInfo, PreFilter.Empty, this);
         }
 
         #endregion
@@ -232,11 +231,11 @@ namespace NUnit.Framework
         /// <summary>
         /// Builds a single test fixture from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <param name="filter">Filter used to select methods as tests.</param>
-        public IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter)
+        public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            yield return _builder.BuildFrom(type, filter, this);
+            yield return _builder.BuildFrom(typeInfo, filter, this);
         }
 
         #endregion

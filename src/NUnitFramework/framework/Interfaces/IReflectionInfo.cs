@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,37 +21,21 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Reflection;
-
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Interfaces
 {
-    public static class StubParameterInfo
+    /// <summary>
+    /// The IReflectionInfo interface is implemented by NUnit wrapper objects that perform reflection.
+    /// </summary>
+    public interface IReflectionInfo
     {
-        public static ParameterInfo OfType(Type parameterType)
-        {
-#if NETCOREAPP1_1
-            return typeof(StubParameterInfo)
-                   .GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic)
-                   .MakeGenericMethod(parameterType)
-                   .GetParameters()[0];
-#else
-            return new Impl(parameterType);
-#endif
-        }
+        /// <summary>
+        /// Returns an array of custom attributes of the specified type applied to this object
+        /// </summary>
+        T[] GetCustomAttributes<T>(bool inherit) where T : class;
 
-#if NETCOREAPP1_1
-        private static void DummyMethod<T>(T parameter) { }
-#else
-        private sealed class Impl : ParameterInfo
-        {
-            public Impl(Type parameterType)
-            {
-                ParameterType = parameterType;
-            }
-
-            public override Type ParameterType { get; }
-        }
-#endif
+        /// <summary>
+        /// Returns a value indicating whether an attribute of the specified type is defined on this object.
+        /// </summary>
+        bool IsDefined<T>(bool inherit) where T : class;
     }
 }

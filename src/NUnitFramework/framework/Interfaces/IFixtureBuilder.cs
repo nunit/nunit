@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,14 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Interfaces
 {
     using Internal;
 
-    // TODO: These methods should really return IEnumerable<TestFixture>, 
+    // TODO: These methods should really return IEnumerable<TestFixture>,
     // but that requires changes to the Test hierarchy.
 
     /// <summary>
@@ -42,8 +41,8 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Builds any number of test fixtures from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
-        IEnumerable<TestSuite> BuildFrom(Type type);
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
+        IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo);
     }
 
     /// <summary>
@@ -55,8 +54,8 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Builds any number of test fixtures from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a fixture.</param>
+        /// <param name="typeInfo">The type info of the fixture to be used.</param>
         /// <param name="filter">PreFilter to be used to select methods.</param>
-        IEnumerable<TestSuite> BuildFrom(Type type, IPreFilter filter);
+        IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter);
     }
 }

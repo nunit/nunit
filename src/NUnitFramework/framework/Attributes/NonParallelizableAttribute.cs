@@ -29,7 +29,7 @@ using NUnit.Framework.Internal.Execution;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// NonParallelizableAttribute is used to mark tests that should NOT be run in parallel.
+    /// Marks tests that should NOT be run in parallel.
     /// </summary>
     [AttributeUsage( AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Method, AllowMultiple=false, Inherited=true )]
     public sealed class NonParallelizableAttribute : ParallelizableAttribute

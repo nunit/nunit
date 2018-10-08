@@ -29,9 +29,8 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test to use a pairwise join of any argument 
-    /// data provided. Arguments will be combined in such a
-    /// way that all possible pairs of arguments are used.
+    /// Marks a test as using a pairwise join of any supplied argument data. Arguments will be 
+    /// combined in such a way that all possible pairs of arguments are used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
     public class PairwiseAttribute : CombiningStrategyAttribute

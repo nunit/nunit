@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,13 +26,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// TypeHelper provides static methods that operate on Types.
     /// </summary>
-    public static class TypeHelper
+    public class TypeHelper
     {
         private const int STRING_MAX = 40;
         private const int STRING_LIMIT = STRING_MAX - 3;
@@ -226,7 +227,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="arglist">An array of args to be converted</param>
         /// <param name="parameters">A ParameterInfo[] whose types will be used as targets</param>
-        public static void ConvertArgumentList(object[] arglist, ParameterInfo[] parameters)
+        public static void ConvertArgumentList(object[] arglist, IParameterInfo[] parameters)
         {
             System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
 

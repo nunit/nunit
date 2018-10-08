@@ -28,13 +28,27 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class LessThanOrEqualConstraint : ComparisonConstraint
     {
+        private string _description;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LessThanOrEqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public LessThanOrEqualConstraint(object expected) : base(expected)
+        public LessThanOrEqualConstraint(object expected) : base(expected) {}
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
         {
-            Description = "less than or equal to " + MsgUtils.FormatValue(expected);
+            get
+            {
+                if (_description == null)
+                    _description = DefaultDescription("less than or equal to ");
+                
+                return _description;
+            }
         }
 
         /// <summary>
