@@ -22,12 +22,10 @@
 // ***********************************************************************
 
 #if PARALLEL
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-#if NETSTANDARD2_0
-using System.Runtime.InteropServices;
-#endif
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -64,14 +62,14 @@ namespace NUnit.Framework.Internal.Execution
 #if APARTMENT_STATE
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
-#if NETSTANDARD2_0
-                if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+                try
+                {
+                    _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
+                }
+                catch (PlatformNotSupportedException)
                 {
                     topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
-                    return;
                 }
-#endif
-                _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
             }
 #endif
 

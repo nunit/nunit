@@ -64,11 +64,15 @@ namespace NUnit.Framework.Attributes
 #if NETCOREAPP2_0
         [Platform(Include = "Win, Mono")]
 #endif
-        [Test, Apartment(ApartmentState.MTA)]
-        public void TestWithSameApartmentIsValid()
+        [SingleThreaded]
+        public class SingleThreadedFixtureWithApartmentStateTests : ThreadingTests
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
-            Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            [Test, Apartment(ApartmentState.MTA)]
+            public void TestWithSameApartmentIsValid()
+            {
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
         }
 #endif
 

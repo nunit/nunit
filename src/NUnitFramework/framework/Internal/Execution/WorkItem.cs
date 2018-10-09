@@ -29,9 +29,6 @@ using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
-#if NETSTANDARD2_0
-using System.Runtime.InteropServices;
-#endif
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -247,20 +244,6 @@ namespace NUnit.Framework.Internal.Execution
                     WorkItemComplete();
                     return;
                 }
-
-#if APARTMENT_STATE && NETSTANDARD2_0
-                if (needsNewThreadToSetApartmentState)
-                {
-                    if (!RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
-                    {
-                        string msg = "Apartment state cannot be set on this platform.";
-                        log.Error(msg);
-                        Result.SetResult(ResultState.NotRunnable, msg);
-                        WorkItemComplete();
-                        return;
-                    }
-                }
-#endif
 
                 log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
@@ -498,7 +481,18 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnCurrentThread();
             });
 #if APARTMENT_STATE
-            thread.SetApartmentState(apartment);
+            try
+            {
+                thread.SetApartmentState(apartment);
+            }
+            catch (PlatformNotSupportedException)
+            {
+                string msg = "Apartment state cannot be set on this platform.";
+                log.Error(msg);
+                Result.SetResult(ResultState.NotRunnable, msg);
+                WorkItemComplete();
+                return;
+            }
 #endif
             thread.Start();
             thread.Join();

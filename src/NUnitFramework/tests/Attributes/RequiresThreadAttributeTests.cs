@@ -24,6 +24,8 @@
 #if !NETCOREAPP1_1
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
@@ -46,22 +48,51 @@ namespace NUnit.Framework.Attributes
 #if NETCOREAPP2_0
         [Platform(Include = "Win, Mono")]
 #endif
-        [Test, RequiresThread( ApartmentState.STA )]
-        public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
+        [TestFixture]
+        public class ApartmentStateRequiredTests : ThreadingTests
         {
-            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
-            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
-        }
+            [Test, RequiresThread(ApartmentState.STA)]
+            public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
+            {
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+                Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
+            }
 
-#if NETCOREAPP2_0
-        [Platform(Include = "Win, Mono")]
-#endif
-        [Test, RequiresThread( ApartmentState.MTA )]
-        public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
-        {
-            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
-            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+            [Test, RequiresThread(ApartmentState.MTA)]
+            public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
+            {
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
+                Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
+            }
         }
+#if NETCOREAPP2_0
+        [Platform(Include = "Unix")]
+        [TestFixture]
+        public class ApartmentStateRequiredToFailOnUnixNetCoreTests : ThreadingTests
+        {
+            [Test]
+            public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
+            {
+                var test = TestBuilder.MakeTestFromMethod(typeof(ApartmentStateRequiredTests), nameof(ApartmentStateRequiredTests.TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA));
+                var work = TestBuilder.CreateWorkItem(test);
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("Apartment state cannot be set on this platform."));
+            }
+
+            [Test]
+            public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
+            {
+                var test = TestBuilder.MakeTestFromMethod(typeof(ApartmentStateRequiredTests), nameof(ApartmentStateRequiredTests.TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA));
+                var work = TestBuilder.CreateWorkItem(test);
+                var result = TestBuilder.ExecuteWorkItem(work);
+
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("Apartment state cannot be set on this platform."));
+            }
+        }
+#endif
 #endif
 
         [TestFixture, RequiresThread]

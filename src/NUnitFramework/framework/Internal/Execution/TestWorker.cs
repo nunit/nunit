@@ -25,9 +25,6 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
-#if NETSTANDARD2_0
-using System.Runtime.InteropServices;
-#endif
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -161,15 +158,13 @@ namespace NUnit.Framework.Internal.Execution
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
 #if APARTMENT_STATE
-#if NETSTANDARD2_0
-            if (WorkQueue.TargetApartment != ApartmentState.Unknown
-                && RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
+            try
             {
-#endif
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
-#if NETSTANDARD2_0
             }
-#endif
+            catch (PlatformNotSupportedException)
+            {
+            }
 #endif
             log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
