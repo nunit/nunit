@@ -35,6 +35,8 @@ Key arguments to build.cmd / build:
  * -ShowDescription                   Shows all of the build tasks and their descriptions
  * -Experimental, -e                  Use the experimental build of Roslyn
 
+Note that the above format for supplying arguments only work on Windows. On Linux one has to use double dashes to specify the argument, like `./build.sh --target=Test` or `./build.sh --target Test` to run the `Test` task.
+
 The build.cake script contains a large number of interdependent tasks. The most important top-level tasks to use are listed here:
 
 ```
