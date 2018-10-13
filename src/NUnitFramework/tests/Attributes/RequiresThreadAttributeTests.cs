@@ -68,7 +68,7 @@ namespace NUnit.Framework.Attributes
 #if NETCOREAPP2_0
         [Platform(Include = "Unix")]
         [TestFixture]
-        public class ApartmentStateRequiredToFailOnUnixNetCoreTests : ThreadingTests
+        public class ApartmentStateRequiredToFailOnUnixNetCoreTests
         {
             [Test]
             public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
