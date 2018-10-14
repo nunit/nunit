@@ -113,6 +113,14 @@ namespace NUnit.Framework.Internal
             Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"\\u0001HappyFace\""));
         }
 
+        [Test]
+        public void TestNameWithInvalidCharacter_NonFirstPosition()
+        {
+            testMethod.Name = "Happy\u0001Face";
+            // This throws if the name is not properly escaped
+            Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"Happy\\u0001Face\""));
+        }
+
         #region Helper Methods For Checking XML
 
         private void CheckXmlForTest(Test test, bool recursive)

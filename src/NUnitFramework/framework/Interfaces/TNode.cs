@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -318,17 +319,64 @@ namespace NUnit.Framework.Interfaces
                 : resultNodes;
         }
 
-        private static readonly Regex InvalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])", RegexOptions.Compiled);
         private static string EscapeInvalidXmlCharacters(string str)
         {
             if (str == null) return null;
 
             // Based on the XML spec http://www.w3.org/TR/xml/#charsets
-            // For detailed explanation of the regex see http://mnaoumov.wordpress.com/2014/06/15/escaping-invalid-xml-unicode-characters/
 
-            return InvalidXmlCharactersRegex.Replace(str, match => CharToUnicodeSequence(match.Value[0]));
+            StringBuilder builder = null;
+            for (int i = 0; i < str.Length; i++)
+            {
+                char c = str[i];
+                if(c > 0x20 && c < 0x7F)
+                {
+                    // ASCII characters - break quickly for these
+                    if (builder != null)
+                        builder.Append(c);
+                }
+                else if (!(0x0 <= c && c <= 0x8) &&
+                    c != 0xB &&
+                    c != 0xC &&
+                    !(0xE <= c && c <= 0x1F) &&
+                    !(0x7F <= c && c <= 0x84) &&
+                    !(0x86 <= c && c <= 0x9F) &&
+                    !(0xD800 <= c && c <= 0xDFFF) &&
+                    c != 0xFFFE &&
+                    c != 0xFFFF)
+                {
+                    if (builder != null)
+                        builder.Append(c);
+                }
+                else if (char.IsHighSurrogate(c) &&
+                    i + 1 != str.Length &&
+                    char.IsLowSurrogate(str[i + 1]))
+                {
+                    if (builder != null)
+                    {
+                        builder.Append(c);
+                        builder.Append(str[i + 1]);
+                    }
+                    i++;
+                }
+                else
+                {
+                    if (builder == null)
+                    {
+                        builder = new StringBuilder();
+                        for (int index = 0; index < i; index++)
+                            builder.Append(str[index]);
+                    }
+                    builder.Append(CharToUnicodeSequence(c));
+                }
+            }
+
+            if (builder != null)
+                return builder.ToString();
+            else
+                return str;
         }
-
+        
         private static string CharToUnicodeSequence(char symbol)
         {
             return string.Format("\\u{0}", ((int)symbol).ToString("x4"));
@@ -400,7 +448,7 @@ namespace NUnit.Framework.Interfaces
             }
         }
 
-        #endregion
+#endregion
     }
 
     /// <summary>
