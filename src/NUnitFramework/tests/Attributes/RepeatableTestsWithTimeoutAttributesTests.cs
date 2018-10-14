@@ -22,9 +22,11 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestUtilities;
 
 #if THREAD_ABORT
@@ -35,8 +37,6 @@ namespace NUnit.Framework.Attributes
     public class RepeatableTestsWithTimeoutAttributesTests
     {
         private int retryOnlyCount;
-        private int retryTimeoutCount;
-        private int repeatTimeoutCount;
 
         [Test]
         [Retry(3)]
@@ -46,24 +46,82 @@ namespace NUnit.Framework.Attributes
             Assert.True(retryOnlyCount >= 2);
         }
 
-        [Test]
-        [Retry(3), Timeout(85)]
-        public void ShouldPassAfter3RetriesAndTimeoutIsResetEachTime()
+        public class HelperMethodForTimeoutsClass
         {
-            retryTimeoutCount++;
+            [Test]
+            [Retry(3), Timeout(85)]
+            public void ShouldPassAfter3RetriesAndTimeoutIsResetEachTime()
+            {
+            }
 
-            System.Threading.Thread.Sleep(30);
-            Assert.True(retryTimeoutCount >= 2);
+            [Test]
+            [Repeat(3), Timeout(85)]
+            public void ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime()
+            {
+            }
         }
 
         [Test]
-        [Repeat(3), Timeout(85)]
+        public void ShouldPassAfter3RetriesAndTimeoutIsResetEachTime()
+        {
+            // Rather than testing with sleeps, this tests that the execution will occur in the correct 
+            // order by checking which commands are run when. As the retry command comes first, the
+            // timeout will be reset each time it runs
+            var test = TestBuilder.MakeTestFromMethod(typeof(HelperMethodForTimeoutsClass), nameof(HelperMethodForTimeoutsClass.ShouldPassAfter3RetriesAndTimeoutIsResetEachTime));
+            SimpleWorkItem work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+            var method = typeof(SimpleWorkItem).GetMethod("MakeTestCommand", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            TestCommand command = (TestCommand)method.Invoke(work, null);
+
+            Assert.That(command, Is.TypeOf(typeof(RetryAttribute.RetryCommand)));
+            RetryAttribute.RetryCommand retryCommand = (RetryAttribute.RetryCommand)command;
+
+            command = GetInnerCommand(retryCommand);
+
+            Assert.That(command, Is.TypeOf(typeof(TimeoutCommand)));
+            TimeoutCommand timeoutCommand = (TimeoutCommand)command;
+
+            command = GetInnerCommand(timeoutCommand);
+
+            Assert.That(command, Is.TypeOf(typeof(ApplyChangesToContextCommand)));
+            ApplyChangesToContextCommand applyChangesToContextCommand = (ApplyChangesToContextCommand)command;
+
+            command = GetInnerCommand(applyChangesToContextCommand);
+
+            Assert.That(command, Is.TypeOf(typeof(TestMethodCommand)));
+        }
+
+        [Test]
         public void ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime()
         {
-            repeatTimeoutCount++;
+            // Rather than testing with sleeps, this tests that the execution will occur in the correct 
+            // order by checking which commands are run when. As the repeat command comes first, the
+            // timeout will be reset each time it runs
+            var test = TestBuilder.MakeTestFromMethod(typeof(HelperMethodForTimeoutsClass), nameof(HelperMethodForTimeoutsClass.ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime));
+            SimpleWorkItem work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+            var method = typeof(SimpleWorkItem).GetMethod("MakeTestCommand", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            TestCommand command = (TestCommand)method.Invoke(work, null);
 
-            System.Threading.Thread.Sleep(30);
-            Assert.True(repeatTimeoutCount >= 1);
+            Assert.That(command, Is.TypeOf(typeof(RepeatAttribute.RepeatedTestCommand)));
+            RepeatAttribute.RepeatedTestCommand repeatedCommand = (RepeatAttribute.RepeatedTestCommand)command;
+
+            command = GetInnerCommand(repeatedCommand);
+
+            Assert.That(command, Is.TypeOf(typeof(TimeoutCommand)));
+            TimeoutCommand timeoutCommand = (TimeoutCommand)command;
+
+            command = GetInnerCommand(timeoutCommand);
+
+            Assert.That(command, Is.TypeOf(typeof(ApplyChangesToContextCommand)));
+            ApplyChangesToContextCommand applyChangesToContextCommand = (ApplyChangesToContextCommand)command;
+
+            command = GetInnerCommand(applyChangesToContextCommand);
+
+            Assert.That(command, Is.TypeOf(typeof(TestMethodCommand)));
+        }
+
+        private TestCommand GetInnerCommand(DelegatingTestCommand command)
+        {
+            return (TestCommand)command.GetType().GetField("innerCommand", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(command);
         }
 
         [Test]
