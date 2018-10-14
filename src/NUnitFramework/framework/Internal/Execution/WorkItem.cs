@@ -489,7 +489,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 string msg = "Apartment state cannot be set on this platform.";
                 log.Error(msg);
-                Result.SetResult(ResultState.NotRunnable, msg);
+                Result.SetResult(ResultState.Skipped, msg);
                 WorkItemComplete();
                 return;
             }

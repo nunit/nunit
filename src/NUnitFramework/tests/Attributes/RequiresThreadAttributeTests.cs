@@ -77,7 +77,7 @@ namespace NUnit.Framework.Attributes
                 var work = TestBuilder.CreateWorkItem(test);
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Skipped));
                 Assert.That(result.Message, Is.EqualTo("Apartment state cannot be set on this platform."));
             }
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Attributes
                 var work = TestBuilder.CreateWorkItem(test);
                 var result = TestBuilder.ExecuteWorkItem(work);
 
-                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Skipped));
                 Assert.That(result.Message, Is.EqualTo("Apartment state cannot be set on this platform."));
             }
         }
