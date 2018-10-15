@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Filters
 {
@@ -61,6 +62,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.False(_filter.Pass(_anotherFixture));
         }
 
+        [Test]
         public void ExplicitMatchTest()
         {
             Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
@@ -68,6 +70,41 @@ namespace NUnit.Framework.Internal.Filters
             Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
 
             Assert.False(_filter.IsExplicitMatch(_anotherFixture));
+        }
+
+        [Test]
+        public void UTF8CharacterMatchFromXML()
+        {
+            TestFilter filter = TestFilter.FromXml("<filter><test>NUnit.Framework.Internal.Filters.FullNameFilterTests.UTF8CharacterMatchFromXMLTestMethod(&quot;ABC\u0001&quot;)</test></filter>");
+            var test = TestBuilder.MakeTestFromMethod(GetType(), nameof(UTF8CharacterMatchFromXMLTestMethod));
+
+            Assert.IsTrue(test.HasChildren);
+            Assert.IsTrue(test.Tests[0].Arguments[0] is string);
+            Assert.IsTrue((string)test.Tests[0].Arguments[0] == "ABC\x01");
+            Assert.IsTrue(filter.Match(test.Tests[0]));
+        }
+
+        [Test]
+        public void ArgumentsMatch()
+        {
+            TestFilter filter = TestFilter.FromXml("<filter><test>NUnit.Framework.Internal.Filters.FullNameFilterTests.ArgumentsMatchTestMethod(1)</test></filter>");
+            var test = TestBuilder.MakeTestFromMethod(GetType(), nameof(ArgumentsMatchTestMethod));
+
+            Assert.IsTrue(test.HasChildren);
+            Assert.IsTrue(test.Tests[0].Arguments[0] is int);
+            Assert.IsTrue((int)test.Tests[0].Arguments[0] == 1);
+            Assert.IsTrue(filter.Match(test.Tests[0]));
+        }
+
+        [TestCase("ABC\x01", ExpectedResult = "ABC%01")]
+        public string UTF8CharacterMatchFromXMLTestMethod(string s)
+        {
+            return string.Empty;
+        }
+
+        [Test]
+        public void ArgumentsMatchTestMethod([Values(1, 2)] int s)
+        {
         }
     }
 }
