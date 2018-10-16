@@ -141,10 +141,10 @@ namespace NUnit.Framework.Interfaces
         public static TNode FromXml(string xmlText)
         {
 #if NETSTANDARD1_4
-            return FromXml(XElement.Parse(xmlText));
+            return FromXml(XElement.Parse(EscapeInvalidXmlCharacters(xmlText)));
 #else
             var doc = new XmlDocument();
-            doc.LoadXml(TNode.EscapeInvalidXmlCharacters(xmlText));
+            doc.LoadXml(EscapeInvalidXmlCharacters(xmlText));
             return FromXml(doc.FirstChild);
 #endif
         }
