@@ -67,7 +67,10 @@ namespace NUnit.Framework.Internal.Filters
         {
             Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
             Assert.That(_filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+            if (((FullNameFilter)_filter).IsRegex)
+                Assert.That(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+            else
+                Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
 
             Assert.False(_filter.IsExplicitMatch(_anotherFixture));
         }
@@ -96,10 +99,9 @@ namespace NUnit.Framework.Internal.Filters
             Assert.IsTrue(filter.Match(test.Tests[0]));
         }
 
-        [TestCase("ABC\x01", ExpectedResult = "ABC%01")]
-        public string UTF8CharacterMatchFromXMLTestMethod(string s)
+        [TestCase("ABC\x01")]
+        public void UTF8CharacterMatchFromXMLTestMethod(string s)
         {
-            return string.Empty;
         }
 
         [Test]
