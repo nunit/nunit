@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public override bool Match(ITest test)
         {
-            return Match(test.FullName);
+            return Match(TNode.EscapeInvalidXmlCharacters(test.FullName));
         }
 
         /// <summary>

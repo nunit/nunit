@@ -141,10 +141,10 @@ namespace NUnit.Framework.Interfaces
         public static TNode FromXml(string xmlText)
         {
 #if NETSTANDARD1_4
-            return FromXml(XElement.Parse(xmlText));
+            return FromXml(XElement.Parse(EscapeInvalidXmlCharacters(xmlText)));
 #else
             var doc = new XmlDocument();
-            doc.LoadXml(xmlText);
+            doc.LoadXml(EscapeInvalidXmlCharacters(xmlText));
             return FromXml(doc.FirstChild);
 #endif
         }
@@ -319,7 +319,12 @@ namespace NUnit.Framework.Interfaces
         }
 
         private static readonly Regex InvalidXmlCharactersRegex = new Regex("[^\u0009\u000a\u000d\u0020-\ufffd]|([\ud800-\udbff](?![\udc00-\udfff]))|((?<![\ud800-\udbff])[\udc00-\udfff])", RegexOptions.Compiled);
-        private static string EscapeInvalidXmlCharacters(string str)
+        /// <summary>
+        /// Escapes a string into an XML compatible string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string EscapeInvalidXmlCharacters(string str)
         {
             if (str == null) return null;
 
