@@ -455,7 +455,7 @@ namespace NUnit.Framework.Interfaces
             }
         }
 
-#endregion
+        #endregion
     }
 
     /// <summary>
