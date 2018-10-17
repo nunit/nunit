@@ -323,8 +323,6 @@ namespace NUnit.Framework.Interfaces
         {
             if (str == null) return null;
 
-            // Based on the XML spec http://www.w3.org/TR/xml/#charsets
-
             StringBuilder builder = null;
             for (int i = 0; i < str.Length; i++)
             {
@@ -335,6 +333,9 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
+                // From the XML specification: http://www.w3.org/TR/xml/#charsets
+                // Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+                // Any Unicode character, excluding the surrogate blocks, FFFE, and FFFF.
                 else if (!(0x0 <= c && c <= 0x8) &&
                     c != 0xB &&
                     c != 0xC &&
@@ -348,6 +349,8 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
+                // Also check if the char is actually a high/low surogate pair of two characters
+                // If it is, then it is a valid XML character (from above based on the surrogate blocks)
                 else if (char.IsHighSurrogate(c) &&
                     i + 1 != str.Length &&
                     char.IsLowSurrogate(str[i + 1]))
@@ -361,6 +364,10 @@ namespace NUnit.Framework.Interfaces
                 }
                 else
                 {
+                    // We keep the builder null so that we don't allocate a string
+                    // when doing this conversion until we encounter a unicode character
+                    // Then, we allocate the rest of the string and escape the invalid
+                    // character
                     if (builder == null)
                     {
                         builder = new StringBuilder();
