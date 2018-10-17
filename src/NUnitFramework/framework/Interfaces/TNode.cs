@@ -349,8 +349,8 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
-                // Also check if the char is actually a high/low surogate pair of two characters
-                // If it is, then it is a valid XML character (from above based on the surrogate blocks)
+                // Also check if the char is actually a high/low surogate pair of two characters.
+                // If it is, then it is a valid XML character (from above based on the surrogate blocks).
                 else if (char.IsHighSurrogate(c) &&
                     i + 1 != str.Length &&
                     char.IsLowSurrogate(str[i + 1]))
@@ -365,9 +365,9 @@ namespace NUnit.Framework.Interfaces
                 else
                 {
                     // We keep the builder null so that we don't allocate a string
-                    // when doing this conversion until we encounter a unicode character
+                    // when doing this conversion until we encounter a unicode character.
                     // Then, we allocate the rest of the string and escape the invalid
-                    // character
+                    // character.
                     if (builder == null)
                     {
                         builder = new StringBuilder();
@@ -383,7 +383,7 @@ namespace NUnit.Framework.Interfaces
             else
                 return str;
         }
-        
+
         private static string CharToUnicodeSequence(char symbol)
         {
             return string.Format("\\u{0}", ((int)symbol).ToString("x4"));
