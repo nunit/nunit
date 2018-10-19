@@ -43,6 +43,7 @@ namespace NUnit.Framework.Api
         private const string MISSING_NAME = "junk";
         private const string EMPTY_FILTER = "<filter/>";
         private const string FIXTURE_CAT_FILTER = "<filter><cat>FixtureCategory</cat></filter>";
+        private const string TEST_PREFIX = "ID";
 
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_FILE;
@@ -79,8 +80,14 @@ namespace NUnit.Framework.Api
         [SetUp]
         public void CreateController()
         {
-            _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, "ID", _settings);
+            _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, Test.IdPrefix, _settings);
             _handler = new CallbackEventHandler();
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            Test.IdPrefix = "";
         }
 
         #region SettingsElement Tests
@@ -246,38 +253,53 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_GoodFile_ReturnsRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            var result = TNode.FromXml(_handler.GetCallbackResult());
+            var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
+            try
+            {
+                new FrameworkController.LoadTestsAction(controller, _handler);
+                var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
-            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+                Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+                Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+                Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith(TEST_PREFIX));
+                Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+                Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+                Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+                Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            }
+            finally
+            {
+                Test.IdPrefix = "";
+            }
         }
 
         [Test]
         public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
         {
-            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            var result = TNode.FromXml(_handler.GetCallbackResult());
+            var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
+            try
+            {
+                new FrameworkController.LoadTestsAction(controller, _handler);
+                var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
-            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+                Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+                Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+                Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith(TEST_PREFIX));
+                Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
+                Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+                Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+                Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            }
+            finally
+            {
+                Test.IdPrefix = "";
+            }
         }
 
         [Test]
         public void LoadTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, "ID", _settings), _handler);
+            new FrameworkController.LoadTestsAction(new FrameworkController(MISSING_FILE, Test.IdPrefix, _settings), _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -296,7 +318,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, "ID", _settings), _handler);
+            new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, Test.IdPrefix, _settings), _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
             Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
@@ -313,33 +335,49 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_FilterCategory_ReturnsTests()
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.ExploreTestsAction(_controller, FIXTURE_CAT_FILTER, _handler);
-            var result = TNode.FromXml(_handler.GetCallbackResult());
+            var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
+            try
+            {
+                new FrameworkController.LoadTestsAction(controller, _handler);
+                new FrameworkController.ExploreTestsAction(controller, FIXTURE_CAT_FILTER, _handler);
+                var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
-            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockTestFixture.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+                Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+                Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+                Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith(TEST_PREFIX));
+                Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+                Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+                Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockTestFixture.Tests.ToString()));
+                Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            }
+            finally
+            {
+                Test.IdPrefix = "";
+            }
         }
 
         [TestCaseSource(nameof(EmptyFilters))]
         public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.ExploreTestsAction(_controller, filter, _handler);
-            var result = TNode.FromXml(_handler.GetCallbackResult());
+            var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
+            try
+            {
+                new FrameworkController.LoadTestsAction(controller, _handler);
+                new FrameworkController.ExploreTestsAction(controller, filter, _handler);
+                var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
-            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+                Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+                Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+                Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith(TEST_PREFIX));
+                Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+                Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+                Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+                Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            }
+            finally
+            {
+                Test.IdPrefix = "";
+            }
         }
 
         [TestCase(FIXTURE_CAT_FILTER)]
@@ -369,7 +407,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
+            var controller = new FrameworkController(MISSING_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
@@ -390,7 +428,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
+            var controller = new FrameworkController(BAD_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
@@ -426,7 +464,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void CountTestsAction_FileNotFound_ReturnsZero()
         {
-            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
+            var controller = new FrameworkController(MISSING_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
@@ -435,7 +473,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void CountTestsAction_BadFile_ReturnsZero()
         {
-            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
+            var controller = new FrameworkController(BAD_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.CountTestsAction(controller, EMPTY_FILTER, _handler);
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
@@ -447,26 +485,34 @@ namespace NUnit.Framework.Api
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunTestsAction(_controller, filter, _handler);
-            var result = TNode.FromXml(_handler.GetCallbackResult());
+            var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
+            try
+            {
+                new FrameworkController.LoadTestsAction(controller, _handler);
+                new FrameworkController.RunTestsAction(controller, filter, _handler);
+                var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            // TODO: Any failure here throws an exception because the call to RunTestsAction
-            // has destroyed the test context. We need to figure out how to execute the run
-            // in a cleaner way, perhaps on another thread or in a process.
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
-            Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
-            Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Passed.ToString()));
-            Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.Failed.ToString()));
-            Assert.That(result.Attributes["warnings"], Is.EqualTo(MockAssembly.Warnings.ToString()));
-            Assert.That(result.Attributes["skipped"], Is.EqualTo(MockAssembly.Skipped.ToString()));
-            Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
+                // TODO: Any failure here throws an exception because the call to RunTestsAction
+                // has destroyed the test context. We need to figure out how to execute the run
+                // in a cleaner way, perhaps on another thread or in a process.
+                Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+                Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith(TEST_PREFIX));
+                Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+                Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+                Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+                Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+                Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
+                Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Passed.ToString()));
+                Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.Failed.ToString()));
+                Assert.That(result.Attributes["warnings"], Is.EqualTo(MockAssembly.Warnings.ToString()));
+                Assert.That(result.Attributes["skipped"], Is.EqualTo(MockAssembly.Skipped.ToString()));
+                Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
+                Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
+            }
+            finally
+            {
+                Test.IdPrefix = "";
+            }
         }
 
         [Test]
@@ -480,7 +526,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunTestsAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
+            var controller = new FrameworkController(MISSING_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
@@ -501,7 +547,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunTestsAction_BadFile_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
+            var controller = new FrameworkController(BAD_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
@@ -521,22 +567,30 @@ namespace NUnit.Framework.Api
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunAsyncAction(_controller, filter, _handler);
-            //var result = TNode.FromXml(_handler.GetCallbackResult());
+            var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
+            try
+            {
+                new FrameworkController.LoadTestsAction(controller, _handler);
+                new FrameworkController.RunAsyncAction(controller, filter, _handler);
+                //var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            //Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            //Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            //Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
-            //Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            //Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            //Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
-            //Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Success.ToString()));
-            //Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
-            //Assert.That(result.Attributes["skipped"], Is.EqualTo((MockAssembly.NotRunnable + MockAssembly.Ignored).ToString()));
-            //Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
-            //Assert.That(result.FindDescendants("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
+                //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+                //Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
+                //Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith(TEST_PREFIX));
+                //Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
+                //Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
+                //Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
+                //Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
+                //Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Success.ToString()));
+                //Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
+                //Assert.That(result.Attributes["skipped"], Is.EqualTo((MockAssembly.NotRunnable + MockAssembly.Ignored).ToString()));
+                //Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
+                //Assert.That(result.FindDescendants("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
+            }
+            finally
+            {
+                Test.IdPrefix = "";
+            }
         }
 
         [Test]
@@ -550,7 +604,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
+            var controller = new FrameworkController(MISSING_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
             //var result = TNode.FromXml(_handler.GetCallbackResult());
@@ -567,7 +621,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void RunAsyncAction_BadFile_ReturnsNonRunnableSuite()
         {
-            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
+            var controller = new FrameworkController(BAD_FILE, Test.IdPrefix, _settings);
             new FrameworkController.LoadTestsAction(controller, _handler);
             new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
             //var result = TNode.FromXml(_handler.GetCallbackResult());
