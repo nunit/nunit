@@ -52,6 +52,7 @@ namespace NUnit.Framework.Api
         private readonly IDictionary _settings = new Dictionary<string, object>();
         private FrameworkController _controller;
         private ICallbackEventHandler _handler;
+        private string _originalPrefix;
 
         public static IEnumerable EmptyFilters
         {
@@ -80,6 +81,7 @@ namespace NUnit.Framework.Api
         [SetUp]
         public void CreateController()
         {
+            _originalPrefix = Test.IdPrefix;
             _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, Test.IdPrefix, _settings);
             _handler = new CallbackEventHandler();
         }
@@ -87,7 +89,7 @@ namespace NUnit.Framework.Api
         [OneTimeTearDown]
         public void TearDown()
         {
-            Test.IdPrefix = "";
+            Test.IdPrefix = _originalPrefix;
         }
 
         #region SettingsElement Tests
@@ -253,6 +255,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_GoodFile_ReturnsRunnableSuite()
         {
+            var originalPrefix = Test.IdPrefix;
             var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
             try
             {
@@ -269,13 +272,14 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                Test.IdPrefix = "";
+                Test.IdPrefix = originalPrefix;
             }
         }
 
         [Test]
         public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
         {
+            var originalPrefix = Test.IdPrefix;
             var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
             try
             {
@@ -292,7 +296,7 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                Test.IdPrefix = "";
+                Test.IdPrefix = originalPrefix;
             }
         }
 
@@ -335,6 +339,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void ExploreTestsAction_FilterCategory_ReturnsTests()
         {
+            var originalPrefix = Test.IdPrefix;
             var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
             try
             {
@@ -352,13 +357,14 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                Test.IdPrefix = "";
+                Test.IdPrefix = originalPrefix;
             }
         }
 
         [TestCaseSource(nameof(EmptyFilters))]
         public void ExploreTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
+            var originalPrefix = Test.IdPrefix;
             var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
             try
             {
@@ -376,7 +382,7 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                Test.IdPrefix = "";
+                Test.IdPrefix = originalPrefix;
             }
         }
 
@@ -485,6 +491,7 @@ namespace NUnit.Framework.Api
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
+            var originalPrefix = Test.IdPrefix;
             var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
             try
             {
@@ -511,7 +518,7 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                Test.IdPrefix = "";
+                Test.IdPrefix = originalPrefix;
             }
         }
 
@@ -567,6 +574,7 @@ namespace NUnit.Framework.Api
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
+            var originalPrefix = Test.IdPrefix;
             var controller = new FrameworkController(MOCK_ASSEMBLY_PATH, TEST_PREFIX, _settings);
             try
             {
@@ -589,7 +597,7 @@ namespace NUnit.Framework.Api
             }
             finally
             {
-                Test.IdPrefix = "";
+                Test.IdPrefix = originalPrefix;
             }
         }
 
