@@ -35,6 +35,8 @@ using NUnit.Tests.Assemblies;
 namespace NUnit.Framework.Api
 {
     // Functional tests of the FrameworkController and all subordinate classes
+    // NonParallelizable due to Test.PrefixId changes
+    [NonParallelizable]
     public class FrameworkControllerTests
     {
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
@@ -78,10 +80,15 @@ namespace NUnit.Framework.Api
             }
         }
 
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            _originalPrefix = Test.IdPrefix;
+        }
+
         [SetUp]
         public void CreateController()
         {
-            _originalPrefix = Test.IdPrefix;
             _controller = new FrameworkController(MOCK_ASSEMBLY_PATH, Test.IdPrefix, _settings);
             _handler = new CallbackEventHandler();
         }
