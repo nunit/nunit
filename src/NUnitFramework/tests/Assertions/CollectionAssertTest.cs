@@ -778,6 +778,22 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
+
+        [Test]
+        public void ElementsWithinTuplesAreComparedUsingNUnitEqualityComparer()
+        {
+            var a = new Dictionary<string, ValueTuple<string, Dictionary<string, string>>>()
+            {
+                { "key", ValueTuple.Create("name", new Dictionary<string, string>())}
+            };
+
+            var b = new Dictionary<string, ValueTuple<string, Dictionary<string, string>>>()
+            {
+                { "key", ValueTuple.Create("name", new Dictionary<string, string>())}
+            };
+
+            CollectionAssert.AreEquivalent(a, b);
+        }
 #endregion
 #endif
     }

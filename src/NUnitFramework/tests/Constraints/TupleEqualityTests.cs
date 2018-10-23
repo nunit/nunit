@@ -23,6 +23,7 @@
 
 #if !NET20 && !NET35
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -87,6 +88,14 @@ namespace NUnit.Framework.Constraints
             var tuple1 = Tuple.Create(1, 2, 3, 4, 5, 6, 7, 8);
             var tuple2 = Tuple.Create(1, 2, 3, 4, 5, 6, 7, 9);
             Assert.That(tuple1, Is.Not.EqualTo(tuple2));
+        }
+
+        [Test]
+        public void TupleElementsAreComparedUsingNUnitEqualityComparer()
+        {
+            var a = Tuple.Create(new Dictionary<string, string>());
+            var b = Tuple.Create(new Dictionary<string, string>());
+            Assert.That(a, Is.EqualTo(b));
         }
     }
 }
