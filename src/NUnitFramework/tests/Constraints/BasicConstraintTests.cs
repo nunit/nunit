@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new NullConstraint();
-            expectedDescription = "null";
-            stringRepresentation = "<null>";
+            TheConstraint = new NullConstraint();
+            ExpectedDescription = "null";
+            StringRepresentation = "<null>";
         }
         
         static object[] SuccessData = new object[] { null };
@@ -50,9 +50,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new TrueConstraint();
-            expectedDescription = "True";
-            stringRepresentation = "<true>";
+            TheConstraint = new TrueConstraint();
+            ExpectedDescription = "True";
+            StringRepresentation = "<true>";
         }
         
         static object[] SuccessData = new object[] { true, 2+2==4 };
@@ -68,9 +68,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new FalseConstraint();
-            expectedDescription = "False";
-            stringRepresentation = "<false>";
+            TheConstraint = new FalseConstraint();
+            ExpectedDescription = "False";
+            StringRepresentation = "<false>";
         }
 
         static object[] SuccessData = new object[] { false, 2 + 2 == 5 };
@@ -88,9 +88,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new NaNConstraint();
-            expectedDescription = "NaN";
-            stringRepresentation = "<nan>";
+            TheConstraint = new NaNConstraint();
+            ExpectedDescription = "NaN";
+            StringRepresentation = "<nan>";
         }
         
         static object[] SuccessData = new object[] { double.NaN, float.NaN };

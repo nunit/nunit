@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,9 +31,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<not <null>>";
-            staticSyntax = !Is.Null;
-            builderSyntax = !Builder().Null;
+            ParseTree = "<not <null>>";
+            StaticSyntax = !Is.Null;
+            BuilderSyntax = !Builder().Null;
         }
     }
 
@@ -42,9 +42,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<and <greaterthan 5> <lessthan 10>>";
-            staticSyntax = Is.GreaterThan(5) & Is.LessThan(10);
-            builderSyntax = Builder().GreaterThan(5) & Builder().LessThan(10);
+            ParseTree = "<and <greaterthan 5> <lessthan 10>>";
+            StaticSyntax = Is.GreaterThan(5) & Is.LessThan(10);
+            BuilderSyntax = Builder().GreaterThan(5) & Builder().LessThan(10);
         }
     }
 
@@ -53,9 +53,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<or <lessthan 5> <greaterthan 10>>";
-            staticSyntax = Is.LessThan(5) | Is.GreaterThan(10);
-            builderSyntax = Builder().LessThan(5) | Is.GreaterThan(10);
+            ParseTree = "<or <lessthan 5> <greaterthan 10>>";
+            StaticSyntax = Is.LessThan(5) | Is.GreaterThan(10);
+            BuilderSyntax = Builder().LessThan(5) | Is.GreaterThan(10);
         }
     }
 

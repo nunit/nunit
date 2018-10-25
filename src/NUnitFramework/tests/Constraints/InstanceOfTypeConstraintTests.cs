@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -29,9 +29,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new InstanceOfTypeConstraint(typeof(D1));
-            expectedDescription = string.Format("instance of <{0}>", typeof(D1));
-            stringRepresentation = string.Format("<instanceof {0}>", typeof(D1));
+            TheConstraint = new InstanceOfTypeConstraint(typeof(D1));
+            ExpectedDescription = string.Format("instance of <{0}>", typeof(D1));
+            StringRepresentation = string.Format("<instanceof {0}>", typeof(D1));
         }
 
         static object[] SuccessData = new object[] { new D1(), new D2() };

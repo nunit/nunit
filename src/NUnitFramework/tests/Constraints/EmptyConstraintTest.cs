@@ -35,9 +35,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new EmptyConstraint();
-            expectedDescription = "<empty>";
-            stringRepresentation = "<empty>";
+            TheConstraint = new EmptyConstraint();
+            ExpectedDescription = "<empty>";
+            StringRepresentation = "<empty>";
         }
 
         static object[] SuccessData = new object[]
@@ -60,23 +60,23 @@ namespace NUnit.Framework.Constraints
         [TestCase(5)]
         public void InvalidDataThrowsArgumentException(object data)
         {
-            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }
 
         [Test]
         public void NullStringGivesFailureResult()
         {
             string actual = null;
-            var result = theConstraint.ApplyTo(actual);
+            var result = TheConstraint.ApplyTo(actual);
             Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
         }
 
         [Test]
         public void NullArgumentExceptionMessageContainsTypeName()
         {
-            int? testInput = null;          
-            Assert.That(() => theConstraint.ApplyTo(testInput),
-               Throws.ArgumentException.With.Message.Contains("System.Int32"));          
+            int? testInput = null;
+            Assert.That(() => TheConstraint.ApplyTo(testInput),
+               Throws.ArgumentException.With.Message.Contains("System.Int32"));
         }
     }
 
@@ -86,9 +86,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new EmptyStringConstraint();
-            expectedDescription = "<empty>";
-            stringRepresentation = "<emptystring>";
+            TheConstraint = new EmptyStringConstraint();
+            ExpectedDescription = "<empty>";
+            StringRepresentation = "<emptystring>";
         }
 
         static object[] SuccessData = new object[]

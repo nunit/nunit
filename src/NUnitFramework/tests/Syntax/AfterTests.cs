@@ -36,9 +36,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 <equal 10>>";
-            staticSyntax = Is.EqualTo(10).After(1000);
-            builderSyntax = Builder().EqualTo(10).After(1000);
+            ParseTree = "<after 1000 <equal 10>>";
+            StaticSyntax = Is.EqualTo(10).After(1000);
+            BuilderSyntax = Builder().EqualTo(10).After(1000);
         }
     }
 
@@ -47,9 +47,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 60000 <equal 10>>";
-            staticSyntax = Is.EqualTo(10).After(1).Minutes;
-            builderSyntax = Builder().EqualTo(10).After(1).Minutes;
+            ParseTree = "<after 60000 <equal 10>>";
+            StaticSyntax = Is.EqualTo(10).After(1).Minutes;
+            BuilderSyntax = Builder().EqualTo(10).After(1).Minutes;
         }
     }
 
@@ -58,9 +58,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 20000 <equal 10>>";
-            staticSyntax = Is.EqualTo(10).After(20).Seconds;
-            builderSyntax = Builder().EqualTo(10).After(20).Seconds;
+            ParseTree = "<after 20000 <equal 10>>";
+            StaticSyntax = Is.EqualTo(10).After(20).Seconds;
+            BuilderSyntax = Builder().EqualTo(10).After(20).Seconds;
         }
     }
 
@@ -69,9 +69,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 500 <equal 10>>";
-            staticSyntax = Is.EqualTo(10).After(500).MilliSeconds;
-            builderSyntax = Builder().EqualTo(10).After(500).MilliSeconds;
+            ParseTree = "<after 500 <equal 10>>";
+            StaticSyntax = Is.EqualTo(10).After(500).MilliSeconds;
+            BuilderSyntax = Builder().EqualTo(10).After(500).MilliSeconds;
         }
     }
 
@@ -81,9 +81,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 <property X <equal 10>>>";
-            staticSyntax = Has.Property("X").EqualTo(10).After(1000);
-            builderSyntax = Builder().Property("X").EqualTo(10).After(1000);
+            ParseTree = "<after 1000 <property X <equal 10>>>";
+            StaticSyntax = Has.Property("X").EqualTo(10).After(1000);
+            BuilderSyntax = Builder().Property("X").EqualTo(10).After(1000);
         }
     }
 
@@ -92,33 +92,33 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<after 1000 <and <greaterthan 0> <lessthan 10>>>";
-            staticSyntax = Is.GreaterThan(0).And.LessThan(10).After(1000);
-            builderSyntax = Builder().GreaterThan(0).And.LessThan(10).After(1000);
+            ParseTree = "<after 1000 <and <greaterthan 0> <lessthan 10>>>";
+            StaticSyntax = Is.GreaterThan(0).And.LessThan(10).After(1000);
+            BuilderSyntax = Builder().GreaterThan(0).And.LessThan(10).After(1000);
         }
     }
 
     public abstract class AfterSyntaxTests
     {
-        protected bool flag;
-        protected int num;
-        protected object ob1, ob2, ob3;
-        protected List<object> list;
-        protected string greeting;
+        protected bool Flag;
+        protected int Num;
+        protected object Ob1, Ob2, Ob3;
+        protected List<object> List;
+        protected string Greeting;
 
         [SetUp]
         public void InitializeValues()
         {
-            this.flag = false;
-            this.num = 0;
-            this.ob1 = new object();
-            this.ob2 = new object();
-            this.ob3 = new object();
-            this.list = new List<object>();
-            this.list.Add(1);
-            this.list.Add(2);
-            this.list.Add(3);
-            this.greeting = "hello";
+            this.Flag = false;
+            this.Num = 0;
+            this.Ob1 = new object();
+            this.Ob2 = new object();
+            this.Ob3 = new object();
+            this.List = new List<object>();
+            this.List.Add(1);
+            this.List.Add(2);
+            this.List.Add(3);
+            this.Greeting = "hello";
 
             new Thread(ModifyValuesAfterDelay).Start();
         }
@@ -127,12 +127,12 @@ namespace NUnit.Framework.Syntax
         {
             Thread.Sleep(100);
 
-            this.flag = true;
-            this.num = 1;
-            this.ob1 = ob2;
-            this.ob3 = null;
-            this.list.Add(4);
-            this.greeting += "world";
+            this.Flag = true;
+            this.Num = 1;
+            this.Ob1 = Ob2;
+            this.Ob3 = null;
+            this.List.Add(4);
+            this.Greeting += "world";
         }
     }
 
@@ -141,43 +141,43 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void TrueTest()
         {
-            Assert.That(delegate { return flag; }, Is.True.After(5000, 200));
+            Assert.That(delegate { return Flag; }, Is.True.After(5000, 200));
         }
 
         [Test]
         public void EqualToTest()
         {
-            Assert.That(delegate { return num; }, Is.EqualTo(1).After(5000, 200));
+            Assert.That(delegate { return Num; }, Is.EqualTo(1).After(5000, 200));
         }
 
         [Test]
         public void SameAsTest()
         {
-            Assert.That(delegate { return ob1; }, Is.SameAs(ob2).After(5000, 200));
+            Assert.That(delegate { return Ob1; }, Is.SameAs(Ob2).After(5000, 200));
         }
 
         [Test]
         public void GreaterTest()
         {
-            Assert.That(delegate { return num; }, Is.GreaterThan(0).After(5000,200));
+            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000,200));
         }
 
         [Test]
         public void HasMemberTest()
         {
-            Assert.That(delegate { return list; }, Has.Member(4).After(5000, 200));
+            Assert.That(delegate { return List; }, Has.Member(4).After(5000, 200));
         }
 
         [Test]
         public void NullTest()
         {
-            Assert.That(delegate { return ob3; }, Is.Null.After(5000, 200));
+            Assert.That(delegate { return Ob3; }, Is.Null.After(5000, 200));
         }
 
         [Test]
         public void TextTest()
         {
-            Assert.That(delegate { return greeting; }, Does.EndWith("world").After(5000, 200));
+            Assert.That(delegate { return Greeting; }, Does.EndWith("world").After(5000, 200));
         }
     }
 
@@ -186,43 +186,43 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void TrueTest()
         {
-            Assert.That(() => flag, Is.True.After(5000, 200));
+            Assert.That(() => Flag, Is.True.After(5000, 200));
         }
 
         [Test]
         public void EqualToTest()
         {
-            Assert.That(() => num, Is.EqualTo(1).After(5000, 200));
+            Assert.That(() => Num, Is.EqualTo(1).After(5000, 200));
         }
 
         [Test]
         public void SameAsTest()
         {
-            Assert.That(() => ob1, Is.SameAs(ob2).After(5000, 200));
+            Assert.That(() => Ob1, Is.SameAs(Ob2).After(5000, 200));
         }
 
         [Test]
         public void GreaterTest()
         {
-            Assert.That(() => num, Is.GreaterThan(0).After(5000, 200));
+            Assert.That(() => Num, Is.GreaterThan(0).After(5000, 200));
         }
 
         [Test]
         public void HasMemberTest()
         {
-            Assert.That(() => list, Has.Member(4).After(5000, 200));
+            Assert.That(() => List, Has.Member(4).After(5000, 200));
         }
 
         [Test]
         public void NullTest()
         {
-            Assert.That(() => ob3, Is.Null.After(5000, 200));
+            Assert.That(() => Ob3, Is.Null.After(5000, 200));
         }
 
         [Test]
         public void TextTest()
         {
-            Assert.That(() => greeting, Does.EndWith("world").After(5000, 200));
+            Assert.That(() => Greeting, Does.EndWith("world").After(5000, 200));
         }
     }
 }

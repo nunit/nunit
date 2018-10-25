@@ -32,7 +32,9 @@ namespace NUnit.Framework.Internal
     public class NUnitTestCaseBuilderTests
     {
 #if ASYNC
+#pragma warning disable IDE1006 // Naming Styles
         private readonly Type fixtureType = typeof(AsyncDummyFixture);
+#pragma warning restore IDE1006 // Naming Styles
 
         [TestCase(nameof(AsyncDummyFixture.AsyncVoid), RunState.NotRunnable)]
         [TestCase(nameof(AsyncDummyFixture.AsyncTask), RunState.Runnable)]
@@ -63,7 +65,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+#pragma warning disable IDE1006 // Naming Styles
         private readonly Type optionalTestParametersFixtureType = typeof(OptionalTestParametersFixture);
+#pragma warning restore IDE1006 // Naming Styles
 
         [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams0), RunState.NotRunnable)]
         [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams1), RunState.Runnable)]

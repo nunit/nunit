@@ -33,9 +33,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new BinarySerializableConstraint();
-            expectedDescription = "binary serializable";
-            stringRepresentation = "<binaryserializable>";
+            TheConstraint = new BinarySerializableConstraint();
+            ExpectedDescription = "binary serializable";
+            StringRepresentation = "<binaryserializable>";
         }
 
         static object[] SuccessData = new object[] { 1, "a", new List<int>(), new InternalWithSerializableAttributeClass() };
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
         public void NullArgumentThrowsException()
         {
             object o = null;
-            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(o));
+            Assert.Throws<ArgumentNullException>(() => TheConstraint.ApplyTo(o));
         }
     }
 }

@@ -184,6 +184,7 @@ namespace NUnit.Framework.Internal
         [StructLayout(LayoutKind.Sequential)]
         struct OSVERSIONINFOEX
         {
+#pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
             public uint dwOSVersionInfoSize;
             public readonly uint dwMajorVersion;
             public readonly uint dwMinorVersion;
@@ -194,6 +195,7 @@ namespace NUnit.Framework.Internal
             public readonly Int16 wServicePackMajor;
             public readonly Int16 wServicePackMinor;
             public readonly Int16 wSuiteMask;
+#pragma warning restore IDE1006
             public readonly Byte ProductType;
             public readonly Byte Reserved;
         }
@@ -350,7 +352,9 @@ namespace NUnit.Framework.Internal
         }
 
         [DllImport("libc")]
+#pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
         static extern int uname(IntPtr buf);
+#pragma warning restore IDE1006
 
         static bool CheckIfIsMacOSX(PlatformID platform)
         {

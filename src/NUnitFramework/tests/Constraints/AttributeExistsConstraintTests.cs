@@ -31,9 +31,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new AttributeExistsConstraint(typeof(TestFixtureAttribute));
-            expectedDescription = "type with attribute <NUnit.Framework.TestFixtureAttribute>";
-            stringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
+            TheConstraint = new AttributeExistsConstraint(typeof(TestFixtureAttribute));
+            ExpectedDescription = "type with attribute <NUnit.Framework.TestFixtureAttribute>";
+            StringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
         }
 
         static object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };

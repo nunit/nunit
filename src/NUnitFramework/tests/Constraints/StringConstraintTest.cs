@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void NonStringDataThrowsArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(123));
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(123));
         }
     }
 }

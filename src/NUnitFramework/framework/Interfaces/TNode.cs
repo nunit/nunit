@@ -38,6 +38,8 @@ namespace NUnit.Framework.Interfaces
     /// System.Xml.Linq.XElement, providing a minimal set of methods
     /// for operating on the XML in a platform-independent manner.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
+    // Disregarding naming convention for back-compat
     public class TNode
     {
         #region Constructors

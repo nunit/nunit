@@ -41,13 +41,21 @@ namespace NUnit.Framework.Constraints
         /// The precedence value used when the operator
         /// is about to be pushed to the stack.
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected int left_precedence;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// The precedence value used when the operator
         /// is on the top of the stack.
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected int right_precedence;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// The syntax element preceding this operator

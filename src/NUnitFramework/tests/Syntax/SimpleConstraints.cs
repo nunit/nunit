@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -30,9 +30,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<null>";
-            staticSyntax = Is.Null;
-            builderSyntax = Builder().Null;
+            ParseTree = "<null>";
+            StaticSyntax = Is.Null;
+            BuilderSyntax = Builder().Null;
         }
     }
 
@@ -41,9 +41,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<true>";
-            staticSyntax = Is.True;
-            builderSyntax = Builder().True;
+            ParseTree = "<true>";
+            StaticSyntax = Is.True;
+            BuilderSyntax = Builder().True;
         }
     }
 
@@ -52,9 +52,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<false>";
-            staticSyntax = Is.False;
-            builderSyntax = Builder().False;
+            ParseTree = "<false>";
+            StaticSyntax = Is.False;
+            BuilderSyntax = Builder().False;
         }
     }
 
@@ -63,9 +63,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<greaterthan 0>";
-            staticSyntax = Is.Positive;
-            builderSyntax = Builder().Positive;
+            ParseTree = "<greaterthan 0>";
+            StaticSyntax = Is.Positive;
+            BuilderSyntax = Builder().Positive;
         }
     }
 
@@ -74,9 +74,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<lessthan 0>";
-            staticSyntax = Is.Negative;
-            builderSyntax = Builder().Negative;
+            ParseTree = "<lessthan 0>";
+            StaticSyntax = Is.Negative;
+            BuilderSyntax = Builder().Negative;
         }
     }
 
@@ -85,9 +85,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<equal 0>";
-            staticSyntax = Is.Zero;
-            builderSyntax = Builder().Zero;
+            ParseTree = "<equal 0>";
+            StaticSyntax = Is.Zero;
+            BuilderSyntax = Builder().Zero;
         }
     }
 
@@ -96,9 +96,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<nan>";
-            staticSyntax = Is.NaN;
-            builderSyntax = Builder().NaN;
+            ParseTree = "<nan>";
+            StaticSyntax = Is.NaN;
+            BuilderSyntax = Builder().NaN;
         }
     }
 }

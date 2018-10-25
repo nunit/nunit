@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -35,7 +35,7 @@ namespace NUnit.TestData.TheoryFixture
         static int i1 = 1;
 #pragma warning restore 414
         [Datapoint]
-        public int i100 = 100;
+        public int I100 = 100;
 
         [Theory]
         public void TheoryWithNoArguments()

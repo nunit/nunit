@@ -30,9 +30,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<binaryserializable>";
-            staticSyntax = Is.BinarySerializable;
-            builderSyntax = Builder().BinarySerializable;
+            ParseTree = "<binaryserializable>";
+            StaticSyntax = Is.BinarySerializable;
+            BuilderSyntax = Builder().BinarySerializable;
         }
     }
 
@@ -42,9 +42,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<xmlserializable>";
-            staticSyntax = Is.XmlSerializable;
-            builderSyntax = Builder().XmlSerializable;
+            ParseTree = "<xmlserializable>";
+            StaticSyntax = Is.XmlSerializable;
+            BuilderSyntax = Builder().XmlSerializable;
         }
     }
 }

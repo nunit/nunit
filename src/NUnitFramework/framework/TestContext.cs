@@ -337,11 +337,11 @@ namespace NUnit.Framework
         /// is the only criterion for selection of the formatter, since
         /// it can be used without getting involved with a compound function.
         /// </summary>
-        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
+        /// <typeparam name="TSupported">The type supported by this formatter</typeparam>
         /// <param name="formatter">The ValueFormatter delegate</param>
-        public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
+        public static void AddFormatter<TSupported>(ValueFormatter formatter)
         {
-            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+            AddFormatter(next => val => (val is TSupported) ? formatter(val) : next(val));
         }
 
 #endregion

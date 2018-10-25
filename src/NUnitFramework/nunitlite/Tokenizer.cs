@@ -109,7 +109,7 @@ namespace NUnit.Common
 
         private const char EOF_CHAR = '\0';
         private const string WORD_BREAK_CHARS = "=!()&|";
-        private readonly string[] DOUBLE_CHAR_SYMBOLS = new string[] { "==", "=~", "!=", "!~", "&&", "||" };
+        private static readonly string[] DOUBLE_CHAR_SYMBOLS = new string[] { "==", "=~", "!=", "!~", "&&", "||" };
 
         private Token _lookahead;
 
