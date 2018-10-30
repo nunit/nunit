@@ -358,6 +358,22 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public static void MaxValueRange_SByte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(sbyte.MaxValue - 2, sbyte.MaxValue), typeof(sbyte)),
+                Is.EqualTo(new[] { sbyte.MaxValue - 2, sbyte.MaxValue - 1, sbyte.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRange_Int16()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(short.MaxValue - 2, short.MaxValue), typeof(short)),
+                Is.EqualTo(new[] { short.MaxValue - 2, short.MaxValue - 1, short.MaxValue }));
+        }
+
+        [Test]
         public static void MaxValueRange_Int32()
         {
             Assert.That(
@@ -453,6 +469,22 @@ namespace NUnit.Framework.Attributes
             Assert.That(
                 GetData(new RangeAttribute(byte.MinValue + 2, byte.MinValue), typeof(byte)),
                 Is.EqualTo(new[] { byte.MinValue + 2, byte.MinValue + 1, byte.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRange_SByte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(sbyte.MinValue + 2, sbyte.MinValue), typeof(sbyte)),
+                Is.EqualTo(new[] { sbyte.MinValue + 2, sbyte.MinValue + 1, sbyte.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRange_Int16()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(short.MinValue + 2, short.MinValue), typeof(short)),
+                Is.EqualTo(new[] { short.MinValue + 2, short.MinValue + 1, short.MinValue }));
         }
 
         [Test]
