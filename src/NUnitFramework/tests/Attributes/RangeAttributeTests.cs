@@ -350,6 +350,14 @@ namespace NUnit.Framework.Attributes
         #region MaxValue
 
         [Test]
+        public static void MaxValueRange_Byte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(byte.MaxValue - 2, byte.MaxValue), typeof(byte)),
+                Is.EqualTo(new[] { byte.MaxValue - 2, byte.MaxValue - 1, byte.MaxValue }));
+        }
+
+        [Test]
         public static void MaxValueRange_Int32()
         {
             Assert.That(
@@ -438,6 +446,14 @@ namespace NUnit.Framework.Attributes
         #endregion
 
         #region MinValue
+
+        [Test]
+        public static void MinValueRange_Byte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(byte.MinValue + 2, byte.MinValue), typeof(byte)),
+                Is.EqualTo(new[] { byte.MinValue + 2, byte.MinValue + 1, byte.MinValue }));
+        }
 
         [Test]
         public static void MinValueRange_Int32()
