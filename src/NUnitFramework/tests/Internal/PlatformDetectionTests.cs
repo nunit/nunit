@@ -271,45 +271,13 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void DetectNet10()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework( RuntimeType.Net, new Version( 1, 0, 3705, 0 ) ),
-                "NET,NET-1.0" );
-        }
-
-        [Test]
-        public void DetectNet11()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework( RuntimeType.Net, new Version( 1, 1, 4322, 0 ) ),
-                "NET,NET-1.1" );
-        }
-
-        [Test]
-        public void DetectNet20()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework( RuntimeType.Net, new Version( 2, 0, 50727, 0 ) ),
-                "Net,Net-2.0" );
-        }
-        
-        [Test]
-        public void DetectNet30()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(3, 0)),
-                "Net,Net-2.0,Net-3.0");
-        }
-        
-        [Test]
         public void DetectNet35()
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.Net, new Version(3, 5)),
                 "Net,Net-2.0,Net-3.0,Net-3.5");
         }
-        
+
         [Test]
         public void DetectNet40()
         {
