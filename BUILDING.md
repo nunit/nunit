@@ -79,7 +79,7 @@ Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Dire
  - `APARTMENT_STATE` enables control of the thread apartment state
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
-For example, `NET20` or `NET45`, `NETSTANDARD1_6`, `NETCOREAPP2_0`, and so on.
+For example, `NET45`, `NETSTANDARD1_6`, `NETCOREAPP2_0`, and so on.
 It is most helpful to call out which platforms are the exception in rather than the rule
 in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
 
@@ -94,7 +94,7 @@ For example, rather than this code:
 Consider this:
 
 ```cs
-#if !(NET20 || NET35 || NET40)
+#if !(NET35 || NET40)
 // Something that .NET Framework 4.0 can't do
 #endif
 ```

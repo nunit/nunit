@@ -77,7 +77,6 @@ namespace NUnit.TestData
             Warn.If(2 + 2 != 4, "Not Equal to {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void WarnUnless_Passes_BooleanWithMessageStringFunc()
         {
@@ -141,7 +140,6 @@ namespace NUnit.TestData
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.If(() => 2 + 2 != 4, getExceptionMessage);
         }
-#endif
 
         [Test]
         public void WarnUnless_Passes_ActualAndConstraint()
@@ -179,7 +177,6 @@ namespace NUnit.TestData
             Warn.If(2 + 2, Is.Not.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void WarnUnless_Passes_ActualAndConstraintWithMessageStringFunc()
         {
@@ -243,7 +240,6 @@ namespace NUnit.TestData
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.If(() => 2 + 2, Is.Not.EqualTo(4), getExceptionMessage);
         }
-#endif
 
         [Test]
         public void WarnUnless_Passes_DelegateAndConstraint()
@@ -281,7 +277,6 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -295,7 +290,6 @@ namespace NUnit.TestData
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), getExceptionMessage);
         }
-#endif
 
 #if ASYNC
         [Test]
@@ -363,7 +357,6 @@ namespace NUnit.TestData
             Warn.If(2 + 2 != 5, "got {0}", 5);
         }
 
-#if !NET20
         [Test]
         public void WarnUnless_Fails_BooleanWithMessageStringFunc()
         {
@@ -427,7 +420,6 @@ namespace NUnit.TestData
             Func<string> getExceptionMessage = () => "got 5";
             Warn.If(() => 2 + 2 != 5, getExceptionMessage);
         }
-#endif
 
         [Test]
         public void WarnUnless_Fails_ActualAndConstraint()
@@ -465,7 +457,6 @@ namespace NUnit.TestData
             Warn.If(2 + 2, Is.Not.EqualTo(5), "Should be {0}", 5);
         }
 
-#if !NET20
         [Test]
         public void WarnUnless_Fails_ActualAndConstraintWithMessageStringFunc()
         {
@@ -529,7 +520,6 @@ namespace NUnit.TestData
             Func<string> getExceptionMessage = () => "Should be 5";
             Warn.If(() => 2 + 2, Is.Not.EqualTo(5), getExceptionMessage);
         }
-#endif
 
         [Test]
         public void WarnUnless_Fails_DelegateAndConstraint()
@@ -567,7 +557,6 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -581,7 +570,6 @@ namespace NUnit.TestData
             Func<string> getExceptionMessage = () => "Should be 4";
             Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), getExceptionMessage);
         }
-#endif
 
 #if ASYNC
         [Test]
@@ -656,9 +644,6 @@ namespace NUnit.TestData
             Assert.Warn("(Warning message)");
         }
 
-#if NET20
-        private delegate void Action();
-#endif
         [Test]
         public static void WarningInBeginInvoke()
         {

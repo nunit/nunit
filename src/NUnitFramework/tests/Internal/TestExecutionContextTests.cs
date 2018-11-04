@@ -962,7 +962,7 @@ namespace NUnit.Framework.Internal
 
 #region Cross-domain Tests
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
         [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
@@ -1027,7 +1027,7 @@ namespace NUnit.Framework.Internal
 #endregion
     }
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
     [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {

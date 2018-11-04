@@ -209,7 +209,7 @@ namespace NUnit.Framework.Constraints
         }
 #endif
 
-#if !NET20 && !NET35
+#if !NET35
         [Test]
         public static void FormatValue_OneElementTupleTest()
         {

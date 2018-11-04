@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if !(NET20 || NET35 || NETSTANDARD1_4)
+#if !(NET35 || NETSTANDARD1_4)
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !(NET20 || NET35 || NETSTANDARD1_4)
+#if !(NET35 || NETSTANDARD1_4)
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)

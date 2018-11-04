@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal
 
 
         /// <summary>
-        /// Platform ID for Unix as defined by Microsoft .NET 2.0 and greater
+        /// Platform ID for Unix as defined by .NET
         /// </summary>
         public static readonly PlatformID UnixPlatformID_Microsoft = (PlatformID)4;
 

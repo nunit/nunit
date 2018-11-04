@@ -59,7 +59,6 @@ namespace NUnit.Framework
             Assert.That(condition, Is.True, null, null);
         }
 
-#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -70,13 +69,11 @@ namespace NUnit.Framework
         {
             Assert.That(condition, Is.True, getExceptionMessage);
         }
-#endif
 
         #endregion
 
         #region Lambda returning Boolean
 
-#if !NET20
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="AssertionException"/>.
@@ -109,7 +106,7 @@ namespace NUnit.Framework
         {
             Assert.That(condition.Invoke(), Is.True, getExceptionMessage);
         }
-#endif
+
         #endregion
 
         #region ActualValueDelegate
@@ -145,7 +142,6 @@ namespace NUnit.Framework
                 ReportFailure(result, message, args);
         }
 
-#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -166,7 +162,6 @@ namespace NUnit.Framework
             if (!result.IsSuccess)
                 ReportFailure(result, getExceptionMessage());
         }
-#endif
 
         #endregion
 
@@ -196,7 +191,6 @@ namespace NUnit.Framework
             Assert.That((object)code, constraint, message, args);
         }
 
-#if !NET20
         /// <summary>
         /// Asserts that the code represented by a delegate throws an exception
         /// that satisfies the constraint provided.
@@ -208,7 +202,6 @@ namespace NUnit.Framework
         {
             Assert.That((object)code, constraint, getExceptionMessage);
         }
-#endif
 
         #endregion
 
@@ -247,7 +240,6 @@ namespace NUnit.Framework
                 ReportFailure(result, message, args);
         }
 
-#if !NET20
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
         /// is satisfied and throwing an assertion exception on failure.
@@ -268,7 +260,6 @@ namespace NUnit.Framework
             if (!result.IsSuccess)
                 ReportFailure(result, getExceptionMessage());
         }
-#endif
 
         #endregion
 

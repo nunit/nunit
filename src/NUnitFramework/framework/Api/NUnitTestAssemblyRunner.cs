@@ -32,7 +32,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Security;
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
 using System.Windows.Forms;
 #endif
 
@@ -315,7 +315,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -397,7 +397,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather

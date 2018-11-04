@@ -29,7 +29,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if NET20 || NET35
+#if NET35
 using System;
 using System.Diagnostics;
 

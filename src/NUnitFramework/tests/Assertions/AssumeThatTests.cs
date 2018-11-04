@@ -55,7 +55,6 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2 == 4, "Not Equal to {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void AssumptionPasses_BooleanWithMessageStringFunc()
         {
@@ -87,7 +86,6 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assume.That(() => 2 + 2 == 4, getExceptionMessage);
         }
-#endif
 
         [Test]
         public void AssumptionPasses_ActualAndConstraint()
@@ -107,7 +105,6 @@ namespace NUnit.Framework.Assertions
             Assume.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void AssumptionPasses_ActualAndConstraintWithMessageStringFunc()
         {
@@ -139,7 +136,6 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assume.That(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
-#endif
 
         [Test]
         public void AssumptionPasses_DelegateAndConstraint()
@@ -159,14 +155,12 @@ namespace NUnit.Framework.Assertions
             Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
         }
-#endif
 
         private int ReturnsFour()
         {
@@ -193,7 +187,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("got 5"));
         }
 
-#if !NET20
         [Test]
         public void FailureThrowsInconclusiveException_BooleanWithMessageStringFunc()
         {
@@ -229,7 +222,6 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5, getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("got 5"));
         }
-#endif
 
         [Test]
         public void FailureThrowsInconclusiveException_ActualAndConstraint()
@@ -251,7 +243,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 
-#if !NET20
         [Test]
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessageStringFunc()
         {
@@ -287,7 +278,6 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
-#endif
 
         [Test]
         public void FailureThrowsInconclusiveException_DelegateAndConstraint()
@@ -310,7 +300,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 4"));
         }
 
-#if !NET20
         [Test]
         public void FailureThrowsInconclusiveException_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -356,7 +345,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Func was called"));
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
         }
-#endif
 
         private int ReturnsFive()
         {

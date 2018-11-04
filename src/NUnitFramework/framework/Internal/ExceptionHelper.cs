@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
             PreserveStackTrace(exception);
             throw exception;
 #else
