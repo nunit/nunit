@@ -30,6 +30,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
 {
+    //https://github.com/nunit/nunit/issues/2614
     class FrameworkControllerCallContextTests
     {
         private object _origExecutionContext;
@@ -62,6 +63,10 @@ namespace NUnit.Framework.Api
         {
             get
             {
+                //RunOnMainThread to ensure we're testing worse-case-scenario. The original issue was found
+                //when TestExecutionContext was created in a TestCaseSource,in test exploring code
+                //which always runs on the main thread - however, it could be that the entire test
+                //run is carried out on the main thread - and we should be protecting against that case too.
                 var settings = new Dictionary<string, object>
                 {
                     { FrameworkPackageSettings.RunOnMainThread, true }

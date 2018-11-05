@@ -30,9 +30,9 @@ using System.Security;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// This class ensures the CallContext is correctly cleared or restored around framework actions.
-    /// This is important if running multiple assemblies within the same process, to ensure no leakage
-    /// from one assembly to the next. See https://github.com/nunit/nunit-console/issues/325
+    /// This class ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is correctly cleared
+    /// or restored around framework actions. This is important if running multiple assemblies within the same
+    /// process, to ensure no leakage from one assembly to the next. See https://github.com/nunit/nunit-console/issues/325
     /// </summary>
     internal class NUnitCallContext : IDisposable
     {
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
         [SecuritySafeCritical]
         public NUnitCallContext()
         {
-            _oldContext = CallContext.GetData("NUnit.Framework.TestExecutionContext") as TestExecutionContext;
+            _oldContext = CallContext.GetData(TestExecutionContextKey);
         }
 
         [SecuritySafeCritical]

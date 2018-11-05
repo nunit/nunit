@@ -473,15 +473,21 @@ namespace NUnit.Framework.Api
 
 #endregion
 
+#region Nested Action Classes
+
 #region TestContollerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions
         /// performed against a FrameworkController.
         /// </summary>
-        public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject { }
+        public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject
+        {
+        }
 
-        #region LoadTestsAction
+#endregion
+
+#region LoadTestsAction
 
         /// <summary>
         /// LoadTestsAction loads a test into the FrameworkController
