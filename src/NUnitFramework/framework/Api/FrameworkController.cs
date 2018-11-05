@@ -473,37 +473,15 @@ namespace NUnit.Framework.Api
 
 #endregion
 
-#region Nested Action Classes
-
 #region TestContollerAction
 
         /// <summary>
         /// FrameworkControllerAction is the base class for all actions
         /// performed against a FrameworkController.
         /// </summary>
-        public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject
-        {
-            /// <summary>
-            /// Wrap in NUnitCallContext executes the action within an NUnitCallContext
-            /// which ensures System.Runtime.Remoting.Messaging.CallContext is cleaned up
-            /// suitably at the end of the test run. This method only has an effect running
-            /// the full .NET Framework.
-            /// </summary>
-            /// <param name="action"></param>
-            protected void WrapInNUnitCallContext(Action action)
-            {
-#if !(NET20 || NET35 || NET40 || NET45)
-                action();
-#else
-                using (new NUnitCallContext())
-                    action();
-#endif
-            }
-        }
+        public abstract class FrameworkControllerAction : LongLivedMarshalByRefObject { }
 
-#endregion
-
-#region LoadTestsAction
+        #region LoadTestsAction
 
         /// <summary>
         /// LoadTestsAction loads a test into the FrameworkController
@@ -517,7 +495,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">The callback handler.</param>
             public LoadTestsAction(FrameworkController controller, object handler)
             {
-                WrapInNUnitCallContext(() => controller.LoadTests((ICallbackEventHandler)handler));
+                controller.LoadTests((ICallbackEventHandler)handler);
             }
         }
 
@@ -538,7 +516,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">The callback handler.</param>
             public ExploreTestsAction(FrameworkController controller, string filter, object handler)
             {
-                WrapInNUnitCallContext(() => controller.ExploreTests((ICallbackEventHandler)handler, filter));
+                controller.ExploreTests((ICallbackEventHandler)handler, filter);
             }
         }
 
@@ -560,7 +538,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">A callback handler used to report results</param>
             public CountTestsAction(FrameworkController controller, string filter, object handler)
             {
-                WrapInNUnitCallContext(() => controller.CountTests((ICallbackEventHandler)handler, filter));
+                controller.CountTests((ICallbackEventHandler)handler, filter);
             }
         }
 
@@ -581,7 +559,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">A callback handler used to report results</param>
             public RunTestsAction(FrameworkController controller, string filter, object handler)
             {
-                WrapInNUnitCallContext(() => controller.RunTests((ICallbackEventHandler)handler, filter));
+                controller.RunTests((ICallbackEventHandler)handler, filter);
             }
         }
 
@@ -602,7 +580,7 @@ namespace NUnit.Framework.Api
             /// <param name="handler">A callback handler used to report results</param>
             public RunAsyncAction(FrameworkController controller, string filter, object handler)
             {
-                WrapInNUnitCallContext(() => controller.RunAsync((ICallbackEventHandler)handler, filter));
+                controller.RunAsync((ICallbackEventHandler)handler, filter);
             }
         }
 
@@ -625,7 +603,7 @@ namespace NUnit.Framework.Api
             /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
             public StopRunAction(FrameworkController controller, bool force, object handler)
             {
-                WrapInNUnitCallContext(() => controller.StopRun((ICallbackEventHandler)handler, force));
+                controller.StopRun((ICallbackEventHandler)handler, force);
             }
         }
 

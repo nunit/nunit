@@ -66,7 +66,7 @@ namespace NUnit.Framework.Api
                 {
                     { FrameworkPackageSettings.RunOnMainThread, true }
                 };
-                var controller = new FrameworkController(MockAssemblyFile, "ID", settings);
+                var controller = new FrameworkController(MockAssemblyFile, Test.IdPrefix, settings);
                 var handler = new CallbackEventHandler();
                 yield return () => new FrameworkController.LoadTestsAction(controller, handler);
                 yield return () => new FrameworkController.ExploreTestsAction(controller, null, handler);

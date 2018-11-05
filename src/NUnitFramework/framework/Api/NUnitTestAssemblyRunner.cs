@@ -151,7 +151,8 @@ namespace NUnit.Framework.Api
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
-            return LoadedTest = _builder.Build(assemblyNameOrPath, settings);
+            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assemblyNameOrPath, settings));
+            return LoadedTest;
 
         }
 
@@ -168,7 +169,8 @@ namespace NUnit.Framework.Api
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
-            return LoadedTest = _builder.Build(assembly, settings);
+            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assembly, settings));
+            return LoadedTest;
         }
 
         /// <summary>
@@ -237,7 +239,7 @@ namespace NUnit.Framework.Api
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
-            StartRun(listener);
+            WrapInNUnitCallContext(() => StartRun(listener));
         }
 
         /// <summary>
@@ -411,6 +413,28 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#endregion
+#if (NET20 || NET35 || NET40 || NET45)
+        /// <summary>
+        /// Executes the action within an <see cref="NUnitCallContext" />
+        /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
+        /// suitably at the end of the test run. This method only has an effect running
+        /// the full .NET Framework.
+        /// </summary>
+#else
+        /// <summary>
+        /// This method is a no-op in .NET Standard builds.
+        /// </summary>
+#endif
+        protected void WrapInNUnitCallContext(Action action)
+        {
+#if !(NET20 || NET35 || NET40 || NET45)
+            action();
+#else
+            using (new NUnitCallContext())
+                action();
+#endif
+        }
     }
+
+#endregion
 }
