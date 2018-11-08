@@ -26,6 +26,7 @@ using NUnit.TestUtilities;
 
 #if ASYNC
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 
@@ -65,19 +66,39 @@ namespace NUnit.Framework.Constraints
         };
 
 #if ASYNC
+        private static async Task YieldAsync()
+        {
+#if NET40
+            await TaskEx.Yield();
+#else
+            await Task.Yield();
+#endif
+        }
+
+
         [Test]
         public static void CatchesAsyncException()
         {
             Assert.That(async () =>
             {
-#if NET40
-                await TaskEx.Yield();
-#else
-                await Task.Yield();
-#endif
+                await YieldAsync();
                 throw new Exception();
             }, Throws.Exception);
         }
+        
+        [Test]
+        public static void CatchesAsyncOfTException()
+        {
+            Assert.That(async () =>
+            {
+#pragma warning disable CS0162
+                await YieldAsync();
+                throw new Exception();
+                return 2;
+#pragma warning restore CS0162
+            }, Throws.Exception);
+        }
+
 #endif
     }
 }

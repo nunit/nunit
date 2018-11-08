@@ -98,7 +98,12 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
 #if ASYNC
-            if (typeof(TActual) == typeof(Task)) return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
+            if (typeof(TActual) == typeof(Task))
+                return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
+            
+            var typeWrapper = new TypeWrapper(typeof(TActual));
+            if (typeWrapper.IsGenericType && typeWrapper.GetGenericTypeDefinition() == typeof(Task<>))
+                return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
 #endif
             return ApplyTo(new TestDelegate(() => del.Invoke()));
         }
