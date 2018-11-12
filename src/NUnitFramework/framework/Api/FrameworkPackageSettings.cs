@@ -71,7 +71,6 @@ namespace NUnit
         /// <summary>
         /// A list of tests to be loaded. 
         /// </summary>
-        // TODO: Remove?
         public const string LOAD = "LOAD";
 
         /// <summary>
