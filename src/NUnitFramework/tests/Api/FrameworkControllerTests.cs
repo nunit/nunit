@@ -30,6 +30,7 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api
@@ -589,25 +590,6 @@ namespace NUnit.Framework.Api
         {
             var propNode = result.SelectSingleNode(string.Format("properties/property[@name='{0}']", PropertyNames.SkipReason));
             return propNode == null ? null : propNode.Attributes["value"];
-        }
-
-#endregion
-
-#region Nested Callback Class
-
-        private class CallbackEventHandler : System.Web.UI.ICallbackEventHandler
-        {
-            private string _result;
-
-            public string GetCallbackResult()
-            {
-                return _result;
-            }
-
-            public void RaiseCallbackEvent(string eventArgument)
-            {
-                _result = eventArgument;
-            }
         }
 
 #endregion

@@ -60,18 +60,16 @@ namespace NUnit.Framework.Assertions
             TestExecutionContext.CurrentContext = savedContext;
         }
 #else
-        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
-
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
-            CallContext.FreeNamedDataSlot(CONTEXT_KEY);
+            CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
             return savedContext;
         }
 
         private void RestoreExecutionContext(TestExecutionContext savedContext)
         {
-            CallContext.SetData(CONTEXT_KEY, savedContext);
+            CallContext.SetData(NUnitCallContext.TestExecutionContextKey, savedContext);
         }
 #endif
 
