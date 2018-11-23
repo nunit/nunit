@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 
 #if ASYNC
 using System.Threading.Tasks;
