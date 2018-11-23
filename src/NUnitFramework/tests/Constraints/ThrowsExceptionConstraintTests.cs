@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         };
 
 #if ASYNC
-        private static async Task YieldAsync()
+        private static async Task YieldsAsync()
         {
 #if NET40
             await TaskEx.Yield();
@@ -75,30 +75,28 @@ namespace NUnit.Framework.Constraints
 #endif
         }
 
+        private static async Task ThrowsAsync()
+        {
+            await YieldsAsync();
+            throw new Exception();
+        }
+
 
         [Test]
         public static void CatchesAsyncException()
         {
-            Assert.That(async () =>
-            {
-                await YieldAsync();
-                throw new Exception();
-            }, Throws.Exception);
+            Assert.That(async () => await ThrowsAsync(), Throws.Exception);
         }
         
         [Test]
-        public static void CatchesAsyncOfTException()
+        public static void CatchesAsyncTaskOfTException()
         {
             Assert.That(async () =>
             {
-#pragma warning disable CS0162
-                await YieldAsync();
-                throw new Exception();
+                await ThrowsAsync();
                 return 2;
-#pragma warning restore CS0162
             }, Throws.Exception);
         }
-
 #endif
     }
 }
