@@ -66,26 +66,10 @@ namespace NUnit.Framework.Constraints
         };
 
 #if ASYNC
-        private static async Task YieldsAsync()
-        {
-#if NET40
-            await TaskEx.Yield();
-#else
-            await Task.Yield();
-#endif
-        }
-
-        private static async Task ThrowsAsync()
-        {
-            await YieldsAsync();
-            throw new Exception();
-        }
-
-
         [Test]
         public static void CatchesAsyncException()
         {
-            Assert.That(async () => await ThrowsAsync(), Throws.Exception);
+            Assert.That(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync(), Throws.Exception);
         }
         
         [Test]
@@ -93,7 +77,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(async () =>
             {
-                await ThrowsAsync();
+                await AsyncTestDelegates.ThrowsArgumentExceptionAsync();
                 return 2;
             }, Throws.Exception);
         }
