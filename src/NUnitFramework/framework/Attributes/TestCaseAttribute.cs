@@ -431,10 +431,10 @@ namespace NUnit.Framework
                 return true;
             }
 
-            // Convert.ChangeType doesn't work for TimeSpan from string
-            if ((targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?)) && arg is string)
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter(targetType);
+            if (converter.CanConvertFrom(arg.GetType()))
             {
-                argAsTargetType = TimeSpan.Parse((string)arg);
+                argAsTargetType = converter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, arg);
                 return true;
             }
 

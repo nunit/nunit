@@ -142,6 +142,27 @@ namespace NUnit.Framework.Attributes
             return ts;
         }
 
+        [TestCase("2018-10-09 15:15:00+02:30")]
+        public void CanConvertStringToDateTimeOffset(DateTimeOffset offset)
+        {
+            Assert.AreEqual(2018, offset.Year);
+            Assert.AreEqual(10, offset.Month);
+            Assert.AreEqual(9, offset.Day);
+
+            Assert.AreEqual(15, offset.Hour);
+            Assert.AreEqual(15, offset.Minute);
+            Assert.AreEqual(0, offset.Second);
+
+            Assert.AreEqual(2, offset.Offset.Hours);
+            Assert.AreEqual(30, offset.Offset.Minutes);
+        }
+
+        [TestCase("2018-10-09 15:15:00+02:30", ExpectedResult = "2018-10-09 15:15:00+02:30")]
+        public DateTimeOffset CanConvertExpectedResultStringToDateTimeOffset(DateTimeOffset offset)
+        {
+            return offset;
+        }
+
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
         {
