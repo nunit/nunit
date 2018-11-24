@@ -46,6 +46,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SucceedsWithNonVoidReturningFunction()
         {
+
             var constraintResult = TheConstraint.ApplyTo(TestDelegates.ThrowsInsteadOfReturns);
             if (!constraintResult.IsSuccess)
             {
@@ -75,10 +76,25 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void CatchesAsyncTaskOfTException()
         {
-            Assert.That(async () =>
+            Assert.That<Task<int>>(async () =>
             {
-                await AsyncTestDelegates.ThrowsArgumentExceptionAsync();
-                return 2;
+                await AsyncTestDelegates.Delay(500);
+                throw new Exception();
+            }, Throws.Exception);
+        }
+
+        [Test]
+        public static void CatchesSyncException()
+        {
+            Assert.That(() => AsyncTestDelegates.ThrowsArgumentException(), Throws.Exception);
+        }
+
+        [Test]
+        public static void CatchesSyncTaskOfTException()
+        {
+            Assert.That<int>(() =>
+            {
+                throw new Exception();
             }, Throws.Exception);
         }
 #endif
