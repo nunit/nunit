@@ -17,6 +17,8 @@ namespace NUnit.TestData
             _workload = workload;
         }
 
+        #region Void result
+
 #if ASYNC
 #pragma warning disable 1998
         public Task ReturnsTask()
@@ -194,5 +196,193 @@ namespace NUnit.TestData
                 public void GetResult() => _workload.GetResult();
             }
         }
+
+        #endregion
+
+        #region Non-void result
+
+#if ASYNC
+#pragma warning disable 1998
+        [Test(ExpectedResult = 42)]
+        public Task<object> ReturnsNonVoidResultTask()
+#pragma warning restore 1998
+        {
+            _workload.BeforeReturningAwaitable();
+            _workload.BeforeReturningAwaiter();
+
+            var source = new TaskCompletionSource<object>();
+
+            var complete = new Action(() =>
+            {
+                try
+                {
+                    source.SetResult(_workload.GetResult());
+                }
+                catch (Exception ex)
+                {
+                    source.SetException(ex);
+                }
+            });
+
+            if (_workload.IsCompleted)
+                complete.Invoke();
+            else
+                _workload.OnCompleted(complete);
+
+            return source.Task;
+        }
+
+        [Test(ExpectedResult = 42)]
+        public NonVoidResultCustomTask ReturnsNonVoidResultCustomTask()
+        {
+            _workload.BeforeReturningAwaitable();
+            _workload.BeforeReturningAwaiter();
+
+            var task = new NonVoidResultCustomTask(_workload.GetResult);
+
+            if (_workload.IsCompleted)
+                task.Start();
+            else
+                _workload.OnCompleted(task.Start);
+
+            return task;
+        }
+
+        public sealed class NonVoidResultCustomTask : Task<object>
+        {
+            public NonVoidResultCustomTask(Func<object> function) : base(function)
+            {
+            }
+        }
+#endif
+
+        [Test(ExpectedResult = 42)]
+        public NonVoidResultCustomAwaitable ReturnsNonVoidResultCustomAwaitable()
+        {
+            _workload.BeforeReturningAwaitable();
+            return new NonVoidResultCustomAwaitable(_workload);
+        }
+
+        public struct NonVoidResultCustomAwaitable
+        {
+            private readonly AsyncWorkload _workload;
+
+            public NonVoidResultCustomAwaitable(AsyncWorkload workload)
+            {
+                _workload = workload;
+            }
+
+            public NonVoidResultCustomAwaiter GetAwaiter()
+            {
+                _workload.BeforeReturningAwaiter();
+                return new NonVoidResultCustomAwaiter(_workload);
+            }
+
+            public struct NonVoidResultCustomAwaiter : ICriticalNotifyCompletion
+            {
+                private readonly AsyncWorkload _workload;
+
+                public NonVoidResultCustomAwaiter(AsyncWorkload workload)
+                {
+                    _workload = workload;
+                }
+
+                public bool IsCompleted => _workload.IsCompleted;
+
+                public void OnCompleted(Action continuation)
+                {
+                    Assert.Fail("This method should not be used because UnsafeOnCompleted is available.");
+                }
+
+                public void UnsafeOnCompleted(Action continuation) => _workload.OnCompleted(continuation);
+
+                public object GetResult() => _workload.GetResult();
+            }
+        }
+
+        [Test(ExpectedResult = 42)]
+        public NonVoidResultCustomAwaitableWithImplicitOnCompleted ReturnsNonVoidResultCustomAwaitableWithImplicitOnCompleted()
+        {
+            _workload.BeforeReturningAwaitable();
+            return new NonVoidResultCustomAwaitableWithImplicitOnCompleted(_workload);
+        }
+
+        public struct NonVoidResultCustomAwaitableWithImplicitOnCompleted
+        {
+            private readonly AsyncWorkload _workload;
+
+            public NonVoidResultCustomAwaitableWithImplicitOnCompleted(AsyncWorkload workload)
+            {
+                _workload = workload;
+            }
+
+            public NonVoidResultCustomAwaiterWithImplicitOnCompleted GetAwaiter()
+            {
+                _workload.BeforeReturningAwaiter();
+                return new NonVoidResultCustomAwaiterWithImplicitOnCompleted(_workload);
+            }
+
+            public struct NonVoidResultCustomAwaiterWithImplicitOnCompleted : INotifyCompletion
+            {
+                private readonly AsyncWorkload _workload;
+
+                public NonVoidResultCustomAwaiterWithImplicitOnCompleted(AsyncWorkload workload)
+                {
+                    _workload = workload;
+                }
+
+                public bool IsCompleted => _workload.IsCompleted;
+
+                void INotifyCompletion.OnCompleted(Action continuation) => _workload.OnCompleted(continuation);
+
+                public object GetResult() => _workload.GetResult();
+            }
+        }
+
+        [Test(ExpectedResult = 42)]
+        public NonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted ReturnsNonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted()
+        {
+            _workload.BeforeReturningAwaitable();
+            return new NonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted(_workload);
+        }
+
+        public struct NonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted
+        {
+            private readonly AsyncWorkload _workload;
+
+            public NonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted(AsyncWorkload workload)
+            {
+                _workload = workload;
+            }
+
+            public NonVoidResultCustomAwaiterWithImplicitUnsafeOnCompleted GetAwaiter()
+            {
+                _workload.BeforeReturningAwaiter();
+                return new NonVoidResultCustomAwaiterWithImplicitUnsafeOnCompleted(_workload);
+            }
+
+            public struct NonVoidResultCustomAwaiterWithImplicitUnsafeOnCompleted : ICriticalNotifyCompletion
+            {
+                private readonly AsyncWorkload _workload;
+
+                public NonVoidResultCustomAwaiterWithImplicitUnsafeOnCompleted(AsyncWorkload workload)
+                {
+                    _workload = workload;
+                }
+
+                public bool IsCompleted => _workload.IsCompleted;
+
+                public void OnCompleted(Action continuation)
+                {
+                    Assert.Fail("This method should not be used because UnsafeOnCompleted is available.");
+                }
+
+                void ICriticalNotifyCompletion.UnsafeOnCompleted(Action continuation) => _workload.OnCompleted(continuation);
+
+                public object GetResult() => _workload.GetResult();
+            }
+        }
+
+        #endregion
     }
 }

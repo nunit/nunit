@@ -14,7 +14,7 @@ namespace NUnit.Framework
     [TestFixture(nameof(F.ReturnsCustomAwaitable))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitOnCompleted))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitUnsafeOnCompleted))]
-    public sealed class AwaitableReturnTypeTests
+    public class AwaitableReturnTypeTests
     {
         private readonly string _methodName;
 
@@ -23,7 +23,7 @@ namespace NUnit.Framework
             _methodName = methodName;
         }
 
-        private ITestResult RunCurrentTestMethod(AsyncWorkload workload)
+        protected ITestResult RunCurrentTestMethod(AsyncWorkload workload)
         {
             var test = TestBuilder.MakeTestFromMethod(typeof(F), _methodName);
 
@@ -38,7 +38,7 @@ namespace NUnit.Framework
             RunCurrentTestMethod(new AsyncWorkload(
                 isCompleted: true,
                 onCompleted: continuation => Assert.Fail("OnCompleted should not be called when IsCompleted is true."),
-                getResult: () => wasCalled = true)
+                getResult: () => { wasCalled = true; return 42; })
             ).AssertPassed();
 
             Assert.That(wasCalled);
@@ -52,7 +52,7 @@ namespace NUnit.Framework
             RunCurrentTestMethod(new AsyncWorkload(
                 isCompleted: false,
                 onCompleted: continuation => continuation.Invoke(),
-                getResult: () => wasCalled = true)
+                getResult: () => { wasCalled = true; return 42; })
             ).AssertPassed();
 
             Assert.That(wasCalled);
@@ -70,7 +70,7 @@ namespace NUnit.Framework
                 result = RunCurrentTestMethod(new AsyncWorkload(
                     isCompleted: false,
                     onCompleted: action => continuation = action,
-                    getResult: () => wasCalled = true)
+                    getResult: () => { wasCalled = true; return 42; })
                 );
             });
 
