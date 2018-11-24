@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(expectedMessage, result.Message);
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {

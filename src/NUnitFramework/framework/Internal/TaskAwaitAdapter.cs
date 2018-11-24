@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ASYNC && !NET40
+#if TASK_PARALLEL_LIBRARY_API && !NET40
 using System;
 using System.Linq;
 using System.Reflection;

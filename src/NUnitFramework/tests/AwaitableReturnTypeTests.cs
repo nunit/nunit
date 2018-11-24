@@ -7,7 +7,7 @@ using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
 namespace NUnit.Framework
 {
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
     [TestFixture(nameof(F.ReturnsTask))]
     [TestFixture(nameof(F.ReturnsCustomTask))]
 #endif
@@ -205,7 +205,7 @@ namespace NUnit.Framework
             Assert.That(result.Message, Contains.Substring("OperationCanceledException"));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void TaskCanceledExceptionThrownInGetResultShouldBeReportedAsSuch()
         {

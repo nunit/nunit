@@ -38,7 +38,7 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
@@ -334,7 +334,7 @@ namespace NUnit.Framework
             }
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         /// <summary>
         /// Wraps code containing a series of assertions, which should all
         /// be executed, even if they fail. Failed results are saved and

@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -670,7 +670,7 @@ namespace NUnit.Framework.Attributes
             return arg1;
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(1, ExpectedResult = 1)]
         public async Task<T> TestWithAsyncGenericReturnType<T>(T arg1)
         {

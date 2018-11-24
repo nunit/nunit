@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -19,7 +19,7 @@ namespace NUnit.TestData
 
         #region Void result
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 #pragma warning disable 1998
         public Task ReturnsTask()
 #pragma warning restore 1998
@@ -201,7 +201,7 @@ namespace NUnit.TestData
 
         #region Non-void result
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 #pragma warning disable 1998
         [Test(ExpectedResult = 42)]
         public Task<object> ReturnsNonVoidResultTask()

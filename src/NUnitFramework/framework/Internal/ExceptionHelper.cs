@@ -184,7 +184,7 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in reflectionException.LoaderExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
             if (exception is AggregateException)
             {
                 var aggregateException = (exception as AggregateException);

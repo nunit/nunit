@@ -72,7 +72,7 @@ This brings clarity to the code and makes it easy to change the mapping between 
 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
- - `ASYNC` enables asynchrony
+ - `TASK_PARALLEL_LIBRARY_API` exposes NUnit APIs which depend on the TPL framework types
  - `PARALLEL` enables running tests in parallel
  - `PLATFORM_DETECTION` enables platform detection
  - `THREAD_ABORT` enables timeouts and forcible cancellation

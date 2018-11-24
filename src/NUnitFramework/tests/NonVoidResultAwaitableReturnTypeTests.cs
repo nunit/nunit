@@ -4,7 +4,7 @@ using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
 namespace NUnit.Framework
 {
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
     [TestFixture(nameof(F.ReturnsNonVoidResultTask))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomTask))]
 #endif

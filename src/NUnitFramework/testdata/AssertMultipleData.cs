@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #if NET40
 using Task = System.Threading.Tasks.TaskEx;
@@ -353,7 +353,7 @@ namespace NUnit.TestData.AssertMultipleData
             });
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void ThreeAssertsSucceed_Async()
         {
