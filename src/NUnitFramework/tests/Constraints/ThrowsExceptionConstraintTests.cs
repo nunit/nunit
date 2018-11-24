@@ -46,7 +46,6 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SucceedsWithNonVoidReturningFunction()
         {
-
             var constraintResult = TheConstraint.ApplyTo(TestDelegates.ThrowsInsteadOfReturns);
             if (!constraintResult.IsSuccess)
             {
