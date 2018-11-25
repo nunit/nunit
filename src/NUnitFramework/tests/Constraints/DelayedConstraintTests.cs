@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         // constructing the constraint class, and verify that they work.
 
         private const int DELAY = 100;
-        private const int AFTER = 300;
+        private const int AFTER = 500;
         private const int POLLING = 50;
         private const int MIN = AFTER - 10;
 
