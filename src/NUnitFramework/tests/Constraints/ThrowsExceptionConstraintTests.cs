@@ -77,7 +77,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That<Task<int>>(async () =>
             {
-                await AsyncTestDelegates.Delay(500);
+                await AsyncTestDelegates.Delay(5);
                 throw new Exception();
             }, Throws.Exception);
         }
