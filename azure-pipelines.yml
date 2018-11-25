@@ -10,16 +10,8 @@ jobs:
     vmImage: vs2017-win2016
   steps:
 
-  - powershell: .\build.ps1 --target=Test
-    displayName: Build and test
-
-  - task: PublishTestResults@2
-    displayName: Publish test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: '**\TestResult.xml'
-      testRunTitle: Windows
-    condition: succeededOrFailed()
+  - powershell: .\build.ps1 --target=Test --test-run-name=Windows
+    displayName: Build, test, and publish results
 
   - powershell: .\build.ps1 --target=Package --artifact-dir='$(Build.ArtifactStagingDirectory)'
     displayName: Package
@@ -34,30 +26,12 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   steps:
-
-  - bash: ./build.sh --target=Test --configuration=Release
-    displayName: Build and test
-
-  - task: PublishTestResults@2
-    displayName: Publish test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: '**\TestResult.xml'
-      testRunTitle: Linux
-    condition: succeededOrFailed()
+  - bash: ./build.sh --target=Test --test-run-name=Linux --configuration=Release
+    displayName: Build, test, and publish results
 
 - job: macOS
   pool:
     vmImage: macOS-10.13
   steps:
-
-  - bash: ./build.sh --target=Test --configuration=Release
-    displayName: Build and test
-
-  - task: PublishTestResults@2
-    displayName: Publish test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: '**\TestResult.xml'
-      testRunTitle: macOS
-    condition: succeededOrFailed()
+  - bash: ./build.sh --target=Test --test-run-name=macOS --configuration=Release
+    displayName: Build, test, and publish results
