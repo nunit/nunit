@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -133,14 +134,14 @@ namespace NUnit.Framework.Internal
                 Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
                     targetType.GetGenericArguments()[0] : targetType;
 
-                convertedValue = System.Convert.ChangeType(value, convertTo, System.Globalization.CultureInfo.InvariantCulture);
+                convertedValue = System.Convert.ChangeType(value, convertTo, CultureInfo.InvariantCulture);
                 return true;
             }
 
             var converter = TypeDescriptor.GetConverter(targetType);
             if (converter.CanConvertFrom(value.GetType()))
             {
-                convertedValue = converter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, value);
+                convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
                 return true;
             }
 
