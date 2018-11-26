@@ -269,7 +269,7 @@ namespace NUnit.Framework
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
                 object expectedResultInTargetType;
                 if (parms.HasExpectedResult
-                    && PerformSpecialConversion(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
+                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
                 {
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
@@ -288,7 +288,7 @@ namespace NUnit.Framework
                             if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
                             {
                                 Array array = Array.CreateInstance(elementType, 1);
-                                var argValue = CoalesceParameterValue(parms.Arguments[argsProvided - 1], elementType);
+                                var argValue = ParamAttributeTypeConversions.Convert(parms.Arguments[argsProvided - 1], elementType);
 
                                 array.SetValue(argValue, 0);
                                 parms.Arguments[argsProvided - 1] = array;
@@ -304,7 +304,7 @@ namespace NUnit.Framework
                             Array array = Array.CreateInstance(elementType, length);
                             for (int i = 0; i < length; i++)
                             {
-                                var argValue = CoalesceParameterValue(parms.Arguments[argsNeeded + i - 1], elementType);
+                                var argValue = ParamAttributeTypeConversions.Convert(parms.Arguments[argsNeeded + i - 1], elementType);
                                 array.SetValue(argValue, i);
                             }
 
@@ -361,15 +361,6 @@ namespace NUnit.Framework
             return parms;
         }
 
-        private static object CoalesceParameterValue(object arg, Type targetType)
-        {
-            object argAsTargetType;
-            if (PerformSpecialConversion(arg, targetType, out argAsTargetType))
-                return argAsTargetType;
-            else
-                return arg;
-        }
-
         /// <summary>
         /// Performs several special conversions allowed by NUnit in order to
         /// permit arguments with types that cannot be used in the constructor
@@ -384,72 +375,11 @@ namespace NUnit.Framework
                 object arg = arglist[i];
                 Type targetType = parameters[i].ParameterType;
                 object argAsTargetType;
-                if (PerformSpecialConversion(arg, targetType, out argAsTargetType))
+                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out argAsTargetType))
                 {
                     arglist[i] = argAsTargetType;
                 }
             }
-        }
-
-        /// <summary>
-        /// Performs several special conversions allowed by NUnit in order to
-        /// permit arguments with types that cannot be used in the constructor
-        /// of an Attribute such as TestCaseAttribute or to simplify their use.
-        /// </summary>
-        /// <param name="arg">The argument to be converted</param>
-        /// <param name="targetType">The target <see cref="Type"/> in which the <paramref name="arg"/> should be converted</param>
-        /// <param name="argAsTargetType">If conversion was successfully applied, the <paramref name="arg"/> converted into <paramref name="targetType"/></param>
-        /// <returns>
-        /// <c>true</c> if <paramref name="arg"/> was converted and <paramref name="argAsTargetType"/> should be used;
-        /// <c>false</c> is no conversion was applied and <paramref name="argAsTargetType"/> should be ignored
-        /// </returns>
-        private static bool PerformSpecialConversion(object arg, Type targetType, out object argAsTargetType)
-        {
-            argAsTargetType = null;
-            if (arg == null)
-                return false;
-
-            if (targetType.IsInstanceOfType(arg))
-                return false;
-
-            if (arg.GetType().FullName == "System.DBNull")
-            {
-                argAsTargetType = null;
-                return true;
-            }
-
-            bool convert = false;
-
-            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
-                targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
-            {
-                convert = arg is int;
-            }
-            else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
-            {
-                convert = arg is double || arg is string || arg is int;
-            }
-            else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
-            {
-                convert = arg is string;
-            }
-
-            if (convert)
-            {
-                Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
-                    targetType.GetGenericArguments()[0] : targetType;
-                argAsTargetType = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
-                return true;
-            }
-
-            var converter = System.ComponentModel.TypeDescriptor.GetConverter(targetType);
-            if (converter.CanConvertFrom(arg.GetType()))
-            {
-                argAsTargetType = converter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, arg);
-                return true;
-            }
-
-            return false;
         }
         #endregion
 

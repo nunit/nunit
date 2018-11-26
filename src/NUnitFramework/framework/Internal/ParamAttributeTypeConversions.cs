@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -86,8 +87,17 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Converts a single value to the <paramref name="targetType"/>, if it is supported.
+        /// Performs several special conversions allowed by NUnit in order to
+        /// permit arguments with types that cannot be used in the constructor
+        /// of an Attribute such as TestCaseAttribute or to simplify their use.
         /// </summary>
+        /// <param name="value">The value to be converted</param>
+        /// <param name="targetType">The target <see cref="Type"/> in which the <paramref name="value"/> should be converted</param>
+        /// <param name="convertedValue">If conversion was successfully applied, the <paramref name="value"/> converted into <paramref name="targetType"/></param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
+        /// <c>false</c> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
+        /// </returns>
         public static bool TryConvert(object value, Type targetType, out object convertedValue)
         {
             if (targetType.IsInstanceOfType(value))
@@ -104,26 +114,30 @@ namespace NUnit.Framework.Internal
 
             bool convert = false;
 
-            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte))
+            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
+                targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
             {
                 convert = value is int;
             }
-            else if (targetType == typeof(decimal))
+            else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
             {
                 convert = value is double || value is string || value is int;
             }
-            else if (targetType == typeof(DateTime) || targetType == typeof(TimeSpan))
+            else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
             {
                 convert = value is string;
             }
 
             if (convert)
             {
-                convertedValue = System.Convert.ChangeType(value, targetType, System.Globalization.CultureInfo.InvariantCulture);
+                Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
+                    targetType.GetGenericArguments()[0] : targetType;
+
+                convertedValue = System.Convert.ChangeType(value, convertTo, System.Globalization.CultureInfo.InvariantCulture);
                 return true;
             }
 
-            var converter = System.ComponentModel.TypeDescriptor.GetConverter(targetType);
+            var converter = TypeDescriptor.GetConverter(targetType);
             if (converter.CanConvertFrom(value.GetType()))
             {
                 convertedValue = converter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, value);

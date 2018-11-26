@@ -62,23 +62,20 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void CanConvertIntToDecimal([Values(12)]decimal x)
+        public void CanConvertValuesToDecimal([Values(12, 12.5, "12.5")]decimal x)
         {
         }
 
         [Test]
-        public void CanConvertDoubleToDecimal([Values(12.5)]decimal x)
+        public void CanConvertValuesToNullableDecimal([Values(12, 12.5, "12.5")]decimal? x)
         {
-        }
-
-        [Test]
-        public void CanConvertStringToDecimal([Values("12.5")]decimal x)
-        {
+            Assert.IsNotNull(x);
         }
 
         [Test]
         public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset? x)
         {
+            Assert.IsNotNull(x);
         }
 
         [Test]
@@ -88,6 +85,23 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void CanConvertStringToTimeSpan([Values("4:44:15")]TimeSpan x)
+        {
+        }
+
+        [Test]
+        public void CanConvertStringToNullableTimeSpan([Values("4:44:15")]TimeSpan? x)
+        {
+            Assert.IsNotNull(x);
+        }
+
+        [Test]
+        public void CanConvertStringToNullableDateTime([Values("2018-10-10")]DateTime? x)
+        {
+            Assert.IsNotNull(x);
+        }
+
+        [Test]
+        public void CanConvertStringToDateTime([Values("2018-10-10")]DateTime x)
         {
         }
 
