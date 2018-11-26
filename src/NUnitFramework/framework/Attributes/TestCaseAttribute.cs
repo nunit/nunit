@@ -263,7 +263,7 @@ namespace NUnit.Framework
                 IParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
-
+                
                 parms = new TestCaseParameters(this);
 
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
@@ -288,7 +288,9 @@ namespace NUnit.Framework
                             if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
                             {
                                 Array array = Array.CreateInstance(elementType, 1);
-                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
+                                var argValue = CoalesceParameterValue(parms.Arguments[argsProvided - 1], elementType);
+
+                                array.SetValue(argValue, 0);
                                 parms.Arguments[argsProvided - 1] = array;
                             }
                         }
@@ -301,7 +303,10 @@ namespace NUnit.Framework
                             int length = argsProvided - argsNeeded + 1;
                             Array array = Array.CreateInstance(elementType, length);
                             for (int i = 0; i < length; i++)
-                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
+                            {
+                                var argValue = CoalesceParameterValue(parms.Arguments[argsNeeded + i - 1], elementType);
+                                array.SetValue(argValue, i);
+                            }
 
                             newArglist[argsNeeded - 1] = array;
                             parms.Arguments = newArglist;
@@ -335,9 +340,6 @@ namespace NUnit.Framework
                     parms.Arguments = newArgList;
                 }
 
-                //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                //    parms.Arguments = new object[]{parms.Arguments};
-
                 // Special handling when sole argument is an object[]
                 if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 {
@@ -357,6 +359,15 @@ namespace NUnit.Framework
             }
 
             return parms;
+        }
+
+        private static object CoalesceParameterValue(object arg, Type targetType)
+        {
+            object argAsTargetType;
+            if (PerformSpecialConversion(arg, targetType, out argAsTargetType))
+                return argAsTargetType;
+            else
+                return arg;
         }
 
         /// <summary>

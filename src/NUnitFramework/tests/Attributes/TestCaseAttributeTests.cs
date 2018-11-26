@@ -128,6 +128,13 @@ namespace NUnit.Framework.Attributes
             return dt;
         }
 
+        [TestCase("1942-10-12")]
+        [TestCase("1942-10-12", "1942-10-12")]
+        public void CanConvertStringToDateTimeAsParamArray(params DateTime[] dt)
+        {
+            CanConvertSpecialCaseToParams(dt);
+        }
+
         [TestCase("4:44:15")]
         public void CanConvertStringToTimeSpan(TimeSpan ts)
         {
@@ -140,6 +147,13 @@ namespace NUnit.Framework.Attributes
         public TimeSpan CanConvertExpectedResultStringToTimeSpan(TimeSpan ts)
         {
             return ts;
+        }
+        
+        [TestCase("4:44:15")]
+        [TestCase("4:44:15", "4:44:15")]
+        public void CanConvertStringToTimeSpanAsParamArray(params TimeSpan[] ts)
+        {
+            CanConvertSpecialCaseToParams(ts);
         }
 
         [TestCase("2018-10-09 15:15:00+02:30")]
@@ -161,6 +175,22 @@ namespace NUnit.Framework.Attributes
         public DateTimeOffset CanConvertExpectedResultStringToDateTimeOffset(DateTimeOffset offset)
         {
             return offset;
+        }
+
+        [TestCase("2018-10-09 15:15:00+02:30")]
+        [TestCase("2018-10-09 15:15:00+02:30", "2018-10-09 15:15:00+02:30")]
+        public void CanConvertStringToDateTimeOffsetAsParamArray(params DateTimeOffset[] offsets)
+        {
+            CanConvertSpecialCaseToParams(offsets);
+        }
+
+        private static void CanConvertSpecialCaseToParams<T>(T[] args)
+        {
+            Assert.IsNotNull(args);
+            CollectionAssert.IsNotEmpty(args);
+
+            foreach (var arg in args)
+                Assert.AreNotEqual(default(T), arg);
         }
 
         [TestCase(null)]
