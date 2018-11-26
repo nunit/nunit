@@ -1,4 +1,4 @@
-﻿#if ASYNC
+#if ASYNC
 
 using System;
 using System.Threading.Tasks;

@@ -26,6 +26,7 @@ using NUnit.TestUtilities;
 
 #if ASYNC
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 #endif
 
@@ -68,13 +69,30 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void CatchesAsyncException()
         {
-            Assert.That(async () =>
+            Assert.That(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync(), Throws.Exception);
+        }
+        
+        [Test]
+        public static void CatchesAsyncTaskOfTException()
+        {
+            Assert.That<Task<int>>(async () =>
             {
-#if NET40
-                await TaskEx.Yield();
-#else
-                await Task.Yield();
-#endif
+                await AsyncTestDelegates.Delay(5);
+                throw new Exception();
+            }, Throws.Exception);
+        }
+
+        [Test]
+        public static void CatchesSyncException()
+        {
+            Assert.That(() => AsyncTestDelegates.ThrowsArgumentException(), Throws.Exception);
+        }
+
+        [Test]
+        public static void CatchesSyncTaskOfTException()
+        {
+            Assert.That<Task<int>>(() =>
+            {
                 throw new Exception();
             }, Throws.Exception);
         }
