@@ -76,6 +76,21 @@ namespace NUnit.Framework.Attributes
         {
         }
 
+        [Test]
+        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset? x)
+        {
+        }
+
+        [Test]
+        public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset x)
+        {
+        }
+
+        [Test]
+        public void CanConvertStringToTimeSpan([Values("4:44:15")]TimeSpan x)
+        {
+        }
+
         #endregion
 
         #region Helper Methods

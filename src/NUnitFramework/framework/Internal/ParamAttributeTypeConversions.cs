@@ -123,6 +123,13 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter(targetType);
+            if (converter.CanConvertFrom(value.GetType()))
+            {
+                convertedValue = converter.ConvertFrom(null, System.Globalization.CultureInfo.InvariantCulture, value);
+                return true;
+            }
+
             convertedValue = null;
             return false;
         }

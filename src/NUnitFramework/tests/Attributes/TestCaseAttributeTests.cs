@@ -184,6 +184,13 @@ namespace NUnit.Framework.Attributes
             CanConvertSpecialCaseToParams(offsets);
         }
 
+        [TestCase("2018-10-09 15:15:00+02:30")]
+        [TestCase("2018-10-09 15:15:00+02:30", "2018-10-09 15:15:00+02:30")]
+        public void CanConvertStringToNullableDateTimeOffsetAsParamArray(params DateTimeOffset?[] offsets)
+        {
+            CanConvertSpecialCaseToParams(offsets);
+        }
+
         private static void CanConvertSpecialCaseToParams<T>(T[] args)
         {
             Assert.IsNotNull(args);
