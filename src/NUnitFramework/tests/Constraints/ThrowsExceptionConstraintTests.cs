@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void CatchesSyncTaskOfTException()
         {
-            Assert.That<int>(() =>
+            Assert.That<Task<int>>(() =>
             {
                 throw new Exception();
             }, Throws.Exception);
