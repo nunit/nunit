@@ -47,8 +47,25 @@ namespace NUnit.Framework.Attributes
         #region Conversion Tests
 
         [Test]
+        public void CanConvertIntsToLong([Values(5, int.MaxValue)]long x)
+        {
+        }
+
+        [Test]
+        public void CanConvertIntsToNullableLong([Values(5, int.MaxValue)]long? x)
+        {
+            Assert.That(x.HasValue, Is.True);
+        }
+
+        [Test]
         public void CanConvertSmallIntsToShort([Values(5)]short x)
         {
+        }
+
+        [Test]
+        public void CanConvertSmallIntsToNullableShort([Values(5)]short? x)
+        {
+            Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
@@ -57,8 +74,20 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void CanConvertSmallIntsToNullableByte([Values(5)]byte? x)
+        {
+            Assert.That(x.HasValue, Is.True);
+        }
+
+        [Test]
         public void CanConvertSmallIntsToSByte([Values(5)]sbyte x)
         {
+        }
+
+        [Test]
+        public void CanConvertSmallIntsToNullableSByte([Values(5)]sbyte? x)
+        {
+            Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
@@ -69,18 +98,18 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertValuesToNullableDecimal([Values(12, 12.5, "12.5")]decimal? x)
         {
-            Assert.IsNotNull(x);
-        }
-
-        [Test]
-        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset? x)
-        {
-            Assert.IsNotNull(x);
+            Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
         public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset x)
         {
+        }
+
+        [Test]
+        public void CanConvertStringToNullableDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset? x)
+        {
+            Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
@@ -91,18 +120,18 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertStringToNullableTimeSpan([Values("4:44:15")]TimeSpan? x)
         {
-            Assert.IsNotNull(x);
-        }
-
-        [Test]
-        public void CanConvertStringToNullableDateTime([Values("2018-10-10")]DateTime? x)
-        {
-            Assert.IsNotNull(x);
+            Assert.That(x.HasValue, Is.True);
         }
 
         [Test]
         public void CanConvertStringToDateTime([Values("2018-10-10")]DateTime x)
         {
+        }
+
+        [Test]
+        public void CanConvertStringToNullableDateTime([Values("2018-10-10")]DateTime? x)
+        {
+            Assert.That(x.HasValue, Is.True);
         }
 
         #endregion

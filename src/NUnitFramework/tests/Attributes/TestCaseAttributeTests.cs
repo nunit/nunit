@@ -604,6 +604,12 @@ namespace NUnit.Framework.Attributes
             Assert.That(x.Value, Is.EqualTo(1));
         }
 
+        [TestCase(1)]
+        public void CanConvertIntToLong(long x)
+        {
+            Assert.That(x, Is.EqualTo(1));
+        }
+
         [TestCase("2.2", "3.3", ExpectedResult = 5.5)]
         public decimal? CanConvertStringToNullableDecimal(decimal? x, decimal? y)
         {
