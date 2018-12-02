@@ -1,8 +1,7 @@
 trigger:
   branches:
     include: [ '*' ]
-    exclude: [ 'refs/tags/*' ]
-
+#
 jobs:
 
 - job: Windows
