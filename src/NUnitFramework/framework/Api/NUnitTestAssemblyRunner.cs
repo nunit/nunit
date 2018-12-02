@@ -413,7 +413,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if (NET20 || NET35 || NET40 || NET45)
+#if (NET35 || NET40 || NET45)
         /// <summary>
         /// Executes the action within an <see cref="NUnitCallContext" />
         /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
@@ -427,7 +427,7 @@ namespace NUnit.Framework.Api
 #endif
         protected void WrapInNUnitCallContext(Action action)
         {
-#if !(NET20 || NET35 || NET40 || NET45)
+#if !(NET35 || NET40 || NET45)
             action();
 #else
             using (new NUnitCallContext())
