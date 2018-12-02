@@ -236,8 +236,6 @@ namespace NUnit.Framework.Constraints
 
 #endif
 
-#if !NET20
-
         [Test]
         public void ShouldCallContainsKeysMethodOnLookupInterface()
         {
@@ -246,8 +244,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, Does.ContainKey(20));
             Assert.That(dictionary, !Does.ContainKey(43));
         }
-
-#endif
 
         [Test, Obsolete("DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.")]
         public void UsingDictionaryContainsKeyConstraintComparisonFunc()
@@ -500,7 +496,6 @@ namespace NUnit.Framework.Constraints
             public bool IsSynchronized { get; }
         }
 
-#if !NET20
         public class TestLookup : ILookup<int, string>
         {
             private readonly int _key;
@@ -532,9 +527,8 @@ namespace NUnit.Framework.Constraints
                 get { throw new NotImplementedException(); }
             }
         }
-#endif
 
-#if !NET20 && !NET35 && !NET40
+#if !(NET35 || NET40)
         public class TestReadOnlyDictionary : IReadOnlyDictionary<string, string>
         {
             private readonly string _key;

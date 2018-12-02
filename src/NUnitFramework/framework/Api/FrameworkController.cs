@@ -236,8 +236,6 @@ namespace NUnit.Framework.Api
             return result.OuterXml;
         }
 
-#if !NET20
-
         class ActionCallback : ICallbackEventHandler
         {
             Action<string> _callback;
@@ -291,7 +289,6 @@ namespace NUnit.Framework.Api
 
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
-#endif
 
         /// <summary>
         /// Stops the test run

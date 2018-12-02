@@ -571,7 +571,7 @@ namespace NUnit.Framework.Internal.Execution
 #endregion
     }
 
-#if NET20 || NET35
+#if NET35
     static class ActionTargetsExtensions
     {
         public static bool HasFlag(this ActionTargets targets, ActionTargets value)

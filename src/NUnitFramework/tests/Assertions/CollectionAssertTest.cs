@@ -297,7 +297,6 @@ namespace NUnit.Framework.Assertions
                                     Contains("But was:  2"));
         }
 
-#if !NET20
         [Test]
         public void AreEqual_UsingLinqQuery()
         {
@@ -318,7 +317,6 @@ namespace NUnit.Framework.Assertions
                                     Contains("Expected: 1").And.
                                     Contains("But was:  2"));
         }
-#endif
 
         [Test]
         public void AreEqual_IEquatableImplementationIsIgnored()

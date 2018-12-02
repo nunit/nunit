@@ -33,7 +33,6 @@ var AllFrameworks = new string[]
     "net45",
     "net40",
     "net35",
-    "net20",
     "netstandard1.4",
     "netstandard2.0"
 };
@@ -217,18 +216,6 @@ Task("Test35")
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
-Task("Test20")
-    .Description("Tests the .NET 2.0 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "net20";
-        var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-    });
-
 Task("TestNetStandard14")
     .Description("Tests the .NET Standard 1.4 version of the framework")
     .IsDependentOn("Build")
@@ -267,7 +254,6 @@ var RootFiles = new FilePath[]
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
 // used by the .NET 4.0 framework. 4.0 tests will not run without them.
-// NUnit.System.Linq is only present for the .NET 2.0 build.
 var FrameworkFiles = new FilePath[]
 {
     "mock-assembly.dll",
@@ -275,7 +261,6 @@ var FrameworkFiles = new FilePath[]
     "nunit.framework.dll",
     "nunit.framework.pdb",
     "nunit.framework.xml",
-    "NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
@@ -368,7 +353,6 @@ Task("PackageZip")
 
         var zipFiles =
             GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net20/**/*.*") +
             GetFiles(CurrentImageDir + "bin/net35/**/*.*") +
             GetFiles(CurrentImageDir + "bin/net40/**/*.*") +
             GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
@@ -513,7 +497,6 @@ Task("Test")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
-    .IsDependentOn("Test20")
     .IsDependentOn("TestNetStandard14")
     .IsDependentOn("TestNetStandard20");
 

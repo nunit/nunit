@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1"))
                 {
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
                     return type.GetGenericArguments()[0];
 #else
                     return type.GenericTypeArguments[0];

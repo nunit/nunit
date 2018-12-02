@@ -83,11 +83,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
-#if NET20
-        protected ReaderWriterLock RwLock = new ReaderWriterLock();
-#else
         protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-#endif
 #endif
 
         #endregion

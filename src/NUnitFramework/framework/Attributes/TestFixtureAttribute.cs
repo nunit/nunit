@@ -46,8 +46,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Construct with a object[] representing a set of arguments.
-        /// In .NET 2.0, the arguments may later be separated into
-        /// type arguments and constructor arguments.
+        /// The arguments may later be separated into type arguments and constructor arguments.
         /// </summary>
         /// <param name="arguments"></param>
         public TestFixtureAttribute(params object[] arguments)

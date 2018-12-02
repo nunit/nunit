@@ -58,7 +58,7 @@ namespace NUnit.TestUtilities
                         }
                         catch (Exception ex)
                         {
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
                             exception = ex;
                             times = 0;
                             Thread.MemoryBarrier();
@@ -91,7 +91,7 @@ namespace NUnit.TestUtilities
 
                 noMoreThreadsEvent.Wait();
 
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
                 Thread.MemoryBarrier();
                 if (exception != null)
 #else

@@ -172,7 +172,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if !(NET20 || NET35)
+#if !NET35
         [Test]
         public static void UsesProvidedGenericEqualityComparison()
         {
