@@ -48,7 +48,7 @@ var NetCoreTests = new String[]
 //////////////////////////////////////////////////////////////////////
 
 var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
-var PACKAGE_DIR = PROJECT_DIR + "package/";
+var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
@@ -224,7 +224,7 @@ Task("TestNetStandard14")
     {
         var runtime = "netcoreapp1.1";
         var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
@@ -236,7 +236,7 @@ Task("TestNetStandard20")
     {
         var runtime = "netcoreapp2.0";
         var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
@@ -408,14 +408,27 @@ void CheckForError(ref List<string> errorDetail)
 // HELPER METHODS - TEST
 //////////////////////////////////////////////////////////////////////
 
+FilePath GetResultXmlPath(string testAssembly, string framework)
+{
+    var assemblyName = System.IO.Path.GetFileNameWithoutExtension(testAssembly);
+
+    CreateDirectory($@"test-results\{framework}");
+
+    return MakeAbsolute(new FilePath($@"test-results\{framework}\{assemblyName}.xml"));
+}
+
 void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framework, ref List<string> errorDetail)
 {
     try
     {
-        var path = workingDir.CombineWithFilePath(new FilePath(testAssembly));
+        var path = workingDir.CombineWithFilePath(testAssembly);
+
         var settings = new NUnit3Settings();
-        if(!IsRunningOnWindows())
+        settings.Results = new[] { new NUnit3Result { FileName = GetResultXmlPath(testAssembly, framework) } };
+
+        if (!IsRunningOnWindows())
             settings.Process = NUnit3ProcessOption.InProcess;
+
         NUnit3(path.ToString(), settings);
     }
     catch(CakeException ce)
@@ -433,9 +446,12 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 {
     int rc = StartProcess(
         MakeAbsolute(exePath),
-        new ProcessSettings()
+        new ProcessSettings
         {
-            Arguments = arguments,
+            Arguments = new ProcessArgumentBuilder()
+                .Append(arguments)
+                .AppendSwitchQuoted("--result", ":", GetResultXmlPath(exePath.FullPath, framework).FullPath)
+                .Render(),
             WorkingDirectory = workingDir
         });
 
@@ -447,16 +463,20 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
-    RunDotnetCoreTests(exePath, workingDir, null, framework, ref errorDetail);
+    RunDotnetCoreTests(exePath, workingDir, null, framework, GetResultXmlPath(exePath.FullPath, framework), ref errorDetail);
 }
 
-void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
+void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
 {
     int rc = StartProcess(
         "dotnet",
-        new ProcessSettings()
+        new ProcessSettings
         {
-            Arguments = exePath + " " + arguments,
+            Arguments = new ProcessArgumentBuilder()
+                .AppendQuoted(exePath.FullPath)
+                .Append(arguments)
+                .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
+                .Render(),
             WorkingDirectory = workingDir
         });
 

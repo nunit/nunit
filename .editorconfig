@@ -13,7 +13,7 @@ indent_size = 4
 insert_final_newline = true
 charset = utf-8
 
-[*.{proj,csproj,vcxproj,xproj,json,config,nuspec,xml,xsd}]
+[*.{proj,csproj,vcxproj,xproj,json,config,nuspec,xml,xsd,yml}]
 indent_size = 2
 
 
