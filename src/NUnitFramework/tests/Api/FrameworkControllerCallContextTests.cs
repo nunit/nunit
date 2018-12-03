@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if (NET20 || NET35 || NET40 || NET45)
+#if NET35 || NET40 || NET45
 using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
@@ -30,7 +30,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
 {
-    //https://github.com/nunit/nunit/issues/2614
+    // https://github.com/nunit/nunit/issues/2614
     class FrameworkControllerCallContextTests
     {
         private object _origExecutionContext;
