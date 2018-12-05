@@ -43,6 +43,11 @@ namespace NUnit.Framework.Attributes
         }
 
 #if APARTMENT_STATE
+        [Test]
+        public void ApartmentStateUnknownThrowsException() {
+            Assert.That(() => new RequiresThreadAttribute(ApartmentState.Unknown), Throws.ArgumentException);
+        }
+
         [Test, RequiresThread( ApartmentState.STA )]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
         {
