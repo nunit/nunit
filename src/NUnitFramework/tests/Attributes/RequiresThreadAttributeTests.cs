@@ -24,6 +24,10 @@
 #if !NETCOREAPP1_1
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
@@ -44,22 +48,24 @@ namespace NUnit.Framework.Attributes
 
 #if APARTMENT_STATE
         [Test]
-        public void ApartmentStateUnknownThrowsException() {
-            Assert.That(() => new RequiresThreadAttribute(ApartmentState.Unknown), Throws.ArgumentException);
+        public void ApartmentStateUnknownIsNotRunnable()
+        {
+            var testSuite = TestBuilder.MakeFixture(typeof(ApartmentDataRequiresThreadAttribute));
+            Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
 
-        [Test, RequiresThread( ApartmentState.STA )]
+        [Test, RequiresThread(ApartmentState.STA)]
         public void TestWithRequiresThreadWithSTAArgRunsOnSeparateThreadInSTA()
         {
-            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
-            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
+            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
         }
 
-        [Test, RequiresThread( ApartmentState.MTA )]
+        [Test, RequiresThread(ApartmentState.MTA)]
         public void TestWithRequiresThreadWithMTAArgRunsOnSeparateThreadInMTA()
         {
-            Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.MTA ) );
-            Assert.That( Thread.CurrentThread, Is.Not.EqualTo( ParentThread ) );
+            Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.MTA));
+            Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
         }
 #endif
 

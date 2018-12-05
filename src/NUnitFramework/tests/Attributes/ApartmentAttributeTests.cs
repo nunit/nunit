@@ -24,17 +24,24 @@
 #if APARTMENT_STATE
 using System;
 using System.Threading;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.TestData;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
     public class ApartmentAttributeTests : ThreadingTests
     {
+#if APARTMENT_STATE
         [Test]
-        public void ApartmentStateUnknownThrowsException()
+        public void ApartmentStateUnknownIsNotRunnable()
         {
-            Assert.That(() => new ApartmentAttribute(ApartmentState.Unknown), Throws.ArgumentException);
+            var testSuite = TestBuilder.MakeFixture(typeof(ApartmentDataRequiresThreadAttribute));
+            Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
+#endif
 
         [Test, Apartment(ApartmentState.STA)]
         public void TestWithRequiresSTARunsInSTA()
