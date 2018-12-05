@@ -38,7 +38,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ApartmentStateUnknownIsNotRunnable()
         {
-            var testSuite = TestBuilder.MakeFixture(typeof(ApartmentDataRequiresThreadAttribute));
+            var testSuite = TestBuilder.MakeFixture(typeof(ApartmentDataApartmentAttribute));
             Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
 #endif
