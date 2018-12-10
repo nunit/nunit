@@ -125,6 +125,7 @@ namespace NUnit.Framework.Constraints
             Comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;
         }
+        #pragma warning restore CS0612
 
         /// <summary>
         /// Flag the constraint to use the supplied boolean-returning delegate.
@@ -137,5 +138,6 @@ namespace NUnit.Framework.Constraints
             Comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
+        #pragma warning restore CS0612
     }
 }

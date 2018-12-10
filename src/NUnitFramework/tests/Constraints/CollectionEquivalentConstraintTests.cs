@@ -162,6 +162,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(new CollectionEquivalentConstraint(set1)
                 .Using<string>((x, y) => StringUtil.Compare(x, y, true))
                 .ApplyTo(set2).IsSuccess);
+            #pragma warning restore CS0612
         }
 
         [Test]
@@ -181,12 +182,15 @@ namespace NUnit.Framework.Constraints
             #pragma warning disable CS0612
             Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>(comparer.Delegate));
             Assert.That(comparer.WasCalled, "Comparer was not called");
+            #pragma warning restore CS0612
         }
 
         [Test]
         public static void UsesBooleanReturningDelegateWithImplicitParameterTypes()
         {
+            #pragma warning disable CS0612
             Assert.That(new[] { 1 }, Is.EquivalentTo(new[] { 1 }).Using<int>((x, y) => x.Equals(y)));
+            #pragma warning restore CS0612
         }
 
         [Test]
