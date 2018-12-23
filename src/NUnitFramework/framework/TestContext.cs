@@ -121,7 +121,7 @@ namespace NUnit.Framework
         /// </summary>
         public string WorkerId
         {
-            get { return _testExecutionContext.TestWorker.Name; }
+            get { return _testExecutionContext.TestWorker?.Name; }
         }
 #endif
 
