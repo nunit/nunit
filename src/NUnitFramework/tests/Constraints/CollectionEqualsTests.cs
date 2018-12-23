@@ -7,7 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
+using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
@@ -45,6 +45,19 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void FailureForEnumerablesWithDifferentSizes()
+        {
+            IEnumerable<int> expected = new int[] { 1, 2, 3 }.Select(i => i);
+            IEnumerable<int> actual = expected.Take(2);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(
+                $"  Expected is {MsgUtils.GetTypeRepresentation(expected)}, actual is {MsgUtils.GetTypeRepresentation(actual)}" + Environment.NewLine +
+                "  Values differ at index [2]" + Environment.NewLine +
+                "  Missing:  3"));
+        }
+
+        [Test]
         public void FailureMatchingArrayAndCollection()
         {
             int[] expected = new int[] { 1, 2, 3 };
@@ -58,10 +71,10 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
 
-        [TestCaseSource( nameof(IgnoreCaseData) )]
-        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        [TestCaseSource(nameof(IgnoreCaseData))]
+        public void HonorsIgnoreCase(IEnumerable expected, IEnumerable actual)
         {
-            Assert.That( expected, Is.EqualTo( actual ).IgnoreCase );
+            Assert.That(expected, Is.EqualTo(actual).IgnoreCase);
         }
 
         private static readonly object[] IgnoreCaseData =
