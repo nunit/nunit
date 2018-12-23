@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(ex.Message, Is.EqualTo(
                 $"  Expected is {MsgUtils.GetTypeRepresentation(expected)}, actual is {MsgUtils.GetTypeRepresentation(actual)}" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
-                "  Missing:  3"));
+                "  Missing:  < 3, ... >"));
         }
 
         [Test]

@@ -271,13 +271,11 @@ namespace NUnit.Framework.Constraints
                         ++depth);
                 else if (failurePoint.ActualHasData)
                 {
-                    writer.Write("  Extra:    ");
-                    writer.WriteValue(failurePoint.ActualValue);
+                    writer.Write($"  Extra:    < {MsgUtils.FormatValue(failurePoint.ActualValue)}, ... >");
                 }
                 else
                 {
-                    writer.Write("  Missing:  ");
-                    writer.WriteValue(failurePoint.ExpectedValue);
+                    writer.Write($"  Missing:  < {MsgUtils.FormatValue(failurePoint.ExpectedValue)}, ... >");
                 }
             }
         }
