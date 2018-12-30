@@ -78,8 +78,19 @@ namespace NUnit.Framework.Internal
 
         private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
         {
-            Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
-            Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
+            Type monoRuntimeType = null;
+            Type monoTouchType = null;
+
+            try
+            {
+                monoRuntimeType = Type.GetType("Mono.Runtime", false);
+                monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch", false);
+            }
+            catch
+            {
+                //If exception thrown, assume no valid installation
+            }
+
             bool isMonoTouch = monoTouchType != null;
             bool isMono = monoRuntimeType != null;
             bool isNetCore = !isMono && !isMonoTouch && IsNetCore();
