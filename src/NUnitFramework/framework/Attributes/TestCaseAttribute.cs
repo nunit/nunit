@@ -454,7 +454,6 @@ namespace NUnit.Framework
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
 #if PLATFORM_DETECTION
-
             if (IncludePlatform != null || ExcludePlatform != null)
             {
                 if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
