@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal
             }
             catch
             {
-                //If exception throw, assume no valid installation
+                //If exception thrown, assume no valid installation
             }
 
             bool isMonoTouch = monoTouchType != null;
