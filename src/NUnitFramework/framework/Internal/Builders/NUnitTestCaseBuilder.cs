@@ -228,6 +228,9 @@ namespace NUnit.Framework.Internal.Builders
                 parameters = testMethod.Method.GetParameters();
             }
 
+            if (parms != null && parms.TestName != null && parms.TestName.Trim() == "")
+                return MarkAsNotRunnable(testMethod, "Test has no name");
+
             if (arglist != null && parameters != null)
                 TypeHelper.ConvertArgumentList(arglist, parameters);
 

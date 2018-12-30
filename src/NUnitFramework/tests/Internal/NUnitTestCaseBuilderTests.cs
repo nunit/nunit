@@ -83,5 +83,19 @@ namespace NUnit.Framework.Internal
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }
+
+        private readonly Type testNameFixtureType = typeof(TestNameFixture);
+
+        [TestCase(nameof(TestNameFixture.ImplicitNull), RunState.Runnable)]
+        [TestCase(nameof(TestNameFixture.ExplicitNull), RunState.Runnable)]
+        [TestCase(nameof(TestNameFixture.EmptyTest), RunState.NotRunnable)]
+        [TestCase(nameof(TestNameFixture.WhiteSpaceTest), RunState.NotRunnable)]
+        [TestCase(nameof(TestNameFixture.ProperNameTest), RunState.Runnable)]
+        public void TestNameTests(string methodName, RunState expectedState)
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(testNameFixtureType, methodName);
+            var testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(expectedState));
+        }
     }
 }
