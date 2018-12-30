@@ -229,7 +229,7 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             if (parms != null && parms.TestName != null && parms.TestName.Trim() == "")
-                return MarkAsNotRunnable(testMethod, "Test has no name");
+                return MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
 
             if (arglist != null && parameters != null)
                 TypeHelper.ConvertArgumentList(arglist, parameters);
