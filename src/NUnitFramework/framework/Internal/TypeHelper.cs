@@ -222,45 +222,6 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Convert an argument list to the required parameter types.
-        /// Currently, only widening numeric conversions are performed.
-        /// </summary>
-        /// <param name="arglist">An array of args to be converted</param>
-        /// <param name="parameters">A ParameterInfo[] whose types will be used as targets</param>
-        public static void ConvertArgumentList(object[] arglist, IParameterInfo[] parameters)
-        {
-            System.Diagnostics.Debug.Assert(arglist.Length <= parameters.Length);
-
-            for (int i = 0; i < arglist.Length; i++)
-            {
-                object arg = arglist[i];
-
-                if (arg is IConvertible)
-                {
-                    Type argType = arg.GetType();
-                    Type targetType = parameters[i].ParameterType;
-                    bool convert = false;
-
-                    if (argType != targetType && IsNumeric(argType) && IsNumeric(targetType))
-                    {
-                        if (targetType == typeof(double) || targetType == typeof(float))
-                            convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
-                        else
-                            if (targetType == typeof(long))
-                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                            else
-                                if (targetType == typeof(short))
-                                    convert = arg is byte || arg is sbyte;
-                    }
-
-                    if (convert)
-                        arglist[i] = Convert.ChangeType(arg, targetType,
-                            System.Globalization.CultureInfo.InvariantCulture);
-                }
-            }
-        }
-
-        /// <summary>
         /// Determines whether this instance can deduce type args for a generic type from the supplied arguments.
         /// </summary>
         /// <param name="type">The type to be examined.</param>

@@ -228,9 +228,6 @@ namespace NUnit.Framework.Internal.Builders
                 parameters = testMethod.Method.GetParameters();
             }
 
-            if (arglist != null && parameters != null)
-                TypeHelper.ConvertArgumentList(arglist, parameters);
-
             return true;
         }
 

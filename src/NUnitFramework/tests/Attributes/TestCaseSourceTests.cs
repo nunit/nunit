@@ -385,6 +385,16 @@ namespace NUnit.Framework.Attributes
             });
         }
 
+        [TestCaseSource(nameof(CasesWithInteger))]
+        public void TestIntegerConvertedToFloat(string a, float b)
+        {
+        }
+
+        [TestCaseSource(nameof(CasesWithInteger))]
+        public void TestIntegerKeptAsItIs(string a, int b)
+        {
+        }
+
         #region Sources used by the tests
         static object[] MyData = new object[] {
             new object[] { 12, 3, 4 },
@@ -422,6 +432,12 @@ namespace NUnit.Framework.Attributes
         static object[] Params = new object[] {
             new TestCaseData(24, 3).Returns(8),
             new TestCaseData(24, 2).Returns(12) };
+
+        static readonly TestCaseData[] CasesWithInteger =
+        {
+            new TestCaseData("Empty", 0),
+            new TestCaseData("Empty", 1)
+        };
 
         private class DivideDataProvider
         {
