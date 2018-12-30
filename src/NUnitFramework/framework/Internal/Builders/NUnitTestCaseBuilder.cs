@@ -228,6 +228,9 @@ namespace NUnit.Framework.Internal.Builders
                 parameters = testMethod.Method.GetParameters();
             }
 
+            if (parms != null && parms.TestName != null && parms.TestName.Trim() == "")
+                return MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
+
             if (arglist != null && parameters != null)
                 TypeHelper.ConvertArgumentList(arglist, parameters);
 
