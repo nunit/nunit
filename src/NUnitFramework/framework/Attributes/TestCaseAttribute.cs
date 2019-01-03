@@ -288,9 +288,7 @@ namespace NUnit.Framework
                             if (!lastParameterType.IsInstanceOfType(parms.Arguments[argsProvided - 1]))
                             {
                                 Array array = Array.CreateInstance(elementType, 1);
-                                var argValue = ParamAttributeTypeConversions.Convert(parms.Arguments[argsProvided - 1], elementType);
-
-                                array.SetValue(argValue, 0);
+                                array.SetValue(parms.Arguments[argsProvided - 1], 0);
                                 parms.Arguments[argsProvided - 1] = array;
                             }
                         }
@@ -303,10 +301,7 @@ namespace NUnit.Framework
                             int length = argsProvided - argsNeeded + 1;
                             Array array = Array.CreateInstance(elementType, length);
                             for (int i = 0; i < length; i++)
-                            {
-                                var argValue = ParamAttributeTypeConversions.Convert(parms.Arguments[argsNeeded + i - 1], elementType);
-                                array.SetValue(argValue, i);
-                            }
+                                array.SetValue(parms.Arguments[argsNeeded + i - 1], i);
 
                             newArglist[argsNeeded - 1] = array;
                             parms.Arguments = newArglist;
