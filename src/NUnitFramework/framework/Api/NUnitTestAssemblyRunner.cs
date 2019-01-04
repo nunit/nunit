@@ -143,7 +143,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="assemblyNameOrPath">File name or path of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
-        /// <returns>True if the load was successful</returns>
+        /// <returns>A Test Assembly containing all loaded tests</returns>
         public ITest Load(string assemblyNameOrPath, IDictionary<string, object> settings)
         {
             Settings = settings;
@@ -161,7 +161,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
-        /// <returns>True if the load was successful</returns>
+        /// <returns>A Test Assembly containing all loaded tests</returns>
         public ITest Load(Assembly assembly, IDictionary<string, object> settings)
         {
             Settings = settings;
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="filter">A test filter used to select tests to be run</param>
-        /// <returns></returns>
+        /// <returns>The test results from the run</returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
             RunAsync(listener, filter);
