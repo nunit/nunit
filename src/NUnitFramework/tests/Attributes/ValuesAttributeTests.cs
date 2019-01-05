@@ -49,6 +49,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertIntsToLong([Values(5, int.MaxValue)]long x)
         {
+            Assert.That(x, Is.Not.EqualTo(default(long)));
         }
 
         [Test]
@@ -93,6 +94,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertValuesToDecimal([Values(12, 12.5, "12.5")]decimal x)
         {
+            Assert.That(x, Is.Not.EqualTo(default(decimal)));
         }
 
         [Test]
@@ -104,6 +106,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertStringToDateTimeOffset([Values("2018-10-09 15:15:00+02:30")]DateTimeOffset x)
         {
+            Assert.That(x, Is.Not.EqualTo(default(DateTimeOffset)));
         }
 
         [Test]
@@ -115,6 +118,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertStringToTimeSpan([Values("4:44:15")]TimeSpan x)
         {
+            Assert.That(x, Is.Not.EqualTo(default(TimeSpan)));
         }
 
         [Test]
@@ -126,6 +130,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanConvertStringToDateTime([Values("2018-10-10")]DateTime x)
         {
+            Assert.That(x, Is.Not.EqualTo(default(DateTime)));
         }
 
         [Test]
