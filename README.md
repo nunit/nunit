@@ -1,6 +1,6 @@
 # NUnit 3 Framework #
 
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/3xfkxtnkrts1x06q/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit/branch/master) [![Travis Build Status](https://travis-ci.org/nunit/nunit.svg?branch=master)](https://travis-ci.org/nunit/nunit) [![NuGet Version and Downloads count](https://buildstats.info/nuget/NUnit)](https://www.nuget.org/packages/NUnit)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/3xfkxtnkrts1x06q/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit/branch/master) [![Travis Build Status](https://travis-ci.org/nunit/nunit.svg?branch=master)](https://travis-ci.org/nunit/nunit) [![Build Status](https://nunit.visualstudio.com/NUnit/_apis/build/status/NUnit%20Framework/NUnit%20Framework%20CI?branchName=master)](https://nunit.visualstudio.com/NUnit/_build/latest?definitionId=11?branchName=master) [![NuGet Version and Downloads count](https://buildstats.info/nuget/NUnit)](https://www.nuget.org/packages/NUnit)
 
 [![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nunit/nunit) [![nunit-discuss Google Groups](https://img.shields.io/badge/mailing%20list-nunit--discuss-blue.svg)](https://groups.google.com/forum/#!forum/nunit-discuss)
 
