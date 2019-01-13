@@ -80,7 +80,7 @@ namespace NUnit.Framework.Api
             _inconclusiveCount = 0;
         }
 
-#region Load
+        #region Load
 
         [Test]
         public void Load_GoodFile_ReturnsRunnableSuite()
@@ -122,9 +122,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
 
-#endregion
+        #endregion
 
-#region CountTestCases
+        #region CountTestCases
 
         [Test]
         public void CountTestCases_AfterLoad_ReturnsCorrectCount()
@@ -155,9 +155,9 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
-#endregion
+        #endregion
 
-#region ExploreTests
+        #region ExploreTests
         [Test]
         public void ExploreTests_WithoutLoad_ThrowsInvalidOperation()
         {
@@ -196,6 +196,25 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             var explorer = _runner.ExploreTests(TestFilter.Empty);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(TestFilter.Empty)));
+        }
+
+        [Test]
+        public void ExploreTest_AfterLoad_AllIdsAreUnique()
+        {
+            LoadMockAssembly();
+            var explorer = _runner.ExploreTests(TestFilter.Empty);
+
+            var dict = new Dictionary<string, bool>();
+            CheckForDuplicates(explorer, dict);
+        }
+
+        private void CheckForDuplicates(ITest test, Dictionary<string, bool> dict)
+        {
+            Assert.False(dict.ContainsKey(test.Id), "Duplicate key: {0}", test.Id);
+            dict.Add(test.Id, true);
+
+            foreach (var child in test.Tests)
+                CheckForDuplicates(child, dict);
         }
 
         [Test]
