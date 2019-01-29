@@ -33,7 +33,7 @@ namespace NUnit.Framework
     /// maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class RetryAttribute : PropertyAttribute, IRepeatTest
+    public class RetryAttribute : NUnitAttribute, IRepeatTest
     {
         private readonly int _tryCount;
 
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         /// Construct a <see cref="RetryAttribute" />
         /// </summary>
         /// <param name="tryCount">The maximum number of times the test should be run if it fails</param>
-        public RetryAttribute(int tryCount) : base(tryCount)
+        public RetryAttribute(int tryCount)
         {
             _tryCount = tryCount;
         }
