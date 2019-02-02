@@ -287,6 +287,12 @@ namespace NUnit.Framework.Internal.Execution
             // Keep lock until we can remove for both methods
             lock (_queueLock)
             {
+                if (_isolationLevel <= 0)
+                {
+                    log.Debug("ParallelWorkItemDispatcher.RestoreQueues(): Isolation level <= 0");
+                    return;
+                }
+
                 log.Info("Restoring Queue State");
 
                 foreach (WorkItemQueue queue in Queues)
