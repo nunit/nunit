@@ -79,14 +79,7 @@ namespace NUnit.Framework.Internal.Commands
 #if ASYNC
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                try
-                {
-                    return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
-                }
-                catch (Exception e)
-                {
-                    throw new NUnitException("Rethrown", e);
-                }
+                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }
 #endif
             return InvokeTestMethod(context);
