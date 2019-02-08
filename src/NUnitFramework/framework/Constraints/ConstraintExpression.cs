@@ -729,8 +729,14 @@ namespace NUnit.Framework.Constraints
         #region Contains
 
         /// <summary>
+        /// <para>
         /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
+        /// </para>
+        /// <para>
+        /// To search for a substring instead of a collection element, use the
+        /// <see cref="Contains(string)"/> overload.
+        /// </para>
         /// </summary>
         public SomeItemsConstraint Contains(object expected)
         {
@@ -738,12 +744,15 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
+        /// <para>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
         /// constraint, depending on the type of the actual argument.
-        /// This overload is only used if the item sought is a string,
-        /// since any other type implies that we are looking for a
-        /// collection member.
+        /// </para>
+        /// <para>
+        /// To search for a collection element instead of a substring, use the
+        /// <see cref="Contains(object)"/> overload.
+        /// </para>
         /// </summary>
         public ContainsConstraint Contains(string expected)
         {
