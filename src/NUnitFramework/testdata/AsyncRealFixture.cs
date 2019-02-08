@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,6 +29,9 @@ using NUnit.Framework;
 #if NET40
 using Task = System.Threading.Tasks.TaskEx;
 #endif
+
+// Don’t warn when async is used without await
+#pragma warning disable CS1998
 
 namespace NUnit.TestData
 {
@@ -68,9 +71,30 @@ namespace NUnit.TestData
             Assert.Fail("Should never get here");
         }
 
-#endregion
+        [Test]
+        public async System.Threading.Tasks.Task AsyncTaskPass()
+        {
+            Assert.Pass();
+            throw new Exception("This test expects Assert.Pass() to throw an exception.");
+        }
 
-#region non-async Task
+        [Test]
+        public async System.Threading.Tasks.Task AsyncTaskIgnore()
+        {
+            Assert.Ignore();
+            throw new Exception("This test expects Assert.Ignore() to throw an exception.");
+        }
+
+        [Test]
+        public async System.Threading.Tasks.Task AsyncTaskInconclusive()
+        {
+            Assert.Inconclusive();
+            throw new Exception("This test expects Assert.Inconclusive() to throw an exception.");
+        }
+
+        #endregion
+
+        #region non-async Task
 
         [Test]
         public System.Threading.Tasks.Task TaskSuccess()
@@ -90,7 +114,28 @@ namespace NUnit.TestData
             throw new InvalidOperationException();
         }
 
-#endregion
+        [Test]
+        public System.Threading.Tasks.Task TaskPass()
+        {
+            Assert.Pass();
+            throw new Exception("This test expects Assert.Pass() to throw an exception.");
+        }
+
+        [Test]
+        public System.Threading.Tasks.Task TaskIgnore()
+        {
+            Assert.Ignore();
+            throw new Exception("This test expects Assert.Ignore() to throw an exception.");
+        }
+
+        [Test]
+        public System.Threading.Tasks.Task TaskInconclusive()
+        {
+            Assert.Inconclusive();
+            throw new Exception("This test expects Assert.Inconclusive() to throw an exception.");
+        }
+
+        #endregion
 
 
         [Test]
