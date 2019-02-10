@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </para>
     /// <para>
     /// The PairwiseStrategy code is based on "jenny" tool by Bob Jenkins:
-    /// http://burtleburtle.net/bob/math/jenny.html
+    /// https://burtleburtle.net/bob/math/jenny.html
     /// </para>
     /// </remarks>
     public class PairwiseStrategy : ICombiningStrategy
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Builders
 
         /// <summary>
         /// FleaRand is a pseudo-random number generator developed by Bob Jenkins:
-        /// http://burtleburtle.net/bob/rand/talksmall.html#flea
+        /// https://burtleburtle.net/bob/rand/talksmall.html#flea
         /// </summary>
         internal class FleaRand
         {

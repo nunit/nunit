@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
             }
             else if (CheckIfIsMacOSX(os.Platform))
             {
-                // Mono returns PlatformID.Unix for OSX (see http://www.mono-project.com/docs/faq/technical/#how-to-detect-the-execution-platform)
+                // Mono returns PlatformID.Unix for OSX (see https://www.mono-project.com/docs/faq/technical/#how-to-detect-the-execution-platform)
                 // The above check uses uname to confirm it is MacOSX and we change the PlatformId here.
                 currentPlatform = new OSPlatform(PlatformID.MacOSX, os.Version);
             }
