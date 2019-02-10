@@ -278,15 +278,19 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Remove isolated queues and restore old ones
+        /// Try to remove isolated queues and restore old ones
         /// </summary>
-        private void RestoreQueues()
+        private void TryRestoreQueues()
         {
-            Guard.OperationValid(_isolationLevel > 0, $"Called {nameof(RestoreQueues)} with no saved queues.");
-            
             // Keep lock until we can remove for both methods
             lock (_queueLock)
             {
+                if (_isolationLevel <= 0)
+                {
+                    log.Debug("Ignoring call to restore Queue State");
+                    return;
+                }
+
                 log.Info("Restoring Queue State");
 
                 foreach (WorkItemQueue queue in Queues)
@@ -325,7 +329,7 @@ namespace NUnit.Framework.Internal.Execution
                 // If the shift has ended for an isolated queue, restore
                 // the queues and keep trying. Otherwise, we are done.
                 if (_isolationLevel > 0)
-                    RestoreQueues();
+                    TryRestoreQueues();
                 else
                     break;
             }
