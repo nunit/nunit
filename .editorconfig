@@ -9,14 +9,11 @@ root = true
 
 [*]
 indent_style = space
-indent_size = 4
 insert_final_newline = true
 charset = utf-8
 
-[*.{proj,csproj,vcxproj,xproj,json,config,nuspec,xml,xsd,yml}]
-indent_size = 2
-
-
+[*.{cs,cake}]
+indent_size = 4
 
 [*]
 # https://github.com/nunit/docs/wiki/Coding-Standards#namespace-class-structure-interface-enumeration-and-method-definitions
