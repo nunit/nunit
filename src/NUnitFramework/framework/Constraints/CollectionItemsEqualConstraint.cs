@@ -34,11 +34,10 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class CollectionItemsEqualConstraint : CollectionConstraint
     {
-
         /// <summary>
         /// The NUnitEqualityComparer in use for this constraint
         /// </summary>
-        protected NUnitEqualityComparer Comparer { get; } = new NUnitEqualityComparer();
+        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
 
         /// <summary>
         /// Construct an empty CollectionConstraint
@@ -58,7 +57,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected bool IgnoringCase
         {
-            get { return Comparer.IgnoreCase; }
+            get { return _comparer.IgnoreCase; }
         }
 
         /// <summary>
@@ -66,7 +65,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected bool UsingExternalComparer
         {
-            get { return Comparer.ExternalComparers.Count > 0; }
+            get { return _comparer.ExternalComparers.Count > 0; }
         }
 
         #endregion
@@ -80,7 +79,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                Comparer.IgnoreCase = true;
+                _comparer.IgnoreCase = true;
                 return this;
             }
         }
@@ -91,7 +90,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The IComparer object to use.</param>
         public CollectionItemsEqualConstraint Using(IComparer comparer)
         {
-            Comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -101,7 +100,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The IComparer object to use.</param>
         public CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
         {
-            Comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -111,7 +110,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparison">The Comparison object to use.</param>
         public CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
         {
-            Comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparison));
             return this;
         }
 
@@ -121,7 +120,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The IComparer object to use.</param>
         public CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
         {
-            Comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -131,7 +130,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The IComparer object to use.</param>
         public CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
         {
-            Comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
@@ -141,13 +140,13 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
         public CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
         {
-            Comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
+            _comparer.ExternalComparers.Add(EqualityAdapter.For(comparer));
             return this;
         }
 
         internal CollectionItemsEqualConstraint Using(EqualityAdapter adapter)
         {
-            Comparer.ExternalComparers.Add(adapter);
+            _comparer.ExternalComparers.Add(adapter);
             return this;
         }
 
@@ -159,7 +158,7 @@ namespace NUnit.Framework.Constraints
         protected bool ItemsEqual(object x, object y)
         {
             Tolerance tolerance = Tolerance.Default;
-            return Comparer.AreEqual(x, y, ref tolerance);
+            return _comparer.AreEqual(x, y, ref tolerance);
         }
 
         /// <summary>
@@ -168,7 +167,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The collection to be included in the tally</param>
         protected CollectionTally Tally(IEnumerable c)
         {
-            return new CollectionTally(Comparer, c);
+            return new CollectionTally(_comparer, c);
         }
     }
 }
