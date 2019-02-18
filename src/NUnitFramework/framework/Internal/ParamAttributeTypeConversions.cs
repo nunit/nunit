@@ -25,9 +25,10 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
+
+#if !(NET35 || NET40 || NET45)
 using System.Reflection;
-using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -114,31 +115,29 @@ namespace NUnit.Framework.Internal
             }
 
             bool convert = false;
+            var underlyingTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
 
-            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
-                targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
+            if (underlyingTargetType == typeof(short) || underlyingTargetType == typeof(byte) || underlyingTargetType == typeof(sbyte)
+                || targetType == typeof(long?) || targetType == typeof(double?))
             {
                 convert = value is int;
             }
-            else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
+            else if (underlyingTargetType == typeof(decimal))
             {
                 convert = value is double || value is string || value is int;
             }
-            else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
+            else if (underlyingTargetType == typeof(DateTime))
             {
                 convert = value is string;
             }
 
             if (convert)
             {
-                Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
-                    targetType.GetGenericArguments()[0] : targetType;
-
-                convertedValue = System.Convert.ChangeType(value, convertTo, CultureInfo.InvariantCulture);
+                convertedValue = System.Convert.ChangeType(value, underlyingTargetType, CultureInfo.InvariantCulture);
                 return true;
             }
 
-            var converter = TypeDescriptor.GetConverter(targetType);
+            var converter = TypeDescriptor.GetConverter(underlyingTargetType);
             if (converter.CanConvertFrom(value.GetType()))
             {
                 convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
