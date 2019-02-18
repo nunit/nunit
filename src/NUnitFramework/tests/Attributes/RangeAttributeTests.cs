@@ -52,7 +52,7 @@ namespace NUnit.Framework.Attributes
         };
 
         // See XML docs for the ParamAttributeTypeConversions class.
-        private static readonly Type[] Int32RangeConvertibleToParameterTypes = { typeof(int), typeof(sbyte), typeof(byte), typeof(short), typeof(decimal) };
+        private static readonly Type[] Int32RangeConvertibleToParameterTypes = { typeof(int), typeof(sbyte), typeof(byte), typeof(short), typeof(decimal), typeof(long), typeof(double) };
         private static readonly Type[] UInt32RangeConvertibleToParameterTypes = { typeof(uint) };
         private static readonly Type[] Int64RangeConvertibleToParameterTypes = { typeof(long) };
         private static readonly Type[] UInt64RangeConvertibleToParameterTypes = { typeof(ulong) };

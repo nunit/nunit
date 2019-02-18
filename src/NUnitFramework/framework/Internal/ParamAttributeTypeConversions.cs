@@ -118,7 +118,7 @@ namespace NUnit.Framework.Internal
             var underlyingTargetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
 
             if (underlyingTargetType == typeof(short) || underlyingTargetType == typeof(byte) || underlyingTargetType == typeof(sbyte)
-                || targetType == typeof(long?) || targetType == typeof(double?))
+                || underlyingTargetType == typeof(long) || underlyingTargetType == typeof(double))
             {
                 convert = value is int;
             }
