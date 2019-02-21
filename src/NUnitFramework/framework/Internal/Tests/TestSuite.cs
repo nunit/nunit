@@ -117,7 +117,9 @@ namespace NUnit.Framework.Internal
                 {
                     if(child.IsSuite)
                     {
-                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        TestSuite childSuite = child.GetType() == typeof(TestFixture)
+                            ? new TestFixture(child as TestSuite, filter)
+                            : new TestSuite(child as TestSuite, filter);
                         childSuite.Parent    = this;
                         this.tests.Add(childSuite);
                     }

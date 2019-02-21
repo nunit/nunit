@@ -51,6 +51,16 @@ namespace NUnit.Framework.Internal
             CheckSetUpTearDownMethods(TearDownMethods);
         }
 
+        /// <summary>
+        /// Copy constructor style to create a filtered copy of the given test suite
+        /// </summary>
+        /// <param name="suite">Test Suite to copy</param>
+        /// <param name="filter">Filter to be applied</param>
+        public TestFixture(TestSuite suite, ITestFilter filter) 
+            : base(suite, filter)
+        {
+        }
+
         #endregion
     }
 }
