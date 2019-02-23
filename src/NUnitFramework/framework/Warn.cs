@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Provides static methods to express conditions 
+    /// Provides static methods to express conditions
     /// that must be met for the test to succeed. If
     /// any test fails, a warning is issued.
     /// </summary>
@@ -39,7 +39,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// DO NOT USE!
-        /// The Equals method throws an InvalidOperationException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a">The left object.</param>
@@ -48,12 +48,12 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new InvalidOperationException("Warn.Equals should not be used for Assertions.");
+            throw new InvalidOperationException("Warn.Equals should not be used.");
         }
 
         /// <summary>
         /// DO NOT USE!
-        /// The ReferenceEquals method throws an InvalidOperationException. This is done 
+        /// The ReferenceEquals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a">The left object.</param>
@@ -61,7 +61,7 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new InvalidOperationException("Warn.ReferenceEquals should not be used for Assertions.");
+            throw new InvalidOperationException("Warn.ReferenceEquals should not be used.");
         }
 
         #endregion
@@ -137,7 +137,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false a warning is issued.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -147,7 +147,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued. 
+        /// Asserts that a condition is true. If the condition is false a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void Unless(bool condition)
@@ -157,7 +157,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false a warning is issued.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless(bool condition, Func<string> getExceptionMessage)
@@ -172,7 +172,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -194,7 +194,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless(Func<bool> condition, Func<string> getExceptionMessage)
@@ -350,7 +350,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false a warning is issued.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -360,7 +360,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued. 
+        /// Asserts that a condition is true. If the condition is false a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void If(bool condition)
@@ -370,7 +370,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. If the condition is false a warning is issued.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If(bool condition, Func<string> getExceptionMessage)
@@ -384,7 +384,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is false. If the condition is true a warning is issued.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is true</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -404,7 +404,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is false. If the condition is true a warning is issued.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If(Func<bool> condition, Func<string> getExceptionMessage)

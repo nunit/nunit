@@ -65,7 +65,7 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new InvalidOperationException("Assert.Equals should not be used for Assertions, use Assert.AreEqual(...) instead.");
+            throw new InvalidOperationException("Assert.Equals should not be used. Use Assert.AreEqual instead.");
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new InvalidOperationException("Assert.ReferenceEquals should not be used for Assertions, use Assert.AreSame(...) instead.");
+            throw new InvalidOperationException("Assert.ReferenceEquals should not be used. Use Assert.AreSame instead.");
         }
 
         #endregion
@@ -314,7 +314,7 @@ namespace NUnit.Framework
         public static void Multiple(TestDelegate testDelegate)
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "Assert.Multiple called outside of a valid TestExecutionContext");
+            Guard.OperationValid(context != null, "There is no current test execution context.");
 
             context.MultipleAssertLevel++;
 
@@ -344,7 +344,7 @@ namespace NUnit.Framework
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "Assert.Multiple called outside of a valid TestExecutionContext");
+            Guard.OperationValid(context != null, "There is no current test execution context.");
 
             context.MultipleAssertLevel++;
 
@@ -365,9 +365,9 @@ namespace NUnit.Framework
         }
 #endif
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static void ReportFailure(ConstraintResult result, string message)
         {

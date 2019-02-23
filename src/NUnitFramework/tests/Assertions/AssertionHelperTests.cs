@@ -3,9 +3,10 @@ using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.TestUtilities.Comparers;
 
+#pragma warning disable CS0618 // AssertionHelper is obsolete
+
 namespace NUnit.Framework.Syntax
 {
-    [Obsolete("Test of Obsolete AssertionHelper class")]
     class AssertionHelperTests : AssertionHelper
     {
         private static readonly string DEFAULT_PATH_CASE = Path.DirectorySeparatorChar == '\\' ? "ignorecase" : "respectcase";
@@ -309,7 +310,7 @@ namespace NUnit.Framework.Syntax
         #endregion
 
         #region After
-        
+
         [Test]
         public void After()
         {

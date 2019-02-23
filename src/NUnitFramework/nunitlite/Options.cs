@@ -536,7 +536,7 @@ namespace NUnit.Options
             throw new InvalidOperationException ("Option has no names!");
         }
 
-        [Obsolete ("Use KeyedCollection.this[string]")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use the default indexer instead.")]
         protected Option GetOptionForName (string option)
         {
             if (option == null)

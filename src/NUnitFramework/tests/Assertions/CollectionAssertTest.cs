@@ -736,14 +736,14 @@ namespace NUnit.Framework.Assertions
         public void EqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.Equals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used for Assertions"));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.ReferenceEquals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used for Assertions"));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used."));
         }
 #endregion
 

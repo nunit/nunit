@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the default NUnitEqualityComparer
         /// </summary>
-        [Obsolete("Deprecated. Use the default constructor instead.")]
+        [Obsolete("This property has been deprecated and will be removed in a future release. Please use 'new NUnitEqualityComparer()' instead.")]
         public static NUnitEqualityComparer Default
         {
             get { return new NUnitEqualityComparer(); }

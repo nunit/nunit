@@ -138,7 +138,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.CountTestCases(TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.ExploreTests(TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The ExploreTests method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before exploring them."));
         }
 
         [Test]
@@ -279,7 +279,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.Run(TestListener.NULL, TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test, SetUICulture("en-US")]
@@ -393,7 +393,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.RunAsync(TestListener.NULL, TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test, SetUICulture("en-US")]
@@ -538,7 +538,7 @@ namespace NUnit.Framework.Api
         /// <param name="message">A TestMessage object containing the text to send</param>
         public void SendMessage(TestMessage message)
         {
-            
+
         }
 
         #endregion

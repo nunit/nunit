@@ -811,7 +811,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Contains")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
         public SubstringConstraint StringContaining(string expected)
         {
             return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
@@ -821,7 +821,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Contains")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
         public SubstringConstraint ContainsSubstring(string expected)
         {
             return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
@@ -853,7 +853,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.StartWith or StartsWith")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.StartWith or StartsWith instead.")]
         public StartsWithConstraint StringStarting(string expected)
         {
             return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
@@ -885,7 +885,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.EndWith or EndsWith")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.EndWith or EndsWith instead.")]
         public EndsWithConstraint StringEnding(string expected)
         {
             return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
@@ -917,7 +917,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Match or Matches")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Match or Matches instead.")]
         public RegexConstraint StringMatching(string pattern)
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
