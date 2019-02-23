@@ -43,6 +43,16 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Copy constructor style to create a filtered copy of the given parameterized fixture suite
+        /// </summary>
+        /// <param name="suite">Parameterized Fixture Suite to copy</param>
+        /// <param name="filter">Filter to be applied</param>
+        public ParameterizedFixtureSuite(ParameterizedFixtureSuite suite, ITestFilter filter)
+            : base(suite, filter)
+        {
+        }
+
+        /// <summary>
         /// Gets a string representing the type of test
         /// </summary>
         public override string TestType
@@ -53,6 +63,15 @@ namespace NUnit.Framework.Internal
                     ? "GenericFixture"
                     : "ParameterizedFixture";
             }
+        }
+
+        /// <summary>
+        /// Overriden to return a Parameterized Fixture Suite
+        /// </summary>
+        /// <param name="filter">Filter to apply</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new ParameterizedFixtureSuite(this, filter);
         }
     }
 }

@@ -52,6 +52,29 @@ namespace NUnit.Framework.Internal
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
         }
 
+        /// <summary>
+        /// Copy constructor style to create a filtered copy of the given setup fixture
+        /// </summary>
+        /// <param name="setUpFixture">SetUp Fixture to copy</param>
+        /// <param name="filter">Filter to be applied</param>
+        public SetUpFixture(SetUpFixture setUpFixture, ITestFilter filter)
+            : base(setUpFixture, filter)
+        {
+        }
+
+        #endregion
+
+        #region Test Suite Overrides
+
+        /// <summary>
+        /// Overriden to return a SetUp Fixture
+        /// </summary>
+        /// <param name="filter">Filter to apply</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new SetUpFixture(this, filter);
+        }
+
         #endregion
     }
 }

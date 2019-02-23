@@ -52,13 +52,26 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy constructor style to create a filtered copy of the given test suite
+        /// Copy constructor style to create a filtered copy of the given test fixture
         /// </summary>
-        /// <param name="suite">Test Suite to copy</param>
+        /// <param name="fixture">Test Fixture to copy</param>
         /// <param name="filter">Filter to be applied</param>
-        public TestFixture(TestSuite suite, ITestFilter filter) 
-            : base(suite, filter)
+        private TestFixture(TestFixture fixture, ITestFilter filter) 
+            : base(fixture, filter)
         {
+        }
+
+        #endregion
+
+        #region Test Suite Overrides
+
+        /// <summary>
+        /// Overriden to return a Test Fixture
+        /// </summary>
+        /// <param name="filter">Filter to apply</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new TestFixture(this, filter);
         }
 
         #endregion

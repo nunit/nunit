@@ -117,9 +117,7 @@ namespace NUnit.Framework.Internal
                 {
                     if(child.IsSuite)
                     {
-                        TestSuite childSuite = child.GetType() == typeof(TestFixture)
-                            ? new TestFixture(child as TestSuite, filter)
-                            : new TestSuite(child as TestSuite, filter);
+                        TestSuite childSuite = ((TestSuite) child).Copy(filter);
                         childSuite.Parent    = this;
                         this.tests.Add(childSuite);
                     }
@@ -179,6 +177,16 @@ namespace NUnit.Framework.Internal
         {
             test.Parent = this;
             tests.Add(test);
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite
+        /// </summary>
+        /// <param name="filter">Filter to apply</param>
+        /// <returns></returns>
+        public virtual TestSuite Copy(ITestFilter filter)
+        {
+            return new TestSuite(this, filter);
         }
 
         #endregion

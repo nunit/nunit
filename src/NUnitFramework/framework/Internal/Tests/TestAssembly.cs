@@ -95,6 +95,15 @@ namespace NUnit.Framework.Internal
                 ? Assembly.GetAttributes<TAttr>()
                 : new TAttr[0];
         }
+
+        /// <summary>
+        /// Overriden to return a Test Assembly
+        /// </summary>
+        /// <param name="filter">Filter to apply</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new TestAssembly(this, filter);
+        }
     }
 }
 

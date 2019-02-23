@@ -45,6 +45,16 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Copy constructor style to create a filtered copy of the given parameterized method suite
+        /// </summary>
+        /// <param name="suite">Parameterized Method Suite to copy</param>
+        /// <param name="filter">Filter to be applied</param>
+        public ParameterizedMethodSuite(ParameterizedMethodSuite suite, ITestFilter filter)
+            : base(suite, filter)
+        {
+        }
+
+        /// <summary>
         /// Gets a string representing the type of test
         /// </summary>
         public override string TestType
@@ -59,6 +69,15 @@ namespace NUnit.Framework.Internal
 
                 return "ParameterizedMethod";
             }
+        }
+
+        /// <summary>
+        /// Overriden to return a Parameterized Method Suite
+        /// </summary>
+        /// <param name="filter">Filter to apply</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new ParameterizedMethodSuite(this, filter);
         }
     }
 }
