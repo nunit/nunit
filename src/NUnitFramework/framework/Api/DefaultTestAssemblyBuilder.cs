@@ -254,7 +254,7 @@ namespace NUnit.Framework.Api
 
             if (fixtures.Count == 0)
             {
-                testAssembly.MakeInvalid("Has no TestFixtures");
+                testAssembly.MakeInvalid("No test fixtures were found.");
             }
             else
             {

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,7 +38,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// DO NOT USE! Use CollectionAssert.AreEqual(...) instead.
-        /// The Equals method throws an InvalidOperationException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -46,23 +46,23 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new InvalidOperationException("CollectionAssert.Equals should not be used for Assertions, use CollectionAssert.AreEqual(...) instead.");
+            throw new InvalidOperationException("CollectionAssert.Equals should not be used. Use CollectionAssert.AreEqual instead.");
         }
 
         /// <summary>
         /// DO NOT USE!
-        /// The ReferenceEquals method throws an InvalidOperationException. This is done 
+        /// The ReferenceEquals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new InvalidOperationException("CollectionAssert.ReferenceEquals should not be used for Assertions.");
+            throw new InvalidOperationException("CollectionAssert.ReferenceEquals should not be used.");
         }
 
         #endregion
-                
+
         #region AllItemsAreInstancesOfType
         /// <summary>
         /// Asserts that all items contained in collection are of the type specified by expectedType.
@@ -93,7 +93,7 @@ namespace NUnit.Framework
         /// Asserts that all items contained in collection are not equal to null.
         /// </summary>
         /// <param name="collection">IEnumerable containing objects to be considered</param>
-        public static void AllItemsAreNotNull (IEnumerable collection) 
+        public static void AllItemsAreNotNull (IEnumerable collection)
         {
             AllItemsAreNotNull(collection, string.Empty, null);
         }
@@ -104,7 +104,7 @@ namespace NUnit.Framework
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AllItemsAreNotNull (IEnumerable collection, string message, params object[] args) 
+        public static void AllItemsAreNotNull (IEnumerable collection, string message, params object[] args)
         {
             Assert.That(collection, Is.All.Not.Null, message, args);
         }
@@ -117,11 +117,11 @@ namespace NUnit.Framework
         /// once and only once.
         /// </summary>
         /// <param name="collection">IEnumerable of objects to be considered</param>
-        public static void AllItemsAreUnique (IEnumerable collection) 
+        public static void AllItemsAreUnique (IEnumerable collection)
         {
             AllItemsAreUnique(collection, string.Empty, null);
         }
-        
+
         /// <summary>
         /// Ensures that every object contained in collection exists within the collection
         /// once and only once.
@@ -129,7 +129,7 @@ namespace NUnit.Framework
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AllItemsAreUnique (IEnumerable collection, string message, params object[] args) 
+        public static void AllItemsAreUnique (IEnumerable collection, string message, params object[] args)
         {
             Assert.That(collection, Is.Unique, message, args);
         }
@@ -138,44 +138,44 @@ namespace NUnit.Framework
         #region AreEqual
 
         /// <summary>
-        /// Asserts that expected and actual are exactly equal.  The collections must have the same count, 
+        /// Asserts that expected and actual are exactly equal.  The collections must have the same count,
         /// and contain the exact same objects in the same order.
         /// </summary>
         /// <param name="expected">The first IEnumerable of objects to be considered</param>
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual) 
+        public static void AreEqual (IEnumerable expected, IEnumerable actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
 
         /// <summary>
-        /// Asserts that expected and actual are exactly equal.  The collections must have the same count, 
+        /// Asserts that expected and actual are exactly equal.  The collections must have the same count,
         /// and contain the exact same objects in the same order.
         /// If comparer is not null then it will be used to compare the objects.
         /// </summary>
         /// <param name="expected">The first IEnumerable of objects to be considered</param>
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="comparer">The IComparer to use in comparing objects from each IEnumerable</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer) 
+        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer)
         {
             AreEqual(expected, actual, comparer, string.Empty, null);
         }
 
         /// <summary>
-        /// Asserts that expected and actual are exactly equal.  The collections must have the same count, 
+        /// Asserts that expected and actual are exactly equal.  The collections must have the same count,
         /// and contain the exact same objects in the same order.
         /// </summary>
         /// <param name="expected">The first IEnumerable of objects to be considered</param>
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
+        public static void AreEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected).AsCollection, message, args);
         }
 
         /// <summary>
-        /// Asserts that expected and actual are exactly equal.  The collections must have the same count, 
+        /// Asserts that expected and actual are exactly equal.  The collections must have the same count,
         /// and contain the exact same objects in the same order.
         /// If comparer is not null then it will be used to compare the objects.
         /// </summary>
@@ -184,7 +184,7 @@ namespace NUnit.Framework
         /// <param name="comparer">The IComparer to use in comparing objects from each IEnumerable</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object[] args) 
+        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object[] args)
         {
             Assert.That(actual, Is.EqualTo(expected).Using(comparer), message, args);
         }
@@ -197,7 +197,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The first IEnumerable of objects to be considered</param>
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
-        public static void AreEquivalent (IEnumerable expected, IEnumerable actual) 
+        public static void AreEquivalent (IEnumerable expected, IEnumerable actual)
         {
             AreEquivalent(expected, actual, string.Empty, null);
         }
@@ -209,7 +209,7 @@ namespace NUnit.Framework
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
+        public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args)
         {
             Assert.That(actual, Is.EquivalentTo(expected), message, args);
         }
@@ -246,7 +246,7 @@ namespace NUnit.Framework
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args) 
+        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected).AsCollection, message, args);
         }
@@ -485,7 +485,7 @@ namespace NUnit.Framework
             IsNotEmpty(collection, string.Empty, null);
         }
         #endregion
- 
+
         #region IsOrdered
         /// <summary>
         /// Assert that an array, list or other collection is ordered

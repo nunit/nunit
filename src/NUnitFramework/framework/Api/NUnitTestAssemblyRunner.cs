@@ -181,7 +181,7 @@ namespace NUnit.Framework.Api
         public int CountTestCases(ITestFilter filter)
         {
             if (LoadedTest == null)
-                throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
+                throw new InvalidOperationException("Tests must be loaded before counting test cases.");
 
             return CountTestCases(LoadedTest, filter);
         }
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Api
         public ITest ExploreTests(ITestFilter filter)
         {
             if (LoadedTest == null)
-                throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
+                throw new InvalidOperationException("Tests must be loaded before exploring them.");
 
             if (filter == TestFilter.Empty)
                 return LoadedTest;
@@ -229,7 +229,7 @@ namespace NUnit.Framework.Api
         {
             log.Info("Running tests");
             if (LoadedTest == null)
-                throw new InvalidOperationException("The Run method was called but no test has been loaded");
+                throw new InvalidOperationException("Tests must be loaded before running them.");
 
             _runComplete.Reset();
 
@@ -306,13 +306,13 @@ namespace NUnit.Framework.Api
                 }
                 catch (SecurityException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
+                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission must be granted in order to launch the debugger.");
                     return;
                 }
                 //System.Diagnostics.Debugger.Launch() not implemented on mono
                 catch (NotImplementedException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("Debugger unavailable on this platform.");
+                    TopLevelWorkItem.MarkNotRunnable("This platform does not support launching the debugger.");
                     return;
                 }
             }
@@ -353,7 +353,7 @@ namespace NUnit.Framework.Api
                 (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
                 Context.Dispatcher = new MainThreadWorkItemDispatcher();
             else if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
@@ -408,8 +408,14 @@ namespace NUnit.Framework.Api
         private static void PauseBeforeRun()
         {
             var process = Process.GetCurrentProcess();
-            string attachMessage = string.Format("Attach debugger to Process {0}.exe with Id {1} if desired.", process.ProcessName, process.Id);
-            MessageBox.Show(attachMessage, process.ProcessName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                $"Pausing as requested. If you would like to attach a debugger, the process name and ID are {process.ProcessName}.exe and {process.Id}." + Environment.NewLine
+                + Environment.NewLine
+                + "Click OK when you are ready to continue.",
+                $"{process.ProcessName} – paused",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 #endif
 
