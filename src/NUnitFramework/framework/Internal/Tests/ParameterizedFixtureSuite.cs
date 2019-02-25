@@ -43,10 +43,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy constructor style to create a filtered copy of the given parameterized fixture suite
+        /// Creates a copy of the given suite with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="suite">Parameterized Fixture Suite to copy</param>
-        /// <param name="filter">Filter to be applied</param>
+        /// <param name="suite">The <see cref="ParameterizedFixtureSuite"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public ParameterizedFixtureSuite(ParameterizedFixtureSuite suite, ITestFilter filter)
             : base(suite, filter)
         {
@@ -66,9 +66,9 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Overriden to return a Parameterized Fixture Suite
+        /// Creates a filtered copy of the test suite.
         /// </summary>
-        /// <param name="filter">Filter to apply</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public override TestSuite Copy(ITestFilter filter)
         {
             return new ParameterizedFixtureSuite(this, filter);

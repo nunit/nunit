@@ -53,10 +53,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy constructor style to create a filtered copy of the given setup fixture
+        /// Creates a copy of the given suite with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="setUpFixture">SetUp Fixture to copy</param>
-        /// <param name="filter">Filter to be applied</param>
+        /// <param name="setUpFixture">The <see cref="SetUpFixture"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public SetUpFixture(SetUpFixture setUpFixture, ITestFilter filter)
             : base(setUpFixture, filter)
         {
@@ -67,9 +67,9 @@ namespace NUnit.Framework.Internal
         #region Test Suite Overrides
 
         /// <summary>
-        /// Overriden to return a SetUp Fixture
+        /// Creates a filtered copy of the test suite.
         /// </summary>
-        /// <param name="filter">Filter to apply</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public override TestSuite Copy(ITestFilter filter)
         {
             return new SetUpFixture(this, filter);
