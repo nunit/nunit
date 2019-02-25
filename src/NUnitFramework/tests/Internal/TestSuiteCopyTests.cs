@@ -1,7 +1,7 @@
 using NUnit.Framework.Api;
 using NUnit.TestData.OneTimeSetUpTearDownData;
-using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
+using System.IO;
 
 namespace NUnit.Framework.Internal
 {
@@ -58,7 +58,10 @@ namespace NUnit.Framework.Internal
         public void CopyTestAssemblyReturnsCorrectType()
         {
             var runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
-            TestSuite assembly = new TestAssembly(AssemblyHelper.Load("mock-assembly.dll"), "mock-assembly");
+            TestSuite assembly =
+                new TestAssembly(
+                    AssemblyHelper.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, "mock-assembly.dll")),
+                    "mock-assembly");
             var copiedAssembly = assembly.Copy(TestFilter.Empty);
             Assert.AreEqual(copiedAssembly.GetType(), typeof(TestAssembly));
         }
