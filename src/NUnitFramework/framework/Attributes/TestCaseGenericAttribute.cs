@@ -40,6 +40,15 @@ namespace NUnit.Framework.Attributes
 
         /// <summary>
         /// Construct a TestCaseGenericAttribute with a list of arguments.
+        /// </summary>
+        /// <param name="arg"></param>
+        public TestCaseGenericAttribute(object arg)
+            : base(arg)
+        {
+        }
+
+        /// <summary>
+        /// Construct a TestCaseGenericAttribute with a list of arguments.
         /// This constructor is not CLS-Compliant
         /// </summary>
         /// <param name="arguments"></param>
