@@ -571,11 +571,14 @@ namespace NUnit.Framework.Internal
         {
             public ResultState ResultState { get; }
             public string Message { get; }
-            public string StackTrace { get; }
+            public string StackTrace { get; } 
+            public Exception Exception { get; }
 
             public ExceptionResult(Exception ex, FailureSite site)
             {
-                ex = ValidateAndUnwrap(ex);
+                ex = ValidateAndUnwrap(ex); 
+                
+                Exception = ex;
 
                 if (ex is ResultStateException)
                 {
