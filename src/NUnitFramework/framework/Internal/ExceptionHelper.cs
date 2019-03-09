@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
     public class ExceptionHelper
     {
         /// <summary>
-        /// When true, each entry in Exception.Data is included in the exception message
+        /// When true, each entry in Exception.Data is included in the exception message.
         /// </summary>
         public static bool OutputExceptionDataProperty { get; set; } = true;
             

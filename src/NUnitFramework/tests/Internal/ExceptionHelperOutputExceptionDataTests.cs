@@ -110,12 +110,11 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Specialized;
 
-namespace NUnit.Framework.Internal {
+namespace NUnit.Framework.Internal 
+{
     public static class ExceptionHelperOutputExceptionDataTests
     {
-
         [Test]
         public static void AppendsDataItemsToExceptionMessage()
         {
