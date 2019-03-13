@@ -79,6 +79,8 @@ namespace NUnit.Framework.Internal
         [TestCase("{m}({3})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod()")]
         [TestCase("{m}({1:20})", new object[] { 42, "Now is the time for all good men to come to the aid of their country.", 5.2 },
             ExpectedResult = "TestMethod(\"Now is the time f...\")")]
+        [TestCase("{m}({0})", new object[] { "Now is the time for all good men to come to the aid of their country." },
+            ExpectedResult = "TestMethod(\"Now is the time for all good men to come to the aid of their country.\")")]
         public string ParameterizedTests(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);

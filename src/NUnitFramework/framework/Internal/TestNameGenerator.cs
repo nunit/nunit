@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal
                     case "{8}":
                     case "{9}":
                         int index = token[1] - '0';
-                        fragments.Add(new ArgumentFragment(index, 40));
+                        fragments.Add(new ArgumentFragment(index, 0));
                         break;
                     default:
                         char c = token[1];
