@@ -31,7 +31,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TimeoutCommand creates a timer in order to cancel
+    /// <see cref="TimeoutCommand"/> creates a timer in order to cancel
     /// a test if it exceeds a specified time and adjusts
     /// the test result if it did time out.
     /// </summary>

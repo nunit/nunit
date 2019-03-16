@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
@@ -35,6 +36,19 @@ namespace NUnit.Framework.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
+        [Test, Timeout(500), SetCulture("fr-BE"), SetUICulture("es-BO")]
+        public void TestWithTimeoutRespectsCulture()
+        {
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-BE"));
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("es-BO"));
+        }
+
+        [Test, Timeout(500)]
+        public void TestWithTimeoutCurrentContextIsNotAnAdhocContext()
+        {
+            Assert.That(TestExecutionContext.CurrentContext, Is.Not.TypeOf<TestExecutionContext.AdhocContext>());
+        }
+
 #if PLATFORM_DETECTION && THREAD_ABORT
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
@@ -169,7 +183,7 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
-#if !THREAD_ABORT && !(NET20 || NET35)
+#if !THREAD_ABORT
         [Timeout(50)]
         public void TestTimeoutAndReportsTimeoutFailure()
         {
