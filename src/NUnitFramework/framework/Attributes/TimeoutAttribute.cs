@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if THREAD_ABORT
 using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -49,7 +48,7 @@ namespace NUnit.Framework
             _timeout = timeout;
         }
 
-        #region IApplyToContext Members
+        #region IApplyToContext
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
@@ -59,4 +58,3 @@ namespace NUnit.Framework
         #endregion
     }
 }
-#endif
