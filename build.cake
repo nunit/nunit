@@ -159,17 +159,29 @@ Task("Build")
 
 MSBuildSettings CreateSettings()
 {
-    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+    // Find MSBuild for Visual Studio 2017
+    DirectoryPath vsLatest  = VSWhereLatest();
+    FilePath msBuildPathX64 = (vsLatest==null) ? null
+                                : vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
 
-    // Only needed when packaging
-    settings.WithProperty("DebugType", "pdbonly");
+    // Find MSBuild for Visual Studio 2019
+    if ( msBuildPathX64 != null && !FileExists(msBuildPathX64))
+        msBuildPathX64 = vsLatest.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
 
-    if (IsRunningOnWindows())
-        settings.ToolVersion = MSBuildToolVersion.VS2017;
-    else
-        settings.ToolPath = Context.Tools.Resolve("msbuild");
+    // Have we found MSBuild yet?
+    if ( !FileExists(msBuildPathX64) )
+    {
+        throw new Exception($"Failed to find MSBuild: {msBuildPathX64}");
+    }
 
-    return settings;
+    Information("Building using MSBuild at " + msBuildPathX64);
+
+    return new MSBuildSettings { ToolPath = msBuildPathX64 }
+        .SetConfiguration(configuration)
+        .WithProperty("DebugType", "pdbonly")
+        .SetVerbosity(Verbosity.Minimal)
+        // Workaround for https://github.com/Microsoft/msbuild/issues/3626
+        .WithProperty("AddSyntheticProjectReferencesForSolutionDependencies", "false");
 }
 
 //////////////////////////////////////////////////////////////////////
