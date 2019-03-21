@@ -57,11 +57,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy-constructor style to create a filtered copy of the test assemblies
-        /// test cases
+        /// Creates a copy of the given assembly with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="filter"></param>
+        /// <param name="assembly">The <see cref="TestAssembly"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
             : base(assembly as TestSuite, filter)
         {
@@ -94,6 +93,15 @@ namespace NUnit.Framework.Internal
             return Assembly != null
                 ? Assembly.GetAttributes<TAttr>()
                 : new TAttr[0];
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new TestAssembly(this, filter);
         }
     }
 }

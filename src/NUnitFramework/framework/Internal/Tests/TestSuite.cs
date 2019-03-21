@@ -99,10 +99,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy constructor style to create a filtered copy of the given test suite
+        /// Creates a copy of the given suite with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="suite">Test Suite to copy</param>
-        /// <param name="filter">Filter to be applied</param>
+        /// <param name="suite">The <see cref="TestSuite"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public TestSuite(TestSuite suite, ITestFilter filter)
             : base(suite.Name)
         {
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal
                 {
                     if(child.IsSuite)
                     {
-                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        TestSuite childSuite = ((TestSuite)child).Copy(filter);
                         childSuite.Parent    = this;
                         this.tests.Add(childSuite);
                     }
@@ -177,6 +177,15 @@ namespace NUnit.Framework.Internal
         {
             test.Parent = this;
             tests.Add(test);
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public virtual TestSuite Copy(ITestFilter filter)
+        {
+            return new TestSuite(this, filter);
         }
 
         #endregion
