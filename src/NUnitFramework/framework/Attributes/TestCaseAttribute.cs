@@ -263,7 +263,7 @@ namespace NUnit.Framework
                 IParameterInfo[] parameters = method.GetParameters();
                 int argsNeeded = parameters.Length;
                 int argsProvided = Arguments.Length;
-                
+
                 parms = new TestCaseParameters(this);
 
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
