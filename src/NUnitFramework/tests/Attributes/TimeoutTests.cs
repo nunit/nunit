@@ -187,7 +187,7 @@ namespace NUnit.Framework.Attributes
         [Timeout(50)]
         public void TestTimeoutAndReportsTimeoutFailure()
         {
-            while (true) { }
+            Thread.Sleep(Timeout.Infinite);
         }
 
         [Test, Timeout(100)]
