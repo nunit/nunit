@@ -122,29 +122,9 @@ namespace NUnit.Framework.Internal
             exception.Data["data-prop"] = "data-value";
             
             var message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("data-prop"));
             Assert.That(message, Contains.Substring("data-value"));
-        }
-
-        [Test]
-        public static void CanDisable()
-        {
-            var exception = new Exception("blah");
-            exception.Data["data-prop"] = "data-value";
-
-            string message;
-            try
-            {
-                ExceptionHelper.OutputExceptionDataProperty = false;
-                message = ExceptionHelper.BuildMessage(exception);
-            }
-            finally
-            {
-                ExceptionHelper.OutputExceptionDataProperty = true;
-            }
-            
-            Assert.That(message, !Contains.Substring("data-prop"));
-            Assert.That(message, !Contains.Substring("data-value"));
         }
 
         [Test]
@@ -154,8 +134,19 @@ namespace NUnit.Framework.Internal
             exception.Data["data-prop"] = null;
             
             var message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("data-prop"));
             Assert.That(message, Contains.Substring("<null>"));
+        }
+
+        [Test]
+        public static void SkipsDataSectionOnEmptyData()
+        {
+            var exception = new Exception("blah");
+            
+            var message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Contains.Substring("blah"));
+            Assert.That(message, !Contains.Substring("Data"));
         }
     }
 }

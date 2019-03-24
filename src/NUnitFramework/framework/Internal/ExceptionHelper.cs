@@ -36,11 +36,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-        /// <summary>
-        /// When true, each entry in Exception.Data is included in the exception message.
-        /// </summary>
-        public static bool OutputExceptionDataProperty { get; set; } = true;
-            
 #if NET35 || NET40
         private static readonly Action<Exception> PreserveStackTrace;
 
@@ -91,10 +86,7 @@ namespace NUnit.Framework.Internal
             if (!excludeExceptionNames)
                 sb.AppendFormat("{0} : ", exception.GetType());
             sb.Append(GetExceptionMessage(exception));
-            if (OutputExceptionDataProperty)
-            {
-                AppendExceptionDataContents(exception, sb);
-            }
+            AppendExceptionDataContents(exception, sb);
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -103,10 +95,7 @@ namespace NUnit.Framework.Internal
                 if (!excludeExceptionNames)
                     sb.AppendFormat("{0} : ", inner.GetType());
                 sb.Append(GetExceptionMessage(inner));
-                if (OutputExceptionDataProperty)
-                {
-                    AppendExceptionDataContents(inner, sb);
-                }
+                AppendExceptionDataContents(inner, sb);
             }
 
             return sb.ToString();
@@ -177,10 +166,8 @@ namespace NUnit.Framework.Internal
             sb.AppendLine("Data:");
             foreach (DictionaryEntry kvp in ex.Data)
             {
-                sb.Append("  ");
-                sb.Append(kvp.Key);
-                sb.Append(": ");
-                sb.AppendLine(kvp.Value?.ToString() ?? "<null>");
+                sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                sb.AppendLine();
             }
         }
 
