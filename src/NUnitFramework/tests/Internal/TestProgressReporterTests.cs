@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -47,7 +47,39 @@ namespace NUnit.Framework.Internal
 			_listener.Reports.Clear();
 		}
 
-		[Test]
+        [Test]
+        public void TestStarted_AssemblyEmitsSingleStartSuiteElement()
+        {
+            var work = TestBuilder.CreateWorkItem(new TestAssembly("mytest.dll"));
+            work.Context.Listener = _reporter;
+
+            TestBuilder.ExecuteWorkItem(work);
+
+            var startReport = _listener.Reports.FirstOrDefault();
+            Assert.NotNull(startReport);
+            Assert.That(startReport, Does.StartWith("<start-suite"));
+            Assert.That(startReport, Contains.Substring("type=\"Assembly\""));
+
+            Assert.That(_listener.Reports.Count(x => x.StartsWith("<start-suite") && x.Contains("type=\"Assembly\"")), Is.EqualTo(1), "More than one Assembly event");
+        }
+
+        [Test]
+        public void TestFinished_AssemblyEmitsSingleTestSuiteElement()
+        {
+            var work = TestBuilder.CreateWorkItem(new TestAssembly("mytest.dll"));
+            work.Context.Listener = _reporter;
+
+            TestBuilder.ExecuteWorkItem(work);
+
+            var endReport = _listener.Reports.LastOrDefault();
+            Assert.NotNull(endReport);
+            Assert.That(endReport, Does.StartWith("<test-suite"));
+            Assert.That(endReport, Contains.Substring("type=\"Assembly\""));
+
+            Assert.That(_listener.Reports.Count(x => x.StartsWith("<test-suite") && x.Contains("type=\"Assembly\"")), Is.EqualTo(1), "More than one Assembly event");
+        }
+
+        [Test]
 		public void TestStarted_FixtureEmitsStartSuiteElement()
 		{
 			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute));
@@ -58,6 +90,7 @@ namespace NUnit.Framework.Internal
 			var startReport = _listener.Reports.FirstOrDefault();
 			Assert.NotNull(startReport);
 			StringAssert.StartsWith("<start-suite", startReport);
+            Assert.That(startReport, Contains.Substring("type=\"TestFixture\""));
 		}
 
 		[Test]

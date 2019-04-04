@@ -58,6 +58,7 @@ namespace NUnit.Framework.Api
 
         private ITestAssemblyRunner _runner;
 
+        private int _suiteStartedCount;
         private int _testStartedCount;
         private int _testFinishedCount;
         private int _testOutputCount;
@@ -71,6 +72,7 @@ namespace NUnit.Framework.Api
         {
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
+            _suiteStartedCount = 0;
             _testStartedCount = 0;
             _testFinishedCount = 0;
             _testOutputCount = 0;
@@ -264,6 +266,7 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             _runner.Run(this, TestFilter.Empty);
 
+            Assert.That(_suiteStartedCount, Is.EqualTo(MockAssembly.Suites));
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
@@ -495,7 +498,9 @@ namespace NUnit.Framework.Api
 
         void ITestListener.TestStarted(ITest test)
         {
-            if (!test.IsSuite)
+            if (test.IsSuite)
+                _suiteStartedCount++;
+            else
                 _testStartedCount++;
         }
 
