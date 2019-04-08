@@ -22,6 +22,8 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -198,6 +200,92 @@ namespace NUnit.Framework
             this.RunState = RunState.Ignored;
             this.Properties.Set(PropertyNames.SkipReason, reason);
             return this;
+        }
+
+        #endregion
+        
+        #region Methods
+
+        /// <summary>
+        /// Returns a list of <see cref="TestCaseData"/> objects representing all possible combinations of the given parameters.
+        /// </summary>
+        /// <param name="values">Each array in this object array is to represent a parameter for the method being tested</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="TestCaseData"/> objects that represents all possible combinations for the given parameters</returns>
+        /// <remarks>
+        /// This method will generate a collection of <see cref="TestCaseData"/> instances where the collection represents every possible combination that could be made
+        /// with the given parameters.  That is to say, with the following code:
+        /// <code>
+        /// return TestCaseData.Combinatorial(
+        ///             new[] { true, false }.Cast&lt;object&gt;(),
+        ///             new[] { 0, 1, 10 }.Cast&lt;object&gt;());
+        /// </code>
+        /// 
+        /// The following test data will be returned:
+        /// <list type="bullet">
+        /// <item><description>TestCaseData(true, 0)</description></item>
+        /// <item><description>TestCaseData(true, 1)</description></item>
+        /// <item><description>TestCaseData(true, 10)</description></item>
+        /// <item><description>TestCaseData(false, 0)</description></item>
+        /// <item><description>TestCaseData(false, 1)</description></item>
+        /// <item><description>TestCaseData(false, 10)</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// public class TestClass
+        /// {
+        ///     #region TestCaseSource
+        /// 
+        ///     private static IEnumerable ExampleTest_TestCases
+        ///     {
+        ///         return TestCaseData.Combinatorial(
+        ///             new[] { true, false }.Cast&lt;object&gt;(),
+        ///             new[] { 0, 1, 10 }.Cast&lt;object&gt;());
+        ///     }
+        /// 
+        ///     #endregion
+        ///     [Test, TestCaseSource(typeof(TestClass), nameof(ExampleTest_TestCases))]
+        ///     public void ExampleTest(bool condition, int input)
+        ///     {
+        ///          // Execute test
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static IEnumerable<TestCaseData> Combinatorial(params IEnumerable<object>[] values)
+        {
+            // Let's first figure out how many combinations we're going to be creating (the count of each list multiplied together)
+            int combinations = values.Aggregate(1, (x, y) => x * y.Count());
+
+            // If there are no combinations to be made, just return an empty list
+            if (combinations == 0)
+            {
+                return Enumerable.Empty<TestCaseData>();
+            }
+
+            // Iterate through every list of objects and do the magic
+            List<List<object>> result = Enumerable.Range(0, combinations).Select(i => new List<object>()).ToList();
+            int repetition = combinations;
+            foreach (IEnumerable<object> value in values)
+            {
+                int index = 0;
+
+                repetition = repetition / value.Count();
+
+                while (index < combinations)
+                {
+                    foreach (object o in value)
+                    {
+                        for (int i = 0; i < repetition; i++)
+                        {
+                            result[index].Add(o);
+                            index++;
+                        }
+                    }
+                }
+            }
+
+            return result.Select(i => new TestCaseData(i.ToArray()));
         }
 
         #endregion
