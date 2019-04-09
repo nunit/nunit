@@ -22,10 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -239,8 +241,8 @@ namespace NUnit.Framework
         ///     private static IEnumerable ExampleTest_TestCases
         ///     {
         ///         return TestCaseData.Combinatorial(
-        ///             new[] { true, false }.Cast&lt;object&gt;(),
-        ///             new[] { 0, 1, 10 }.Cast&lt;object&gt;());
+        ///             new[] { true, false }(),
+        ///             new[] { 0, 1, 10 }());
         ///     }
         /// 
         ///     #endregion
@@ -252,40 +254,9 @@ namespace NUnit.Framework
         /// }
         /// </code>
         /// </example>
-        public static IEnumerable<TestCaseData> Combinatorial(params IEnumerable<object>[] values)
+        public static IEnumerable<TestCaseData> Combinatorial(params IEnumerable[] values)
         {
-            // Let's first figure out how many combinations we're going to be creating (the count of each list multiplied together)
-            int combinations = values.Aggregate(1, (x, y) => x * y.Count());
-
-            // If there are no combinations to be made, just return an empty list
-            if (combinations == 0)
-            {
-                return Enumerable.Empty<TestCaseData>();
-            }
-
-            // Iterate through every list of objects and do the magic
-            List<List<object>> result = Enumerable.Range(0, combinations).Select(i => new List<object>()).ToList();
-            int repetition = combinations;
-            foreach (IEnumerable<object> value in values)
-            {
-                int index = 0;
-
-                repetition = repetition / value.Count();
-
-                while (index < combinations)
-                {
-                    foreach (object o in value)
-                    {
-                        for (int i = 0; i < repetition; i++)
-                        {
-                            result[index].Add(o);
-                            index++;
-                        }
-                    }
-                }
-            }
-
-            return result.Select(i => new TestCaseData(i.ToArray()));
+            return CombinatorialStrategy.GetCombinations<TestCaseData>(values, (o) => new TestCaseData(o));
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -40,7 +40,16 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>The test cases.</returns>
         public IEnumerable<ITestCaseData> GetTestCases(IEnumerable[] sources)
         {
-            List<ITestCaseData> testCases = new List<ITestCaseData>();
+            return GetCombinations<ITestCaseData>(sources, (o) => new TestCaseParameters(o));
+        }
+
+        /// <summary>
+        /// Returns an <see cref="IEnumerable{T}"/> representing every single possible combination of the given parameters
+        /// </summary>
+        /// <returns>Every combination of parameters</returns>
+        public static IEnumerable<T> GetCombinations<T>(IEnumerable[] sources, Func<object[], T> handle)
+        {
+            List<T> testCases = new List<T>();
             IEnumerator[] enumerators = new IEnumerator[sources.Length];
             int index = -1;
 
@@ -58,7 +67,7 @@ namespace NUnit.Framework.Internal.Builders
                 for (int i = 0; i < sources.Length; i++)
                     testdata[i] = enumerators[i].Current;
 
-                TestCaseParameters parms = new TestCaseParameters(testdata);
+                T parms = handle(testdata);
                 testCases.Add(parms);
 
                 index = sources.Length;
