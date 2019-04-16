@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>True if the method signature is valid, false if not</returns>
         private static bool CheckTestMethodAttributes(TestMethod testMethod)
         {
-            if (testMethod.Method.MethodInfo.GetAttributes<IRepeatTest>(true).Length > 1)
+            if (testMethod.Method.GetCustomAttributes<IRepeatTest>(true).Length > 1)
                 return MarkAsNotRunnable(testMethod, "Multiple attributes that repeat a test may cause issues.");
 
             return true;
