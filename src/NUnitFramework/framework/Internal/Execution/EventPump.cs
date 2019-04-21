@@ -185,13 +185,13 @@ namespace NUnit.Framework.Internal.Execution
                     }
                     catch (Exception ex)
                     {
-                        log.Error( "Exception in event handler\r\n {0}", ex );
+                        log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
                     }
                 }
             }
             catch (Exception ex)
             {
-                log.Error("Exception in pump thread {0}", ex);
+                log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex));
             }
             finally
             {
