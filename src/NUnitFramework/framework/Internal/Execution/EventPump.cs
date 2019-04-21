@@ -191,7 +191,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                log.Error( "Exception in pump thread", ex );
+                log.Error("Exception in pump thread {0}", ex);
             }
             finally
             {
