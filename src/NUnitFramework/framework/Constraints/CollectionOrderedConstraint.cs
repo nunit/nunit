@@ -300,7 +300,7 @@ namespace NUnit.Framework.Constraints
                 FieldInfo field = item.GetType().GetField(propertyName);
                 if (field == null)
                 {
-                    throw new ArgumentException($"Property {propertyName} not found at index {index}", nameof(actual));
+                    throw new ArgumentException($"No property or field with name {propertyName} was found at index {index}", nameof(actual));
                 }
                 value = field.GetValue(item);
             }
