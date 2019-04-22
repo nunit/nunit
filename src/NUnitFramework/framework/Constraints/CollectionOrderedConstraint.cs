@@ -223,15 +223,9 @@ namespace NUnit.Framework.Constraints
                         {
                             string propertyName = step.PropertyName;
 
-                            PropertyInfo previousProp = previous.GetType().GetProperty(propertyName);
-                            if (previousProp == null)
-                                throw new ArgumentException($"Property {propertyName} not found at index {_breakingIndex - 1}", nameof(actual));
-                            var previousValue = previousProp.GetValue(previous, null);
+                            object previousValue = ExtractValue(actual, previous, propertyName, _breakingIndex - 1);
 
-                            PropertyInfo prop = current.GetType().GetProperty(propertyName);
-                            if (prop == null)
-                                throw new ArgumentException($"Property {propertyName} not found at index {_breakingIndex}", nameof(actual));
-                            var currentValue = prop.GetValue(current, null);
+                            object currentValue = ExtractValue(actual, current, propertyName, _breakingIndex);
 
                             int comparisonResult = step.Comparer.Compare(previousValue, currentValue);
 
@@ -295,6 +289,26 @@ namespace NUnit.Framework.Constraints
         {
             _activeStep = new OrderingStep(propertyName);
             _steps.Add(_activeStep);
+        }
+
+        private object ExtractValue(IEnumerable actual, object item, string propertyName, int index)
+        {
+            object value;
+            PropertyInfo property = item.GetType().GetProperty(propertyName);
+            if (property == null)
+            {
+                FieldInfo field = item.GetType().GetField(propertyName);
+                if (field == null)
+                {
+                    throw new ArgumentException($"Property {propertyName} not found at index {index}", nameof(actual));
+                }
+                value = field.GetValue(item);
+            }
+            else
+            {
+                value = property.GetValue(item, null);
+            }
+            return value;
         }
 
         #region Internal OrderingStep Class
