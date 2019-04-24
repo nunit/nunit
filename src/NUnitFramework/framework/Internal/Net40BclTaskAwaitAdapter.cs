@@ -145,7 +145,9 @@ namespace NUnit.Framework.Internal
                 catch (AggregateException ex) when (ex.InnerExceptions.Count == 1) // Task.Wait wraps every exception
                 {
                     ExceptionHelper.Rethrow(ex.InnerException);
-                    throw null; // Rethrow’s return type would be `never` if C# could express that.
+
+                    // If this line is reached, ExceptionHelper.Rethrow is very broken.
+                    throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
                 }
             }
         }

@@ -400,7 +400,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal static MethodInfo GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
         {
-            for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
+            foreach (var currentType in type.TypeAndBaseTypes())
             {
                 var method = currentType
                    .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
@@ -461,7 +461,9 @@ namespace NUnit.Framework.Internal
             catch (TargetInvocationException ex)
             {
                 ExceptionHelper.Rethrow(ex.InnerException);
-                throw null; // Rethrow’s return type would be `never` if C# could express that.
+
+                // If this line is reached, ExceptionHelper.Rethrow is very broken.
+                throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
             }
         }
 
@@ -474,7 +476,9 @@ namespace NUnit.Framework.Internal
             catch (TargetInvocationException ex)
             {
                 ExceptionHelper.Rethrow(ex.InnerException);
-                throw null; // Rethrow’s return type would be `never` if C# could express that.
+
+                // If this line is reached, ExceptionHelper.Rethrow is very broken.
+                throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
             }
         }
     }
