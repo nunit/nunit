@@ -34,7 +34,6 @@ namespace NUnit.Framework.Internal
     public class SetUpFixtureTests
     {
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).GetTypeInfo().Assembly);
-        private static readonly string SUITE_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
         ITestAssemblyBuilder builder;
         ITestAssemblyRunner runner;
@@ -85,7 +84,7 @@ namespace NUnit.Framework.Internal
 
             Assert.IsNotNull(suite);
 
-            Assert.AreEqual(SUITE_NAME, suite.FullName);
+            Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
 
             string[] nameSpaceBits = nameSpace.Split('.');
@@ -134,7 +133,7 @@ namespace NUnit.Framework.Internal
 
             Assert.IsNotNull(suite);
 
-            Assert.AreEqual(SUITE_NAME, suite.FullName);
+            Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
             Assert.AreEqual(RunState.Runnable, suite.RunState);
 
