@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 
 #if ASYNC
 using System.Threading.Tasks;
@@ -98,7 +99,8 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
 #if ASYNC
-            if (typeof(TActual) == typeof(Task)) return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
+            if (typeof(Task).IsAssignableFrom(typeof(TActual)))
+                return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
 #endif
             return ApplyTo(new TestDelegate(() => del.Invoke()));
         }

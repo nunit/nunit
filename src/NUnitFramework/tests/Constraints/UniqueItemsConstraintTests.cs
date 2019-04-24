@@ -35,9 +35,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new UniqueItemsConstraint();
-            stringRepresentation = "<uniqueitems>";
-            expectedDescription = "all items unique";
+            TheConstraint = new UniqueItemsConstraint();
+            StringRepresentation = "<uniqueitems>";
+            ExpectedDescription = "all items unique";
         }
 
         static object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, new object[0] };

@@ -211,6 +211,8 @@ namespace NUnit.Framework.Internal
         {
             if (!PostThreadMessage(nativeId, WM.CLOSE, IntPtr.Zero, IntPtr.Zero))
             {
+                // ReSharper disable once InconsistentNaming
+                // P/invoke doesn’t need to follow naming convention
                 const int ERROR_INVALID_THREAD_ID = 0x5A4;
                 var errorCode = Marshal.GetLastWin32Error();
                 if (errorCode != ERROR_INVALID_THREAD_ID)
@@ -227,6 +229,8 @@ namespace NUnit.Framework.Internal
 
         private enum WM : uint
         {
+            // ReSharper disable once InconsistentNaming
+            // P/invoke doesn’t need to follow naming convention
             CLOSE = 0x0010
         }
 #endif

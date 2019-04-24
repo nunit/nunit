@@ -82,7 +82,6 @@ namespace NUnit.Framework.Assertions
                     Throws.Exception.TypeOf<ArgumentException>());
         }
 
-#if !NET20
         [Test]
         public void ThrowsSucceedsWithLambda()
         {
@@ -101,7 +100,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(() => { throw new ArgumentException(); }, 
                 Throws.Exception.TypeOf<ArgumentException>());
         }
-#endif
 
         [Test]
         public void GenericThrowsReturnsCorrectException()

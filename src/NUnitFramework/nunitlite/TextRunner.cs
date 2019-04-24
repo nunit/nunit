@@ -428,7 +428,7 @@ namespace NUnitLite
 
         private string GetLogFileName()
         {
-            const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.{2}";
+            const string logFileFormat = "InternalTrace.{0}.{1}.{2}";
 
             // Some mobiles don't have an Open With menu item,
             // so we use .txt, which is opened easily.
@@ -445,7 +445,7 @@ namespace NUnitLite
             var id = Process.GetCurrentProcess().Id;
 #endif
 
-            return string.Format(LOG_FILE_FORMAT, id, baseName, ext);
+            return string.Format(logFileFormat, id, baseName, ext);
         }
 
         #endregion

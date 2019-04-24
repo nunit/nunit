@@ -59,10 +59,16 @@ namespace NUnit.Framework.Internal
                 yield return GetTestCase(Method("AsyncTaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("AsyncTaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("AsyncTaskError"), ResultState.Error, 0, false);
+                yield return GetTestCase(Method("AsyncTaskPass"), ResultState.Success, 0, false);
+                yield return GetTestCase(Method("AsyncTaskIgnore"), ResultState.Ignored, 0, false);
+                yield return GetTestCase(Method("AsyncTaskInconclusive"), ResultState.Inconclusive, 0, false);
 
                 yield return GetTestCase(Method("TaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("TaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("TaskError"), ResultState.Error, 0, false);
+                yield return GetTestCase(Method("TaskPass"), ResultState.Success, 0, false);
+                yield return GetTestCase(Method("TaskIgnore"), ResultState.Ignored, 0, false);
+                yield return GetTestCase(Method("TaskInconclusive"), ResultState.Inconclusive, 0, false);
 
                 yield return GetTestCase(Method("AsyncTaskResult"), ResultState.NotRunnable, 0, false);
                 yield return GetTestCase(Method("TaskResult"), ResultState.NotRunnable, 0, false);
@@ -96,7 +102,7 @@ namespace NUnit.Framework.Internal
         /// Private method to return a test case, optionally ignored on the Linux platform.
         /// We use this since the Platform attribute is not supported on TestCaseData.
         /// </summary>
-        private static TestCaseData GetTestCase(MethodInfo method, ResultState resultState, int assertionCount, bool ignoreThis)
+        private static TestCaseData GetTestCase(IMethodInfo method, ResultState resultState, int assertionCount, bool ignoreThis)
         {
             var data = new TestCaseData(method, resultState, assertionCount);
             if (PLATFORM_IGNORE && ignoreThis)
@@ -106,18 +112,18 @@ namespace NUnit.Framework.Internal
 
         [Test]
         [TestCaseSource("TestCases")]
-        public void RunTests(MethodInfo method, ResultState resultState, int assertionCount)
+        public void RunTests(IMethodInfo method, ResultState resultState, int assertionCount)
         {
-            var test = _builder.BuildFrom(new FixtureMethod(_testObject.GetType(), method));
+            var test = _builder.BuildFrom(method);
             var result = TestBuilder.RunTest(test, _testObject);
 
             Assert.That(result.ResultState, Is.EqualTo(resultState), "Wrong result state");
             Assert.That(result.AssertCount, Is.EqualTo(assertionCount), "Wrong assertion count");
         }
 
-        private static MethodInfo Method(string name)
+        private static IMethodInfo Method(string name)
         {
-            return typeof(AsyncRealFixture).GetMethod(name);
+            return new MethodWrapper(typeof(AsyncRealFixture), name);
         }
     }
 }

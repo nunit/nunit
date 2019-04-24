@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -77,16 +77,9 @@ namespace NUnit.Framework.Internal.Commands
         private object RunTestMethod(TestExecutionContext context)
         {
 #if ASYNC
-            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method))
+            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                try
-                {
-                    return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
-                }
-                catch (Exception e)
-                {
-                    throw new NUnitException("Rethrown", e);
-                }
+                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }
 #endif
             return InvokeTestMethod(context);
@@ -94,7 +87,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object InvokeTestMethod(TestExecutionContext context)
         {
-            return Reflect.InvokeMethod(testMethod.Method, context.TestObject, arguments);
+            return testMethod.Method.Invoke(context.TestObject, arguments);
         }
     }
 }

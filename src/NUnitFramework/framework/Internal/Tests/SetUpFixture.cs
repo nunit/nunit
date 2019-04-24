@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -37,7 +36,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="SetUpFixture"/> class.
         /// </summary>
-        public SetUpFixture(Type type) : base(type)
+        public SetUpFixture(ITypeInfo type) : base(type)
         {
             this.Name = type.Namespace;
             if (this.Name == null)
@@ -46,11 +45,34 @@ namespace NUnit.Framework.Internal
             if (index > 0)
                 this.Name = this.Name.Substring(index + 1);
 
-            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(Type, typeof(OneTimeSetUpAttribute), true);
-            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(Type, typeof(OneTimeTearDownAttribute), true);
+            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeSetUpAttribute), true);
+            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(OneTimeTearDownAttribute), true);
 
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
+        }
+
+        /// <summary>
+        /// Creates a copy of the given suite with only the descendants that pass the specified filter.
+        /// </summary>
+        /// <param name="setUpFixture">The <see cref="SetUpFixture"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public SetUpFixture(SetUpFixture setUpFixture, ITestFilter filter)
+            : base(setUpFixture, filter)
+        {
+        }
+
+        #endregion
+
+        #region Test Suite Overrides
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new SetUpFixture(this, filter);
         }
 
         #endregion

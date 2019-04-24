@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -35,9 +35,9 @@ namespace NUnit.Framework.Syntax
             string defaultCaseSensitivity = Path.DirectorySeparatorChar == '\\'
                 ? "ignorecase" : "respectcase";
 
-            parseTree = string.Format(@"<samepath ""{0}"" {1}>", path, defaultCaseSensitivity);
-            staticSyntax = Is.SamePath(path);
-            builderSyntax = Builder().SamePath(path);
+            ParseTree = string.Format(@"<samepath ""{0}"" {1}>", path, defaultCaseSensitivity);
+            StaticSyntax = Is.SamePath(path);
+            BuilderSyntax = Builder().SamePath(path);
         }
     }
 
@@ -48,9 +48,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<samepath ""{0}"" ignorecase>", path);
-            staticSyntax = Is.SamePath(path).IgnoreCase;
-            builderSyntax = Builder().SamePath(path).IgnoreCase;
+            ParseTree = string.Format(@"<samepath ""{0}"" ignorecase>", path);
+            StaticSyntax = Is.SamePath(path).IgnoreCase;
+            BuilderSyntax = Builder().SamePath(path).IgnoreCase;
         }
     }
 
@@ -61,9 +61,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<not <samepath ""{0}"" ignorecase>>", path);
-            staticSyntax = Is.Not.SamePath(path).IgnoreCase;
-            builderSyntax = Builder().Not.SamePath(path).IgnoreCase;
+            ParseTree = string.Format(@"<not <samepath ""{0}"" ignorecase>>", path);
+            StaticSyntax = Is.Not.SamePath(path).IgnoreCase;
+            BuilderSyntax = Builder().Not.SamePath(path).IgnoreCase;
         }
     }
 
@@ -74,9 +74,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<samepath ""{0}"" respectcase>", path);
-            staticSyntax = Is.SamePath(path).RespectCase;
-            builderSyntax = Builder().SamePath(path).RespectCase;
+            ParseTree = string.Format(@"<samepath ""{0}"" respectcase>", path);
+            StaticSyntax = Is.SamePath(path).RespectCase;
+            BuilderSyntax = Builder().SamePath(path).RespectCase;
         }
     }
 
@@ -87,9 +87,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<not <samepath ""{0}"" respectcase>>", path);
-            staticSyntax = Is.Not.SamePath(path).RespectCase;
-            builderSyntax = Builder().Not.SamePath(path).RespectCase;
+            ParseTree = string.Format(@"<not <samepath ""{0}"" respectcase>>", path);
+            StaticSyntax = Is.Not.SamePath(path).RespectCase;
+            BuilderSyntax = Builder().Not.SamePath(path).RespectCase;
         }
     }
 
@@ -102,9 +102,9 @@ namespace NUnit.Framework.Syntax
             string defaultCaseSensitivity = Path.DirectorySeparatorChar == '\\'
                 ? "ignorecase" : "respectcase";
 
-            parseTree = string.Format(@"<samepathorunder ""{0}"" {1}>", path, defaultCaseSensitivity);
-            staticSyntax = Is.SamePathOrUnder(path);
-            builderSyntax = Builder().SamePathOrUnder(path);
+            ParseTree = string.Format(@"<samepathorunder ""{0}"" {1}>", path, defaultCaseSensitivity);
+            StaticSyntax = Is.SamePathOrUnder(path);
+            BuilderSyntax = Builder().SamePathOrUnder(path);
         }
     }
 
@@ -115,9 +115,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<samepathorunder ""{0}"" ignorecase>", path);
-            staticSyntax = Is.SamePathOrUnder(path).IgnoreCase;
-            builderSyntax = Builder().SamePathOrUnder(path).IgnoreCase;
+            ParseTree = string.Format(@"<samepathorunder ""{0}"" ignorecase>", path);
+            StaticSyntax = Is.SamePathOrUnder(path).IgnoreCase;
+            BuilderSyntax = Builder().SamePathOrUnder(path).IgnoreCase;
         }
     }
 
@@ -128,9 +128,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<not <samepathorunder ""{0}"" ignorecase>>", path);
-            staticSyntax = Is.Not.SamePathOrUnder(path).IgnoreCase;
-            builderSyntax = Builder().Not.SamePathOrUnder(path).IgnoreCase;
+            ParseTree = string.Format(@"<not <samepathorunder ""{0}"" ignorecase>>", path);
+            StaticSyntax = Is.Not.SamePathOrUnder(path).IgnoreCase;
+            BuilderSyntax = Builder().Not.SamePathOrUnder(path).IgnoreCase;
         }
     }
 
@@ -141,9 +141,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<samepathorunder ""{0}"" respectcase>", path);
-            staticSyntax = Is.SamePathOrUnder(path).RespectCase;
-            builderSyntax = Builder().SamePathOrUnder(path).RespectCase;
+            ParseTree = string.Format(@"<samepathorunder ""{0}"" respectcase>", path);
+            StaticSyntax = Is.SamePathOrUnder(path).RespectCase;
+            BuilderSyntax = Builder().SamePathOrUnder(path).RespectCase;
         }
     }
 
@@ -154,9 +154,9 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            parseTree = string.Format(@"<not <samepathorunder ""{0}"" respectcase>>", path);
-            staticSyntax = Is.Not.SamePathOrUnder(path).RespectCase;
-            builderSyntax = Builder().Not.SamePathOrUnder(path).RespectCase;
+            ParseTree = string.Format(@"<not <samepathorunder ""{0}"" respectcase>>", path);
+            StaticSyntax = Is.Not.SamePathOrUnder(path).RespectCase;
+            BuilderSyntax = Builder().Not.SamePathOrUnder(path).RespectCase;
         }
     }
 }

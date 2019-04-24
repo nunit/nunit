@@ -35,17 +35,29 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The expected value
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected string expected;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// Indicates whether tests should be case-insensitive
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected bool caseInsensitive;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// Description of this constraint
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected string descriptionText;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// The Description of what this constraint tests, for

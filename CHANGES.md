@@ -1,3 +1,67 @@
+### NUnit 3.11 - October 6, 2018
+
+ * More informative assertion messages
+ * PlatformAttribute is available on .NET Standard and now detects .NET Core
+ * ValuesAttribute now works with nullable types
+ * Async tests detecting and running Windows Forms or WPF message pumps rather than deadlocking
+ * Support for UWP 10.0 is back via .NET Standard 1.4
+
+#### Issues Resolved
+
+ * 352 Test with infinite loop in TearDown cannot be aborted
+ * 452 Deprecate the existing Chocolatey framework package
+ * 660 Order dependence of And and Or constraints should be documented
+ * 1200 async test + Apartment(ApartmentState.STA) => await not returning on STA thread
+ * 2123 Task.Run inside a test will result in deadlock if a control was created previously
+ * 2146 Assert.That with a Throws constraint does not provide as much info as Assert.Throws
+ * 2427 PropertyConstraint throws away the more helpful message in the base constraint result
+ * 2432 Ability to exclude/include the platform .NET Core
+ * 2450 NullReferenceException in ExceptionHelper.BuildMessage on Mono
+ * 2536 SetArgDisplayNames for TestCaseData and TestFixtureData
+ * 2611 Enable .NET Standard 1.6 tests on non-Windows
+ * 2693 Ensure that resharper settings are consistent with the editorconfig configuration
+ * 2757 Broken `char` comparison in v3.7 and higher
+ * 2759 Test fails with "No arguments were provided" error when no values returned from IParameterDataSource
+ * 2761 Infinite loop in nunit 3.9
+ * 2781 Fixed precompiler typo
+ * 2786 Timeout value not resetting on Retry of failed test
+ * 2790 Removing ITypeInfo abstraction
+ * 2798 [Request] Show actual count value when test fail on Has.Exactly(x).Items
+ * 2814 Remove public marker types
+ * 2819 Only run AppVeyor PR build against open PRs
+ * 2821 Save and restore the SynchronizationContext before and after each test case
+ * 2823 SetUp failed for test fixture - Array was not a one-dimensional array.  Issue seems related to byte[,] method parameters
+ * 2829 Obsoletion warning for DataAttribute
+ * 2831 Regular "BusyExecIdle after 200 milliseconds delay" CI failures
+ * 2833  Use longer BusyExecIdle to avoid CI failures
+ * 2836 NUnit.Framework.Does cannot be extended
+ * 2837 DictionaryContainsKeyConstraint behaviour is inconstant with Dictionary.ContainsKey when the dictionary uses a custom Comparer
+ * 2842 Supporting inheritance of Assert and related classes
+ * 2854 Has.All.../Has.None... - show non-matching items in error message
+ * 2863 Make tests robust without depending on the order of attributes
+ * 2867 Skip executing TestCaseSources for tests which are not included in the filter
+ * 2876 Implement Discovery-time filtering for NUnitLite
+ * 2883 Our public ConcurrentQueue causes type conflicts
+ * 2885 Copy/paste error in Assert.That documentation
+ * 2887 NETStandard 1.3 support dropped in NUnit 3.10
+ * 2896 Some tests are silently skipped on netstandard1.x since #2796
+ * 2898 AssemblyPath contains invalid charaters
+ * 2901 Values attribute support for nullable bool and enum types
+ * 2923 Update outdated CategoryAttribute xmldoc
+ * 2928 Improve error message on EmptyConstraint
+ * 2929 Added NUnit XML schemas
+ * 2940 Increase StackTracesAreFiltered amount to 5
+ * 2955 Potential threading issue in IsolatedContext
+ * 2965 NuGet Package : Add `repository` metadata.
+ * 2970 InvalidCastException @ NUnit.Framework.TestFixtureSourceAttribute.BuildFrom
+ * 2979 Warn.If in Assert.Multiple
+ * 2994 Error in .NET Standard 1.4 DictionaryContainsKeyConstraint MetadataToken compatibility methods
+ * 2996 Remove unused enum
+ * 3009 Fix failing CI Builds by upgrading to NUnit Console 3.9.0
+ * 3020 Upgrade nunit-vs-adapter to 3.10 for nUnit 3.11
+ * 3024 Unable to add `.IgnoreCase` modifier to an `AnyOf` constraint in collection constraints
+ * 3032 APIs to restore before 3.11
+
 ### NUnit 3.10.1 - March 12, 2018
 
 Added a namespace to the props file included in the NuGet package to make it

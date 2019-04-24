@@ -35,7 +35,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Indicates the method or class the assembly, test fixture or test method is testing.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
     public class TestOfAttribute : PropertyAttribute
     {
         /// <summary>

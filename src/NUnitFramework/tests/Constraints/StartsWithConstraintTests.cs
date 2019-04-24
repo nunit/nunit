@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -32,9 +32,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new StartsWithConstraint("hello");
-            expectedDescription = "String starting with \"hello\"";
-            stringRepresentation = "<startswith \"hello\">";
+            TheConstraint = new StartsWithConstraint("hello");
+            ExpectedDescription = "String starting with \"hello\"";
+            StringRepresentation = "<startswith \"hello\">";
         }
 
         static object[] SuccessData = new object[] { "hello", "hello there" };
@@ -54,9 +54,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new StartsWithConstraint("hello").IgnoreCase;
-            expectedDescription = "String starting with \"hello\", ignoring case";
-            stringRepresentation = "<startswith \"hello\">";
+            TheConstraint = new StartsWithConstraint("hello").IgnoreCase;
+            ExpectedDescription = "String starting with \"hello\", ignoring case";
+            StringRepresentation = "<startswith \"hello\">";
         }
 
         static object[] SuccessData = new object[] { "Hello", "HELLO there" };

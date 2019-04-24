@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Assertions
                 throw testException;
         }
 
-#if !(NET20 || NET35 || NET40 || NET45)
+#if !(NET35 || NET40 || NET45)
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
@@ -60,18 +60,16 @@ namespace NUnit.Framework.Assertions
             TestExecutionContext.CurrentContext = savedContext;
         }
 #else
-        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
-
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
-            CallContext.FreeNamedDataSlot(CONTEXT_KEY);
+            CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
             return savedContext;
         }
 
         private void RestoreExecutionContext(TestExecutionContext savedContext)
         {
-            CallContext.SetData(CONTEXT_KEY, savedContext);
+            CallContext.SetData(NUnitCallContext.TestExecutionContextKey, savedContext);
         }
 #endif
 

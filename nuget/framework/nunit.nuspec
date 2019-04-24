@@ -6,8 +6,8 @@
     <version>$version$</version>
     <authors>Charlie Poole, Rob Prouse</authors>
     <owners>Charlie Poole, Rob Prouse</owners>
-    <licenseUrl>https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt</licenseUrl>
-    <projectUrl>http://nunit.org</projectUrl>
+    <license type="file">LICENSE.txt</license>
+    <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -17,7 +17,7 @@
 This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports NUnit 3 in order to execute tests. Runners intended for use with NUnit 2.x will not run NUnit 3 tests correctly.
 
 Supported platforms:
-- .NET Framework 2.0+
+- .NET Framework 3.5+
 - .NET Standard 1.4+
 - .NET Core</description>
     <releaseNotes>This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports NUnit 3 in order to execute tests. Runners intended for use with NUnit 2.x will not run NUnit 3 tests correctly.</releaseNotes>
@@ -25,7 +25,6 @@ Supported platforms:
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
     <copyright>Copyright (c) 2018 Charlie Poole, Rob Prouse</copyright>
     <dependencies>
-      <group targetFramework="net20" />
       <group targetFramework="net35" />
       <group targetFramework="net40" />
       <group targetFramework="net45" />
@@ -42,10 +41,6 @@ Supported platforms:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
-    <file src="bin/net20/nunit.framework.dll" target="lib\net20" />
-    <file src="bin/net20/nunit.framework.pdb" target="lib\net20" />
-    <file src="bin/net20/nunit.framework.xml" target="lib\net20" />
-    <file src="bin/net20/NUnit.System.Linq.dll" target="lib\net20" />
     <file src="bin/net35/nunit.framework.dll" target="lib\net35" />
     <file src="bin/net35/nunit.framework.pdb" target="lib\net35" />
     <file src="bin/net35/nunit.framework.xml" target="lib\net35" />

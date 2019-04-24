@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,12 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -41,25 +38,23 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
         /// <param name="parameter">The parameter of a parameterized test</param>
-        public bool HasDataFor(Type fixtureType, ParameterInfo parameter)
+        public bool HasDataFor(IParameterInfo parameter)
         {
-            return parameter.HasAttribute<IParameterDataSource>(false);
+            return parameter.IsDefined<IParameterDataSource>(false);
         }
 
         /// <summary>
         /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
         /// <param name="parameter">The parameter of a parameterized test</param>
-        public IEnumerable GetDataFor(Type fixtureType, ParameterInfo parameter)
+        public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var data = new List<object>();
 
-            foreach (IParameterDataSource source in parameter.GetAttributes<IParameterDataSource>(false))
+            foreach (IParameterDataSource source in parameter.GetCustomAttributes<IParameterDataSource>(false))
             {
-                foreach (object item in source.GetData(fixtureType, parameter))
+                foreach (object item in source.GetData(parameter))
                     data.Add(item);
             }
 

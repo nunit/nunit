@@ -18,7 +18,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.11.0";
+var version = "3.12.0";
 var modifier = "";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
@@ -33,9 +33,12 @@ var AllFrameworks = new string[]
     "net45",
     "net40",
     "net35",
-    "net20",
     "netstandard1.4",
-    "netstandard2.0",
+    "netstandard2.0"
+};
+
+var NetCoreTests = new String[]
+{
     "netcoreapp1.1",
     "netcoreapp2.0"
 };
@@ -45,7 +48,7 @@ var AllFrameworks = new string[]
 //////////////////////////////////////////////////////////////////////
 
 var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
-var PACKAGE_DIR = PROJECT_DIR + "package/";
+var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 
@@ -162,7 +165,24 @@ MSBuildSettings CreateSettings()
     settings.WithProperty("DebugType", "pdbonly");
 
     if (IsRunningOnWindows())
-        settings.ToolVersion = MSBuildToolVersion.VS2017;
+    {
+        // Find MSBuild for Visual Studio 2019 and newer
+        DirectoryPath vsLatest = VSWhereLatest();
+        FilePath msBuildPath = vsLatest?.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
+
+        // Find MSBuild for Visual Studio 2017
+        if (msBuildPath != null && !FileExists(msBuildPath))
+            msBuildPath = vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
+
+        // Have we found MSBuild yet?
+        if (!FileExists(msBuildPath))
+        {
+            throw new Exception($"Failed to find MSBuild: {msBuildPath}");
+        }
+
+        Information("Building using MSBuild at " + msBuildPath);
+        settings.ToolPath = msBuildPath;
+    }
     else
         settings.ToolPath = Context.Tools.Resolve("msbuild");
 
@@ -213,18 +233,6 @@ Task("Test35")
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
     });
 
-Task("Test20")
-    .Description("Tests the .NET 2.0 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "net20";
-        var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-    });
-
 Task("TestNetStandard14")
     .Description("Tests the .NET Standard 1.4 version of the framework")
     .IsDependentOn("Build")
@@ -233,7 +241,7 @@ Task("TestNetStandard14")
     {
         var runtime = "netcoreapp1.1";
         var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
@@ -245,7 +253,7 @@ Task("TestNetStandard20")
     {
         var runtime = "netcoreapp2.0";
         var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
     });
 
@@ -263,7 +271,6 @@ var RootFiles = new FilePath[]
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
 // used by the .NET 4.0 framework. 4.0 tests will not run without them.
-// NUnit.System.Linq is only present for the .NET 2.0 build.
 var FrameworkFiles = new FilePath[]
 {
     "mock-assembly.dll",
@@ -271,7 +278,6 @@ var FrameworkFiles = new FilePath[]
     "nunit.framework.dll",
     "nunit.framework.pdb",
     "nunit.framework.xml",
-    "NUnit.System.Linq.dll",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
@@ -316,6 +322,16 @@ Task("CreateImage")
                 if (FileExists(sourcePath))
                     CopyFileToDirectory(sourcePath, targetDir);
             }
+            var schemaPath = sourceDir + "/Schemas";
+            if (DirectoryExists(schemaPath))
+                CopyDirectory(sourceDir, targetDir);
+        }
+
+        foreach (var dir in NetCoreTests)
+        {
+            var targetDir = imageBinDir + Directory(dir);
+            var sourceDir = BIN_DIR + Directory(dir);
+            CopyDirectory(sourceDir, targetDir);
         }
     });
 
@@ -354,12 +370,13 @@ Task("PackageZip")
 
         var zipFiles =
             GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net20/*.*") +
-            GetFiles(CurrentImageDir + "bin/net35/*.*") +
-            GetFiles(CurrentImageDir + "bin/net40/*.*") +
-            GetFiles(CurrentImageDir + "bin/net45/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard1.4/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard2.0/*.*");
+            GetFiles(CurrentImageDir + "bin/net35/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/net40/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard1.4/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
@@ -408,14 +425,27 @@ void CheckForError(ref List<string> errorDetail)
 // HELPER METHODS - TEST
 //////////////////////////////////////////////////////////////////////
 
+FilePath GetResultXmlPath(string testAssembly, string framework)
+{
+    var assemblyName = System.IO.Path.GetFileNameWithoutExtension(testAssembly);
+
+    CreateDirectory($@"test-results\{framework}");
+
+    return MakeAbsolute(new FilePath($@"test-results\{framework}\{assemblyName}.xml"));
+}
+
 void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framework, ref List<string> errorDetail)
 {
     try
     {
-        var path = workingDir.CombineWithFilePath(new FilePath(testAssembly));
+        var path = workingDir.CombineWithFilePath(testAssembly);
+
         var settings = new NUnit3Settings();
-        if(!IsRunningOnWindows())
+        settings.Results = new[] { new NUnit3Result { FileName = GetResultXmlPath(testAssembly, framework) } };
+
+        if (!IsRunningOnWindows())
             settings.Process = NUnit3ProcessOption.InProcess;
+
         NUnit3(path.ToString(), settings);
     }
     catch(CakeException ce)
@@ -433,9 +463,12 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 {
     int rc = StartProcess(
         MakeAbsolute(exePath),
-        new ProcessSettings()
+        new ProcessSettings
         {
-            Arguments = arguments,
+            Arguments = new ProcessArgumentBuilder()
+                .Append(arguments)
+                .AppendSwitchQuoted("--result", ":", GetResultXmlPath(exePath.FullPath, framework).FullPath)
+                .Render(),
             WorkingDirectory = workingDir
         });
 
@@ -447,16 +480,20 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
 
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
-    RunDotnetCoreTests(exePath, workingDir, null, framework, ref errorDetail);
+    RunDotnetCoreTests(exePath, workingDir, null, framework, GetResultXmlPath(exePath.FullPath, framework), ref errorDetail);
 }
 
-void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
+void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
 {
     int rc = StartProcess(
         "dotnet",
-        new ProcessSettings()
+        new ProcessSettings
         {
-            Arguments = exePath + " " + arguments,
+            Arguments = new ProcessArgumentBuilder()
+                .AppendQuoted(exePath.FullPath)
+                .Append(arguments)
+                .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
+                .Render(),
             WorkingDirectory = workingDir
         });
 
@@ -497,7 +534,6 @@ Task("Test")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
-    .IsDependentOn("Test20")
     .IsDependentOn("TestNetStandard14")
     .IsDependentOn("TestNetStandard20");
 

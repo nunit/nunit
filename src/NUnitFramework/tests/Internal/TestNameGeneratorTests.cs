@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -35,10 +35,10 @@ namespace NUnit.Framework.Internal
         public void InitializeMethodInfos()
         {
             Type thisType = GetType();
-            var simpleMethod = thisType.GetFixtureMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            var genericMethod = thisType.GetFixtureMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
-            _simpleTest = new TestMethod(simpleMethod);
-            _genericTest = new TestMethod(genericMethod);
+            var simpleMethod = thisType.GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+            var genericMethod = thisType.GetMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
+            _simpleTest = new TestMethod(new MethodWrapper(thisType, simpleMethod));
+            _genericTest = new TestMethod(new MethodWrapper(thisType, genericMethod));
             _simpleTest.Id = "THE_ID";
         }
 
@@ -79,6 +79,8 @@ namespace NUnit.Framework.Internal
         [TestCase("{m}({3})", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod()")]
         [TestCase("{m}({1:20})", new object[] { 42, "Now is the time for all good men to come to the aid of their country.", 5.2 },
             ExpectedResult = "TestMethod(\"Now is the time f...\")")]
+        [TestCase("{m}({0})", new object[] { "Now is the time for all good men to come to the aid of their country." },
+            ExpectedResult = "TestMethod(\"Now is the time for all good men to come to the aid of their country.\")")]
         public string ParameterizedTests(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);

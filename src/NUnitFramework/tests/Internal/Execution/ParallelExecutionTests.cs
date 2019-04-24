@@ -96,11 +96,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-        // NOTE: The following tests use Assert.Fail under control of an
-        // if statement to avoid evaluating DumpEvents unnecessarily.
-        // Unfortunately, we can't use the form of Assert that takes
-        // a Func for a message because it's not present in .NET 2.0
-
         [Test]
         public void AllTestsPassed()
         {

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
     /// <remarks>
     ///   <para>
     ///     The floating point comparison code is based on this excellent article:
-    ///     http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+    ///     https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
     ///   </para>
     ///   <para>
     ///     "ULP" means Unit in the Last Place and in the context of this library refers to

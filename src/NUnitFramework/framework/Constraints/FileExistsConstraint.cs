@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,7 +28,8 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// FileExistsConstraint is used to determine if a file exists
     /// </summary>
-    [Obsolete("FileExistsConstraint is deprecated, please use FileOrDirectoryExistsConstraint instead.")]
+    [Obsolete("The FileExistsConstraint class has been deprecated and will be removed in a future release. "
+        + "Please use " + nameof(FileOrDirectoryExistsConstraint) + " instead.")]
     public class FileExistsConstraint : FileOrDirectoryExistsConstraint
     {
         /// <summary>

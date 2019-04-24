@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
             {
                 if (value is byte)
                 {
-                    step = new ComparableStep<byte>((byte)value, (prev, stepValue) => unchecked((byte)(prev + stepValue)));
+                    step = new ComparableStep<byte>((byte)value, (prev, stepValue) => checked((byte)(prev + stepValue)));
                     return true;
                 }
 
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
                 // -1 can be converted natively to Int16, SByte and Decimal, so we can fall back on the automatic conversion for them.
                 if (value is int)
                 {
-                    step = new ComparableStep<int>((int)value, (prev, stepValue) => unchecked((byte)(prev + stepValue)));
+                    step = new ComparableStep<int>((int)value, (prev, stepValue) => checked((byte)(prev + stepValue)));
                     return true;
                 }
 

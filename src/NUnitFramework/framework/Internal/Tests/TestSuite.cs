@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
-        public TestSuite(Type fixtureType, object[] arguments)
+        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
             Arguments = arguments ?? new object[0];
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         public TestSuite(Type fixtureType)
-            : base(fixtureType)
+            : base(new TypeWrapper(fixtureType))
         {
             Arguments = new object[0];
             OneTimeSetUpMethods = new MethodInfo[0];
@@ -99,10 +99,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy constructor style to create a filtered copy of the given test suite
+        /// Creates a copy of the given suite with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="suite">Test Suite to copy</param>
-        /// <param name="filter">Filter to be applied</param>
+        /// <param name="suite">The <see cref="TestSuite"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public TestSuite(TestSuite suite, ITestFilter filter)
             : base(suite.Name)
         {
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal
                 {
                     if(child.IsSuite)
                     {
-                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        TestSuite childSuite = ((TestSuite)child).Copy(filter);
                         childSuite.Parent    = this;
                         this.tests.Add(childSuite);
                     }
@@ -177,6 +177,15 @@ namespace NUnit.Framework.Internal
         {
             test.Parent = this;
             tests.Add(test);
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public virtual TestSuite Copy(ITestFilter filter)
+        {
+            return new TestSuite(this, filter);
         }
 
         #endregion

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
 using System;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
@@ -31,7 +31,6 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
-    // TODO: Make this work for .NET 2.0
     [TestFixture]
     public class CallContextTests
     {

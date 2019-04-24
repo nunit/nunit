@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012-2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2012-2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -42,6 +41,16 @@ namespace NUnit.Framework.Internal
         /// uninitialized ids will stand out.
         /// </summary>
         private static int _nextID = 1000;
+
+        /// <summary>
+        /// Used to cache the declaring type for this MethodInfo
+        /// </summary>
+        private ITypeInfo _declaringTypeInfo;
+
+        /// <summary>
+        /// Method property backing field
+        /// </summary>
+        private IMethodInfo _method;
 
         #endregion
 
@@ -75,26 +84,26 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Constructs a test for a specific type.
         /// </summary>
-        protected Test(Type type)
+        protected Test(ITypeInfo typeInfo)
         {
-            Initialize(TypeHelper.GetDisplayName(type));
+            Initialize(typeInfo.GetDisplayName());
 
-            string nspace = type.Namespace;
+            string nspace = typeInfo.Namespace;
             if (nspace != null && nspace != "")
                 FullName = nspace + "." + Name;
-            Type = type;
+            TypeInfo = typeInfo;
         }
 
         /// <summary>
         /// Constructs a test for a specific method.
         /// </summary>
-        protected Test(FixtureMethod method)
+        protected Test(IMethodInfo method)
         {
-            Initialize(method.Method.Name);
+            Initialize(method.Name);
 
-            Method = method.Method;
-            Type = method.FixtureType;
-            FullName = Type.FullName + "." + Name;
+            Method = method;
+            TypeInfo = method.TypeInfo;
+            FullName = method.TypeInfo.FullName + "." + Name;
         }
 
         private void Initialize(string name)
@@ -141,14 +150,22 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                Type type = Method?.DeclaringType ?? Type;
+                ITypeInfo typeInfo = TypeInfo;
 
-                if (type == null)
+                if (Method != null)
+                {
+                    if (_declaringTypeInfo == null)
+                        _declaringTypeInfo = new TypeWrapper(Method.MethodInfo.DeclaringType);
+
+                    typeInfo = _declaringTypeInfo;
+                }
+
+                if (typeInfo == null)
                     return null;
 
-                return type.GetTypeInfo().IsGenericType
-                    ? type.GetGenericTypeDefinition().FullName
-                    : type.FullName;
+                return typeInfo.IsGenericType
+                    ? typeInfo.GetGenericTypeDefinition().FullName
+                    : typeInfo.FullName;
             }
         }
 
@@ -167,16 +184,24 @@ namespace NUnit.Framework.Internal
         public abstract object[] Arguments { get; }
 
         /// <summary>
-        /// Gets the type which declares the fixture, or <see langword="null"/>
-        /// if no fixture type is associated with this test.
+        /// Gets the TypeInfo of the fixture used in running this test
+        /// or null if no fixture type is associated with it.
         /// </summary>
-        public Type Type { get; }
+        public ITypeInfo TypeInfo { get; private set; }
 
         /// <summary>
-        /// Gets the method which declares the test, or <see langword="null"/>
-        /// if no method is associated with this test.
+        /// Gets a MethodInfo for the method implementing this test.
+        /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public MethodInfo Method { get; internal set; }
+        public IMethodInfo Method
+        {
+            get { return _method; }
+            set
+            {
+                _declaringTypeInfo = null;
+                _method = value;
+            }
+        } // public setter needed by NUnitTestCaseBuilder
 
         /// <summary>
         /// Whether or not the test should be run
@@ -286,8 +311,8 @@ namespace NUnit.Framework.Internal
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    _actions = Method == null && Type != null
-                        ? GetActionsForType(Type)
+                    _actions = Method == null && TypeInfo != null
+                        ? GetActionsForType(TypeInfo.Type)
                         : GetCustomAttributes<ITestAction>(false);
                 }
 
@@ -379,10 +404,10 @@ namespace NUnit.Framework.Internal
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
         {
             if (Method != null)
-                return Method.GetAttributes<TAttr>(inherit);
+                return Method.GetCustomAttributes<TAttr>(inherit);
 
-            if (Type != null)
-                return Type.GetAttributes<TAttr>(inherit);
+            if (TypeInfo != null)
+                return TypeInfo.GetCustomAttributes<TAttr>(inherit);
 
             return new TAttr[0];
         }

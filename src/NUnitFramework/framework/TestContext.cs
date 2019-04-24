@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -122,7 +121,7 @@ namespace NUnit.Framework
         /// </summary>
         public string WorkerId
         {
-            get { return _testExecutionContext.TestWorker.Name; }
+            get { return _testExecutionContext.TestWorker?.Name; }
         }
 #endif
 
@@ -133,7 +132,7 @@ namespace NUnit.Framework
         {
             get
             {
-                Assembly assembly = _testExecutionContext?.CurrentTest?.Type?.GetTypeInfo().Assembly;
+                Assembly assembly = _testExecutionContext?.CurrentTest?.TypeInfo?.Assembly;
 
                 if (assembly != null)
                     return AssemblyHelper.GetDirectoryName(assembly);
@@ -183,7 +182,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the number of times the current Test has been repeated. This is currently only 
+        /// Get the number of times the current Test has been repeated. This is currently only
         /// set when using the <see cref="RetryAttribute"/>.
         /// TODO: add this to the RepeatAttribute as well
         /// </summary>
@@ -338,11 +337,11 @@ namespace NUnit.Framework
         /// is the only criterion for selection of the formatter, since
         /// it can be used without getting involved with a compound function.
         /// </summary>
-        /// <typeparam name="TSUPPORTED">The type supported by this formatter</typeparam>
+        /// <typeparam name="TSupported">The type supported by this formatter</typeparam>
         /// <param name="formatter">The ValueFormatter delegate</param>
-        public static void AddFormatter<TSUPPORTED>(ValueFormatter formatter)
+        public static void AddFormatter<TSupported>(ValueFormatter formatter)
         {
-            AddFormatter(next => val => (val is TSUPPORTED) ? formatter(val) : next(val));
+            AddFormatter(next => val => (val is TSupported) ? formatter(val) : next(val));
         }
 
 #endregion
@@ -559,7 +558,7 @@ namespace NUnit.Framework
         public class PropertyBagAdapter
         {
             private readonly IPropertyBag _source;
-            
+
             /// <summary>
             /// Construct a <see cref="PropertyBagAdapter"/> from a source
             /// <see cref="IPropertyBag"/>.

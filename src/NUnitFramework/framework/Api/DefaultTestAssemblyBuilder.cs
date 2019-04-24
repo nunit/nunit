@@ -206,16 +206,18 @@ namespace NUnit.Framework.Api
             int testcases = 0;
             foreach (Type testType in testTypes)
             {
+                var typeInfo = new TypeWrapper(testType);
+
                 // Any exceptions from this call are fatal problems in NUnit itself,
                 // since this is always DefaultSuiteBuilder and the current implementation
                 // of DefaultSuiteBuilder.CanBuildFrom cannot invoke any user code.
-                if (_defaultSuiteBuilder.CanBuildFrom(testType))
+                if (_defaultSuiteBuilder.CanBuildFrom(typeInfo))
                 {
                     // We pass the filter for use in selecting methods of the type.
                     // Any exceptions from this call are fatal problems in NUnit itself,
                     // since this is always DefaultSuiteBuilder and the current implementation
                     // of DefaultSuiteBuilder.BuildFrom handles all exceptions from user code.
-                    Test fixture = _defaultSuiteBuilder.BuildFrom(testType, _filter);
+                    Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo, _filter);
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }
@@ -252,7 +254,7 @@ namespace NUnit.Framework.Api
 
             if (fixtures.Count == 0)
             {
-                testAssembly.MakeInvalid("Has no TestFixtures");
+                testAssembly.MakeInvalid("No test fixtures were found.");
             }
             else
             {
@@ -265,7 +267,7 @@ namespace NUnit.Framework.Api
             testAssembly.ApplyAttributesToTest(assembly);
 
 #if !NETSTANDARD1_4
-            testAssembly.Properties.Set(PropertyNames.ProcessID, System.Diagnostics.Process.GetCurrentProcess().Id);
+            testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 #endif
 

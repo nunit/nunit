@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,7 +37,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// DO NOT USE! Use FileAssert.AreEqual(...) instead.
-        /// The Equals method throws an InvalidOperationException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -45,12 +45,12 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new InvalidOperationException("FileAssert.Equals should not be used for Assertions, use FileAssert.AreEqual(...) instead.");
+            throw new InvalidOperationException("FileAssert.Equals should not be used. Use FileAssert.AreEqual instead.");
         }
 
         /// <summary>
         /// DO NOT USE!
-        /// The ReferenceEquals method throws an InvalidOperationException. This is done 
+        /// The ReferenceEquals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a"></param>
@@ -58,7 +58,7 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new InvalidOperationException("FileAssert.ReferenceEquals should not be used for Assertions.");
+            throw new InvalidOperationException("FileAssert.ReferenceEquals should not be used.");
         }
 
         #endregion

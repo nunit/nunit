@@ -11,8 +11,8 @@ using Task = System.Threading.Tasks.TaskEx;
 namespace NUnit.TestData.AssertMultipleData
 {
     // NOTE: Some of these methods were getting optimized out of
-    // existence in the .NET 2.0 AppVeyor build. For that reason,
-    // we turned optimization off for the testdata assembly.
+    // existence in the AppVeyor build. For that reason, we turned
+    // optimization off for the testdata assembly.
 
     public class AssertMultipleFixture
     {

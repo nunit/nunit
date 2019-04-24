@@ -1,4 +1,7 @@
-#if NET20 || NET35
+// ReSharper disable InconsistentNaming
+// Disregarding naming convention in polyfill code
+
+#if NET35
 #pragma warning disable 0420
 
 // ==++==

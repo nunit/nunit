@@ -28,13 +28,27 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class GreaterThanOrEqualConstraint : ComparisonConstraint
     {
+        private string _description;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="GreaterThanOrEqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public GreaterThanOrEqualConstraint(object expected) : base(expected)
+        public GreaterThanOrEqualConstraint(object expected) : base(expected) {}
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
         {
-            Description = "greater than or equal to " + MsgUtils.FormatValue(expected);
+            get
+            {
+                if (_description == null)
+                    _description = DefaultDescription("greater than or equal to ");
+                
+                return _description;
+            }
         }
 
         /// <summary>

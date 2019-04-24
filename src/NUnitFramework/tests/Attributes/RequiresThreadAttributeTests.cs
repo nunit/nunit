@@ -25,6 +25,8 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.TestData;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -45,6 +47,13 @@ namespace NUnit.Framework.Attributes
         }
 
 #if APARTMENT_STATE
+        [Test]
+        public void ApartmentStateUnknownIsNotRunnable()
+        {
+            var testSuite = TestBuilder.MakeFixture(typeof(ApartmentDataRequiresThreadAttribute));
+            Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
+        }
+
 #if NETCOREAPP2_0
         [Platform(Include = "Win, Mono")]
 #endif

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -44,7 +44,11 @@ namespace NUnit.Framework
         /// elements may have their type changed in GetData
         /// if necessary
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected object[] data;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// Constructs for use with an Enum parameter. Will pass every enum
@@ -97,19 +101,18 @@ namespace NUnit.Framework
         /// <summary>
         /// Retrieves a list of arguments which can be passed to the specified parameter.
         /// </summary>
-        /// <param name="fixtureType">The point of context in the fixture’s inheritance hierarchy.</param>
         /// <param name="parameter">The parameter of a parameterized test.</param>
-        public IEnumerable GetData(Type fixtureType, ParameterInfo parameter)
+        public IEnumerable GetData(IParameterInfo parameter)
         {
-            if (data.Length == 0)           
+            if (data.Length == 0)
                 return GenerateData(parameter.ParameterType);
-            else           
+            else
                 return ParamAttributeTypeConversions.ConvertData(data, parameter.ParameterType);
         }
 
         /// <summary>
         /// To generate data for Values attribute, in case no data is provided.
-        /// </summary>       
+        /// </summary>
         private static IEnumerable GenerateData(Type targetType)
         {
             if (IsNullableEnum(targetType))
@@ -133,11 +136,11 @@ namespace NUnit.Framework
             }
 
             return new object[] { };
-        }      
+        }
 
         /// <summary>
         /// To Check if type is nullable enum.
-        /// </summary>       
+        /// </summary>
         private static bool IsNullableEnum(Type t)
         {
             Type u = Nullable.GetUnderlyingType(t);

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,11 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 
 using NUnit.Framework.Interfaces;
 
@@ -61,11 +57,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy-constructor style to create a filtered copy of the test assemblies
-        /// test cases
+        /// Creates a copy of the given assembly with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="filter"></param>
+        /// <param name="assembly">The <see cref="TestAssembly"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
             : base(assembly as TestSuite, filter)
         {
@@ -98,6 +93,15 @@ namespace NUnit.Framework.Internal
             return Assembly != null
                 ? Assembly.GetAttributes<TAttr>()
                 : new TAttr[0];
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new TestAssembly(this, filter);
         }
     }
 }

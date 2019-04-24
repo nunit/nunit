@@ -1,8 +1,25 @@
-// ****************************************************************
-// Copyright 2007, Charlie Poole, Rob Prouse
-// This is free software licensed under the NUnit license. You may
-// obtain a copy of the license at http://nunit.org
-// ****************************************************************
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System.Collections.Generic;
 using System.Reflection;
@@ -33,12 +50,12 @@ namespace NUnit.Framework.Internal
         }
         #endregion SetUp
 
-        private ITestResult runTests(string nameSpace)
+        private ITestResult RunTests(string nameSpace)
         {
-            return runTests(nameSpace, TestFilter.Empty);
+            return RunTests(nameSpace, TestFilter.Empty);
         }
 
-        private ITestResult runTests(string nameSpace, TestFilter filter)
+        private ITestResult RunTests(string nameSpace, TestFilter filter)
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
             if (nameSpace != null)
@@ -143,7 +160,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfSingleTest()
         {
-            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace1").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace1").ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("NS1.OneTimeSetup",
                                                      "NS1.Fixture.SetUp",
                                                      "NS1.Test.SetUp",
@@ -158,7 +175,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void NamespaceSetUpMethodsMayBeStatic()
         {
-            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace5").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace5").ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("NS5.OneTimeSetUp",
                                                      "NS5.Fixture.SetUp",
                                                      "NS5.Test.SetUp",
@@ -173,7 +190,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfTwoTests()
         {
-            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace2").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace2").ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
             // There are two fixtures but we can't be sure of the order of execution so they use the same events
             TestUtilities.SimpleEventRecorder.Verify("NS2.OneTimeSetUp",
@@ -195,7 +212,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void NamespaceSetUpFixtureWrapsNestedNamespaceSetUpFixture()
         {
-            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace3").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace3").ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("NS3.OneTimeSetUp",
                                                      "NS3.Fixture.SetUp",
                                                      "NS3.Test.SetUp",
@@ -217,7 +234,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void WithTwoSetUpFixturesBothAreUsed()
         {
-            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.ExpectEvents("NS4.OneTimeSetUp1", "NS4.OneTimeSetUp2")
                                              .AndThen("NS4.Fixture.SetUp")
                                              .AndThen("NS4.Test.SetUp")
@@ -234,7 +251,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void InvalidSetUpFixtureTest()
         {
-            Assert.That(runTests("NUnit.TestData.SetupFixture.Namespace6").ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace6").ResultState.Status, Is.EqualTo(TestStatus.Failed));
             TestUtilities.SimpleEventRecorder.Verify(new string[0]);
         }
 
@@ -244,7 +261,7 @@ namespace NUnit.Framework.Internal
         [NUnit.Framework.Test]
         public void AssemblySetupFixtureWrapsExecutionOfTest()
         {
-            ITestResult result = runTests(null, new Filters.FullNameFilter("SomeFixture"));
+            ITestResult result = RunTests(null, new Filters.FullNameFilter("SomeFixture"));
             Assert.AreEqual(1, result.PassCount);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",

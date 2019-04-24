@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ContainsConstraint : Constraint
     {
-        readonly object _expected;
-        Constraint _realConstraint;
-        bool _ignoreCase;
+        private readonly object _expected;
+        private Constraint _realConstraint;
+        private bool _ignoreCase;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainsConstraint"/> class.
@@ -53,9 +53,20 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return _realConstraint != null ? 
-                    _realConstraint.Description : 
-                    "containing " + MsgUtils.FormatValue(_expected); }
+            get
+            {
+                if (_realConstraint != null)
+                {
+                    return _realConstraint.Description;
+                }
+
+                var description = "containing " + MsgUtils.FormatValue(_expected);
+
+                if (_ignoreCase)
+                    description += ", ignoring case";
+
+                return description;
+            }
         }
 
         /// <summary>
@@ -81,7 +92,12 @@ namespace NUnit.Framework.Constraints
                 _realConstraint = constraint;
             }
             else
-                _realConstraint = new SomeItemsConstraint(new EqualConstraint(_expected));
+            {
+                var itemConstraint = new EqualConstraint(_expected);
+                if (_ignoreCase)
+                    itemConstraint = itemConstraint.IgnoreCase;
+                _realConstraint = new SomeItemsConstraint(itemConstraint);
+            }
 
             return _realConstraint.ApplyTo(actual);
         }

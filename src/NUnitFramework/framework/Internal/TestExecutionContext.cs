@@ -37,7 +37,7 @@ using NUnit.Framework.Internal.Execution;
 using System.Security.Principal;
 #endif
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
     /// or which might be changed by the user tests.
     /// </summary>
     public class TestExecutionContext : LongLivedMarshalByRefObject
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
         , ILogicalThreadAffinative
 #endif
     {
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Internal
 
         // NOTE: We use different implementations for various platforms.
 
-#if !(NET20 || NET35 || NET40 || NET45)
+#if !(NET35 || NET40 || NET45)
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
         /// Gets and sets the current context.
@@ -162,39 +162,37 @@ namespace NUnit.Framework.Internal
         }
 #else
         // In all other builds, we use the CallContext
-        private static readonly string CONTEXT_KEY = "NUnit.Framework.TestContext";
-
         /// <summary>
         /// Gets and sets the current context.
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            // This getter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
+            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
             // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
             // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             get
             {
-                var context = CallContext.GetData(CONTEXT_KEY) as TestExecutionContext;
+                var context = CallContext.GetData(NUnitCallContext.TestExecutionContextKey) as TestExecutionContext;
 
                 if (context == null)
                 {
                     context = new AdhocContext();
-                    CallContext.SetData(CONTEXT_KEY, context);
+                    CallContext.SetData(NUnitCallContext.TestExecutionContextKey, context);
                 }
 
                 return context;
             }
-            // This setter invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
+            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
             // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
             // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
             [SecuritySafeCritical]
             private set
             {
                 if (value == null)
-                    CallContext.FreeNamedDataSlot(CONTEXT_KEY);
+                    CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
                 else
-                    CallContext.SetData(CONTEXT_KEY, value);
+                    CallContext.SetData(NUnitCallContext.TestExecutionContextKey, value);
             }
         }
 #endif
@@ -552,9 +550,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#endregion
+        #endregion
 
-#region Nested AdhocTestExecutionContext
+        #region Nested AdhocTestExecutionContext
 
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed
@@ -572,7 +570,7 @@ namespace NUnit.Framework.Internal
                 var type = GetType();
                 var method = type.GetMethod("AdhocTestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                CurrentTest = new TestMethod(new FixtureMethod(type, method));
+                CurrentTest = new TestMethod(new MethodWrapper(type, method));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

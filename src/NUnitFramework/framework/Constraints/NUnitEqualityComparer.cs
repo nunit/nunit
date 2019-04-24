@@ -67,10 +67,10 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public NUnitEqualityComparer()
         {
-            EnumerablesComparer _enumerablesComparer = new EnumerablesComparer(this);
+            var enumerablesComparer = new EnumerablesComparer(this);
             _comparers = new List<IChainComparer>
             {
-                new ArraysComparer(this, _enumerablesComparer),
+                new ArraysComparer(this, enumerablesComparer),
                 new DictionariesComparer(this),
                 new DictionaryEntriesComparer(this),
                 new KeyValuePairsComparer(this),
@@ -81,10 +81,10 @@ namespace NUnit.Framework.Constraints
                 new NumericsComparer(),
                 new DateTimeOffsetsComparer(this),
                 new TimeSpanToleranceComparer(),
-                new EquatablesComparer(this),
                 new TupleComparer(this),
                 new ValueTupleComparer(this),
-                _enumerablesComparer
+                new EquatablesComparer(this),
+                enumerablesComparer
             };
         }
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the default NUnitEqualityComparer
         /// </summary>
-        [Obsolete("Deprecated. Use the default constructor instead.")]
+        [Obsolete("This property has been deprecated and will be removed in a future release. Please use 'new NUnitEqualityComparer()' instead.")]
         public static NUnitEqualityComparer Default
         {
             get { return new NUnitEqualityComparer(); }

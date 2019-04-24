@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,9 +31,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<equal 999>";
-            staticSyntax = Is.EqualTo(999);
-            builderSyntax = Builder().EqualTo(999);
+            ParseTree = "<equal 999>";
+            StaticSyntax = Is.EqualTo(999);
+            BuilderSyntax = Builder().EqualTo(999);
         }
     }
 
@@ -42,9 +42,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<equal ""X"">";
-            staticSyntax = Is.EqualTo("X").IgnoreCase;
-            builderSyntax = Builder().EqualTo("X").IgnoreCase;
+            ParseTree = @"<equal ""X"">";
+            StaticSyntax = Is.EqualTo("X").IgnoreCase;
+            BuilderSyntax = Builder().EqualTo("X").IgnoreCase;
         }
     }
 
@@ -53,9 +53,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<equal 0.7>";
-            staticSyntax = Is.EqualTo(0.7).Within(.005);
-            builderSyntax = Builder().EqualTo(0.7).Within(.005);
+            ParseTree = "<equal 0.7>";
+            StaticSyntax = Is.EqualTo(0.7).Within(.005);
+            BuilderSyntax = Builder().EqualTo(0.7).Within(.005);
         }
     }
 

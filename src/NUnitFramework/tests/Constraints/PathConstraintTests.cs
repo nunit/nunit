@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SamePathConstraint( @"C:\folder1\file.tmp" ).IgnoreCase;
-            expectedDescription = @"Path matching ""C:\folder1\file.tmp""";
-            stringRepresentation = "<samepath \"C:\\folder1\\file.tmp\" ignorecase>";
+            TheConstraint = new SamePathConstraint( @"C:\folder1\file.tmp" ).IgnoreCase;
+            ExpectedDescription = @"Path matching ""C:\folder1\file.tmp""";
+            StringRepresentation = "<samepath \"C:\\folder1\\file.tmp\" ignorecase>";
         }
 
         static object[] SuccessData = new object[] 
@@ -67,9 +67,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SamePathConstraint(@"/folder1/folder2").RespectCase;
-            expectedDescription = @"Path matching ""/folder1/folder2""";
-            stringRepresentation = @"<samepath ""/folder1/folder2"" respectcase>";
+            TheConstraint = new SamePathConstraint(@"/folder1/folder2").RespectCase;
+            ExpectedDescription = @"Path matching ""/folder1/folder2""";
+            StringRepresentation = @"<samepath ""/folder1/folder2"" respectcase>";
         }
 
         static object[] SuccessData = new object[] 
@@ -108,9 +108,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SubPathConstraint(@"C:\folder1\folder2").IgnoreCase;
-            expectedDescription = @"Subpath of ""C:\folder1\folder2""";
-            stringRepresentation = @"<subpath ""C:\folder1\folder2"" ignorecase>";
+            TheConstraint = new SubPathConstraint(@"C:\folder1\folder2").IgnoreCase;
+            ExpectedDescription = @"Subpath of ""C:\folder1\folder2""";
+            StringRepresentation = @"<subpath ""C:\folder1\folder2"" ignorecase>";
         }
 
         static object[] SuccessData = new object[]
@@ -146,9 +146,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SubPathConstraint(@"/folder1/folder2").RespectCase;
-            expectedDescription = @"Subpath of ""/folder1/folder2""";
-            stringRepresentation = @"<subpath ""/folder1/folder2"" respectcase>";
+            TheConstraint = new SubPathConstraint(@"/folder1/folder2").RespectCase;
+            ExpectedDescription = @"Subpath of ""/folder1/folder2""";
+            StringRepresentation = @"<subpath ""/folder1/folder2"" respectcase>";
         }
 
         static object[] SuccessData = new object[]
@@ -185,9 +185,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SamePathOrUnderConstraint( @"C:\folder1\folder2" ).IgnoreCase;
-            expectedDescription = @"Path under or matching ""C:\folder1\folder2""";
-            stringRepresentation = @"<samepathorunder ""C:\folder1\folder2"" ignorecase>";
+            TheConstraint = new SamePathOrUnderConstraint( @"C:\folder1\folder2" ).IgnoreCase;
+            ExpectedDescription = @"Path under or matching ""C:\folder1\folder2""";
+            StringRepresentation = @"<samepathorunder ""C:\folder1\folder2"" ignorecase>";
         }
 
         static object[] SuccessData = new object[]
@@ -217,9 +217,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SamePathOrUnderConstraint( @"/folder1/folder2"  ).RespectCase;
-            expectedDescription = @"Path under or matching ""/folder1/folder2""";
-            stringRepresentation = @"<samepathorunder ""/folder1/folder2"" respectcase>";
+            TheConstraint = new SamePathOrUnderConstraint( @"/folder1/folder2"  ).RespectCase;
+            ExpectedDescription = @"Path under or matching ""/folder1/folder2""";
+            StringRepresentation = @"<samepathorunder ""/folder1/folder2"" respectcase>";
         }
 
         static object[] SuccessData = new object[]

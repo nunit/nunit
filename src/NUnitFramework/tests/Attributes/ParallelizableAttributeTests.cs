@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Attributes
         [TestCaseSourceAttribute(nameof(Scopes))]
         public void ApplyScopeToTestFixture(ParallelScope scope)
         {
-            var fixture = new TestFixture(typeof(FixtureClass));
+            var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
             var attr = new ParallelizableAttribute(scope);
             attr.ApplyToTest(fixture);
             if (scope == ParallelScope.Fixtures)
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MayNotCombineParallelScopeSelfAndParallelScopeNone()
         {
-            var fixture = new TestFixture(typeof(FixtureClass));
+            var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));
             var attr = new ParallelizableAttribute(ParallelScope.Self | ParallelScope.None);
             attr.ApplyToTest(fixture);
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));

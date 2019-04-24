@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
+// Copyright (c) 2012-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter) 
+        public SimpleWorkItem(TestMethod test, ITestFilter filter)
             : base(test, filter)
         {
             _testMethod = test;
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                // Currently, if there are no command wrappers, test 
+                // Currently, if there are no command wrappers, test
                 // actions, setup or teardown, we have to catch any
                 // exception from the test here. In addition, since
                 // users may create their own command wrappers, etc.
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Execution
                 var method = _testMethod.Method;
 
                 // Add any wrappers to the TestMethodCommand
-                foreach (IWrapTestMethod wrapper in method.GetAttributes<IWrapTestMethod>(true))
+                foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
                     command = wrapper.Wrap(command);
 
                 // Create TestActionCommands using attributes of the method
@@ -102,16 +102,16 @@ namespace NUnit.Framework.Internal.Execution
                     if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
                         command = new TestActionCommand(command, action); ;
 
-                // Try to locate the parent fixture. In current implementations, the test method 
-                // is either one or two levels below the TestFixture - if this changes, 
+                // Try to locate the parent fixture. In current implementations, the test method
+                // is either one or two levels below the TestFixture - if this changes,
                 // so should the following code.
                 TestFixture parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
 
                 // In normal operation we should always get the methods from the parent fixture.
-                // However, some of NUnit's own tests can create a TestMethod without a parent 
+                // However, some of NUnit's own tests can create a TestMethod without a parent
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.Type, typeof(SetUpAttribute), true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.Type, typeof(TearDownAttribute), true);
+                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(SetUpAttribute), true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(TearDownAttribute), true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new SetUpTearDownCommand(command, item);
 
                 // In the current implementation, upstream actions only apply to tests. If that should change in the future,
-                // then actions would have to be tested for here. For now we simply assert it in Debug. We allow 
+                // then actions would have to be tested for here. For now we simply assert it in Debug. We allow
                 // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
                 int index = Context.UpstreamActions.Count;
                 while (--index >= 0)
@@ -133,15 +133,14 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (ICommandWrapper decorator in method.GetAttributes<IWrapSetUpTearDown>(true))
+                foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
                     command = decorator.Wrap(command);
 
                 // Add command to set up context using attributes that implement IApplyToContext
-                foreach (var attr in method.GetAttributes<IApplyToContext>(true))
+                foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // If a timeout is specified, create a TimeoutCommand
-#if THREAD_ABORT
                 // Timeout set at a higher level
                 int timeout = Context.TestCaseTimeout;
 
@@ -151,10 +150,9 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout);
-#endif
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
-                foreach (var repeatableAttribute in method.GetAttributes<IRepeatTest>(true))
+                foreach (var repeatableAttribute in method.MethodInfo.GetAttributes<IRepeatTest>(true))
                     command = repeatableAttribute.Wrap(command);
 
                 return command;

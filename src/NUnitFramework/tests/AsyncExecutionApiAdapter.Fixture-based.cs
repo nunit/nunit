@@ -34,7 +34,7 @@ namespace NUnit.Framework
         private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
         {
             TestBuilder.RunTest(
-                new NUnitTestFixtureBuilder().BuildFrom(fixtureType, PreFilter.Empty, new TestFixtureData(asyncUserCode))
+                new NUnitTestFixtureBuilder().BuildFrom(new TypeWrapper(fixtureType), PreFilter.Empty, new TestFixtureData(asyncUserCode))
             ).AssertPassed();
         }
 

@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new CollectionSupersetConstraint(new int[] { 1, 2, 3, 4, 5 });
-            stringRepresentation = "<supersetof System.Int32[]>";
-            expectedDescription = "superset of < 1, 2, 3, 4, 5 >";
+            TheConstraint = new CollectionSupersetConstraint(new int[] { 1, 2, 3, 4, 5 });
+            StringRepresentation = "<supersetof System.Int32[]>";
+            ExpectedDescription = "superset of < 1, 2, 3, 4, 5 >";
         }
 
         static object[] SuccessData = new object[] 

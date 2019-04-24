@@ -32,9 +32,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SubstringConstraint("hello");
-            expectedDescription = "String containing \"hello\"";
-            stringRepresentation = "<substring \"hello\">";
+            TheConstraint = new SubstringConstraint("hello");
+            ExpectedDescription = "String containing \"hello\"";
+            StringRepresentation = "<substring \"hello\">";
         }
 
         static object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UseDifferentComparisonTypes_ThrowsException()
         {
-            var subStringConstraint = theConstraint as SubstringConstraint;
+            var subStringConstraint = TheConstraint as SubstringConstraint;
             // Invoke Using method before IgnoreCase
             Assert.That(() => subStringConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
@@ -120,13 +120,13 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void UseSameComparisonTypes_DoesNotThrowException()
         {
-            var subStringConstraint = theConstraint as SubstringConstraint;
+            var subStringConstraint = TheConstraint as SubstringConstraint;
             Assert.DoesNotThrow(() =>
             {
                 var newConstraint = subStringConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
             });
 
-            var stringConstraint = theConstraint as StringConstraint;
+            var stringConstraint = TheConstraint as StringConstraint;
             Assert.DoesNotThrow(() =>
             {
                 var newConstraint = stringConstraint.IgnoreCase as SubstringConstraint;
@@ -141,9 +141,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SubstringConstraint("hello").IgnoreCase;
-            expectedDescription = "String containing \"hello\", ignoring case";
-            stringRepresentation = "<substring \"hello\">";
+            TheConstraint = new SubstringConstraint("hello").IgnoreCase;
+            ExpectedDescription = "String containing \"hello\", ignoring case";
+            StringRepresentation = "<substring \"hello\">";
         }
 
         static object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };

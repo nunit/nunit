@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal
                     case "{8}":
                     case "{9}":
                         int index = token[1] - '0';
-                        fragments.Add(new ArgumentFragment(index, 40));
+                        fragments.Add(new ArgumentFragment(index, 0));
                         break;
                     default:
                         char c = token[1];
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal
 
             public virtual string GetText(TestMethod testMethod, object[] args)
             {
-                return GetText(testMethod.Method, args);
+                return GetText(testMethod.Method.MethodInfo, args);
             }
 
             public abstract string GetText(MethodInfo method, object[] args);
@@ -230,9 +230,9 @@ namespace NUnit.Framework.Internal
                         var builder = new StringBuilder();
                         builder.Append("[");
 
-                        const int MaxNumItemsToEnumerate = 5;
+                        const int maxNumItemsToEnumerate = 5;
 
-                        var numItemsToEnumerate = Math.Min(argArray.Length, MaxNumItemsToEnumerate);
+                        var numItemsToEnumerate = Math.Min(argArray.Length, maxNumItemsToEnumerate);
                         for (int i = 0; i < numItemsToEnumerate; i++)
                         {
                             if (i > 0)
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal
                             }
                         }
 
-                        if (argArray.Length > MaxNumItemsToEnumerate)
+                        if (argArray.Length > maxNumItemsToEnumerate)
                             builder.Append(", ...");
 
                         builder.Append("]");
@@ -416,7 +416,7 @@ namespace NUnit.Framework.Internal
 
                 return EscapeControlChar(c);
             }
-            
+
             private static string EscapeControlChar(char c)
             {
                 switch (c)
@@ -557,7 +557,7 @@ namespace NUnit.Framework.Internal
                         if (i > 0) sb.Append(",");
                         sb.Append(GetDisplayString(arglist[i], _maxStringLength));
                     }
-                    
+
                     sb.Append(')');
                 }
 

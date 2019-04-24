@@ -1,6 +1,6 @@
 # NUnit 3 Framework #
 
-[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/3xfkxtnkrts1x06q/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit/branch/master) [![Travis Build Status](https://travis-ci.org/nunit/nunit.svg?branch=master)](https://travis-ci.org/nunit/nunit) [![NuGet Version and Downloads count](https://buildstats.info/nuget/NUnit)](https://www.nuget.org/packages/NUnit)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/3xfkxtnkrts1x06q/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit/branch/master) [![Travis Build Status](https://travis-ci.org/nunit/nunit.svg?branch=master)](https://travis-ci.org/nunit/nunit) [![Azure Pipelines Build Status](https://nunit.visualstudio.com/NUnit/_apis/build/status/NUnit%20Framework/NUnit%20Framework%20CI?branchName=master)](https://nunit.visualstudio.com/NUnit/_build/latest?definitionId=11?branchName=master) [![NuGet Version and Downloads count](https://buildstats.info/nuget/NUnit)](https://www.nuget.org/packages/NUnit)
 
 [![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nunit/nunit) [![nunit-discuss Google Groups](https://img.shields.io/badge/mailing%20list-nunit--discuss-blue.svg)](https://groups.google.com/forum/#!forum/nunit-discuss)
 
@@ -44,7 +44,7 @@ set breakpoints and watch variables, [follow these steps](https://github.com/nun
 
 ## License ##
 
-NUnit is Open Source software and NUnit 3 is released under the [MIT license](https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt). Earlier releases used the [NUnit license](http://www.nunit.org/nuget/license.html). Both of these licenses allow the use of NUnit in free and commercial applications and libraries without restrictions.
+NUnit is Open Source software and NUnit 3 is released under the [MIT license](https://raw.githubusercontent.com/nunit/nunit/master/LICENSE.txt). Earlier releases used the [NUnit license](https://nunit.org/nuget/license.html). Both of these licenses allow the use of NUnit in free and commercial applications and libraries without restrictions.
 
 ## NUnit Projects ##
 

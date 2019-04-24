@@ -109,40 +109,40 @@ namespace NUnit.Framework.Internal
         [TestCaseSource(nameof(frameworkData))]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
-            RuntimeFramework framework = new RuntimeFramework(data.runtime, data.frameworkVersion);
-            Assert.AreEqual(data.runtime, framework.Runtime, "#1");
-            Assert.AreEqual(data.frameworkVersion, framework.FrameworkVersion, "#2");
-            Assert.AreEqual(data.clrVersion, framework.ClrVersion, "#3");
+            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
+            Assert.AreEqual(data.Runtime, framework.Runtime, "#1");
+            Assert.AreEqual(data.FrameworkVersion, framework.FrameworkVersion, "#2");
+            Assert.AreEqual(data.ClrVersion, framework.ClrVersion, "#3");
         }
 
         [TestCaseSource(nameof(frameworkData))]
         public void CanCreateUsingClrVersion(FrameworkData data)
         {
-            Assume.That(data.frameworkVersion.Major != 3, "#0");
+            Assume.That(data.FrameworkVersion.Major != 3, "#0");
             //.NET Framework 4.0+ and .NET Core 2.0+ all have the same CLR version
-            Assume.That(data.frameworkVersion.Major != 4 && data.frameworkVersion.Minor != 5, "#0");
-            Assume.That(data.runtime != RuntimeType.NetCore, "#0");
+            Assume.That(data.FrameworkVersion.Major != 4 && data.FrameworkVersion.Minor != 5, "#0");
+            Assume.That(data.Runtime != RuntimeType.NetCore, "#0");
 
-            RuntimeFramework framework = new RuntimeFramework(data.runtime, data.clrVersion);
-            Assert.AreEqual(data.runtime, framework.Runtime, "#1");
-            Assert.AreEqual(data.frameworkVersion, framework.FrameworkVersion, "#2");
-            Assert.AreEqual(data.clrVersion, framework.ClrVersion, "#3");
+            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.ClrVersion);
+            Assert.AreEqual(data.Runtime, framework.Runtime, "#1");
+            Assert.AreEqual(data.FrameworkVersion, framework.FrameworkVersion, "#2");
+            Assert.AreEqual(data.ClrVersion, framework.ClrVersion, "#3");
         }
 
         [TestCaseSource(nameof(frameworkData))]
         public void CanParseRuntimeFramework(FrameworkData data)
         {
-            RuntimeFramework framework = RuntimeFramework.Parse(data.representation);
-            Assert.AreEqual(data.runtime, framework.Runtime, "#1");
-            Assert.AreEqual(data.clrVersion, framework.ClrVersion, "#2");
+            RuntimeFramework framework = RuntimeFramework.Parse(data.Representation);
+            Assert.AreEqual(data.Runtime, framework.Runtime, "#1");
+            Assert.AreEqual(data.ClrVersion, framework.ClrVersion, "#2");
         }
 
         [TestCaseSource(nameof(frameworkData))]
         public void CanDisplayFrameworkAsString(FrameworkData data)
         {
-            RuntimeFramework framework = new RuntimeFramework(data.runtime, data.frameworkVersion);
-            Assert.AreEqual(data.representation, framework.ToString(), "#1");
-            Assert.AreEqual(data.displayName, framework.DisplayName, "#2");
+            RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
+            Assert.AreEqual(data.Representation, framework.ToString(), "#1");
+            Assert.AreEqual(data.DisplayName, framework.DisplayName, "#2");
         }
 
         [TestCaseSource(nameof(matchData))]
@@ -308,25 +308,25 @@ namespace NUnit.Framework.Internal
 
         public struct FrameworkData
         {
-            public RuntimeType runtime;
-            public Version frameworkVersion;
-            public Version clrVersion;
-            public string representation;
-            public string displayName;
+            public RuntimeType Runtime;
+            public Version FrameworkVersion;
+            public Version ClrVersion;
+            public string Representation;
+            public string DisplayName;
 
             public FrameworkData(RuntimeType runtime, Version frameworkVersion, Version clrVersion,
                                  string representation, string displayName)
             {
-                this.runtime = runtime;
-                this.frameworkVersion = frameworkVersion;
-                this.clrVersion = clrVersion;
-                this.representation = representation;
-                this.displayName = displayName;
+                Runtime = runtime;
+                FrameworkVersion = frameworkVersion;
+                ClrVersion = clrVersion;
+                Representation = representation;
+                DisplayName = displayName;
             }
 
             public override string ToString()
             {
-                return string.Format("<{0},{1},{2}>", this.runtime, this.frameworkVersion, this.clrVersion);
+                return string.Format("<{0},{1},{2}>", this.Runtime, this.FrameworkVersion, this.ClrVersion);
             }
         }
 

@@ -21,9 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1    // Schema validation doesn’t exist
-#if !(NET20 || NET35) // Framework bug causes NRE: https://social.msdn.microsoft.com/Forums/en-US/53be44de-30b2-4d18-968d-d3414d0783b1
-                      // We don’t really need these tests to run on more than one platform.
+#if !NETCOREAPP1_1 // Schema validation doesn’t exist
+#if !NET35         // Framework bug causes NRE: https://social.msdn.microsoft.com/Forums/en-US/53be44de-30b2-4d18-968d-d3414d0783b1
+                   // We don’t really need these tests to run on more than one platform.
 
 using System;
 using System.IO;

@@ -213,9 +213,9 @@ namespace NUnit.Framework.Attributes
 
         #region Helper Methods and Data
 
-        private FixtureMethod GetMethod(string methodName)
+        private IMethodInfo GetMethod(string methodName)
         {
-            return GetType().GetFixtureMethod(methodName);
+            return new MethodWrapper(GetType(), methodName);
         }
 
         public static void MethodWithoutArgs() { }

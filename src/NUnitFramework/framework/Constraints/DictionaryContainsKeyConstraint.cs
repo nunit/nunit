@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,7 +38,9 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
-        private const string ObsoleteMessage = "DictionaryContainsKeyConstraint now uses the comparer which the dictionary is based on. To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.";
+        private const string ComparerMemberObsoletionMessage = "This member has been deprecated and will be removed in a future release. "
+            + "To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.";
+
         private const string ContainsMethodName = "Contains";
         private bool _isDeprecatedMode = false;
 
@@ -52,7 +54,7 @@ namespace NUnit.Framework.Constraints
             Expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
@@ -77,7 +79,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Flag the constraint to ignore case and return self.
         /// </summary>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint IgnoreCase
         {
             get
@@ -129,7 +131,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied predicate function
         /// </summary>
         /// <param name="comparison">The comparison function to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public DictionaryContainsKeyConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
         {
             // reverse the order of the arguments to match expectations of PredicateEqualityComparer
@@ -144,7 +146,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied Comparison object.
         /// </summary>
         /// <param name="comparison">The Comparison object to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
         {
             _isDeprecatedMode = true;
@@ -156,7 +158,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint Using(IComparer comparer)
         {
             _isDeprecatedMode = true;
@@ -167,7 +169,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
         {
             _isDeprecatedMode = true;
@@ -178,7 +180,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
         {
             _isDeprecatedMode = true;
@@ -189,7 +191,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied IEqualityComparer object.
         /// </summary>
         /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
         {
             _isDeprecatedMode = true;
@@ -200,7 +202,7 @@ namespace NUnit.Framework.Constraints
         /// Flag the constraint to use the supplied boolean-returning delegate.
         /// </summary>
         /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
-        [Obsolete(ObsoleteMessage)]
+        [Obsolete(ComparerMemberObsoletionMessage)]
         public new CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
         {
             _isDeprecatedMode = true;

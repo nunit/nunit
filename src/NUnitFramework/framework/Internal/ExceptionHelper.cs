@@ -22,8 +22,10 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -34,7 +36,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
         private static readonly Action<Exception> PreserveStackTrace;
 
         static ExceptionHelper()
@@ -60,7 +62,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
             PreserveStackTrace(exception);
             throw exception;
 #else
@@ -84,6 +86,7 @@ namespace NUnit.Framework.Internal
             if (!excludeExceptionNames)
                 sb.AppendFormat("{0} : ", exception.GetType());
             sb.Append(GetExceptionMessage(exception));
+            AppendExceptionDataContents(exception, sb);
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -92,6 +95,7 @@ namespace NUnit.Framework.Internal
                 if (!excludeExceptionNames)
                     sb.AppendFormat("{0} : ", inner.GetType());
                 sb.Append(GetExceptionMessage(inner));
+                AppendExceptionDataContents(inner, sb);
             }
 
             return sb.ToString();
@@ -149,6 +153,22 @@ namespace NUnit.Framework.Internal
             }
 
             return ex.Message;
+        }
+
+        private static void AppendExceptionDataContents(Exception ex, StringBuilder sb)
+        {
+            if (ex.Data.Count == 0)
+            {
+                return;
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("Data:");
+            foreach (DictionaryEntry kvp in ex.Data)
+            {
+                sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                sb.AppendLine();
+            }
         }
 
         private static List<Exception> FlattenExceptionHierarchy(Exception exception)

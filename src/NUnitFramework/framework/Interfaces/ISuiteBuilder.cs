@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007–2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Interfaces
@@ -41,22 +40,21 @@ namespace NUnit.Framework.Interfaces
         /// but label it as non-runnable, ignored, etc., then this
         /// method must return true.
         /// </summary>
-        /// <param name="type">The type to be used as a suite.</param>
-        bool CanBuildFrom(Type type);
+        /// <param name="typeInfo">The type of the fixture to be used</param>
+        bool CanBuildFrom(ITypeInfo typeInfo);
 
         /// <summary>
         /// Builds a single test suite from the specified type.
         /// </summary>
-        /// <param name="type">The type to be used as a suite.</param>
-        TestSuite BuildFrom(Type type);
+        /// <param name="typeInfo">The type of the fixture to be used</param>
+        TestSuite BuildFrom(ITypeInfo typeInfo);
 
         /// <summary>
         /// Builds a single test suite from the specified type, subject
         /// to a filter that decides which methods are included.
         /// </summary>
-        /// <param name="type">The Type to be used as a suite.</param>
+        /// <param name="typeInfo">The type of the fixture to be used</param>
         /// <param name="filter">A PreFilter for selecting methods.</param>
-        /// <returns></returns>
-        TestSuite BuildFrom(Type type, IPreFilter filter);
+        TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter);
     }
 }

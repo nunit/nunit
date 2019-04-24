@@ -78,8 +78,19 @@ namespace NUnit.Framework.Internal
 
         private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
         {
-            Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
-            Type monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch");
+            Type monoRuntimeType = null;
+            Type monoTouchType = null;
+
+            try
+            {
+                monoRuntimeType = Type.GetType("Mono.Runtime", false);
+                monoTouchType = Type.GetType("MonoTouch.UIKit.UIApplicationDelegate,monotouch", false);
+            }
+            catch
+            {
+                //If exception thrown, assume no valid installation
+            }
+
             bool isMonoTouch = monoTouchType != null;
             bool isMono = monoRuntimeType != null;
             bool isNetCore = !isMono && !isMonoTouch && IsNetCore();
@@ -121,26 +132,9 @@ namespace NUnit.Framework.Internal
 #else
             if (major == 2)
             {
-                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\.NETFramework"))
-                {
-                    if (key != null)
-                    {
-                        string installRoot = key.GetValue("InstallRoot") as string;
-                        if (installRoot != null)
-                        {
-                            if (Directory.Exists(Path.Combine(installRoot, "v3.5")))
-                            {
-                                major = 3;
-                                minor = 5;
-                            }
-                            else if (Directory.Exists(Path.Combine(installRoot, "v3.0")))
-                            {
-                                major = 3;
-                                minor = 0;
-                            }
-                        }
-                    }
-                }
+                // The only assembly we compile that can run on the v2 CLR uses .NET Framework 3.5.
+                major = 3;
+                minor = 5;
             }
             else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") != null)
             {

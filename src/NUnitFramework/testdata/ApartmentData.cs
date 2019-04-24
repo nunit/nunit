@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,37 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Reflection;
+using System.Threading;
+using NUnit.Framework;
 
-namespace NUnit.TestUtilities
+namespace NUnit.TestData
 {
-    public static class StubParameterInfo
+#if APARTMENT_STATE
+    [RequiresThread(ApartmentState.Unknown)]
+    public class ApartmentDataRequiresThreadAttribute
     {
-        public static ParameterInfo OfType(Type parameterType)
-        {
-#if NETCOREAPP1_1
-            return typeof(StubParameterInfo)
-                   .GetMethod(nameof(DummyMethod), BindingFlags.Static | BindingFlags.NonPublic)
-                   .MakeGenericMethod(parameterType)
-                   .GetParameters()[0];
-#else
-            return new Impl(parameterType);
-#endif
-        }
-
-#if NETCOREAPP1_1
-        private static void DummyMethod<T>(T parameter) { }
-#else
-        private sealed class Impl : ParameterInfo
-        {
-            public Impl(Type parameterType)
-            {
-                ParameterType = parameterType;
-            }
-
-            public override Type ParameterType { get; }
-        }
-#endif
     }
+
+    [Apartment(ApartmentState.Unknown)]
+    public class ApartmentDataApartmentAttribute
+    {
+    }
+#endif
 }

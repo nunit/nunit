@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,12 +37,12 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            testMethod = new TestMethod(typeof(DummyFixture).GetFixtureMethod("DummyMethod"));
+            testMethod = new TestMethod(new MethodWrapper(typeof(DummyFixture), "DummyMethod"));
             testMethod.Properties.Set(PropertyNames.Description, "Test description");
             testMethod.Properties.Add(PropertyNames.Category, "Dubious");
             testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(typeof(DummyFixture));
+            testFixture = new TestFixture(new TypeWrapper(typeof(DummyFixture)));
             testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
             testFixture.Properties.Add(PropertyNames.Category, "Fast");
             testFixture.Properties.Add("Value", 3);
@@ -56,22 +56,22 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestTypeTests()
         {
-            Assert.That(testMethod.TestType, 
+            Assert.That(testMethod.TestType,
                 Is.EqualTo("TestMethod"));
-            Assert.That(testFixture.TestType, 
+            Assert.That(testFixture.TestType,
                 Is.EqualTo("TestFixture"));
-            Assert.That(testSuite.TestType, 
+            Assert.That(testSuite.TestType,
                 Is.EqualTo("TestSuite"));
-            Assert.That(new TestAssembly("junk").TestType, 
+            Assert.That(new TestAssembly("junk").TestType,
                 Is.EqualTo("Assembly"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetFixtureMethod("GenericMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType,
                 Is.EqualTo("GenericMethod"));
-            Assert.That(new ParameterizedMethodSuite(typeof(DummyFixture).GetFixtureMethod("ParameterizedMethod")).TestType,
+            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType,
                 Is.EqualTo("ParameterizedMethod"));
-            Assert.That(new ParameterizedFixtureSuite(typeof(DummyFixture)).TestType,
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(typeof(DummyFixture))).TestType,
                 Is.EqualTo("ParameterizedFixture"));
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(genericType).TestType,
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(genericType)).TestType,
                 Is.EqualTo("GenericFixture"));
         }
 
@@ -113,6 +113,14 @@ namespace NUnit.Framework.Internal
             Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"\\u0001HappyFace\""));
         }
 
+        [Test]
+        public void TestNameWithInvalidCharacter_NonFirstPosition()
+        {
+            testMethod.Name = "Happy\u0001Face";
+            // This throws if the name is not properly escaped
+            Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"Happy\\u0001Face\""));
+        }
+
         #region Helper Methods For Checking XML
 
         private void CheckXmlForTest(Test test, bool recursive)
@@ -139,7 +147,7 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
-            if (test.Type != null)
+            if (test.TypeInfo != null)
             {
                 Assert.NotNull(test.ClassName);
                 Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));
