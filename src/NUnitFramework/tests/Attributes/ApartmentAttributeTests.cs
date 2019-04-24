@@ -31,6 +31,9 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
+#if PLATFORM_DETECTION
+    [Platform(Include = "Win, Mono")]
+#endif
     [TestFixture]
     public class ApartmentAttributeTests : ThreadingTests
     {
@@ -43,6 +46,9 @@ namespace NUnit.Framework.Attributes
         }
 #endif
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [Test, Apartment(ApartmentState.STA)]
         public void TestWithRequiresSTARunsInSTA()
         {
@@ -55,6 +61,9 @@ namespace NUnit.Framework.Attributes
 #if THREAD_ABORT
         [Timeout(10000)]
 #endif
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [Apartment(ApartmentState.STA)]
         public void TestWithTimeoutAndSTARunsInSTA()
         {
@@ -64,6 +73,9 @@ namespace NUnit.Framework.Attributes
         [TestFixture]
 #if THREAD_ABORT
         [Timeout(10000)]
+#endif
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
         public class FixtureWithTimeoutRequiresSTA
@@ -75,6 +87,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [TestFixture, Apartment(ApartmentState.STA)]
         public class FixtureRequiresSTA
         {
@@ -132,6 +147,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.Children)]
@@ -151,6 +169,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.Children)]
@@ -172,6 +193,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.None)]
@@ -191,6 +215,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [TestFixture]
         [Apartment(ApartmentState.STA)]
         [Parallelizable(ParallelScope.None)]

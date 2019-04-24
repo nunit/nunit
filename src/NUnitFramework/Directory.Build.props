@@ -27,10 +27,10 @@
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
                             and '$(TargetFramework)' != 'netcoreapp1.1'
                             and '$(TargetFramework)' != 'netstandard2.0'
-                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);THREAD_ABORT;APARTMENT_STATE</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
 
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
-                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PLATFORM_DETECTION</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PLATFORM_DETECTION;APARTMENT_STATE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

@@ -73,6 +73,9 @@ namespace NUnit.Framework
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
 #if APARTMENT_STATE
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]
         public static void ContinuationStaysOnStaThread(AsyncExecutionApiAdapter apiAdapter)
@@ -86,6 +89,9 @@ namespace NUnit.Framework
             });
         }
 
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
         [Apartment(ApartmentState.STA)]
         [TestCaseSource(nameof(ApiAdapters))]
         public static void AsyncDelegatesAreExecutedOnStaThread(AsyncExecutionApiAdapter apiAdapter)
