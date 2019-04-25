@@ -293,22 +293,19 @@ namespace NUnit.Framework.Constraints
 
         private object ExtractValue(IEnumerable actual, object item, string propertyName, int index)
         {
-            object value;
             PropertyInfo property = item.GetType().GetProperty(propertyName);
-            if (property == null)
+            if (property != null)
             {
-                FieldInfo field = item.GetType().GetField(propertyName);
-                if (field == null)
-                {
-                    throw new ArgumentException($"No property or field with name {propertyName} was found at index {index}", nameof(actual));
-                }
-                value = field.GetValue(item);
+                return property.GetValue(item, null);
             }
-            else
+
+            FieldInfo field = item.GetType().GetField(propertyName);
+            if (field != null)
             {
-                value = property.GetValue(item, null);
+                return field.GetValue(item);
             }
-            return value;
+
+            throw new ArgumentException($"No property or field with name {propertyName} was found at index {index}", nameof(actual));
         }
 
         #region Internal OrderingStep Class
