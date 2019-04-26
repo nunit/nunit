@@ -184,6 +184,19 @@ namespace NUnit.Framework.Internal
                                                      "NS5.Fixture.TearDown",
                                                      "NS5.OneTimeTearDown");
         }
+
+        [Test]
+        public void NamespaceSetUpFixtureMayBeStatic()
+        {
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.StaticFixture").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            TestUtilities.SimpleEventRecorder.Verify("StaticFixture.OneTimeSetUp",
+                                                     "StaticFixture.Fixture.SetUp",
+                                                     "StaticFixture.Test.SetUp",
+                                                     "StaticFixture.Test",
+                                                     "StaticFixture.Test.TearDown",
+                                                     "StaticFixture.Fixture.TearDown",
+                                                     "StaticFixture.OneTimeTearDown");
+        }
         #endregion
 
         #region TwoTestFixtures
