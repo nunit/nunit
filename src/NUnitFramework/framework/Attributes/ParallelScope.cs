@@ -41,7 +41,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// The test may be run in parallel with others at the same level.
-        /// Valid on classes and methods but not assemblies.
+        /// Valid on classes and methods but has no effect on assemblies.
         /// </summary>
         Self = 1,
 
@@ -81,7 +81,9 @@ namespace NUnit.Framework
 
         /// <summary>
         /// The test and its descendants may be run in parallel with others at
-        /// the same level. Valid on classes, parameterized methods, and assemblies.
+        /// the same level. Valid on classes and parameterized methods.
+        /// For assemblies it is recommended to use <see cref="Children"/>
+        /// instead, as <see cref="Self"/> has no effect on assemblies.
         /// </summary>
         All = Self + Children
     }
