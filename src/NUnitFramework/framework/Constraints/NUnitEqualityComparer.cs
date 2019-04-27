@@ -128,9 +128,6 @@ namespace NUnit.Framework.Constraints
             get { return externalComparers; }
         }
 
-        // TODO: Define some sort of FailurePoint struct or otherwise
-        // eliminate the type-unsafeness of the current approach
-
         /// <summary>
         /// Gets the list of failure points for the last Match performed.
         /// The list consists of objects to be interpreted by the caller.

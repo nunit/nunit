@@ -1,4 +1,4 @@
-﻿ // ***********************************************************************
+ // ***********************************************************************
 // Copyright (c) 2010-2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,15 +21,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Diagnostics;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TODO: Documentation needed for class
+    /// <see cref="MaxTimeCommand" /> adjusts the result of a successful test
+    /// to a failure if the elapsed time has exceeded the specified maximum
+    /// time allowed.
     /// </summary>
     public class MaxTimeCommand : AfterTestCommand
     {
