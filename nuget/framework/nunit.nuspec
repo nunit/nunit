@@ -30,6 +30,7 @@ Supported platforms:
       <group targetFramework="net45" />
       <group targetFramework="netstandard1.4">
         <dependency id="NETStandard.Library" version="1.6.1" />
+        <dependency id="System.ComponentModel.TypeConverter" version="4.3.0" />
         <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="compile" />
       </group>
       <group targetFramework="netstandard2.0">
