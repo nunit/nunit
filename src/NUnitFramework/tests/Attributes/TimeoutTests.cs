@@ -50,6 +50,9 @@ namespace NUnit.Framework.Attributes
         }
 
 #if PLATFORM_DETECTION && THREAD_ABORT
+        // Most recent version of Mono tested: 5.20.1
+        private const string MonoFailsToAbortThreadReason = "ThreadAbortException is never thrown on Mono";
+
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
         {
@@ -63,7 +66,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
+        [Platform(Exclude = "Mono", Reason = MonoFailsToAbortThreadReason)]
         public void TestTimesOutAndTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixture();
@@ -88,7 +91,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [Platform(Exclude = "Mono", Reason = "Test never aborts on Mono (tested 5.4–5.12)")]
+        [Platform(Exclude = "Mono", Reason = MonoFailsToAbortThreadReason)]
         public void TearDownTimesOutAndNoFurtherTearDownIsRun()
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
@@ -101,7 +104,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [Platform(Exclude = "Mono", Reason = "Runner hangs at end when this is run")]
+        [Platform(Exclude = "Mono", Reason = MonoFailsToAbortThreadReason)]
         public void TimeoutCanBeSetOnTestFixture()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutFixtureWithTimeoutOnFixture));
@@ -172,6 +175,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test, Platform("Win")]
+        [Platform(Exclude = "Mono", Reason = MonoFailsToAbortThreadReason)]
         public void TimeoutWithMessagePumpShouldAbort()
         {
             ITestResult result = TestBuilder.RunTest(
