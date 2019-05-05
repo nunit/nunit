@@ -46,17 +46,21 @@ namespace NUnit.Framework.Internal.Filters
         public TestFilter BaseFilter { get; }
 
         /// <summary>
-        /// Determine if a particular test passes the filter criteria. The default 
-        /// implementation checks the test itself, its parents and any descendants.
+        /// Determine if a particular test passes the filter criteria.
         /// 
-        /// Derived classes may override this method or any of the Match methods
-        /// to change the behavior of the filter.
+        /// Overriden in NotFilter so that
+        /// 1. Two nested NotFilters are simply ignored
+        /// 2. Otherwise, we only look at the test itself and parents, ignoring
+        /// any child test matches.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
         /// <returns>True if the test passes the filter, otherwise false</returns>
         public override bool Pass(ITest test)
         {
-            return !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
+            var secondNotFilter = BaseFilter as NotFilter;
+            return secondNotFilter != null
+                ? secondNotFilter.BaseFilter.Pass(test) 
+                : !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
         }
 
         /// <summary>
