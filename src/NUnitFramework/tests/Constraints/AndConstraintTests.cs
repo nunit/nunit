@@ -21,6 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using NUnit.Framework.Internal;
+
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
@@ -53,8 +56,25 @@ namespace NUnit.Framework.Constraints
             var constraint = expression.Resolve();
             var constraintResult = constraint.ApplyTo(test);
 
-            Assert.That( constraintResult.IsSuccess, Is.False );
-            Assert.That( constraintResult.Description, Is.EqualTo( "String starting with \"Could not load\" and containing \"c:\\myfile.txt\"" ) );
+            Assert.That(constraintResult.IsSuccess, Is.False);
+            Assert.That(constraintResult.Description, Is.EqualTo("String starting with \"Could not load\" and containing \"c:\\myfile.txt\""));
+        }
+
+        [Test]
+        public void ShouldIncludeAdditionalInformationFromFailedConstraint()
+        {
+            var constraint = new AndConstraint(Is.Ordered, Is.EquivalentTo(new[] { 1, 2, 3 }));
+
+            string expectedMsg =
+                "  Expected: collection ordered and equivalent to < 1, 2, 3 >" + Environment.NewLine +
+                "  But was:  < 1, 2 >" + Environment.NewLine +
+                "  Missing (1): < 3 >" + Environment.NewLine;
+
+            var constraintResult = constraint.ApplyTo(new[] { 1, 2 });
+            var messageWriter = new TextMessageWriter();
+            constraintResult.WriteMessageTo(messageWriter);
+
+            Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
         }
     }
 }
