@@ -41,7 +41,7 @@ namespace NUnit.Framework
         [Test]
         public static void SynchronizationContextIsRestoredBetweenTestCases()
         {
-            using (RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
+            using (TestUtils.RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
             {
                 var result = TestBuilder.RunParameterizedMethodSuite(
                     typeof(SynchronizationContextFixture),
@@ -54,7 +54,7 @@ namespace NUnit.Framework
         [Test]
         public static void SynchronizationContextIsRestoredBetweenTestCaseSources()
         {
-            using (RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
+            using (TestUtils.RestoreSynchronizationContext()) // Restore the synchronization context so as not to affect other tests if this test fails
             {
                 var fixture = TestBuilder.MakeFixture(typeof(SynchronizationContextFixture));
 
@@ -143,7 +143,7 @@ namespace NUnit.Framework
         {
             var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
-            using (TemporarySynchronizationContext(createdOnThisThread))
+            using (TestUtils.TemporarySynchronizationContext(createdOnThisThread))
             {
                 apiAdapter.Execute(async () => await TaskEx.Yield());
             }
@@ -156,7 +156,7 @@ namespace NUnit.Framework
         {
             var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
-            using (TemporarySynchronizationContext(createdOnThisThread))
+            using (TestUtils.TemporarySynchronizationContext(createdOnThisThread))
             {
                 apiAdapter.Execute(() =>
                 {
@@ -173,7 +173,7 @@ namespace NUnit.Framework
         {
             var createdOnThisThread = CreateSynchronizationContext(knownSynchronizationContextType);
 
-            using (TemporarySynchronizationContext(createdOnThisThread))
+            using (TestUtils.TemporarySynchronizationContext(createdOnThisThread))
             {
                 apiAdapter.Execute(async () => await TaskEx.Yield());
 
@@ -181,19 +181,6 @@ namespace NUnit.Framework
             }
         }
 #endif
-
-        private static IDisposable TemporarySynchronizationContext(SynchronizationContext synchronizationContext)
-        {
-            var restore = RestoreSynchronizationContext();
-            SynchronizationContext.SetSynchronizationContext(synchronizationContext);
-            return restore;
-        }
-
-        private static IDisposable RestoreSynchronizationContext()
-        {
-            var originalContext = SynchronizationContext.Current;
-            return On.Dispose(() => SynchronizationContext.SetSynchronizationContext(originalContext));
-        }
     }
 }
 #endif
