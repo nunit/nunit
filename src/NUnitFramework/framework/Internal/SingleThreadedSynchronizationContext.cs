@@ -48,6 +48,7 @@ namespace NUnit.Framework.Internal
         {
             NotStarted,
             Running,
+            ShuttingDown,
             ShutDown
         }
 
@@ -86,9 +87,14 @@ namespace NUnit.Framework.Internal
         {
             lock (_queue)
             {
-                if (_status == Status.ShutDown)
+                switch (_status)
                 {
-                    throw CreateInvalidWhenShutDownException();
+                    case Status.ShuttingDown:
+                        if (_timeSinceShutdown.Elapsed < _shutdownTimeout) break;
+                        goto case Status.ShutDown;
+
+                    case Status.ShutDown:
+                        throw CreateInvalidWhenShutDownException();
                 }
 
                 _queue.Enqueue(work);
@@ -103,8 +109,15 @@ namespace NUnit.Framework.Internal
         {
             lock (_queue)
             {
+                switch (_status)
+                {
+                    case Status.ShuttingDown:
+                    case Status.ShutDown:
+                        break;
+                }
+
                 _timeSinceShutdown = Stopwatch.StartNew();
-                _status = Status.ShutDown;
+                _status = Status.ShuttingDown;
                 Monitor.Pulse(_queue);
             }
         }
@@ -125,6 +138,8 @@ namespace NUnit.Framework.Internal
                 {
                     case Status.Running:
                         throw new InvalidOperationException("SingleThreadedTestSynchronizationContext.Run may not be reentered.");
+
+                    case Status.ShuttingDown:
                     case Status.ShutDown:
                         throw CreateInvalidWhenShutDownException();
                 }
@@ -143,8 +158,9 @@ namespace NUnit.Framework.Internal
             {
                 while (_queue.Count == 0)
                 {
-                    if (_status == Status.ShutDown)
+                    if (_status == Status.ShuttingDown)
                     {
+                        _status = Status.ShutDown;
                         scheduledWork = default(ScheduledWork);
                         return false;
                     }
@@ -152,8 +168,10 @@ namespace NUnit.Framework.Internal
                     Monitor.Wait(_queue);
                 }
 
-                if (_status == Status.ShutDown && _timeSinceShutdown.Elapsed > _shutdownTimeout)
+                if (_status == Status.ShuttingDown && _timeSinceShutdown.Elapsed > _shutdownTimeout)
                 {
+                    _status = Status.ShutDown;
+
                     var testExecutionContext = TestExecutionContext.CurrentContext;
 
                     testExecutionContext?.CurrentResult.RecordAssertion(AssertionStatus.Error, ShutdownTimeoutMessage);
