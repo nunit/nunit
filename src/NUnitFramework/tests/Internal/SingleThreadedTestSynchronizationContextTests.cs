@@ -24,6 +24,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
@@ -35,18 +36,18 @@ namespace NUnit.Framework.Internal
             using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
             using (TestUtils.TemporarySynchronizationContext(context))
             {
-                var wasExecuted = false;
+                var wasExecuted = new CallbackWatcher();
 
                 context.Post(state =>
                 {
                     context.Post(_ => Thread.Sleep(TimeSpan.FromSeconds(0.5)), null);
-                    context.Post(_ => wasExecuted = true, null);
+                    context.Post(_ => wasExecuted.OnCallback(), null);
 
                     context.ShutDown();
                 }, null);
 
-                context.Run();
-                Assert.That(wasExecuted);
+                using (wasExecuted.ExpectCallback())
+                    context.Run();
             }
         }
 
@@ -56,22 +57,29 @@ namespace NUnit.Framework.Internal
             using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
             using (TestUtils.TemporarySynchronizationContext(context))
             {
+                var wasExecuted = new CallbackWatcher();
+
                 context.Post(_ =>
                 {
-                    ScheduleWorkRecursively(Stopwatch.StartNew(), until: TimeSpan.FromSeconds(0.5));
+                    ScheduleWorkRecursively(Stopwatch.StartNew(), until: TimeSpan.FromSeconds(0.5), wasExecuted: wasExecuted);
 
                     context.ShutDown();
                 }, null);
 
-                context.Run();
+                using (wasExecuted.ExpectCallback())
+                    context.Run();
             }
         }
 
-        private static void ScheduleWorkRecursively(Stopwatch stopwatch, TimeSpan until)
+        private static void ScheduleWorkRecursively(Stopwatch stopwatch, TimeSpan until, CallbackWatcher wasExecuted)
         {
-            if (stopwatch.Elapsed >= until) return;
+            if (stopwatch.Elapsed >= until)
+            {
+                wasExecuted.OnCallback();
+                return;
+            }
 
-            SynchronizationContext.Current.Post(_ => ScheduleWorkRecursively(stopwatch, until), null);
+            SynchronizationContext.Current.Post(_ => ScheduleWorkRecursively(stopwatch, until, wasExecuted), null);
         }
     }
 }
