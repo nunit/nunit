@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal
                         goto case Status.ShutDown;
 
                     case Status.ShutDown:
-                        throw CreateInvalidWhenShutDownException();
+                        throw ErrorAndGetExceptionForShutdownTimeout();
                 }
 
                 _queue.Enqueue(work);
@@ -122,11 +122,6 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static InvalidOperationException CreateInvalidWhenShutDownException()
-        {
-            return new InvalidOperationException("This SingleThreadedTestSynchronizationContext has been shut down.");
-        }
-
         /// <summary>
         /// May be called from any thread, but may only be called once.
         /// </summary>
@@ -141,7 +136,7 @@ namespace NUnit.Framework.Internal
 
                     case Status.ShuttingDown:
                     case Status.ShutDown:
-                        throw CreateInvalidWhenShutDownException();
+                        throw new InvalidOperationException("This SingleThreadedTestSynchronizationContext has been shut down.");
                 }
 
                 _status = Status.Running;
@@ -171,18 +166,22 @@ namespace NUnit.Framework.Internal
                 if (_status == Status.ShuttingDown && _timeSinceShutdown.Elapsed > _shutdownTimeout)
                 {
                     _status = Status.ShutDown;
-
-                    var testExecutionContext = TestExecutionContext.CurrentContext;
-
-                    testExecutionContext?.CurrentResult.RecordAssertion(AssertionStatus.Error, ShutdownTimeoutMessage);
-
-                    throw new InvalidOperationException(ShutdownTimeoutMessage);
+                    throw ErrorAndGetExceptionForShutdownTimeout();
                 }
 
                 scheduledWork = _queue.Dequeue();
             }
 
             return true;
+        }
+
+        private static Exception ErrorAndGetExceptionForShutdownTimeout()
+        {
+            var testExecutionContext = TestExecutionContext.CurrentContext;
+
+            testExecutionContext?.CurrentResult.RecordAssertion(AssertionStatus.Error, ShutdownTimeoutMessage);
+
+            return new InvalidOperationException(ShutdownTimeoutMessage);
         }
 
         public void Dispose()

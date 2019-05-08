@@ -24,10 +24,12 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {
+    [Parallelizable(ParallelScope.Children)]
     public static class SingleThreadedTestSynchronizationContextTests
     {
         [Test]
@@ -48,6 +50,92 @@ namespace NUnit.Framework.Internal
 
                 using (wasExecuted.ExpectCallback())
                     context.Run();
+            }
+        }
+
+        [Test]
+        public static void WorkInQueueAfterTimeoutIsDiscardedAndCausesRunToThrowAndError()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            using (TestUtils.TemporarySynchronizationContext(context))
+            {
+                var wasExecuted = new CallbackWatcher();
+
+                context.Post(state =>
+                {
+                    context.Post(_ => Thread.Sleep(TimeSpan.FromSeconds(1.5)), null);
+                    context.Post(_ => wasExecuted.OnCallback(), null);
+
+                    context.ShutDown();
+                }, null);
+
+                TestResult testResult;
+                Exception exception;
+
+                using (wasExecuted.ExpectCallback(count: 0)) // Work is discarded
+                using (new TestExecutionContext.IsolatedContext())
+                {
+                    try
+                    {
+                        context.Run();
+                        exception = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
+
+                    testResult = TestExecutionContext.CurrentContext.CurrentResult;
+                }
+
+                Assert.That(exception, Is.InstanceOf<InvalidOperationException>()); // Run() throws
+
+                Assert.That(testResult.WorstAssertionStatus, Is.EqualTo(AssertionStatus.Error)); // Run() errors
+            }
+        }
+
+        [Test]
+        public static void PostAfterTimeoutDiscardsWorkAndThrowsAndErrors()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            using (TestUtils.TemporarySynchronizationContext(context))
+            {
+                var wasExecuted = new CallbackWatcher();
+
+                var testResult = (TestResult)null;
+                var exception = (Exception)null;
+
+                context.Post(state =>
+                {
+                    context.Post(_ =>
+                    {
+                        Thread.Sleep(TimeSpan.FromSeconds(1.5));
+
+                        try
+                        {
+                            context.Post(__ => wasExecuted.OnCallback(), null);
+                            exception = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            exception = ex;
+                        }
+
+                        testResult = TestExecutionContext.CurrentContext.CurrentResult;
+                    }, null);
+
+                    context.ShutDown();
+                }, null);
+
+                using (wasExecuted.ExpectCallback(count: 0)) // Work is discarded
+                using (new TestExecutionContext.IsolatedContext())
+                {
+                    context.Run();
+                }
+
+                Assert.That(exception, Is.InstanceOf<InvalidOperationException>()); // Run() throws
+
+                Assert.That(testResult.WorstAssertionStatus, Is.EqualTo(AssertionStatus.Error)); // Run() errors
             }
         }
 
