@@ -33,6 +33,72 @@ namespace NUnit.Framework.Internal
     public static class SingleThreadedTestSynchronizationContextTests
     {
         [Test]
+        public static void RunWaitsWhenQueueIsEmptyUntilShutdown()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            {
+                var thread = new Thread(context.Run);
+
+                using (var queueRunning = new ManualResetEventSlim())
+                {
+                    context.Post(_ => queueRunning.Set(), null);
+                    thread.Start();
+                    Assert.That(queueRunning.Wait(1000), Is.True);
+                }
+
+                Assert.That(thread.Join(10), Is.False);
+
+                context.ShutDown();
+
+                Assert.That(thread.Join(1000), Is.True);
+            }
+        }
+
+        [Test]
+        public static void RunWaitsWhenQueueIsEmptyUntilPostAndExecutesPostedWork()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            {
+                var thread = new Thread(context.Run);
+                thread.Start();
+
+                using (var workExecuted = new ManualResetEventSlim())
+                {
+                    Thread.Sleep(100);
+                    context.Post(_ => workExecuted.Set(), null);
+
+                    Assert.That(workExecuted.Wait(1000), Is.True);
+                }
+            }
+        }
+
+        [Test]
+        public static void RunAfterShutdownThrowsInvalidOperationException()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            {
+                context.ShutDown();
+
+                Assert.That(context.Run, Throws.InvalidOperationException);
+            }
+        }
+
+        [Test]
+        public static void ReenteringRunThrowsInvalidOperationException()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
+            {
+                context.Post(_ =>
+                {
+                    Assert.That(context.Run, Throws.InvalidOperationException);
+                    context.ShutDown();
+                }, null);
+
+                context.Run();
+            }
+        }
+
+        [Test]
         public static void RecursivelyPostedWorkIsStillExecutedIfStartedWithinTimeout()
         {
             using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
