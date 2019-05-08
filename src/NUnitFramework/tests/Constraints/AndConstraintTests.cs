@@ -29,12 +29,15 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AndConstraintTests : ConstraintTestBase
     {
+        private TextMessageWriter messageWriter;
+
         [SetUp]
         public void SetUp()
         {
             TheConstraint = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
             ExpectedDescription = "greater than 40 and less than 50";
             StringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
+            messageWriter = new TextMessageWriter();
         }
 
         static object[] SuccessData = new object[] { 42 };
@@ -61,7 +64,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void ShouldIncludeAdditionalInformationFromFailedConstraint()
+        public void ShouldIncludeAdditionalInformationFromFailedConstraint_Right()
         {
             var constraint = new AndConstraint(Is.Ordered, Is.EquivalentTo(new[] { 1, 2, 3 }));
 
@@ -71,9 +74,46 @@ namespace NUnit.Framework.Constraints
                 "  Missing (1): < 3 >" + Environment.NewLine;
 
             var constraintResult = constraint.ApplyTo(new[] { 1, 2 });
-            var messageWriter = new TextMessageWriter();
-            constraintResult.WriteMessageTo(messageWriter);
 
+            Assert.That(constraintResult.IsSuccess, Is.False);
+
+            constraintResult.WriteMessageTo(messageWriter);
+            Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
+        }
+
+        [Test]
+        public void ShouldIncludeAdditionalInformationFromFailedConstraint_Left()
+        {
+            var constraint = new AndConstraint(Is.EquivalentTo(new[] { 1, 2, 3 }), Is.Ordered);
+
+            string expectedMsg =
+                "  Expected: equivalent to < 1, 2, 3 > and collection ordered" + Environment.NewLine +
+                "  But was:  < 1, 2 >" + Environment.NewLine +
+                "  Missing (1): < 3 >" + Environment.NewLine;
+
+            var constraintResult = constraint.ApplyTo(new[] { 1, 2 });
+
+            Assert.That(constraintResult.IsSuccess, Is.False);
+
+            constraintResult.WriteMessageTo(messageWriter);
+            Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
+        }
+
+        [Test]
+        public void ShouldIncludeAdditionalInformationFromFailedConstraint_Both()
+        {
+            var constraint = new AndConstraint(Is.EquivalentTo(new[] { 1, 2, 3 }), Is.Ordered);
+
+            string expectedMsg =
+                "  Expected: equivalent to < 1, 2, 3 > and collection ordered" + Environment.NewLine +
+                "  But was:  < 2, 1 >" + Environment.NewLine +
+                "  Missing (1): < 3 >" + Environment.NewLine;
+
+            var constraintResult = constraint.ApplyTo(new[] { 2, 1 });
+
+            Assert.That(constraintResult.IsSuccess, Is.False);
+
+            constraintResult.WriteMessageTo(messageWriter);
             Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
         }
     }
