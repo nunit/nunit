@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void RecursivelyPostedWorkIsStillExecutedIfStartedWithinTimeout()
         {
-            using (var context = new SingleThreadedTestSynchronizationContext())
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
             using (TestUtils.TemporarySynchronizationContext(context))
             {
                 var wasExecuted = false;
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void RecursivelyPostedWorkIsStillExecutedWithinTimeout()
         {
-            using (var context = new SingleThreadedTestSynchronizationContext())
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1)))
             using (TestUtils.TemporarySynchronizationContext(context))
             {
                 context.Post(_ =>
