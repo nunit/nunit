@@ -76,7 +76,7 @@ namespace NUnit.Framework.Constraints
             private readonly ConstraintResult rightResult;
 
             public AndConstraintResult(AndConstraint constraint, object actual, ConstraintResult leftResult, ConstraintResult rightResult)
-                : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess) 
+                : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess)
             {
                 this.leftResult = leftResult;
                 this.rightResult = rightResult;
@@ -97,6 +97,16 @@ namespace NUnit.Framework.Constraints
                     leftResult.WriteActualValueTo(writer);
                 else
                     rightResult.WriteActualValueTo(writer);
+            }
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
+            {
+                if (this.IsSuccess)
+                    base.WriteAdditionalLinesTo(writer);
+                else if (!leftResult.IsSuccess)
+                    leftResult.WriteAdditionalLinesTo(writer);
+                else
+                    rightResult.WriteAdditionalLinesTo(writer);
             }
         }
 
