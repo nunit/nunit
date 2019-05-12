@@ -269,18 +269,22 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if THREAD_ABORT
-                catch (System.Threading.ThreadAbortException)
-                {
-                    // No need to wrap or rethrow ThreadAbortException
-                    return null;
-                }
-#endif
                 catch (TargetInvocationException e)
                 {
                     throw new NUnitException("Rethrown", e.InnerException);
                 }
                 catch (Exception e)
+#if THREAD_ABORT
+                    // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
+                    // will not rethrow at the end of the catch block. Instead, it will resurrect
+                    // the ThreadAbortException at the end of the next unrelated catch block that
+                    // executes on the same thread after handling an unrelated exception.
+                    // The end result is that an unrelated test will error with the message "Test
+                    // cancelled by user."
+
+                    // This is just cleaner than catching and rethrowing:
+                    when (!(e is System.Threading.ThreadAbortException))
+#endif
                 {
                     throw new NUnitException("Rethrown", e);
                 }
