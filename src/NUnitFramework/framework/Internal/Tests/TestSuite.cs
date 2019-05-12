@@ -25,11 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
-
-#if ASYNC
-using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -309,19 +304,32 @@ namespace NUnit.Framework.Internal
         protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
             foreach (MethodInfo method in methods)
-                if (method.IsAbstract ||
-                     !method.IsPublic && !method.IsFamily ||
-                     method.GetParameters().Length > 0 ||
-                     method.ReturnType != typeof(void)
-#if ASYNC
-                     &&
-                     method.ReturnType != typeof(Task)
-#endif
-                    )
+            {
+                if (method.IsAbstract)
                 {
-                    this.MakeInvalid(string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    break;
+                    MakeInvalid("An abstract SetUp and TearDown methods cannot be run: " + method.Name);
                 }
+                else if (!(method.IsPublic || method.IsFamily))
+                {
+                    MakeInvalid("SetUp and TearDown methods must be public or internal: " + method.Name);
+                }
+                else if (method.GetParameters().Length != 0)
+                {
+                    MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
+                }
+                else if (AsyncToSyncAdapter.IsAsyncOperation(method))
+                {
+                    if (method.ReturnType == typeof(void))
+                        MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
+                    else if (AwaitAdapter.GetResultType(method.ReturnType) != typeof(void))
+                        MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
+                }
+                else
+                {
+                    if (method.ReturnType != typeof(void))
+                        MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
+                }
+            }
         }
         #endregion
     }

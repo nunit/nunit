@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class NUnitTestCaseBuilderTests
     {
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 #pragma warning disable IDE1006 // Naming Styles
         private readonly Type fixtureType = typeof(AsyncDummyFixture);
 #pragma warning restore IDE1006 // Naming Styles

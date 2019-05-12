@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc))]
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_Async))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_Async))]
 #endif
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_Async), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_Async), null)]
 #endif
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Async_Error()
         {
@@ -271,7 +271,7 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
 #endif
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
         [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 5)]
 #endif

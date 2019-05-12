@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 using NUnit.Framework.Interfaces;
@@ -340,7 +340,7 @@ namespace NUnit.Framework
 
         #region Out
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {

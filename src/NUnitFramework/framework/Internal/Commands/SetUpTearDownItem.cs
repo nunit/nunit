@@ -103,11 +103,10 @@ namespace NUnit.Framework.Internal.Commands
         private static void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
         {
             Guard.ArgumentNotAsyncVoid(method, nameof(method));
-#if ASYNC
+
             if (AsyncToSyncAdapter.IsAsyncOperation(method))
                 AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
             else
-#endif
                 InvokeMethod(method, context);
         }
 

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ASYNC
 using System;
 using System.Security;
 using System.Threading;
@@ -170,4 +169,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-#endif

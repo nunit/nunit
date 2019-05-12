@@ -76,12 +76,11 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-#if ASYNC
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
                 return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }
-#endif
+
             return InvokeTestMethod(context);
         }
 

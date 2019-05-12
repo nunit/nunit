@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework.Constraints;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -351,7 +351,7 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void AssumeThatSuccess()
         {
