@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -648,17 +648,37 @@ namespace NUnit.Framework.Internal
             UniqueValues.Check(() => _randomizer.NextDecimal(1066M, 2010M), 10, 100);
         }
 
+        [Test]
+        public void NextDecimalIsNotBiased()
+        {
+            const decimal wholeRange = decimal.MaxValue * (2 / 3m);
+            const decimal halfRange = wholeRange / 2;
+
+            const int totalCount = 10000;
+            var countInTopHalf = 0;
+
+            for (var i = 0; i < totalCount; i++)
+            {
+                if (_randomizer.NextDecimal(wholeRange) >= halfRange)
+                {
+                    countInTopHalf++;
+                }
+            }
+
+            Assert.That(countInTopHalf / (double)totalCount, Is.EqualTo(0.5).Within(0.01));
+        }
+
         #endregion
 
         #region Strings
-                
+
         [Test]
         [Description("Test that all generated strings are unique")]
         public void RandomStringsAreUnique()
         {
             UniqueValues.Check(() => _randomizer.GetString(), 10, 10);
         }
-        
+
         [TestCase(30, "Tｈｅɋúｉｃｋƃｒòｗｎｆ߀хｊｕｍｐëԁoѵerｔհëｌａȥｙｄｏɢ")]
         [TestCase(200, "ａèí߀ù123456")]
         [TestCase(1000, Randomizer.DefaultStringChars)]
@@ -667,7 +687,7 @@ namespace NUnit.Framework.Internal
         {
             UniqueValues.Check(() => _randomizer.GetString(outputLength, allowedChars), 10, 10);
         }
-        
+
         #endregion
 
         #region Enums
