@@ -17,7 +17,18 @@ NUnit is a unit-testing framework for all .NET languages. Initially ported from 
 
 ## Downloads ##
 
-The latest stable release of the NUnit Framework is [available on NuGet](https://www.nuget.org/packages/NUnit/) or can be [downloaded from GitHub](https://github.com/nunit/nunit/releases). Pre-release builds are [available on MyGet](https://www.myget.org/feed/nunit/package/nuget/NUnit).
+The latest stable release of the NUnit Framework is [available on NuGet](https://www.nuget.org/packages/NUnit/) or can be [downloaded from GitHub](https://github.com/nunit/nunit/releases).
+
+Pre-release builds are [available on MyGet](https://www.myget.org/feed/nunit/package/nuget/NUnit). When any pull request is merged, you can use the change immediately by merging this with your [`nuget.config`](https://docs.microsoft.com/en-us/nuget/consume-packages/configuring-nuget-behavior) and installing the latest `NUnit` package version similar to `3.X.0-dev-YYYYY`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="NUnit prerelease" value="https://www.myget.org/F/nunit/api/v3/index.json" />
+  </packageSources>
+</configuration>
+```
 
 ## Documentation ##
 
