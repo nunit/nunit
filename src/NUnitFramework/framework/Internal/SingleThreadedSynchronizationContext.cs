@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal
                 {
                     case Status.ShuttingDown:
                     case Status.ShutDown:
-                        break;
+                        return;
                 }
 
                 _timeSinceShutdown = Stopwatch.StartNew();

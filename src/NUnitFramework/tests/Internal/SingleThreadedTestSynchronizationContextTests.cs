@@ -235,5 +235,27 @@ namespace NUnit.Framework.Internal
 
             SynchronizationContext.Current.Post(_ => ScheduleWorkRecursively(stopwatch, until, wasExecuted), null);
         }
+
+        [Test]
+        public static void Duplicate_shutdown_call_does_not_extend_shutdown_time()
+        {
+            using (var context = new SingleThreadedTestSynchronizationContext(shutdownTimeout: TimeSpan.FromSeconds(1.5)))
+            using (TestUtils.TemporarySynchronizationContext(context))
+            {
+                var wasExecuted = new CallbackWatcher();
+
+                context.Post(_ =>
+                {
+                    context.ShutDown();
+                    Thread.Sleep(TimeSpan.FromSeconds(1));
+                    context.ShutDown();
+                }, null);
+                context.Post(_ => Thread.Sleep(TimeSpan.FromSeconds(1)), null);
+                context.Post(_ => wasExecuted.OnCallback(), null);
+
+                using (wasExecuted.ExpectCallback(count: 0))
+                    Assert.That(context.Run, Throws.InvalidOperationException);
+            }
+        }
     }
 }
