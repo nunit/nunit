@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -36,14 +36,15 @@ namespace NUnit.Framework.Constraints
         /// Construct a CollectionContainsConstraint
         /// </summary>
         /// <param name="expected"></param>
-        [Obsolete("Deprecated, use 'new SomeItemsConstraint(new EqualConstraint(expected))' or 'Has.Some.EqualTo(expected)' instead.")]
+        [Obsolete("This constructor has been deprecated and will be removed in a future release. "
+            + "Please use 'new SomeItemsConstraint(new EqualConstraint(expected))' or 'Has.Some.EqualTo(expected)' instead.")]
         public CollectionContainsConstraint(object expected)
             : base(expected)
         {
             Expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set

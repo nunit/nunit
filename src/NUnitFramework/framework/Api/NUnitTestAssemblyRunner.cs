@@ -32,7 +32,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Security;
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
 using System.Windows.Forms;
 #endif
 
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="assemblyNameOrPath">File name or path of the assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
-        /// <returns>True if the load was successful</returns>
+        /// <returns>A Test Assembly containing all loaded tests</returns>
         public ITest Load(string assemblyNameOrPath, IDictionary<string, object> settings)
         {
             Settings = settings;
@@ -151,7 +151,8 @@ namespace NUnit.Framework.Api
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
-            return LoadedTest = _builder.Build(assemblyNameOrPath, settings);
+            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assemblyNameOrPath, settings));
+            return LoadedTest;
 
         }
 
@@ -160,7 +161,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="assembly">The assembly to load</param>
         /// <param name="settings">Dictionary of option settings for loading the assembly</param>
-        /// <returns>True if the load was successful</returns>
+        /// <returns>A Test Assembly containing all loaded tests</returns>
         public ITest Load(Assembly assembly, IDictionary<string, object> settings)
         {
             Settings = settings;
@@ -168,7 +169,8 @@ namespace NUnit.Framework.Api
             if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
                 Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
 
-            return LoadedTest = _builder.Build(assembly, settings);
+            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assembly, settings));
+            return LoadedTest;
         }
 
         /// <summary>
@@ -179,7 +181,7 @@ namespace NUnit.Framework.Api
         public int CountTestCases(ITestFilter filter)
         {
             if (LoadedTest == null)
-                throw new InvalidOperationException("The CountTestCases method was called but no test has been loaded");
+                throw new InvalidOperationException("Tests must be loaded before counting test cases.");
 
             return CountTestCases(LoadedTest, filter);
         }
@@ -192,7 +194,7 @@ namespace NUnit.Framework.Api
         public ITest ExploreTests(ITestFilter filter)
         {
             if (LoadedTest == null)
-                throw new InvalidOperationException("The ExploreTests method was called but no test has been loaded");
+                throw new InvalidOperationException("Tests must be loaded before exploring them.");
 
             if (filter == TestFilter.Empty)
                 return LoadedTest;
@@ -206,7 +208,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="filter">A test filter used to select tests to be run</param>
-        /// <returns></returns>
+        /// <returns>The test results from the run</returns>
         public ITestResult Run(ITestListener listener, ITestFilter filter)
         {
             RunAsync(listener, filter);
@@ -227,7 +229,7 @@ namespace NUnit.Framework.Api
         {
             log.Info("Running tests");
             if (LoadedTest == null)
-                throw new InvalidOperationException("The Run method was called but no test has been loaded");
+                throw new InvalidOperationException("Tests must be loaded before running them.");
 
             _runComplete.Reset();
 
@@ -237,7 +239,7 @@ namespace NUnit.Framework.Api
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
-            StartRun(listener);
+            WrapInNUnitCallContext(() => StartRun(listener));
         }
 
         /// <summary>
@@ -304,18 +306,18 @@ namespace NUnit.Framework.Api
                 }
                 catch (SecurityException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission is not set to start the debugger.");
+                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission must be granted in order to launch the debugger.");
                     return;
                 }
                 //System.Diagnostics.Debugger.Launch() not implemented on mono
                 catch (NotImplementedException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("Debugger unavailable on this platform.");
+                    TopLevelWorkItem.MarkNotRunnable("This platform does not support launching the debugger.");
                     return;
                 }
             }
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -351,7 +353,7 @@ namespace NUnit.Framework.Api
                 (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
                 Context.Dispatcher = new MainThreadWorkItemDispatcher();
             else if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism); 
+                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
 #endif
@@ -397,7 +399,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -406,11 +408,39 @@ namespace NUnit.Framework.Api
         private static void PauseBeforeRun()
         {
             var process = Process.GetCurrentProcess();
-            string attachMessage = string.Format("Attach debugger to Process {0}.exe with Id {1} if desired.", process.ProcessName, process.Id);
-            MessageBox.Show(attachMessage, process.ProcessName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            MessageBox.Show(
+                $"Pausing as requested. If you would like to attach a debugger, the process name and ID are {process.ProcessName}.exe and {process.Id}." + Environment.NewLine
+                + Environment.NewLine
+                + "Click OK when you are ready to continue.",
+                $"{process.ProcessName} – paused",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 #endif
 
-#endregion
+#if (NET35 || NET40 || NET45)
+        /// <summary>
+        /// Executes the action within an <see cref="NUnitCallContext" />
+        /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
+        /// suitably at the end of the test run. This method only has an effect running
+        /// the full .NET Framework.
+        /// </summary>
+#else
+        /// <summary>
+        /// This method is a no-op in .NET Standard builds.
+        /// </summary>
+#endif
+        protected void WrapInNUnitCallContext(Action action)
+        {
+#if !(NET35 || NET40 || NET45)
+            action();
+#else
+            using (new NUnitCallContext())
+                action();
+#endif
+        }
     }
+
+#endregion
 }

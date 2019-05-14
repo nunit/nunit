@@ -1,4 +1,4 @@
-﻿' ***********************************************************************
+' ***********************************************************************
 ' Copyright (c) 2015 Charlie Poole, Rob Prouse
 '
 ' Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,15 @@
 
 Imports NUnitLite
 
-Public Class Program
+Public Module Program
 
     ''' <summary>
     ''' The main program executes the tests. Output may be routed to
     ''' various locations, depending on the arguments passed.
     ''' </summary>
     ''' <remarks>Run with --help for a full list of arguments supported</remarks>
-    Public Shared Function Main(ByVal args() As String) As Integer
+    Public Function Main(ByVal args() As String) As Integer
         Return New AutoRun().Execute(args)
     End Function
 
-End Class
+End Module

@@ -1,4 +1,4 @@
-﻿#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 
 using System;
 using System.Threading.Tasks;

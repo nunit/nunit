@@ -36,7 +36,6 @@ namespace NUnit.TestData.RepeatingTests
         private int setupCount;
         private int teardownCount;
         private readonly List<string> tearDownResults = new List<string>();
-        protected int count;
 
         [OneTimeSetUp]
         public void FixtureSetUp()
@@ -84,9 +83,6 @@ namespace NUnit.TestData.RepeatingTests
         {
             get { return tearDownResults; }
         }
-        public int Count
-        {
-            get { return count; }
-        }
+        public int Count { get; protected set; }
     }
 }

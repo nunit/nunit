@@ -29,22 +29,22 @@ namespace NUnit.TestData.SetUpData
     [TestFixture]
     public class SetUpAndTearDownFixture
     {
-        public bool wasSetUpCalled;
-        public bool wasTearDownCalled;
-        public bool throwInBaseSetUp;
+        public bool WasSetUpCalled;
+        public bool WasTearDownCalled;
+        public bool ThrowInBaseSetUp;
 
         [SetUp]
         public virtual void Init()
         {
-            wasSetUpCalled = true;
-            if (throwInBaseSetUp)
+            WasSetUpCalled = true;
+            if (ThrowInBaseSetUp)
                 throw (new Exception("Exception in base setup"));
         }
 
         [TearDown]
         public virtual void Destroy()
         {
-            wasTearDownCalled = true;
+            WasTearDownCalled = true;
         }
 
         [Test]
@@ -55,19 +55,19 @@ namespace NUnit.TestData.SetUpData
     [TestFixture]
     public class SetUpAndTearDownCounterFixture
     {
-        public int setUpCounter;
-        public int tearDownCounter;
+        public int SetUpCounter;
+        public int TearDownCounter;
 
         [SetUp]
         public virtual void Init()
         {
-            setUpCounter++;
+            SetUpCounter++;
         }
 
         [TearDown]
         public virtual void Destroy()
         {
-            tearDownCounter++;
+            TearDownCounter++;
         }
 
         [Test]
@@ -90,19 +90,19 @@ namespace NUnit.TestData.SetUpData
     [TestFixture]
     public class DefineInheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
-        public bool derivedSetUpCalled;
-        public bool derivedTearDownCalled;
+        public bool DerivedSetUpCalled;
+        public bool DerivedTearDownCalled;
 
         [SetUp]
         public override void Init()
         {
-            derivedSetUpCalled = true;
+            DerivedSetUpCalled = true;
         }
 
         [TearDown]
         public override void Destroy()
         {
-            derivedTearDownCalled = true;
+            DerivedTearDownCalled = true;
         }
 
         [Test]
@@ -111,37 +111,37 @@ namespace NUnit.TestData.SetUpData
 
     public class MultipleSetUpTearDownFixture
     {
-        public bool wasSetUp1Called;
-        public bool wasSetUp2Called;
-        public bool wasSetUp3Called;
-        public bool wasTearDown1Called;
-        public bool wasTearDown2Called;
+        public bool WasSetUp1Called;
+        public bool WasSetUp2Called;
+        public bool WasSetUp3Called;
+        public bool WasTearDown1Called;
+        public bool WasTearDown2Called;
 
         [SetUp]
         public virtual void Init1()
         {
-            wasSetUp1Called = true;
+            WasSetUp1Called = true;
         }
         [SetUp]
         public virtual void Init2()
         {
-            wasSetUp2Called = true;
+            WasSetUp2Called = true;
         }
         [SetUp]
         public virtual void Init3()
         {
-            wasSetUp3Called = true;
+            WasSetUp3Called = true;
         }
 
         [TearDown]
         public virtual void TearDown1()
         {
-            wasTearDown1Called = true;
+            WasTearDown1Called = true;
         }
         [TearDown]
         public virtual void TearDown2()
         {
-            wasTearDown2Called = true;
+            WasTearDown2Called = true;
         }
 
         [Test]
@@ -151,42 +151,42 @@ namespace NUnit.TestData.SetUpData
     [TestFixture]
     public class DerivedClassWithSeparateSetUp : SetUpAndTearDownFixture
     {
-        public bool wasDerivedSetUpCalled;
-        public bool wasDerivedTearDownCalled;
-        public bool wasBaseSetUpCalledFirst;
-        public bool wasBaseTearDownCalledLast;
+        public bool WasDerivedSetUpCalled;
+        public bool WasDerivedTearDownCalled;
+        public bool WasBaseSetUpCalledFirst;
+        public bool WasBaseTearDownCalledLast;
 
         [SetUp]
         public void DerivedInit()
         {
-            wasDerivedSetUpCalled = true;
-            wasBaseSetUpCalledFirst = wasSetUpCalled;
+            WasDerivedSetUpCalled = true;
+            WasBaseSetUpCalledFirst = WasSetUpCalled;
         }
 
         [TearDown]
         public void DerivedTearDown()
         {
-            wasDerivedTearDownCalled = true;
-            wasBaseTearDownCalledLast = !wasTearDownCalled;
+            WasDerivedTearDownCalled = true;
+            WasBaseTearDownCalledLast = !WasTearDownCalled;
         }
     }
 
     [TestFixture]
     public class SetupAndTearDownExceptionFixture
     {
-        public Exception setupException;
-        public Exception tearDownException;
+        public Exception SetupException;
+        public Exception TearDownException;
 
         [SetUp] 
         public void SetUp()
         {
-            if (setupException != null) throw setupException;
+            if (SetupException != null) throw SetupException;
         }
 
         [TearDown]
         public void TearDown()
         {
-            if (tearDownException!=null) throw tearDownException;
+            if (TearDownException!=null) throw TearDownException;
         }
 
         [Test]

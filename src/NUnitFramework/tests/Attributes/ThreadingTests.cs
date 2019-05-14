@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
+// Copyright (c) 2009-2018 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,13 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
+
 using System.Threading;
 
 namespace NUnit.Framework.Attributes
 {
     public class ThreadingTests
     {
+#if !NETCOREAPP1_1
         protected Thread ParentThread { get; private set; }
         protected Thread SetupThread { get; private set; }
         protected ApartmentState ParentThreadApartment { get; private set; }
@@ -65,6 +66,6 @@ namespace NUnit.Framework.Attributes
         {
             return thread.GetApartmentState();
         }
+#endif
     }
 }
-#endif

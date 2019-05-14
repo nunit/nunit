@@ -1,13 +1,30 @@
-// *****************************************************
-// Copyright 2007, Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
-// Licensed under the Open Software License version 3.0
-// *****************************************************
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
+using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
@@ -45,6 +62,19 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void FailureForEnumerablesWithDifferentSizes()
+        {
+            IEnumerable<int> expected = new int[] { 1, 2, 3 }.Select(i => i);
+            IEnumerable<int> actual = expected.Take(2);
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+            Assert.That(ex.Message, Is.EqualTo(
+                $"  Expected is {MsgUtils.GetTypeRepresentation(expected)}, actual is {MsgUtils.GetTypeRepresentation(actual)}" + Environment.NewLine +
+                "  Values differ at index [2]" + Environment.NewLine +
+                "  Missing:  < 3, ... >"));
+        }
+
+        [Test]
         public void FailureMatchingArrayAndCollection()
         {
             int[] expected = new int[] { 1, 2, 3 };
@@ -58,10 +88,10 @@ namespace NUnit.Framework.Constraints
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
 
-        [TestCaseSource( nameof(IgnoreCaseData) )]
-        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        [TestCaseSource(nameof(IgnoreCaseData))]
+        public void HonorsIgnoreCase(IEnumerable expected, IEnumerable actual)
         {
-            Assert.That( expected, Is.EqualTo( actual ).IgnoreCase );
+            Assert.That(expected, Is.EqualTo(actual).IgnoreCase);
         }
 
         private static readonly object[] IgnoreCaseData =

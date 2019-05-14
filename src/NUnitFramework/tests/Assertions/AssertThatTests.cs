@@ -27,7 +27,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System;
 using System.Threading.Tasks;
 #endif
@@ -61,14 +61,12 @@ namespace NUnit.Framework.Assertions
             Assert.That(2 + 2 == 4, "Not Equal to {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void AssertionPasses_BooleanWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assert.That(2 + 2 == 4, getExceptionMessage);
         }
-#endif
 
         [Test]
         public void AssertionPasses_ActualAndConstraint()
@@ -88,7 +86,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(2 + 2, Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void AssertionPasses_ActualAndConstraintWithMessageStringFunc()
         {
@@ -120,7 +117,6 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assert.That(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
-#endif
 
         [Test]
         public void AssertionPasses_DelegateAndConstraint()
@@ -140,14 +136,12 @@ namespace NUnit.Framework.Assertions
             Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
         }
 
-#if !NET20
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
             Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
         }
-#endif
 
         private int ReturnsFour()
         {
@@ -174,7 +168,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("got 5"));
         }
 
-#if !NET20
         [Test]
         public void FailureThrowsAssertionException_BooleanWithMessageStringFunc()
         {
@@ -182,7 +175,6 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("Not Equal to 4"));
         }
-#endif
 
         [Test]
         public void FailureThrowsAssertionException_ActualAndConstraint()
@@ -204,7 +196,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 5"));
         }
 
-#if !NET20
         [Test]
         public void FailureThrowsAssertionException_ActualAndConstraintWithMessageStringFunc()
         {
@@ -240,7 +231,6 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("error"));
         }
-#endif
 
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraint()
@@ -262,7 +252,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Should be 4"));
         }
 
-#if !NET20
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageStringFunc()
         {
@@ -270,7 +259,6 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("error"));
         }
-#endif
 
         [Test]
         public void AssertionsAreCountedCorrectly()
@@ -288,7 +276,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.AssertCount, Is.EqualTo(totalCount), "Fixture count is not correct");
         }
 
-#if !NET20
         [Test]
         public void PassingAssertion_DoesNotCallExceptionStringFunc()
         {
@@ -325,14 +312,13 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Does.Contain("Func was called"));
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
         }
-#endif
 
         private int ReturnsFive()
         {
             return 5;
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void AssertThatSuccess()
         {
@@ -408,7 +394,6 @@ namespace NUnit.Framework.Assertions
         }
 #endif
 
-#if !NET20
         [Test]
         public void AssertThatWithLambda()
         {
@@ -421,6 +406,5 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(() => false, "Error"));
             Assert.That(ex.Message, Does.Contain("Error"));
         }
-#endif
     }
 }

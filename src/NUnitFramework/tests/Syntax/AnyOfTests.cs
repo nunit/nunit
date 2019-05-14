@@ -28,9 +28,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<anyof 1 2 3>";
-            staticSyntax = Is.AnyOf(1, 2, 3);
-            builderSyntax = Builder().AnyOf(1, 2, 3);
+            ParseTree = "<anyof 1 2 3>";
+            StaticSyntax = Is.AnyOf(1, 2, 3);
+            BuilderSyntax = Builder().AnyOf(1, 2, 3);
         }
 
         [Test]
@@ -51,9 +51,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<anyof null>";
-            staticSyntax = Is.AnyOf(null);
-            builderSyntax = Builder().AnyOf(null);
+            ParseTree = "<anyof null>";
+            StaticSyntax = Is.AnyOf(null);
+            BuilderSyntax = Builder().AnyOf(null);
         }
     }
 }

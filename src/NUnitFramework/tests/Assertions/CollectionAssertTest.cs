@@ -297,7 +297,6 @@ namespace NUnit.Framework.Assertions
                                     Contains("But was:  2"));
         }
 
-#if !NET20
         [Test]
         public void AreEqual_UsingLinqQuery()
         {
@@ -318,7 +317,6 @@ namespace NUnit.Framework.Assertions
                                     Contains("Expected: 1").And.
                                     Contains("But was:  2"));
         }
-#endif
 
         [Test]
         public void AreEqual_IEquatableImplementationIsIgnored()
@@ -738,14 +736,14 @@ namespace NUnit.Framework.Assertions
         public void EqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.Equals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used for Assertions"));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.ReferenceEquals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used for Assertions"));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used."));
         }
 #endregion
 
@@ -777,6 +775,22 @@ namespace NUnit.Framework.Assertions
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ElementsWithinTuplesAreComparedUsingNUnitEqualityComparer()
+        {
+            var a = new Dictionary<string, ValueTuple<string, Dictionary<string, string>>>()
+            {
+                { "key", ValueTuple.Create("name", new Dictionary<string, string>())}
+            };
+
+            var b = new Dictionary<string, ValueTuple<string, Dictionary<string, string>>>()
+            {
+                { "key", ValueTuple.Create("name", new Dictionary<string, string>())}
+            };
+
+            CollectionAssert.AreEquivalent(a, b);
         }
 #endregion
 #endif

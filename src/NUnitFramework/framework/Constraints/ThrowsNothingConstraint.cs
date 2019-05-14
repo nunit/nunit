@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -49,7 +50,10 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if no exception is thrown, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            caughtException = ThrowsConstraint.ExceptionInterceptor.Intercept(actual);
+            var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
+
+            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
+
             return new ConstraintResult(this, caughtException, caughtException == null);
         }
 
@@ -63,7 +67,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-            return ApplyTo(new ThrowsConstraint.GenericInvocationDescriptor<TActual>(del));
+            return ApplyTo((Delegate)del);
         }
     }
 }

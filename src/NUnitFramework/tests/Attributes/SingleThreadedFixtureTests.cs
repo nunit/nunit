@@ -61,11 +61,18 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("may not specify a different apartment");
         }
 
-        [Test, Apartment(ApartmentState.MTA)]
-        public void TestWithSameApartmentIsValid()
+#if NETCOREAPP2_0
+        [Platform(Include = "Win, Mono")]
+#endif
+        [SingleThreaded]
+        public class SingleThreadedFixtureWithApartmentStateTests : ThreadingTests
         {
-            Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
-            Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            [Test, Apartment(ApartmentState.MTA)]
+            public void TestWithSameApartmentIsValid()
+            {
+                Assert.That(Thread.CurrentThread, Is.EqualTo(ParentThread));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+            }
         }
 #endif
 
@@ -79,6 +86,9 @@ namespace NUnit.Framework.Attributes
     }
 
 #if APARTMENT_STATE
+#if NETCOREAPP2_0
+    [Platform(Include = "Win")]
+#endif
     [SingleThreaded, Apartment(ApartmentState.STA)]
     public class SingleThreadedFixtureRunInSTA : ThreadingTests
     {

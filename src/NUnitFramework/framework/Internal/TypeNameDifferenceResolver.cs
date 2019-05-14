@@ -117,21 +117,21 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Obtain a shortened name of the given <see cref="Type"/>.
         /// </summary>
-        public string FullyShortenTypeName(Type GenericType)
+        public string FullyShortenTypeName(Type genericType)
         {
-            if (IsTypeGeneric(GenericType))
+            if (IsTypeGeneric(genericType))
             {
-                string genericType = GenericType.GetGenericTypeDefinition().Name;
+                string genericTypeDefinition = genericType.GetGenericTypeDefinition().Name;
 
-                List<Type> genericParams = new List<Type>(GenericType.GetGenericArguments());
+                List<Type> genericParams = new List<Type>(genericType.GetGenericArguments());
                 List<string> shortenedGenericParams = new List<string>();
                 genericParams.ForEach(x => shortenedGenericParams.Add(FullyShortenTypeName(x)));
 
-                return ReconstructGenericTypeName(genericType, shortenedGenericParams);
+                return ReconstructGenericTypeName(genericTypeDefinition, shortenedGenericParams);
             }
             else
             {
-                return GenericType.Name;
+                return genericType.Name;
             }
         }
 
@@ -207,11 +207,11 @@ namespace NUnit.Framework.Internal
         /// Reconstruct a generic type name using the provided generic type name, and a
         /// <see cref="List"/> of the template parameters.
         /// </summary>
-        /// <param name="GenericTypeName">The name of the generic type, including the number of template parameters expected.</param>
-        /// <param name="TemplateParamNames">A <see cref="List"/> of names of the template parameters of the provided generic type.</param>
-        public string ReconstructGenericTypeName(string GenericTypeName, List<string> TemplateParamNames)
+        /// <param name="genericTypeName">The name of the generic type, including the number of template parameters expected.</param>
+        /// <param name="templateParamNames">A <see cref="List"/> of names of the template parameters of the provided generic type.</param>
+        public string ReconstructGenericTypeName(string genericTypeName, List<string> templateParamNames)
         {
-            return GenericTypeName + "[" + string.Join(",", TemplateParamNames.ToArray()) + "]";
+            return genericTypeName + "[" + string.Join(",", templateParamNames.ToArray()) + "]";
         }
 
         /// <summary>

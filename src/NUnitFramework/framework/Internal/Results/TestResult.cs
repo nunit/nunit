@@ -83,11 +83,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
-#if NET20
-        protected ReaderWriterLock RwLock = new ReaderWriterLock();
-#else
         protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-#endif
 #endif
 
         #endregion
@@ -575,11 +571,14 @@ namespace NUnit.Framework.Internal
         {
             public ResultState ResultState { get; }
             public string Message { get; }
-            public string StackTrace { get; }
+            public string StackTrace { get; } 
+            public Exception Exception { get; }
 
             public ExceptionResult(Exception ex, FailureSite site)
             {
-                ex = ValidateAndUnwrap(ex);
+                ex = ValidateAndUnwrap(ex); 
+                
+                Exception = ex;
 
                 if (ex is ResultStateException)
                 {

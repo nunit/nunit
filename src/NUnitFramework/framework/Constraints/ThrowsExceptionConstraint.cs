@@ -22,11 +22,8 @@
 // ***********************************************************************
 
 using System;
-
-#if ASYNC
-using System.Threading.Tasks;
+using System.Reflection;
 using NUnit.Framework.Internal;
-#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -52,41 +49,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if an exception is thrown, otherwise false</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            TestDelegate code = actual as TestDelegate;
-            Exception caughtException = null;
+            var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            if (code != null)
-            {
-                try
-                {
-                    code();
-                }
-                catch (Exception ex)
-                {
-                    caughtException = ex;
-                }
-            }
-#if ASYNC
-            AsyncTestDelegate asyncCode = actual as AsyncTestDelegate;
-            if (asyncCode != null)
-            {
-                try
-                {
-                    AsyncToSyncAdapter.Await(asyncCode.Invoke);
-                }
-                catch (Exception ex)
-                {
-                    caughtException = ex;
-                }
-            }
-            if (code == null && asyncCode == null)
-#else
-            else
-#endif
-            {
-                throw new ArgumentException(string.Format("The actual value must be a TestDelegate or AsyncTestDelegate but was {0}", actual.GetType().Name), nameof(actual));
-            }
-            return new ThrowsExceptionConstraintResult(this, caughtException);
+            var exception = ExceptionHelper.RecordException(@delegate, nameof(actual));
+
+            return new ThrowsExceptionConstraintResult(this, exception);
         }
 
         /// <summary>
@@ -97,10 +64,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override ConstraintResult ApplyTo<TActual>(ActualValueDelegate<TActual> del)
         {
-#if ASYNC
-            if (typeof(TActual) == typeof(Task)) return ApplyTo(new AsyncTestDelegate(() => (Task)(object)del.Invoke()));
-#endif
-            return ApplyTo(new TestDelegate(() => del.Invoke()));
+            return ApplyTo((Delegate)del);
         }
 
         #region Nested Result Class

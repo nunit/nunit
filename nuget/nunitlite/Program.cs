@@ -25,7 +25,7 @@ using NUnitLite;
 
 namespace NUnitLite.Tests
 {
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// The main program executes the tests. Output may be routed to

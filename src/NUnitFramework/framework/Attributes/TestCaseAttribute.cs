@@ -269,7 +269,7 @@ namespace NUnit.Framework
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
                 object expectedResultInTargetType;
                 if (parms.HasExpectedResult
-                    && PerformSpecialConversion(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
+                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
                 {
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
@@ -335,9 +335,6 @@ namespace NUnit.Framework
                     parms.Arguments = newArgList;
                 }
 
-                //if (method.GetParameters().Length == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
-                //    parms.Arguments = new object[]{parms.Arguments};
-
                 // Special handling when sole argument is an object[]
                 if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 {
@@ -373,72 +370,11 @@ namespace NUnit.Framework
                 object arg = arglist[i];
                 Type targetType = parameters[i].ParameterType;
                 object argAsTargetType;
-                if (PerformSpecialConversion(arg, targetType, out argAsTargetType))
+                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out argAsTargetType))
                 {
                     arglist[i] = argAsTargetType;
                 }
             }
-        }
-
-        /// <summary>
-        /// Performs several special conversions allowed by NUnit in order to
-        /// permit arguments with types that cannot be used in the constructor
-        /// of an Attribute such as TestCaseAttribute or to simplify their use.
-        /// </summary>
-        /// <param name="arg">The argument to be converted</param>
-        /// <param name="targetType">The target <see cref="Type"/> in which the <paramref name="arg"/> should be converted</param>
-        /// <param name="argAsTargetType">If conversion was successfully applied, the <paramref name="arg"/> converted into <paramref name="targetType"/></param>
-        /// <returns>
-        /// <c>true</c> if <paramref name="arg"/> was converted and <paramref name="argAsTargetType"/> should be used;
-        /// <c>false</c> is no conversion was applied and <paramref name="argAsTargetType"/> should be ignored
-        /// </returns>
-        private static bool PerformSpecialConversion(object arg, Type targetType, out object argAsTargetType)
-        {
-            argAsTargetType = null;
-            if (arg == null)
-                return false;
-
-            if (targetType.IsInstanceOfType(arg))
-                return false;
-
-            if (arg.GetType().FullName == "System.DBNull")
-            {
-                argAsTargetType = null;
-                return true;
-            }
-
-            bool convert = false;
-
-            if (targetType == typeof(short) || targetType == typeof(byte) || targetType == typeof(sbyte) || targetType == typeof(long?) ||
-                targetType == typeof(short?) || targetType == typeof(byte?) || targetType == typeof(sbyte?) || targetType == typeof(double?))
-            {
-                convert = arg is int;
-            }
-            else if (targetType == typeof(decimal) || targetType == typeof(decimal?))
-            {
-                convert = arg is double || arg is string || arg is int;
-            }
-            else if (targetType == typeof(DateTime) || targetType == typeof(DateTime?))
-            {
-                convert = arg is string;
-            }
-
-            if (convert)
-            {
-                Type convertTo = targetType.GetTypeInfo().IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>) ?
-                    targetType.GetGenericArguments()[0] : targetType;
-                argAsTargetType = Convert.ChangeType(arg, convertTo, System.Globalization.CultureInfo.InvariantCulture);
-                return true;
-            }
-
-            // Convert.ChangeType doesn't work for TimeSpan from string
-            if ((targetType == typeof(TimeSpan) || targetType == typeof(TimeSpan?)) && arg is string)
-            {
-                argAsTargetType = TimeSpan.Parse((string)arg);
-                return true;
-            }
-
-            return false;
         }
         #endregion
 
@@ -454,10 +390,15 @@ namespace NUnit.Framework
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
 #if PLATFORM_DETECTION
-            if (test.RunState != RunState.NotRunnable &&
-                test.RunState != RunState.Ignored)
+            if (IncludePlatform != null || ExcludePlatform != null)
             {
-                PlatformHelper platformHelper = new PlatformHelper();
+                if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
+                {
+                    yield return test;
+                    yield break;
+                }
+
+                var platformHelper = new PlatformHelper();
 
                 if (!platformHelper.IsPlatformSupported(this))
                 {

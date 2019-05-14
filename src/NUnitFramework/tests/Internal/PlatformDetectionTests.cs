@@ -271,45 +271,13 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void DetectNet10()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework( RuntimeType.Net, new Version( 1, 0, 3705, 0 ) ),
-                "NET,NET-1.0" );
-        }
-
-        [Test]
-        public void DetectNet11()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework( RuntimeType.Net, new Version( 1, 1, 4322, 0 ) ),
-                "NET,NET-1.1" );
-        }
-
-        [Test]
-        public void DetectNet20()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework( RuntimeType.Net, new Version( 2, 0, 50727, 0 ) ),
-                "Net,Net-2.0" );
-        }
-        
-        [Test]
-        public void DetectNet30()
-        {
-            CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(3, 0)),
-                "Net,Net-2.0,Net-3.0");
-        }
-        
-        [Test]
         public void DetectNet35()
         {
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.Net, new Version(3, 5)),
                 "Net,Net-2.0,Net-3.0,Net-3.5");
         }
-        
+
         [Test]
         public void DetectNet40()
         {
@@ -463,13 +431,13 @@ namespace NUnit.Framework.Internal
             bool is64BitProcess = helper.IsPlatformSupported(attr64);
             Assert.False(is32BitProcess & is64BitProcess, "Process cannot be both 32 and 64 bit");
 
-#if ASYNC
+#if !NET35
             // For .NET 4.0 and 4.5, we can check further
             Assert.That(is64BitProcess, Is.EqualTo(Environment.Is64BitProcess));
 #endif
         }
 
-#if ASYNC
+#if !NET35
         [Test]
         public void PlatformAttribute_OperatingSystemBitNess()
         {

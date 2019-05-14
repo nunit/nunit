@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET20 || NET35 || NET40
+#if NET35 || NET40
 using System;
 using System.Reflection;
 
@@ -88,6 +88,14 @@ namespace NUnit.Compatibility
         public static Delegate CreateDelegate(this MethodInfo method, Type type)
         {
             return Delegate.CreateDelegate(type, method);
+        }
+
+        /// <summary>
+        /// See <see cref="Delegate.CreateDelegate(Type, object, MethodInfo)"/>.
+        /// </summary>
+        public static Delegate CreateDelegate(this MethodInfo method, Type type, object target)
+        {
+            return Delegate.CreateDelegate(type, target, method);
         }
     }
 }

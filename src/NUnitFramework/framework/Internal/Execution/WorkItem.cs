@@ -225,8 +225,9 @@ namespace NUnit.Framework.Internal.Execution
 #if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
+            var needsNewThreadToSetApartmentState = targetApartment != CurrentApartment;
 
-            if (Test.RequiresThread || targetApartment != CurrentApartment)
+            if (Test.RequiresThread || needsNewThreadToSetApartmentState)
 #else
             if (Test.RequiresThread)
 #endif
@@ -480,7 +481,18 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnCurrentThread();
             });
 #if APARTMENT_STATE
-            thread.SetApartmentState(apartment);
+            try
+            {
+                thread.SetApartmentState(apartment);
+            }
+            catch (PlatformNotSupportedException)
+            {
+                string msg = "Apartment state cannot be set on this platform.";
+                log.Error(msg);
+                Result.SetResult(ResultState.Skipped, msg);
+                WorkItemComplete();
+                return;
+            }
 #endif
             thread.Start();
             thread.Join();
@@ -571,7 +583,7 @@ namespace NUnit.Framework.Internal.Execution
 #endregion
     }
 
-#if NET20 || NET35
+#if NET35
     static class ActionTargetsExtensions
     {
         public static bool HasFlag(this ActionTargets targets, ActionTargets value)

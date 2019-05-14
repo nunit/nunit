@@ -38,7 +38,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void RepeatSuccess()
         {
-            count++;
+            Count++;
             Assert.IsTrue (true);
         }
     }
@@ -48,7 +48,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void RepeatFailOnFirst()
         {
-            count++;
+            Count++;
             Assert.IsFalse (true);
         }
     }
@@ -58,9 +58,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void RepeatFailOnThird()
         {
-            count++;
+            Count++;
 
-            if (count == 2)
+            if (Count == 2)
                 Assert.IsTrue(false);
         }
     }
@@ -70,9 +70,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void RepeatFailOnThird()
         {
-            count++;
+            Count++;
 
-            if (count == 3)
+            if (Count == 3)
                 Assert.IsTrue(false);
         }
     }
@@ -91,7 +91,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void Test()
         {
-            count++;
+            Count++;
             Assert.Ignore("Ignoring");
         }
     }
@@ -101,9 +101,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count == 2)
+            if (Count == 2)
                 Assert.Ignore("Ignoring");
         }
     }
@@ -113,9 +113,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count == 3)
+            if (Count == 3)
                 Assert.Ignore("Ignoring");
         }
     }
@@ -125,7 +125,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void Test()
         {
-            count++;
+            Count++;
             throw new Exception("Deliberate Exception");
         }
     }
@@ -135,9 +135,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count == 2)
+            if (Count == 2)
                 throw new Exception("Deliberate Exception");
         }
     }
@@ -147,9 +147,9 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3)]
         public void Test()
         {
-            count++;
+            Count++;
 
-            if (count == 3)
+            if (Count == 3)
                 throw new Exception("Deliberate Exception");
         }
     }
@@ -159,7 +159,7 @@ namespace NUnit.TestData.RepeatingTests
         [Test, Repeat(3), Category("SAMPLE")]
         public void TestWithCategory()
         {
-            count++;
+            Count++;
             Assert.IsTrue(true);
         }
     }

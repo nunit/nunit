@@ -31,8 +31,8 @@ namespace NUnit.Framework
     /// AssertionHelper is an optional base class for user tests,
     /// allowing the use of shorter names in making asserts.
     /// </summary>
-    [Obsolete("The AssertionHelper class will be removed in a coming release. " +
-              "Consider using the NUnit.StaticExpect NuGet package as a replacement.")]
+    [Obsolete("The AssertionHelper class has been deprecated and will be removed in a future release. "
+        + "Please consider using the NUnit.StaticExpect NuGet package instead.")]
     public class AssertionHelper
     {
         #region Expect
@@ -421,7 +421,7 @@ namespace NUnit.Framework
         }
 
         #endregion
-        
+
 #if SERIALIZATION
 
         /// <summary>
@@ -688,8 +688,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// <para>
         /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
+        /// </para>
+        /// <para>
+        /// To search for a substring instead of a collection element, use the
+        /// <see cref="Contains(string)"/> overload.
+        /// </para>
         /// </summary>
         public SomeItemsConstraint Contains(object expected)
         {
@@ -701,12 +707,15 @@ namespace NUnit.Framework
         #region Contains
 
         /// <summary>
+        /// <para>
         /// Returns a new ContainsConstraint. This constraint
         /// will, in turn, make use of the appropriate second-level
         /// constraint, depending on the type of the actual argument.
-        /// This overload is only used if the item sought is a string,
-        /// since any other type implies that we are looking for a
-        /// collection member.
+        /// </para>
+        /// <para>
+        /// To search for a collection element instead of a substring, use the
+        /// <see cref="Contains(object)"/> overload.
+        /// </para>
         /// </summary>
         public ContainsConstraint Contains(string expected)
         {
@@ -721,7 +730,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Contains")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
         public SubstringConstraint StringContaining(string expected)
         {
             return new SubstringConstraint(expected);
@@ -731,7 +740,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Contains")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
         public SubstringConstraint ContainsSubstring(string expected)
         {
             return new SubstringConstraint(expected);
@@ -745,7 +754,7 @@ namespace NUnit.Framework
         /// Returns a constraint that fails if the actual
         /// value contains the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Not.Contain")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Not.Contain instead.")]
         public SubstringConstraint DoesNotContain(string expected)
         {
             return new ConstraintExpression().Not.ContainsSubstring(expected);
@@ -777,7 +786,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.StartWith or StartsWith")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.StartWith or StartsWith instead.")]
         public StartsWithConstraint StringStarting(string expected)
         {
             return new StartsWithConstraint(expected);
@@ -791,7 +800,7 @@ namespace NUnit.Framework
         /// Returns a constraint that fails if the actual
         /// value starts with the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Not.StartWith")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Not.StartWith instead.")]
         public StartsWithConstraint DoesNotStartWith(string expected)
         {
             return new ConstraintExpression().Not.StartsWith(expected);
@@ -823,7 +832,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.EndWith or EndsWith")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.EndWith or EndsWith instead.")]
         public EndsWithConstraint StringEnding(string expected)
         {
             return new EndsWithConstraint(expected);
@@ -837,7 +846,7 @@ namespace NUnit.Framework
         /// Returns a constraint that fails if the actual
         /// value ends with the substring supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Not.EndWith")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Not.EndWith instead.")]
         public EndsWithConstraint DoesNotEndWith(string expected)
         {
             return new ConstraintExpression().Not.EndsWith(expected);
@@ -869,7 +878,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Match or Matches")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Match or Matches instead.")]
         public RegexConstraint StringMatching(string pattern)
         {
             return new RegexConstraint(pattern);
@@ -883,7 +892,7 @@ namespace NUnit.Framework
         /// Returns a constraint that fails if the actual
         /// value matches the pattern supplied as an argument.
         /// </summary>
-        [Obsolete("Deprecated, use Does.Not.Match")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Not.Match instead.")]
         public RegexConstraint DoesNotMatch(string pattern)
         {
             return new ConstraintExpression().Not.Matches(pattern);

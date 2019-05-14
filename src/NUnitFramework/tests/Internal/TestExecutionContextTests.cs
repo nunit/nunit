@@ -32,7 +32,7 @@ using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Interfaces;
 using System.Security.Principal;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Internal
 
 #region CurrentContext
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CurrentContextFlowsWithAsyncExecution()
         {
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task AsyncTestCanAccessItsOwnName()
         {
@@ -366,7 +366,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessResultName_Async()
         {
@@ -416,7 +416,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.GreaterThanOrEqualTo(_setupContext.StartTime));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessStartTime_Async()
         {
@@ -439,7 +439,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.GreaterThanOrEqualTo(_setupContext.StartTicks));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task AsyncTestCanAccessStartTicks()
         {
@@ -462,7 +462,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(_setupContext.OutWriter));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task AsyncTestCanAccessOutWriter()
         {
@@ -485,7 +485,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(_setupContext.TestObject));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessTestObject_Async()
         {
@@ -507,7 +507,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(_setupContext.StopOnError));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessStopOnError_Async()
         {
@@ -530,7 +530,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(_setupContext.Listener));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessListener_Async()
         {
@@ -553,7 +553,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(_setupContext.Dispatcher));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessDispatcher_Async()
         {
@@ -576,7 +576,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessParallelScope_Async()
         {
@@ -603,7 +603,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessTestWorker_Async()
         {
@@ -627,7 +627,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(_setupContext.RandomGenerator));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessRandomGenerator_Async()
         {
@@ -652,7 +652,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(4));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessAssertCount_Async()
         {
@@ -680,7 +680,7 @@ namespace NUnit.Framework.Internal
             });
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessMultipleAssertLevel_Async()
         {
@@ -706,7 +706,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessTestCaseTimeout_Async()
         {
@@ -729,7 +729,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.EqualTo(actions));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessUpstreamAcxtions_Async()
         {
@@ -761,7 +761,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentUICulture, Is.EqualTo(CultureInfo.CurrentUICulture));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessCurrentCulture_Async()
         {
@@ -840,7 +840,7 @@ namespace NUnit.Framework.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentPrincipal, Is.SameAs(expectedInstance), "Test");
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task CanAccessCurrentPrincipal_Async()
         {
@@ -962,7 +962,7 @@ namespace NUnit.Framework.Internal
 
 #region Cross-domain Tests
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
         [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
@@ -998,7 +998,7 @@ namespace NUnit.Framework.Internal
 
 #region Helper Methods
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         private async Task YieldAsync()
         {
 #if NET40
@@ -1027,7 +1027,7 @@ namespace NUnit.Framework.Internal
 #endregion
     }
 
-#if NET20 || NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45
     [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {

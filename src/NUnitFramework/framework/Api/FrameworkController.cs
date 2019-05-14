@@ -213,9 +213,6 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of exploring the tests</returns>
         public string ExploreTests(string filter)
         {
-            if (Runner.LoadedTest == null)
-                throw new InvalidOperationException("The Explore method was called but no test has been loaded");
-
             return Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml;
         }
 
@@ -235,8 +232,6 @@ namespace NUnit.Framework.Api
 
             return result.OuterXml;
         }
-
-#if !NET20
 
         class ActionCallback : ICallbackEventHandler
         {
@@ -291,7 +286,6 @@ namespace NUnit.Framework.Api
 
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
-#endif
 
         /// <summary>
         /// Stops the test run
@@ -323,10 +317,7 @@ namespace NUnit.Framework.Api
 
         private void ExploreTests(ICallbackEventHandler handler, string filter)
         {
-            if (Runner.LoadedTest == null)
-                throw new InvalidOperationException("The Explore method was called but no test has been loaded");
-
-            handler.RaiseCallbackEvent(Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml);
+            handler.RaiseCallbackEvent(ExploreTests(filter));
         }
 
         private void RunTests(ICallbackEventHandler handler, string filter)

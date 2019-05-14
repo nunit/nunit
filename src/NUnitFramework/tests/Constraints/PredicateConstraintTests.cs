@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new PredicateConstraint<int>((x) => x < 5);
-            expectedDescription = @"value matching lambda expression";
-            stringRepresentation = "<predicate>";
+            TheConstraint = new PredicateConstraint<int>((x) => x < 5);
+            ExpectedDescription = @"value matching lambda expression";
+            StringRepresentation = "<predicate>";
         }
 
         static object[] SuccessData = new object[]

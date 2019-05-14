@@ -32,9 +32,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new SameAsConstraint(obj1);
-            expectedDescription = "same as <System.Object>";
-            stringRepresentation = "<sameas System.Object>";
+            TheConstraint = new SameAsConstraint(obj1);
+            ExpectedDescription = "same as <System.Object>";
+            StringRepresentation = "<sameas System.Object>";
         }
 
         static object[] SuccessData = new object[] { obj1 };

@@ -31,9 +31,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new NotConstraint( new EqualConstraint(null) );
-            expectedDescription = "not equal to null";
-            stringRepresentation = "<not <equal null>>";
+            TheConstraint = new NotConstraint( new EqualConstraint(null) );
+            ExpectedDescription = "not equal to null";
+            StringRepresentation = "<not <equal null>>";
         }
 
         static object[] SuccessData = new object[] { 42, "Hello" };

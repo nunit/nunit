@@ -28,9 +28,6 @@ using System.Collections.Concurrent;
 #endif
 using NUnit.Framework.Interfaces;
 using System.Threading;
-#if NET20
-using NUnit.Compatibility;
-#endif
 
 namespace NUnit.Framework.Internal
 {

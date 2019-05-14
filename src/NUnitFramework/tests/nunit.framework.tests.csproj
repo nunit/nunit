@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net20;net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <DebugType>Full</DebugType>
 
@@ -16,7 +16,7 @@
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net20' and '$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
@@ -27,14 +27,14 @@
     <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' != 'net20' and '$(TargetFramework)' != 'net35'">
+  <ItemGroup Condition="'$(TargetFramework)' != 'net35'">
     <PackageReference Include="System.ValueTuple" version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase" Condition="'$(TargetFramework)' != 'net20'" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
 
   <ItemGroup>

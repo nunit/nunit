@@ -29,9 +29,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new AssignableToConstraint(typeof(D1));
-            expectedDescription = string.Format("assignable to <{0}>", typeof(D1));
-            stringRepresentation = string.Format("<assignableto {0}>", typeof(D1));
+            TheConstraint = new AssignableToConstraint(typeof(D1));
+            ExpectedDescription = string.Format("assignable to <{0}>", typeof(D1));
+            StringRepresentation = string.Format("<assignableto {0}>", typeof(D1));
         }
 
         static object[] SuccessData = new object[] { new D1(), new D2() };

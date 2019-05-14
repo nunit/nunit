@@ -1,4 +1,4 @@
-#if NET20 || NET35
+#if NET35
 // ==++==
 //
 //   Copyright (c) Microsoft Corporation.  All rights reserved.

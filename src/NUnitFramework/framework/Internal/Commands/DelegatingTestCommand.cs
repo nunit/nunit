@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2010 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,12 +31,16 @@ namespace NUnit.Framework.Internal.Commands
     public abstract class DelegatingTestCommand : TestCommand
     {
         /// <summary>TODO: Documentation needed for field</summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected TestCommand innerCommand;
+#pragma warning restore IDE1006
 
         /// <summary>
-        /// TODO: Documentation needed for constructor
+        /// Initializes a new instance of the <see cref="DelegatingTestCommand"/> class.
         /// </summary>
-        /// <param name="innerCommand"></param>
+        /// <param name="innerCommand">The inner command.</param>
         protected DelegatingTestCommand(TestCommand innerCommand)
             : base(innerCommand.Test)
         {

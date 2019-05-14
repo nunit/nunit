@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -28,9 +28,9 @@ namespace NUnit.Framework.Syntax
 {
     public abstract class SyntaxTest
     {
-        protected string parseTree;
-        protected IResolveConstraint staticSyntax;
-        protected IResolveConstraint builderSyntax;
+        protected string ParseTree;
+        protected IResolveConstraint StaticSyntax;
+        protected IResolveConstraint BuilderSyntax;
 
         protected ConstraintExpression Builder()
         {
@@ -41,16 +41,16 @@ namespace NUnit.Framework.Syntax
         public void SupportedByStaticSyntax()
         {
             Assert.That(
-                staticSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
+                StaticSyntax.Resolve().ToString(),
+                Is.EqualTo(ParseTree).NoClip);
         }
 
         [Test]
         public void SupportedByConstraintBuilder()
         {
             Assert.That(
-                builderSyntax.Resolve().ToString(),
-                Is.EqualTo(parseTree).NoClip);
+                BuilderSyntax.Resolve().ToString(),
+                Is.EqualTo(ParseTree).NoClip);
         }
     }
 }

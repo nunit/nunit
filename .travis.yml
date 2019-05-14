@@ -7,7 +7,7 @@ mono: 5.10.0 # Need 5.2+ for the included MSBuild.
 
 matrix:
   include:
-    - os: linux
+    - dist: xenial
       install:
         - sudo apt-get install dotnet-sharedframework-microsoft.netcore.app-1.1.6
 

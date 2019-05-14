@@ -49,12 +49,12 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         #region Test With Ignored TestCaseData
 
-        [TestCaseSource(nameof(ignored_source))]
+        [TestCaseSource(nameof(IgnoredSource))]
         public void MethodWithIgnoredTestCases(int num)
         {
         }
 
-        private static IEnumerable ignored_source
+        private static IEnumerable IgnoredSource
         {
             get
             {
@@ -69,12 +69,12 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         #region Test With Explicit TestCaseData
 
-        [TestCaseSource(nameof(explicit_source))]
+        [TestCaseSource(nameof(ExplicitSource))]
         public void MethodWithExplicitTestCases(int num)
         {
         }
 
-        private static IEnumerable explicit_source
+        private static IEnumerable ExplicitSource
         {
             get
             {
@@ -139,7 +139,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        [TestCaseSource(nameof(exception_source))]
+        [TestCaseSource(nameof(ExceptionSource))]
         public void MethodWithSourceThrowingException(string lhs, string rhs)
         {
         }
@@ -154,7 +154,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        static IEnumerable exception_source
+        static IEnumerable ExceptionSource
         {
             get
             {

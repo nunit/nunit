@@ -31,8 +31,10 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class NUnitTestCaseBuilderTests
     {
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
+#pragma warning disable IDE1006 // Naming Styles
         private readonly Type fixtureType = typeof(AsyncDummyFixture);
+#pragma warning restore IDE1006 // Naming Styles
 
         [TestCase(nameof(AsyncDummyFixture.AsyncVoid), RunState.NotRunnable)]
         [TestCase(nameof(AsyncDummyFixture.AsyncTask), RunState.Runnable)]
@@ -63,7 +65,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
+#pragma warning disable IDE1006 // Naming Styles
         private readonly Type optionalTestParametersFixtureType = typeof(OptionalTestParametersFixture);
+#pragma warning restore IDE1006 // Naming Styles
 
         [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams0), RunState.NotRunnable)]
         [TestCase(nameof(OptionalTestParametersFixture.MethodWithOptionalParams1), RunState.Runnable)]
@@ -76,6 +80,20 @@ namespace NUnit.Framework.Internal
         public void ParametrizedTestCaseTests(string methodName, RunState expectedState)
         {
             var suite = TestBuilder.MakeParameterizedMethodSuite(optionalTestParametersFixtureType, methodName);
+            var testCase = (Test)suite.Tests[0];
+            Assert.That(testCase.RunState, Is.EqualTo(expectedState));
+        }
+
+        private readonly Type testNameFixtureType = typeof(TestNameFixture);
+
+        [TestCase(nameof(TestNameFixture.ImplicitNull), RunState.Runnable)]
+        [TestCase(nameof(TestNameFixture.ExplicitNull), RunState.Runnable)]
+        [TestCase(nameof(TestNameFixture.EmptyTest), RunState.NotRunnable)]
+        [TestCase(nameof(TestNameFixture.WhiteSpaceTest), RunState.NotRunnable)]
+        [TestCase(nameof(TestNameFixture.ProperNameTest), RunState.Runnable)]
+        public void TestNameTests(string methodName, RunState expectedState)
+        {
+            var suite = TestBuilder.MakeParameterizedMethodSuite(testNameFixtureType, methodName);
             var testCase = (Test)suite.Tests[0];
             Assert.That(testCase.RunState, Is.EqualTo(expectedState));
         }

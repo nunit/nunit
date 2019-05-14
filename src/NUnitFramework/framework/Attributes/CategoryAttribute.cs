@@ -36,7 +36,11 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of the category
         /// </summary>
+#pragma warning disable IDE1006
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         protected string categoryName;
+#pragma warning restore IDE1006
 
         /// <summary>
         /// Construct attribute for a given category based on

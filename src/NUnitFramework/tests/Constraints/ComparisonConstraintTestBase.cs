@@ -32,20 +32,20 @@ namespace NUnit.Framework.Constraints
 
     public abstract class ComparisonConstraintTestBase : ConstraintTestBase
     {
-        protected ComparisonConstraint comparisonConstraint;
+        protected ComparisonConstraint ComparisonConstraint;
 
         [TestCase(null)]
         [TestCase("xxx")]
         public void InvalidDataThrowsArgumentException(object data)
         {
-            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(data));
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }
 
         [Test]
         public void UsesProvidedIComparer()
         {
             var comparer = new ObjectComparer();
-            comparisonConstraint.Using(comparer).ApplyTo(0);
+            ComparisonConstraint.Using(comparer).ApplyTo(0);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedGenericComparer()
         {
             var comparer = new GenericComparer<int>();
-            comparisonConstraint.Using(comparer).ApplyTo(0);
+            ComparisonConstraint.Using(comparer).ApplyTo(0);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedGenericComparison()
         {
             var comparer = new GenericComparison<int>();
-            comparisonConstraint.Using(comparer.Delegate).ApplyTo(0);
+            ComparisonConstraint.Using(comparer.Delegate).ApplyTo(0);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
-            comparisonConstraint.Using(comparer).ApplyTo(0);
+            ComparisonConstraint.Using(comparer).ApplyTo(0);
         }
     }
 

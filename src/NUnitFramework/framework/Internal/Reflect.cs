@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if !(NET20 || NET35 || NETSTANDARD1_4)
+#if !(NET35 || NETSTANDARD1_4)
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
@@ -258,7 +258,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !(NET20 || NET35 || NETSTANDARD1_4)
+#if !(NET35 || NETSTANDARD1_4)
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
@@ -269,18 +269,22 @@ namespace NUnit.Framework.Internal
                 {
                     return method.Invoke(fixture, args);
                 }
-#if THREAD_ABORT
-                catch (System.Threading.ThreadAbortException)
-                {
-                    // No need to wrap or rethrow ThreadAbortException
-                    return null;
-                }
-#endif
                 catch (TargetInvocationException e)
                 {
                     throw new NUnitException("Rethrown", e.InnerException);
                 }
                 catch (Exception e)
+#if THREAD_ABORT
+                    // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
+                    // will not rethrow at the end of the catch block. Instead, it will resurrect
+                    // the ThreadAbortException at the end of the next unrelated catch block that
+                    // executes on the same thread after handling an unrelated exception.
+                    // The end result is that an unrelated test will error with the message "Test
+                    // cancelled by user."
+
+                    // This is just cleaner than catching and rethrowing:
+                    when (!(e is System.Threading.ThreadAbortException))
+#endif
                 {
                     throw new NUnitException("Rethrown", e);
                 }
@@ -374,6 +378,112 @@ namespace NUnit.Framework.Internal
             return type.GetTypeInfo().IsGenericType
                 && !type.GetTypeInfo().IsGenericTypeDefinition
                 && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
+        }
+
+        internal static IEnumerable<Type> TypeAndBaseTypes(this Type type)
+        {
+            for (; type != null; type = type.GetTypeInfo().BaseType)
+            {
+                yield return type;
+            }
+        }
+
+#if NETSTANDARD1_4
+        internal static Type GetInterface(this Type type, string name)
+        {
+            return type.GetTypeInfo().ImplementedInterfaces
+                .SingleOrDefault(implementedInterface => implementedInterface.FullName == name);
+        }
+#endif
+
+        /// <summary>
+        /// Same as <c>GetMethod(<paramref name="name"/>, <see cref="BindingFlags.Public"/> |
+        /// <see cref="BindingFlags.Instance"/>, <see langword="null"/>, <paramref name="parameterTypes"/>,
+        /// <see langword="null"/>)</c> except that it also chooses only non-generic methods.
+        /// Useful for avoiding the <see cref="AmbiguousMatchException"/> you can have with <c>GetMethod</c>.
+        /// </summary>
+        internal static MethodInfo GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
+        {
+            foreach (var currentType in type.TypeAndBaseTypes())
+            {
+                var method = currentType
+                   .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                   .SingleOrDefault(candidate =>
+                   {
+                       if (candidate.Name != name || candidate.GetGenericArguments().Length != 0) return false;
+
+                       var parameters = candidate.GetParameters();
+                       if (parameters.Length != parameterTypes.Length) return false;
+
+                       for (var i = 0; i < parameterTypes.Length; i++)
+                           if (parameters[i].ParameterType != parameterTypes[i])
+                               return false;
+
+                       return true;
+                   });
+
+                if (method != null) return method;
+            }
+
+            return null;
+        }
+
+        internal static PropertyInfo GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
+        {
+            for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
+            {
+                var property = currentType
+                     .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                     .SingleOrDefault(candidate =>
+                     {
+                         if (candidate.Name != name) return false;
+
+                         var indexParameters = candidate.GetIndexParameters();
+                         if (indexParameters.Length != indexParameterTypes.Length) return false;
+
+                         for (var i = 0; i < indexParameterTypes.Length; i++)
+                             if (indexParameters[i].ParameterType != indexParameterTypes[i]) return false;
+
+                         return true;
+                     });
+
+                if (property != null) return property;
+            }
+
+            return null;
+        }
+
+        internal static object InvokeWithTransparentExceptions(this MethodBase methodBase, object instance)
+        {
+            // If we ever target .NET Core 2.1, we can keep from mucking with the exception stack trace
+            // using BindingFlags.DoNotWrapExceptions rather than try…catch.
+
+            try
+            {
+                return methodBase.Invoke(instance, null);
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionHelper.Rethrow(ex.InnerException);
+
+                // If this line is reached, ExceptionHelper.Rethrow is very broken.
+                throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
+            }
+        }
+
+        internal static object DynamicInvokeWithTransparentExceptions(this Delegate @delegate)
+        {
+            try
+            {
+                return @delegate.DynamicInvoke();
+            }
+            catch (TargetInvocationException ex)
+            {
+                ExceptionHelper.Rethrow(ex.InnerException);
+
+                // If this line is reached, ExceptionHelper.Rethrow is very broken.
+                throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
+            }
         }
     }
 }

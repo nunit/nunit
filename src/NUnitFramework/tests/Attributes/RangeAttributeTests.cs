@@ -52,7 +52,7 @@ namespace NUnit.Framework.Attributes
         };
 
         // See XML docs for the ParamAttributeTypeConversions class.
-        private static readonly Type[] Int32RangeConvertibleToParameterTypes = { typeof(int), typeof(sbyte), typeof(byte), typeof(short), typeof(decimal) };
+        private static readonly Type[] Int32RangeConvertibleToParameterTypes = { typeof(int), typeof(sbyte), typeof(byte), typeof(short), typeof(decimal), typeof(long), typeof(double) };
         private static readonly Type[] UInt32RangeConvertibleToParameterTypes = { typeof(uint) };
         private static readonly Type[] Int64RangeConvertibleToParameterTypes = { typeof(long) };
         private static readonly Type[] UInt64RangeConvertibleToParameterTypes = { typeof(ulong) };
@@ -350,6 +350,30 @@ namespace NUnit.Framework.Attributes
         #region MaxValue
 
         [Test]
+        public static void MaxValueRange_Byte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(byte.MaxValue - 2, byte.MaxValue), typeof(byte)),
+                Is.EqualTo(new[] { byte.MaxValue - 2, byte.MaxValue - 1, byte.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRange_SByte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(sbyte.MaxValue - 2, sbyte.MaxValue), typeof(sbyte)),
+                Is.EqualTo(new[] { sbyte.MaxValue - 2, sbyte.MaxValue - 1, sbyte.MaxValue }));
+        }
+
+        [Test]
+        public static void MaxValueRange_Int16()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(short.MaxValue - 2, short.MaxValue), typeof(short)),
+                Is.EqualTo(new[] { short.MaxValue - 2, short.MaxValue - 1, short.MaxValue }));
+        }
+
+        [Test]
         public static void MaxValueRange_Int32()
         {
             Assert.That(
@@ -438,6 +462,30 @@ namespace NUnit.Framework.Attributes
         #endregion
 
         #region MinValue
+
+        [Test]
+        public static void MinValueRange_Byte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(byte.MinValue + 2, byte.MinValue), typeof(byte)),
+                Is.EqualTo(new[] { byte.MinValue + 2, byte.MinValue + 1, byte.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRange_SByte()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(sbyte.MinValue + 2, sbyte.MinValue), typeof(sbyte)),
+                Is.EqualTo(new[] { sbyte.MinValue + 2, sbyte.MinValue + 1, sbyte.MinValue }));
+        }
+
+        [Test]
+        public static void MinValueRange_Int16()
+        {
+            Assert.That(
+                GetData(new RangeAttribute(short.MinValue + 2, short.MinValue), typeof(short)),
+                Is.EqualTo(new[] { short.MinValue + 2, short.MinValue + 1, short.MinValue }));
+        }
 
         [Test]
         public static void MinValueRange_Int32()

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -29,6 +29,8 @@ namespace NUnit.Common
 {
     public class ColorConsoleWriter : ExtendedTextWrapper
     {
+        // ReSharper disable once InconsistentNaming
+        // Disregarding naming convention for back-compat
         public bool _colorEnabled;
 
         /// <summary>

@@ -29,9 +29,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new OrConstraint(new EqualConstraint(42), new EqualConstraint(99));
-            expectedDescription = "42 or 99";
-            stringRepresentation = "<or <equal 42> <equal 99>>";
+            TheConstraint = new OrConstraint(new EqualConstraint(42), new EqualConstraint(99));
+            ExpectedDescription = "42 or 99";
+            StringRepresentation = "<or <equal 42> <equal 99>>";
         }
 
         static object[] SuccessData = new object[] { 99, 42 };

@@ -96,11 +96,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-        // NOTE: The following tests use Assert.Fail under control of an
-        // if statement to avoid evaluating DumpEvents unnecessarily.
-        // Unfortunately, we can't use the form of Assert that takes
-        // a Func for a message because it's not present in .NET 2.0
-
         [Test]
         public void AllTestsPassed()
         {
@@ -423,14 +418,19 @@ namespace NUnit.Framework.Internal.Execution
                 .SetName("Issue-2464");
 
 #if APARTMENT_STATE
-            yield return new TestFixtureData(
-                Suite("fake-assembly.dll").Parallelizable()
-                    .Containing(Fixture(typeof(STAFixture)).Parallelizable()),
-                Expecting(
-                    That("fake-assembly.dll").StartsOn("ParallelWorker"),
-                    That("STAFixture").RunsOn("ParallelSTAWorker"),
-                    That("STAFixture_Test").RunsOn("ParallelSTAWorker")))
-                .SetName("Issue-2467");
+#if NETCOREAPP2_0
+            if (new PlatformHelper().IsPlatformSupported(new PlatformAttribute { Include = "Win, Mono" }))
+#endif
+            {
+                yield return new TestFixtureData(
+                        Suite("fake-assembly.dll").Parallelizable()
+                                                  .Containing(Fixture(typeof(STAFixture)).Parallelizable()),
+                        Expecting(
+                            That("fake-assembly.dll").StartsOn("ParallelWorker"),
+                            That("STAFixture").RunsOn("ParallelSTAWorker"),
+                            That("STAFixture_Test").RunsOn("ParallelSTAWorker")))
+                    .SetName("Issue-2467");
+            }
 #endif
         }
 
@@ -466,7 +466,7 @@ namespace NUnit.Framework.Internal.Execution
 
         public void SendMessage(TestMessage message)
         {
-            
+
         }
 
 #endregion

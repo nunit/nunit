@@ -30,6 +30,7 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.TestUtilities;
 using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api
@@ -363,7 +364,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("The Explore method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before exploring them."));
         }
 
         [Test]
@@ -420,7 +421,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
         }
 
         [Test]
@@ -474,7 +475,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test]
@@ -544,7 +545,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test]
@@ -589,25 +590,6 @@ namespace NUnit.Framework.Api
         {
             var propNode = result.SelectSingleNode(string.Format("properties/property[@name='{0}']", PropertyNames.SkipReason));
             return propNode == null ? null : propNode.Attributes["value"];
-        }
-
-#endregion
-
-#region Nested Callback Class
-
-        private class CallbackEventHandler : System.Web.UI.ICallbackEventHandler
-        {
-            private string _result;
-
-            public string GetCallbackResult()
-            {
-                return _result;
-            }
-
-            public void RaiseCallbackEvent(string eventArgument)
-            {
-                _result = eventArgument;
-            }
         }
 
 #endregion

@@ -170,19 +170,19 @@ namespace NUnit.Framework.Attributes
         public class SqrtTests
         {
             [Datapoint]
-            public double zero = 0;
+            public double Zero = 0;
 
             [Datapoint]
-            public double positive = 1;
+            public double Positive = 1;
 
             [Datapoint]
-            public double negative = -1;
+            public double Negative = -1;
 
             [Datapoint]
-            public double max = double.MaxValue;
+            public double Max = double.MaxValue;
 
             [Datapoint]
-            public double infinity = double.PositiveInfinity;
+            public double Infinity = double.PositiveInfinity;
 
             [Theory]
             public void SqrtTimesItselfGivesOriginal(double num)

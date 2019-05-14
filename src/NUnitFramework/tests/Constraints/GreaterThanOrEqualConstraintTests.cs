@@ -33,9 +33,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = comparisonConstraint = new GreaterThanOrEqualConstraint(5);
-            expectedDescription = "greater than or equal to 5";
-            stringRepresentation = "<greaterthanorequal 5>";
+            TheConstraint = ComparisonConstraint = new GreaterThanOrEqualConstraint(5);
+            ExpectedDescription = "greater than or equal to 5";
+            StringRepresentation = "<greaterthanorequal 5>";
         }
 
         static object[] SuccessData = new object[] { 6, 5 };

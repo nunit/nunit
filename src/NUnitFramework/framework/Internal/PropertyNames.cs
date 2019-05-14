@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The process ID of the executing assembly
         /// </summary>
-        public const string ProcessID = "_PID";
+        public const string ProcessId = "_PID";
 
         /// <summary>
         /// The stack trace from any data provider that threw

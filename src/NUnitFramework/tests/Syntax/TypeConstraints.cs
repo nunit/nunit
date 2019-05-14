@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -31,9 +31,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<typeof System.String>";
-            staticSyntax = Is.TypeOf(typeof(string));
-            builderSyntax = Builder().TypeOf(typeof(string));
+            ParseTree = "<typeof System.String>";
+            StaticSyntax = Is.TypeOf(typeof(string));
+            BuilderSyntax = Builder().TypeOf(typeof(string));
         }
     }
 
@@ -43,9 +43,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<instanceof System.String>";
-            staticSyntax = Is.InstanceOf(typeof(string));
-            builderSyntax = Builder().InstanceOf(typeof(string));
+            ParseTree = "<instanceof System.String>";
+            StaticSyntax = Is.InstanceOf(typeof(string));
+            BuilderSyntax = Builder().InstanceOf(typeof(string));
         }
     }
 
@@ -55,9 +55,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<assignablefrom System.String>";
-            staticSyntax = Is.AssignableFrom(typeof(string));
-            builderSyntax = Builder().AssignableFrom(typeof(string));
+            ParseTree = "<assignablefrom System.String>";
+            StaticSyntax = Is.AssignableFrom(typeof(string));
+            BuilderSyntax = Builder().AssignableFrom(typeof(string));
         }
     }
 
@@ -67,9 +67,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<assignableto System.String>";
-            staticSyntax = Is.AssignableTo(typeof(string));
-            builderSyntax = Builder().AssignableTo(typeof(string));
+            ParseTree = "<assignableto System.String>";
+            StaticSyntax = Is.AssignableTo(typeof(string));
+            BuilderSyntax = Builder().AssignableTo(typeof(string));
         }
     }
 
@@ -79,9 +79,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
-            staticSyntax = Has.Attribute(typeof(TestFixtureAttribute));
-            builderSyntax = Builder().Attribute(typeof(TestFixtureAttribute));
+            ParseTree = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
+            StaticSyntax = Has.Attribute(typeof(TestFixtureAttribute));
+            BuilderSyntax = Builder().Attribute(typeof(TestFixtureAttribute));
         }
     }
 
@@ -91,9 +91,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = @"<attribute NUnit.Framework.TestFixtureAttribute <property Description <not <null>>>>";
-            staticSyntax = Has.Attribute(typeof(TestFixtureAttribute)).Property("Description").Not.Null;
-            builderSyntax = Builder().Attribute(typeof(TestFixtureAttribute)).Property("Description").Not.Null;
+            ParseTree = @"<attribute NUnit.Framework.TestFixtureAttribute <property Description <not <null>>>>";
+            StaticSyntax = Has.Attribute(typeof(TestFixtureAttribute)).Property("Description").Not.Null;
+            BuilderSyntax = Builder().Attribute(typeof(TestFixtureAttribute)).Property("Description").Not.Null;
         }
     }
 
@@ -103,9 +103,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<typeof System.String>";
-            staticSyntax = Is.TypeOf<string>();
-            builderSyntax = Builder().TypeOf<string>();
+            ParseTree = "<typeof System.String>";
+            StaticSyntax = Is.TypeOf<string>();
+            BuilderSyntax = Builder().TypeOf<string>();
         }
     }
 
@@ -115,9 +115,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<instanceof System.String>";
-            staticSyntax = Is.InstanceOf<string>();
-            builderSyntax = Builder().InstanceOf<string>();
+            ParseTree = "<instanceof System.String>";
+            StaticSyntax = Is.InstanceOf<string>();
+            BuilderSyntax = Builder().InstanceOf<string>();
         }
     }
 
@@ -127,9 +127,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<assignablefrom System.String>";
-            staticSyntax = Is.AssignableFrom<string>();
-            builderSyntax = Builder().AssignableFrom<string>();
+            ParseTree = "<assignablefrom System.String>";
+            StaticSyntax = Is.AssignableFrom<string>();
+            BuilderSyntax = Builder().AssignableFrom<string>();
         }
     }
 
@@ -139,9 +139,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<assignableto System.String>";
-            staticSyntax = Is.AssignableTo<string>();
-            builderSyntax = Builder().AssignableTo<string>();
+            ParseTree = "<assignableto System.String>";
+            StaticSyntax = Is.AssignableTo<string>();
+            BuilderSyntax = Builder().AssignableTo<string>();
         }
     }
 
@@ -151,9 +151,9 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void SetUp()
         {
-            parseTree = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
-            staticSyntax = Has.Attribute<TestFixtureAttribute>();
-            builderSyntax = Builder().Attribute<TestFixtureAttribute>();
+            ParseTree = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
+            StaticSyntax = Has.Attribute<TestFixtureAttribute>();
+            BuilderSyntax = Builder().Attribute<TestFixtureAttribute>();
         }
     }
 }

@@ -269,16 +269,14 @@ namespace NUnit.Framework.Constraints
                         failurePoint.ExpectedValue,
                         failurePoint.ActualValue,
                         ++depth);
-                //else if (failurePoint.ActualHasData)
-                //{
-                //    writer.Write("  Extra:    ");
-                //    writer.WriteCollectionElements(actual, failurePoint.Position, 3);
-                //}
-                //else
-                //{
-                //    writer.Write("  Missing:  ");
-                //    writer.WriteCollectionElements(expected, failurePoint.Position, 3);
-                //}
+                else if (failurePoint.ActualHasData)
+                {
+                    writer.Write($"  Extra:    < {MsgUtils.FormatValue(failurePoint.ActualValue)}, ... >");
+                }
+                else
+                {
+                    writer.Write($"  Missing:  < {MsgUtils.FormatValue(failurePoint.ExpectedValue)}, ... >");
+                }
             }
         }
 

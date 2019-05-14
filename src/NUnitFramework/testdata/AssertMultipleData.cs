@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #if NET40
 using Task = System.Threading.Tasks.TaskEx;
@@ -11,8 +11,8 @@ using Task = System.Threading.Tasks.TaskEx;
 namespace NUnit.TestData.AssertMultipleData
 {
     // NOTE: Some of these methods were getting optimized out of
-    // existence in the .NET 2.0 AppVeyor build. For that reason,
-    // we turned optimization off for the testdata assembly.
+    // existence in the AppVeyor build. For that reason, we turned
+    // optimization off for the testdata assembly.
 
     public class AssertMultipleFixture
     {
@@ -353,7 +353,7 @@ namespace NUnit.TestData.AssertMultipleData
             });
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void ThreeAssertsSucceed_Async()
         {

@@ -58,6 +58,7 @@ namespace NUnit.Framework.Api
 
         private ITestAssemblyRunner _runner;
 
+        private int _suiteStartedCount;
         private int _testStartedCount;
         private int _testFinishedCount;
         private int _testOutputCount;
@@ -71,6 +72,7 @@ namespace NUnit.Framework.Api
         {
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
+            _suiteStartedCount = 0;
             _testStartedCount = 0;
             _testFinishedCount = 0;
             _testOutputCount = 0;
@@ -80,7 +82,7 @@ namespace NUnit.Framework.Api
             _inconclusiveCount = 0;
         }
 
-#region Load
+        #region Load
 
         [Test]
         public void Load_GoodFile_ReturnsRunnableSuite()
@@ -122,9 +124,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load").And.Contains(BAD_FILE));
         }
 
-#endregion
+        #endregion
 
-#region CountTestCases
+        #region CountTestCases
 
         [Test]
         public void CountTestCases_AfterLoad_ReturnsCorrectCount()
@@ -138,7 +140,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.CountTestCases(TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The CountTestCases method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
         }
 
         [Test]
@@ -155,15 +157,15 @@ namespace NUnit.Framework.Api
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
-#endregion
+        #endregion
 
-#region ExploreTests
+        #region ExploreTests
         [Test]
         public void ExploreTests_WithoutLoad_ThrowsInvalidOperation()
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.ExploreTests(TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The ExploreTests method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before exploring them."));
         }
 
         [Test]
@@ -196,6 +198,25 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             var explorer = _runner.ExploreTests(TestFilter.Empty);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(TestFilter.Empty)));
+        }
+
+        [Test]
+        public void ExploreTest_AfterLoad_AllIdsAreUnique()
+        {
+            LoadMockAssembly();
+            var explorer = _runner.ExploreTests(TestFilter.Empty);
+
+            var dict = new Dictionary<string, bool>();
+            CheckForDuplicates(explorer, dict);
+        }
+
+        private void CheckForDuplicates(ITest test, Dictionary<string, bool> dict)
+        {
+            Assert.False(dict.ContainsKey(test.Id), "Duplicate key: {0}", test.Id);
+            dict.Add(test.Id, true);
+
+            foreach (var child in test.Tests)
+                CheckForDuplicates(child, dict);
         }
 
         [Test]
@@ -245,6 +266,7 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             _runner.Run(this, TestFilter.Empty);
 
+            Assert.That(_suiteStartedCount, Is.EqualTo(MockAssembly.Suites));
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
@@ -260,7 +282,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.Run(TestListener.NULL, TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test, SetUICulture("en-US")]
@@ -374,7 +396,7 @@ namespace NUnit.Framework.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.RunAsync(TestListener.NULL, TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("The Run method was called but no test has been loaded"));
+            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test, SetUICulture("en-US")]
@@ -476,7 +498,9 @@ namespace NUnit.Framework.Api
 
         void ITestListener.TestStarted(ITest test)
         {
-            if (!test.IsSuite)
+            if (test.IsSuite)
+                _suiteStartedCount++;
+            else
                 _testStartedCount++;
         }
 
@@ -519,7 +543,7 @@ namespace NUnit.Framework.Api
         /// <param name="message">A TestMessage object containing the text to send</param>
         public void SendMessage(TestMessage message)
         {
-            
+
         }
 
         #endregion

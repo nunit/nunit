@@ -22,16 +22,15 @@
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
                             and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PARALLEL;SERIALIZATION</DefineConstants>
 
-    <DefineConstants Condition="'$(TargetFramework)' != 'net20'
-                            and '$(TargetFramework)' != 'net35'">$(DefineConstants);ASYNC</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' != 'net35'">$(DefineConstants);TASK_PARALLEL_LIBRARY_API</DefineConstants>
 
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
                             and '$(TargetFramework)' != 'netcoreapp1.1'
                             and '$(TargetFramework)' != 'netstandard2.0'
-                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);THREAD_ABORT;APARTMENT_STATE</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
 
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
-                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PLATFORM_DETECTION</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PLATFORM_DETECTION;APARTMENT_STATE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

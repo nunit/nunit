@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.IO;
 using System.Reflection;
-
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -38,30 +38,32 @@ namespace NUnit.Framework.Internal
         /// specifying the Assembly and the suite name.
         /// </summary>
         /// <param name="assembly">The assembly this test represents.</param>
-        /// <param name="name">The desired name for the test suite.</param>
-        public TestAssembly(Assembly assembly, string name)
-            : base(name)
+        /// <param name="assemblyNameOrPath">
+        /// This becomes the full name of the suite and the filename part is used as the suite name.
+        /// </param>
+        public TestAssembly(Assembly assembly, string assemblyNameOrPath)
+            : this(assemblyNameOrPath)
         {
             this.Assembly = assembly;
-            this.Name = name;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestAssembly"/> class
         /// specifying the suite name for an assembly that could not be loaded.
         /// </summary>
-        /// <param name="name">The desired name for the test suite.</param>
-        public TestAssembly(string name) : base(name)
+        /// <param name="assemblyNameOrPath">
+        /// This becomes the full name of the suite and the filename part is used as the suite name.
+        /// </param>
+        public TestAssembly(string assemblyNameOrPath) : base(assemblyNameOrPath)
         {
-            this.Name = name;
+            this.Name = Path.GetFileName(assemblyNameOrPath);
         }
 
         /// <summary>
-        /// Copy-constructor style to create a filtered copy of the test assemblies
-        /// test cases
+        /// Creates a copy of the given assembly with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="assembly"></param>
-        /// <param name="filter"></param>
+        /// <param name="assembly">The <see cref="TestAssembly"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
             : base(assembly as TestSuite, filter)
         {
@@ -94,6 +96,15 @@ namespace NUnit.Framework.Internal
             return Assembly != null
                 ? Assembly.GetAttributes<TAttr>()
                 : new TAttr[0];
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public override TestSuite Copy(ITestFilter filter)
+        {
+            return new TestAssembly(this, filter);
         }
     }
 }

@@ -97,7 +97,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var field = type.GetTypeInfo().GetField("field");
+            var field = type.GetTypeInfo().GetField(nameof(A.Field));
             Assert.That(field, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(field, typeof(DatapointAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Compatibility
             public int MyProperty { get; set; }
 
             [Datapoint]
-            public int field = 1;
+            public int Field = 1;
         }
 
         class B : A

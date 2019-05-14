@@ -72,9 +72,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new PropertyExistsConstraint("Length");
-            expectedDescription = "property Length";
-            stringRepresentation = "<propertyexists Length>";
+            TheConstraint = new PropertyExistsConstraint("Length");
+            ExpectedDescription = "property Length";
+            StringRepresentation = "<propertyexists Length>";
         }
 
         static object[] SuccessData = new object[] { new int[0], "hello", typeof(Array) };
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         public void NullDataThrowsArgumentNullException()
         {
             object value = null;
-            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(value));
+            Assert.Throws<ArgumentNullException>(() => TheConstraint.ApplyTo(value));
         }
     }
 
@@ -96,9 +96,9 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            theConstraint = new PropertyConstraint("Length", new EqualConstraint(5));
-            expectedDescription = "property Length equal to 5";
-            stringRepresentation = "<property Length <equal 5>>";
+            TheConstraint = new PropertyConstraint("Length", new EqualConstraint(5));
+            ExpectedDescription = "property Length equal to 5";
+            StringRepresentation = "<property Length <equal 5>>";
         }
 
         static object[] SuccessData = new object[] { new int[5], "hello" };
@@ -111,19 +111,19 @@ namespace NUnit.Framework.Constraints
         public void NullDataThrowsArgumentNullException()
         {
             object value = null;
-            Assert.Throws<ArgumentNullException>(() => theConstraint.ApplyTo(value));
+            Assert.Throws<ArgumentNullException>(() => TheConstraint.ApplyTo(value));
         }
 
         [Test]
         public void InvalidDataThrowsArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => theConstraint.ApplyTo(42));
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(42));
         }
 
         [Test]
         public void InvalidPropertyExceptionMessageContainsTypeName()
         {
-            Assert.That(() => theConstraint.ApplyTo(42),
+            Assert.That(() => TheConstraint.ApplyTo(42),
                 Throws.ArgumentException.With.Message.Contains("System.Int32"));
         }
 

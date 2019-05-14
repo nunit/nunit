@@ -1,3 +1,6 @@
+// ReSharper disable InconsistentNaming
+// Disregarding naming convention in polyfill code
+
 //
 // Lazy.cs
 //
@@ -26,7 +29,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if NET20 || NET35
+#if NET35
 using System;
 using System.Runtime.Serialization;
 using System.Runtime.InteropServices;
