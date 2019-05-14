@@ -649,7 +649,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void NextDecimalIsNotBiased()
+        public void NextDecimalWithMaximumIsNotBiased()
         {
             const decimal wholeRange = decimal.MaxValue * (2 / 3m);
             const decimal halfRange = wholeRange / 2;

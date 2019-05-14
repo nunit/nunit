@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,18 +34,18 @@ namespace NUnit.Framework.Internal
     /// way, to allow re-running of tests if necessary. It extends
     /// the .NET Random class, providing random values for a much
     /// wider range of types.
-    /// 
-    /// The class is used internally by the framework to generate 
-    /// test case data and is also exposed for use by users through 
+    ///
+    /// The class is used internally by the framework to generate
+    /// test case data and is also exposed for use by users through
     /// the TestContext.Random property.
     /// </summary>
     /// <remarks>
-    /// For consistency with the underlying Random Type, methods 
+    /// For consistency with the underlying Random Type, methods
     /// returning a single value use the prefix "Next..." Those
     /// without an argument return a non-negative value up to
     /// the full positive range of the Type. Overloads are provided
     /// for specifying a maximum or a range. Methods that return
-    /// arrays or strings use the prefix "Get..." to avoid 
+    /// arrays or strings use the prefix "Get..." to avoid
     /// confusion with the single-value methods.
     /// </remarks>
     public class Randomizer : Random
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Internal
                 raw = RawUInt();
             }
             while (raw > limit);
-            
+
             return unchecked(raw % range + min);
         }
 
@@ -337,7 +337,7 @@ namespace NUnit.Framework.Internal
                 raw = RawULong();
             }
             while (raw > limit);
-            
+
             return unchecked(raw % range + min);
         }
 
@@ -500,9 +500,9 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
-        
+
         #region String
-        
+
         /// <summary>
         /// Default characters for random functions.
         /// </summary>
@@ -510,7 +510,7 @@ namespace NUnit.Framework.Internal
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
-                
+
         /// <summary>
         /// Generate a random string based on the characters from the input string.
         /// </summary>
@@ -526,7 +526,7 @@ namespace NUnit.Framework.Internal
             {
                 sb.Append(allowedChars[Next(0,allowedChars.Length)]);
             }
-        
+
             return sb.ToString();
         }
 
@@ -574,7 +574,52 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public decimal NextDecimal(decimal max)
         {
-            return NextDecimal() % max;
+            if (max <= 1)
+            {
+                Guard.ArgumentInRange(max > 0, "Maximum must be greater than zero.", nameof(max));
+                return 0;
+            }
+
+            unchecked
+            {
+                max = decimal.Floor(max);
+                var parts = decimal.GetBits(max);
+                var scale = (byte)(parts[3] >> 16);
+                if (scale != 0) throw new InvalidOperationException("Decimal.Floor returned a value whose scale was not 0.");
+
+                var bytes = new byte[sizeof(int) * 3];
+
+                while (true)
+                {
+                    NextBytes(bytes);
+
+                    var low = BitConverter.ToInt32(bytes, 0);
+                    var mid = BitConverter.ToInt32(bytes, 4);
+                    var high = BitConverter.ToInt32(bytes, 8);
+
+                    if (parts[2] != 0)
+                    {
+                        high &= (int)GetMaskForSignificantBits((uint)parts[2]);
+                    }
+                    else
+                    {
+                        high = 0;
+
+                        if (parts[1] != 0)
+                        {
+                            mid &= (int)GetMaskForSignificantBits((uint)parts[1]);
+                        }
+                        else
+                        {
+                            mid = 0;
+                            low &= (int)GetMaskForSignificantBits((uint)parts[0]);
+                        }
+                    }
+
+                    var result = new decimal(low, mid, high, false, 0);
+                    if (result < max) return result;
+                }
+            }
         }
 
         /// <summary>
@@ -589,7 +634,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
-            // Check that the range is not greater than MaxValue without 
+            // Check that the range is not greater than MaxValue without
             // first calculating it, since this would cause overflow
             Guard.ArgumentValid(max < 0M == min < 0M || min + decimal.MaxValue >= max,
                 "Range too great for decimal data, use double range", nameof(max));
@@ -611,7 +656,20 @@ namespace NUnit.Framework.Internal
             return unchecked(raw % range + min);
         }
 
-        #endregion 
+        private static uint GetMaskForSignificantBits(uint value)
+        {
+            // http://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2 but
+            // without the value++ at the end
+            value--;
+            value |= value >> 1;
+            value |= value >> 2;
+            value |= value >> 4;
+            value |= value >> 8;
+            value |= value >> 16;
+            return value;
+        }
+
+        #endregion
 
         #region Guid
 
