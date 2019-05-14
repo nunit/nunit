@@ -563,10 +563,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public decimal NextDecimal()
         {
-            int low = Next(0, int.MaxValue);
-            int mid = Next(0, int.MaxValue);
-            int high = Next(0, int.MaxValue);
-            return new Decimal(low, mid, high, false, 0);
+            var bytes = new byte[sizeof(int) * 3];
+            NextBytes(bytes);
+
+            var low = BitConverter.ToInt32(bytes, 0);
+            var mid = BitConverter.ToInt32(bytes, 4);
+            var high = BitConverter.ToInt32(bytes, 8);
+
+            return new decimal(low, mid, high, false, 0);
         }
 
         /// <summary>
@@ -587,33 +591,41 @@ namespace NUnit.Framework.Internal
                 var scale = (byte)(parts[3] >> 16);
                 if (scale != 0) throw new InvalidOperationException("Decimal.Floor returned a value whose scale was not 0.");
 
-                var bytes = new byte[sizeof(int) * 3];
+                var bytes = new byte[sizeof(int)];
 
                 while (true)
                 {
-                    NextBytes(bytes);
-
-                    var low = BitConverter.ToInt32(bytes, 0);
-                    var mid = BitConverter.ToInt32(bytes, 4);
-                    var high = BitConverter.ToInt32(bytes, 8);
+                    int low, mid, high;
 
                     if (parts[2] != 0)
                     {
-                        high &= (int)GetMaskForSignificantBits((uint)parts[2]);
+                        NextBytes(bytes);
+                        low = BitConverter.ToInt32(bytes, 0);
+
+                        NextBytes(bytes);
+                        mid = BitConverter.ToInt32(bytes, 0);
+
+                        NextBytes(bytes);
+                        high = BitConverter.ToInt32(bytes, 0) & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
+                    }
+                    else if (parts[1] != 0)
+                    {
+                        NextBytes(bytes);
+                        low = BitConverter.ToInt32(bytes, 0);
+
+                        NextBytes(bytes);
+                        mid = BitConverter.ToInt32(bytes, 0) & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
+
+                        high = 0;
                     }
                     else
                     {
-                        high = 0;
+                        NextBytes(bytes);
+                        low = BitConverter.ToInt32(bytes, 0) & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
 
-                        if (parts[1] != 0)
-                        {
-                            mid &= (int)GetMaskForSignificantBits((uint)parts[1]);
-                        }
-                        else
-                        {
-                            mid = 0;
-                            low &= (int)GetMaskForSignificantBits((uint)parts[0]);
-                        }
+                        mid = 0;
+
+                        high = 0;
                     }
 
                     var result = new decimal(low, mid, high, false, 0);
@@ -656,11 +668,12 @@ namespace NUnit.Framework.Internal
             return unchecked(raw % range + min);
         }
 
-        private static uint GetMaskForSignificantBits(uint value)
+        private static uint MaskOutBitsGuaranteedToExceedMaximum(uint maximum)
         {
-            // http://graphics.stanford.edu/%7Eseander/bithacks.html#RoundUpPowerOf2 but
-            // without the value++ at the end
-            value--;
+            // http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
+            // without the value-- and value++
+
+            var value = maximum;
             value |= value >> 1;
             value |= value >> 2;
             value |= value >> 4;

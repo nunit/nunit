@@ -649,6 +649,25 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void NextDecimalIsNotBiased()
+        {
+            const decimal halfRange = decimal.MaxValue / 2;
+
+            const int totalCount = 10000;
+            var countInTopHalf = 0;
+
+            for (var i = 0; i < totalCount; i++)
+            {
+                if (_randomizer.NextDecimal() >= halfRange)
+                {
+                    countInTopHalf++;
+                }
+            }
+
+            Assert.That(countInTopHalf / (double)totalCount, Is.EqualTo(0.5).Within(0.01));
+        }
+
+        [Test]
         public void NextDecimalWithMaximumIsNotBiased()
         {
             const decimal wholeRange = decimal.MaxValue * (2 / 3m);
