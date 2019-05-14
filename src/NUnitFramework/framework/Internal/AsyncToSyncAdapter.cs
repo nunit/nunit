@@ -69,7 +69,9 @@ namespace NUnit.Framework.Internal
                 var context = SynchronizationContext.Current;
                 if (context == null || context.GetType() == typeof(SynchronizationContext))
                 {
-                    var singleThreadedContext = new SingleThreadedTestSynchronizationContext();
+                    var singleThreadedContext = new SingleThreadedTestSynchronizationContext(
+                        shutdownTimeout: TimeSpan.FromSeconds(10));
+
                     SetSynchronizationContext(singleThreadedContext);
 
                     return On.Dispose(() =>

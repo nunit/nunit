@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2018 Charlie Poole, Rob Prouse
+// Copyright (c) 2018–2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,19 +23,32 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
     internal sealed partial class SingleThreadedTestSynchronizationContext : SynchronizationContext, IDisposable
     {
+        private const string ShutdownTimeoutMessage =
+            "Work posted to the synchronization context did not complete within ten seconds. Consider explicitly waiting for the work to complete.";
+
+        private readonly TimeSpan _shutdownTimeout;
         private readonly Queue<ScheduledWork> _queue = new Queue<ScheduledWork>();
-        private Status status;
+        private Status _status;
+        private Stopwatch _timeSinceShutdown;
+
+        public SingleThreadedTestSynchronizationContext(TimeSpan shutdownTimeout)
+        {
+            _shutdownTimeout = shutdownTimeout;
+        }
 
         private enum Status
         {
             NotStarted,
             Running,
+            ShuttingDown,
             ShutDown
         }
 
@@ -74,7 +87,16 @@ namespace NUnit.Framework.Internal
         {
             lock (_queue)
             {
-                if (status == Status.ShutDown) throw CreateInvalidWhenShutDownException();
+                switch (_status)
+                {
+                    case Status.ShuttingDown:
+                        if (_timeSinceShutdown.Elapsed < _shutdownTimeout) break;
+                        goto case Status.ShutDown;
+
+                    case Status.ShutDown:
+                        throw ErrorAndGetExceptionForShutdownTimeout();
+                }
+
                 _queue.Enqueue(work);
                 Monitor.Pulse(_queue);
             }
@@ -87,17 +109,17 @@ namespace NUnit.Framework.Internal
         {
             lock (_queue)
             {
-                status = Status.ShutDown;
+                switch (_status)
+                {
+                    case Status.ShuttingDown:
+                    case Status.ShutDown:
+                        return;
+                }
+
+                _timeSinceShutdown = Stopwatch.StartNew();
+                _status = Status.ShuttingDown;
                 Monitor.Pulse(_queue);
-
-                if (_queue.Count != 0)
-                    throw new InvalidOperationException("Shutting down SingleThreadedTestSynchronizationContext with work still in the queue.");
             }
-        }
-
-        private static InvalidOperationException CreateInvalidWhenShutDownException()
-        {
-            return new InvalidOperationException("This SingleThreadedTestSynchronizationContext has been shut down.");
         }
 
         /// <summary>
@@ -107,15 +129,17 @@ namespace NUnit.Framework.Internal
         {
             lock (_queue)
             {
-                switch (status)
+                switch (_status)
                 {
                     case Status.Running:
                         throw new InvalidOperationException("SingleThreadedTestSynchronizationContext.Run may not be reentered.");
+
+                    case Status.ShuttingDown:
                     case Status.ShutDown:
-                        throw CreateInvalidWhenShutDownException();
+                        throw new InvalidOperationException("This SingleThreadedTestSynchronizationContext has been shut down.");
                 }
 
-                status = Status.Running;
+                _status = Status.Running;
             }
 
             ScheduledWork scheduledWork;
@@ -127,22 +151,37 @@ namespace NUnit.Framework.Internal
         {
             lock (_queue)
             {
-                for (;;)
+                while (_queue.Count == 0)
                 {
-                    if (status == Status.ShutDown)
+                    if (_status == Status.ShuttingDown)
                     {
+                        _status = Status.ShutDown;
                         scheduledWork = default(ScheduledWork);
                         return false;
                     }
 
-                    if (_queue.Count != 0) break;
                     Monitor.Wait(_queue);
+                }
+
+                if (_status == Status.ShuttingDown && _timeSinceShutdown.Elapsed > _shutdownTimeout)
+                {
+                    _status = Status.ShutDown;
+                    throw ErrorAndGetExceptionForShutdownTimeout();
                 }
 
                 scheduledWork = _queue.Dequeue();
             }
 
             return true;
+        }
+
+        private static Exception ErrorAndGetExceptionForShutdownTimeout()
+        {
+            var testExecutionContext = TestExecutionContext.CurrentContext;
+
+            testExecutionContext?.CurrentResult.RecordAssertion(AssertionStatus.Error, ShutdownTimeoutMessage);
+
+            return new InvalidOperationException(ShutdownTimeoutMessage);
         }
 
         public void Dispose()
