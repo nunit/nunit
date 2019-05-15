@@ -18,7 +18,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.12.0";
+var version = "3.13.0";
 var modifier = "";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
