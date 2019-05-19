@@ -579,35 +579,59 @@ namespace NUnit.Framework.Internal
 
             unchecked
             {
+                // Flooring sets the exponent (scale) to zero. This is necessary even if the number is already an
+                // integer so that the low, mid and high parts of the mantissa get shifted by the appropriate power of
+                // ten until they only contain the integral part of the number.
+                // May as well set it back to the parameter so that the `result < max` lower down is doing less work.
                 max = decimal.Floor(max);
-                var parts = decimal.GetBits(max);
-                var scale = (byte)(parts[3] >> 16);
-                if (scale != 0) throw new InvalidOperationException("Decimal.Floor returned a value whose scale was not 0.");
+
+                var parts = DecimalParts.FromValue(max);
+
+                // If scale is not zero, that means that low, mid, and high are shifted to make room for digits from the
+                // fractional part of the number. We relied on Decimal.Floor to prevent this.
+                Guard.OperationValid(parts.Scale == 0, "Decimal.Floor returned a value whose scale was not 0.");
 
                 while (true)
                 {
+                    // Fill all 96 bits with uniformly-distributed randomness except for the bits that must be zero in
+                    // order to stay under the exclusive maximum.
                     int low, mid, high;
 
-                    if (parts[2] != 0)
+                    if (parts.High != 0)
                     {
+                        var inclusiveMaximum = parts.High - 1;
+
                         low = RawInt32();
                         mid = RawInt32();
-                        high = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
+                        high = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(inclusiveMaximum);
                     }
-                    else if (parts[1] != 0)
+                    else if (parts.Mid != 0)
                     {
+                        var inclusiveMaximum = parts.Mid - 1;
+
                         low = RawInt32();
-                        mid = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
+                        mid = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(inclusiveMaximum);
                         high = 0;
                     }
                     else
                     {
-                        low = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
+                        var inclusiveMaximum = parts.Low - 1;
+
+                        low = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(inclusiveMaximum);
                         mid = 0;
                         high = 0;
                     }
 
                     var result = new decimal(low, mid, high, false, 0);
+
+                    // By masking out the random bits which would put the result at or over the exclusive maximum, the
+                    // chance of having to loop and try again is strictly less than 50% in the worst-case scenario. The
+                    // best-case scenario is 0% chance, and an average is 25% chance per iteration.
+
+                    // For the worst-case scenario of 50% chance per iteration, the total chance of having to iterate
+                    // twice is < 25%. Three times, 12.5%. And so on.
+                    // For the average scenario of 25% chance per iteration, the total chance of having to iterate twice
+                    // is < 6.25%. Three times, 1.5625%. And so on.
                     if (result < max) return result;
                 }
             }
