@@ -184,7 +184,7 @@ namespace NUnit.Framework.Internal
             uint raw;
             do
             {
-                raw = RawUInt();
+                raw = RawUInt32();
             }
             while (raw > limit);
 
@@ -287,7 +287,7 @@ namespace NUnit.Framework.Internal
             ulong raw;
             do
             {
-                raw = RawULong();
+                raw = RawUInt64();
             }
             while (raw > limit);
 
@@ -334,7 +334,7 @@ namespace NUnit.Framework.Internal
             ulong raw;
             do
             {
-                raw = RawULong();
+                raw = RawUInt64();
             }
             while (raw > limit);
 
@@ -563,7 +563,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public decimal NextDecimal()
         {
-            return new decimal(RawInt(), RawInt(), RawInt(), false, 0);
+            return new decimal(RawInt32(), RawInt32(), RawInt32(), false, 0);
         }
 
         /// <summary>
@@ -590,19 +590,19 @@ namespace NUnit.Framework.Internal
 
                     if (parts[2] != 0)
                     {
-                        low = RawInt();
-                        mid = RawInt();
-                        high = RawInt() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
+                        low = RawInt32();
+                        mid = RawInt32();
+                        high = RawInt32() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
                     }
                     else if (parts[1] != 0)
                     {
-                        low = RawInt();
-                        mid = RawInt() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
+                        low = RawInt32();
+                        mid = RawInt32() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
                         high = 0;
                     }
                     else
                     {
-                        low = RawInt() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
+                        low = RawInt32() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
                         mid = 0;
                         high = 0;
                     }
@@ -684,47 +684,23 @@ namespace NUnit.Framework.Internal
 
         #region Helper Methods
 
-        private int RawInt()
+        private int RawInt32()
         {
             return Next(int.MinValue, int.MaxValue);
         }
 
-        private uint RawUInt()
+        private uint RawUInt32()
         {
             var buffer = new byte[sizeof(uint)];
             NextBytes(buffer);
             return BitConverter.ToUInt32(buffer, 0);
         }
 
-        private uint RawUShort()
-        {
-            var buffer = new byte[sizeof(uint)];
-            NextBytes(buffer);
-            return BitConverter.ToUInt32(buffer, 0);
-        }
-
-        private ulong RawULong()
+        private ulong RawUInt64()
         {
             var buffer = new byte[sizeof(ulong)];
             NextBytes(buffer);
             return BitConverter.ToUInt64(buffer, 0);
-        }
-
-        private long RawLong()
-        {
-            var buffer = new byte[sizeof(long)];
-            NextBytes(buffer);
-            return BitConverter.ToInt64(buffer, 0);
-        }
-
-        private decimal RawDecimal()
-        {
-            int low = Next(0, int.MaxValue);
-            int mid = Next(0, int.MaxValue);
-            int hi = Next(0, int.MaxValue);
-            bool isNegative = NextBool();
-            byte scale = NextByte(29);
-            return new Decimal(low, mid, hi, isNegative, scale);
         }
 
         #endregion
