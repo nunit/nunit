@@ -649,22 +649,26 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void NextDecimalIsNotBiased()
+        public void NextDecimalIsNotBiased([Range(0, 95)] int bit)
         {
-            const decimal halfRange = decimal.MaxValue / 2;
+            const int totalCount = 100000;
+            var bitSetCount = 0;
 
-            const int totalCount = 10000;
-            var countInTopHalf = 0;
+            var part = bit / 32;
+            var mask = 1 << (bit % 32);
 
             for (var i = 0; i < totalCount; i++)
             {
-                if (_randomizer.NextDecimal() >= halfRange)
+                var value = _randomizer.NextDecimal();
+                var parts = decimal.GetBits(value);
+
+                if ((parts[part] & mask) != 0)
                 {
-                    countInTopHalf++;
+                    bitSetCount++;
                 }
             }
 
-            Assert.That(countInTopHalf / (double)totalCount, Is.EqualTo(0.5).Within(0.01));
+            Assert.That(bitSetCount / (double)totalCount, Is.EqualTo(0.5).Within(0.01));
         }
 
         [Test]
