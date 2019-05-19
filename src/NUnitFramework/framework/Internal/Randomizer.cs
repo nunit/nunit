@@ -592,17 +592,17 @@ namespace NUnit.Framework.Internal
                     {
                         low = RawInt32();
                         mid = RawInt32();
-                        high = RawInt32() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
+                        high = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
                     }
                     else if (parts[1] != 0)
                     {
                         low = RawInt32();
-                        mid = RawInt32() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
+                        mid = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
                         high = 0;
                     }
                     else
                     {
-                        low = RawInt32() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
+                        low = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
                         mid = 0;
                         high = 0;
                     }
@@ -647,7 +647,7 @@ namespace NUnit.Framework.Internal
             return unchecked(raw % range + min);
         }
 
-        private static uint MaskOutBitsGuaranteedToExceedMaximum(uint maximum)
+        private static uint MaskToRemoveBitsGuaranteedToExceedMaximum(uint maximum)
         {
             // http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
             // without the value-- and value++
