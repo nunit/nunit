@@ -648,49 +648,6 @@ namespace NUnit.Framework.Internal
             UniqueValues.Check(() => _randomizer.NextDecimal(1066M, 2010M), 10, 100);
         }
 
-        [Test]
-        public void NextDecimalIsNotBiased([Range(0, 95)] int bit)
-        {
-            const int totalCount = 100000;
-            var bitSetCount = 0;
-
-            var part = bit / 32;
-            var mask = 1 << (bit % 32);
-
-            for (var i = 0; i < totalCount; i++)
-            {
-                var value = _randomizer.NextDecimal();
-                var parts = decimal.GetBits(value);
-
-                if ((parts[part] & mask) != 0)
-                {
-                    bitSetCount++;
-                }
-            }
-
-            Assert.That(bitSetCount / (double)totalCount, Is.EqualTo(0.5).Within(0.01));
-        }
-
-        [Test]
-        public void NextDecimalWithMaximumIsNotBiased()
-        {
-            const decimal wholeRange = decimal.MaxValue * (2 / 3m);
-            const decimal halfRange = wholeRange / 2;
-
-            const int totalCount = 10000;
-            var countInTopHalf = 0;
-
-            for (var i = 0; i < totalCount; i++)
-            {
-                if (_randomizer.NextDecimal(wholeRange) >= halfRange)
-                {
-                    countInTopHalf++;
-                }
-            }
-
-            Assert.That(countInTopHalf / (double)totalCount, Is.EqualTo(0.5).Within(0.01));
-        }
-
         #endregion
 
         #region Strings
