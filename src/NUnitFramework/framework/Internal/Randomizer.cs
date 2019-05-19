@@ -563,14 +563,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public decimal NextDecimal()
         {
-            var bytes = new byte[sizeof(int) * 3];
-            NextBytes(bytes);
-
-            var low = BitConverter.ToInt32(bytes, 0);
-            var mid = BitConverter.ToInt32(bytes, 4);
-            var high = BitConverter.ToInt32(bytes, 8);
-
-            return new decimal(low, mid, high, false, 0);
+            return new decimal(RawInt(), RawInt(), RawInt(), false, 0);
         }
 
         /// <summary>
@@ -591,40 +584,26 @@ namespace NUnit.Framework.Internal
                 var scale = (byte)(parts[3] >> 16);
                 if (scale != 0) throw new InvalidOperationException("Decimal.Floor returned a value whose scale was not 0.");
 
-                var bytes = new byte[sizeof(int)];
-
                 while (true)
                 {
                     int low, mid, high;
 
                     if (parts[2] != 0)
                     {
-                        NextBytes(bytes);
-                        low = BitConverter.ToInt32(bytes, 0);
-
-                        NextBytes(bytes);
-                        mid = BitConverter.ToInt32(bytes, 0);
-
-                        NextBytes(bytes);
-                        high = BitConverter.ToInt32(bytes, 0) & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
+                        low = RawInt();
+                        mid = RawInt();
+                        high = RawInt() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[2] - 1);
                     }
                     else if (parts[1] != 0)
                     {
-                        NextBytes(bytes);
-                        low = BitConverter.ToInt32(bytes, 0);
-
-                        NextBytes(bytes);
-                        mid = BitConverter.ToInt32(bytes, 0) & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
-
+                        low = RawInt();
+                        mid = RawInt() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[1] - 1);
                         high = 0;
                     }
                     else
                     {
-                        NextBytes(bytes);
-                        low = BitConverter.ToInt32(bytes, 0) & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
-
+                        low = RawInt() & (int)MaskOutBitsGuaranteedToExceedMaximum(maximum: (uint)parts[0] - 1);
                         mid = 0;
-
                         high = 0;
                     }
 
@@ -704,6 +683,11 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Helper Methods
+
+        private int RawInt()
+        {
+            return Next(int.MinValue, int.MaxValue);
+        }
 
         private uint RawUInt()
         {
