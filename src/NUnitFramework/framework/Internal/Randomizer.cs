@@ -657,18 +657,7 @@ namespace NUnit.Framework.Internal
             if (min == max)
                 return min;
 
-            decimal range = max - min;
-
-            // Avoid introduction of modulo bias
-            decimal limit = decimal.MaxValue - decimal.MaxValue % range;
-            decimal raw;
-            do
-            {
-                raw = NextDecimal();
-            }
-            while (raw > limit);
-
-            return unchecked(raw % range + min);
+            return NextDecimal(max - min) + min;
         }
 
         private static uint MaskToRemoveBitsGuaranteedToExceedMaximum(uint maximum)
