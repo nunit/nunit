@@ -1,8 +1,6 @@
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
 #tool GitLink
 
-#load lib.cake
-
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -519,8 +517,9 @@ void PublishTestResults(string framework)
         if (!string.IsNullOrEmpty(ciRunName))
             fullTestRunTitle += '/' + ciRunName;
 
-        TFBuildPublishTestResults($@"test-results\{framework}\*.xml", new TFBuildPublishTestResultsData
+        TFBuild.Commands.PublishTestResults(new TFBuildPublishTestResultsData
         {
+            TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
             TestRunTitle = fullTestRunTitle,
             TestRunner = TFTestRunnerType.NUnit,
             MergeTestResults = true,
@@ -528,6 +527,22 @@ void PublishTestResults(string framework)
             Configuration = configuration
         });
     }
+}
+
+public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
+{
+    if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+    if (!string.IsNullOrEmpty(rawArgument))
+    {
+        var previousCustomizer = settings.ArgumentCustomization;
+        if (previousCustomizer != null)
+            settings.ArgumentCustomization = builder => previousCustomizer.Invoke(builder).Append(rawArgument);
+        else
+            settings.ArgumentCustomization = builder => builder.Append(rawArgument);
+    }
+
+    return settings;
 }
 
 //////////////////////////////////////////////////////////////////////
