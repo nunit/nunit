@@ -510,7 +510,7 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
 
 void PublishTestResults(string framework)
 {
-    if (TFBuild.IsRunningOnAzurePipelines)
+    if (EnvironmentVariable("TF_BUILD", false))
     {
         var fullTestRunTitle = framework;
         var ciRunName = Argument<string>("test-run-name");
