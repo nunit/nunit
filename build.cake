@@ -1,6 +1,8 @@
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
 #tool GitLink
 
+#load lib.cake
+
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
@@ -207,6 +209,7 @@ Task("Test45")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test40")
@@ -219,6 +222,7 @@ Task("Test40")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test35")
@@ -231,6 +235,7 @@ Task("Test35")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("TestNetStandard14")
@@ -243,6 +248,7 @@ Task("TestNetStandard14")
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("TestNetStandard20")
@@ -255,6 +261,7 @@ Task("TestNetStandard20")
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -503,20 +510,24 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
-public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
+void PublishTestResults(string framework)
 {
-    if (settings == null) throw new ArgumentNullException(nameof(settings));
-
-    if (!string.IsNullOrEmpty(rawArgument))
+    if (TFBuild.IsRunningOnTFS)
     {
-        var previousCustomizer = settings.ArgumentCustomization;
-        if (previousCustomizer != null)
-            settings.ArgumentCustomization = builder => previousCustomizer.Invoke(builder).Append(rawArgument);
-        else
-            settings.ArgumentCustomization = builder => builder.Append(rawArgument);
-    }
+        var fullTestRunTitle = framework;
+        var ciRunName = Argument<string>("test-run-name");
+        if (!string.IsNullOrEmpty(ciRunName))
+            fullTestRunTitle += '/' + ciRunName;
 
-    return settings;
+        TFBuildPublishTestResults($@"test-results\{framework}\*.xml", new TFBuildPublishTestResultsData
+        {
+            TestRunTitle = fullTestRunTitle,
+            TestRunner = TFTestRunnerType.NUnit,
+            MergeTestResults = true,
+            PublishRunAttachments = true,
+            Configuration = configuration
+        });
+    }
 }
 
 //////////////////////////////////////////////////////////////////////
