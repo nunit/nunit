@@ -699,7 +699,7 @@ namespace NUnit.Framework.Internal
 
         private int RawInt32()
         {
-            return Next(int.MinValue, int.MaxValue);
+            return unchecked((int)RawUInt32());
         }
 
         private uint RawUInt32()
