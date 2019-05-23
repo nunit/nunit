@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
         negatives would then only occur on average only one month out of every 286 years.
 
         One in a billion, or 99.9999999% confidence, seems desirable. To obtain this confidence level, we need a
-        sufficiently high trial count or a sufficiently low tolerance. I chose a trial count of 100000 because
+        sufficiently high trial count or a sufficiently high tolerance. I chose a trial count of 100000 because
         that takes only about 10ms on my machine. That results in a confidence interval (see Wikipedia link above)
         of ~±0.0097 around 0.5. 0.5 of the trials are expected to succeed, where success means something
         like "the third bit is set"—something which we expect to happen half the time if the generator is not
