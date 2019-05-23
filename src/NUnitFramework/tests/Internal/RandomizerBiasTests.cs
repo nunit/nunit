@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
             const decimal wholeRange = decimal.MaxValue * (2 / 3m);
             const decimal halfRange = wholeRange / 2;
 
-            const int totalCount = 10000;
+            const int totalCount = 100000;
             var countInTopHalf = 0;
 
             for (var i = 0; i < totalCount; i++)
