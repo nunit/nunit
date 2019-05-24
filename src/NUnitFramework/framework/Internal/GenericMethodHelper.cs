@@ -109,7 +109,9 @@ namespace NUnit.Framework.Internal
             }
             else if (parmType.GetTypeInfo().ContainsGenericParameters)
             {
-                var genericArgTypes = parmType.GetGenericArguments();
+                var genericArgTypes = parmType.IsArray
+                    ? new[] { parmType.GetElementType() }
+                    : parmType.GetGenericArguments();
 
                 if (argType.HasElementType)
                 {
