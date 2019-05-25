@@ -98,7 +98,13 @@ namespace NUnit.Framework.Internal
                 TypeArgs<string,object>()),
             new TestCaseData("MethodWithNestedTypes",
                 ArgList(new List<Dictionary<string, int>>(), new Dictionary<int, List<string[]>>() ),
-                TypeArgs<string,int,string[]>())
+                TypeArgs<string,int,string[]>()),
+            new TestCaseData(nameof(MethodWithOneTypeUsedDirectlyAndAsAnArray),
+                ArgList(10, new int[40]),
+                TypeArgs<int>()),
+            new TestCaseData(nameof(MethodWithOneTypeUsedAsAnArrayAndDirectly),
+                ArgList(new int[40], 10),
+                TypeArgs<int>())
         };
 
         [TestCaseSource(nameof(TypeArgData))]
@@ -137,5 +143,8 @@ namespace NUnit.Framework.Internal
 
         void MethodTakingDictionary<T, U>(Dictionary<T, U> d) { }
         void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) { }
+
+        void MethodWithOneTypeUsedDirectlyAndAsAnArray<T>(T value, T[] array) { }
+        void MethodWithOneTypeUsedAsAnArrayAndDirectly<T>(T[] array, T value) { }
     }
 }
