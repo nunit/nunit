@@ -136,7 +136,7 @@ namespace NUnit.Framework
             return (SynchronizationContext)Activator.CreateInstance(knownSynchronizationContextType);
         }
 
-        [Test, Timeout(10000)]
+        [Test, Timeout(10_000)]
         public static void ContinuationDoesNotDeadlockOnKnownSynchronizationContext(
             [ValueSource(nameof(KnownSynchronizationContextTypes))] Type knownSynchronizationContextType,
             [ValueSource(nameof(ApiAdapters))] AsyncExecutionApiAdapter apiAdapter)
@@ -166,7 +166,7 @@ namespace NUnit.Framework
             }
         }
 
-        [Test, Timeout(10000)]
+        [Test, Timeout(10_000)]
         public static void AwaitingContinuationDoesNotAlterSynchronizationContext(
             [ValueSource(nameof(KnownSynchronizationContextTypes))] Type knownSynchronizationContextType,
             [ValueSource(nameof(ApiAdapters))] AsyncExecutionApiAdapter apiAdapter)

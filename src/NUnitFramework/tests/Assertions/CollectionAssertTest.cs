@@ -149,7 +149,7 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
         }
 
-        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
+        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10_000);
 
         static readonly IEnumerable[] PerformanceData =
         {

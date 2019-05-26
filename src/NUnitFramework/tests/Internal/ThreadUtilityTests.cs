@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
                 // I measured timer callbacks to be firing around ten times later than the 100 ms requested.
                 // All this number does is manage how long we can tolerate waiting for a build if a bug
                 // is introduced and the thread never aborts.
-                const int waitTime = 15000;
+                const int waitTime = 15_000;
 
                 Assert.That(thread.Join(waitTime), "Native message pump was not able to be interrupted to enable a managed thread abort.");
             }

@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
             {
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
-                Assert.That(actual, new EqualConstraint(expected).Within(300000).Milliseconds);
+                Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -308,7 +308,7 @@ namespace NUnit.Framework.Constraints
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
-                Assert.That(actual, new EqualConstraint(expected).Within(300000).Milliseconds);
+                Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
             [Test]

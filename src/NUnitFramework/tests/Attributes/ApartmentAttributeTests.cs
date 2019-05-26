@@ -59,7 +59,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
 #if THREAD_ABORT
-        [Timeout(10000)]
+        [Timeout(10_000)]
 #endif
 #if NETCOREAPP2_0
         [Platform(Include = "Win, Mono")]
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Attributes
 
         [TestFixture]
 #if THREAD_ABORT
-        [Timeout(10000)]
+        [Timeout(10_000)]
 #endif
 #if NETCOREAPP2_0
         [Platform(Include = "Win, Mono")]
