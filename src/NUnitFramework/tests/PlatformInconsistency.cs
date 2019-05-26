@@ -39,6 +39,7 @@ namespace NUnit.Framework
             _maxVersion = maxVersion;
         }
 
+#if PLATFORM_DETECTION
         private static Version GetCurrentVersion()
         {
             if (RuntimeFramework.CurrentFramework.Runtime == RuntimeType.Mono)
@@ -50,11 +51,13 @@ namespace NUnit.Framework
 
             return RuntimeFramework.CurrentFramework.FrameworkVersion;
         }
+#endif
 
         private bool CurrentPlatformIsInconsistent
         {
             get
             {
+#if PLATFORM_DETECTION
                 if (RuntimeFramework.CurrentFramework.Runtime != _runtimeType) return false;
 
                 var version = GetCurrentVersion();
@@ -62,6 +65,9 @@ namespace NUnit.Framework
                 if (_maxVersion != null && version > _maxVersion) return false;
 
                 return true;
+#else
+                return false;
+#endif
             }
         }
 
