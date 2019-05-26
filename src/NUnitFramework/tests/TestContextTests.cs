@@ -319,7 +319,11 @@ namespace NUnit.Framework
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.FailCount, Is.EqualTo(1));
             Assert.That(fixture.Message, Is.EqualTo("Deliberate failure"));
-            Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+            });
         }
 
         [Test]
