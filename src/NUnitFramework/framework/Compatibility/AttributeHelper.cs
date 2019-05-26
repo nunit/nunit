@@ -42,17 +42,17 @@ namespace NUnit.Compatibility
         public static Attribute[] GetCustomAttributes(object actual, Type attributeType, bool inherit)
         {
 #if NETSTANDARD1_4
-            var member = actual as MemberInfo;
-            if (member != null) return (Attribute[])member.GetCustomAttributes(attributeType, inherit);
+            if (actual is MemberInfo member)
+                return (Attribute[])member.GetCustomAttributes(attributeType, inherit);
 
-            var type = actual as Type;
-            if (type != null) return (Attribute[])type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
+            if (actual is Type type)
+                return (Attribute[])type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
 
-            var parameter = actual as ParameterInfo;
-            if (parameter != null) return (Attribute[])parameter.GetCustomAttributes(attributeType, inherit);
+            if (actual is ParameterInfo parameter)
+                return (Attribute[])parameter.GetCustomAttributes(attributeType, inherit);
 
-            var assembly = actual as Assembly;
-            if (assembly != null) return (Attribute[])assembly.GetCustomAttributes(attributeType);
+            if (actual is Assembly assembly)
+                return (Attribute[])assembly.GetCustomAttributes(attributeType);
 
             var interfaceType = actual?.GetType().GetInterfaces().SingleOrDefault(i => i.FullName == "System.Reflection.ICustomAttributeProvider");
             if (interfaceType != null)
@@ -61,8 +61,8 @@ namespace NUnit.Compatibility
                 return (Attribute[])method.Invoke(actual, new object[] { attributeType, inherit });
             }
 #else
-            var attrProvider = actual as ICustomAttributeProvider;
-            if (attrProvider != null) return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
+            if (actual is ICustomAttributeProvider attrProvider)
+                return (Attribute[])attrProvider.GetCustomAttributes(attributeType, inherit);
 #endif
 
             throw new ArgumentException($"Actual value {actual} does not implement ICustomAttributeProvider.", nameof(actual));

@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -55,9 +55,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             foreach (CacheEntry key in instances.Keys)
             {
-                IDisposable provider = instances[key] as IDisposable;
-                if (provider != null)
-                    provider.Dispose();
+                (instances[key] as IDisposable)?.Dispose();
             }
 
             instances.Clear();
@@ -65,24 +63,21 @@ namespace NUnit.Framework.Internal.Builders
 
         class CacheEntry
         {
-            private readonly Type providerType;
+            private readonly Type _providerType;
 
             public CacheEntry(Type providerType, object[] providerArgs)
             {
-                this.providerType = providerType;
+                _providerType = providerType;
             }
 
             public override bool Equals(object obj)
             {
-                CacheEntry other = obj as CacheEntry;
-                if (other == null) return false;
-
-                return this.providerType == other.providerType;
+                return obj is CacheEntry other && other._providerType == _providerType;
             }
 
             public override int GetHashCode()
             {
-                return providerType.GetHashCode();
+                return _providerType.GetHashCode();
             }
         }
     }

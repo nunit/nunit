@@ -360,8 +360,7 @@ namespace NUnit.Framework.Internal.Execution
             // only blocks its own children.
             lock (_childCompletionLock)
             {
-                WorkItem childTask = sender as WorkItem;
-                if (childTask != null)
+                if (sender is WorkItem childTask)
                 {
                     childTask.Completed -= new EventHandler(OnChildItemCompleted);
                     _suiteResult.AddResult(childTask.Result);

@@ -189,9 +189,8 @@ namespace NUnitLite
         private void StartTestElement(ITestResult result)
         {
             ITest test = result.Test;
-            TestSuite suite = test as TestSuite;
 
-            if (suite != null)
+            if (test is TestSuite suite)
             {
                 xmlWriter.WriteStartElement("test-suite");
                 xmlWriter.WriteAttributeString("type", suite.TestType == "ParameterizedMethod" ? "ParameterizedTest" : suite.TestType);

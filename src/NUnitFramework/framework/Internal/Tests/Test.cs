@@ -491,12 +491,9 @@ namespace NUnit.Framework.Internal
         /// <returns>Value of -1, 0 or +1 depending on whether the current test is less than, equal to or greater than the other test</returns>
         public int CompareTo(object obj)
         {
-            Test other = obj as Test;
-
-            if (other == null)
-                return -1;
-
-            return this.FullName.CompareTo(other.FullName);
+            return obj is Test other
+                ? FullName.CompareTo(other.FullName)
+                : -1;
         }
 
         #endregion

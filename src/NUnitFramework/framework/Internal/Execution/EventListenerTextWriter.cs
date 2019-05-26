@@ -34,21 +34,21 @@ namespace NUnit.Framework.Internal.Execution
     /// listener is active in the context, or if there is no context,
     /// the output is forwarded to the supplied default writer.
     /// </summary>
-	public class EventListenerTextWriter : TextWriter
-	{
+    public class EventListenerTextWriter : TextWriter
+    {
         private readonly TextWriter _defaultWriter;
-		private readonly string _streamName;
+        private readonly string _streamName;
 
         /// <summary>
         /// Construct an EventListenerTextWriter
         /// </summary>
         /// <param name="streamName">The name of the stream to use for events</param>
         /// <param name="defaultWriter">The default writer to use if no listener is available</param>
-		public EventListenerTextWriter( string streamName, TextWriter defaultWriter )
-		{
-			_streamName = streamName;
+        public EventListenerTextWriter( string streamName, TextWriter defaultWriter )
+        {
+            _streamName = streamName;
             _defaultWriter = defaultWriter;
-		}
+        }
 
         /// <summary>
         /// Get the Encoding for this TextWriter
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Execution
             if (context == null || context.Listener == null)
                 return false;
 
-            context.Listener.TestOutput(new TestOutput(text, _streamName, 
+            context.Listener.TestOutput(new TestOutput(text, _streamName,
                 context.CurrentTest?.Id, context.CurrentTest?.FullName));
 
             return true;
@@ -111,24 +111,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void Write(object value)
         {
-            if (value != null)
+            if (value != null && TrySendToListener(value is IFormattable formattable
+                ? formattable.ToString(null, FormatProvider)
+                : value.ToString()))
             {
-                IFormattable f = value as IFormattable;
-                if (f != null)
-                {
-                    if (!TrySendToListener(f.ToString(null, FormatProvider)))
-                        _defaultWriter.Write(value);
-                }
-                else
-                {
-                    if (!TrySendToListener(value.ToString()))
-                        _defaultWriter.Write(value);
-                }
+                return;
             }
-            else
-            {
-                _defaultWriter.Write(value);
-            }
+
+            _defaultWriter.Write(value);
         }
 
         /// <summary>
@@ -271,8 +261,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             else
             {
-                IFormattable f = value as IFormattable;
-                if (f != null)
+                if (value is IFormattable f)
                 {
                     if (!TrySendLineToListener(f.ToString(null, FormatProvider)))
                         _defaultWriter.WriteLine(value);

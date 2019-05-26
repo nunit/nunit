@@ -134,10 +134,8 @@ namespace NUnit.Framework.Internal
 
             public override void WaitForCompletion(AwaitAdapter awaitable)
             {
-                var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext;
-
-                if (context == null)
-                    throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
+                var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext
+                    ?? throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
 
                 if (awaitable.IsCompleted) return;
 

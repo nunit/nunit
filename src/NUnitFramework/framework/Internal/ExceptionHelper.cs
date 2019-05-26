@@ -147,8 +147,7 @@ namespace NUnit.Framework.Internal
             if (string.IsNullOrEmpty(ex.Message))
             {
                 // Special handling for Mono 5.0, which returns an empty message
-                var fnfEx = ex as System.IO.FileNotFoundException;
-                return fnfEx != null
+                return ex is System.IO.FileNotFoundException fnfEx
                     ? "Could not load assembly. File not found: " + fnfEx.FileName
                     : "No message provided";
             }

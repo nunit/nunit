@@ -219,8 +219,7 @@ namespace NUnit.Framework.Internal
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
-                var argArray = arg as Array;
-                if (argArray != null && argArray.Rank == 1)
+                if (arg is Array argArray && argArray.Rank == 1)
                 {
                     if (argArray.Length == 0)
                         display = "[]";
@@ -238,9 +237,8 @@ namespace NUnit.Framework.Internal
                                 builder.Append(", ");
 
                             var element = argArray.GetValue(i);
-                            var childArray = element as Array;
 
-                            if (childArray != null && childArray.Rank == 1)
+                            if (element is Array childArray && childArray.Rank == 1)
                             {
                                 builder.Append(childArray.GetType().GetElementType().Name);
                                 builder.Append("[]");

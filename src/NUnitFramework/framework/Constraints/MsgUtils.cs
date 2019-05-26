@@ -348,8 +348,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public static string GetTypeRepresentation(object obj)
         {
-            Array array = obj as Array;
-            if (array == null)
+            if (!(obj is Array array))
                 return string.Format("<{0}>", obj.GetType());
 
             StringBuilder sb = new StringBuilder();

@@ -188,12 +188,13 @@ namespace NUnit.Framework.Internal.Builders
             return attrs;
         }
 
-        private bool HasArguments(IFixtureBuilder attr)
+        private bool HasArguments(IFixtureBuilder builder)
         {
             // Only TestFixtureAttribute can be used without arguments
-            var temp = attr as TestFixtureAttribute;
 
-            return temp == null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
+            return !(builder is TestFixtureAttribute attr)
+                || attr.Arguments.Length > 0
+                || attr.TypeArgs.Length > 0;
         }
 
         #endregion

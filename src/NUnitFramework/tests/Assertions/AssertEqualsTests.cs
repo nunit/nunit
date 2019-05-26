@@ -603,14 +603,7 @@ namespace NUnit.Framework.Assertions
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-
-            var other = obj as ThrowsIfToStringIsCalled;
-            if (other == null)
-                return false;
-
-            return _x == other._x;
+            return obj is ThrowsIfToStringIsCalled other && _x == other._x;
         }
 
         public override int GetHashCode()

@@ -57,10 +57,9 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if the test passes the filter, otherwise false</returns>
         public override bool Pass(ITest test)
         {
-            var secondNotFilter = BaseFilter as NotFilter;
-            return secondNotFilter != null
-                ? secondNotFilter.BaseFilter.Pass(test) 
-                : !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
+            return BaseFilter is NotFilter secondNotFilter
+                ? secondNotFilter.BaseFilter.Pass(test)
+                : !BaseFilter.Match(test) && !BaseFilter.MatchParent(test);
         }
 
         /// <summary>

@@ -147,18 +147,8 @@ namespace NUnit.Framework
                 {
                     foreach (object item in source)
                     {
-                        var parms = item as ITestFixtureData;
-
-                        if (parms == null)
-                        {
-                            object[] args = item as object[];
-                            if (args == null)
-                            {
-                                args = new object[] { item };
-                            }
-
-                            parms = new TestFixtureParameters(args);
-                        }
+                        var parms = item as ITestFixtureData
+                            ?? new TestFixtureParameters(item as object[] ?? new object[] { item });
 
                         if (this.Category != null)
                             foreach (string cat in this.Category.Split(new char[] { ',' }))
@@ -190,20 +180,17 @@ namespace NUnit.Framework
             {
                 MemberInfo member = members[0];
 
-                var field = member as FieldInfo;
-                if (field != null)
+                if (member is FieldInfo field)
                     return field.IsStatic
                         ? (IEnumerable)field.GetValue(null)
                         : SourceMustBeStaticError();
 
-                var property = member as PropertyInfo;
-                if (property != null)
+                if (member is PropertyInfo property)
                     return property.GetGetMethod(true).IsStatic
                         ? (IEnumerable)property.GetValue(null, null)
                         : SourceMustBeStaticError();
 
-                var m = member as MethodInfo;
-                if (m != null)
+                if (member is MethodInfo m)
                     return m.IsStatic
                         ? (IEnumerable)m.Invoke(null, null)
                         : SourceMustBeStaticError();

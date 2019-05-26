@@ -138,8 +138,7 @@ namespace NUnit.Framework.Api
 
                 if (options.ContainsKey(FrameworkPackageSettings.TestParametersDictionary))
                 {
-                    var testParametersDictionary = options[FrameworkPackageSettings.TestParametersDictionary] as IDictionary<string, string>;
-                    if (testParametersDictionary != null)
+                    if (options[FrameworkPackageSettings.TestParametersDictionary] is IDictionary<string, string> testParametersDictionary)
                     {
                         foreach (var parameter in testParametersDictionary)
                             TestContext.Parameters.Add(parameter.Key, parameter.Value);

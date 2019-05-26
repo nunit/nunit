@@ -139,8 +139,7 @@ namespace NUnit.Framework.Internal
 
                 foreach (Test test in Tests)
                 {
-                    TestSuite suite = test as TestSuite;
-                    if (suite != null)
+                    if (test is TestSuite suite)
                         suite.Sort();
                 }
             }

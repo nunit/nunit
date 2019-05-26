@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// The EqualConstraintResult class is tailored for formatting
-    /// and displaying the result of an EqualConstraint. 
+    /// and displaying the result of an EqualConstraint.
     /// </summary>
     public class EqualConstraintResult : ConstraintResult
     {
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Write a failure message. Overridden to provide custom 
+        /// Write a failure message. Overridden to provide custom
         /// failure messages for EqualConstraint.
         /// </summary>
         /// <param name="writer">The MessageWriter to write to</param>
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Displays a single line showing the types and sizes of the expected
-        /// and actual collections or arrays. If both are identical, the value is 
+        /// and actual collections or arrays. If both are identical, the value is
         /// only shown once.
         /// </summary>
         /// <param name="writer">The MessageWriter on which to display</param>
@@ -223,23 +223,6 @@ namespace NUnit.Framework.Constraints
                 writer.WriteMessageLine(indent, ValuesDiffer_2,
                     MsgUtils.GetArrayIndicesAsString(expectedIndices), MsgUtils.GetArrayIndicesAsString(actualIndices));
             }
-        }
-
-        private static object GetValueFromCollection(ICollection collection, int index)
-        {
-            Array array = collection as Array;
-
-            if (array != null && array.Rank > 1)
-                return array.GetValue(MsgUtils.GetArrayIndicesFromCollectionIndex(array, index));
-
-            if (collection is IList)
-                return ((IList)collection)[index];
-
-            foreach (object obj in collection)
-                if (--index < 0)
-                    return obj;
-
-            return null;
         }
 
         #endregion

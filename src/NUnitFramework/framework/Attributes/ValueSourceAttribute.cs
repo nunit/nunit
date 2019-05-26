@@ -118,8 +118,7 @@ namespace NUnit.Framework
 
             MemberInfo member = members[0];
 
-            var field = member as FieldInfo;
-            if (field != null)
+            if (member is FieldInfo field)
             {
                 if (field.IsStatic)
                     return (IEnumerable)field.GetValue(null);
@@ -127,8 +126,7 @@ namespace NUnit.Framework
                 ThrowInvalidDataSourceException();
             }
 
-            var property = member as PropertyInfo;
-            if (property != null)
+            if (member is PropertyInfo property)
             {
                 if (property.GetGetMethod(true).IsStatic)
                     return (IEnumerable)property.GetValue(null, null);
@@ -136,8 +134,7 @@ namespace NUnit.Framework
                 ThrowInvalidDataSourceException();
             }
 
-            var m = member as MethodInfo;
-            if (m != null)
+            if (member is MethodInfo m)
             {
                 if (m.IsStatic)
                     return (IEnumerable)m.Invoke(null, null);

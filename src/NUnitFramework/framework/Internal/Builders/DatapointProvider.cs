@@ -80,8 +80,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {
-                    var field = member as FieldInfo;
-                    if (GetTypeFromMemberInfo(member) == parameterType && field != null)
+                    if (GetTypeFromMemberInfo(member) == parameterType && member is FieldInfo field)
                     {
                         if (field.IsStatic)
                             datapoints.Add(field.GetValue(null));
@@ -94,24 +93,20 @@ namespace NUnit.Framework.Internal.Builders
                     if (GetElementTypeFromMemberInfo(member) == parameterType)
                     {
                         object instance;
-
-                        FieldInfo field = member as FieldInfo;
-                        PropertyInfo property = member as PropertyInfo;
-                        MethodInfo method = member as MethodInfo;
-                        if (field != null)
+                        if (member is FieldInfo field)
                         {
                             instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
                             foreach (object data in (IEnumerable)field.GetValue(instance))
                                 datapoints.Add(data);
                         }
-                        else if (property != null)
+                        else if (member is PropertyInfo property)
                         {
                             MethodInfo getMethod = property.GetGetMethod(true);
                             instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
                             foreach (object data in (IEnumerable)property.GetValue(instance, null))
                                 datapoints.Add(data);
                         }
-                        else if (method != null)
+                        else if (member is MethodInfo method)
                         {
                             instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
                             foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
@@ -153,16 +148,13 @@ namespace NUnit.Framework.Internal.Builders
 
         private Type GetTypeFromMemberInfo(MemberInfo member)
         {
-            var field = member as FieldInfo;
-            if (field != null)
+            if (member is FieldInfo field)
                 return field.FieldType;
 
-            var property = member as PropertyInfo;
-            if (property != null)
+            if (member is PropertyInfo property)
                 return property.PropertyType;
 
-            var method = member as MethodInfo;
-            if (method != null)
+            if (member is MethodInfo method)
                 return method.ReturnType;
 
             return null;

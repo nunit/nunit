@@ -196,8 +196,7 @@ namespace NUnit.Framework
                             // 3. An array was passed, it may be an object[]
                             //    or possibly some other kind of array, which
                             //    TestCaseSource can accept.
-                            var array = item as Array;
-                            if (array != null)
+                            if (item is Array array)
                             {
                                 // If array has the same number of elements as parameters
                                 // and it does not fit exactly into single existing parameter
@@ -258,22 +257,19 @@ namespace NUnit.Framework
             {
                 MemberInfo member = members[0];
 
-                var field = member as FieldInfo;
-                if (field != null)
+                if (member is FieldInfo field)
                     return field.IsStatic
                         ? (MethodParams == null ? (IEnumerable)field.GetValue(null)
                                                 : ReturnErrorAsParameter(ParamGivenToField))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
 
-                var property = member as PropertyInfo;
-                if (property != null)
+                if (member is PropertyInfo property)
                     return property.GetGetMethod(true).IsStatic
                         ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null)
                                                 : ReturnErrorAsParameter(ParamGivenToProperty))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
 
-                var m = member as MethodInfo;
-                if (m != null)
+                if (member is MethodInfo m)
                     return m.IsStatic
                         ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length
                             ? (IEnumerable)m.Invoke(null, MethodParams)

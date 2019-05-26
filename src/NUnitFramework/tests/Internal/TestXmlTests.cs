@@ -182,8 +182,7 @@ namespace NUnit.Framework.Internal
 
             if (recursive)
             {
-                TestSuite suite = test as TestSuite;
-                if (suite != null)
+                if (test is TestSuite suite)
                 {
                     foreach (Test child in suite.Tests)
                     {

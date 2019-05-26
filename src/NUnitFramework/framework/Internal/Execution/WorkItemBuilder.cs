@@ -43,8 +43,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <returns></returns>
         static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
         {
-            TestSuite suite = test as TestSuite;
-            if (suite == null)
+            if (!(test is TestSuite suite))
                 return new SimpleWorkItem((TestMethod)test, filter);
 
             var work = new CompositeWorkItem(suite, filter);

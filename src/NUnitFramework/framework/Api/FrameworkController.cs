@@ -421,8 +421,7 @@ namespace NUnit.Framework.Api
 
             if (value != null)
             {
-                var dict = value as IDictionary;
-                if (dict != null)
+                if (value is IDictionary dict)
                 {
                     AddDictionaryEntries(setting, dict);
                     AddBackwardsCompatibleDictionaryEntries(setting, dict);

@@ -50,9 +50,10 @@ namespace NUnit.Framework.Interfaces
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            var other = obj as AssertionResult;
-
-            return other != null && Status == other.Status && Message == other.Message && StackTrace == other.StackTrace;
+            return obj is AssertionResult other
+                && Status == other.Status
+                && Message == other.Message
+                && StackTrace == other.StackTrace;
         }
     }
 }

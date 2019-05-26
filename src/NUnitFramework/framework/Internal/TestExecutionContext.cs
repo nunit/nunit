@@ -173,9 +173,7 @@ namespace NUnit.Framework.Internal
             [SecuritySafeCritical]
             get
             {
-                var context = CallContext.GetData(NUnitCallContext.TestExecutionContextKey) as TestExecutionContext;
-
-                if (context == null)
+                if (!(CallContext.GetData(NUnitCallContext.TestExecutionContextKey) is TestExecutionContext context))
                 {
                     context = new AdhocContext();
                     CallContext.SetData(NUnitCallContext.TestExecutionContextKey, context);

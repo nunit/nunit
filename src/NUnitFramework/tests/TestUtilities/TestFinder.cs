@@ -40,8 +40,7 @@ namespace NUnit.TestUtilities
                     return child;
                 if (recursive)
                 {
-                    TestSuite childSuite = child as TestSuite;
-                    if (childSuite != null)
+                    if (child is TestSuite childSuite)
                     {
                         Test grandchild = Find(name, childSuite, true);
                         if (grandchild != null)
