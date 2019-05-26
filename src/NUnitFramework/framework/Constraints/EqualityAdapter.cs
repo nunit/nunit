@@ -200,8 +200,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                T xValue, yValue;
-                CastOrThrow(x, y, out xValue, out yValue);
+                CastOrThrow(x, y, out var xValue, out var yValue);
                 return comparer.Equals(xValue, yValue);
             }
         }
@@ -232,8 +231,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                T xValue, yValue;
-                CastOrThrow(x, y, out xValue, out yValue);
+                CastOrThrow(x, y, out var xValue, out var yValue);
                 return comparer.Compare(xValue, yValue) == 0;
             }
         }
@@ -261,8 +259,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                T xValue, yValue;
-                CastOrThrow(x, y, out xValue, out yValue);
+                CastOrThrow(x, y, out var xValue, out var yValue);
                 return comparer.Invoke(xValue, yValue) == 0;
             }
         }

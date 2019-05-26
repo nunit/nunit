@@ -162,8 +162,7 @@ namespace NUnit.Framework.Internal
         /// <exception cref="NotSupportedException"/>
         public sealed override ValueGenerator.Step CreateStep(object value)
         {
-            ValueGenerator.Step step;
-            if (TryCreateStep(value, out step)) return step;
+            if (TryCreateStep(value, out var step)) return step;
             throw CreateNotSupportedException($"creating a step of type {value.GetType()}");
         }
 

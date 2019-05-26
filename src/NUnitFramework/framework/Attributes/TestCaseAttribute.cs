@@ -267,9 +267,8 @@ namespace NUnit.Framework
                 parms = new TestCaseParameters(this);
 
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
-                object expectedResultInTargetType;
                 if (parms.HasExpectedResult
-                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
+                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
                 {
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
@@ -369,8 +368,7 @@ namespace NUnit.Framework
             {
                 object arg = arglist[i];
                 Type targetType = parameters[i].ParameterType;
-                object argAsTargetType;
-                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out argAsTargetType))
+                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
                 {
                     arglist[i] = argAsTargetType;
                 }

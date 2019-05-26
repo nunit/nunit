@@ -112,8 +112,7 @@ namespace NUnit.Framework.Internal
         {
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
 
-            Type[] typeArguments;
-            Assert.That(new GenericMethodHelper(method).TryGetTypeArguments(args, out typeArguments) ? typeArguments : null, Is.EqualTo(typeArgs));
+            Assert.That(new GenericMethodHelper(method).TryGetTypeArguments(args, out var typeArguments) ? typeArguments : null, Is.EqualTo(typeArgs));
         }
 
         private static object[] ArgList(params object[] args) { return args; }

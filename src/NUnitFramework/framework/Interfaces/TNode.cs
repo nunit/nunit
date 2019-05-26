@@ -482,12 +482,7 @@ namespace NUnit.Framework.Interfaces
         {
             get
             {
-                string value;
-
-                if (TryGetValue(key, out value))
-                    return value;
-
-                return null;
+                return TryGetValue(key, out var value) ? value : null;
             }
         }
     }

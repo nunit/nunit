@@ -291,8 +291,7 @@ namespace NUnit.Common
 
         protected int RequiredInt(string val, string option)
         {
-            int result;
-            if (int.TryParse(val, out result)) return result;
+            if (int.TryParse(val, out var result)) return result;
 
             ErrorMessages.Add(string.IsNullOrEmpty(val)
                 ? "Missing required value for option '" + option + "'."

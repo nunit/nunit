@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -130,12 +130,10 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public override int Compare(object expected, object actual)
             {
-                T expectedCast;
-                if (!TypeHelper.TryCast(expected, out expectedCast))
+                if (!TypeHelper.TryCast(expected, out T expectedCast))
                     throw new ArgumentException($"Cannot compare {expected?.ToString() ?? "null"}");
 
-                T actualCast;
-                if (!TypeHelper.TryCast(actual, out actualCast))
+                if (!TypeHelper.TryCast(actual, out T actualCast))
                     throw new ArgumentException($"Cannot compare to {actual?.ToString() ?? "null"}");
 
                 return comparer.Compare(expectedCast, actualCast);
@@ -159,15 +157,13 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public override int Compare(object expected, object actual)
             {
-                T expectedCast;
-                if (!TypeHelper.TryCast(expected, out expectedCast))
+                if (!TypeHelper.TryCast(expected, out T expectedCast))
                     throw new ArgumentException($"Cannot compare {expected?.ToString() ?? "null"}");
 
-                T actualCast;
-                if (!TypeHelper.TryCast(actual, out actualCast))
+                if (!TypeHelper.TryCast(actual, out T actualCast))
                     throw new ArgumentException($"Cannot compare to {actual?.ToString() ?? "null"}");
 
-                return comparison.Invoke((T)expected, (T)actual);
+                return comparison.Invoke(expectedCast, actualCast);
             }
         }
     }

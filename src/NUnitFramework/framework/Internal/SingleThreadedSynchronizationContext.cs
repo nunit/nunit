@@ -142,8 +142,7 @@ namespace NUnit.Framework.Internal
                 _status = Status.Running;
             }
 
-            ScheduledWork scheduledWork;
-            while (TryTake(out scheduledWork))
+            while (TryTake(out var scheduledWork))
                 scheduledWork.Execute();
         }
 
