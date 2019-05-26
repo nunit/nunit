@@ -26,12 +26,18 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   steps:
-  - bash: ./build.sh --target=Test --test-run-name=Linux --configuration=Release
+  - bash: |
+     dotnet tool install --global Cake.Tool
+     export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
+     ~/.dotnet/tools/dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
     displayName: Build, test, and publish results
 
 - job: macOS
   pool:
     vmImage: macOS-10.13
   steps:
-  - bash: ./build.sh --target=Test --test-run-name=macOS --configuration=Release
+  - bash: |
+     dotnet tool install --global Cake.Tool
+     export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
+     ~/.dotnet/tools/dotnet-cake --target=Test --test-run-name=macOS --configuration=Release
     displayName: Build, test, and publish results
