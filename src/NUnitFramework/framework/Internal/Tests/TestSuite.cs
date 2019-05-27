@@ -321,12 +321,12 @@ namespace NUnit.Framework.Internal
                 {
                     if (method.ReturnType == typeof(void))
                         MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
-                    else if (AwaitAdapter.GetResultType(method.ReturnType) != typeof(void))
+                    else if (!Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(method.ReturnType)))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
                 else
                 {
-                    if (method.ReturnType != typeof(void))
+                    if (!Reflect.IsVoidOrUnit(method.ReturnType))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
             }

@@ -461,5 +461,12 @@ namespace NUnit.Framework.Internal
             someType = null;
             return false;
         }
+
+        internal static bool IsVoidOrUnit(Type type)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+
+            return type == typeof(void) || type.FullName == "Microsoft.FSharp.Core.Unit";
+        }
     }
 }

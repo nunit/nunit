@@ -184,7 +184,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
 
-                var voidResult = AwaitAdapter.GetResultType(returnType) == typeof(void);
+                var voidResult = Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(returnType));
 
                 if (!voidResult && (parms == null || !parms.HasExpectedResult))
                     return MarkAsNotRunnable(testMethod,
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Internal.Builders
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a non-void result when a result is expected");
             }
-            else if (returnType == typeof(void))
+            else if (Reflect.IsVoidOrUnit(returnType))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
