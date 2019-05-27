@@ -187,14 +187,14 @@ namespace NUnit.Framework.Attributes
             Thread.Sleep(Timeout.Infinite);
         }
 
-        [Test, Timeout(100)]
+        [Test, Timeout(1000)]
         public void TestTimeoutDoesNotStopCompletion()
         {
             Thread.Sleep(20);
             Assert.True(true);
         }
 
-        [Timeout(100)]
+        [Timeout(1000)]
         public void TestTimeoutWhichThrowsTestException()
         {
             throw new ArgumentException($"{nameof(ArgumentException)} was thrown.");
