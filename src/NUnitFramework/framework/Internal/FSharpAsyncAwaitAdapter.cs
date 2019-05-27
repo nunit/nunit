@@ -32,18 +32,49 @@ namespace NUnit.Framework.Internal
     {
         private static MethodInfo _startImmediateAsTaskMethod;
 
+        public static bool IsAwaitable(Type awaitableType)
+        {
+            return GetAsyncInfo(awaitableType) != null;
+        }
+
+        public static Type GetResultType(Type awaitableType)
+        {
+            return GetAsyncInfo(awaitableType)?.ResultType;
+        }
+
+        private static AsyncInfo GetAsyncInfo(Type asyncType)
+        {
+            if (asyncType == null) return null;
+
+            if (!asyncType.GetTypeInfo().IsGenericType) return null;
+            var genericDefinition = asyncType.GetGenericTypeDefinition();
+            if (genericDefinition.FullName != "Microsoft.FSharp.Control.FSharpAsync`1") return null;
+
+            return new AsyncInfo(genericDefinition, asyncType.GetGenericArguments()[0]);
+        }
+
+        private sealed class AsyncInfo
+        {
+            public AsyncInfo(Type fSharpAsyncTypeDefinition, Type resultType)
+            {
+                FSharpAsyncTypeDefinition = fSharpAsyncTypeDefinition;
+                ResultType = resultType;
+            }
+
+            public Type FSharpAsyncTypeDefinition { get; }
+            public Type ResultType { get; }
+        }
+
         public static AwaitAdapter TryCreate(object awaitable)
         {
             if (awaitable == null) return null;
 
-            var awaitableType = awaitable.GetType();
-            if (!awaitableType.GetTypeInfo().IsGenericType) return null;
-            var genericDefinition = awaitableType.GetGenericTypeDefinition();
-            if (genericDefinition.FullName != "Microsoft.FSharp.Control.FSharpAsync`1") return null;
+            var info = GetAsyncInfo(awaitable.GetType());
+            if (info == null) return null;
 
             if (_startImmediateAsTaskMethod == null)
             {
-                var asyncHelperMethodsType = awaitableType.GetTypeInfo().Assembly.GetType("Microsoft.FSharp.Control.FSharpAsync");
+                var asyncHelperMethodsType = info.FSharpAsyncTypeDefinition.GetTypeInfo().Assembly.GetType("Microsoft.FSharp.Control.FSharpAsync");
                 if (asyncHelperMethodsType == null)
                     throw new InvalidOperationException("Cannot find non-generic FSharpAsync type in the same assembly as the generic one.");
 
@@ -58,7 +89,7 @@ namespace NUnit.Framework.Internal
                        var parameters = method.GetParameters();
                        if (parameters.Length != 2) return false;
 
-                       if (parameters[0].ParameterType != genericDefinition.MakeGenericType(typeArguments[0])) return false;
+                       if (parameters[0].ParameterType != info.FSharpAsyncTypeDefinition.MakeGenericType(typeArguments[0])) return false;
 
                        Type someType;
                        return parameters[1].ParameterType.IsFSharpOption(out someType)
@@ -67,7 +98,7 @@ namespace NUnit.Framework.Internal
             }
 
             var task = _startImmediateAsTaskMethod
-                .MakeGenericMethod(awaitableType.GetGenericArguments()[0])
+                .MakeGenericMethod(info.ResultType)
                 .Invoke(null, new[] { awaitable, null });
 
             return AwaitAdapter.FromAwaitable(task);

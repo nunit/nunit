@@ -37,12 +37,16 @@ namespace NUnit.Framework.Internal
 
         public static bool IsAwaitable(Type awaitableType)
         {
-            return CSharpPatternBasedAwaitAdapter.IsAwaitable(awaitableType);
+            return
+                CSharpPatternBasedAwaitAdapter.IsAwaitable(awaitableType)
+                || FSharpAsyncAwaitAdapter.IsAwaitable(awaitableType);
         }
 
         public static Type GetResultType(Type awaitableType)
         {
-            return CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType);
+            return
+                CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType)
+                ?? FSharpAsyncAwaitAdapter.GetResultType(awaitableType);
         }
 
         public static AwaitAdapter FromAwaitable(object awaitable)
