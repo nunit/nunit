@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal
 {
     public static class RandomizerBiasTests
     {
-        private const int TrialCount = 100000;
+        private const int TrialCount = 100_000;
         private const double ConfidenceInterval = 0.00965802342765787;
 
         /* Random generators wouldn’t be truly random if it was impossible to hit a highly biased sequence.
@@ -51,14 +51,14 @@ namespace NUnit.Framework.Internal
         negatives would then only occur on average only one month out of every 286 years.
 
         One in a billion, or 99.9999999% confidence, seems desirable. To obtain this confidence level, we need a
-        sufficiently high trial count or a sufficiently high tolerance. I chose a trial count of 100000 because
+        sufficiently high trial count or a sufficiently high tolerance. I chose a trial count of 100,000 because
         that takes only about 10ms on my machine. That results in a confidence interval (see Wikipedia link above)
         of ~±0.0097 around 0.5. 0.5 of the trials are expected to succeed, where success means something
         like "the third bit is set"—something which we expect to happen half the time if the generator is not
         biased. If we check whether the actual tested fraction of the time is within ~±0.0097 of 0.5, we will
         have the desired 99.9999999% confidence level per trial.
 
-        I used this tool to calculate the confidence interval for trial count 100000, success count 50000,
+        I used this tool to calculate the confidence interval for trial count 100,000, success count 50,000,
         confidence 99.9999999%, and method Agresti-Coull:
         http://epitools.ausvet.com.au/content.php?page=CIProportion&SampleSize=100000&Positive=50000&Conf=0.999999999&method=5&Digits=17
         The result is placed in the ConfidenceInterval constant above.

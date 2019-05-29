@@ -661,7 +661,7 @@ namespace NUnit.TestData
                     }
                 }).BeginInvoke(ar => { }, null);
 
-                if (!finished.WaitOne(10000)) Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
+                if (!finished.WaitOne(10_000)) Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
             }
         }
 
@@ -682,7 +682,7 @@ namespace NUnit.TestData
                     }
                 }).Start();
 
-                if (!finished.WaitOne(10000))
+                if (!finished.WaitOne(10_000))
                     Assert.Fail("Timeout while waiting for threadstart to execute.");
             }
         }
@@ -704,7 +704,7 @@ namespace NUnit.TestData
                     }
                 });
 
-                if (!finished.WaitOne(10000))
+                if (!finished.WaitOne(10_000))
                     Assert.Fail("Timeout while waiting for Threadpool.QueueUserWorkItem to execute.");
             }
         }
@@ -713,7 +713,7 @@ namespace NUnit.TestData
         [Test]
         public static void WarningInTaskRun()
         {
-            if (!Task.Run(() => Assert.Warn("(Warning message)")).Wait(10000))
+            if (!Task.Run(() => Assert.Warn("(Warning message)")).Wait(10_000))
                 Assert.Fail("Timeout while waiting for Task.Run to execute.");
         }
 
