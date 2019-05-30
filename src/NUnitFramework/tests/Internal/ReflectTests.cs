@@ -241,23 +241,29 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsPreservesStackTrace()
         {
-            Assert.That(
-                () => typeof(ReflectTests)
-                    .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
-                    .InvokeWithTransparentExceptions(instance: null),
-                Throws.Exception
-                    .With.Property(nameof(Exception.StackTrace))
-                        .Contains(nameof(MethodThrowingTargetInvocationException)));
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.IgnoreOnAffectedPlatform(() =>
+            {
+                Assert.That(
+                    () => typeof(ReflectTests)
+                        .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
+                        .InvokeWithTransparentExceptions(instance: null),
+                    Throws.Exception
+                        .With.Property(nameof(Exception.StackTrace))
+                            .Contains(nameof(MethodThrowingTargetInvocationException)));
+            });
         }
 
         [Test]
         public static void DynamicInvokeWithTransparentExceptionsPreservesStackTrace()
         {
-            Assert.That(
-                () => new Func<int>(MethodThrowingTargetInvocationException).DynamicInvokeWithTransparentExceptions(),
-                Throws.Exception
-                    .With.Property(nameof(Exception.StackTrace))
-                        .Contains(nameof(MethodThrowingTargetInvocationException)));
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.IgnoreOnAffectedPlatform(() =>
+            {
+                Assert.That(
+                    () => new Func<int>(MethodThrowingTargetInvocationException).DynamicInvokeWithTransparentExceptions(),
+                    Throws.Exception
+                        .With.Property(nameof(Exception.StackTrace))
+                            .Contains(nameof(MethodThrowingTargetInvocationException)));
+            });
         }
 
         private static int MethodReturning42() => 42;

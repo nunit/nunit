@@ -28,12 +28,17 @@ namespace NUnit.Framework
 {
     internal sealed class PlatformInconsistency
     {
+        private readonly string _message;
         private readonly RuntimeType _runtimeType;
         private readonly Version _minVersion;
         private readonly Version _maxVersion;
 
-        private PlatformInconsistency(RuntimeType runtimeType, Version minVersion, Version maxVersion)
+        private PlatformInconsistency(string message, RuntimeType runtimeType, Version minVersion, Version maxVersion)
         {
+            if (string.IsNullOrEmpty(message))
+                throw new ArgumentException("Descriptive message must be specified.", nameof(message));
+
+            _message = message;
             _runtimeType = runtimeType;
             _minVersion = minVersion;
             _maxVersion = maxVersion;
@@ -71,6 +76,9 @@ namespace NUnit.Framework
             }
         }
 
+        /// <summary>
+        /// Does nothing if the current platform is affected; otherwise, executes the specified action.
+        /// </summary>
         public void SkipOnAffectedPlatform(Action action)
         {
             Guard.ArgumentNotNull(action, nameof(action));
@@ -79,9 +87,23 @@ namespace NUnit.Framework
         }
 
         /// <summary>
+        /// Reports the current test as ignored if the current platform is affected; otherwise, executes the specified action.
+        /// </summary>
+        public void IgnoreOnAffectedPlatform(Action action)
+        {
+            Guard.ArgumentNotNull(action, nameof(action));
+
+            if (CurrentPlatformIsInconsistent)
+                Assert.Ignore(_message);
+            else
+                action.Invoke();
+        }
+
+        /// <summary>
         /// Mono's MethodInfo.Invoke loses the stack trace beginning in 5.20.
         /// </summary>
         public static PlatformInconsistency MonoMethodInfoInvokeLosesStackTrace { get; } = new PlatformInconsistency(
+            "Mono's MethodInfo.Invoke loses the stack trace beginning in 5.20.",
             RuntimeType.Mono,
             minVersion: new Version(5, 20),
             maxVersion: null);
