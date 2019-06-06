@@ -454,12 +454,20 @@ namespace NUnit.Framework.Api
             Assert.DoesNotThrow(() => _runner.StopRun(force));
         }
 
-        [Test]
-        public void StopRun_WhenTestIsRunning_StopsTest([Values] bool force)
+        private static TestCaseData[] StopRunCases = new TestCaseData[]
         {
-            var stopType = force ? "forced stop" : "cooperative stop";
+            new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
+            new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
+            new TestCaseData(2, false).SetName("{m}(Parallel dispatcher, cooperative stop)"),
+#if !NETCOREAPP2_0 // Hangs the CI build
+            new TestCaseData(2, true).SetName("{m}(Parallel dispatcher, forced stop)")
+#endif
+        };
 
-            var tests = LoadSlowTests();
+        [TestCaseSource(nameof(StopRunCases))]
+        public void StopRun_WhenTestIsRunning_StopsTest(int workers, bool force)
+        {
+            var tests = LoadSlowTests(workers);
             var count = tests.TestCaseCount;
             _runner.RunAsync(this, TestFilter.Empty);
 
@@ -468,9 +476,9 @@ namespace NUnit.Framework.Api
 
             _runner.StopRun(force);
 
-            Assert.True(_runner.WaitForCompletion(CANCEL_TEST_DELAY), $"Runner never signaled completion after {stopType}");
+            Assert.True(_runner.WaitForCompletion(CANCEL_TEST_DELAY), "Runner never signaled completion");
 
-            Assert.True(_runner.IsTestComplete, "Test is not recorded as complete after {stopType}");
+            Assert.True(_runner.IsTestComplete, "Test is not recorded as complete");
 
             Assert.That(_suiteStartedCount, Is.GreaterThan(0), "No suites started");
             Assert.That(_testStartedCount, Is.GreaterThan(0), "No test cases started");
@@ -479,7 +487,8 @@ namespace NUnit.Framework.Api
 
             if (_runner.Result.ResultState != ResultState.Success) // Test may have finished before we stopped it
             {
-                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled));
+                Assert.That(_runner.Result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                //Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled));
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count));
             }
         }
@@ -558,9 +567,12 @@ namespace NUnit.Framework.Api
                 settings);
         }
 
-        private ITest LoadSlowTests()
+        private ITest LoadSlowTests(int workers)
         {
-            return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), EMPTY_SETTINGS);
+            var settings = new Dictionary<string, object>();
+            settings.Add(FrameworkPackageSettings.NumberOfTestWorkers, workers);
+
+            return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), settings);
         }
 
         private void CheckParameterOutput(ITestResult result)
