@@ -260,6 +260,21 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. Ignore Me Until The Future"));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(4)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. Ignore Me Until The Future"));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(5)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. Ignore Me Until The Future"));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(6)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [Test]

@@ -60,7 +60,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             {
                 return new object[] {
                     new TestCaseData(1),
-                    new TestCaseData(2).Ignore("Don't Run Me!")
+                    new TestCaseData(2).Ignore("Don't Run Me!"),
+                    new TestCaseData(3).Ignore("Ignore Me Until The Future", "4242-01-01"),
+                    new TestCaseData(4).Ignore("Ignore Me Until The Future", "4242-01-01 00:00:00"),
+                    new TestCaseData(5).Ignore("Ignore Me Until The Future", "4242-01-01 00:00:00Z"),
+                    new TestCaseData(6).Ignore("I Was Ignored in the Past", "1492-01-01")
                 };
             }
         }
