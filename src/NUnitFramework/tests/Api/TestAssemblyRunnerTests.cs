@@ -39,6 +39,7 @@ using NUnit.Framework.Internal.Filters;
 namespace NUnit.Framework.Api
 {
     // Functional tests of the TestAssemblyRunner and all subordinate classes
+    [NonParallelizable]
     public class TestAssemblyRunnerTests : ITestListener
     {
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
@@ -85,11 +86,6 @@ namespace NUnit.Framework.Api
             _failCount = 0;
             _skipCount = 0;
             _inconclusiveCount = 0;
-        }
-
-        public void DestroyRunner()
-        {
-            
         }
 
         #region Load
@@ -458,9 +454,11 @@ namespace NUnit.Framework.Api
         {
             new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
             new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
+#if PARALLEL
             new TestCaseData(2, false).SetName("{m}(Parallel dispatcher, cooperative stop)"),
 #if !NETCOREAPP2_0 // Hangs the CI build
             new TestCaseData(2, true).SetName("{m}(Parallel dispatcher, forced stop)")
+#endif
 #endif
         };
 
