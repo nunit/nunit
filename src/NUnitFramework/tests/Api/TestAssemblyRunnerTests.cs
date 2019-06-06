@@ -51,6 +51,9 @@ namespace NUnit.Framework.Api
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
 
+        // Arbitrary delay for cancellation based on the time to run each case in SlowTests
+        private const int CANCEL_TEST_DELAY = SlowTests.SINGLE_TEST_DELAY * 2;
+
         private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
         private const string INVALID_FILTER_ELEMENT_MESSAGE = "Invalid filter element: {0}";
 
@@ -59,6 +62,7 @@ namespace NUnit.Framework.Api
         private ITestAssemblyRunner _runner;
 
         private int _suiteStartedCount;
+        private int _suiteFinishedCount;
         private int _testStartedCount;
         private int _testFinishedCount;
         private int _testOutputCount;
@@ -73,6 +77,7 @@ namespace NUnit.Framework.Api
             _runner = new NUnitTestAssemblyRunner(new DefaultTestAssemblyBuilder());
 
             _suiteStartedCount = 0;
+            _suiteFinishedCount = 0;
             _testStartedCount = 0;
             _testFinishedCount = 0;
             _testOutputCount = 0;
@@ -80,6 +85,11 @@ namespace NUnit.Framework.Api
             _failCount = 0;
             _skipCount = 0;
             _inconclusiveCount = 0;
+        }
+
+        public void DestroyRunner()
+        {
+            
         }
 
         #region Load
@@ -267,6 +277,7 @@ namespace NUnit.Framework.Api
             _runner.Run(this, TestFilter.Empty);
 
             Assert.That(_suiteStartedCount, Is.EqualTo(MockAssembly.Suites));
+            Assert.That(_suiteFinishedCount, Is.EqualTo(MockAssembly.Suites));
             Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
             Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
             Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
@@ -433,59 +444,40 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load"));
         }
 
-#endregion
+        #endregion
 
-#region StopRun
+        #region StopRun
 
         [Test]
-        public void StopRun_WhenNoTestIsRunning_Succeeds()
+        public void StopRun_WhenNoTestIsRunning_DoesNotThrow([Values] bool force)
         {
-            _runner.StopRun(false);
+            Assert.DoesNotThrow(() => _runner.StopRun(force));
         }
 
         [Test]
-        public void StopRun_WhenTestIsRunning_StopsTest()
+        public void StopRun_WhenTestIsRunning_StopsTest([Values] bool force)
         {
+            var stopType = force ? "forced stop" : "cooperative stop";
+
             var tests = LoadSlowTests();
             var count = tests.TestCaseCount;
-            _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
-            _runner.StopRun(false);
-            _runner.WaitForCompletion(Timeout.Infinite);
+            _runner.RunAsync(this, TestFilter.Empty);
 
-            Assert.True(_runner.IsTestComplete, "Test is not complete");
+            // Ensure that at least one test started, otherwise we aren't testing anything!
+            SpinWait.SpinUntil(() => _testStartedCount > 0, CANCEL_TEST_DELAY);
+
+            _runner.StopRun(force);
+
+            Assert.True(_runner.WaitForCompletion(CANCEL_TEST_DELAY), $"Runner never signaled completion after {stopType}");
+
+            Assert.True(_runner.IsTestComplete, "Test is not recorded as complete after {stopType}");
+
+            Assert.That(_suiteStartedCount, Is.GreaterThan(0), "No suites started");
+            Assert.That(_testStartedCount, Is.GreaterThan(0), "No test cases started");
+            Assert.That(_suiteFinishedCount, Is.EqualTo(_suiteStartedCount), "Not all suites terminated after {stopType}");
+            Assert.That(_testFinishedCount, Is.EqualTo(_testStartedCount), "Not all test cases terminated after {stopType}");
 
             if (_runner.Result.ResultState != ResultState.Success) // Test may have finished before we stopped it
-            {
-                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled));
-                Assert.That(_runner.Result.PassCount, Is.LessThan(count));
-            }
-        }
-
-#endregion
-
-#region Cancel Run
-
-        [Test]
-        public void CancelRun_WhenNoTestIsRunning_Succeeds()
-        {
-            _runner.StopRun(true);
-        }
-
-        [Test]
-        public void CancelRun_WhenTestIsRunning_StopsTest()
-        {
-            var tests = LoadSlowTests();
-            var count = tests.TestCaseCount;
-            _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
-            _runner.StopRun(true);
-
-            // When cancelling, the completion event may not be signalled,
-            // so we only wait a short time before checking.
-            _runner.WaitForCompletion(Timeout.Infinite);
-
-            Assert.True(_runner.IsTestComplete, "Test is not complete");
-
-            if (_runner.Result.ResultState != ResultState.Success)
             {
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled));
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count));
@@ -506,7 +498,11 @@ namespace NUnit.Framework.Api
 
         void ITestListener.TestFinished(ITestResult result)
         {
-            if (!result.Test.IsSuite)
+            if (result.Test.IsSuite)
+            {
+                _suiteFinishedCount++;
+            }
+            else
             {
                 _testFinishedCount++;
 
