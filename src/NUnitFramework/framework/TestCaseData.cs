@@ -203,6 +203,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Ignores this TestCase, specifying the reason until the specified date.
+        /// </summary>
         /// <param name="reason">The reason.</param>
         /// <param name="until">
         /// The date in the future to stop ignoring the test as a string in UTC time.
