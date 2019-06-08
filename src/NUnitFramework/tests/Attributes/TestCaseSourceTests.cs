@@ -264,17 +264,30 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. Ignore Me Until The Future"));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 00:00:00Z"));
 
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(4)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. Ignore Me Until The Future"));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 00:00:00Z"));
 
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(5)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 00:00:00Z. Ignore Me Until The Future"));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 00:00:00Z"));
 
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(6)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(7)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 12:42:33Z. Ignore Me Until The Future"));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 12:42:33Z"));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(8)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Ignoring until 4242-01-01 12:42:33Z. Ignore Me Until The Future"));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo("4242-01-01 12:42:33Z"));
         }
 
         [Test]

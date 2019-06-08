@@ -210,7 +210,6 @@ namespace NUnit.Framework
         /// For example for a date and time, "2014-12-25 08:10:00Z" or for just a date,
         /// "2014-12-25". If just a date is given, the Ignore will expire at midnight UTC.
         /// </param>
-        /// <returns></returns>
         /// <remarks>
         /// Once the ignore until date has passed, the test will be marked
         /// as runnable. Tests with an ignore until date will have an IgnoreUntilDate
