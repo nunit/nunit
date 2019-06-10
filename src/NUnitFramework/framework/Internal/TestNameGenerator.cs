@@ -160,8 +160,7 @@ namespace NUnit.Framework.Internal
                         char c = token[1];
                         if (token.Length >= 5 && token[2] == ':' && (c == 'a' || char.IsDigit(c)))
                         {
-                            int length;
-                            if (int.TryParse(token.Substring(3, token.Length - 4), out length) && length > 0)
+                            if (int.TryParse(token.Substring(3, token.Length - 4), out var length) && length > 0)
                             {
                                 if (c == 'a')
                                     fragments.Add(new ArgListFragment(length));

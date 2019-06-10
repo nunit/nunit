@@ -55,15 +55,14 @@ namespace NUnit.Framework.Internal
         private static AwaitShapeInfo GetShapeInfo(Type type)
         {
 #if NET35
-            AwaitShapeInfo info;
-
             lock (ShapeInfoByType)
             {
-                if (!ShapeInfoByType.TryGetValue(type, out info))
+                if (!ShapeInfoByType.TryGetValue(type, out var info))
                     ShapeInfoByType.Add(type, info = AwaitShapeInfo.TryCreate(type));
+
+                return info;
             }
 
-            return info;
 #else
             return ShapeInfoByType.GetOrAdd(type, AwaitShapeInfo.TryCreate);
 #endif

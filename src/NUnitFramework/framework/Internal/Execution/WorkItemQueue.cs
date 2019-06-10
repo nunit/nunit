@@ -367,8 +367,7 @@ namespace NUnit.Framework.Internal.Execution
             // If there are any queued items, copy to the next lower level
             for (int i = 0; i < PRIORITY_LEVELS; i++)
             {
-                WorkItem work;
-                while (_innerQueues[i].TryDequeue(out work))
+                while (_innerQueues[i].TryDequeue(out var work))
                     state.InnerQueues[i].Enqueue(work);
             }
 

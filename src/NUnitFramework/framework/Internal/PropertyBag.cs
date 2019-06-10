@@ -51,8 +51,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(value, "value");
 
-            IList list;
-            if (!inner.TryGetValue(key, out list))
+            if (!inner.TryGetValue(key, out var list))
             {
                 list = new List<object>();
                 inner.Add(key, list);
@@ -86,8 +85,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public object Get(string key)
         {
-            IList list;
-            return inner.TryGetValue(key, out list) && list.Count > 0
+            return inner.TryGetValue(key, out var list) && list.Count > 0
                 ? list[0]
                 : null;
         }
@@ -121,8 +119,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                IList list;
-                if (!inner.TryGetValue(key, out list))
+                if (!inner.TryGetValue(key, out var list))
                 {
                     list = new List<object>();
                     inner.Add(key, list);

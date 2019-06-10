@@ -66,8 +66,7 @@ namespace NUnit.Framework.Internal
         {
             for (int i = 0; i < data.Length; i++)
             {
-                object convertedValue;
-                if (TryConvert(data[i], targetType, out convertedValue))
+                if (TryConvert(data[i], targetType, out var convertedValue))
                     data[i] = convertedValue;
             }
 
@@ -79,8 +78,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static object Convert(object value, Type targetType)
         {
-            object convertedValue;
-            if (TryConvert(value, targetType, out convertedValue))
+            if (TryConvert(value, targetType, out var convertedValue))
                 return convertedValue;
 
             throw new InvalidOperationException(

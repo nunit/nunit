@@ -321,9 +321,7 @@ namespace System.Collections.Concurrent
             try
             {
                 //store head and tail positions in buffer,
-                Segment head, tail;
-                int headLow, tailHigh;
-                GetHeadTailPositions(out head, out tail, out headLow, out tailHigh);
+                GetHeadTailPositions(out var head, out var tail, out var headLow, out var tailHigh);
 
                 if (head == tail)
                 {
@@ -399,9 +397,7 @@ namespace System.Collections.Concurrent
             get
             {
                 //store head and tail positions in buffer,
-                Segment head, tail;
-                int headLow, tailHigh;
-                GetHeadTailPositions(out head, out tail, out headLow, out tailHigh);
+                GetHeadTailPositions(out var head, out var tail, out var headLow, out var tailHigh);
 
                 if (head == tail)
                 {
@@ -481,9 +477,7 @@ namespace System.Collections.Concurrent
             // A design flaw here: if a Thread.Abort() happens, we cannot decrement m_numSnapshotTakers. But we cannot
             // wrap the following with a try/finally block, otherwise the decrement will happen before the yield return
             // statements in the GetEnumerator (head, tail, headLow, tailHigh) method.
-            Segment head, tail;
-            int headLow, tailHigh;
-            GetHeadTailPositions(out head, out tail, out headLow, out tailHigh);
+            GetHeadTailPositions(out var head, out var tail, out var headLow, out var tailHigh);
 
             //If we put yield-return here, the iterator will be lazily evaluated. As a result a snapshot of
             // the queue is not taken when GetEnumerator is initialized but when MoveNext() is first called.

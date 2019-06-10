@@ -124,8 +124,7 @@ namespace NUnit.Framework.Internal
                     if (key != null)
                     {
                         var buildStr = key.GetValue("CurrentBuildNumber") as string;
-                        int build = 0;
-                        int.TryParse(buildStr, out build);
+                        int.TryParse(buildStr, out var build);
 
                         // These two keys are in Windows 10 only and are DWORDS
                         var major = key.GetValue("CurrentMajorVersionNumber") as int?;

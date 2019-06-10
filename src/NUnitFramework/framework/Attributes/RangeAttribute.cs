@@ -177,8 +177,7 @@ namespace NUnit.Framework
 
             var valueGenerator = ValueGenerator.Create(parameter.ParameterType);
 
-            ValueGenerator.Step step;
-            if (!valueGenerator.TryCreateStep(_step, out step))
+            if (!valueGenerator.TryCreateStep(_step, out var step))
             {
                 // ValueGenerator.CreateStep has the responsibility to enable Byte values to be incremented
                 // by the Int32 value -1. Or perhaps in the future, DateTime values to be incremented by a TimeSpan.
@@ -188,8 +187,7 @@ namespace NUnit.Framework
                 // that are only of a different type due to IL limitations or NUnit smoothing over overload differences.
                 // See the XML docs for the ParamAttributeTypeConversions class.
 
-                object stepValueToRequire;
-                if (!ParamAttributeTypeConversions.TryConvert(_step, parameter.ParameterType, out stepValueToRequire))
+                if (!ParamAttributeTypeConversions.TryConvert(_step, parameter.ParameterType, out var stepValueToRequire))
                 {
                     // This will cause CreateStep to throw the same exception as it would throw if TryConvert
                     // succeeded but the value generator still didn’t recognize the step value.
