@@ -170,6 +170,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void PumpThreadProc()
         {
+            log.Debug("Starting EventPump");
+
             //ITestListener hostListeners = CoreExtensions.Host.Listeners;
             try
             {
@@ -188,6 +190,8 @@ namespace NUnit.Framework.Internal.Execution
                         log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
                     }
                 }
+
+                log.Debug("EventPump Terminating");
             }
             catch (Exception ex)
             {

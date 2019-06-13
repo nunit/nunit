@@ -58,6 +58,11 @@ namespace NUnit.Framework.Internal
         internal static readonly string CHILD_IGNORE_MESSAGE = "One or more child tests were ignored";
 
         /// <summary>
+        /// Error message for when user has cancelled the test run
+        /// </summary>
+        internal const string USER_CANCELLED_MESSAGE = "Test run cancelled by user";
+
+        /// <summary>
         /// The minimum duration for tests
         /// </summary>
         internal const double MIN_DURATION = 0.000001d;

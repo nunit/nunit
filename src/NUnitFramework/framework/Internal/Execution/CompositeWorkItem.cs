@@ -382,8 +382,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void OnAllChildItemsCompleted()
         {
-            var teardown = new OneTimeTearDownWorkItem(this);
-            Context.Dispatcher.Dispatch(teardown);
+            if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
+                WorkItemComplete();
+            else
+                Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
         private readonly object cancelLock = new object();

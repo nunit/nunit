@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -72,6 +73,8 @@ namespace NUnit.Framework.Api
         private int _skipCount;
         private int _inconclusiveCount;
 
+        private Dictionary<string, bool> _activeTests;
+
         [SetUp]
         public void CreateRunner()
         {
@@ -86,6 +89,8 @@ namespace NUnit.Framework.Api
             _failCount = 0;
             _skipCount = 0;
             _inconclusiveCount = 0;
+
+            _activeTests = new Dictionary<string, bool>();
         }
 
         #region Load
@@ -442,8 +447,9 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-        #region StopRun
+#region StopRun
 
+#if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
         [Test]
         public void StopRun_WhenNoTestIsRunning_DoesNotThrow([Values] bool force)
         {
@@ -454,11 +460,9 @@ namespace NUnit.Framework.Api
         {
             new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
             new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
-#if PARALLEL
+#if PARALLEL // Currently, all THREAD_ABORT platforms are also PARALLEL, but just in case...
             new TestCaseData(2, false).SetName("{m}(Parallel dispatcher, cooperative stop)"),
-#if !NETCOREAPP2_0 // Hangs the CI build
             new TestCaseData(2, true).SetName("{m}(Parallel dispatcher, forced stop)")
-#endif
 #endif
         };
 
@@ -467,6 +471,8 @@ namespace NUnit.Framework.Api
         {
             var tests = LoadSlowTests(workers);
             var count = tests.TestCaseCount;
+            var stopType = force ? "forced stop" : "cooperative stop";
+
             _runner.RunAsync(this, TestFilter.Empty);
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
@@ -474,22 +480,32 @@ namespace NUnit.Framework.Api
 
             _runner.StopRun(force);
 
-            Assert.True(_runner.WaitForCompletion(CANCEL_TEST_DELAY), "Runner never signaled completion");
+            var completionWasSignaled = _runner.WaitForCompletion(CANCEL_TEST_DELAY);
 
-            Assert.True(_runner.IsTestComplete, "Test is not recorded as complete");
-
-            Assert.That(_suiteStartedCount, Is.GreaterThan(0), "No suites started");
-            Assert.That(_testStartedCount, Is.GreaterThan(0), "No test cases started");
-            Assert.That(_suiteFinishedCount, Is.EqualTo(_suiteStartedCount), "Not all suites terminated after {stopType}");
-            Assert.That(_testFinishedCount, Is.EqualTo(_testStartedCount), "Not all test cases terminated after {stopType}");
-
-            if (_runner.Result.ResultState != ResultState.Success) // Test may have finished before we stopped it
+            // Use Assert.Multiple so we can see everything that went wrong at one time
+            Assert.Multiple(() =>
             {
-                Assert.That(_runner.Result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                //Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled));
-                Assert.That(_runner.Result.PassCount, Is.LessThan(count));
-            }
+                Assert.True(completionWasSignaled, "Runner never signaled completion");
+                Assert.True(_runner.IsTestComplete, "Test is not recorded as complete");
+
+                if (_activeTests.Count > 0)
+                {
+                    var sb = new StringBuilder("The following tests never terminated:" + Environment.NewLine);
+                    foreach (var name in _activeTests.Keys)
+                        sb.AppendLine($" * {name}");
+                    Assert.Fail(sb.ToString());
+                }
+
+                Assert.That(_suiteStartedCount, Is.GreaterThan(0), "No suites started");
+                Assert.That(_testStartedCount, Is.GreaterThan(0), "No test cases started");
+                Assert.That(_suiteFinishedCount, Is.EqualTo(_suiteStartedCount), $"Not all suites terminated after {stopType}");
+                Assert.That(_testFinishedCount, Is.EqualTo(_testStartedCount), $"Not all test cases terminated after {stopType}");
+
+                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled), $"Invalid ResultState after {stopType}");
+                Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
+            });
         }
+#endif
 
 #endregion
 
@@ -497,6 +513,8 @@ namespace NUnit.Framework.Api
 
         void ITestListener.TestStarted(ITest test)
         {
+            _activeTests.Add(test.Name, true);
+
             if (test.IsSuite)
                 _suiteStartedCount++;
             else
@@ -505,6 +523,8 @@ namespace NUnit.Framework.Api
 
         void ITestListener.TestFinished(ITestResult result)
         {
+            _activeTests.Remove(result.Test.Name);
+
             if (result.Test.IsSuite)
             {
                 _suiteFinishedCount++;
@@ -549,9 +569,9 @@ namespace NUnit.Framework.Api
 
         }
 
-        #endregion
+#endregion
 
-        #region Helper Methods
+#region Helper Methods
 
         private ITest LoadMockAssembly()
         {
