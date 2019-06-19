@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -38,8 +39,12 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
 
+        private const int WAIT_FOR_FORCED_TERMINATION = 5000;
+
         private WorkItem _topLevelWorkItem;
         private readonly Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
+
+        private readonly List<WorkItem> _workItemsInProcess = new List<WorkItem>();
 
         #region Events
 
@@ -221,6 +226,9 @@ namespace NUnit.Framework.Internal.Execution
         {
             log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
+            _workItemsInProcess.Add(work);
+            work.Completed += (s, e) => _workItemsInProcess.Remove((WorkItem)s);
+
             switch (strategy)
             {
                 default:
@@ -254,6 +262,21 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (var shift in Shifts)
                 shift.Cancel(force);
+
+            if (force)
+            {
+                SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WAIT_FOR_FORCED_TERMINATION);
+
+                // Notify termination of any remaining in-process suites
+                int index = _workItemsInProcess.Count;
+                while (index > 0)
+                {
+                    var work = _workItemsInProcess[--index] as CompositeWorkItem;
+                    
+                    if (work != null && work.State == WorkItemState.Running)
+                        new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
+                }
+            }
         }
 
         private readonly object _queueLock = new object();
