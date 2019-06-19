@@ -653,6 +653,24 @@ namespace NUnit.Framework.Constraints
                 ICollection strings = new List<string> { "1", "2", "3" };
                 Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
             }
+
+            [Test]
+            public void UsesProvidedPredicateForItemComparison()
+            {
+                var expected = new[] { "yeti", "łysy", "rysiu" };
+                var actual = new[] { "YETI", "Łysy", "RySiU" };
+
+                Assert.That(actual, Is.EqualTo(expected).Using<string>((x, y) => StringUtil.StringsEqual(x, y, true)));
+            }
+
+            [Test]
+            public void UsesProvidedPredicateForItemComparisonDifferentTypes()
+            {
+                var expected = new[] { 1, 2, 3 };
+                var actual = new[] { "1", "2", "3" };
+
+                Assert.That(actual, Is.EqualTo(expected).Using<string, int>((s, i) => i.ToString() == s));
+            }
         }
 
         #endregion
