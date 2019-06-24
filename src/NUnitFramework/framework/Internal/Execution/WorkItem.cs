@@ -130,7 +130,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the current state of the WorkItem
         /// </summary>
-        public WorkItemState State { get; private set; }
+        public WorkItemState State { get; protected set; }
 
         /// <summary>
         /// The test being executed by the work item
@@ -303,6 +303,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 lock (threadLock)
                 {
+                    // Exit if not running on a separate thread
                     if (thread == null)
                         return;
 

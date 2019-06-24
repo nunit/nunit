@@ -27,6 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -38,8 +39,12 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
 
+        private const int WAIT_FOR_FORCED_TERMINATION = 5000;
+
         private WorkItem _topLevelWorkItem;
         private readonly Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
+
+        private readonly List<CompositeWorkItem> _activeWorkItems = new List<CompositeWorkItem>();
 
         #region Events
 
@@ -221,6 +226,15 @@ namespace NUnit.Framework.Internal.Execution
         {
             log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
+            // Currently, we only track CompositeWorkItems - this could be expanded
+            var composite = work as CompositeWorkItem;
+            if (composite != null)
+                lock (_activeWorkItems)
+                {
+                    _activeWorkItems.Add(composite);
+                    composite.Completed += OnWorkItemCompletion;
+                }
+
             switch (strategy)
             {
                 default:
@@ -254,6 +268,25 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (var shift in Shifts)
                 shift.Cancel(force);
+
+            if (force)
+            {
+                SpinWait.SpinUntil(() => _topLevelWorkItem.State == WorkItemState.Complete, WAIT_FOR_FORCED_TERMINATION);
+
+                // Notify termination of any remaining in-process suites
+                lock (_activeWorkItems)
+                {
+                    int index = _activeWorkItems.Count;
+
+                    while (index > 0)
+                    {
+                        var work = _activeWorkItems[--index];
+
+                        if (work.State == WorkItemState.Running)
+                            new CompositeWorkItem.OneTimeTearDownWorkItem(work).WorkItemCancelled();
+                    }
+                }
+            }
         }
 
         private readonly object _queueLock = new object();
@@ -301,9 +334,20 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
+
+        private void OnWorkItemCompletion(object sender, EventArgs args)
+        {
+            var work = (CompositeWorkItem)sender;
+
+            lock (_activeWorkItems)
+            {
+                _activeWorkItems.Remove(work);
+                work.Completed -= OnWorkItemCompletion;
+            }
+        }
 
         private void OnEndOfShift(WorkShift endingShift)
         {
