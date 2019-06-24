@@ -249,9 +249,9 @@ namespace NUnit.Framework.Api
             var explorer = _runner.ExploreTests(filter);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(filter)));
         }
-#endregion
+        #endregion
 
-#region Run
+        #region Run
 
         [Test]
         public void Run_AfterLoad_ReturnsRunnableSuite()
@@ -364,9 +364,9 @@ namespace NUnit.Framework.Api
                 Does.StartWith("Could not load"));
         }
 
-#endregion
+        #endregion
 
-#region RunAsync
+        #region RunAsync
 
         [Test]
         public void RunAsync_AfterLoad_ReturnsRunnableSuite()
@@ -447,7 +447,7 @@ namespace NUnit.Framework.Api
 
         #endregion
 
-#region StopRun
+        #region StopRun
 
 #if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
         [Test]
@@ -507,9 +507,9 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#endregion
+        #endregion
 
-#region ITestListener Implementation
+        #region ITestListener Implementation
 
         void ITestListener.TestStarted(ITest test)
         {
@@ -569,9 +569,9 @@ namespace NUnit.Framework.Api
 
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private ITest LoadMockAssembly()
         {
@@ -603,6 +603,6 @@ namespace NUnit.Framework.Api
                 "Parameter Y = 7" + Environment.NewLine));
         }
 
-#endregion
+        #endregion
     }
 }
