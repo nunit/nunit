@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public override bool CanCompare(object x, object y)
             {
-                return true;
+                return TypeHelper.CanCast<TExpected>(x) && TypeHelper.CanCast<TActual>(y);
             }
 
             /// <summary>
