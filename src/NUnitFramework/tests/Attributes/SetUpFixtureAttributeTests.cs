@@ -64,6 +64,39 @@ namespace NUnit.Framework.Attributes
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
+        [Test]
+        public void AbstractClassNotAllowed()
+        {
+            var abstractType = typeof(AbstractSetupClass);
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(abstractType));
+            foreach (var fixture in fixtures)
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+        }
+
+        [Test]
+        public void StaticClassIsAllowed()
+        {
+            var abstractType = typeof(StaticSetupClass);
+            var fixtures = new SetUpFixtureAttribute().BuildFrom(new TypeWrapper(abstractType));
+            foreach (var fixture in fixtures)
+                Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
+        }
+
+        private static class StaticSetupClass
+        {
+            [OneTimeSetUp]
+            public static void SomeSetUpMethod() { }
+
+            [OneTimeTearDown]
+            public static void SomeTearDownMethod() { }
+        }
+
+        private abstract class AbstractSetupClass
+        {
+            [OneTimeSetUp]
+            public void SomeSetUpMethod() { }
+        }
+
         private class TestSetupClass
         {
             [SetUp]

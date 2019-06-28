@@ -1,6 +1,6 @@
 # Building NUnit 3
 
-NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories at http://github.com/nunit/nunit and http://github.com/nunit/nunit-console.
+NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories at https://github.com/nunit/nunit and https://github.com/nunit/nunit-console.
 
 There are two ways to build NUnit: using the solution file in an IDE or through the build script. See also [Building and testing for Linux on a Windows machine](#building-and-testing-for-linux-on-a-windows-machine).
 
@@ -8,7 +8,7 @@ There are two ways to build NUnit: using the solution file in an IDE or through 
 
 The framework is built using a single Visual Studio solution, `nunit.sln`, which may be built with [Visual Studio 2017](https://www.visualstudio.com/vs/) on Windows and [Visual Studio for Mac](https://www.visualstudio.com/vs/) on macOS. Currently, MonoDevelop does not support the new multi-targeted `csproj` project format. Once MonoDevelop is updated, it should start working again. Until then, we recommend [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build scripts on non-Windows platforms.
 
-On all platforms, you will need to install [.NET Core 2.0.3 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](http://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
+On all platforms, you will need to install [.NET Core 2.0.3 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
 
 The solutions all place their output in a common bin directory under the solution root.
 
@@ -23,7 +23,7 @@ Other test projects contain tests designed to fail purposely for integration tes
 
 ## Build Script
 
-We use [Cake](http://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is build.cake. We modify build.cake when we need to add new targets or change the way the build is done. Normally build.cake is not invoked directly but through build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script. This helps the build to work on CI servers using newly created agents to run the build and we generally run it the same way on our own machines.
+We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is build.cake. We modify build.cake when we need to add new targets or change the way the build is done. Normally build.cake is not invoked directly but through build.ps1 (on Windows) or build.sh (on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script. This helps the build to work on CI servers using newly created agents to run the build and we generally run it the same way on our own machines.
 
 The build shell script and build.cmd script are provided as an easy way to run the above commands. In addition to passing their arguments through to build.cake, they can supply added arguments through the CAKE_ARGS environment variable. The rest of this document will assume use of these commands.
 
@@ -53,16 +53,6 @@ For a full list of tasks, run `build.cmd -ShowDescription`.
  1. By design, the Package target does not depend on Build. This is to allow re-packaging when necessary without changing the binaries themselves. Of course, this means that you have to be very careful that the build is up to date before packaging.
  2. For additional targets, refer to the build.cake script itself.
 
-### Building and testing for Linux on a Windows machine
-
-Most of the time, it's not necessary to build or run tests on platforms other than your primary platform. The continuous integration which runs on every PR is enough to catch any problems.
-
-Once in a while you may find it desirable to be primarily developing the repository on a Windows machine but to run Linux tests on the same set of files while you edit them in Windows. One convenient way to do this is to pass the same arguments to [build-mono-docker.ps1](.\build-mono-docker.ps1) that you would pass to build.ps1. It requires [Docker](https://docs.docker.com/docker-for-windows/install/) to be installed.
-
-For example, to build and test everything: `.\build-mono-docker.ps1 -t test`
-
-This will run a temporary container using the latest [Mono image](https://hub.docker.com/r/library/mono/), mounting the repo inside the container and executing the [build.sh](build.sh) Cake bootstrapper with the arguments you specify.
-
 ### Defined constants
 
 NUnit often uses conditional preprocessor to light up APIs and behaviors per platform.
@@ -72,7 +62,7 @@ This brings clarity to the code and makes it easy to change the mapping between 
 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
- - `ASYNC` enables asynchrony
+ - `TASK_PARALLEL_LIBRARY_API` exposes NUnit APIs which depend on the TPL framework types
  - `PARALLEL` enables running tests in parallel
  - `PLATFORM_DETECTION` enables platform detection
  - `THREAD_ABORT` enables timeouts and forcible cancellation

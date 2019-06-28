@@ -1,5 +1,5 @@
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
-#tool GitLink
+#tool NUnit.ConsoleRunner&version=3.9.0
+#tool GitLink&version=3.1.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -18,7 +18,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.12.0";
+var version = "3.13.0";
 var modifier = "";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
@@ -165,7 +165,24 @@ MSBuildSettings CreateSettings()
     settings.WithProperty("DebugType", "pdbonly");
 
     if (IsRunningOnWindows())
-        settings.ToolVersion = MSBuildToolVersion.VS2017;
+    {
+        // Find MSBuild for Visual Studio 2019 and newer
+        DirectoryPath vsLatest = VSWhereLatest();
+        FilePath msBuildPath = vsLatest?.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
+
+        // Find MSBuild for Visual Studio 2017
+        if (msBuildPath != null && !FileExists(msBuildPath))
+            msBuildPath = vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
+
+        // Have we found MSBuild yet?
+        if (!FileExists(msBuildPath))
+        {
+            throw new Exception($"Failed to find MSBuild: {msBuildPath}");
+        }
+
+        Information("Building using MSBuild at " + msBuildPath);
+        settings.ToolPath = msBuildPath;
+    }
     else
         settings.ToolPath = Context.Tools.Resolve("msbuild");
 
@@ -190,6 +207,7 @@ Task("Test45")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test40")
@@ -202,6 +220,7 @@ Task("Test40")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test35")
@@ -214,6 +233,7 @@ Task("Test35")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("TestNetStandard14")
@@ -226,6 +246,7 @@ Task("TestNetStandard14")
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("TestNetStandard20")
@@ -238,6 +259,7 @@ Task("TestNetStandard20")
         var dir = BIN_DIR + runtime + "/";
         RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
         RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -484,6 +506,27 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
     else if (rc < 0)
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+}
+
+void PublishTestResults(string framework)
+{
+    if (EnvironmentVariable("TF_BUILD", false))
+    {
+        var fullTestRunTitle = framework;
+        var ciRunName = Argument<string>("test-run-name");
+        if (!string.IsNullOrEmpty(ciRunName))
+            fullTestRunTitle += '/' + ciRunName;
+
+        TFBuild.Commands.PublishTestResults(new TFBuildPublishTestResultsData
+        {
+            TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
+            TestRunTitle = fullTestRunTitle,
+            TestRunner = TFTestRunnerType.NUnit,
+            MergeTestResults = true,
+            PublishRunAttachments = true,
+            Configuration = configuration
+        });
+    }
 }
 
 public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings

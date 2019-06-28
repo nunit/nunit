@@ -38,9 +38,9 @@ namespace NUnit.Framework.Internal.Commands
 #pragma warning restore IDE1006
 
         /// <summary>
-        /// TODO: Documentation needed for constructor
+        /// Initializes a new instance of the <see cref="DelegatingTestCommand"/> class.
         /// </summary>
-        /// <param name="innerCommand"></param>
+        /// <param name="innerCommand">The inner command.</param>
         protected DelegatingTestCommand(TestCommand innerCommand)
             : base(innerCommand.Test)
         {

@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal.Results
             {
                 new NUnitException(),
                 new TargetInvocationException(null),
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
                 new AggregateException()
 #endif
             };

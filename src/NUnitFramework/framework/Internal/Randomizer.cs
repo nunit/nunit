@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,18 +34,18 @@ namespace NUnit.Framework.Internal
     /// way, to allow re-running of tests if necessary. It extends
     /// the .NET Random class, providing random values for a much
     /// wider range of types.
-    /// 
-    /// The class is used internally by the framework to generate 
-    /// test case data and is also exposed for use by users through 
+    ///
+    /// The class is used internally by the framework to generate
+    /// test case data and is also exposed for use by users through
     /// the TestContext.Random property.
     /// </summary>
     /// <remarks>
-    /// For consistency with the underlying Random Type, methods 
+    /// For consistency with the underlying Random Type, methods
     /// returning a single value use the prefix "Next..." Those
     /// without an argument return a non-negative value up to
     /// the full positive range of the Type. Overloads are provided
     /// for specifying a maximum or a range. Methods that return
-    /// arrays or strings use the prefix "Get..." to avoid 
+    /// arrays or strings use the prefix "Get..." to avoid
     /// confusion with the single-value methods.
     /// </remarks>
     public class Randomizer : Random
@@ -184,10 +184,10 @@ namespace NUnit.Framework.Internal
             uint raw;
             do
             {
-                raw = RawUInt();
+                raw = RawUInt32();
             }
             while (raw > limit);
-            
+
             return unchecked(raw % range + min);
         }
 
@@ -287,7 +287,7 @@ namespace NUnit.Framework.Internal
             ulong raw;
             do
             {
-                raw = RawULong();
+                raw = RawUInt64();
             }
             while (raw > limit);
 
@@ -334,10 +334,10 @@ namespace NUnit.Framework.Internal
             ulong raw;
             do
             {
-                raw = RawULong();
+                raw = RawUInt64();
             }
             while (raw > limit);
-            
+
             return unchecked(raw % range + min);
         }
 
@@ -500,9 +500,9 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
-        
+
         #region String
-        
+
         /// <summary>
         /// Default characters for random functions.
         /// </summary>
@@ -510,7 +510,7 @@ namespace NUnit.Framework.Internal
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
-                
+
         /// <summary>
         /// Generate a random string based on the characters from the input string.
         /// </summary>
@@ -526,7 +526,7 @@ namespace NUnit.Framework.Internal
             {
                 sb.Append(allowedChars[Next(0,allowedChars.Length)]);
             }
-        
+
             return sb.ToString();
         }
 
@@ -563,10 +563,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public decimal NextDecimal()
         {
-            int low = Next(0, int.MaxValue);
-            int mid = Next(0, int.MaxValue);
-            int high = Next(0, int.MaxValue);
-            return new Decimal(low, mid, high, false, 0);
+            return new decimal(RawInt32(), RawInt32(), RawInt32(), false, 0);
         }
 
         /// <summary>
@@ -574,7 +571,70 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public decimal NextDecimal(decimal max)
         {
-            return NextDecimal() % max;
+            if (max <= 1)
+            {
+                Guard.ArgumentInRange(max > 0, "Maximum must be greater than zero.", nameof(max));
+                return 0;
+            }
+
+            unchecked
+            {
+                // Flooring sets the exponent (scale) to zero. This is necessary even if the number is already an
+                // integer so that the low, mid and high parts of the mantissa get shifted by the appropriate power of
+                // ten until they only contain the integral part of the number.
+                // May as well set it back to the parameter so that the `result < max` lower down is doing less work.
+                max = decimal.Floor(max);
+
+                var parts = DecimalParts.FromValue(max);
+
+                // If scale is not zero, that means that low, mid, and high are shifted to make room for digits from the
+                // fractional part of the number. We relied on Decimal.Floor to prevent this.
+                Guard.OperationValid(parts.Scale == 0, "Decimal.Floor returned a value whose scale was not 0.");
+
+                while (true)
+                {
+                    // Fill all 96 bits with uniformly-distributed randomness except for the bits that must be zero in
+                    // order to stay under the exclusive maximum.
+                    int low, mid, high;
+
+                    if (parts.High != 0)
+                    {
+                        var inclusiveMaximum = parts.High - 1;
+
+                        low = RawInt32();
+                        mid = RawInt32();
+                        high = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(inclusiveMaximum);
+                    }
+                    else if (parts.Mid != 0)
+                    {
+                        var inclusiveMaximum = parts.Mid - 1;
+
+                        low = RawInt32();
+                        mid = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(inclusiveMaximum);
+                        high = 0;
+                    }
+                    else
+                    {
+                        var inclusiveMaximum = parts.Low - 1;
+
+                        low = RawInt32() & (int)MaskToRemoveBitsGuaranteedToExceedMaximum(inclusiveMaximum);
+                        mid = 0;
+                        high = 0;
+                    }
+
+                    var result = new decimal(low, mid, high, false, 0);
+
+                    // By masking out the random bits which would put the result at or over the exclusive maximum, the
+                    // chance of having to loop and try again is strictly less than 50% in the worst-case scenario. The
+                    // best-case scenario is 0% chance, and an average is 25% chance per iteration.
+
+                    // For the worst-case scenario of 50% chance per iteration, the total chance of having to iterate
+                    // twice is < 25%. Three times, 12.5%. And so on.
+                    // For the average scenario of 25% chance per iteration, the total chance of having to iterate twice
+                    // is < 6.25%. Three times, 1.5625%. And so on.
+                    if (result < max) return result;
+                }
+            }
         }
 
         /// <summary>
@@ -589,7 +649,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentInRange(max >= min, "Maximum value must be greater than or equal to minimum.", nameof(max));
 
-            // Check that the range is not greater than MaxValue without 
+            // Check that the range is not greater than MaxValue without
             // first calculating it, since this would cause overflow
             Guard.ArgumentValid(max < 0M == min < 0M || min + decimal.MaxValue >= max,
                 "Range too great for decimal data, use double range", nameof(max));
@@ -597,21 +657,24 @@ namespace NUnit.Framework.Internal
             if (min == max)
                 return min;
 
-            decimal range = max - min;
-
-            // Avoid introduction of modulo bias
-            decimal limit = decimal.MaxValue - decimal.MaxValue % range;
-            decimal raw;
-            do
-            {
-                raw = NextDecimal();
-            }
-            while (raw > limit);
-
-            return unchecked(raw % range + min);
+            return NextDecimal(max - min) + min;
         }
 
-        #endregion 
+        private static uint MaskToRemoveBitsGuaranteedToExceedMaximum(uint maximum)
+        {
+            // http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
+            // without the value-- and value++
+
+            var value = maximum;
+            value |= value >> 1;
+            value |= value >> 2;
+            value |= value >> 4;
+            value |= value >> 8;
+            value |= value >> 16;
+            return value;
+        }
+
+        #endregion
 
         #region Guid
 
@@ -634,42 +697,23 @@ namespace NUnit.Framework.Internal
 
         #region Helper Methods
 
-        private uint RawUInt()
+        private int RawInt32()
+        {
+            return unchecked((int)RawUInt32());
+        }
+
+        private uint RawUInt32()
         {
             var buffer = new byte[sizeof(uint)];
             NextBytes(buffer);
             return BitConverter.ToUInt32(buffer, 0);
         }
 
-        private uint RawUShort()
-        {
-            var buffer = new byte[sizeof(uint)];
-            NextBytes(buffer);
-            return BitConverter.ToUInt32(buffer, 0);
-        }
-
-        private ulong RawULong()
+        private ulong RawUInt64()
         {
             var buffer = new byte[sizeof(ulong)];
             NextBytes(buffer);
             return BitConverter.ToUInt64(buffer, 0);
-        }
-
-        private long RawLong()
-        {
-            var buffer = new byte[sizeof(long)];
-            NextBytes(buffer);
-            return BitConverter.ToInt64(buffer, 0);
-        }
-
-        private decimal RawDecimal()
-        {
-            int low = Next(0, int.MaxValue);
-            int mid = Next(0, int.MaxValue);
-            int hi = Next(0, int.MaxValue);
-            bool isNegative = NextBool();
-            byte scale = NextByte(29);
-            return new Decimal(low, mid, hi, isNegative, scale);
         }
 
         #endregion

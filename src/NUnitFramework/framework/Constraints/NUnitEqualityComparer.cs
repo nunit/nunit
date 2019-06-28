@@ -81,9 +81,9 @@ namespace NUnit.Framework.Constraints
                 new NumericsComparer(),
                 new DateTimeOffsetsComparer(this),
                 new TimeSpanToleranceComparer(),
-                new EquatablesComparer(this),
                 new TupleComparer(this),
                 new ValueTupleComparer(this),
+                new EquatablesComparer(this),
                 enumerablesComparer
             };
         }
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the default NUnitEqualityComparer
         /// </summary>
-        [Obsolete("Deprecated. Use the default constructor instead.")]
+        [Obsolete("This property has been deprecated and will be removed in a future release. Please use 'new NUnitEqualityComparer()' instead.")]
         public static NUnitEqualityComparer Default
         {
             get { return new NUnitEqualityComparer(); }
@@ -127,9 +127,6 @@ namespace NUnit.Framework.Constraints
         {
             get { return externalComparers; }
         }
-
-        // TODO: Define some sort of FailurePoint struct or otherwise
-        // eliminate the type-unsafeness of the current approach
 
         /// <summary>
         /// Gets the list of failure points for the last Match performed.

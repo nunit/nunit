@@ -29,7 +29,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -142,6 +142,27 @@ namespace NUnit.Framework.Attributes
             return ts;
         }
 
+        [TestCase("2018-10-09 15:15:00+02:30")]
+        public void CanConvertStringToDateTimeOffset(DateTimeOffset offset)
+        {
+            Assert.AreEqual(2018, offset.Year);
+            Assert.AreEqual(10, offset.Month);
+            Assert.AreEqual(9, offset.Day);
+
+            Assert.AreEqual(15, offset.Hour);
+            Assert.AreEqual(15, offset.Minute);
+            Assert.AreEqual(0, offset.Second);
+
+            Assert.AreEqual(2, offset.Offset.Hours);
+            Assert.AreEqual(30, offset.Offset.Minutes);
+        }
+
+        [TestCase("2018-10-09 15:15:00+02:30", ExpectedResult = "2018-10-09 15:15:00+02:30")]
+        public DateTimeOffset CanConvertExpectedResultStringToDateTimeOffset(DateTimeOffset offset)
+        {
+            return offset;
+        }
+        
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
         {
@@ -546,6 +567,12 @@ namespace NUnit.Framework.Attributes
             Assert.That(x.Value, Is.EqualTo(1));
         }
 
+        [TestCase(1)]
+        public void CanConvertIntToLong(long x)
+        {
+            Assert.That(x, Is.EqualTo(1));
+        }
+
         [TestCase("2.2", "3.3", ExpectedResult = 5.5)]
         public decimal? CanConvertStringToNullableDecimal(decimal? x, decimal? y)
         {
@@ -643,7 +670,7 @@ namespace NUnit.Framework.Attributes
             return arg1;
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(1, ExpectedResult = 1)]
         public async Task<T> TestWithAsyncGenericReturnType<T>(T arg1)
         {

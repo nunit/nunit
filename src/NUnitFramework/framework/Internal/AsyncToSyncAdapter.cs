@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Security;
@@ -35,8 +34,8 @@ namespace NUnit.Framework.Internal
     {
         public static bool IsAsyncOperation(MethodInfo method)
         {
-            return IsTaskType(method.ReturnType) ||
-                   method.GetCustomAttributes(false).Any(attr => attr.GetType().FullName == "System.Runtime.CompilerServices.AsyncStateMachineAttribute");
+            return AwaitAdapter.IsAwaitable(method.ReturnType)
+                || method.GetCustomAttributes(false).Any(attr => attr.GetType().FullName == "System.Runtime.CompilerServices.AsyncStateMachineAttribute");
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
@@ -44,70 +43,22 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        private static bool IsTaskType(Type type)
-        {
-            for (; type != null; type = type.GetTypeInfo().BaseType)
-            {
-                if (type.GetTypeInfo().IsGenericType
-                    ? type.GetGenericTypeDefinition().FullName == "System.Threading.Tasks.Task`1"
-                    : type.FullName == "System.Threading.Tasks.Task")
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-#if ASYNC
-        private const string TaskWaitMethod = "Wait";
-        private const string TaskResultProperty = "Result";
-        private const string VoidTaskResultType = "VoidTaskResult";
-        private const string SystemAggregateException = "System.AggregateException";
-        private const string InnerExceptionsProperty = "InnerExceptions";
-        private const BindingFlags TaskResultPropertyBindingFlags = BindingFlags.Instance | BindingFlags.Public;
-
         public static object Await(Func<object> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
-            object invocationResult;
             using (InitializeExecutionEnvironment())
             {
-                invocationResult = invoke.Invoke();
-                if (invocationResult == null || !IsTaskType(invocationResult.GetType()))
-                    throw new InvalidOperationException("The delegate did not return a Task."); // General awaitable support coming soon.
-
-                var awaitAdapter = AwaitAdapter.FromAwaitable(invocationResult);
+                var awaitAdapter = AwaitAdapter.FromAwaitable(invoke.Invoke());
 
                 if (!awaitAdapter.IsCompleted)
                 {
                     var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
                     waitStrategy.WaitForCompletion(awaitAdapter);
                 }
-            }
 
-            // Future: instead of Wait(), use GetAwaiter() to check awaiter.IsCompleted above
-            // and use awaiter.OnCompleted/awaiter.GetResult below.
-            // (Implement a ReflectionAwaitAdapter)
-            try
-            {
-                invocationResult.GetType().GetMethod(TaskWaitMethod, new Type[0]).Invoke(invocationResult, null);
+                return awaitAdapter.GetResult();
             }
-            catch (TargetInvocationException e)
-            {
-                IList<Exception> innerExceptions = GetAllExceptions(e.InnerException);
-                ExceptionHelper.Rethrow(innerExceptions[0]);
-            }
-            var genericArguments = invocationResult.GetType().GetGenericArguments();
-            if (genericArguments.Length == 1 && genericArguments[0].Name == VoidTaskResultType)
-            {
-                return null;
-            }
-
-            PropertyInfo taskResultProperty = invocationResult.GetType().GetProperty(TaskResultProperty, TaskResultPropertyBindingFlags);
-
-            return taskResultProperty != null ? taskResultProperty.GetValue(invocationResult, null) : invocationResult;
         }
 
         private static IDisposable InitializeExecutionEnvironment()
@@ -118,7 +69,9 @@ namespace NUnit.Framework.Internal
                 var context = SynchronizationContext.Current;
                 if (context == null || context.GetType() == typeof(SynchronizationContext))
                 {
-                    var singleThreadedContext = new SingleThreadedTestSynchronizationContext();
+                    var singleThreadedContext = new SingleThreadedTestSynchronizationContext(
+                        shutdownTimeout: TimeSpan.FromSeconds(10));
+
                     SetSynchronizationContext(singleThreadedContext);
 
                     return On.Dispose(() =>
@@ -137,14 +90,5 @@ namespace NUnit.Framework.Internal
         {
             SynchronizationContext.SetSynchronizationContext(syncContext);
         }
-
-        private static IList<Exception> GetAllExceptions(Exception exception)
-        {
-            if (SystemAggregateException.Equals(exception.GetType().FullName))
-                return (IList<Exception>)exception.GetType().GetProperty(InnerExceptionsProperty).GetValue(exception, null);
-
-            return new Exception[] { exception };
-        }
-#endif
     }
 }

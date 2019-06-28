@@ -1,13 +1,13 @@
 language: csharp
 sudo: false
 
-dotnet: 2.1.4 # SDK version; includes runtime version 2.0.5. Need 2.0+ for netcoreapp2.0 tests.
+dotnet: 2.1.604
 
 mono: 5.10.0 # Need 5.2+ for the included MSBuild.
 
 matrix:
   include:
-    - os: linux
+    - dist: xenial
       install:
         - sudo apt-get install dotnet-sharedframework-microsoft.netcore.app-1.1.6
 
@@ -22,4 +22,5 @@ matrix:
       osx_image: xcode9.1
 
 script:
-  - ./build.sh --target=Travis --configuration=Release
+  - dotnet tool install --global Cake.Tool
+  - ~/.dotnet/tools/dotnet-cake --target=Travis --configuration=Release

@@ -61,16 +61,12 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(expectedMessage, result.Message);
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {
-            string expectedMessage =
-#if NETCOREAPP1_1 || NETCOREAPP2_0
-                "System.AggregateException : Outer Aggregate Exception (Inner Exception 1 of 2) (Inner Exception 2 of 2)" + Environment.NewLine +
-#else
-                "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
-#endif
+            string expectedStartOfMessage = "System.AggregateException : Outer Aggregate Exception";
+            string expectedEndOfMessage =
                 "  ----> System.Exception : Inner Exception 1 of 2" + Environment.NewLine +
                 "  ----> System.Exception : Inner Exception 2 of 2";
 
@@ -79,18 +75,15 @@ namespace NUnit.Framework.Internal
                 "ThrowsWithAggregateException");
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual(expectedMessage, result.Message);
+            Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
+            Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
         }
 
         [Test]
         public void FailRecordsNestedInnerExceptionAsPartOfAggregateException()
         {
-            string expectedMessage =
-#if NETCOREAPP1_1 || NETCOREAPP2_0
-                "System.AggregateException : Outer Aggregate Exception (Inner Exception)" + Environment.NewLine +
-#else
-                "System.AggregateException : Outer Aggregate Exception" + Environment.NewLine +
-#endif
+            string expectedStartOfMessage = "System.AggregateException : Outer Aggregate Exception";
+            string expectedEndOfMessage =
                 "  ----> System.Exception : Inner Exception" + Environment.NewLine +
                 "  ----> System.Exception : Inner Inner Exception";
 
@@ -99,7 +92,8 @@ namespace NUnit.Framework.Internal
                 "ThrowsWithAggregateExceptionContainingNestedInnerException");
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual(expectedMessage, result.Message);
+            Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
+            Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
         }
 #endif
 

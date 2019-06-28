@@ -431,13 +431,13 @@ namespace NUnit.Framework.Internal
             bool is64BitProcess = helper.IsPlatformSupported(attr64);
             Assert.False(is32BitProcess & is64BitProcess, "Process cannot be both 32 and 64 bit");
 
-#if ASYNC
+#if !NET35
             // For .NET 4.0 and 4.5, we can check further
             Assert.That(is64BitProcess, Is.EqualTo(Environment.Is64BitProcess));
 #endif
         }
 
-#if ASYNC
+#if !NET35
         [Test]
         public void PlatformAttribute_OperatingSystemBitNess()
         {

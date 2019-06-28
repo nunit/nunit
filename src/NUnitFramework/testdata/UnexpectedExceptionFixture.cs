@@ -43,7 +43,7 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
                     new Exception("Inner Inner Exception")));
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void ThrowsWithAggregateException()
         {

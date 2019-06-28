@@ -26,7 +26,7 @@ using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 
@@ -291,7 +291,7 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), getExceptionMessage);
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Passes_Async()
         {
@@ -571,7 +571,7 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), getExceptionMessage);
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Fails_Async()
         {
@@ -627,7 +627,7 @@ namespace NUnit.TestData
             return 5;
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         private static Task<int> One()
         {
             return Task.Run(() => 1);
@@ -661,7 +661,7 @@ namespace NUnit.TestData
                     }
                 }).BeginInvoke(ar => { }, null);
 
-                if (!finished.WaitOne(10000)) Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
+                if (!finished.WaitOne(10_000)) Assert.Fail("Timeout while waiting for BeginInvoke to execute.");
             }
         }
 
@@ -682,7 +682,7 @@ namespace NUnit.TestData
                     }
                 }).Start();
 
-                if (!finished.WaitOne(10000))
+                if (!finished.WaitOne(10_000))
                     Assert.Fail("Timeout while waiting for threadstart to execute.");
             }
         }
@@ -704,16 +704,16 @@ namespace NUnit.TestData
                     }
                 });
 
-                if (!finished.WaitOne(10000))
+                if (!finished.WaitOne(10_000))
                     Assert.Fail("Timeout while waiting for Threadpool.QueueUserWorkItem to execute.");
             }
         }
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public static void WarningInTaskRun()
         {
-            if (!Task.Run(() => Assert.Warn("(Warning message)")).Wait(10000))
+            if (!Task.Run(() => Assert.Warn("(Warning message)")).Wait(10_000))
                 Assert.Fail("Timeout while waiting for Task.Run to execute.");
         }
 

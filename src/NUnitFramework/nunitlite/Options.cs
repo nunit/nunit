@@ -4,7 +4,7 @@
 // Authors:
 //  Jonathan Pryor <jpryor@novell.com>
 //
-// Copyright (C) 2008 Novell (http://www.novell.com)
+// Copyright (C) 2008 Novell (https://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -536,7 +536,7 @@ namespace NUnit.Options
             throw new InvalidOperationException ("Option has no names!");
         }
 
-        [Obsolete ("Use KeyedCollection.this[string]")]
+        [Obsolete("This method has been deprecated and will be removed in a future release. Please use the default indexer instead.")]
         protected Option GetOptionForName (string option)
         {
             if (option == null)

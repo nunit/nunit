@@ -42,7 +42,7 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(AM.NestedBlocksInMethodCalls), 3)]
         [TestCase(nameof(AM.ThreeWarnIf_AllPass), 3)]
         [TestCase(nameof(AM.ThreeWarnUnless_AllPass), 3)]
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(AM.ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.NestedBlock_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async), 3)]
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(AM.MethodCallsFailAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
         [TestCase(nameof(AM.TwoAssertsFailAfterWarning), 2, "WARNING", "Expected: 5", "ImaginaryPart")]
         [TestCase(nameof(AM.WarningAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "WARNING")]
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(AM.TwoAsserts_BothAssertsFail_Async), 2, "RealPart", "ImaginaryPart")]
         [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async), 3, "Expected: 5", "ImaginaryPart")]
 #endif
@@ -106,8 +106,12 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
             Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "AssertCount");
             Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
-            if (result.ResultState.Status == TestStatus.Failed)
-                Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                if (result.ResultState.Status == TestStatus.Failed)
+                    Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+            });
 
             if (result.AssertionResults.Count > 0)
             {
@@ -130,7 +134,11 @@ namespace NUnit.Framework.Assertions
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
-                    Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
+
+                    PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+                    {
+                        Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
+                    });
                 }
             }
 

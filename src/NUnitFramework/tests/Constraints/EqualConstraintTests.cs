@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
             {
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
-                Assert.That(actual, new EqualConstraint(expected).Within(300000).Milliseconds);
+                Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -308,7 +308,7 @@ namespace NUnit.Framework.Constraints
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
-                Assert.That(actual, new EqualConstraint(expected).Within(300000).Milliseconds);
+                Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -652,6 +652,24 @@ namespace NUnit.Framework.Constraints
             {
                 ICollection strings = new List<string> { "1", "2", "3" };
                 Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
+            }
+
+            [Test]
+            public void UsesProvidedPredicateForItemComparison()
+            {
+                var expected = new[] { "yeti", "łysy", "rysiu" };
+                var actual = new[] { "YETI", "Łysy", "RySiU" };
+
+                Assert.That(actual, Is.EqualTo(expected).Using<string>((x, y) => StringUtil.StringsEqual(x, y, true)));
+            }
+
+            [Test]
+            public void UsesProvidedPredicateForItemComparisonDifferentTypes()
+            {
+                var expected = new[] { 1, 2, 3 };
+                var actual = new[] { "1", "2", "3" };
+
+                Assert.That(actual, Is.EqualTo(expected).Using<string, int>((s, i) => i.ToString() == s));
             }
         }
 

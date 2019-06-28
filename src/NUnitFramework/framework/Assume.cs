@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -40,7 +40,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// DO NOT USE!
-        /// The Equals method throws an InvalidOperationException. This is done 
+        /// The Equals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a">The left object.</param>
@@ -49,19 +49,19 @@ namespace NUnit.Framework
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static new bool Equals(object a, object b)
         {
-            throw new InvalidOperationException("Assume.Equals should not be used for Assertions.");
+            throw new InvalidOperationException("Assume.Equals should not be used. Use Assume.That instead.");
         }
 
         /// <summary>
         /// DO NOT USE!
-        /// The ReferenceEquals method throws an InvalidOperationException. This is done 
+        /// The ReferenceEquals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
         /// <param name="a">The left object.</param>
         /// <param name="b">The right object.</param>
         public static new void ReferenceEquals(object a, object b)
         {
-            throw new InvalidOperationException("Assume.ReferenceEquals should not be used for Assertions.");
+            throw new InvalidOperationException("Assume.ReferenceEquals should not be used. Use Assume.That instead.");
         }
 
         #endregion
@@ -140,7 +140,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -150,7 +150,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the 
+        /// Asserts that a condition is true. If the condition is false the
         /// method throws an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
@@ -162,7 +162,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(bool condition, Func<string> getExceptionMessage)
@@ -177,7 +177,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -199,7 +199,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is true. If the condition is false the method throws
         /// an <see cref="InconclusiveException"/>.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(Func<bool> condition, Func<string> getExceptionMessage)

@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 #if PARALLEL
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -59,8 +60,17 @@ namespace NUnit.Framework.Internal.Execution
             _runnerThread = new Thread(RunnerThreadProc);
 
 #if APARTMENT_STATE
-            if (topLevelWorkItem.TargetApartment == ApartmentState.STA)
-                _runnerThread.SetApartmentState(ApartmentState.STA);
+            if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
+            {
+                try
+                {
+                    _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
+                }
+                catch (PlatformNotSupportedException)
+                {
+                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
+                }
+            }
 #endif
 
             _runnerThread.Start();

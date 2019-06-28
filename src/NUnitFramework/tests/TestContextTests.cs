@@ -25,7 +25,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 #endif
 using NUnit.Framework.Interfaces;
@@ -319,7 +319,11 @@ namespace NUnit.Framework
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.FailCount, Is.EqualTo(1));
             Assert.That(fixture.Message, Is.EqualTo("Deliberate failure"));
-            Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+            });
         }
 
         [Test]
@@ -340,7 +344,7 @@ namespace NUnit.Framework
 
         #region Out
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {

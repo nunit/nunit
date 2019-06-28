@@ -85,7 +85,7 @@ namespace NUnit.Framework.Api
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
             string suiteName = assemblyPath.Equals("<Unknown>")
                 ? AssemblyHelper.GetAssemblyName(assembly).FullName
-                : Path.GetFileName(assemblyPath);
+                : assemblyPath;
 
             return Build(assembly, suiteName, options);
         }
@@ -111,18 +111,18 @@ namespace NUnit.Framework.Api
             try
             {
                 var assembly = AssemblyHelper.Load(assemblyNameOrPath);
-                testAssembly = Build(assembly, Path.GetFileName(assemblyNameOrPath), options);
+                testAssembly = Build(assembly, assemblyNameOrPath, options);
             }
             catch (Exception ex)
             {
-                testAssembly = new TestAssembly(Path.GetFileName(assemblyNameOrPath));
+                testAssembly = new TestAssembly(assemblyNameOrPath);
                 testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
             return testAssembly;
         }
 
-        private TestSuite Build(Assembly assembly, string suiteName, IDictionary<string, object> options)
+        private TestSuite Build(Assembly assembly, string assemblyNameOrPath, IDictionary<string, object> options)
         {
             TestSuite testAssembly = null;
 
@@ -176,11 +176,11 @@ namespace NUnit.Framework.Api
 
                 var fixtures = GetFixtures(assembly);
 
-                testAssembly = BuildTestAssembly(assembly, suiteName, fixtures);
+                testAssembly = BuildTestAssembly(assembly, assemblyNameOrPath, fixtures);
             }
             catch (Exception ex)
             {
-                testAssembly = new TestAssembly(suiteName);
+                testAssembly = new TestAssembly(assemblyNameOrPath);
                 testAssembly.MakeInvalid(ExceptionHelper.BuildMessage(ex, true));
             }
 
@@ -248,13 +248,13 @@ namespace NUnit.Framework.Api
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
-        private TestSuite BuildTestAssembly(Assembly assembly, string suiteName, IList<Test> fixtures)
+        private TestSuite BuildTestAssembly(Assembly assembly, string assemblyNameOrPath, IList<Test> fixtures)
         {
-            TestSuite testAssembly = new TestAssembly(assembly, suiteName);
+            TestSuite testAssembly = new TestAssembly(assembly, assemblyNameOrPath);
 
             if (fixtures.Count == 0)
             {
-                testAssembly.MakeInvalid("Has no TestFixtures");
+                testAssembly.MakeInvalid("No test fixtures were found.");
             }
             else
             {

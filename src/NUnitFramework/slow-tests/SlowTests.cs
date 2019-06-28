@@ -27,7 +27,7 @@ namespace NUnit.Tests
 {
     public class SlowTests
     {
-        const int DELAY = 1000;
+        public const int SINGLE_TEST_DELAY = 1000;
 
         public class AAA
         {
@@ -61,7 +61,7 @@ namespace NUnit.Tests
 
         private static void Delay()
         {
-            System.Threading.Thread.Sleep(DELAY);
+            System.Threading.Thread.Sleep(SINGLE_TEST_DELAY);
         }
     }
 }

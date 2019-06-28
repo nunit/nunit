@@ -28,7 +28,7 @@ using System.Reflection;
 //
 [assembly: AssemblyCompany("NUnit Software")]
 [assembly: AssemblyProduct("NUnit 3")]
-[assembly: AssemblyCopyright("Copyright (c) 2018 Charlie Poole, Rob Prouse")]
+[assembly: AssemblyCopyright("Copyright (c) 2019 Charlie Poole, Rob Prouse")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
 #if DEBUG

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ASYNC
+#if TASK_PARALLEL_LIBRARY_API
 using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -59,10 +59,16 @@ namespace NUnit.Framework.Internal
                 yield return GetTestCase(Method("AsyncTaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("AsyncTaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("AsyncTaskError"), ResultState.Error, 0, false);
+                yield return GetTestCase(Method("AsyncTaskPass"), ResultState.Success, 0, false);
+                yield return GetTestCase(Method("AsyncTaskIgnore"), ResultState.Ignored, 0, false);
+                yield return GetTestCase(Method("AsyncTaskInconclusive"), ResultState.Inconclusive, 0, false);
 
                 yield return GetTestCase(Method("TaskSuccess"), ResultState.Success, 1, true);
                 yield return GetTestCase(Method("TaskFailure"), ResultState.Failure, 1, true);
                 yield return GetTestCase(Method("TaskError"), ResultState.Error, 0, false);
+                yield return GetTestCase(Method("TaskPass"), ResultState.Success, 0, false);
+                yield return GetTestCase(Method("TaskIgnore"), ResultState.Ignored, 0, false);
+                yield return GetTestCase(Method("TaskInconclusive"), ResultState.Inconclusive, 0, false);
 
                 yield return GetTestCase(Method("AsyncTaskResult"), ResultState.NotRunnable, 0, false);
                 yield return GetTestCase(Method("TaskResult"), ResultState.NotRunnable, 0, false);

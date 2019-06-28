@@ -335,7 +335,7 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
-                // From the XML specification: http://www.w3.org/TR/xml/#charsets
+                // From the XML specification: https://www.w3.org/TR/xml/#charsets
                 // Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
                 // Any Unicode character, excluding the surrogate blocks, FFFE, and FFFF.
                 else if (!(0x0 <= c && c <= 0x8) &&
@@ -482,12 +482,7 @@ namespace NUnit.Framework.Interfaces
         {
             get
             {
-                string value;
-
-                if (TryGetValue(key, out value))
-                    return value;
-
-                return null;
+                return TryGetValue(key, out var value) ? value : null;
             }
         }
     }

@@ -25,11 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
-
-#if ASYNC
-using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -99,10 +94,10 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Copy constructor style to create a filtered copy of the given test suite
+        /// Creates a copy of the given suite with only the descendants that pass the specified filter.
         /// </summary>
-        /// <param name="suite">Test Suite to copy</param>
-        /// <param name="filter">Filter to be applied</param>
+        /// <param name="suite">The <see cref="TestSuite"/> to copy.</param>
+        /// <param name="filter">Determines which descendants are copied.</param>
         public TestSuite(TestSuite suite, ITestFilter filter)
             : base(suite.Name)
         {
@@ -117,7 +112,7 @@ namespace NUnit.Framework.Internal
                 {
                     if(child.IsSuite)
                     {
-                        TestSuite childSuite = new TestSuite(child as TestSuite, filter);
+                        TestSuite childSuite = ((TestSuite)child).Copy(filter);
                         childSuite.Parent    = this;
                         this.tests.Add(childSuite);
                     }
@@ -177,6 +172,15 @@ namespace NUnit.Framework.Internal
         {
             test.Parent = this;
             tests.Add(test);
+        }
+
+        /// <summary>
+        /// Creates a filtered copy of the test suite.
+        /// </summary>
+        /// <param name="filter">Determines which descendants are copied.</param>
+        public virtual TestSuite Copy(ITestFilter filter)
+        {
+            return new TestSuite(this, filter);
         }
 
         #endregion
@@ -300,19 +304,32 @@ namespace NUnit.Framework.Internal
         protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
             foreach (MethodInfo method in methods)
-                if (method.IsAbstract ||
-                     !method.IsPublic && !method.IsFamily ||
-                     method.GetParameters().Length > 0 ||
-                     method.ReturnType != typeof(void)
-#if ASYNC
-                     &&
-                     method.ReturnType != typeof(Task)
-#endif
-                    )
+            {
+                if (method.IsAbstract)
                 {
-                    this.MakeInvalid(string.Format("Invalid signature for SetUp or TearDown method: {0}", method.Name));
-                    break;
+                    MakeInvalid("An abstract SetUp and TearDown methods cannot be run: " + method.Name);
                 }
+                else if (!(method.IsPublic || method.IsFamily))
+                {
+                    MakeInvalid("SetUp and TearDown methods must be public or internal: " + method.Name);
+                }
+                else if (method.GetParameters().Length != 0)
+                {
+                    MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
+                }
+                else if (AsyncToSyncAdapter.IsAsyncOperation(method))
+                {
+                    if (method.ReturnType == typeof(void))
+                        MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
+                    else if (AwaitAdapter.GetResultType(method.ReturnType) != typeof(void))
+                        MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
+                }
+                else
+                {
+                    if (method.ReturnType != typeof(void))
+                        MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
+                }
+            }
         }
         #endregion
     }

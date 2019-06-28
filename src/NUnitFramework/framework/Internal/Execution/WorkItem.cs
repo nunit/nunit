@@ -130,7 +130,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the current state of the WorkItem
         /// </summary>
-        public WorkItemState State { get; private set; }
+        public WorkItemState State { get; protected set; }
 
         /// <summary>
         /// The test being executed by the work item
@@ -225,8 +225,9 @@ namespace NUnit.Framework.Internal.Execution
 #if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
+            var needsNewThreadToSetApartmentState = targetApartment != CurrentApartment;
 
-            if (Test.RequiresThread || targetApartment != CurrentApartment)
+            if (Test.RequiresThread || needsNewThreadToSetApartmentState)
 #else
             if (Test.RequiresThread)
 #endif
@@ -302,6 +303,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 lock (threadLock)
                 {
+                    // Exit if not running on a separate thread
                     if (thread == null)
                         return;
 
@@ -480,7 +482,18 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnCurrentThread();
             });
 #if APARTMENT_STATE
-            thread.SetApartmentState(apartment);
+            try
+            {
+                thread.SetApartmentState(apartment);
+            }
+            catch (PlatformNotSupportedException)
+            {
+                string msg = "Apartment state cannot be set on this platform.";
+                log.Error(msg);
+                Result.SetResult(ResultState.Skipped, msg);
+                WorkItemComplete();
+                return;
+            }
 #endif
             thread.Start();
             thread.Join();

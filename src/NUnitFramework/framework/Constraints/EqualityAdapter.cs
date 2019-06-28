@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public override bool CanCompare(object x, object y)
             {
-                return true;
+                return TypeHelper.CanCast<TExpected>(x) && TypeHelper.CanCast<TActual>(y);
             }
 
             /// <summary>
@@ -200,8 +200,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                T xValue, yValue;
-                CastOrThrow(x, y, out xValue, out yValue);
+                CastOrThrow(x, y, out var xValue, out var yValue);
                 return comparer.Equals(xValue, yValue);
             }
         }
@@ -232,8 +231,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                T xValue, yValue;
-                CastOrThrow(x, y, out xValue, out yValue);
+                CastOrThrow(x, y, out var xValue, out var yValue);
                 return comparer.Compare(xValue, yValue) == 0;
             }
         }
@@ -261,8 +259,7 @@ namespace NUnit.Framework.Constraints
 
             public override bool AreEqual(object x, object y)
             {
-                T xValue, yValue;
-                CastOrThrow(x, y, out xValue, out yValue);
+                CastOrThrow(x, y, out var xValue, out var yValue);
                 return comparer.Invoke(xValue, yValue) == 0;
             }
         }

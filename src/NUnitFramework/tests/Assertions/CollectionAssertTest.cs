@@ -149,7 +149,7 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
         }
 
-        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
+        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10_000);
 
         static readonly IEnumerable[] PerformanceData =
         {
@@ -736,14 +736,14 @@ namespace NUnit.Framework.Assertions
         public void EqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.Equals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used for Assertions"));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => CollectionAssert.ReferenceEquals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used for Assertions"));
+            Assert.That(ex.Message, Does.StartWith("CollectionAssert.ReferenceEquals should not be used."));
         }
 #endregion
 
@@ -752,8 +752,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ValueTupleAreEqual()
         {
-            var set1 = new SimpleEnumerable(ValueTuple.Create(1,2,3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3));
-            var set2 = new SimpleEnumerable(ValueTuple.Create(1,2,3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3));
+            var set1 = new SimpleEnumerable((1, 2, 3), (1, 2, 3), (1, 2, 3));
+            var set2 = new SimpleEnumerable((1, 2, 3), (1, 2, 3), (1, 2, 3));
 
             CollectionAssert.AreEqual(set1, set2);
             CollectionAssert.AreEqual(set1, set2, new TestComparer());
@@ -764,8 +764,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ValueTupleAreEqualFail()
         {
-            var set1 = new SimpleEnumerable(ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3));
-            var set2 = new SimpleEnumerable(ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 3), ValueTuple.Create(1, 2, 4));
+            var set1 = new SimpleEnumerable((1, 2, 3), (1, 2, 3), (1, 2, 3));
+            var set2 = new SimpleEnumerable((1, 2, 3), (1, 2, 3), (1, 2, 4));
 
             var expectedMessage =
                 "  Expected and actual are both <NUnit.TestUtilities.Collections.SimpleEnumerable>" + Environment.NewLine +
@@ -775,6 +775,22 @@ namespace NUnit.Framework.Assertions
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AreEqual(set1, set2, new TestComparer()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ElementsWithinTuplesAreComparedUsingNUnitEqualityComparer()
+        {
+            var a = new Dictionary<string, (string, Dictionary<string, string>)>()
+            {
+                { "key", ("name", new Dictionary<string, string>())}
+            };
+
+            var b = new Dictionary<string, (string, Dictionary<string, string>)>()
+            {
+                { "key", ("name", new Dictionary<string, string>())}
+            };
+
+            CollectionAssert.AreEquivalent(a, b);
         }
 #endregion
 #endif

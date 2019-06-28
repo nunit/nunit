@@ -154,14 +154,13 @@ namespace NUnit.Framework.Internal
                     case "{8}":
                     case "{9}":
                         int index = token[1] - '0';
-                        fragments.Add(new ArgumentFragment(index, 40));
+                        fragments.Add(new ArgumentFragment(index, 0));
                         break;
                     default:
                         char c = token[1];
                         if (token.Length >= 5 && token[2] == ':' && (c == 'a' || char.IsDigit(c)))
                         {
-                            int length;
-                            if (int.TryParse(token.Substring(3, token.Length - 4), out length) && length > 0)
+                            if (int.TryParse(token.Substring(3, token.Length - 4), out var length) && length > 0)
                             {
                                 if (c == 'a')
                                     fragments.Add(new ArgListFragment(length));

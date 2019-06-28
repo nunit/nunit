@@ -167,6 +167,62 @@ namespace NUnit.TestUtilities
 
 namespace NUnit.TestData.SetupFixture
 {
+    namespace StaticFixture
+    {
+        #region SomeFixture
+        [TestFixture]
+        public class TestSetupFixtureStuff
+        {
+            [OneTimeSetUp]
+            public void FixtureSetup()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.Fixture.SetUp");
+            }
+
+            [SetUp]
+            public void Setup()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.Test.SetUp");
+            }
+
+            [Test]
+            public void Test()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.Test");
+            }
+
+            [TearDown]
+            public void TearDown()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.Test.TearDown");
+            }
+
+            [OneTimeTearDown]
+            public void FixtureTearDown()
+            {
+                TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.Fixture.TearDown");
+            }
+        }
+        #endregion SomeFixture
+
+
+        [SetUpFixture]
+        public static class StaticSetupTeardown
+        {
+            [OneTimeSetUp]
+            public static void DoNamespaceSetUp()
+            {
+                NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.OneTimeSetUp");
+            }
+
+            [OneTimeTearDown]
+            public static void DoNamespaceTearDown()
+            {
+                NUnit.TestUtilities.SimpleEventRecorder.RegisterEvent("StaticFixture.OneTimeTearDown");
+            }
+        }
+    }
+
     namespace Namespace1
     {
         #region SomeFixture

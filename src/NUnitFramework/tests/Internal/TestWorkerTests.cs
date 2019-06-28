@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal.Execution
             _queue.Start();
 
             Assert.That(() => sb.ToString(), Is.EqualTo("BusyExecIdle").After(
-                delayInMilliseconds: 10000, pollingInterval: 200));
+                delayInMilliseconds: 10_000, pollingInterval: 200));
         }
 
         private void FakeMethod()

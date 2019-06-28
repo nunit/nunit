@@ -257,7 +257,9 @@ namespace NUnit.Framework.Internal
                     break;
 
                 case TestStatus.Failed:
-                    if (ResultState.Status != TestStatus.Failed)
+                    if (childResultState.Label == "Cancelled")
+                        SetResult(ResultState.Cancelled, USER_CANCELLED_MESSAGE);
+                    else if (ResultState.Status != TestStatus.Failed)
                         SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
                     break;
 

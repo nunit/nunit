@@ -36,7 +36,7 @@ namespace NUnit.Framework
     /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
     /// under a given namespace.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
@@ -67,16 +67,19 @@ namespace NUnit.Framework
 
         private static bool IsValidFixtureType(ITypeInfo typeInfo, ref string reason)
         {
-            if (typeInfo.IsAbstract)
+            if (!typeInfo.IsStaticClass)
             {
-                reason = string.Format("{0} is an abstract class", typeInfo.FullName);
-                return false;
-            }
+                if (typeInfo.IsAbstract)
+                {
+                    reason = string.Format("{0} is an abstract class", typeInfo.FullName);
+                    return false;
+                }
 
-            if (!typeInfo.HasConstructor(new Type[0]))
-            {
-                reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
-                return false;
+                if (!typeInfo.HasConstructor(new Type[0]))
+                {
+                    reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
+                    return false;
+                }
             }
 
             var invalidAttributes = new Type[] {

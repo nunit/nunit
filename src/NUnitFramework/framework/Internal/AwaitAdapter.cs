@@ -21,11 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if ASYNC
 using System;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -34,81 +30,47 @@ namespace NUnit.Framework.Internal
         public abstract bool IsCompleted { get; }
         public abstract void OnCompleted(Action action);
         public abstract void BlockUntilCompleted();
+        public abstract object GetResult();
+
+        public static bool IsAwaitable(Type awaitableType)
+        {
+            return CSharpPatternBasedAwaitAdapter.IsAwaitable(awaitableType);
+        }
+
+        public static Type GetResultType(Type awaitableType)
+        {
+            return CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType);
+        }
 
         public static AwaitAdapter FromAwaitable(object awaitable)
         {
-            if (awaitable == null) throw new ArgumentNullException(nameof(awaitable));
+            if (awaitable == null)
+                throw new InvalidOperationException("A null reference cannot be awaited.");
 
-            var task = awaitable as Task;
-            if (task == null)
-                throw new NotImplementedException("Proper awaitable implementation to follow.");
+#if !(NET35 || NET40)
+            // TaskAwaitAdapter is more efficient because it can rely on Task’s
+            // special quality of blocking until complete in GetResult.
+            // As long as the pattern-based adapters are reflection-based, this
+            // is much more efficient as well.
+            var task = awaitable as System.Threading.Tasks.Task;
+            if (task != null) return TaskAwaitAdapter.Create(task);
+#endif
+
+            // Await all the (C#) things
+            var patternBasedAdapter = CSharpPatternBasedAwaitAdapter.TryCreate(awaitable);
+            if (patternBasedAdapter != null) return patternBasedAdapter;
 
 #if NET40
-            // TODO: use the general reflection-based awaiter if net40 build is running against a newer BCL
-            return new Net40BclTaskAwaitAdapter(task);
-#else
-            return new TaskAwaitAdapter(task);
+            // If System.Threading.Tasks.Task does not have a GetAwaiter instance method
+            // (we don’t heuristically search for AsyncBridge-style extension methods),
+            // we still need to be able to await it to preserve NUnit behavior on machines
+            // which have a max .NET Framework version of 4.0 installed, such as the default
+            // for versions of Windows earlier than 8.
+            var task = awaitable as System.Threading.Tasks.Task;
+            if (task != null) return Net40BclTaskAwaitAdapter.Create(task);
 #endif
+
+            throw new NotSupportedException("NUnit can only await objects which follow the C# specification for awaitable expressions.");
         }
-
-#if NET40
-        private sealed class Net40BclTaskAwaitAdapter : AwaitAdapter
-        {
-            private readonly Task _task;
-
-            public Net40BclTaskAwaitAdapter(Task task)
-            {
-                _task = task;
-            }
-
-            public override bool IsCompleted => _task.IsCompleted;
-
-            public override void OnCompleted(Action action)
-            {
-                if (action == null) return;
-
-                // Normally we would call TaskAwaiter.UnsafeOnCompleted (https://source.dot.net/#System.Private.CoreLib/src/System/Runtime/CompilerServices/TaskAwaiter.cs)
-                // We will have to polyfill on top of the TPL API.
-                // Compare TaskAwaiter.OnCompletedInternal from Microsoft.Threading.Tasks.dll in Microsoft.Bcl.Async.nupkg.
-
-                _task.ContinueWith(_ => action.Invoke(), TaskScheduler.FromCurrentSynchronizationContext());
-            }
-
-            public override void BlockUntilCompleted()
-            {
-                // Normally we would call TaskAwaiter.GetResult (https://source.dot.net/#System.Private.CoreLib/src/System/Runtime/CompilerServices/TaskAwaiter.cs)
-                // We will have to polyfill on top of the TPL API.
-                // Compare TaskAwaiter.ValidateEnd from Microsoft.Threading.Tasks.dll in Microsoft.Bcl.Async.nupkg.
-
-                try
-                {
-                    _task.Wait(); // Wait even if the task is completed so that an exception is thrown for cancellation or failure.
-                }
-                catch (AggregateException ex) when (ex.InnerExceptions.Count == 1) // Task.Wait wraps every exception
-                {
-                    ExceptionHelper.Rethrow(ex.InnerException);
-                }
-            }
-        }
-#else
-        private sealed class TaskAwaitAdapter : AwaitAdapter
-        {
-            private readonly TaskAwaiter _awaiter;
-
-            public TaskAwaitAdapter(Task task)
-            {
-                _awaiter = task.GetAwaiter();
-            }
-
-            public override bool IsCompleted => _awaiter.IsCompleted;
-
-            [SecuritySafeCritical]
-            public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
-
-            // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
-            public override void BlockUntilCompleted() => _awaiter.GetResult();
-        }
-#endif
     }
 }
-#endif

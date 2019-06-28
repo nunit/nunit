@@ -1,8 +1,25 @@
-// ****************************************************************
-// Copyright 2007, Charlie Poole, Rob Prouse
-// This is free software licensed under the NUnit license. You may
-// obtain a copy of the license at http://nunit.org
-// ****************************************************************
+// ***********************************************************************
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// ***********************************************************************
 
 using System.Collections.Generic;
 using System.Reflection;
@@ -17,7 +34,6 @@ namespace NUnit.Framework.Internal
     public class SetUpFixtureTests
     {
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).GetTypeInfo().Assembly);
-        private static readonly string SUITE_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
         ITestAssemblyBuilder builder;
         ITestAssemblyRunner runner;
@@ -68,7 +84,7 @@ namespace NUnit.Framework.Internal
 
             Assert.IsNotNull(suite);
 
-            Assert.AreEqual(SUITE_NAME, suite.FullName);
+            Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
 
             string[] nameSpaceBits = nameSpace.Split('.');
@@ -117,7 +133,7 @@ namespace NUnit.Framework.Internal
 
             Assert.IsNotNull(suite);
 
-            Assert.AreEqual(SUITE_NAME, suite.FullName);
+            Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
             Assert.AreEqual(RunState.Runnable, suite.RunState);
 
@@ -166,6 +182,19 @@ namespace NUnit.Framework.Internal
                                                      "NS5.Test.TearDown",
                                                      "NS5.Fixture.TearDown",
                                                      "NS5.OneTimeTearDown");
+        }
+
+        [Test]
+        public void NamespaceSetUpFixtureMayBeStatic()
+        {
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.StaticFixture").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            TestUtilities.SimpleEventRecorder.Verify("StaticFixture.OneTimeSetUp",
+                                                     "StaticFixture.Fixture.SetUp",
+                                                     "StaticFixture.Test.SetUp",
+                                                     "StaticFixture.Test",
+                                                     "StaticFixture.Test.TearDown",
+                                                     "StaticFixture.Fixture.TearDown",
+                                                     "StaticFixture.OneTimeTearDown");
         }
         #endregion
 

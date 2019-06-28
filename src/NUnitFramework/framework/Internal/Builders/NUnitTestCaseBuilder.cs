@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>True if the method signature is valid, false if not</returns>
         private static bool CheckTestMethodAttributes(TestMethod testMethod)
         {
-            if (testMethod.Method.MethodInfo.GetAttributes<IRepeatTest>(true).Length > 1)
+            if (testMethod.Method.GetCustomAttributes<IRepeatTest>(true).Length > 1)
                 return MarkAsNotRunnable(testMethod, "Multiple attributes that repeat a test may cause issues.");
 
             return true;
@@ -177,28 +177,24 @@ namespace NUnit.Framework.Internal.Builders
                     return false;
             }
 
-            ITypeInfo returnType = testMethod.Method.ReturnType;
+            var returnType = testMethod.Method.ReturnType.Type;
 
-#if ASYNC
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                if (returnType.IsType(typeof(void)))
+                if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
 
-                var returnsGenericTask = returnType.IsGenericType &&
-                    returnType.GetGenericTypeDefinition() == typeof(System.Threading.Tasks.Task<>);
+                var voidResult = AwaitAdapter.GetResultType(returnType) == typeof(void);
 
-                if (returnsGenericTask && (parms == null || !parms.HasExpectedResult))
+                if (!voidResult && (parms == null || !parms.HasExpectedResult))
                     return MarkAsNotRunnable(testMethod,
-                        "Async test method must have non-generic Task return type when no result is expected");
+                        "Async test method must return an awaitable with a void result when no result is expected");
 
-                if (!returnsGenericTask && parms != null && parms.HasExpectedResult)
+                if (voidResult && parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod,
-                        "Async test method must have Task<T> return type when a result is expected");
+                        "Async test method must return an awaitable with a non-void result when a result is expected");
             }
-            else
-#endif
-            if (returnType.IsType(typeof(void)))
+            else if (returnType == typeof(void))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
@@ -220,8 +216,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                Type[] typeArguments;
-                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out typeArguments))
+                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
                     return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);

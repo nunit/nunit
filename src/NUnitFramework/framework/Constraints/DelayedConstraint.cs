@@ -349,10 +349,8 @@ namespace NUnit.Framework.Constraints
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
-#if ASYNC
             if (AsyncToSyncAdapter.IsAsyncOperation(del))
                 return AsyncToSyncAdapter.Await(() => del.Invoke());
-#endif
 
             return del();
         }

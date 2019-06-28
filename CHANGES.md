@@ -1,3 +1,77 @@
+### NUnit 3.12 - May 14, 2019
+
+This release of NUnit finally drops support for .NET 2.0. If your application still
+targets .NET 2.0, your tests will need to target at least .NET 3.5. Microsoft ended
+support for .NET 2.0 on July 12, 2011. Microsoft recommends that everyone migrate
+to at least .NET Framework 3.5 SP1 for security and performance fixes.
+
+This release dramatically improves NUnit support for async tests including returning
+ValueTask and custom tasks from tests, improved handling of SynchronizationContexts
+and better exception handling.
+
+The .NET Standard 2.0 version of NUnit continues to gain more functionality that
+is found in the .NET 4.5 version of the framework like setting the ApartmentState
+and enabling Timeout on tests.
+
+#### Issues Resolved
+
+ * 474 TypeHelperTests.cs is orphaned
+ * 999 Support multiple TestOf attributes per test
+ * 1638 TimeoutAttribute not available when targeting netcoreapp framework
+ * 2168 ThrowsAsync reports OperationCanceledException as TaskCanceledException
+ * 2194 How to use `Contains.Substring` with `And`
+ * 2286 Add support for custom Task (i.e. ValueTask)
+ * 2579 AppVeyor Test Failures under .NET 3.5
+ * 2614 TestExecutionContext.CurrentContext is saved in Remoting CallContext between test runs
+ * 2696 Getting WorkerId fails in debug
+ * 2772 Random failing of parallel test run: Unhandled Exception: System.InvalidOperationException: Stack empty.
+ * 2975 ComparisonConstraints are allocating string on construction
+ * 3014 Timeout failures on MacOS
+ * 3023 NUnit runner fails when test method returns ValueTask<>
+ * 3035 Apartment state can't be used for .NET Standard 2.0 tests
+ * 3036 Apartment state can't be used for .NET Standard 2.0 tests
+ * 3038 TestName in TestCase attribute not validated to be not empty
+ * 3042 RequiresThreadAttribute allows ApartmentState.Unknown, unlike ApartmentAttribute
+ * 3048 Add .idea folder to .gitignore
+ * 3053 Conversion from TestCase string parameter to DateTimeOffset
+ * 3059 Constraint Throws.Exception does not work with async return value
+ * 3068 First Chance Exception in RuntimeFramework
+ * 3070 End support for .NET Framework 2.0 (released in 2005)
+ * 3073 CollectionAssert.AreEquivalent fails for ValueTuple Wrapped Dictionary
+ * 3079 Regression from 3.10 to 3.11: Range in bytes
+ * 3082 Is.Ordered.By
+ * 3085 XML Test-Suite Assembly does not contain DLL path anymore
+ * 3089 Remove outdated comment
+ * 3093 Tests having TaskLike objects as their return type throws Exception
+ * 3094 Bad error message if collections have different types
+ * 3104 Removed NET20 compile output
+ * 3105 Add tests for use of ApartmentState.Unknown in RequiresThreadAttribute
+ * 3107 Declare class in Program.cs provided with NUnitLite Nuget package static
+ * 3109 Azure DevOps build fails in Save package artifacts
+ * 3124 Switch copyright notice
+ * 3128 Correct documentation on ParallelScope
+ * 3137 Fix doc-comments in NUnitTestAssemblyRunner
+ * 3138 Assert.Ignore breaks when a Task is returned w/o using async/await
+ * 3139  Add Azure pipelines badge to frontpage
+ * 3144 Retry attribute should not derive from PropertyAttribute
+ * 3145 Capture additional exception details in the test output
+ * 3156 UnexpectedExceptionTests should tolerate Mono on Azure DevOps Ubuntu
+ * 3159 Make tests more tolerant
+ * 3161 https url repo
+ * 3166 Allow static SetUpFixture classes
+ * 3171 Incorrect type for Test Fixtures when using running explore with a filter
+ * 3175 Improve user-facing messages
+ * 3181 Template Based Test Naming - Incorrect truncation for individual arguments
+ * 3186 Fix licenseUrl element in nuspec, will be deprecated
+ * 3193 Cake Build Fails with Visual Studio 2019
+ * 3195 Drop or at least make Travis not required?
+ * 3231 Breaking change in filter functionality between framework 2.7 and 3.11
+ * 3209 Test fail when posting to SynchronizationContext.Current
+ * 3211 Fix logging
+ * 3218 Remove todos from the code base
+ * 3222 Our build script tests hang when run with Mono on Windows
+ * 3233 AndConstraint should write additional information from failed constraint
+
 ### NUnit 3.11 - October 6, 2018
 
  * More informative assertion messages
