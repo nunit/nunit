@@ -106,7 +106,7 @@ namespace NUnit.Framework.Internal
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.ExceptionWithBadStackTrace : thrown by me", result.Message);
-            Assert.AreEqual("No stack trace available", result.StackTrace);
+            Assert.AreEqual("InvalidOperationException was thrown by the Exception.StackTrace property.", result.StackTrace);
         }
 
         [Test]
