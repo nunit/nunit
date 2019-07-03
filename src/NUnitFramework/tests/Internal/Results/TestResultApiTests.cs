@@ -88,6 +88,13 @@ namespace NUnit.Framework.Internal.Results
             foreach (var result in TestResults)
             {
                 method.Invoke(result, new BrokenException());
+
+                Assert.That(result, Has.Property("Message").StartWith(
+                    "NUnit.Framework.Internal.Results.TestResultApiTests+BrokenException : BrokenException was thrown by the Exception.Message property." + Environment.NewLine
+                    + "BrokenException was thrown by the Exception.Data property."));
+
+                Assert.That(result, Has.Property("StackTrace").StartWith(
+                    "BrokenException was thrown by the Exception.StackTrace property."));
             }
         }
 
