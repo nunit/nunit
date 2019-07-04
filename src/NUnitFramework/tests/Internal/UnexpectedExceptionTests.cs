@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
+// Copyright (c) 2009–2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,7 +29,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
-    public class UnexpectedExceptionTests
+    public partial class UnexpectedExceptionTests
     {
         [Test]
         public void FailRecordsInnerException()
@@ -118,6 +118,56 @@ namespace NUnit.Framework.Internal
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.CustomException : message", result.Message);
+        }
+
+        [Test]
+        public void RecordExceptionDoesNotThrowWhenExceptionMembersThrowRecursively()
+        {
+            var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
+
+            result.RecordException(new RecursivelyThrowingException());
+
+            Assert.That(result, Has.Property("Message").StartWith(
+                "NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
+                + "RecursivelyThrowingException was thrown by the Exception.Data property."));
+
+            Assert.That(result, Has.Property("StackTrace").EqualTo(
+                "RecursivelyThrowingException was thrown by the Exception.StackTrace property."));
+        }
+
+        [Test]
+        public void RecordExceptionWithSiteDoesNotThrowWhenExceptionMembersThrowRecursively()
+        {
+            var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
+
+            result.RecordException(new RecursivelyThrowingException(), FailureSite.Test);
+
+            Assert.That(result, Has.Property("Message").StartWith(
+                "NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
+                + "RecursivelyThrowingException was thrown by the Exception.Data property."));
+
+            Assert.That(result, Has.Property("StackTrace").EqualTo(
+                "RecursivelyThrowingException was thrown by the Exception.StackTrace property."));
+        }
+
+        [Test]
+        public void RecordTearDownExceptionDoesNotThrowWhenExceptionMembersThrowRecursively()
+        {
+            var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
+
+            result.RecordTearDownException(new RecursivelyThrowingException());
+
+            Assert.That(result, Has.Property("Message").StartWith(
+                "TearDown : NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
+                + "RecursivelyThrowingException was thrown by the Exception.Data property."));
+
+            Assert.That(result, Has.Property("StackTrace").EqualTo(
+                "--TearDown" + Environment.NewLine
+                + "RecursivelyThrowingException was thrown by the Exception.StackTrace property."));
+        }
+
+        public void DummyMethod()
+        {
         }
     }
 }

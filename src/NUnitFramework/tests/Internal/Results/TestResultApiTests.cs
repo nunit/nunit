@@ -76,55 +76,5 @@ namespace NUnit.Framework.Internal.Results
                 method.Invoke(result, exception);
             }
         }
-
-        /// <summary>
-        /// This models a .NET Framework race condition that resulted in stack traces throwing AccessViolationException
-        /// which would produce another AccessViolationException on attempting to print its stack trace in turn.
-        /// </summary>
-        [Test]
-        public void RecordingExceptionDoesNotThrowWhenExceptionMembersThrowRecursively()
-        {
-            foreach (var method in RecordExceptionMethods)
-            foreach (var result in TestResults)
-            {
-                method.Invoke(result, new BrokenException());
-
-                Assert.That(result, Has.Property("Message").StartWith(
-                    "NUnit.Framework.Internal.Results.TestResultApiTests+BrokenException : BrokenException was thrown by the Exception.Message property." + Environment.NewLine
-                    + "BrokenException was thrown by the Exception.Data property."));
-
-                Assert.That(result, Has.Property("StackTrace").StartWith(
-                    "BrokenException was thrown by the Exception.StackTrace property."));
-            }
-        }
-
-        private sealed class BrokenException : Exception
-        {
-            public override string Message => throw this;
-
-            public override IDictionary Data => throw this;
-
-            public override string StackTrace => throw this;
-
-            public override string HelpLink
-            {
-                get => throw this;
-                set => throw this;
-            }
-
-            public override string Source
-            {
-                get => throw this;
-                set => throw this;
-            }
-
-            public override bool Equals(object obj) => throw this;
-
-            public override Exception GetBaseException() => throw this;
-
-            public override int GetHashCode() => throw this;
-
-            public override string ToString() => throw this;
-        }
     }
 }
