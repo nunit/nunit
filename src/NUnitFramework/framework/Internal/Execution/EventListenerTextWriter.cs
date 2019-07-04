@@ -119,11 +119,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void Write(object value)
         {
-            if (value != null)
-            {
-                if (TrySendToListener(FormatForListener(value)))
-                    return;
-            }
+            if (value != null && TrySendToListener(FormatForListener(value)))
+                return;
 
             _defaultWriter.Write(value);
         }
