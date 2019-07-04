@@ -40,11 +40,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
-            if (!(x is IEnumerable) || !(y is IEnumerable))
+            if (!(x is IEnumerable xIEnumerable) || !(y is IEnumerable yIEnumerable))
                 return null;
-
-            IEnumerable xIEnumerable = (IEnumerable)x;
-            IEnumerable yIEnumerable = (IEnumerable)y;
 
             IEnumerator expectedEnum = null;
             IEnumerator actualEnum = null;
@@ -62,7 +59,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
                     if (!expectedHasData && !actualHasData)
                         return true;
-                    
+
                     if (expectedHasData != actualHasData ||
                         !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, topLevelComparison: false))
                     {
