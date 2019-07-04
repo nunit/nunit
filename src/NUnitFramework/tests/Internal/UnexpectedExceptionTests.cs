@@ -31,15 +31,18 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public partial class UnexpectedExceptionTests
     {
+        private static ITestResult RunDataTestCase(string methodName)
+        {
+            return TestBuilder.RunTestCase(typeof(UnexpectedExceptionFixture), methodName);
+        }
+
         [Test]
         public void FailRecordsInnerException()
         {
             string expectedMessage =
                 "System.Exception : Outer Exception" + Environment.NewLine + "  ----> System.Exception : Inner Exception";
 
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(UnexpectedExceptionFixture),
-                "ThrowsWithInnerException");
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithInnerException));
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.AreEqual(expectedMessage, result.Message);
@@ -53,9 +56,7 @@ namespace NUnit.Framework.Internal
                 "  ----> System.Exception : Inner Exception" + Environment.NewLine +
                 "  ----> System.Exception : Inner Inner Exception";
 
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(UnexpectedExceptionFixture),
-                "ThrowsWithNestedInnerException");
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithNestedInnerException));
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.AreEqual(expectedMessage, result.Message);
@@ -70,9 +71,7 @@ namespace NUnit.Framework.Internal
                 "  ----> System.Exception : Inner Exception 1 of 2" + Environment.NewLine +
                 "  ----> System.Exception : Inner Exception 2 of 2";
 
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(UnexpectedExceptionFixture),
-                "ThrowsWithAggregateException");
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithAggregateException));
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
@@ -87,9 +86,7 @@ namespace NUnit.Framework.Internal
                 "  ----> System.Exception : Inner Exception" + Environment.NewLine +
                 "  ----> System.Exception : Inner Inner Exception";
 
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(UnexpectedExceptionFixture),
-                "ThrowsWithAggregateExceptionContainingNestedInnerException");
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithAggregateExceptionContainingNestedInnerException));
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
@@ -100,9 +97,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void BadStackTraceIsHandled()
         {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(UnexpectedExceptionFixture),
-                "ThrowsWithBadStackTrace");
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithBadStackTrace));
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.ExceptionWithBadStackTrace : thrown by me", result.Message);
@@ -112,9 +107,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CustomExceptionIsHandled()
         {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(UnexpectedExceptionFixture),
-                "ThrowsCustomException");
+            ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsCustomException));
 
             Assert.AreEqual(ResultState.Error, result.ResultState);
             Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.CustomException : message", result.Message);
