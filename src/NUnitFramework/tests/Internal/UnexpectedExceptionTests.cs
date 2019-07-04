@@ -121,11 +121,14 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void RecordExceptionDoesNotThrowWhenExceptionMembersThrowRecursively()
+        public void RecordExceptionCanHandleRecursivelyThrowingException()
         {
             var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
 
-            result.RecordException(new RecursivelyThrowingException());
+            var ex = RecordPossiblyDangerousException(() =>
+                result.RecordException(new RecursivelyThrowingException()));
+
+            Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
             Assert.That(result, Has.Property("Message").StartWith(
                 "NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
@@ -136,11 +139,14 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void RecordExceptionWithSiteDoesNotThrowWhenExceptionMembersThrowRecursively()
+        public void RecordExceptionWithSiteCanHandleRecursivelyThrowingException()
         {
             var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
 
-            result.RecordException(new RecursivelyThrowingException(), FailureSite.Test);
+            var ex = RecordPossiblyDangerousException(() =>
+                result.RecordException(new RecursivelyThrowingException(), FailureSite.Test));
+
+            Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
             Assert.That(result, Has.Property("Message").StartWith(
                 "NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
@@ -151,11 +157,14 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void RecordTearDownExceptionDoesNotThrowWhenExceptionMembersThrowRecursively()
+        public void RecordTearDownExceptionCanHandleRecursivelyThrowingException()
         {
             var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
 
-            result.RecordTearDownException(new RecursivelyThrowingException());
+            var ex = RecordPossiblyDangerousException(() =>
+                result.RecordTearDownException(new RecursivelyThrowingException()));
+
+            Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
             Assert.That(result, Has.Property("Message").StartWith(
                 "TearDown : NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
@@ -168,6 +177,22 @@ namespace NUnit.Framework.Internal
 
         public void DummyMethod()
         {
+        }
+
+#if !(NET35 || NETCOREAPP1_1)
+        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+#endif
+        private static Exception RecordPossiblyDangerousException(Action action)
+        {
+            try
+            {
+                action.Invoke();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
         }
     }
 }
