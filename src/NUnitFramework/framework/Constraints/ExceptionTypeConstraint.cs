@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -44,10 +45,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Exception castedToException = actual as Exception;
-
-            if (actual != null && castedToException == null)
-                throw new ArgumentException("Actual value must be an Exception", nameof(actual));
+            ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
 
             actualType = actual == null ? null : actual.GetType();
 
@@ -60,8 +58,8 @@ namespace NUnit.Framework.Constraints
             private readonly object caughtException;
 
             public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object caughtException, Type type, bool matches)
-                : base(constraint, type, matches) 
-            { 
+                : base(constraint, type, matches)
+            {
                 this.caughtException = caughtException;
             }
 
