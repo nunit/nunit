@@ -51,8 +51,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 expectedEnum = xIEnumerable.GetEnumerator();
                 actualEnum = yIEnumerable.GetEnumerator();
 
-                int count;
-                for (count = 0; ; count++)
+                for (int count = 0; ; count++)
                 {
                     bool expectedHasData = expectedEnum.MoveNext();
                     bool actualHasData = actualEnum.MoveNext();
