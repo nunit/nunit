@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008–2019 Charlie Poole, Rob Prouse
+// Copyright (c) 2008â€“2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,19 +26,19 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.Builders
 {
-    class ProviderCache
+    internal sealed class ProviderCache
     {
-        private static readonly Dictionary<Type, object> instances = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
 
-        public static object GetInstanceOf(Type providerType)
+        public object GetInstanceOf(Type providerType)
         {
             return GetInstanceOf(providerType, null);
         }
 
-        public static object GetInstanceOf(Type providerType, object[] providerArgs)
+        public object GetInstanceOf(Type providerType, object[] providerArgs)
         {
-            if (!instances.TryGetValue(providerType, out var instance))
-                instances.Add(providerType, instance = Reflect.Construct(providerType, providerArgs));
+            if (!_instances.TryGetValue(providerType, out var instance))
+                _instances.Add(providerType, instance = Reflect.Construct(providerType, providerArgs));
 
             return instance;
         }
