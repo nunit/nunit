@@ -114,16 +114,18 @@ namespace NUnit.Framework.Internal.Execution
             if (value != null)
             {
                 IFormattable f = value as IFormattable;
+                string stringValue;
                 if (f != null)
                 {
-                    if (TrySendToListener(f.ToString(null, FormatProvider)))
-                        return;
+                    stringValue = f.ToString(null, FormatProvider);
                 }
                 else
                 {
-                    if (TrySendToListener(value.ToString()))
-                        return;
+                    stringValue = value.ToString();
                 }
+
+                if (TrySendToListener(stringValue))
+                    return;
             }
 
             _defaultWriter.Write(value);
