@@ -90,7 +90,7 @@ namespace NUnit.Framework
 
                 continuation.Invoke();
 
-                if (!getResultWasCalled.Wait(1000))
+                if (!getResultWasCalled.Wait(10_000))
                     Assert.Fail("GetResult was not called after the continuation passed to OnCompleted was invoked.");
             }
         }
