@@ -256,25 +256,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void WriteLine(object value)
         {
-            if (value == null)
-            {
-                if (!TrySendLineToListener(string.Empty))
-                    _defaultWriter.WriteLine(value);
-            }
-            else
-            {
-                IFormattable f = value as IFormattable;
-                if (f != null)
-                {
-                    if (!TrySendLineToListener(f.ToString(null, FormatProvider)))
-                        _defaultWriter.WriteLine(value);
-                }
-                else
-                {
-                    if (!TrySendLineToListener(value.ToString()))
-                        _defaultWriter.WriteLine(value);
-                }
-            }
+            if (!TrySendLineToListener(FormatForListener(value)))
+                _defaultWriter.WriteLine(value);
         }
 
         /// <summary>
