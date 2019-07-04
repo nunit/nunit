@@ -44,10 +44,10 @@ namespace NUnit.Framework.Constraints.Comparers
                 return null;
 
             var expectedEnum = xIEnumerable.GetEnumerator();
-            try
+            using (expectedEnum as IDisposable)
             {
                 var actualEnum = yIEnumerable.GetEnumerator();
-                try
+                using (actualEnum as IDisposable)
                 {
                     for (int count = 0; ; count++)
                     {
@@ -73,16 +73,6 @@ namespace NUnit.Framework.Constraints.Comparers
                         }
                     }
                 }
-                finally
-                {
-                    var actualDisposable = actualEnum as IDisposable;
-                    if (actualDisposable != null) actualDisposable.Dispose();
-                }
-            }
-            finally
-            {
-                var expectedDisposable = expectedEnum as IDisposable;
-                if (expectedDisposable != null) expectedDisposable.Dispose();
             }
         }
     }
