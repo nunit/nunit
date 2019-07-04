@@ -29,7 +29,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
-    public partial class UnexpectedExceptionTests
+    public class UnexpectedExceptionTests
     {
         private static ITestResult RunDataTestCase(string methodName)
         {
@@ -114,6 +114,36 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public void AssertThatCanHandleRecursivelyThrowingExceptionAsActual()
+        {
+            var result = (ITestResult)null;
+
+            var ex = RecordPossiblyDangerousException(() =>
+                result = RunDataTestCase(nameof(UnexpectedExceptionFixture.AssertThatWithRecursivelyThrowingExceptionAsActual)));
+
+            Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
+
+            Assert.That(result, Has.Property("Message").StartWith(
+                "  Expected: null" + Environment.NewLine
+                + "  But was:  <! RecursivelyThrowingException was thrown by RecursivelyThrowingException.ToString() !>"));
+        }
+
+        [Test]
+        public void AssertThatCanHandleRecursivelyThrowingExceptionAsExpected()
+        {
+            var result = (ITestResult)null;
+
+            var ex = RecordPossiblyDangerousException(() =>
+                result = RunDataTestCase(nameof(UnexpectedExceptionFixture.AssertThatWithRecursivelyThrowingExceptionAsExpected)));
+
+            Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
+
+            Assert.That(result, Has.Property("Message").StartWith(
+                "  Expected: <! RecursivelyThrowingException was thrown by RecursivelyThrowingException.ToString() !>" + Environment.NewLine
+                + "  But was:  null"));
+        }
+
+        [Test]
         public void RecordExceptionCanHandleRecursivelyThrowingException()
         {
             var result = new TestCaseResult(new TestMethod(new MethodWrapper(typeof(UnexpectedExceptionTests), nameof(DummyMethod))));
@@ -124,7 +154,7 @@ namespace NUnit.Framework.Internal
             Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
             Assert.That(result, Has.Property("Message").StartWith(
-                "NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
+                "NUnit.TestData.UnexpectedExceptionFixture.RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
                 + "RecursivelyThrowingException was thrown by the Exception.Data property."));
 
             Assert.That(result, Has.Property("StackTrace").EqualTo(
@@ -142,7 +172,7 @@ namespace NUnit.Framework.Internal
             Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
             Assert.That(result, Has.Property("Message").StartWith(
-                "NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
+                "NUnit.TestData.UnexpectedExceptionFixture.RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
                 + "RecursivelyThrowingException was thrown by the Exception.Data property."));
 
             Assert.That(result, Has.Property("StackTrace").EqualTo(
@@ -160,7 +190,7 @@ namespace NUnit.Framework.Internal
             Assert.That(ex is null); // Careful not to pass ex to Assert.That and crash the test run rather than failing
 
             Assert.That(result, Has.Property("Message").StartWith(
-                "TearDown : NUnit.Framework.Internal.UnexpectedExceptionTests+RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
+                "TearDown : NUnit.TestData.UnexpectedExceptionFixture.RecursivelyThrowingException : RecursivelyThrowingException was thrown by the Exception.Message property." + Environment.NewLine
                 + "RecursivelyThrowingException was thrown by the Exception.Data property."));
 
             Assert.That(result, Has.Property("StackTrace").EqualTo(
