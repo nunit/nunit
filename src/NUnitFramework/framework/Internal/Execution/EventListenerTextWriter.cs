@@ -55,6 +55,14 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override Encoding Encoding { get; } = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
+        private string FormatForListener(object value)
+        {
+            return
+                value is null ? string.Empty :
+                value is IFormattable formattable ? formattable.ToString(null, FormatProvider) :
+                value.ToString();
+        }
+
         private bool TrySendToListener(string text)
         {
             var context = TestExecutionContext.CurrentContext;
@@ -113,11 +121,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             if (value != null)
             {
-                var stringValue = value is IFormattable formattable
-                    ? formattable.ToString(null, FormatProvider)
-                    : value.ToString();
-
-                if (TrySendToListener(stringValue))
+                if (TrySendToListener(FormatForListener(value)))
                     return;
             }
 
