@@ -114,15 +114,9 @@ namespace NUnit.Framework.Internal.Execution
             if (value != null)
             {
                 IFormattable f = value as IFormattable;
-                string stringValue;
-                if (f != null)
-                {
-                    stringValue = f.ToString(null, FormatProvider);
-                }
-                else
-                {
-                    stringValue = value.ToString();
-                }
+                var stringValue = f != null
+                    ? f.ToString(null, FormatProvider)
+                    : value.ToString();
 
                 if (TrySendToListener(stringValue))
                     return;
