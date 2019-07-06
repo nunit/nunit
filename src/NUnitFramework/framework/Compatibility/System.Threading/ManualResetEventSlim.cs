@@ -40,6 +40,8 @@ namespace System.Threading
         public void Wait() => _mres.WaitOne();
 
         public bool Wait(int millisecondsTimeout) => _mres.WaitOne(millisecondsTimeout);
+
+        public bool IsSet => _mres.WaitOne(0);
     }
 }
 #endif
