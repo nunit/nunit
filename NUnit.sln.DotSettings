@@ -202,4 +202,5 @@ namespace $NAMESPACE$&#xD;
 			$END$&#xD;
 		}&#xD;
 	}&#xD;
-}</s:String></wpf:ResourceDictionary>
+}</s:String>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=formattable/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
