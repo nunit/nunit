@@ -654,8 +654,6 @@ namespace NUnit.Framework
         {
             public DecimalDataSource(int count) : base(count) { }
 
-            public DecimalDataSource(decimal min, decimal max, int count) : base(min, max, count) { }
-
             protected override decimal GetNext()
             {
                 return Randomizer.NextDecimal();
