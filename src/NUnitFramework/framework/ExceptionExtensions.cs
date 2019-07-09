@@ -95,7 +95,7 @@ namespace NUnit.Framework
             }
             catch (Exception ex)
             {
-                return ex.GetType().Name + " was thrown by the Exception.Data property.";
+                return Result.Error<IDictionary>(ex.GetType().Name + " was thrown by the Exception.Data property.");
             }
         }
     }
