@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Builds up a message, using the Message field of the specified exception
-        /// as well as any InnerExceptions. Optionally excludes exception names, 
+        /// as well as any InnerExceptions. Optionally excludes exception names,
         /// creating a more readable message.
         /// </summary>
         /// <param name="exception">The exception.</param>
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
 
             Guard.ArgumentValid(
-                parameterlessDelegate.GetMethodInfo().GetParameters().Length == 0,
+                parameterlessDelegate.GetType().GetMethod("Invoke").GetParameters().Length == 0,
                 $"The actual value must be a parameterless delegate but was {parameterlessDelegate.GetType().Name}.",
                 nameof(parameterName));
 
