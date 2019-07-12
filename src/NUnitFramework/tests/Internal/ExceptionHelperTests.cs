@@ -21,6 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Reflection;
+using NUnit.Compatibility;
+
 namespace NUnit.Framework.Internal
 {
     public static class ExceptionHelperTests
@@ -29,6 +33,51 @@ namespace NUnit.Framework.Internal
         public static void BuildMessageThrowsForNullException()
         {
             Assert.That(() => ExceptionHelper.BuildMessage(null), Throws.ArgumentNullException.With.Property("ParamName").EqualTo("exception"));
+        }
+
+        [Test]
+        public static void RecordExceptionHandlesDelegatesThatHaveOneFewerParameterThanTheBoundMethod()
+        {
+            Assert.That(
+                ExceptionHelper.RecordException(new TestDelegate(new Foo(null).ThrowingExtensionMethod), "someParamName"),
+                Is.Null);
+
+            var exceptionToThrow = new Exception();
+
+            Assert.That(
+                ExceptionHelper.RecordException(new TestDelegate(new Foo(exceptionToThrow).ThrowingExtensionMethod), "someParamName"),
+                Is.SameAs(exceptionToThrow));
+        }
+
+        [Test]
+        public static void RecordExceptionThrowsProperExceptionForDelegatesThatHaveOneMoreParameterThanTheBoundMethod()
+        {
+            var methodInfo = typeof(Foo).GetMethod(nameof(Foo.DummyInstanceMethod));
+            var delegateThatParameterizesTheInstance = (Action<Foo>)methodInfo.CreateDelegate(typeof(Action<Foo>));
+
+            Assert.That(
+                () => ExceptionHelper.RecordException(delegateThatParameterizesTheInstance, "someParamName"),
+                Throws.ArgumentException);
+        }
+
+        private sealed class Foo
+        {
+            public Foo(Exception exceptionToThrow)
+            {
+                ExceptionToThrow = exceptionToThrow;
+            }
+
+            public Exception ExceptionToThrow { get; }
+
+            public void DummyInstanceMethod()
+            {
+            }
+        }
+
+        private static void ThrowingExtensionMethod(this Foo foo)
+        {
+            if (foo.ExceptionToThrow != null)
+                throw foo.ExceptionToThrow;
         }
     }
 }
