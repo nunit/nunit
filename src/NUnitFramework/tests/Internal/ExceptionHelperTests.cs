@@ -24,6 +24,9 @@
 using System;
 using System.Reflection;
 using NUnit.Compatibility;
+#if TASK_PARALLEL_LIBRARY_API
+using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -33,6 +36,14 @@ namespace NUnit.Framework.Internal
         public static void BuildMessageThrowsForNullException()
         {
             Assert.That(() => ExceptionHelper.BuildMessage(null), Throws.ArgumentNullException.With.Property("ParamName").EqualTo("exception"));
+        }
+
+        [Test]
+        public static void RecordExceptionThrowsForNullDelegate()
+        {
+            Assert.That(
+                () => ExceptionHelper.RecordException(null, "someParamName"),
+                Throws.ArgumentNullException.With.Property("ParamName").EqualTo("someParamName"));
         }
 
         [Test]
@@ -87,5 +98,35 @@ namespace NUnit.Framework.Internal
             if (foo.ExceptionToThrow != null)
                 throw foo.ExceptionToThrow;
         }
+
+#if TASK_PARALLEL_LIBRARY_API
+        [Test]
+        public static void RecordExceptionReturnsExceptionThrownBeforeReturningAwaitableObject()
+        {
+            var exceptionToThrow = new Exception();
+
+            Assert.That(
+                ExceptionHelper.RecordException(new Func<Task>(() => throw exceptionToThrow), "someParamName"),
+                Is.SameAs(exceptionToThrow));
+        }
+
+        [Test]
+        public static void RecordExceptionReturnsExceptionFromAwaitableObjectResult()
+        {
+            var exceptionToThrow = new Exception();
+
+            Assert.That(
+                ExceptionHelper.RecordException(new Func<Task>(() => TaskFromException(exceptionToThrow)), "someParamName"),
+                Is.SameAs(exceptionToThrow));
+        }
+
+        // Task.FromException was added in .NET Framework 4.6
+        private static Task TaskFromException(Exception exception)
+        {
+            var source = new TaskCompletionSource<object>();
+            source.SetException(exception);
+            return source.Task;
+        }
+#endif
     }
 }
