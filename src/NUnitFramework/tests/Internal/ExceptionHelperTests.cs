@@ -36,6 +36,14 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
+        public static void RecordExceptionThrowsForDelegateThatRequiresParameters()
+        {
+            Assert.That(
+                () => ExceptionHelper.RecordException(new Action<object>(_ => { }), "someParamName"),
+                Throws.ArgumentException.With.Property("ParamName").EqualTo("someParamName"));
+        }
+
+        [Test]
         public static void RecordExceptionHandlesDelegatesThatHaveOneFewerParameterThanTheBoundMethod()
         {
             Assert.That(

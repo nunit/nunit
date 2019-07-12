@@ -214,7 +214,7 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentValid(
                 parameterlessDelegate.GetType().GetMethod("Invoke").GetParameters().Length == 0,
                 $"The actual value must be a parameterless delegate but was {parameterlessDelegate.GetType().Name}.",
-                nameof(parameterName));
+                parameterName);
 
             Guard.ArgumentNotAsyncVoid(parameterlessDelegate, parameterName);
 
