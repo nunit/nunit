@@ -12,6 +12,9 @@ indent_style = space
 insert_final_newline = true
 charset = utf-8
 
+[*.{sln,*proj}]
+charset = utf-8-bom
+
 [*.{cs,cake}]
 indent_size = 4
 
