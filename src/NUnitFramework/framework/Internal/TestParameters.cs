@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the property dictionary for this test
         /// </summary>
-        public IPropertyBag Properties { get; }
+        public IPropertyBag Properties { get; protected internal set; }
 
         /// <summary>
         /// Applies ParameterSet values to the test itself.
@@ -146,7 +146,7 @@ namespace NUnit.Framework.Internal
         /// The original arguments provided by the user,
         /// used for display purposes.
         /// </summary>
-        public object[] OriginalArguments { get; private set; }
+        public object[] OriginalArguments { get; protected internal set; }
 
         private string[] _argDisplayNames;
 

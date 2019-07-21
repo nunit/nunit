@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -323,6 +324,38 @@ namespace NUnit.Framework.Attributes
             testCase = TestFinder.Find($"{methodName}(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
+        }
+
+        [Test]
+        public void CanIgnoreIndividualTestCasesWithUntilDate()
+        {
+            var methodName = nameof(TestCaseAttributeFixture.MethodWithIgnoredWithUntilDateTestCases);
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseAttributeFixture), methodName);
+            Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+
+            string untilDateString = DateTimeOffset.Parse("4242-01-01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal).ToString("u");
+            testCase = TestFinder.Find($"{methodName}(2)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(string.Format("Ignoring until {0}. Should not run", untilDateString)));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDateString));
+
+            untilDateString = DateTimeOffset.Parse("1942-01-01", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal).ToString("u");
+
+            testCase = TestFinder.Find($"{methodName}(3)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDateString));
+
+            untilDateString = DateTimeOffset.Parse("4242-01-01T01:23:45Z", CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal).ToString("u");
+
+            testCase = TestFinder.Find($"{methodName}(4)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(string.Format("Ignoring until {0}. Don't Run Me!", untilDateString)));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDateString));
+
+            testCase = TestFinder.Find($"{methodName}(5)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
         [Test]

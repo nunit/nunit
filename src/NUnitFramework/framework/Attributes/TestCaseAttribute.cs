@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -143,6 +144,13 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Instance Fields
+
+        private RunState _originalRunState;
+        private DateTimeOffset? _untilDate;
+
+        #endregion
+
         #region Other Properties
 
         /// <summary>
@@ -219,6 +227,7 @@ namespace NUnit.Framework
             get { return Reason; }
             set
             {
+                _originalRunState = RunState;
                 RunState = RunState.Ignored;
                 Reason = value;
             }
@@ -247,6 +256,24 @@ namespace NUnit.Framework
             {
                 foreach (string cat in value.Split(new char[] { ',' }) )
                     Properties.Add(PropertyNames.Category, cat);
+            }
+        }
+
+        /// <summary>
+        /// Gets and sets the ignore until date for this test case.
+        /// </summary>
+        public string Until
+        {
+            get { return Properties.Get(PropertyNames.IgnoreUntilDate) as string; }
+            set
+            {
+                if (!string.IsNullOrEmpty(IgnoreReason))
+                {
+                    _untilDate = DateTimeOffset.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                    Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
+                }
+                else
+                    this.RunState = RunState.NotRunnable;
             }
         }
 
@@ -386,6 +413,20 @@ namespace NUnit.Framework
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
+
+            if (_untilDate.HasValue)
+            {
+                if (_untilDate > DateTimeOffset.UtcNow)
+                {
+                    test.RunState = RunState.Ignored;
+                    string reason = string.Format("Ignoring until {0}. {1}", _untilDate.Value.ToString("u"), IgnoreReason);
+                    test.Properties.Set(PropertyNames.SkipReason, reason);
+                }
+                else
+                {
+                    test.RunState = _originalRunState;
+                }
+            }
 
 #if PLATFORM_DETECTION
             if (IncludePlatform != null || ExcludePlatform != null)

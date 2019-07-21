@@ -62,10 +62,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
                 return new object[] {
                     new TestCaseData(1),
                     new TestCaseData(2).Ignore("Don't Run Me!"),
-                    new TestCaseData(3).Ignore("Ignore Me Until The Future", "4242-01-01"),
-                    new TestCaseData(4).Ignore("Ignore Me Until The Future", "4242-01-01 00:00:00"),
-                    new TestCaseData(5).Ignore("Ignore Me Until The Future", "4242-01-01 00:00:00Z"),
-                    new TestCaseData(6).Ignore("I Was Ignored in the Past", "1492-01-01")
+
                 };
             }
         }
@@ -74,9 +71,12 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
             get
             {
+                DateTimeOffset utcTime = DateTimeOffset.UtcNow;
+                TimeSpan timeZoneOffset = utcTime - utcTime.ToLocalTime();
                 return new object[] {
-                    new TestCaseData(7).Ignore("Ignore Me Until The Future", "4242-01-01 12:42:33"),
-                    new TestCaseData(8).Ignore("Ignore Me Until The Future", "4242-01-01 12:42:33Z"),
+                    new TestCaseData(3).Ignore("Ignore Me Until The Future").Until(new DateTimeOffset(4242, 01, 01, 0, 0, 0, timeZoneOffset)),
+                    new TestCaseData(4).Ignore("I Was Ignored in the Past").Until(new DateTimeOffset(1492, 01, 01, 0, 0, 0, timeZoneOffset)),
+                    new TestCaseData(5).Ignore("Ignore Me Until The Future").Until(new DateTimeOffset(4242, 01, 01, 12, 42, 33, timeZoneOffset)),
                 };
             }
         }

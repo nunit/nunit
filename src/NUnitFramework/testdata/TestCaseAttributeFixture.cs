@@ -77,6 +77,15 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         }
 
         [TestCase(1)]
+        [TestCase(2, Ignore = "Should not run", Until = "4242-01-01")]
+        [TestCase(3, Ignore = "Run me after 1942", Until = "1942-01-01")]
+        [TestCase(4, Ignore = "Don't Run Me!", Until = "4242-01-01T01:23:45Z")]
+        [TestCase(5, Until = "This should err!")]
+        public void MethodWithIgnoredWithUntilDateTestCases(int num)
+        {
+        }
+
+        [TestCase(1)]
         [TestCase(2, Explicit = true)]
         [TestCase(3, Explicit = true, Reason = "Connection failing")]
         public void MethodWithExplicitTestCases(int num)
