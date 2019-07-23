@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net35;net40;net45;netstandard1.4;netstandard2.0</TargetFrameworks>
@@ -7,20 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" PrivateAssets="compile" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.5.1" PrivateAssets="compile" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.3.0" />
   </ItemGroup>
-  
+
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Update="Schemas\*.xsd" CopyToOutputDirectory="Always" />
   </ItemGroup>

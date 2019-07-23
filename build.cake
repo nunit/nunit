@@ -1,4 +1,4 @@
-#tool NUnit.ConsoleRunner&version=3.9.0
+#tool NUnit.ConsoleRunner&version=3.10.0
 #tool GitLink&version=3.1.0
 
 //////////////////////////////////////////////////////////////////////
