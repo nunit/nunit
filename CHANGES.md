@@ -1089,8 +1089,7 @@ use the NUnit NuGet packages for the framework, but a ZIP file with the binaries
 
  * Added a core engine which is a non-extensible, minimal engine for use by
    devices and similar situations where reduced functionality is compensated
-   for by reduced size and simplicity of usage. See
-   https://github.com/nunit/dev/wiki/Core-Engine for more information.
+   for by reduced size and simplicity of usage.
 
 #### Issues Resolved
 
