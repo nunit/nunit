@@ -27,6 +27,7 @@ using System.Reflection;
 using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -43,7 +44,7 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        public static object Await(Func<object> invoke)
+        public static object Await(Func<object> invoke, IAsyncCompletionStrategy waitStrategy = null)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
@@ -53,7 +54,8 @@ namespace NUnit.Framework.Internal
 
                 if (!awaitAdapter.IsCompleted)
                 {
-                    var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
+                    if (waitStrategy == null)
+                        waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
                     waitStrategy.WaitForCompletion(awaitAdapter);
                 }
 

@@ -22,10 +22,11 @@
 // ***********************************************************************
 
 using System;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
-    internal abstract class AwaitAdapter
+    internal abstract class AwaitAdapter : IAwaiterObject
     {
         public abstract bool IsCompleted { get; }
         public abstract void OnCompleted(Action action);

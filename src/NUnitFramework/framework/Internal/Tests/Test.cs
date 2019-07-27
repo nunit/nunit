@@ -412,6 +412,33 @@ namespace NUnit.Framework.Internal
             return new TAttr[0];
         }
 
+        /// <summary>
+        /// Get custom attributes applied to a test by combining the set
+        /// applied to both test method and fixture
+        /// </summary>
+        public virtual TAttr[] GetCombinedCustomAttributes<TAttr>(bool inherit) where TAttr : class
+        {
+            TAttr[] result = null;
+
+            if (Method != null)
+                result = Method.GetCustomAttributes<TAttr>(inherit);
+
+            if (TypeInfo != null) {
+                var typeAttrs = TypeInfo.GetCustomAttributes<TAttr>(inherit);
+                if (typeAttrs != null && typeAttrs.Length > 0) {
+                    if (result == null)
+                        result = typeAttrs;
+                    else {
+                        var oldLength = result.Length;
+                        Array.Resize (ref result, oldLength + typeAttrs.Length);
+                        Array.Copy (typeAttrs, 0, result, oldLength, typeAttrs.Length);
+                    }
+                }
+            }
+
+            return result ?? new TAttr[0];
+        }
+
         #endregion
 
         #region Protected Methods
