@@ -203,4 +203,5 @@ namespace $NAMESPACE$&#xD;
 		}&#xD;
 	}&#xD;
 }</s:String>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=awaiters/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=formattable/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

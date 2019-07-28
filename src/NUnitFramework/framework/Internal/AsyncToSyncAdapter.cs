@@ -49,15 +49,15 @@ namespace NUnit.Framework.Internal
 
             using (InitializeExecutionEnvironment())
             {
-                var awaitAdapter = AwaitAdapter.FromAwaitable(invoke.Invoke());
+                var awaiter = AwaitAdapter.FromAwaitable(invoke.Invoke());
 
-                if (!awaitAdapter.IsCompleted)
+                if (!awaiter.IsCompleted)
                 {
                     var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
-                    waitStrategy.WaitForCompletion(awaitAdapter);
+                    waitStrategy.WaitForCompletion(awaiter);
                 }
 
-                return awaitAdapter.GetResult();
+                return awaiter.GetResult();
             }
         }
 
