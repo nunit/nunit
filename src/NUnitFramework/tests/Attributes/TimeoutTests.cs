@@ -131,27 +131,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Message, Does.Contain("50ms"));
         }
 
-        [Test]
-        public void TestTimeoutNotElapsed()
-        {
-            TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
-            TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod testMethod = (TestMethod)TestFinder.Find("TestTimeOutNotElapsed", suite, false);
-            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-        }
-
-        [Test]
-        public void TestTimeoutElapsed()
-        {
-            TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
-            TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod testMethod = (TestMethod)TestFinder.Find("TestTimeOutElapsed", suite, false);
-            ITestResult result = TestBuilder.RunTest(testMethod, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Does.Contain("100ms"));
-        }
-
         [Explicit("Tests that demonstrate Timeout failure")]
         public class ExplicitTests
         {
@@ -255,34 +234,10 @@ namespace NUnit.Framework.Attributes
 #endif
 
 #if !THREAD_ABORT
-        [Timeout(50)]
-        public void TestTimeoutAndReportsTimeoutFailure()
-        {
-            Thread.Sleep(Timeout.Infinite);
-        }
-
-        [Test, Timeout(1000)]
-        public void TestTimeoutDoesNotStopCompletion()
-        {
-            Thread.Sleep(20);
-            Assert.True(true);
-        }
-
         [Timeout(1000)]
         public void TestTimeoutWhichThrowsTestException()
         {
             throw new ArgumentException($"{nameof(ArgumentException)} was thrown.");
-        }
-
-        [Test]
-        public void TestTimesOut()
-        {
-            var testMethod = TestBuilder.MakeTestCase(GetType(), nameof(TestTimeoutAndReportsTimeoutFailure));
-            var testResult = TestBuilder.RunTest(testMethod, this);
-
-            Assert.That(testResult?.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(testResult?.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(testResult?.ResultState.Label, Is.EqualTo("Test exceeded Timeout value 50ms."));
         }
 
         [Test]
