@@ -24,6 +24,7 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Execution
@@ -149,7 +150,10 @@ namespace NUnit.Framework.Internal.Execution
                     timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
                 if (timeout > 0)
-                    command = new TimeoutCommand(command, timeout);
+                {
+                    var debugger = new DebuggerFactory().Create();
+                    command = new TimeoutCommand(command, timeout, debugger);
+                }
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
                 foreach (var repeatableAttribute in method.GetCustomAttributes<IRepeatTest>(true))

@@ -28,6 +28,7 @@ using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
@@ -36,6 +37,12 @@ namespace NUnit.Framework.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
+        [TearDown]
+        public void ResetDebuggerFacory()
+        {
+            DebuggerFactory.ImplementationFactory = null;
+        }
+
         [Test, Timeout(500), SetCulture("fr-BE"), SetUICulture("es-BO")]
         public void TestWithTimeoutRespectsCulture()
         {
@@ -47,6 +54,20 @@ namespace NUnit.Framework.Attributes
         public void TestWithTimeoutCurrentContextIsNotAnAdhocContext()
         {
             Assert.That(TestExecutionContext.CurrentContext, Is.Not.TypeOf<TestExecutionContext.AdhocContext>());
+        }
+
+        [Timeout(10)]
+        public void TestThatTimesOutButOtherwisePasses()
+        {
+            Thread.Sleep(20);
+            Assert.Pass("The test has passed");
+        }
+
+        [Timeout(10)]
+        public void TestThatTimesOutAndFails()
+        {
+            Thread.Sleep(20);
+            Assert.Fail("The test has failed");
         }
 
 #if PLATFORM_DETECTION && THREAD_ABORT
@@ -178,6 +199,59 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
             Assert.That(result.Message, Is.EqualTo("Test exceeded Timeout value of 500ms"));
         }
+
+        [Test]
+        public void TimeoutCausesOtherwisePassingTestToFail()
+        {
+            // given
+            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = false };
+
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+
+            // then
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of 10ms"));
+        }
+
+        [Test]
+        public void TimeoutIsIgnoredAndPassingTestWillPassWithDebuggerAttached()
+        {
+            // given
+            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
+
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+
+            // then
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Message, Is.EqualTo("The test has passed"));
+        }
+
+        [Test]
+        public void TimeoutIsIgnoredAndFailingTestWillFailWithDebuggerAttached()
+        {
+            // given
+            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
+
+            var testThatTimesOutAndFails =
+                TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutAndFails));
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutAndFails, this);
+
+            // then
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Is.EqualTo("The test has failed"));
+        }
 #endif
 
 #if !THREAD_ABORT
@@ -221,6 +295,64 @@ namespace NUnit.Framework.Attributes
             Assert.That(testResult?.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(testResult?.ResultState.Label, Is.EqualTo("Error"));
         }
+
+        [Test]
+        public void TimeoutCausesOtherwisePassingTestToFail()
+        {
+            // given
+            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = false };
+
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+
+            // then
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo($"Test exceeded Timeout value 10ms."));
+        }
+
+        [Test]
+        public void TimeoutIsIgnoredAndPassingTestWillPassWithDebuggerAttached()
+        {
+            // given
+            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
+
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+
+            // then
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+            Assert.That(result.Message, Is.EqualTo("The test has passed"));
+        }
+
+        [Test]
+        public void TimeoutIsIgnoredAndFailingTestWillFailWithDebuggerAttached()
+        {
+            // given
+            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
+
+            var testThatTimesOutAndFails =
+                TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutAndFails));
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutAndFails, this);
+
+            // then
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Is.EqualTo("The test has failed"));
+        }
 #endif
+
+        private class StubDebugger : IDebugger
+        {
+            public bool IsAttached { get; set; }
+        }
     }
 }
