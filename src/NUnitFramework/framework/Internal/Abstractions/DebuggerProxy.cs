@@ -21,16 +21,18 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Diagnostics;
+
 namespace NUnit.Framework.Internal.Abstractions
 {
     /// <summary>
-    /// A layer of abstraction around <see cref="System.Diagnostics.Debugger"/> to facilitate testing.
+    /// A production <see cref="IDebugger"/> implementation that delegates directly to .NET's <see cref="Debugger"/>.
     /// </summary>
-    public interface IDebugger
+    public class DebuggerProxy : IDebugger
     {
         /// <summary>
-        /// Whether a debugger is currently attached to the process.
+        /// Returns whether a debugger is currently attached to the process
         /// </summary>
-        bool IsAttached { get; }
+        public bool IsAttached => Debugger.IsAttached;
     }
 }

@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Abstractions
     /// <summary>
     /// Used to create an <see cref="IDebugger"/> implementation instance based on configuration.
     /// </summary>
-    public class DebuggerFactory
+    public partial class DebuggerFactory
     {
         /// <summary>
         /// A customizable delegate for creating <see cref="IDebugger"/>.
@@ -48,11 +48,6 @@ namespace NUnit.Framework.Internal.Abstractions
         {
             return ImplementationFactory?.Invoke()
                 ?? new DebuggerProxy();
-        }
-        
-        private class DebuggerProxy : IDebugger
-        {
-            public bool IsAttached => Debugger.IsAttached;
         }
     }
 }
