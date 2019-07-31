@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -32,6 +33,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public static class WorkItemBuilder
     {
+        private static readonly DebuggerFactory DebuggerFactory = new DebuggerFactory();
+
         #region Static Factory Method
 
         /// <summary>
@@ -45,7 +48,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             TestSuite suite = test as TestSuite;
             if (suite == null)
-                return new SimpleWorkItem((TestMethod)test, filter);
+                return new SimpleWorkItem((TestMethod)test, filter, DebuggerFactory.Create());
 
             var work = new CompositeWorkItem(suite, filter);
 

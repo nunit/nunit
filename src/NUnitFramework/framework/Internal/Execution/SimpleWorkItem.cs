@@ -36,6 +36,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
+        private readonly IDebugger _debugger;
+
         readonly TestMethod _testMethod;
 
         /// <summary>
@@ -43,9 +45,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter)
+        /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
+        public SimpleWorkItem(TestMethod test, ITestFilter filter, IDebugger debugger)
             : base(test, filter)
         {
+            _debugger = debugger;
             _testMethod = test;
         }
 
@@ -150,10 +154,7 @@ namespace NUnit.Framework.Internal.Execution
                     timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
                 if (timeout > 0)
-                {
-                    var debugger = new DebuggerFactory().Create();
-                    command = new TimeoutCommand(command, timeout, debugger);
-                }
+                    command = new TimeoutCommand(command, timeout, _debugger);
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
                 foreach (var repeatableAttribute in method.GetCustomAttributes<IRepeatTest>(true))
