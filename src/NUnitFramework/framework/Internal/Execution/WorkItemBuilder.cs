@@ -31,11 +31,18 @@ namespace NUnit.Framework.Internal.Execution
     /// <summary>
     /// WorkItemBuilder class knows how to build a tree of work items from a tree of tests
     /// </summary>
-    public static class WorkItemBuilder
+    public class WorkItemBuilder
     {
-        private static readonly DebuggerFactory DebuggerFactory = new DebuggerFactory();
+        private readonly IDebugger _debugger;
 
-        #region Static Factory Method
+        /// <summary>
+        /// Creates a new instance of <see cref="WorkItemBuilder"/>.
+        /// </summary>
+        /// <param name="debugger">An <see cref="IDebugger"/> used to access debugger-related properties in a controlled manner</param>
+        public WorkItemBuilder(IDebugger debugger)
+        {
+            _debugger = debugger;
+        }
 
         /// <summary>
         /// Creates a work item.
@@ -44,11 +51,11 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <returns></returns>
-        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
         {
             TestSuite suite = test as TestSuite;
             if (suite == null)
-                return new SimpleWorkItem((TestMethod)test, filter, DebuggerFactory.Create());
+                return new SimpleWorkItem((TestMethod)test, filter, _debugger);
 
             var work = new CompositeWorkItem(suite, filter);
 
@@ -83,8 +90,6 @@ namespace NUnit.Framework.Internal.Execution
 
             return work;
         }
-
-        #endregion
 
         private class WorkItemOrderComparer : IComparer<WorkItem>
         {

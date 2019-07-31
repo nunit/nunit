@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
 using System.Security;
+using NUnit.Framework.Internal.Abstractions;
 
 #if NET35 || NET40 || NET45
 using System.Windows.Forms;
@@ -235,7 +236,8 @@ namespace NUnit.Framework.Api
 
             CreateTestExecutionContext(listener);
 
-            TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, true);
+            var workItemBuilder = new WorkItemBuilder(new DebuggerProxy());
+            TopLevelWorkItem = workItemBuilder.CreateWorkItem(LoadedTest, filter, true);
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 

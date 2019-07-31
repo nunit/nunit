@@ -37,12 +37,6 @@ namespace NUnit.Framework.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-        [TearDown]
-        public void ResetDebuggerFacory()
-        {
-            DebuggerFactory.ImplementationFactory = null;
-        }
-
         [Test, Timeout(500), SetCulture("fr-BE"), SetUICulture("es-BO")]
         public void TestWithTimeoutRespectsCulture()
         {
@@ -183,13 +177,13 @@ namespace NUnit.Framework.Attributes
         public void TimeoutCausesOtherwisePassingTestToFail()
         {
             // given
-            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = false };
-
             var testThatTimesOutButOtherwisePasses =
                 TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
 
+            var detachedDebugger = new StubDebugger { IsAttached = false };
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this, detachedDebugger);
 
             // then
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
@@ -201,13 +195,13 @@ namespace NUnit.Framework.Attributes
         public void TimeoutIsIgnoredAndPassingTestWillPassWithDebuggerAttached()
         {
             // given
-            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
-
             var testThatTimesOutButOtherwisePasses =
                 TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
 
+            var attachedDebugger = new StubDebugger { IsAttached = true };
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this, attachedDebugger);
 
             // then
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
@@ -218,13 +212,13 @@ namespace NUnit.Framework.Attributes
         public void TimeoutIsIgnoredAndFailingTestWillFailWithDebuggerAttached()
         {
             // given
-            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
-
             var testThatTimesOutAndFails =
                 TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutAndFails));
 
+            var attachedDebugger = new StubDebugger { IsAttached = true };
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutAndFails, this);
+            var result = TestBuilder.RunTest(testThatTimesOutAndFails, this, attachedDebugger);
 
             // then
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
@@ -255,13 +249,13 @@ namespace NUnit.Framework.Attributes
         public void TimeoutCausesOtherwisePassingTestToFail()
         {
             // given
-            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = false };
-
             var testThatTimesOutButOtherwisePasses =
                 TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
 
+            var detachedDebugger = new StubDebugger { IsAttached = false };
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this, detachedDebugger);
 
             // then
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
@@ -273,13 +267,13 @@ namespace NUnit.Framework.Attributes
         public void TimeoutIsIgnoredAndPassingTestWillPassWithDebuggerAttached()
         {
             // given
-            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
-
             var testThatTimesOutButOtherwisePasses =
                 TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutButOtherwisePasses));
 
+            var attachedDebugger = new StubDebugger { IsAttached = true };
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this);
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, this, attachedDebugger);
 
             // then
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
@@ -290,13 +284,13 @@ namespace NUnit.Framework.Attributes
         public void TimeoutIsIgnoredAndFailingTestWillFailWithDebuggerAttached()
         {
             // given
-            DebuggerFactory.ImplementationFactory = () => new StubDebugger { IsAttached = true };
-
             var testThatTimesOutAndFails =
                 TestBuilder.MakeTestCase(typeof(TimeoutTests), nameof(TestThatTimesOutAndFails));
 
+            var attachedDebugger = new StubDebugger { IsAttached = true };
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutAndFails, this);
+            var result = TestBuilder.RunTest(testThatTimesOutAndFails, this, attachedDebugger);
 
             // then
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));

@@ -34,6 +34,7 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.TestUtilities
 {
@@ -111,16 +112,29 @@ namespace NUnit.TestUtilities
 
         public static WorkItem CreateWorkItem(Test test, object testObject)
         {
-            var context = new TestExecutionContext();
-            context.TestObject = testObject;
-            context.Dispatcher = new SuperSimpleDispatcher();
+            return CreateWorkItem(test, testObject, null);
+        }
 
-            return CreateWorkItem(test, context);
+        public static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger)
+        {
+            var context = new TestExecutionContext
+            {
+                TestObject = testObject,
+                Dispatcher = new SuperSimpleDispatcher()
+            };
+
+            return CreateWorkItem(test, context, debugger);
         }
 
         public static WorkItem CreateWorkItem(Test test, TestExecutionContext context)
         {
-            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
+            return CreateWorkItem(test, context, null);
+        }
+
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger)
+        {
+            var workItemBuilder = new WorkItemBuilder(debugger ?? new DebuggerProxy());
+            var work = workItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
             work.InitializeContext(context);
 
             return work;
@@ -183,7 +197,12 @@ namespace NUnit.TestUtilities
 
         public static ITestResult RunTest(Test test, object testObject)
         {
-            return ExecuteWorkItem(CreateWorkItem(test, testObject));
+            return RunTest(test, testObject, null);
+        }
+
+        public static ITestResult RunTest(Test test, object testObject, IDebugger debugger)
+        {
+            return ExecuteWorkItem(CreateWorkItem(test, testObject, debugger));
         }
 
         public static ITestResult ExecuteWorkItem(WorkItem work)
