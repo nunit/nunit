@@ -384,8 +384,8 @@ namespace NUnit.Framework.Internal
             if (ResultState.Site != FailureSite.Test)
                 thisNode.AddAttribute("site", ResultState.Site.ToString());
 
-            thisNode.AddAttribute("start-time", StartTime.ToString("u"));
-            thisNode.AddAttribute("end-time", EndTime.ToString("u"));
+            thisNode.AddAttribute("start-time", StartTime.ToString("o", CultureInfo.InvariantCulture));
+            thisNode.AddAttribute("end-time", EndTime.ToString("o", CultureInfo.InvariantCulture));
             thisNode.AddAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             if (Test is TestSuite)

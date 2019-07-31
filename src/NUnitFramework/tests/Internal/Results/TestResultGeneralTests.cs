@@ -160,8 +160,8 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual(EXPECTED_START.ToString("u"), testNode.Attributes["start-time"]);
-            Assert.AreEqual(EXPECTED_END.ToString("u"), testNode.Attributes["end-time"]);
+            Assert.AreEqual(EXPECTED_START, DateTime.Parse(testNode.Attributes["start-time"], CultureInfo.InvariantCulture).ToUniversalTime());
+            Assert.AreEqual(EXPECTED_END, DateTime.Parse(testNode.Attributes["end-time"], CultureInfo.InvariantCulture).ToUniversalTime());
             Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture), testNode.Attributes["duration"]);
         }
 
@@ -199,8 +199,8 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual(EXPECTED_START.ToString("u"), suiteNode.Attributes["start-time"]);
-            Assert.AreEqual(EXPECTED_END.ToString("u"), suiteNode.Attributes["end-time"]);
+            Assert.AreEqual(EXPECTED_START, DateTime.Parse(suiteNode.Attributes["start-time"], CultureInfo.InvariantCulture).ToUniversalTime());
+            Assert.AreEqual(EXPECTED_END, DateTime.Parse(suiteNode.Attributes["end-time"], CultureInfo.InvariantCulture).ToUniversalTime());
             Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture), suiteNode.Attributes["duration"]);
         }
     }
