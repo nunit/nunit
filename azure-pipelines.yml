@@ -26,9 +26,15 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   steps:
+  - task: UseDotNet@2
+    displayName: Stick with .NET Core SDK version compatible to Mono toolchain
+    inputs:
+      packageType: sdk
+      version: 2.2.301  # See also: https://github.com/mono/mono/issues/13537
+      installationPath: $(Agent.ToolsDirectory)/dotnet
   - bash: |
      dotnet tool install --global Cake.Tool
-     export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
+     export DOTNET_ROOT="$(Agent.ToolsDirectory)/dotnet"
      ~/.dotnet/tools/dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
     displayName: Build, test, and publish results
 
