@@ -27,6 +27,11 @@ jobs:
     vmImage: ubuntu-16.04
   steps:
   - bash: |
+     wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+     sudo dpkg -i packages-microsoft-prod.deb
+     sudo apt-get install apt-transport-https
+     sudo apt-get update
+     sudo apt-get install dotnet-sdk-2.2
      dotnet tool install --global Cake.Tool
      export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
      ~/.dotnet/tools/dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
