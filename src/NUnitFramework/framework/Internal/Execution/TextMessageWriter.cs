@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
         #region Public Methods - High Level
         /// <summary>
         /// Method to write single line message with optional args, usually
-        /// written to precede the general failure message, at a given 
+        /// written to precede the general failure message, at a given
         /// indentation level.
         /// </summary>
         /// <param name="level">The indentation level of the message</param>
@@ -117,8 +117,8 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Display Expected and Actual lines for a constraint. This
-        /// is called by MessageWriter's default implementation of 
-        /// WriteMessageTo and provides the generic two-line display. 
+        /// is called by MessageWriter's default implementation of
+        /// WriteMessageTo and provides the generic two-line display.
         /// </summary>
         /// <param name="result">The result of the constraint that failed</param>
         public override void DisplayDifferences(ConstraintResult result)
@@ -171,7 +171,7 @@ namespace NUnit.Framework.Internal
                 ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
             }
             WriteExpectedLine(expected, tolerance);
-            WriteActualLine(actual);    
+            WriteActualLine(actual);
         }
 
         /// <summary>
@@ -259,15 +259,6 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Write the generic 'Expected' line for a given value
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        private void WriteExpectedLine(object expected)
-        {
-            WriteExpectedLine(expected, null);
-        }
-
-        /// <summary>
-        /// Write the generic 'Expected' line for a given value
         /// and tolerance.
         /// </summary>
         /// <param name="expected">The expected value</param>
@@ -276,7 +267,7 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-            if (_sameValDiffTypes) {            
+            if (_sameValDiffTypes) {
                 Write(_expectedType);
             }
             if (tolerance != null && !tolerance.IsUnsetOrDefault)

@@ -61,32 +61,38 @@ namespace NUnit.Framework
         [Test]
         public void GetResultIsNotCalledUntilContinued()
         {
-            var wasCalled = false;
-            var continuation = (Action)null;
-            var result = (ITestResult)null;
-
-            ThreadPool.QueueUserWorkItem(state =>
+            using (var continuationIsAvailable = new ManualResetEventSlim())
+            using (var getResultWasCalled = new ManualResetEventSlim())
             {
-                result = RunCurrentTestMethod(new AsyncWorkload(
-                    isCompleted: false,
-                    onCompleted: action => continuation = action,
-                    getResult: () => { wasCalled = true; return 42; })
-                );
-            });
+                var continuation = (Action)null;
 
-            SpinWait.SpinUntil(() => continuation != null);
+                ThreadPool.QueueUserWorkItem(state =>
+                {
+                    RunCurrentTestMethod(new AsyncWorkload(
+                        isCompleted: false,
+                        onCompleted: action =>
+                        {
+                            continuation = action;
+                            continuationIsAvailable.Set();
+                        },
+                        getResult: () =>
+                        {
+                            getResultWasCalled.Set();
+                            return 42;
+                        })
+                    );
+                });
 
-            Assert.That(wasCalled, Is.False, "GetResult was called before the continuation passed to OnCompleted was invoked.");
+                continuationIsAvailable.Wait();
 
-            continuation.Invoke();
+                if (getResultWasCalled.IsSet)
+                    Assert.Fail("GetResult was called before the continuation passed to OnCompleted was invoked.");
 
-            if (!SpinWait.SpinUntil(() => wasCalled, 1000))
-            {
-                Assert.Fail("GetResult was not called after the continuation passed to OnCompleted was invoked.");
+                continuation.Invoke();
+
+                if (!getResultWasCalled.Wait(10_000))
+                    Assert.Fail("GetResult was not called after the continuation passed to OnCompleted was invoked.");
             }
-
-            SpinWait.SpinUntil(() => result != null);
-            result.AssertPassed();
         }
 
         [Test]

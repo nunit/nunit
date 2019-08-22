@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -65,8 +65,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get 
-            { 
+            get
+            {
                 string desc = string.Format("{0} {1}", descriptionText, MsgUtils.FormatValue(expected));
                 if (caseInsensitive)
                     desc += ", ignoring case";
@@ -104,13 +104,11 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            string actualAsString = actual as string;
-            if (actual != null && actualAsString == null)
-                throw new ArgumentException("Actual value must be a string", nameof(actual));
+            var stringValue = ConstraintUtils.RequireActual<string>(actual, nameof(actual), allowNull: true);
 
-            return new ConstraintResult(this, actual, Matches(actualAsString));
+            return new ConstraintResult(this, actual, Matches(stringValue));
         }
-               
+
         /// <summary>
         /// Test whether the constraint is satisfied by a given string
         /// </summary>

@@ -25,6 +25,9 @@ using System;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// Adapts various styles of asynchronous waiting to a common API.
+    /// </summary>
     internal abstract class AwaitAdapter
     {
         public abstract bool IsCompleted { get; }

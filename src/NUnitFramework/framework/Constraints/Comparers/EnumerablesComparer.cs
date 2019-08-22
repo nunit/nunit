@@ -40,52 +40,39 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
         {
-            if (!(x is IEnumerable) || !(y is IEnumerable))
+            if (!(x is IEnumerable xIEnumerable) || !(y is IEnumerable yIEnumerable))
                 return null;
 
-            IEnumerable xIEnumerable = (IEnumerable)x;
-            IEnumerable yIEnumerable = (IEnumerable)y;
-
-            IEnumerator expectedEnum = null;
-            IEnumerator actualEnum = null;
-
-            try
+            var expectedEnum = xIEnumerable.GetEnumerator();
+            using (expectedEnum as IDisposable)
             {
-                expectedEnum = xIEnumerable.GetEnumerator();
-                actualEnum = yIEnumerable.GetEnumerator();
-
-                int count;
-                for (count = 0; ; count++)
+                var actualEnum = yIEnumerable.GetEnumerator();
+                using (actualEnum as IDisposable)
                 {
-                    bool expectedHasData = expectedEnum.MoveNext();
-                    bool actualHasData = actualEnum.MoveNext();
-
-                    if (!expectedHasData && !actualHasData)
-                        return true;
-                    
-                    if (expectedHasData != actualHasData ||
-                        !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, topLevelComparison: false))
+                    for (int count = 0; ; count++)
                     {
-                        NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
-                        fp.Position = count;
-                        fp.ExpectedHasData = expectedHasData;
-                        if (expectedHasData)
-                            fp.ExpectedValue = expectedEnum.Current;
-                        fp.ActualHasData = actualHasData;
-                        if (actualHasData)
-                            fp.ActualValue = actualEnum.Current;
-                        _equalityComparer.FailurePoints.Insert(0, fp);
-                        return false;
+                        bool expectedHasData = expectedEnum.MoveNext();
+                        bool actualHasData = actualEnum.MoveNext();
+
+                        if (!expectedHasData && !actualHasData)
+                            return true;
+
+                        if (expectedHasData != actualHasData ||
+                            !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, topLevelComparison: false))
+                        {
+                            NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
+                            fp.Position = count;
+                            fp.ExpectedHasData = expectedHasData;
+                            if (expectedHasData)
+                                fp.ExpectedValue = expectedEnum.Current;
+                            fp.ActualHasData = actualHasData;
+                            if (actualHasData)
+                                fp.ActualValue = actualEnum.Current;
+                            _equalityComparer.FailurePoints.Insert(0, fp);
+                            return false;
+                        }
                     }
                 }
-            }
-            finally
-            {
-                var expectedDisposable = expectedEnum as IDisposable;
-                if (expectedDisposable != null) expectedDisposable.Dispose();
-
-                var actualDisposable = actualEnum as IDisposable;
-                if (actualDisposable != null) actualDisposable.Dispose();
             }
         }
     }
