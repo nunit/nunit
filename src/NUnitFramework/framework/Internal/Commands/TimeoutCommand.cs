@@ -110,18 +110,17 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                var testExecution = ExecuteTestAsync(context);
-
-                if (WaitForTimeout(testExecution))
+                var testExecution = RunTestWithTimeoutAsync(context);
+                if (_debugger.IsAttached)
+                {
+                    AwaitCompletionWithoutExceptionWrapping(testExecution);
+                }
+                else if (!testExecution.IsCompleted)
                 {
                     context.CurrentResult.SetResult(new ResultState(
                         TestStatus.Failed,
                         $"Test exceeded Timeout value {_timeout}ms.",
                         FailureSite.Test));
-                }
-                else
-                {
-                    return context.CurrentResult = testExecution.Result;
                 }
             }
             catch (Exception exception)
@@ -132,16 +131,27 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private Task<TestResult> ExecuteTestAsync(TestExecutionContext context)
+        private Task RunTestWithTimeoutAsync(TestExecutionContext context)
         {
-            return Task.Run(() => innerCommand.Execute(context));
+            var testExecution = Task.Run(() => context.CurrentResult = innerCommand.Execute(context));
+
+            AwaitWithoutExceptionWrapping(testExecution, _timeout);
+
+            return testExecution;
         }
 
-        private bool WaitForTimeout(Task testExecution)
+        private static void AwaitWithoutExceptionWrapping(Task<TestResult> testExecution, int timeoutMilliseconds)
         {
-            var executionCompletedInTime = testExecution.Wait(_timeout);
+            var timeoutOrCompletion = Task
+                .WhenAny(testExecution, Task.Delay(timeoutMilliseconds))
+                .Unwrap();
 
-            return !executionCompletedInTime && !_debugger.IsAttached;
+            AwaitCompletionWithoutExceptionWrapping(timeoutOrCompletion);
+        }
+
+        private static void AwaitCompletionWithoutExceptionWrapping(Task task)
+        {
+            task.GetAwaiter().GetResult();
         }
 #endif
     }
