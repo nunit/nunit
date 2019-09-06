@@ -282,6 +282,12 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the number of test cases executed
+        /// when running the test and all its children.
+        /// </summary>
+        public abstract int TotalCount { get; }
+
+        /// <summary>
         /// Gets the number of test cases that failed
         /// when running the test and all its children.
         /// </summary>
@@ -390,7 +396,7 @@ namespace NUnit.Framework.Internal
 
             if (Test is TestSuite)
             {
-                thisNode.AddAttribute("total", (PassCount + FailCount + SkipCount + InconclusiveCount).ToString());
+                thisNode.AddAttribute("total", TotalCount.ToString());
                 thisNode.AddAttribute("passed", PassCount.ToString());
                 thisNode.AddAttribute("failed", FailCount.ToString());
                 thisNode.AddAttribute("warnings", WarningCount.ToString());

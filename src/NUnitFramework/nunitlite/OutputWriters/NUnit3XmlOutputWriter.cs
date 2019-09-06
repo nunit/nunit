@@ -112,13 +112,12 @@ namespace NUnitLite
             testRun.AddAttribute("end-time", result.EndTime.ToString("u"));
             testRun.AddAttribute("duration", result.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
-            testRun.AddAttribute("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
+            testRun.AddAttribute("total", result.TotalCount.ToString());
             testRun.AddAttribute("passed", result.PassCount.ToString());
             testRun.AddAttribute("failed", result.FailCount.ToString());
             testRun.AddAttribute("inconclusive", result.InconclusiveCount.ToString());
             testRun.AddAttribute("skipped", result.SkipCount.ToString());
             testRun.AddAttribute("asserts", result.AssertCount.ToString());
-
             testRun.AddAttribute("random-seed", Randomizer.InitialSeed.ToString());
 
             // NOTE: The console runner adds attributes for engine-version and clr-version

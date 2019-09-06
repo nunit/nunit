@@ -171,7 +171,7 @@ namespace NUnit.Framework.Internal.Execution
             public FakeTestResult(ITest test) : base(test)
             {
             }
-
+            public override int TotalCount => 1;
             public override int FailCount => 0;
 
             public override int WarningCount => 0;

@@ -49,6 +49,15 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Gets the number of test cases that executed
+        /// when running the test and all its children.
+        /// </summary>
+        public override int TotalCount
+        {
+            get { return 1;  }
+        }
+
+        /// <summary>
         /// Gets the number of test cases that had warnings
         /// when running the test and all its children.
         /// </summary>
