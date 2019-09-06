@@ -41,7 +41,6 @@ namespace NUnit.Framework.Internal
         private int _warningCount = 0;
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
-        private int _totalCount = 0;
 #if PARALLEL
         private readonly ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
 #else
@@ -56,33 +55,7 @@ namespace NUnit.Framework.Internal
         {
         }
 
-        #region Overrides
-
-
-        /// <summary>
-        /// Gets the number of test cases that executed
-        /// when running the test and all its children.
-        /// </summary>
-        public override int TotalCount
-        {
-            get
-            {
-#if PARALLEL
-                RwLock.EnterReadLock();
-#endif
-                try
-                {
-                    return _totalCount;
-                }
-                finally
-                {
-#if PARALLEL
-                    RwLock.ExitReadLock();
-#endif
-                }
-            }
-        }
-
+#region Overrides
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -267,7 +240,6 @@ namespace NUnit.Framework.Internal
             _warningCount += childResult.WarningCount;
             _skipCount += childResult.SkipCount;
             _inconclusiveCount += childResult.InconclusiveCount;
-            _totalCount += childResult.PassCount + childResult.FailCount + childResult.SkipCount + childResult.InconclusiveCount + childResult.WarningCount;
         }
 
         private void UpdateResultState(ResultState childResultState)

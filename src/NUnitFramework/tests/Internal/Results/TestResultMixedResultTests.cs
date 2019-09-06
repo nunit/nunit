@@ -45,10 +45,6 @@ namespace NUnit.Framework.Internal.Results
             _testResult.SetResult(ResultState.Inconclusive, "inconclusive reason", "stacktrace");
             _testResult.AssertCount = 0;
             _suiteResult.AddResult(_testResult);
-
-            _testResult.SetResult(ResultState.Warning, "message", "warning");
-            _testResult.AssertCount = 0;
-            _suiteResult.AddResult(_testResult);
         }
 
         [Test]
@@ -59,10 +55,10 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, _suiteResult.Message);
             Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.Null(_suiteResult.StackTrace, "There should be no stacktrace");
-            Assert.AreEqual(5, _suiteResult.TotalCount);
+
             Assert.AreEqual(2, _suiteResult.PassCount);
             Assert.AreEqual(1, _suiteResult.FailCount);
-            Assert.AreEqual(1, _suiteResult.WarningCount);
+            Assert.AreEqual(0, _suiteResult.WarningCount);
             Assert.AreEqual(0, _suiteResult.SkipCount);
             Assert.AreEqual(1, _suiteResult.InconclusiveCount);
             Assert.AreEqual(6, _suiteResult.AssertCount);
@@ -83,10 +79,10 @@ namespace NUnit.Framework.Internal.Results
 
             TNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
             Assert.Null(stacktraceNode, "There should be no stacktrace");
-            Assert.AreEqual("5", suiteNode.Attributes["total"]);
+
             Assert.AreEqual("2", suiteNode.Attributes["passed"]);
             Assert.AreEqual("1", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("1", suiteNode.Attributes["warnings"]);
+            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
             Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
             Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
             Assert.AreEqual("6", suiteNode.Attributes["asserts"]);
