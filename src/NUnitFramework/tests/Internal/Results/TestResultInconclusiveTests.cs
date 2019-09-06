@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.AreEqual(ResultState.Inconclusive, _suiteResult.ResultState);
             Assert.Null(_suiteResult.Message);
-
+            Assert.AreEqual(1, _suiteResult.TotalCount);
             Assert.AreEqual(0, _suiteResult.PassCount);
             Assert.AreEqual(0, _suiteResult.FailCount);
             Assert.AreEqual(0, _suiteResult.WarningCount);
