@@ -117,6 +117,7 @@ namespace NUnitLite
             testRun.AddAttribute("failed", result.FailCount.ToString());
             testRun.AddAttribute("inconclusive", result.InconclusiveCount.ToString());
             testRun.AddAttribute("skipped", result.SkipCount.ToString());
+            testRun.AddAttribute("warnings", result.WarningCount.ToString());
             testRun.AddAttribute("asserts", result.AssertCount.ToString());
             testRun.AddAttribute("random-seed", Randomizer.InitialSeed.ToString());
 
