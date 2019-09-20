@@ -97,6 +97,7 @@ namespace NUnit.Framework.Api
                     new XAttribute("failed", 0),
                     new XAttribute("inconclusive", 0),
                     new XAttribute("skipped", 0),
+                    new XAttribute("warnings", 0),
                     new XAttribute("asserts", 0),
                     new XAttribute("random-seed", 0));
 
@@ -110,7 +111,7 @@ namespace NUnit.Framework.Api
             Assert.Multiple(() =>
             {
                 SchemaTestUtils.AssertValidXml(@"
-                    <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' asserts='0' random-seed='0'>
+                    <test-run id='0' name='0' fullname='0' testcasecount='0' result='Passed' total='0' passed='0' failed='0' inconclusive='0' skipped='0' warnings='0' asserts='0' random-seed='0'>
                       <command-line />
                       <filter />
                       <test-case result='Passed' asserts='0' id='1' name='0' fullname='0' runstate='Runnable' seed='0' />

@@ -135,7 +135,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 Parent = new FakeTest("Fixture", fixtureApartment)
                 {
-                    Parent  = new FakeTest("Assembly", assemblyApartment)
+                    Parent = new FakeTest("Assembly", assemblyApartment)
                 }
             };
 
@@ -171,6 +171,8 @@ namespace NUnit.Framework.Internal.Execution
             public FakeTestResult(ITest test) : base(test)
             {
             }
+
+            public override int TotalCount => 1;
 
             public override int FailCount => 0;
 
