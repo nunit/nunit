@@ -5,6 +5,7 @@
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
 
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
