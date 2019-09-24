@@ -511,7 +511,7 @@ namespace NUnit.Framework.Internal
             if (AssertionResults.Count > 0 && result.ResultState == ResultState.Error)
             {
                 // Add pending failures to the legacy result message
-                Message += " " + CreateLegacyFailureMessage();
+                Message += Environment.NewLine + Environment.NewLine + CreateLegacyFailureMessage();
 
                 // Add to the list of assertion errors, so that newer runners will see it
                 AssertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));
