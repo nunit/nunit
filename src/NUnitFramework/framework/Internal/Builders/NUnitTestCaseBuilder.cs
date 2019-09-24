@@ -214,9 +214,9 @@ namespace NUnit.Framework.Internal.Builders
             if (argsProvided > maxArgsNeeded)
                 return MarkAsNotRunnable(testMethod, string.Format("Too many arguments provided, provide at most {0} arguments.", maxArgsNeeded));
 
-            if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
+            if (testMethod.Method.IsGenericMethodDefinition)
             {
-                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
+                if (arglist == null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out Type[] typeArguments))
                     return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
