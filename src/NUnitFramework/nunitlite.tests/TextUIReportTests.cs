@@ -54,7 +54,8 @@ namespace NUnitLite.Tests
             _result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture)) as TestResult;
             Assert.NotNull(_result, "Unable to run fixture");
 
-            _result.StartTime = _result.EndTime = new DateTime(2014, 12, 2, 12, 34, 56, DateTimeKind.Utc);
+            _result.StartTime = new DateTime(2014, 12, 2, 12, 34, 56, 789, DateTimeKind.Utc);
+            _result.EndTime = new DateTime(2014, 12, 2, 12, 34, 56, 902, DateTimeKind.Utc);
             _result.Duration = 0.123;
         }
 
@@ -115,8 +116,8 @@ namespace NUnitLite.Tests
                 "  Test Count: 10, Passed: 2, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 2\n" +
                 "    Failed Tests - Failures: 1, Errors: 1, Invalid: 2\n" +
                 "    Skipped Tests - Ignored: 1, Explicit: 1, Other: 0\n" +
-                "  Start time: 2014-12-02 12:34:56Z\n" +
-                "    End time: 2014-12-02 12:34:56Z\n" +
+                "  Start time: 2014-12-02T12:34:56.7890000Z\n" +
+                "    End time: 2014-12-02T12:34:56.9020000Z\n" +
                 "    Duration: 0.123 seconds\n\n"));
         }
 
