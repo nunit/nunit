@@ -190,8 +190,8 @@ namespace NUnitLite
             foreach (string filter in _options.PreFilters)
                 Writer.WriteLabelLine("  Pre-Filter: ", filter);
 
-            Writer.WriteLabelLine("  Start time: ", startTime.DateTime.ToString("o"));
-            Writer.WriteLabelLine("    End time: ", endTime.DateTime.ToString("o"));
+            Writer.WriteLabelLine("  Start time: ", startTime.DateTime.ToString("u"));
+            Writer.WriteLabelLine("    End time: ", endTime.DateTime.ToString("u"));
             double elapsedSeconds = TimeStamp.TicksToSeconds(endTime.Ticks - startTime.Ticks);
             Writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", elapsedSeconds));
 
@@ -366,8 +366,8 @@ namespace NUnitLite
                 Writer.WriteLine();
             }
 
-            Writer.WriteLabelLine("  Start time: ", summary.StartTime.ToString("o"));
-            Writer.WriteLabelLine("    End time: ", summary.EndTime.ToString("o"));
+            Writer.WriteLabelLine("  Start time: ", summary.StartTime.ToString("u"));
+            Writer.WriteLabelLine("    End time: ", summary.EndTime.ToString("u"));
             Writer.WriteLabelLine("    Duration: ", string.Format(NumberFormatInfo.InvariantInfo, "{0:0.000} seconds", summary.Duration));
             Writer.WriteLine();
         }
