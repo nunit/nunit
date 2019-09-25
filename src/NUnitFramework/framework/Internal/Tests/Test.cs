@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// The Test abstract class represents a test within the framework.
     /// </summary>
-    public abstract class Test : ITest, IComparable
+    public abstract class Test : ITest, IComparable, IComparable<Test>
     {
         #region Fields
 
@@ -484,19 +484,18 @@ namespace NUnit.Framework.Internal
 
         #region IComparable Members
 
-        /// <summary>
-        /// Compares this test to another test for sorting purposes
-        /// </summary>
-        /// <param name="obj">The other test</param>
-        /// <returns>Value of -1, 0 or +1 depending on whether the current test is less than, equal to or greater than the other test</returns>
+        /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
+        /// <param name="obj">An object to compare with this instance. </param>
         public int CompareTo(object obj)
         {
-            Test other = obj as Test;
+            return CompareTo(obj as Test);
+        }
 
-            if (other == null)
-                return -1;
-
-            return this.FullName.CompareTo(other.FullName);
+        /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object. </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        public int CompareTo(Test other)
+        {
+            return other == null ? -1 : this.FullName.CompareTo(other.FullName);
         }
 
         #endregion
