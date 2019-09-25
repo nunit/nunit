@@ -138,7 +138,7 @@ namespace NUnitLite
         private static TNode MakeTestFilterElement(TestFilter filter)
         {
             TNode result = new TNode("filter");
-            if (!filter.IsEmpty)
+            if (filter != null && !filter.IsEmpty)
                 filter.AddToXml(result, true);
             return result;
         }
