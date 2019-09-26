@@ -23,6 +23,7 @@
 
 #if !NETCOREAPP1_1
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -116,14 +117,14 @@ namespace NUnitLite.Tests
         public void TestResults_HasValidStartTimeAttribute()
         {
             string startTimeString = RequiredAttribute(topNode, "start-time");
-            Assert.That(DateTime.TryParse(startTimeString, out _), "Invalid start time attribute: {0}", startTimeString);
+            Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)), "Invalid start time attribute: {0}. Expecting DateTime in 'o' format.", startTimeString);
         }
 
         [Test]
         public void TestResults_HasValidEndTimeAttribute()
         {
             string endTimeString = RequiredAttribute(topNode, "end-time");
-            Assert.That(DateTime.TryParse(endTimeString, out _), "Invalid end time attribute: {0}", endTimeString);
+            Assert.That(DateTime.TryParseExact(endTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid end time attribute: {0}. Expecting DateTime in 'o' format.", endTimeString);
         }
 
         [Test]
@@ -163,7 +164,7 @@ namespace NUnitLite.Tests
             {
                 culture = System.Globalization.CultureInfo.CreateSpecificCulture(cultureName);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 // Do nothing - culture will be null
             }
@@ -193,7 +194,7 @@ namespace NUnitLite.Tests
         public void TestSuite_HasValidStartTimeAttribute()
         {
             var startTimeString = RequiredAttribute(suiteNode, "start-time");
-            
+
             var success = DateTime.TryParse(startTimeString, out _);
             Assert.That(success, "{0} is an invalid value for start time", startTimeString);
         }
@@ -207,7 +208,7 @@ namespace NUnitLite.Tests
             Assert.That(success, "{0} is an invalid value for end time", endTimeString);
         }
 
-#region Helper Methods
+        #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
         {
@@ -217,7 +218,7 @@ namespace NUnitLite.Tests
             return attr.Value;
         }
 
-#endregion
+        #endregion
     }
 }
 #endif
