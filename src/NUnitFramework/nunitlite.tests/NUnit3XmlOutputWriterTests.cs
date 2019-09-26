@@ -117,7 +117,7 @@ namespace NUnitLite.Tests
         public void TestResults_HasValidStartTimeAttribute()
         {
             string startTimeString = RequiredAttribute(topNode, "start-time");
-            Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _)), "Invalid start time attribute: {0}. Expecting DateTime in 'o' format.", startTimeString);
+            Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid start time attribute: {0}. Expecting DateTime in 'o' format.", startTimeString);
         }
 
         [Test]
