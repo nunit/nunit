@@ -208,11 +208,6 @@ namespace NUnitLite.Tests
             Assert.That(success, "{0} is an invalid value for time", timeString);
         }
 
-        [Test]
-        public void TestSuite_ResultIsFailure()
-        {
-        }
-
 #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
