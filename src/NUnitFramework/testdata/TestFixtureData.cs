@@ -524,7 +524,6 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !NETCOREAPP2_0
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {
@@ -536,7 +535,6 @@ namespace NUnit.TestData.TestFixtureTests
             System.Threading.Thread.CurrentPrincipal = principal;
         }
     }
-#endif
 
     [TestFixture(typeof(int))]
     [TestFixture(typeof(string))]

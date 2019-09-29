@@ -59,7 +59,7 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithDifferentApartment>("may not specify a different apartment");
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [SingleThreaded]
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
     [Platform(Include = "Win")]
 #endif
     [SingleThreaded, Apartment(ApartmentState.STA)]

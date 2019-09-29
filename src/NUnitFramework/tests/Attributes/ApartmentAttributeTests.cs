@@ -41,7 +41,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Test, Apartment(ApartmentState.STA)]
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Attributes
 #if THREAD_ABORT
         [Timeout(10_000)]
 #endif
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Attributes
 #if THREAD_ABORT
         [Timeout(10_000)]
 #endif
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture, Apartment(ApartmentState.STA)]
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -210,7 +210,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]

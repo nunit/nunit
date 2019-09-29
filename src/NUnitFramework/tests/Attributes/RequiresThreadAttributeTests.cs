@@ -52,7 +52,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
             }
         }
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Unix")]
         [TestFixture]
         public class ApartmentStateRequiredToFailOnUnixNetCoreTests

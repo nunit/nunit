@@ -21,11 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP2_0
-using System;
-using System.Collections;
+#if !NETCOREAPP
 using System.CodeDom.Compiler;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Syntax
 {

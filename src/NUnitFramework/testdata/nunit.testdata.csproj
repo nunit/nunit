@@ -18,6 +18,10 @@
     <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.6.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>

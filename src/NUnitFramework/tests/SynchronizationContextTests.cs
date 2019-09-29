@@ -72,7 +72,7 @@ namespace NUnit.Framework
 
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -88,7 +88,7 @@ namespace NUnit.Framework
             });
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]

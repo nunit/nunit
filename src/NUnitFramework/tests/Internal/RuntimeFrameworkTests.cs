@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
     public class RuntimeFrameworkTests
     {
         static readonly RuntimeType currentRuntime =
-#if NETCOREAPP2_0
+#if NETCOREAPP
             RuntimeType.NetCore;
 #else
             Type.GetType("Mono.Runtime", false) != null
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
         {
             PlatformHelper platformHelper = new PlatformHelper();
             bool isNetCore;
-#if NETCOREAPP2_0
+#if NETCOREAPP
             isNetCore = true;
 #else
             isNetCore = false;

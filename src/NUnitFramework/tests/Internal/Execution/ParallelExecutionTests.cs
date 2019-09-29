@@ -416,9 +416,7 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture2_Test").RunsOn("NonParallelWorker")))
                 .SetName("Issue-2464");
 
-#if NETCOREAPP2_0
             if (new PlatformHelper().IsPlatformSupported(new PlatformAttribute { Include = "Win, Mono" }))
-#endif
             {
                 yield return new TestFixtureData(
                         Suite("fake-assembly.dll").Parallelizable()
