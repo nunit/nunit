@@ -22,17 +22,13 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using NUnit.Framework;
-#if !NETCOREAPP1_1
 using NUnit.Compatibility;
-#endif
+using NUnit.Framework;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.TestUtilities

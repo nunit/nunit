@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
 using System;
 using System.Linq;
 using System.Reflection;
@@ -421,4 +420,3 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 }
-#endif

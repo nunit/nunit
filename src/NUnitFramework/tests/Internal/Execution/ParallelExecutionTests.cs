@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -417,7 +416,6 @@ namespace NUnit.Framework.Internal.Execution
                     That("TestFixture2_Test").RunsOn("NonParallelWorker")))
                 .SetName("Issue-2464");
 
-#if APARTMENT_STATE
 #if NETCOREAPP2_0
             if (new PlatformHelper().IsPlatformSupported(new PlatformAttribute { Include = "Win, Mono" }))
 #endif
@@ -431,7 +429,6 @@ namespace NUnit.Framework.Internal.Execution
                             That("STAFixture_Test").RunsOn("ParallelSTAWorker")))
                     .SetName("Issue-2467");
             }
-#endif
         }
 
 #endregion
@@ -611,4 +608,3 @@ namespace NUnit.Framework.Internal.Execution
 #endregion
     }
 }
-#endif

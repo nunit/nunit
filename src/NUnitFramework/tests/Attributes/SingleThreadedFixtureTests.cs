@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.Linq;
 using System.Threading;
@@ -54,7 +53,6 @@ namespace NUnit.Framework.Attributes
             CheckTestIsInvalid<SingleThreadedFixture_TestWithRequiresThread>("RequiresThreadAttribute may not be specified");
         }
 
-#if APARTMENT_STATE
         [Test]
         public void TestWithDifferentApartmentIsInvalid()
         {
@@ -74,7 +72,6 @@ namespace NUnit.Framework.Attributes
                 Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
             }
         }
-#endif
 
         private void CheckTestIsInvalid<TFixture>(string reason)
         {
@@ -85,7 +82,6 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if APARTMENT_STATE
 #if NETCOREAPP2_0
     [Platform(Include = "Win")]
 #endif
@@ -106,6 +102,4 @@ namespace NUnit.Framework.Attributes
             Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
         }
     }
-#endif
 }
-#endif

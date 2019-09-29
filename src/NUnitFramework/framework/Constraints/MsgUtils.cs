@@ -109,7 +109,7 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
         }
 
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
 #endif
         private static string FormatValueWithoutThrowing(object val)

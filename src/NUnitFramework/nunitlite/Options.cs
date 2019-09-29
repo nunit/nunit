@@ -133,9 +133,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using NUnit.Compatibility;
@@ -143,10 +144,6 @@ using NUnit.Compatibility;
 // Missing XML Docs
 #pragma warning disable 1591
 
-#if !NETSTANDARD1_4
-using System.Security.Permissions;
-using System.Runtime.Serialization;
-#endif
 
 namespace NUnit.Options
 {
@@ -352,17 +349,11 @@ namespace NUnit.Options
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 
-#if !NETSTANDARD1_4
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
-#endif
             T t = default (T);
             try {
                 if (value != null)
-#if NETSTANDARD1_4
-                    t = (T)Convert.ChangeType(value, tt, CultureInfo.InvariantCulture);
-#else
                     t = (T) conv.ConvertFromString (value);
-#endif
             }
             catch (Exception e) {
                 throw new OptionException (
@@ -489,26 +480,22 @@ namespace NUnit.Options
             this.option = optionName;
         }
 
-#if SERIALIZATION
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
             this.option = info.GetString ("OptionName");
         }
-#endif
 
         public string OptionName {
             get {return this.option;}
         }
 
-#if SERIALIZATION
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData (info, context);
             info.AddValue ("OptionName", option);
         }
-#endif
     }
 
     public delegate void OptionAction<TKey, TValue> (TKey key, TValue value);

@@ -252,14 +252,7 @@ namespace NUnit.Framework.Constraints
 
                     if (method != null)
                     {
-#if NETSTANDARD1_4
-                        method = methods.Single(m => m.Name == method.Name &&
-                                                     m.GetParameters().Length == 1 &&
-                                                     method.GetParameters().Length == 1 &&
-                                                     m.GetParameters()[0].Name == method.GetParameters()[0].Name);
-#else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
-#endif
                     }
                 }
             }

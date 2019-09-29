@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.IsFalse(actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-    
+
         [Test]
         public void IsNull()
         {
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.IsNull(s1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-    
+
         [Test]
         public void IsNotNull()
         {
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.IsNotNull(null));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-    
+
         [Test]
         public void IsNaN()
         {
@@ -154,10 +154,8 @@ namespace NUnit.Framework.Assertions
             Assert.IsEmpty( new int[0], "Failed on empty Array" );
             Assert.IsEmpty((IEnumerable)new int[0], "Failed on empty IEnumerable");
 
-#if !NETCOREAPP1_1
             Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
             Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
-#endif
         }
 
         [Test]
@@ -199,7 +197,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty((IEnumerable)new int[] { 1, 2, 3 }));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
- 
+
         [Test]
         public void IsNotEmpty()
         {
@@ -209,14 +207,12 @@ namespace NUnit.Framework.Assertions
             Assert.IsNotEmpty( array, "Failed on Array" );
             Assert.IsNotEmpty( (IEnumerable)array, "Failed on IEnumerable" );
 
-#if !NETCOREAPP1_1
             ArrayList list = new ArrayList(array);
             Hashtable hash = new Hashtable();
             hash.Add("array", array);
 
             Assert.IsNotEmpty(list, "Failed on ArrayList");
             Assert.IsNotEmpty(hash, "Failed on Hashtable");
-#endif
         }
 
         [Test]
@@ -249,7 +245,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#if !NETCOREAPP1_1
         [Test]
         public void IsNotEmptyFailsOnEmptyArrayList()
         {
@@ -269,6 +264,5 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(new Hashtable()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
-#endif
     }
 }

@@ -34,24 +34,18 @@ namespace NUnit.Framework.Internal
     {
         public CultureInfo Culture { get; }
         public CultureInfo UICulture { get; }
-#if !NETSTANDARD1_4
         public System.Security.Principal.IPrincipal Principal { get; }
-#endif
         private readonly SynchronizationContext _synchronizationContext;
 
         private SandboxedThreadState(
             CultureInfo culture,
             CultureInfo uiCulture,
-#if !NETSTANDARD1_4
             System.Security.Principal.IPrincipal principal,
-#endif
             SynchronizationContext synchronizationContext)
         {
             Culture = culture;
             UICulture = uiCulture;
-#if !NETSTANDARD1_4
             Principal = principal;
-#endif
             _synchronizationContext = synchronizationContext;
         }
 
@@ -63,9 +57,7 @@ namespace NUnit.Framework.Internal
             return new SandboxedThreadState(
                 CultureInfo.CurrentCulture,
                 CultureInfo.CurrentUICulture,
-#if !NETSTANDARD1_4
                 Thread.CurrentPrincipal,
-#endif
                 SynchronizationContext.Current);
         }
 
@@ -75,14 +67,9 @@ namespace NUnit.Framework.Internal
         [SecurityCritical]
         public void Restore()
         {
-#if NETSTANDARD1_4
-            CultureInfo.CurrentCulture = Culture;
-            CultureInfo.CurrentUICulture = UICulture;
-#else
             Thread.CurrentThread.CurrentCulture = Culture;
             Thread.CurrentThread.CurrentUICulture = UICulture;
             Thread.CurrentPrincipal = Principal;
-#endif
 
             SynchronizationContext.SetSynchronizationContext(_synchronizationContext);
         }
@@ -95,9 +82,7 @@ namespace NUnit.Framework.Internal
             return new SandboxedThreadState(
                 culture,
                 UICulture,
-#if !NETSTANDARD1_4
                 Principal,
-#endif
                 _synchronizationContext);
         }
 
@@ -109,13 +94,10 @@ namespace NUnit.Framework.Internal
             return new SandboxedThreadState(
                 Culture,
                 uiCulture,
-#if !NETSTANDARD1_4
                 Principal,
-#endif
                 _synchronizationContext);
         }
 
-#if !NETSTANDARD1_4
         /// <summary>
         /// Returns a copy with the specified principal.
         /// </summary>
@@ -127,6 +109,5 @@ namespace NUnit.Framework.Internal
                 principal,
                 _synchronizationContext);
         }
-#endif
     }
 }

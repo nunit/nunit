@@ -330,43 +330,6 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
-#if NETSTANDARD1_4
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="MemberInfo"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(MemberInfo provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="TypeInfo"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(TypeInfo provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="Assembly"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(Assembly provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>());
-        }
-#else
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied <see cref="ICustomAttributeProvider"/>, which is
@@ -378,7 +341,6 @@ namespace NUnit.Framework.Internal
         {
             ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
         }
-#endif
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
         {

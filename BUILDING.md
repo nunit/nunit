@@ -63,20 +63,17 @@ This brings clarity to the code and makes it easy to change the mapping between 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
  - `TASK_PARALLEL_LIBRARY_API` exposes NUnit APIs which depend on the TPL framework types
- - `PARALLEL` enables running tests in parallel
- - `PLATFORM_DETECTION` enables platform detection
  - `THREAD_ABORT` enables timeouts and forcible cancellation
- - `APARTMENT_STATE` enables control of the thread apartment state
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
-For example, `NET45`, `NETSTANDARD1_6`, `NETCOREAPP2_0`, and so on.
+For example, `NET45`, `NETSTANDARD2_0`, `NETCOREAPP2_1`, and so on.
 It is most helpful to call out which platforms are the exception in rather than the rule
 in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
 
 For example, rather than this code:
 
 ```cs
-#if NET45 || NETSTANDARD1_6 || NETSTANDARD2_0
+#if NET45 || NETSTANDARD2_0 || NETSTANDARD2_1
 // Something that .NET Framework 4.0 can't do
 #endif
 ```

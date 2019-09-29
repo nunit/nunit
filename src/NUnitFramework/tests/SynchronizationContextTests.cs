@@ -72,7 +72,6 @@ namespace NUnit.Framework
 
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
-#if APARTMENT_STATE
 #if NETCOREAPP2_0
         [Platform(Include = "Win, Mono")]
 #endif
@@ -104,7 +103,6 @@ namespace NUnit.Framework
                 return TaskEx.FromResult<object>(null);
             });
         }
-#endif
 
 #if NET40 || NET45
         // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread

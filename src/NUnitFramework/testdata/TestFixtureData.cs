@@ -22,10 +22,8 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework;
-#if !NETCOREAPP1_1
 using System.Security.Principal;
-#endif
+using NUnit.Framework;
 
 namespace NUnit.TestData.TestFixtureTests
 {
@@ -526,7 +524,7 @@ namespace NUnit.TestData.TestFixtureTests
         }
     }
 
-#if !(NETCOREAPP1_1 || NETCOREAPP2_0)
+#if !NETCOREAPP2_0
     [TestFixture]
     public class FixtureThatChangesTheCurrentPrincipal
     {

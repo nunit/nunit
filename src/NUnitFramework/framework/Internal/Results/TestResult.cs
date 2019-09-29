@@ -84,12 +84,10 @@ namespace NUnit.Framework.Internal
         private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
         private readonly List<TestAttachment> _testAttachments = new List<TestAttachment>();
 
-#if PARALLEL
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
         protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
-#endif
 
         #endregion
 
@@ -104,11 +102,7 @@ namespace NUnit.Framework.Internal
             Test = test;
             ResultState = ResultState.Inconclusive;
 
-#if !PARALLEL
-            OutWriter = new StringWriter(_output);
-#else
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
-#endif
         }
 
         #endregion
@@ -128,18 +122,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _resultState;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
             private set { _resultState = value; }
@@ -202,18 +192,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _message;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
 
             }
@@ -231,18 +217,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _stackTrace;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
 
@@ -260,18 +242,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return InternalAssertCount;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
 
@@ -339,14 +317,10 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 lock (OutWriter)
                 {
                     return _output.ToString();
                 }
-#else
-                return _output.ToString();
-#endif
             }
         }
 
@@ -487,9 +461,7 @@ namespace NUnit.Framework.Internal
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
         public void SetResult(ResultState resultState, string message, string stackTrace)
         {
-#if PARALLEL
             RwLock.EnterWriteLock();
-#endif
             try
             {
                 ResultState = resultState;
@@ -498,9 +470,7 @@ namespace NUnit.Framework.Internal
             }
             finally
             {
-#if PARALLEL
                 RwLock.ExitWriteLock();
-#endif
             }
         }
 

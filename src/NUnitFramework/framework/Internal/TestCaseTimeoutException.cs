@@ -24,9 +24,7 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-#if SERIALIZATION
     using System.Runtime.Serialization;
-#endif
 
     /// <summary>
     /// TestCaseTimeoutException is thrown when a test running directly
@@ -55,12 +53,10 @@ namespace NUnit.Framework.Internal
         public TestCaseTimeoutException(string message, Exception inner) : base(message, inner)
         { }
 
-#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected TestCaseTimeoutException(SerializationInfo info,
             StreamingContext context) : base(info,context){}
-#endif
     }
 }

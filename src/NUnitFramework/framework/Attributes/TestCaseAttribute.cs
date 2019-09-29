@@ -224,7 +224,6 @@ namespace NUnit.Framework
             }
         }
 
-#if PLATFORM_DETECTION
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
@@ -234,7 +233,6 @@ namespace NUnit.Framework
         /// Comma-delimited list of platforms to not run the test for
         /// </summary>
         public string ExcludePlatform { get; set; }
-#endif
 
         /// <summary>
         /// Gets and sets the category for this test case.
@@ -387,7 +385,6 @@ namespace NUnit.Framework
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
-#if PLATFORM_DETECTION
             if (IncludePlatform != null || ExcludePlatform != null)
             {
                 if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
@@ -404,7 +401,6 @@ namespace NUnit.Framework
                     test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
                 }
             }
-#endif
 
             yield return test;
         }

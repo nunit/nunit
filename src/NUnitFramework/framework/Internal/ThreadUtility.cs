@@ -37,11 +37,7 @@ namespace NUnit.Framework.Internal
     {
         internal static void BlockingDelay(int milliseconds)
         {
-#if !PARALLEL
-            System.Threading.Tasks.Task.Delay(milliseconds).GetAwaiter().GetResult();
-#else
             Thread.Sleep(milliseconds);
-#endif
         }
 
 #if THREAD_ABORT

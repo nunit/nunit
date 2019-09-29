@@ -265,13 +265,10 @@ namespace NUnitLite.Tests
                 Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
             }
         }
-#if !NETCOREAPP1_1
+
         [TestCase("DefaultTimeout", "timeout")]
-#endif
         [TestCase("RandomSeed", "seed")]
-#if PARALLEL
         [TestCase("NumberOfTestWorkers", "workers")]
-#endif
         public void CanRecognizeIntOptions(string propertyName, string pattern)
         {
             string[] prototypes = pattern.Split('|');
@@ -331,9 +328,7 @@ namespace NUnitLite.Tests
         [TestCase("--trace")]
         [TestCase("--test")]
         [TestCase("--prefilter")]
-#if !NETCOREAPP1_1
         [TestCase("--timeout")]
-#endif
         public void MissingValuesAreReported(string option)
         {
             var options = new NUnitLiteOptions(option + "=");
@@ -407,7 +402,7 @@ namespace NUnitLite.Tests
             Assert.True(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
-#if !NETCOREAPP1_1
+
         [Test]
         public void TimeoutThrowsExceptionIfOptionHasNoValue()
         {
@@ -429,7 +424,6 @@ namespace NUnitLite.Tests
             Assert.False(options.Validate());
             Assert.AreEqual(-1, options.DefaultTimeout);
         }
-#endif
 
         #endregion
 

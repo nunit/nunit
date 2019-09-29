@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,11 +55,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private static WorkItemQueue CreateQueue(string name)
         {
-#if APARTMENT_STATE
             return new WorkItemQueue(name, true, ApartmentState.MTA);
-#else
-            return new WorkItemQueue(name, true);
-#endif
         }
 
         [Test]
@@ -119,4 +114,3 @@ namespace NUnit.Framework.Internal.Execution
         private void Test1() { }
     }
 }
-#endif

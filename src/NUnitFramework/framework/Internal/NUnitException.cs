@@ -24,9 +24,7 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-#if SERIALIZATION
     using System.Runtime.Serialization;
-#endif
 
     /// <summary>
     /// Thrown when an assertion failed. Here to preserve the inner
@@ -60,12 +58,10 @@ namespace NUnit.Framework.Internal
             base(message, inner)
         { }
 
-#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected NUnitException(SerializationInfo info,
             StreamingContext context) : base(info,context){}
-#endif
     }
 }

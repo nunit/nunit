@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,9 +28,9 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Sets the current Culture on an assembly, test fixture or test method for 
+    /// Sets the current Culture on an assembly, test fixture or test method for
     /// the duration of a test. The culture remains set until the test or fixture
-    /// completes and is then reset to its original value.    
+    /// completes and is then reset to its original value.
     /// </summary>
     /// <seealso cref="SetUICultureAttribute"/>
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=true)]
@@ -42,7 +42,7 @@ namespace NUnit.Framework
         /// Construct given the name of a culture
         /// </summary>
         /// <param name="culture"></param>
-        public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture ) 
+        public SetCultureAttribute( string culture ) : base( PropertyNames.SetCulture, culture )
         {
             _culture = culture;
         }
@@ -51,11 +51,7 @@ namespace NUnit.Framework
 
         void IApplyToContext.ApplyToContext(TestExecutionContext context)
         {
-#if NETSTANDARD1_4
-            context.CurrentCulture = new System.Globalization.CultureInfo(_culture);
-#else
             context.CurrentCulture = new System.Globalization.CultureInfo(_culture, false);
-#endif
         }
 
         #endregion

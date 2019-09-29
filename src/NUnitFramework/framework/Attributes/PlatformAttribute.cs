@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -82,4 +81,3 @@ namespace NUnit.Framework
         #endregion
     }
 }
-#endif

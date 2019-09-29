@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -46,7 +45,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
-#if APARTMENT_STATE
         [Test]
         public void ApartmentStateUnknownIsNotRunnable()
         {
@@ -102,7 +100,6 @@ namespace NUnit.Framework.Attributes
             }
         }
 #endif
-#endif
 
         [TestFixture, RequiresThread]
         public class FixtureRequiresThread
@@ -130,4 +127,3 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#endif

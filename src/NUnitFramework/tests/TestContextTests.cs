@@ -399,9 +399,7 @@ namespace NUnit.Framework
         }
 
         [TestCase(null)]
-#if PLATFORM_DETECTION
         [TestCase("bad|path.png", IncludePlatform = "Win")]
-#endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
         {
             Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -368,5 +367,3 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
-
-#endif
