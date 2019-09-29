@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Assertions
 
         [Test]
         public void ThrowsConstraintSucceedsWithDelegate()
-        { 
+        {
             // Without cast, delegate is ambiguous before C# 3.0.
             Assert.That((AsyncTestDelegate)delegate { throw new ArgumentException(); },
                     Throws.Exception.TypeOf<ArgumentException>());
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Assertions
 
         [Test]
         public void ThrowsConstraintReturnsCorrectException()
-        { 
+        {
             // Without cast, delegate is ambiguous before C# 3.0.
             Assert.That(
                 (AsyncTestDelegate)delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }, TaskScheduler.Default); },
@@ -217,7 +217,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentException));
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Environment.NewLine +
-                "  But was:  <System.ArgumentException: myMessage" + Environment.NewLine + "Parameter name: myParam" + Environment.NewLine));
+                "  But was:  <System.ArgumentException: myMessage"));
 
             CheckForSpuriousAssertionResults();
         }
@@ -228,7 +228,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Environment.NewLine +
-                "  But was:  <System.ArgumentException: myMessage" + Environment.NewLine + "Parameter name: myParam" + Environment.NewLine));
+                "  But was:  <System.ArgumentException: myMessage"));
         }
 
         [Test]

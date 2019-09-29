@@ -79,12 +79,6 @@ namespace NUnit.Framework.Internal
 #endif
 
         [Test]
-        public void CurrentFrameworkHasBuildSpecified()
-        {
-            Assert.That(RuntimeFramework.CurrentFramework.ClrVersion.Build, Is.GreaterThan(0));
-        }
-
-        [Test]
         [TestCaseSource(nameof(netcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
         {
