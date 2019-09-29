@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <DebugType>Full</DebugType>
 

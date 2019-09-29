@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>NUnit.TestData</RootNamespace>
 
     <!-- Needed because we test stack traces and don't want to have to put
