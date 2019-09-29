@@ -1,26 +1,27 @@
 language: csharp
 sudo: false
 
-dotnet: 2.1.604
-
-mono: 5.10.0 # Need 5.2+ for the included MSBuild.
+dotnet: 3.0.100
+mono: 6.4.0
 
 matrix:
   include:
-    - dist: xenial
-      install:
-        - sudo apt-get install dotnet-sharedframework-microsoft.netcore.app-1.1.6
+  - dist: xenial
+    env: DOTNET_INSTALL_DIR=/usr/share/dotnet
 
-    - os: osx
-      install:
-        - curl https://download.microsoft.com/download/A/7/E/A7EF2AFF-F77B-4F77-A21B-0F7BD09A4065/dotnet-osx-x64.1.1.6.pkg -O
-        - sudo installer -pkg dotnet-osx-x64.1.1.6.pkg -target /
+  - os: osx
+    env: DOTNET_INSTALL_DIR=/usr/local/share/dotnet
 
-      # .NET Core 2 requires OSX 10.12+
-      # https://github.com/dotnet/core/blob/master/release-notes/2.0/2.0-supported-os.md#macos
-      # https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
-      osx_image: xcode9.1
+install: |
+  curl -O -sSL https://dot.net/v1/dotnet-install.sh
+  chmod +x dotnet-install.sh
+
+  for channel in 2.1 2.2
+  do
+    sudo -s ./dotnet-install.sh --install-dir $DOTNET_INSTALL_DIR --runtime dotnet --channel $channel
+  done
+
+- dotnet tool install --global Cake.Tool
 
 script:
-  - dotnet tool install --global Cake.Tool
-  - ~/.dotnet/tools/dotnet-cake --target=Travis --configuration=Release
+- ~/.dotnet/tools/dotnet-cake --target=Travis --configuration=Release

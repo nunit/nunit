@@ -33,14 +33,14 @@ var AllFrameworks = new string[]
     "net45",
     "net40",
     "net35",
-    "netstandard1.4",
     "netstandard2.0"
 };
 
 var NetCoreTests = new String[]
 {
-    "netcoreapp1.1",
-    "netcoreapp2.0"
+    "netcoreapp2.1",
+    "netcoreapp2.2",
+    "netcoreapp3.0"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -146,15 +146,6 @@ Task("Build")
     .Does(() =>
     {
         MSBuild(SOLUTION_FILE, CreateSettings());
-
-        Information("Publishing netcoreapp1.1 tests so that dependencies are present...");
-
-        MSBuild("src/NUnitFramework/tests/nunit.framework.tests.csproj", CreateSettings()
-            .WithTarget("Publish")
-            .WithProperty("TargetFramework", "netcoreapp1.1")
-            .WithProperty("NoBuild", "true") // https://github.com/dotnet/cli/issues/5331#issuecomment-338392972
-            .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
-            .WithRawArgument("/nologo"));
     });
 
 MSBuildSettings CreateSettings()
@@ -236,31 +227,25 @@ Task("Test35")
         PublishTestResults(runtime);
     });
 
-Task("TestNetStandard14")
-    .Description("Tests the .NET Standard 1.4 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netcoreapp1.1";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
-    });
+var testNetStandard20 = Task("TestNetStandard20")
+    .Description("Tests the .NET Standard 2.0 version of the framework");
 
-Task("TestNetStandard20")
-    .Description("Tests the .NET Standard 2.0 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netcoreapp2.0";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
-    });
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp2.2", "netcoreapp3.0" })
+{
+    var task = Task("TestNetStandard20 on " + runtime)
+        .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
+        .IsDependentOn("Build")
+        .OnError(exception => { ErrorDetail.Add(exception.Message); })
+        .Does(() =>
+        {
+            var dir = BIN_DIR + runtime + "/";
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+            PublishTestResults(runtime);
+        });
+
+    testNetStandard20.IsDependentOn(task);
+}
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
@@ -560,7 +545,6 @@ Task("Test")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
-    .IsDependentOn("TestNetStandard14")
     .IsDependentOn("TestNetStandard20");
 
 Task("Package")
