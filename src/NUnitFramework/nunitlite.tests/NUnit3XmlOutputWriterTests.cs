@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2011 Charlie Poole, Rob Prouse
+// Copyright (c) 2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,6 +23,7 @@
 
 #if !NETCOREAPP1_1
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -32,12 +33,11 @@ using NUnit.Tests.Assemblies;
 
 namespace NUnitLite.Tests
 {
-    public class NUnit2XmlOutputWriterTests
+    public class NUnit3XmlOutputWriterTests
     {
         private XmlDocument doc;
         private XmlNode topNode;
         private XmlNode envNode;
-        private XmlNode cultureNode;
         private XmlNode suiteNode;
 
         [OneTimeSetUp]
@@ -48,7 +48,7 @@ namespace NUnitLite.Tests
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
-            new NUnit2XmlOutputWriter().WriteResultFile(result, writer, null, null);
+            new NUnit3XmlOutputWriter().WriteResultFile(result, writer, null, null);
             writer.Close();
 
 #if DEBUG
@@ -60,19 +60,18 @@ namespace NUnitLite.Tests
             doc = new XmlDocument();
             doc.LoadXml(sb.ToString());
 
-            topNode = doc.SelectSingleNode("/test-results");
+            topNode = doc.SelectSingleNode("/test-run");
             if (topNode != null)
             {
-                envNode = topNode.SelectSingleNode("environment");
-                cultureNode = topNode.SelectSingleNode("culture-info");
                 suiteNode = topNode.SelectSingleNode("test-suite");
+                envNode = suiteNode.SelectSingleNode("environment");
             }
         }
 
         [Test]
-        public void Document_HasThreeChildren()
+        public void Document_HasTwoChildren()
         {
-            Assert.That(doc.ChildNodes.Count, Is.EqualTo(3));
+            Assert.That(doc.ChildNodes.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -87,54 +86,45 @@ namespace NUnitLite.Tests
         public void Document_SecondChildIsComment()
         {
             Assume.That(doc.ChildNodes.Count >= 2);
-            Assert.That(doc.ChildNodes[1].Name, Is.EqualTo("#comment"));
-        }
-
-        [Test]
-        public void Document_ThirdChildIsTestResults()
-        {
-            Assume.That(doc.ChildNodes.Count >= 3);
-            Assert.That(doc.ChildNodes[2].Name, Is.EqualTo("test-results"));
+            Assert.That(doc.ChildNodes[1].Name, Is.EqualTo("test-run"));
         }
 
         [Test]
         public void Document_HasTestResults()
         {
             Assert.That(topNode, Is.Not.Null);
-            Assert.That(topNode.Name, Is.EqualTo("test-results"));
+            Assert.That(topNode.Name, Is.EqualTo("test-run"));
         }
 
         [Test]
         public void TestResults_AssemblyPathIsCorrect()
         {
-            Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo("NUnit.Tests.Assemblies.MockTestFixture"));
+            Assert.That(RequiredAttribute(topNode, "fullname"), Is.EqualTo("NUnit.Tests.Assemblies.MockTestFixture"));
+            Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo("MockTestFixture"));
         }
 
-        [TestCase("total", MockTestFixture.Tests)]
-        [TestCase("errors", MockTestFixture.Failed_Error)]
-        [TestCase("failures", MockTestFixture.Failed_Other)]
+        [TestCase("testcasecount", MockTestFixture.Tests)]
+        [TestCase("passed", MockTestFixture.Passed)]
+        [TestCase("failed", MockTestFixture.Failed)]
         [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.Skipped+MockTestFixture.Failed_NotRunnable-MockTestFixture.Skipped_Explicit)]
-        [TestCase("ignored", MockTestFixture.Skipped_Ignored)]
-        [TestCase("skipped", MockTestFixture.Skipped-MockTestFixture.Skipped_Ignored-MockTestFixture.Skipped_Explicit)]
-        [TestCase("invalid", MockTestFixture.Failed_NotRunnable)]
+        [TestCase("skipped", MockTestFixture.Skipped)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
             Assert.That(RequiredAttribute(topNode, name), Is.EqualTo(count.ToString()));
         }
 
         [Test]
-        public void TestResults_HasValidDateAttribute()
+        public void TestResults_HasValidStartTimeAttribute()
         {
-            string dateString = RequiredAttribute(topNode, "date");
-            Assert.That(DateTime.TryParse(dateString, out _), "Invalid date attribute: {0}", dateString);
+            string startTimeString = RequiredAttribute(topNode, "start-time");
+            Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid start time attribute: {0}. Expecting DateTime in 'o' format.", startTimeString);
         }
 
         [Test]
-        public void TestResults_HasValidTimeAttribute()
+        public void TestResults_HasValidEndTimeAttribute()
         {
-            string timeString = RequiredAttribute(topNode, "time");
-            Assert.That(DateTime.TryParse(timeString, out _), "Invalid time attribute: {0}", timeString);
+            string endTimeString = RequiredAttribute(topNode, "end-time");
+            Assert.That(DateTime.TryParseExact(endTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid end time attribute: {0}. Expecting DateTime in 'o' format.", endTimeString);
         }
 
         [Test]
@@ -143,7 +133,7 @@ namespace NUnitLite.Tests
             Assert.That(envNode, Is.Not.Null, "Missing environment element");
         }
 
-        [TestCase("nunit-version")]
+        [TestCase("framework-version")]
         [TestCase("clr-version")]
         [TestCase("os-version")]
         [TestCase("platform")]
@@ -151,6 +141,7 @@ namespace NUnitLite.Tests
         [TestCase("machine-name")]
         [TestCase("user")]
         [TestCase("user-domain")]
+        [TestCase("os-architecture")]
         public void Environment_HasRequiredAttribute(string name)
         {
             RequiredAttribute(envNode, name);
@@ -159,21 +150,21 @@ namespace NUnitLite.Tests
         [Test]
         public void CultureInfo_HasCultureInfoElement()
         {
-            Assert.That(cultureNode, Is.Not.Null, "Missing culture-info element");
+            Assert.That(envNode.Attributes["culture"], Is.Not.Null, "Missing culture-info attribute");
         }
 
-        [TestCase("current-culture")]
-        [TestCase("current-uiculture")]
+        [TestCase("culture")]
+        [TestCase("uiculture")]
         public void CultureInfo_HasRequiredAttribute(string name)
         {
-            string cultureName = RequiredAttribute(cultureNode, name);
+            string cultureName = RequiredAttribute(envNode, name);
             System.Globalization.CultureInfo culture = null;
 
             try
             {
                 culture = System.Globalization.CultureInfo.CreateSpecificCulture(cultureName);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 // Do nothing - culture will be null
             }
@@ -189,10 +180,10 @@ namespace NUnitLite.Tests
 
         [TestCase("type", "TestFixture")]
         [TestCase("name", "MockTestFixture")]
-        [TestCase("description", "Fake Test Fixture")]
-        [TestCase("executed", "True")]
-        [TestCase("result", "Failure")]
-        [TestCase("success", "False")]
+        [TestCase("fullname", "NUnit.Tests.Assemblies.MockTestFixture")]
+        [TestCase("classname", "NUnit.Tests.Assemblies.MockTestFixture")]
+        [TestCase("runstate", "Runnable")]
+        [TestCase("result", "Failed")]
         [TestCase("asserts", "0")]
         public void TestSuite_ExpectedAttribute(string name, string value)
         {
@@ -200,15 +191,24 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        public void TestSuite_HasValidTimeAttribute()
+        public void TestSuite_HasValidStartTimeAttribute()
         {
-            var timeString = RequiredAttribute(suiteNode, "time");
-            // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
-            var success = double.TryParse(timeString, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out _);
-            Assert.That(success, "{0} is an invalid value for time", timeString);
+            var startTimeString = RequiredAttribute(suiteNode, "start-time");
+
+            var success = DateTime.TryParse(startTimeString, out _);
+            Assert.That(success, "{0} is an invalid value for start time", startTimeString);
         }
 
-#region Helper Methods
+        [Test]
+        public void TestSuite_HasValidEndTimeAttribute()
+        {
+            var endTimeString = RequiredAttribute(suiteNode, "end-time");
+
+            var success = DateTime.TryParse(endTimeString, out _);
+            Assert.That(success, "{0} is an invalid value for end time", endTimeString);
+        }
+
+        #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
         {
@@ -218,7 +218,7 @@ namespace NUnitLite.Tests
             return attr.Value;
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

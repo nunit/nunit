@@ -108,8 +108,8 @@ namespace NUnitLite
             if (result.ResultState.Label != string.Empty)
                 testRun.AddAttribute("label", result.ResultState.Label);
 
-            testRun.AddAttribute("start-time", result.StartTime.ToString("u"));
-            testRun.AddAttribute("end-time", result.EndTime.ToString("u"));
+            testRun.AddAttribute("start-time", result.StartTime.ToString("o"));
+            testRun.AddAttribute("end-time", result.EndTime.ToString("o"));
             testRun.AddAttribute("duration", result.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             testRun.AddAttribute("total", result.TotalCount.ToString());
@@ -138,7 +138,7 @@ namespace NUnitLite
         private static TNode MakeTestFilterElement(TestFilter filter)
         {
             TNode result = new TNode("filter");
-            if (!filter.IsEmpty)
+            if (filter != null && !filter.IsEmpty)
                 filter.AddToXml(result, true);
             return result;
         }
