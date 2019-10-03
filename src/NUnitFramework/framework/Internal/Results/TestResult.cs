@@ -390,8 +390,8 @@ namespace NUnit.Framework.Internal
             if (ResultState.Site != FailureSite.Test)
                 thisNode.AddAttribute("site", ResultState.Site.ToString());
 
-            thisNode.AddAttribute("start-time", StartTime.ToString("u"));
-            thisNode.AddAttribute("end-time", EndTime.ToString("u"));
+            thisNode.AddAttribute("start-time", StartTime.ToString("o"));
+            thisNode.AddAttribute("end-time", EndTime.ToString("o"));
             thisNode.AddAttribute("duration", Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             if (Test is TestSuite)
@@ -517,7 +517,7 @@ namespace NUnit.Framework.Internal
             if (AssertionResults.Count > 0 && result.ResultState == ResultState.Error)
             {
                 // Add pending failures to the legacy result message
-                Message += CreateLegacyFailureMessage();
+                Message += Environment.NewLine + Environment.NewLine + CreateLegacyFailureMessage();
 
                 // Add to the list of assertion errors, so that newer runners will see it
                 AssertionResults.Add(new AssertionResult(AssertionStatus.Error, result.Message, result.StackTrace));

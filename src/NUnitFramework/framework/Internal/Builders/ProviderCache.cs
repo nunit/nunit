@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// Copyright (c) 2008–2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -22,56 +22,25 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NUnit.Framework.Internal.Builders
 {
-    class ProviderCache
+    internal sealed class ProviderCache
     {
-        private static readonly Dictionary<CacheEntry, object> instances = new Dictionary<CacheEntry, object>();
+        private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
 
-        public static object GetInstanceOf(Type providerType)
+        public object GetInstanceOf(Type providerType)
         {
             return GetInstanceOf(providerType, null);
         }
 
-        public static object GetInstanceOf(Type providerType, object[] providerArgs)
+        public object GetInstanceOf(Type providerType, object[] providerArgs)
         {
-            CacheEntry entry = new CacheEntry(providerType, providerArgs);
-
-            object instance = instances.ContainsKey(entry)
-                ?instances[entry]
-                : null;
-
-            if (instance == null)
-                instances[entry] = instance = Reflect.Construct(providerType, providerArgs);
+            if (!_instances.TryGetValue(providerType, out var instance))
+                _instances.Add(providerType, instance = Reflect.Construct(providerType, providerArgs));
 
             return instance;
-        }
-
-        class CacheEntry
-        {
-            private readonly Type providerType;
-
-            public CacheEntry(Type providerType, object[] providerArgs)
-            {
-                this.providerType = providerType;
-            }
-
-            public override bool Equals(object obj)
-            {
-                CacheEntry other = obj as CacheEntry;
-                if (other == null) return false;
-
-                return this.providerType == other.providerType;
-            }
-
-            public override int GetHashCode()
-            {
-                return providerType.GetHashCode();
-            }
         }
     }
 }
