@@ -151,6 +151,21 @@ namespace NUnit.Framework.Internal
             Assert.That(invalid, Is.EqualTo(2), "Invalid count");
         }
 
+        [Test]
+        public void TestCase_MissingGenericArgumentAreNotRunnable()
+        {
+            int notRunnable = 0;
+            ITestResult result = TestBuilder.RunTestFixture(typeof(NotRunnableGenericData));
+            foreach(ITestResult childResult in result.Children)
+            {
+                Assert.That(childResult.ResultState, Is.EqualTo(ResultState.NotRunnable), 
+                    "A test with generic parameter must have an argument or be marked as NotRunnable");
+                Assert.That(childResult.Message, Is.Not.Empty, "No message is set");
+                notRunnable++;
+            }
+            Assert.That(notRunnable, Is.EqualTo(3), "Invalid count");
+        }
+
         private static readonly object[] Source = new object[] {
             new object[] { 5, 2, "ABC" },
             new object[] { 5.0, 2.0, "ABC" },
