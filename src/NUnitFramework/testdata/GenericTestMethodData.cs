@@ -65,4 +65,24 @@ namespace NUnit.TestData
         {
         }
     }
+
+    public class NotRunnableGenericData
+    {
+        [Test]
+        public void TestWithGeneric_ReturningVoid_ThatIsUnRunnable<T>()
+        {
+        }
+
+        [Test]
+        public Type TestWithGeneric_ReturningGenericType_ThatIsUnRunnable<T>()
+        {
+            return typeof(T);
+        }
+
+        [Test]
+        public T TestWithGeneric_ReturningGenericParameter_ThatIsUnRunnable<T>(T parameter)
+        {
+            return parameter;
+        }
+    }
 }
