@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Filters
             return AssertAndGetEquality(test, MatchFunction.IsExplicitMatch);
         }
 
-        public override bool Pass(ITest test)
+        public override bool Pass(ITest test, bool negated)
         {
             return AssertAndGetEquality(test, MatchFunction.Pass);
         }
