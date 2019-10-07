@@ -121,7 +121,7 @@ namespace NUnit.Framework.Assertions
 
             static public void TestFailingWarning()
             {
-                // Warnings don't throw at all. They are of no use in adhoc execution.
+                // Warnings don't throw at all. They are of no use in ad-hoc execution.
                 Assert.That(() => Warn.Unless(true, Is.False), Throws.Nothing);
             }
 

@@ -127,7 +127,7 @@ namespace System.Threading
                 // We prefer to call Thread.Yield first, triggering a SwitchToThread. This
                 // unfortunately doesn't consider all runnable threads on all OS SKUs. In
                 // some cases, it may only consult the runnable threads whose ideal processor
-                // is the one currently executing code. Thus we oc----ionally issue a call to
+                // is the one currently executing code. Thus we occasionally issue a call to
                 // Sleep(0), which considers all runnable threads at equal priority. Even this
                 // is insufficient since we may be spin waiting for lower priority threads to
                 // execute; we therefore must call Sleep(1) once in a while too, which considers
@@ -322,13 +322,13 @@ namespace System.Threading
     }
 
     /// <summary>
-    /// A helper class to capture a start time using Environment.TickCout as a time in milliseconds, also updates a given timeout bu subtracting the current time from
+    /// A helper class to capture a start time using Environment.TickCount as a time in milliseconds, also updates a given timeout bu subtracting the current time from
     /// the start time
     /// </summary>
     internal static class TimeoutHelper
     {
         /// <summary>
-        /// Returns the Environment.TickCount as a start time in milliseconds as a uint, TickCount tools over from postive to negative every ~ 25 days
+        /// Returns the Environment.TickCount as a start time in milliseconds as a uint, TickCount tools over from positive to negative every ~ 25 days
         /// then ~25 days to back to positive again, uint is sued to ignore the sign and double the range to 50 days
         /// </summary>
         /// <returns></returns>
@@ -341,7 +341,7 @@ namespace System.Threading
         /// Helper function to measure and update the elapsed time
         /// </summary>
         /// <param name="startTime"> The first time (in milliseconds) observed when the wait started</param>
-        /// <param name="originalWaitMillisecondsTimeout">The orginal wait timeoutout in milliseconds</param>
+        /// <param name="originalWaitMillisecondsTimeout">The original wait timeout in milliseconds</param>
         /// <returns>The new wait time in milliseconds, -1 if the time expired</returns>
         public static int UpdateTimeOut(uint startTime, int originalWaitMillisecondsTimeout)
         {
