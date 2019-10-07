@@ -21,7 +21,7 @@ install: |
     sudo -s ./dotnet-install.sh --install-dir $DOTNET_INSTALL_DIR --runtime dotnet --channel $channel
   done
 
-- dotnet tool install --global Cake.Tool
+- dotnet tool install --tool-path tools Cake.Tool
 
 script:
-- ~/.dotnet/tools/dotnet-cake --target=Travis --configuration=Release
+- ./tools/dotnet-cake --target=Travis --configuration=Release
