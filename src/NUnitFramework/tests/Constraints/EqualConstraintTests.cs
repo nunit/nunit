@@ -356,7 +356,6 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !NETCOREAPP1_1
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
@@ -385,7 +384,6 @@ namespace NUnit.Framework.Constraints
                 Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
-#endif
         }
 
         #endregion

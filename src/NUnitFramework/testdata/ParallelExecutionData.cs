@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Threading;
 using NUnit.Framework;
 
@@ -86,7 +85,6 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 
-#if APARTMENT_STATE
     [Apartment(ApartmentState.STA)]
     public class STAFixture
     {
@@ -96,7 +94,6 @@ namespace NUnit.TestData.ParallelExecutionData
             Thread.Sleep(100);
         }
     }
-#endif
 
     public class TestFixtureWithParallelParameterizedTest
     {
@@ -110,4 +107,3 @@ namespace NUnit.TestData.ParallelExecutionData
         }
     }
 }
-#endif

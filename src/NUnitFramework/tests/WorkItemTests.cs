@@ -98,8 +98,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-#if APARTMENT_STATE
-
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)
         {
@@ -204,6 +202,5 @@ namespace NUnit.Framework.Internal.Execution
                 throw new System.NotImplementedException();
             }
         }
-#endif
     }
 }

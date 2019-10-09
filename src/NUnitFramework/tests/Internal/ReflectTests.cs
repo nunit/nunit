@@ -41,16 +41,6 @@ namespace NUnit.Framework.Internal
         {
         }
 
-#if NETCOREAPP1_1
-        [Test]
-        public static void GetInterfaceMatchesByFullName()
-        {
-            Assert.That(
-                Reflect.GetInterface(typeof(List<object>), typeof(IEnumerable<object>).FullName),
-                Is.EqualTo(typeof(IEnumerable<object>)));
-        }
-#endif
-
         [Test]
         public static void GetNonGenericPublicInstanceMethodSearchesBaseClasses()
         {

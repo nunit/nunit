@@ -422,8 +422,6 @@ namespace NUnit.Framework
 
         #endregion
 
-#if SERIALIZATION
-
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -439,8 +437,6 @@ namespace NUnit.Framework
         {
             get { return new XmlSerializableConstraint(); }
         }
-
-#endif
 
         #region EqualTo
 

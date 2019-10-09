@@ -83,7 +83,6 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-#if PLATFORM_DETECTION
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]
@@ -112,7 +111,6 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithExcludeRuntime(int num)
         {
         }
-#endif
 
         [TestCase((object)new object[] { })]
         [TestCase((object)new object[] { 1, "text", null })]

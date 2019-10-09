@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
 using System;
 using System.Linq;
 
@@ -336,4 +335,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-#endif

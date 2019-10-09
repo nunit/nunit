@@ -17,21 +17,12 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- netcoreapp1.1 tests currently pull the netstandard1.6 framework, and
-         netcoreapp2.0 tests currently pull the netstandard2.0 framework -->
-
-    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
-                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PARALLEL;SERIALIZATION</DefineConstants>
-
     <DefineConstants Condition="'$(TargetFramework)' != 'net35'">$(DefineConstants);TASK_PARALLEL_LIBRARY_API</DefineConstants>
 
-    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
-                            and '$(TargetFramework)' != 'netcoreapp1.1'
-                            and '$(TargetFramework)' != 'netstandard2.0'
-                            and '$(TargetFramework)' != 'netcoreapp2.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
-
-    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard1.4'
-                            and '$(TargetFramework)' != 'netcoreapp1.1'">$(DefineConstants);PLATFORM_DETECTION;APARTMENT_STATE</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'
+                            and '$(TargetFramework)' != 'netcoreapp2.1'
+                            and '$(TargetFramework)' != 'netcoreapp2.2'
+                            and '$(TargetFramework)' != 'netcoreapp3.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

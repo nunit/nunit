@@ -63,7 +63,6 @@ namespace NUnit.Framework.Internal
 
         private static IDisposable InitializeExecutionEnvironment()
         {
-#if APARTMENT_STATE
             if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
                 var context = SynchronizationContext.Current;
@@ -81,7 +80,7 @@ namespace NUnit.Framework.Internal
                     });
                 }
             }
-#endif
+
             return null;
         }
 

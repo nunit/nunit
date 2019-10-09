@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL && PLATFORM_DETECTION && THREAD_ABORT
+#if THREAD_ABORT
 using System.Runtime.InteropServices;
 using System.Threading;
 using NUnit.TestUtilities;

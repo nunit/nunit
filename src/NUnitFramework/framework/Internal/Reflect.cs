@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
@@ -108,20 +108,8 @@ namespace NUnit.Framework.Internal
         {
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
-#if NETSTANDARD1_4
-                // For .NET Standard 1.x, MethodInfo.IsDefined resolves to an extension method,
-                // CustomAttributeExtensions.IsDefined, which delegates to Attribute.IsDefined.
-                // On .NET Core and .NET Framework, Attribute.IsDefined throws ArgumentException
-                // for types which aren’t assignable to System.Attribute (such as interface types).
-                foreach (var attributeData in method.CustomAttributes)
-                {
-                    if (attributeType.IsAssignableFrom(attributeData.AttributeType))
-                        return true;
-                }
-#else
                 if (method.IsDefined(attributeType, false))
                     return true;
-#endif
             }
             return false;
         }
@@ -258,7 +246,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
         public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
@@ -295,24 +283,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#if NETSTANDARD1_4
-        /// <summary>
-        /// <para>
-        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
-        /// rather than throwing <see cref="AmbiguousMatchException"/>
-        /// for properties that shadow properties of a different property type
-        /// which is what <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/> does.
-        /// </para>
-        /// <para>
-        /// If you request both public and nonpublic properties, every public property is preferred
-        /// over every nonpublic property. It would violate the principle of least surprise for a
-        /// derived class’s implementation detail to be chosen over the public API for a type.
-        /// </para>
-        /// </summary>
-        /// <param name="type">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-        /// <param name="name">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-        /// <param name="bindingFlags">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-#else
         /// <summary>
         /// <para>
         /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
@@ -329,7 +299,6 @@ namespace NUnit.Framework.Internal
         /// <param name="type">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         /// <param name="name">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         /// <param name="bindingFlags">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
-#endif
         public static PropertyInfo GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
         {
             Guard.ArgumentNotNull(type, nameof(type));
@@ -387,14 +356,6 @@ namespace NUnit.Framework.Internal
                 yield return type;
             }
         }
-
-#if NETSTANDARD1_4
-        internal static Type GetInterface(this Type type, string name)
-        {
-            return type.GetTypeInfo().ImplementedInterfaces
-                .SingleOrDefault(implementedInterface => implementedInterface.FullName == name);
-        }
-#endif
 
         /// <summary>
         /// Same as <c>GetMethod(<paramref name="name"/>, <see cref="BindingFlags.Public"/> |

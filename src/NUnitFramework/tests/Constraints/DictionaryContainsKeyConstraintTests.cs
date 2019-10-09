@@ -75,7 +75,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("ContainsKey"));
         }
 
-#if !NETCOREAPP1_1
         [Test]
         public void WorksWithNonGenericDictionary()
         {
@@ -83,7 +82,6 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hello"));
         }
-#endif
 
 #pragma warning disable CS0618 // DictionaryContainsKeyConstraint.IgnoreCase and .Using are deprecated
 
