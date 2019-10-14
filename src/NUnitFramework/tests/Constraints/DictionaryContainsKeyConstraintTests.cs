@@ -191,6 +191,7 @@ namespace NUnit.Framework.Constraints
             var dictionary = new TestNonGenericDictionary(99);
 
             Assert.That(dictionary, Does.ContainKey(99));
+            Assert.That(dictionary, !Does.ContainKey(35));
         }
 
         [Test]
