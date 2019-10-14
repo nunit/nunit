@@ -93,19 +93,27 @@ namespace NUnit.Framework.Constraints
         {
             if (_isDeprecatedMode)
             {
-                var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-                foreach (object obj in dictionary.Keys)
-                    if (ItemsEqual(obj, Expected))
-                        return true;
-
-                return false;
+                var requiredDictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
+                return MatchesKeysIteratively(requiredDictionary);
             }
 
             var method = GetContainsKeyMethod(actual);
             if (method != null)
                 return (bool)method.Invoke(actual, new[] { Expected });
 
+            if (actual is IDictionary dictionary)
+                return MatchesKeysIteratively(dictionary);
+
             throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a ContainsKey or Contains(TKey) method.");
+        }
+
+        private bool MatchesKeysIteratively(IDictionary dictionary)
+        {
+            foreach (var obj in dictionary.Keys)
+                if (ItemsEqual(obj, Expected))
+                    return true;
+
+            return false;
         }
 
         /// <summary>
