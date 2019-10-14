@@ -449,7 +449,7 @@ namespace NUnit.Framework.Constraints
             public TestNonGenericDictionary(int key)
             {
                 _key = key;
-                Keys = new[] { key };
+                //Keys = new[] { key };
             }
 
             public bool Contains(object key)
