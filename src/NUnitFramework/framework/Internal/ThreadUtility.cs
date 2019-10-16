@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal
 #pragma warning restore 0618,0612   // Thread.Resume has been deprecated
             }
 
-            if ( (thread.ThreadState & ThreadState.WaitSleepJoin) != 0 )
+            if ((thread.ThreadState & ThreadState.WaitSleepJoin) != 0)
                 thread.Interrupt();
         }
 
@@ -230,5 +230,30 @@ namespace NUnit.Framework.Internal
             CLOSE = 0x0010
         }
 #endif
+
+        /// <summary>Gets <see cref="Thread.CurrentPrincipal"/> or <see langword="null" /> if the current platform does not support it.</summary>
+        public static System.Security.Principal.IPrincipal GetCurrentThreadPrincipal()
+        {
+            try
+            {
+                return Thread.CurrentPrincipal;
+            }
+            catch (PlatformNotSupportedException) //E.g. Mono.WASM
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Sets <see cref="Thread.CurrentPrincipal"/> if current platform supports it.</summary>
+        /// <param name="principal">Value to set. If the current platform does not support <see cref="Thread.CurrentPrincipal"/> then the only allowed value is <see langword="null"/>.</param>
+        public static void SetCurrentThreadPrincipal(System.Security.Principal.IPrincipal principal)
+        {
+            try
+            {
+                Thread.CurrentPrincipal = principal;
+            }
+            catch (PlatformNotSupportedException) when (principal == null) //E.g. Mono.WASM
+            { }
+        }
     }
 }

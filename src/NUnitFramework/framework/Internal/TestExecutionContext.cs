@@ -376,7 +376,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithPrincipal(value);
-                Thread.CurrentPrincipal = value;
+                ThreadUtility.SetCurrentThreadPrincipal(value);
             }
         }
 
