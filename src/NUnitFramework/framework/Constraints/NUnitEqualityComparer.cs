@@ -166,7 +166,8 @@ namespace NUnit.Framework.Constraints
         {
             return AreEqual(x, y, ref tolerance, new ComparisonState()
             {
-                TopLevelComparison = topLevelComparison
+                TopLevelComparison = topLevelComparison,
+                Comparisons = new List<ComparisonState.Comparison>()
             });
         }
 

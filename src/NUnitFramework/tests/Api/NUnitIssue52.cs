@@ -23,7 +23,7 @@ namespace NUnit.Framework.Api
             //Assert.True(((ICollection<SelfContainer>)items).Contains(item));
 
             // causes StackOverflowException
-            //Assert.Contains(item, items);
+            Assert.Contains(item, items);
             //Console.WriteLine("test completed");
         }
     }
