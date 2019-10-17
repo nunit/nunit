@@ -43,7 +43,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
         protected abstract object GetValue(Type type, string propertyName, object obj);
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             Type xType = x.GetType();
             Type yType = y.GetType();
@@ -62,7 +62,8 @@ namespace NUnit.Framework.Constraints.Comparers
                 object xItem = GetValue(xType, propertyName, x);
                 object yItem = GetValue(yType, propertyName, y);
 
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, false);
+                state.TopLevelComparison = false;
+                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, state);
                 if (!comparison)
                     return false;
             }

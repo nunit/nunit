@@ -154,7 +154,23 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
-        public bool AreEqual(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool AreEqual(object x, object y, ref Tolerance tolerance)
+        {
+            return AreEqual(x, y, ref tolerance, true);
+        }
+
+        /// <summary>
+        /// Compares two objects for equality within a tolerance.
+        /// </summary>
+        public bool AreEqual(object x, object y, ref Tolerance tolerance, bool topLevelComparison)
+        {
+            return AreEqual(x, y, ref tolerance, new ComparisonState()
+            {
+                TopLevelComparison = topLevelComparison
+            });
+        }
+
+        internal bool AreEqual(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             this.failurePoints = new List<FailurePoint>();
 
@@ -173,13 +189,15 @@ namespace NUnit.Framework.Constraints
 
             foreach (IChainComparer comparer in _comparers)
             {
-                bool? result = comparer.Equal(x, y, ref tolerance, topLevelComparison);
+                bool? result = comparer.Equal(x, y, ref tolerance, state);
                 if (result.HasValue)
                     return result.Value;
             }
 
             return x.Equals(y);
         }
+
+
 
         #endregion
 
