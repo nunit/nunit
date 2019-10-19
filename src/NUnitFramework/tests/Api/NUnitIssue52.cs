@@ -16,10 +16,12 @@ namespace NUnit.Framework.Api
         {
             var equalityComparer = new NUnitEqualityComparer();
             var tolerance = Tolerance.Default;
-            var actualResult = equalityComparer.AreEqual(x, y, ref tolerance);
+            var equality = equalityComparer.AreEqual(x, y, ref tolerance);
 
-            Assert.IsFalse(actualResult);
+            Assert.IsFalse(equality);
             Assert.Contains(x, y);
+            Assert.That(y, Contains.Item(x));
+            Assert.That(y, Does.Contain(x));
         }
 
         [TestCaseSource(nameof(GetTestCases))]
@@ -29,11 +31,16 @@ namespace NUnit.Framework.Api
             var tolerance = Tolerance.Default;
             equalityComparer.ExternalComparers.Add(new DetectRecursionComparer(30));
 
-            Assert.DoesNotThrow(() =>
+            Assert.Multiple(() =>
             {
+                Assert.DoesNotThrow(() => equalityComparer.AreEqual(x, y, ref tolerance));
+
                 var equality = equalityComparer.AreEqual(x, y, ref tolerance);
                 Assert.IsFalse(equality);
+
                 Assert.Contains(x, y);
+                Assert.That(y, Contains.Item(x));
+                Assert.That(y, Does.Contain(x));
             });
         }
 
