@@ -32,7 +32,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class EqualityComparerTests
+    public class NUnitEqualityComparerTests
     {
         private Tolerance tolerance;
         private NUnitEqualityComparer comparer;
@@ -309,7 +309,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(enumeration.EnumeratorsDisposed);
         }
 
-        [TestCaseSource(nameof(GetTestCases))]
+        [TestCaseSource(nameof(GetRecursiveContainsTestCases))]
         public void SelfContainedItemFoundInCollection<T>(T x, ICollection y)
         {
             var equalityComparer = new NUnitEqualityComparer();
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(y, Does.Contain(x));
         }
 
-        [TestCaseSource(nameof(GetTestCases))]
+        [TestCaseSource(nameof(GetRecursiveComparerTestCases))]
         public void SelfContainedItemDoesntRecurseForever<T>(T x, ICollection y)
         {
             var equalityComparer = new NUnitEqualityComparer();
@@ -332,7 +332,23 @@ namespace NUnit.Framework.Constraints
             Assert.DoesNotThrow(() => equalityComparer.AreEqual(x, y, ref tolerance));
         }
 
-        public static IEnumerable<TestCaseData> GetTestCases()
+        public static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
+        {
+            // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in 
+            // 'MsgUtils.FormatValue()' can be fixed for the below cases
+            foreach (var testCase in GetRecursiveContainsTestCases())
+                yield return testCase;
+
+            var dict = new Dictionary<object, object>();
+            var dictItem = "nunit";
+
+            dict[1] = dictItem;
+            dict[2] = dict;
+
+            yield return new TestCaseData(dictItem, dict);
+        }
+
+        public static IEnumerable<TestCaseData> GetRecursiveContainsTestCases()
         {
             var enumerable = new SelfContainer();
             var enumerableContainer = new SelfContainer[] { new SelfContainer(), enumerable };
