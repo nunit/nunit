@@ -175,10 +175,6 @@ namespace NUnit.Framework.Constraints
         {
             this.failurePoints = new List<FailurePoint>();
 
-            if (!state.TopLevelComparison && state.HasCompared(x, y))
-                return false;
-            state.RecordComparison(x, y);
-
             if (x == null && y == null)
                 return true;
 
@@ -187,6 +183,10 @@ namespace NUnit.Framework.Constraints
 
             if (object.ReferenceEquals(x, y))
                 return true;
+
+            if (!state.TopLevelComparison && state.HasCompared(x, y))
+                return false;
+            state.RecordComparison(x, y);
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
