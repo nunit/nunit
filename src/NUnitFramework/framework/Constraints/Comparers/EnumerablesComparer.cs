@@ -43,11 +43,6 @@ namespace NUnit.Framework.Constraints.Comparers
             if (!(x is IEnumerable xIEnumerable) || !(y is IEnumerable yIEnumerable))
                 return null;
 
-            if (state.HasCompared(x, y))
-                return null;
-
-            state.RecordComparison(x, y);
-
             var expectedEnum = xIEnumerable.GetEnumerator();
             using (expectedEnum as IDisposable)
             {

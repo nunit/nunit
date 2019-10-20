@@ -175,6 +175,10 @@ namespace NUnit.Framework.Constraints
         {
             this.failurePoints = new List<FailurePoint>();
 
+            if (!state.TopLevelComparison && state.HasCompared(x, y))
+                return false;
+            state.RecordComparison(x, y);
+
             if (x == null && y == null)
                 return true;
 

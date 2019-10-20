@@ -46,10 +46,25 @@ namespace NUnit.Framework.Api
 
         public static IEnumerable<TestCaseData> GetTestCases()
         {
-            var item = new SelfContainer();
-            var items = new SelfContainer[] { new SelfContainer(), item };
+            var enumerable = new SelfContainer();
+            var enumerableContainer = new SelfContainer[] { new SelfContainer(), enumerable };
 
-            yield return new TestCaseData(item, items);
+            yield return new TestCaseData(enumerable, enumerableContainer);
+
+            object itemB = 1;
+            object[] itemBSet = new object[2];
+            itemBSet[0] = itemB;
+            itemBSet[1] = itemBSet;
+
+            yield return new TestCaseData(itemB, itemBSet);
+
+            var dict = new Dictionary<object, object>();
+            var dictItem = new Dictionary<object, object>();
+
+            dict[dictItem] = dictItem;
+            dictItem[dict] = dict;
+
+            yield return new TestCaseData(dictItem, dict);
         }
 
         private class DetectRecursionComparer : EqualityAdapter
