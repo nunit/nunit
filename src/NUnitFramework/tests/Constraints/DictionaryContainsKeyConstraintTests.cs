@@ -54,6 +54,7 @@ namespace NUnit.Framework.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.Not.ContainKey("NotKey"));
         }
+
         [Test]
         public void FailsWhenKeyIsMissing()
         {
@@ -189,7 +190,8 @@ namespace NUnit.Framework.Constraints
         {
             var dictionary = new TestNonGenericDictionary(99);
 
-            Assert.Catch<ArgumentException>(() => Assert.That(dictionary, Does.ContainKey(99)));
+            Assert.That(dictionary, Does.ContainKey(99));
+            Assert.That(dictionary, !Does.ContainKey(35));
         }
 
         [Test]

@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
             if (_isDeprecatedMode)
             {
                 var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-                foreach (object obj in dictionary.Keys)
+                foreach (var obj in dictionary.Keys)
                     if (ItemsEqual(obj, Expected))
                         return true;
 
@@ -231,7 +231,7 @@ namespace NUnit.Framework.Constraints
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
                 m.ReturnType == typeof(bool)
-                && m.Name == "ContainsKey"
+                && (m.Name == "ContainsKey" || (m.Name == nameof(IDictionary.Contains) && m.DeclaringType == typeof(IDictionary)))
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
