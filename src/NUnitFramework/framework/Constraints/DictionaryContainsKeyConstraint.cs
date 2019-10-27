@@ -231,7 +231,7 @@ namespace NUnit.Framework.Constraints
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
                 m.ReturnType == typeof(bool)
-                && (m.Name == "ContainsKey" || (m.Name == "Contains" && m.DeclaringType == typeof(IDictionary)))
+                && (m.Name == "ContainsKey" || (m.Name == nameof(IDictionary.Contains) && m.DeclaringType == typeof(IDictionary)))
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
