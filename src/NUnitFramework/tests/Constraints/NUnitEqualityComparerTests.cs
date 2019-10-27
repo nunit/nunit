@@ -332,6 +332,19 @@ namespace NUnit.Framework.Constraints
             Assert.DoesNotThrow(() => equalityComparer.AreEqual(x, y, ref tolerance));
         }
 
+        [Test]
+        public void SelfContainedDuplicateItemsAreCompared()
+        {
+            var equalityComparer = new NUnitEqualityComparer();
+            var equalInstance1 = new[] { 1 };
+            var equalInstance2 = new[] { 1 };
+
+            var x = new[] { equalInstance1, equalInstance1 };
+            var y = new[] { equalInstance2, equalInstance2 };
+
+            Assert.True(equalityComparer.AreEqual(x, y, ref tolerance));
+        }
+
         public static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
         {
             // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in 

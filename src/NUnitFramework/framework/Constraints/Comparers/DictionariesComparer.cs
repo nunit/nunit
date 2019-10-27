@@ -55,8 +55,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
             foreach (object key in xDictionary.Keys)
             {
-                state.TopLevelComparison = false;
-                if (!_equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance, state))
+                if (!_equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance, state.WithTopLevelComparison(false)))
                     return false;
             }
                 

@@ -1,36 +1,65 @@
-using System.Collections.Generic;
+using System;
+using System.Collections.ObjectModel;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
     internal struct ComparisonState
     {
-        public struct Comparison
-        {
-            public object X { get; set; }
-            public object Y { get; set; }
-        }
-
         /// <summary>
         /// Flag indicating whether or not this is the top level comparison.
         /// </summary>
-        public bool TopLevelComparison { get; set; }
-        public List<Comparison> Comparisons { get; set; }
+        public bool TopLevelComparison { get; }
 
-        public void RecordComparison(object x, object y)
+        private readonly Collection<Comparison> _comparisons;
+
+        public ComparisonState(bool topLevelComparison)
         {
-            Comparisons.Add(new Comparison()
-            {
-                X = x,
-                Y = y
-            });
+            TopLevelComparison = topLevelComparison;
+            _comparisons = new Collection<Comparison>();
         }
 
-        public bool HasCompared(object x, object y)
+        private ComparisonState(bool topLevelComparison, Collection<Comparison> comparisons)
         {
-            foreach (var item in Comparisons)
+            TopLevelComparison = topLevelComparison;
+            _comparisons = new Collection<Comparison>(comparisons);
+        }
+
+        public ComparisonState WithTopLevelComparison(bool topLevelComparison)
+        {
+            return new ComparisonState(
+                topLevelComparison,
+                _comparisons
+            );
+        }
+
+        public bool RecordComparison(object x, object y)
+        {
+            if (DidCompare(x, y))
+                return false;
+
+            _comparisons.Add(new Comparison(x, y));
+            return true;
+        }
+
+        private bool DidCompare(object x, object y)
+        {
+            foreach (var item in _comparisons)
                 if (item.X == x && item.Y == y)
                     return true;
+
             return false;
+        }
+
+        private struct Comparison
+        {
+            public object X { get; }
+            public object Y { get; }
+
+            public Comparison(object x, object y)
+            {
+                X = x;
+                Y = y;
+            }
         }
     }
 }

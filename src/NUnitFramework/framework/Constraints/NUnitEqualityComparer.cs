@@ -164,11 +164,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool AreEqual(object x, object y, ref Tolerance tolerance, bool topLevelComparison)
         {
-            return AreEqual(x, y, ref tolerance, new ComparisonState()
-            {
-                TopLevelComparison = topLevelComparison,
-                Comparisons = new List<ComparisonState.Comparison>()
-            });
+            return AreEqual(x, y, ref tolerance, new ComparisonState(topLevelComparison));
         }
 
         internal bool AreEqual(object x, object y, ref Tolerance tolerance, ComparisonState state)
@@ -184,9 +180,8 @@ namespace NUnit.Framework.Constraints
             if (object.ReferenceEquals(x, y))
                 return true;
 
-            if (!state.TopLevelComparison && state.HasCompared(x, y))
+            if (!state.RecordComparison(x, y))
                 return false;
-            state.RecordComparison(x, y);
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
@@ -201,8 +196,6 @@ namespace NUnit.Framework.Constraints
 
             return x.Equals(y);
         }
-
-
 
         #endregion
 

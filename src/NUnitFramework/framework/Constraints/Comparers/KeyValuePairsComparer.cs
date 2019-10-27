@@ -59,10 +59,8 @@ namespace NUnit.Framework.Constraints.Comparers
             object xValue = xType.GetProperty("Value").GetValue(x, null);
             object yValue = yType.GetProperty("Value").GetValue(y, null);
 
-            state.TopLevelComparison = false;
-
-            return _equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state) 
-                && _equalityComparer.AreEqual(xValue, yValue, ref tolerance, state);
+            return _equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state.WithTopLevelComparison(false)) 
+                && _equalityComparer.AreEqual(xValue, yValue, ref tolerance, state.WithTopLevelComparison(false));
         }
     }
 }

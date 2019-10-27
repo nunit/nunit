@@ -62,8 +62,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 object xItem = GetValue(xType, propertyName, x);
                 object yItem = GetValue(yType, propertyName, y);
 
-                state.TopLevelComparison = false;
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, state);
+                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, state.WithTopLevelComparison(false));
                 if (!comparison)
                     return false;
             }
