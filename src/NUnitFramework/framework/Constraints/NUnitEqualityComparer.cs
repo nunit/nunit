@@ -180,7 +180,7 @@ namespace NUnit.Framework.Constraints
             if (object.ReferenceEquals(x, y))
                 return true;
 
-            if (!state.RecordComparison(x, y))
+            if (state.DidCompare(x, y))
                 return false;
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);

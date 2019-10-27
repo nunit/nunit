@@ -23,28 +23,22 @@ namespace NUnit.Framework.Constraints.Comparers
         private ComparisonState(bool topLevelComparison, List<Comparison> comparisons)
         {
             TopLevelComparison = topLevelComparison;
-            _comparisons = new List<Comparison>();
-            _comparisons.AddRange(comparisons);
+            _comparisons = comparisons;
         }
 
-        public ComparisonState WithTopLevelComparison(bool topLevelComparison)
+        public ComparisonState PushComparison(bool topLevelComparison, object x, object y)
         {
+            var comparisons = new List<Comparison>();
+            comparisons.AddRange(_comparisons);
+            comparisons.Add(new Comparison(x, y));
+
             return new ComparisonState(
                 topLevelComparison,
-                _comparisons
+                comparisons
             );
         }
 
-        public bool RecordComparison(object x, object y)
-        {
-            if (DidCompare(x, y))
-                return false;
-
-            _comparisons.Add(new Comparison(x, y));
-            return true;
-        }
-
-        private bool DidCompare(object x, object y)
+        public bool DidCompare(object x, object y)
         {
             foreach (var item in _comparisons)
                 if (item.X == x && item.Y == y)
