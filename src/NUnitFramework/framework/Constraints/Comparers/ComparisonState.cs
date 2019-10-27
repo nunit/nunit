@@ -12,15 +12,15 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <summary>
         /// A list of tracked comparisons
         /// </summary>
-        private readonly List<Comparison> _comparisons;
+        private readonly Comparison[] _comparisons;
 
         public ComparisonState(bool topLevelComparison)
         {
             TopLevelComparison = topLevelComparison;
-            _comparisons = new List<Comparison>();
+            _comparisons = new Comparison[0];
         }
 
-        private ComparisonState(bool topLevelComparison, List<Comparison> comparisons)
+        private ComparisonState(bool topLevelComparison, Comparison[] comparisons)
         {
             TopLevelComparison = topLevelComparison;
             _comparisons = comparisons;
@@ -28,9 +28,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public ComparisonState PushComparison(bool topLevelComparison, object x, object y)
         {
-            var comparisons = new List<Comparison>();
-            comparisons.AddRange(_comparisons);
-            comparisons.Add(new Comparison(x, y));
+            var comparisons = new Comparison[_comparisons.Length + 1];
+            _comparisons.CopyTo(comparisons, 0);
+            comparisons[_comparisons.Length] = new Comparison(x, y);
 
             return new ComparisonState(
                 topLevelComparison,
@@ -40,8 +40,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool DidCompare(object x, object y)
         {
-            foreach (var item in _comparisons)
-                if (item.X == x && item.Y == y)
+            for(var i = 0; i < _comparisons.Length; i++)
+                if (_comparisons[i].X == x && _comparisons[i].Y == y)
                     return true;
 
             return false;
