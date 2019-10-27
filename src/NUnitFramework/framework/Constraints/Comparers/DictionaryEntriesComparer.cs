@@ -47,7 +47,6 @@ namespace NUnit.Framework.Constraints.Comparers
             DictionaryEntry yDictionaryEntry = (DictionaryEntry)y;
 
             var keyTolerance = Tolerance.Exact;
-
             return _equalityComparer.AreEqual(xDictionaryEntry.Key, yDictionaryEntry.Key, ref keyTolerance, state.WithTopLevelComparison(false)) 
                 && _equalityComparer.AreEqual(xDictionaryEntry.Value, yDictionaryEntry.Value, ref tolerance, state.WithTopLevelComparison(false));
         }
