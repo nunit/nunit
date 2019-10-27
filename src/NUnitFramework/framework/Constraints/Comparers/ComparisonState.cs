@@ -1,5 +1,4 @@
-using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -8,20 +7,24 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <summary>
         /// Flag indicating whether or not this is the top level comparison.
         /// </summary>
-        public bool TopLevelComparison { get; }
+        public readonly bool TopLevelComparison;
 
-        private readonly Collection<Comparison> _comparisons;
+        /// <summary>
+        /// A list of tracked comparisons
+        /// </summary>
+        private readonly List<Comparison> _comparisons;
 
         public ComparisonState(bool topLevelComparison)
         {
             TopLevelComparison = topLevelComparison;
-            _comparisons = new Collection<Comparison>();
+            _comparisons = new List<Comparison>();
         }
 
-        private ComparisonState(bool topLevelComparison, Collection<Comparison> comparisons)
+        private ComparisonState(bool topLevelComparison, List<Comparison> comparisons)
         {
             TopLevelComparison = topLevelComparison;
-            _comparisons = new Collection<Comparison>(comparisons);
+            _comparisons = new List<Comparison>();
+            _comparisons.AddRange(comparisons);
         }
 
         public ComparisonState WithTopLevelComparison(bool topLevelComparison)
