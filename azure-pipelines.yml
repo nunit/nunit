@@ -22,6 +22,12 @@ jobs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)
       ArtifactName: Package
 
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (Windows)
+
 - job: Linux
   pool:
     vmImage: ubuntu-latest
@@ -48,6 +54,12 @@ jobs:
      dotnet tool install --global Cake.Tool
      dotnet cake --target=Test --test-run-name=Linux --configuration=Release
     displayName: Build, test, and publish results
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (Linux)
 
 - job: macOS
   pool:
@@ -80,3 +92,9 @@ jobs:
      dotnet tool install --global Cake.Tool
      dotnet cake --target=Test --test-run-name=macOS --configuration=Release
     displayName: Build, test, and publish results
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (macOS)
