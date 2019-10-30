@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -12,15 +12,14 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <summary>
         /// A list of tracked comparisons
         /// </summary>
-        private readonly Comparison[] _comparisons;
+        private readonly ImmutableStack<Comparison> _comparisons;
 
         public ComparisonState(bool topLevelComparison)
+            : this(topLevelComparison, ImmutableStack<Comparison>.Empty)
         {
-            TopLevelComparison = topLevelComparison;
-            _comparisons = new Comparison[0];
         }
 
-        private ComparisonState(bool topLevelComparison, Comparison[] comparisons)
+        private ComparisonState(bool topLevelComparison, ImmutableStack<Comparison> comparisons)
         {
             TopLevelComparison = topLevelComparison;
             _comparisons = comparisons;
@@ -28,20 +27,16 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public ComparisonState PushComparison(bool topLevelComparison, object x, object y)
         {
-            var comparisons = new Comparison[_comparisons.Length + 1];
-            _comparisons.CopyTo(comparisons, 0);
-            comparisons[_comparisons.Length] = new Comparison(x, y);
-
             return new ComparisonState(
                 topLevelComparison,
-                comparisons
+                _comparisons.Push(new Comparison(x, y))
             );
         }
 
         public bool DidCompare(object x, object y)
         {
-            for(var i = 0; i < _comparisons.Length; i++)
-                if (_comparisons[i].X == x && _comparisons[i].Y == y)
+            foreach (var comparison in _comparisons)
+                if (comparison.X == x && comparison.Y == y)
                     return true;
 
             return false;
