@@ -62,7 +62,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 object xItem = GetValue(xType, propertyName, x);
                 object yItem = GetValue(yType, propertyName, y);
 
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, state.PushComparison(false, x, y));
+                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, state.PushComparison(x, y));
                 if (!comparison)
                     return false;
             }

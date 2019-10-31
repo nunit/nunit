@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -25,10 +26,10 @@ namespace NUnit.Framework.Constraints.Comparers
             _comparisons = comparisons;
         }
 
-        public ComparisonState PushComparison(bool topLevelComparison, object x, object y)
+        public ComparisonState PushComparison(object x, object y)
         {
             return new ComparisonState(
-                topLevelComparison,
+                false,
                 _comparisons.Push(new Comparison(x, y))
             );
         }
@@ -36,7 +37,8 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool DidCompare(object x, object y)
         {
             foreach (var comparison in _comparisons)
-                if (comparison.X == x && comparison.Y == y)
+                if (Object.ReferenceEquals(comparison.X, x) &&
+                    Object.ReferenceEquals(comparison.Y, y))
                     return true;
 
             return false;

@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             return true;
 
                         if (expectedHasData != actualHasData ||
-                            !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, state.PushComparison(false, x, y)))
+                            !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, state.PushComparison(x, y)))
                         {
                             NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
                             fp.Position = count;
