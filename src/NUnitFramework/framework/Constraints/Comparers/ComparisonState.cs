@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <summary>
         /// Flag indicating whether or not this is the top level comparison.
         /// </summary>
-        public readonly bool TopLevelComparison;
+        public bool TopLevelComparison { get; }
 
         /// <summary>
         /// A list of tracked comparisons
@@ -37,8 +37,7 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool DidCompare(object x, object y)
         {
             foreach (var comparison in _comparisons)
-                if (Object.ReferenceEquals(comparison.X, x) &&
-                    Object.ReferenceEquals(comparison.Y, y))
+                if (ReferenceEquals(comparison.X, x) && ReferenceEquals(comparison.Y, y))
                     return true;
 
             return false;
