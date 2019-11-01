@@ -29,6 +29,7 @@ namespace NUnit.Framework.Internal
     public class TestNameGeneratorTests
     {
         private TestMethod _simpleTest;
+        private TestMethod _simpleTestWithArgs;
         private TestMethod _genericTest;
 
         [SetUp]
@@ -36,8 +37,10 @@ namespace NUnit.Framework.Internal
         {
             Type thisType = GetType();
             var simpleMethod = thisType.GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+            var simpleMethodWithArgs = thisType.GetMethod("TestMethodWithArgs", BindingFlags.NonPublic | BindingFlags.Instance);
             var genericMethod = thisType.GetMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
             _simpleTest = new TestMethod(new MethodWrapper(thisType, simpleMethod));
+            _simpleTestWithArgs = new TestMethod(new MethodWrapper(thisType, simpleMethodWithArgs));
             _genericTest = new TestMethod(new MethodWrapper(thisType, genericMethod));
             _simpleTest.Id = "THE_ID";
         }
@@ -84,6 +87,14 @@ namespace NUnit.Framework.Internal
         public string ParameterizedTests(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);
+        }
+
+        [TestCase("{m}{p}", new object[] { 1 }, ExpectedResult = "TestMethod(a: 1, b: ?)")]
+        [TestCase("{m}{p}", new object[] { 1, 2 }, ExpectedResult = "TestMethod(a: 1, b: 2)")]
+        [TestCase("{m}{p}", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethod(a: 1, b: 2, ?: 3)")]
+        public string ParameterizedTestsWithArgs(string pattern, object[] args)
+        {
+            return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
         }
 
         [TestCase("FIXED", ExpectedResult="FIXED")]
@@ -147,6 +158,8 @@ namespace NUnit.Framework.Internal
         #region Methods Used as Data
 
         private void TestMethod() { }
+
+        private void TestMethodWithArgs(Int32 a, Int32 b) { }
 
         private void GenericTest<T, U, V>() { }
 

@@ -143,6 +143,9 @@ namespace NUnit.Framework.Internal
                     case "{a}":
                         fragments.Add(new ArgListFragment(0));
                         break;
+                    case "{p}":
+                        fragments.Add(new ParamArgListFragment(0));
+                        break;
                     case "{0}":
                     case "{1}":
                     case "{2}":
@@ -158,12 +161,14 @@ namespace NUnit.Framework.Internal
                         break;
                     default:
                         char c = token[1];
-                        if (token.Length >= 5 && token[2] == ':' && (c == 'a' || char.IsDigit(c)))
+                        if (token.Length >= 5 && token[2] == ':' && (c == 'a' || c == 'p' || char.IsDigit(c)))
                         {
                             if (int.TryParse(token.Substring(3, token.Length - 4), out var length) && length > 0)
                             {
                                 if (c == 'a')
                                     fragments.Add(new ArgListFragment(length));
+                                else if (c == 'p')
+                                    fragments.Add(new ParamArgListFragment(length));
                                 else // It's a digit
                                     fragments.Add(new ArgumentFragment(c - '0', length));
                                 break;
@@ -580,6 +585,42 @@ namespace NUnit.Framework.Internal
                 return _index < args.Length
                     ? GetDisplayString(args[_index], _maxStringLength)
                     : string.Empty;
+            }
+        }
+
+        private class ParamArgListFragment : NameFragment
+        {
+            private readonly int _maxStringLength;
+
+            public ParamArgListFragment(int maxStringLength)
+            {
+                _maxStringLength = maxStringLength;
+            }
+
+            public override string GetText(MethodInfo method, object[] args)
+            {
+                var sb = new StringBuilder();
+                args = args ?? new object[0];
+
+                var parameters = method.GetParameters();
+
+                sb.Append('(');
+                var count = Math.Max(args.Length, parameters.Length);
+
+                for (int i = 0; i < count; i++)
+                {
+                    if (i > 0) sb.Append(", ");
+
+                    var paramName = GetDisplayString(parameters.Length > i ? parameters[i].Name : "?", _maxStringLength).Trim('\"');
+                    sb.Append(paramName);
+                    sb.Append(": ");
+                    sb.Append(GetDisplayString(args.Length > i ? args[i] : "?", _maxStringLength));
+                }
+
+                sb.Append(')');
+
+
+                return sb.ToString();
             }
         }
 
