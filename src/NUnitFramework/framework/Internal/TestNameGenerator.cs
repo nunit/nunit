@@ -614,7 +614,7 @@ namespace NUnit.Framework.Internal
                     var paramName = GetDisplayString(parameters.Length > i ? parameters[i].Name : "?", _maxStringLength).Trim('\"');
                     sb.Append(paramName);
                     sb.Append(": ");
-                    sb.Append(GetDisplayString(args.Length > i ? args[i] : "?", _maxStringLength));
+                    sb.Append(args.Length > i ? GetDisplayString(args[i], _maxStringLength) : "?");
                 }
 
                 sb.Append(')');
