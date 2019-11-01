@@ -34,6 +34,11 @@ namespace NUnit.Framework.Internal
     {
         public CultureInfo Culture { get; }
         public CultureInfo UICulture { get; }
+
+        /// <summary>
+        /// Thread principal.
+        /// This will be null on platforms that don't support <see cref="Thread.CurrentPrincipal"/>.
+        /// </summary>
         public System.Security.Principal.IPrincipal Principal { get; }
         private readonly SynchronizationContext _synchronizationContext;
 
@@ -57,7 +62,7 @@ namespace NUnit.Framework.Internal
             return new SandboxedThreadState(
                 CultureInfo.CurrentCulture,
                 CultureInfo.CurrentUICulture,
-                Thread.CurrentPrincipal,
+                ThreadUtility.GetCurrentThreadPrincipal(),
                 SynchronizationContext.Current);
         }
 
@@ -69,7 +74,7 @@ namespace NUnit.Framework.Internal
         {
             Thread.CurrentThread.CurrentCulture = Culture;
             Thread.CurrentThread.CurrentUICulture = UICulture;
-            Thread.CurrentPrincipal = Principal;
+            ThreadUtility.SetCurrentThreadPrincipal(Principal);
 
             SynchronizationContext.SetSynchronizationContext(_synchronizationContext);
         }
