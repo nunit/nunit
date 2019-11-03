@@ -157,7 +157,7 @@ namespace NUnit.Framework.Constraints
             ICollection set2 = new SimpleObjectCollection("z", "Y", "X");
 
             Assert.That(new CollectionEquivalentConstraint(set1)
-                .Using<string>((x, y) => StringUtil.Compare(x, y, true))
+                .Using<string>((x, y) => StringComparer.InvariantCultureIgnoreCase.Compare(x, y))
                 .ApplyTo(set2).IsSuccess);
         }
 

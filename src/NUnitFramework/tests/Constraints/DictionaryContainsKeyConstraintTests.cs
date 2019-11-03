@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
         }
 
 #pragma warning disable CS0618 // DictionaryContainsKeyConstraint.IgnoreCase and .Using are deprecated
-
+        [Test, SetCulture("en-US")]
         public void IgnoreCaseIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };

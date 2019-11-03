@@ -512,7 +512,7 @@ namespace NUnitLite.Tests
             Assert.AreEqual(0, options.ResultOutputSpecifications.Count);
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void InvalidResultSpecRecordsError()
         {
             var options = new NUnitLiteOptions("test.dll", "-result:userspecifed.xml;format=nunit2;format=nunit3");
