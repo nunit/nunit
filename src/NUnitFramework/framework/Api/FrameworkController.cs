@@ -365,8 +365,8 @@ namespace NUnit.Framework.Api
             env.AddAttribute("machine-name", Environment.MachineName);
             env.AddAttribute("user", Environment.UserName);
             env.AddAttribute("user-domain", Environment.UserDomainName);
-            env.AddAttribute("culture", CultureInfo.CurrentCulture.ToString());
-            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.ToString());
+            env.AddAttribute("culture", CultureInfo.CurrentCulture.DisplayName);
+            env.AddAttribute("uiculture", CultureInfo.CurrentUICulture.DisplayName);
             env.AddAttribute("os-architecture", GetProcessorArchitecture());
 
             return env;
