@@ -609,16 +609,26 @@ namespace NUnit.Framework.Internal
 
                 for (int i = 0; i < count; i++)
                 {
+                    if(i < parameters.Length)
+                    {
+                        if (parameters[i].IsOptional)
+                        {
+                            if(i >= args.Length)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
                     if (i > 0) sb.Append(", ");
 
-                    var paramName = GetDisplayString(parameters.Length > i ? parameters[i].Name : "?", _maxStringLength).Trim('\"');
+                    var paramName = i < parameters.Length ? parameters[i].Name : "?";
                     sb.Append(paramName);
                     sb.Append(": ");
-                    sb.Append(args.Length > i ? GetDisplayString(args[i], _maxStringLength) : "?");
+                    sb.Append(i < args.Length ? GetDisplayString(args[i], _maxStringLength) : "?");
                 }
 
                 sb.Append(')');
-
 
                 return sb.ToString();
             }
