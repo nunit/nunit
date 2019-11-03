@@ -91,7 +91,8 @@ namespace NUnit.Framework.Internal
 
         [TestCase("{m}{p}", new object[] { 1 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: ?)")]
         [TestCase("{m}{p}", new object[] { 1, 2 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2)")]
-        [TestCase("{m}{p}", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, ?: 3)")]
+        [TestCase("{m}{p}", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, c: 3)")]
+        [TestCase("{m}{p}", new object[] { 1, 2, 3, 4 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, c: 3, ?: 4)")]
         public string ParameterizedTestsWithArgs(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
@@ -159,7 +160,7 @@ namespace NUnit.Framework.Internal
 
         private void TestMethod() { }
 
-        private void TestMethodWithArgs(Int32 a, Int32 b) { }
+        private void TestMethodWithArgs(Int32 a, Int32 b, Int32 c = 0) { }
 
         private void GenericTest<T, U, V>() { }
 
