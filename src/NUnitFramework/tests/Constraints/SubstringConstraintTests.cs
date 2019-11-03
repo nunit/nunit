@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    [TestFixture]
+    [TestFixture, SetCulture("en-US")]
     public class SubstringConstraintTestsIgnoringCase : StringConstraintTests
     {
         [SetUp]
@@ -148,22 +148,4 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
     }
-
-    //[TestFixture]
-    //public class EqualIgnoringCaseTest : ConstraintTest
-    //{
-    //    [SetUp]
-    //    public void SetUp()
-    //    {
-    //        Matcher = new EqualConstraint("Hello World!").IgnoreCase;
-    //        Description = "\"Hello World!\", ignoring case";
-    //    }
-
-    //    static object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
-
-    //    static object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
-
-
-    //    string[] ActualValues = new string[] { "\"goodbye\"", "\"Hello Friends!\"", "<string.Empty>", "null" };
-    //}
 }

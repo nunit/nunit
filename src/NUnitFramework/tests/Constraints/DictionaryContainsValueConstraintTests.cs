@@ -49,6 +49,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
+
         [Test]
         public void SucceedsWhenValueIsPresentUsingContainKey()
         {
@@ -62,6 +63,7 @@ namespace NUnit.Framework.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.Not.ContainValue("NotValue"));
         }
+
         [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
@@ -81,7 +83,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsValueConstraint("Universe"));
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void IgnoreCaseIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
@@ -89,7 +91,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsValueConstraint("UNIVERSE").IgnoreCase);
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
