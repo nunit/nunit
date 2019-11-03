@@ -158,18 +158,8 @@ namespace NUnitLite.Tests
         public void CultureInfo_HasRequiredAttribute(string name)
         {
             string cultureName = RequiredAttribute(envNode, name);
-            System.Globalization.CultureInfo culture = null;
-
-            try
-            {
-                culture = System.Globalization.CultureInfo.CreateSpecificCulture(cultureName);
-            }
-            catch (ArgumentException)
-            {
-                // Do nothing - culture will be null
-            }
-
-            Assert.That(culture, Is.Not.Null, "Invalid value for {0}: {1}", name, cultureName);
+            Assert.That(CultureInfo.GetCultures(CultureTypes.AllCultures),
+                Has.Some.Property(nameof(CultureInfo.DisplayName)).EqualTo(cultureName));
         }
 
         [Test]
