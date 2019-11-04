@@ -89,10 +89,10 @@ namespace NUnit.Framework.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest, args);
         }
 
-        [TestCase("{m}{p}", new object[] { 1 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: ?)")]
+        [TestCase("{m}{p}", new object[] { 1 }, ExpectedResult = "TestMethodWithArgs(a: 1)")]
         [TestCase("{m}{p}", new object[] { 1, 2 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2)")]
         [TestCase("{m}{p}", new object[] { 1, 2, 3 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, c: 3)")]
-        [TestCase("{m}{p}", new object[] { 1, 2, 3, 4 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, c: 3, ?: 4)")]
+        [TestCase("{m}{p}", new object[] { 1, 2, 3, 4 }, ExpectedResult = "TestMethodWithArgs(a: 1, b: 2, c: 3, 4)")]
         public string ParameterizedTestsWithArgs(string pattern, object[] args)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
