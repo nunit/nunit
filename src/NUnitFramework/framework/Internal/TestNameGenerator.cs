@@ -600,36 +600,28 @@ namespace NUnit.Framework.Internal
             public override string GetText(MethodInfo method, object[] args)
             {
                 var sb = new StringBuilder();
-                args = args ?? new object[0];
 
-                var parameters = method.GetParameters();
-
-                sb.Append('(');
-                var count = Math.Max(args.Length, parameters.Length);
-
-                for (int i = 0; i < count; i++)
+                if (args != null)
                 {
-                    if(i < parameters.Length)
+                    sb.Append('(');
+
+                    var parameters = method.GetParameters();
+                    
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        if (parameters[i].IsOptional)
+                        if (i > 0) sb.Append(", ");
+
+                        if (i < parameters.Length)
                         {
-                            if(i >= args.Length)
-                            {
-                                continue;
-                            }
+                            sb.Append(parameters[i].Name);
+                            sb.Append(": ");
                         }
+
+                        sb.Append(GetDisplayString(args[i], _maxStringLength));
                     }
 
-                    if (i > 0) sb.Append(", ");
-
-                    var paramName = i < parameters.Length ? parameters[i].Name : "?";
-                    sb.Append(paramName);
-                    sb.Append(": ");
-                    sb.Append(i < args.Length ? GetDisplayString(args[i], _maxStringLength) : "?");
+                    sb.Append(')');
                 }
-
-                sb.Append(')');
-
                 return sb.ToString();
             }
         }
