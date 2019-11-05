@@ -18,8 +18,7 @@ This package includes the NUnit 3 framework assembly, which is referenced by you
 
 Supported platforms:
 - .NET Framework 3.5+
-- .NET Standard 1.4+
-- .NET Core</description>
+- .NET Standard 2.0+</description>
     <releaseNotes>This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports NUnit 3 in order to execute tests. Runners intended for use with NUnit 2.x will not run NUnit 3 tests correctly.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
