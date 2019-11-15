@@ -140,6 +140,13 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
                     command = new ApplyChangesToContextCommand(command, attr);
 
+                // Add construct and optionally dispose command in case of instance per test case.
+                if (parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase)
+                {
+                    command = new ConstructFixtureCommand(command);
+                    if (typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+                        command = new DisposeFixtureCommand(command);
+                }
                 // If a timeout is specified, create a TimeoutCommand
                 // Timeout set at a higher level
                 int timeout = Context.TestCaseTimeout;

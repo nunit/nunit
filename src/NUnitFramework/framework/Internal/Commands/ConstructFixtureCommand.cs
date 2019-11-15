@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -37,7 +38,19 @@ namespace NUnit.Framework.Internal.Commands
         public ConstructFixtureCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
+            TestSuite testSuite = null;
+            TestFixture testFixture = null;
+
+            ITest currentTest = Test;
+            while (currentTest != null && (testSuite == null || testFixture == null))
+            {
+                testSuite = testSuite ?? currentTest as TestSuite;
+                testFixture = testFixture ?? currentTest as TestFixture;
+                currentTest = currentTest.Parent;
+            }
+
+
+            Guard.ArgumentValid(testSuite is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {
@@ -45,12 +58,20 @@ namespace NUnit.Framework.Internal.Commands
 
                 if (typeInfo != null)
                 {
-                    // Use preconstructed fixture if available, otherwise construct it
                     if (!typeInfo.IsStaticClass)
                     {
-                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
-                        if (Test.Fixture == null)
+                        if (testFixture != null && testFixture.LifeCycle == LifeCycle.InstancePerTestCase)
+                        {
+                            context.TestObject = typeInfo.Construct(testSuite.Arguments);
                             Test.Fixture = context.TestObject;
+                        }
+                        else
+                        {
+                            // Use preconstructed fixture if available, otherwise construct it
+                            context.TestObject = Test.Fixture ?? typeInfo.Construct(testSuite.Arguments);
+                            if (Test.Fixture == null)
+                                Test.Fixture = context.TestObject;
+                        }
                     }
                 }
             };
