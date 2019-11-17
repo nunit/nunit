@@ -51,6 +51,9 @@ jobs:
       packageType: runtime
       version: 2.2.x
 
+  - bash: sudo apt-get install fsharp
+    displayName: Install F# for Mono
+
   - bash: |
      dotnet tool install --global Cake.Tool
      dotnet cake --target=Test --test-run-name=Linux --configuration=Release

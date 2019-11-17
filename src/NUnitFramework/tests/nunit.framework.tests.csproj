@@ -5,6 +5,10 @@
     <RootNamespace>NUnit.Framework</RootNamespace>
     <DebugType>Full</DebugType>
 
+    <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
+    nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
     <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
   </PropertyGroup>
@@ -17,6 +21,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40'">
+    <ProjectReference Include="..\testdata.fsharp\nunit.testdata.fsharp.fsproj" />
+
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
   </ItemGroup>

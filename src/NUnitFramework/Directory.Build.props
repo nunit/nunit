@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <LangVersion>7</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">7</LangVersion>
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
@@ -25,7 +25,7 @@
                             and '$(TargetFramework)' != 'netcoreapp3.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
     <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
   </ItemGroup>
