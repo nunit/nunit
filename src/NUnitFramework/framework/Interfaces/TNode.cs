@@ -327,7 +327,7 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
-                // Also check if the char is actually a high/low surogate pair of two characters.
+                // Also check if the char is actually a high/low surrogate pair of two characters.
                 // If it is, then it is a valid XML character (from above based on the surrogate blocks).
                 else if (char.IsHighSurrogate(c) &&
                     i + 1 != str.Length &&

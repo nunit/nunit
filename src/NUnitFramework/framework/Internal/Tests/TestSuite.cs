@@ -300,7 +300,6 @@ namespace NUnit.Framework.Internal
         /// Check that setup and teardown methods marked by certain attributes
         /// meet NUnit's requirements and mark the tests not runnable otherwise.
         /// </summary>
-        /// <param name="methods">A list of methodinfos to check</param>
         protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
             foreach (MethodInfo method in methods)
