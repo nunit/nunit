@@ -34,10 +34,6 @@ namespace NUnit.TestData.LifeCycleTests
     public class LifeCycleFixtureTestCountIsAlwaysOne
     {
         public int Count { get; set; }
-        public LifeCycleFixtureTestCountIsAlwaysOne()
-        {
-
-        }
 
         [Test]
         public void CountIsAlwaysOne()
