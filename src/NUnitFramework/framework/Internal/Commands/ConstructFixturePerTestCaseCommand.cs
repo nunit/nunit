@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -28,30 +29,36 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// ConstructFixtureCommand constructs the user test object if necessary.
     /// </summary>
-    public class ConstructFixtureCommand : BeforeTestCommand
+    public class ConstructFixturePerTestCaseCommand : BeforeTestCommand
     {
         /// <summary>
-        /// Constructs a OneTimeSetUpCommand for a suite
+        /// Constructs a fixture per test case
         /// </summary>
         /// <param name="innerCommand">The inner command to which the command applies</param>
-        public ConstructFixtureCommand(TestCommand innerCommand)
+        public ConstructFixturePerTestCaseCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
+            TestSuite testSuite = null;
+            TestFixture testFixture = null;
+
+            ITest currentTest = Test;
+            while (currentTest != null && (testSuite == null || testFixture == null))
+            {
+                testSuite = testSuite ?? currentTest as TestSuite;
+                testFixture = testFixture ?? currentTest as TestFixture;
+                currentTest = currentTest.Parent;
+            }
+
+            Guard.ArgumentValid(testSuite is TestSuite, "ConstructFixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {
                 ITypeInfo typeInfo = Test.TypeInfo;
 
-                if (typeInfo != null)
+                if (context.TestObject == null && typeInfo != null && !typeInfo.IsStaticClass)
                 {
-                    // Use preconstructed fixture if available, otherwise construct it
-                    if (!typeInfo.IsStaticClass)
-                    {
-                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
-                        if (Test.Fixture == null)
-                            Test.Fixture = context.TestObject;
-                    }
+                    context.TestObject = typeInfo.Construct(testSuite.Arguments);
+                    Test.Fixture = context.TestObject;
                 }
             };
         }

@@ -143,7 +143,7 @@ namespace NUnit.Framework.Internal.Execution
                 // Add construct and optionally dispose command in case of instance per test case.
                 if (parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase)
                 {
-                    command = new ConstructFixtureCommand(command);
+                    command = new ConstructFixturePerTestCaseCommand(command);
                     if (typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
                         command = new DisposeFixtureCommand(command);
                 }
