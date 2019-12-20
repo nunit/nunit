@@ -41,7 +41,6 @@ namespace NUnit.Framework.Internal.Commands
         public DisposeFixtureCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-
             AfterTest = (context) =>
             {
                 try

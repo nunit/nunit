@@ -49,7 +49,6 @@ namespace NUnit.Framework.Internal.Commands
                 currentTest = currentTest.Parent;
             }
 
-
             Guard.ArgumentValid(testSuite is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>

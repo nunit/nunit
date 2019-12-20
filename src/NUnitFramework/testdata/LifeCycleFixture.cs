@@ -30,8 +30,6 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.LifeCycleTests
 {
-
-
     [TestFixture]
     public class LifeCycleFixtureTestCountIsAlwaysOne
     {
@@ -95,6 +93,4 @@ namespace NUnit.TestData.LifeCycleTests
             Assert.That(Counter, Is.EqualTo(1));
         }
     }
-
-
 }

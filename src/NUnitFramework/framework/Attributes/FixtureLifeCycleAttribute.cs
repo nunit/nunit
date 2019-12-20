@@ -41,7 +41,6 @@ namespace NUnit.Framework
         /// </summary>
         public FixtureLifeCycleAttribute() : this(LifeCycle.SingleInstance) { }
 
-
         /// <summary>
         /// Construct a FixtureLifeCycleAttribute with a specified lifeCycle.
         /// </summary>
@@ -71,5 +70,4 @@ namespace NUnit.Framework
         }
 
     }
-
 }

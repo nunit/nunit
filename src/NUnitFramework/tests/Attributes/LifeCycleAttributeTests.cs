@@ -61,7 +61,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(childTests.Any(x => x.ResultState == ResultState.Failure));
         }
 
-
         [Test]
         public void InstancePerTestCaseShouldDisposeForEachTestCase()
         {
@@ -83,6 +82,5 @@ namespace NUnit.Framework.Attributes
 
             Assert.AreEqual(3, LifeCycleFixtureInstancePerTestCaseRepeat.RepeatCounter);
         }
-
     }
 }

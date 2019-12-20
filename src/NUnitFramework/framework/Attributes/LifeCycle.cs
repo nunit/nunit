@@ -38,5 +38,4 @@ namespace NUnit.Framework
         /// </summary>
         InstancePerTestCase
     }
-
 }

@@ -244,7 +244,6 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-
             if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) &&
                   (!(Test is TestFixture && ((TestFixture)Test).LifeCycle == LifeCycle.InstancePerTestCase)))
                 command = new DisposeFixtureCommand(command);
