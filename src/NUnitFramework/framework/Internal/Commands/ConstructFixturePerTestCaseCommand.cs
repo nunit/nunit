@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal.Commands
             {
                 ITypeInfo typeInfo = Test.TypeInfo;
 
-                if (context.TestObject == null && typeInfo != null && !typeInfo.IsStaticClass)
+                if (typeInfo != null && !typeInfo.IsStaticClass)
                 {
                     context.TestObject = typeInfo.Construct(testSuite.Arguments);
                     Test.Fixture = context.TestObject;
