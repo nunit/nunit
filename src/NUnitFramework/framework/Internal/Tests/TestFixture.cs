@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     public class TestFixture : TestSuite, IDisposableFixture
     {
         /// <summary>
-        /// The LifeCycle specified for the current test fixture.
+        /// The life cycle specified for the current test fixture.
         /// </summary>
         public LifeCycle LifeCycle { get; set; }
 

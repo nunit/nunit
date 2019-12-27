@@ -24,7 +24,7 @@
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Specifies the lifecycle for a fixture.
+    /// Specifies the life cycle for a test fixture.
     /// </summary>
     public enum LifeCycle
     {

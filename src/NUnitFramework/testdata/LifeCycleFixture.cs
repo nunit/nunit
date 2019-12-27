@@ -31,7 +31,7 @@ using NUnit.Framework;
 namespace NUnit.TestData.LifeCycleTests
 {
     [TestFixture]
-    public class LifeCycleFixtureTestCountIsAlwaysOne
+    public class CountingLifeCycleTestFixture
     {
         public int Count { get; set; }
 
@@ -48,12 +48,11 @@ namespace NUnit.TestData.LifeCycleTests
             Count++;
             Assert.AreEqual(1, Count);
         }
-
     }
 
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class LifeCycleFixtureInstancePerTestCaseDispose : IDisposable
+    public class DisposableLifeCycleFixtureInstancePerTestCase : IDisposable
     {
         public static int DisposeCalls { get; set; }
 
@@ -62,11 +61,13 @@ namespace NUnit.TestData.LifeCycleTests
         {
 
         }
+
         [Test]
         public void TestCase2()
         {
 
         }
+
         public void Dispose()
         {
             DisposeCalls++;
@@ -75,7 +76,7 @@ namespace NUnit.TestData.LifeCycleTests
     
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class LifeCycleFixtureInstancePerTestCaseRepeat
+    public class RepeatingLifeCycleFixtureInstancePerTestCase
     {
         public int Counter { get; set; }
         public static int RepeatCounter { get; set; }

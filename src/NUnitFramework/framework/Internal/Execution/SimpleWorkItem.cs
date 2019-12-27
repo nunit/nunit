@@ -140,7 +140,7 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
                     command = new ApplyChangesToContextCommand(command, attr);
 
-                // Add construct and optionally dispose command in case of instance per test case.
+                // Add a construct command and optionally a dispose command in case of instance per test case.
                 if (parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase)
                 {
                     command = new ConstructFixturePerTestCaseCommand(command);

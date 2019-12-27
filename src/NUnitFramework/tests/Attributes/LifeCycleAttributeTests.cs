@@ -38,49 +38,48 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InstancePerTestCaseCreatesAnInstanceForEachTestCase()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleFixtureTestCountIsAlwaysOne));
+            var fixture = TestBuilder.MakeFixture(typeof(CountingLifeCycleTestFixture));
             var attr = new FixtureLifeCycleAttribute(LifeCycle.InstancePerTestCase);
             attr.ApplyToTest(fixture);
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.ToString(), Is.EqualTo("Passed"));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
 
         [Test]
         public void SingleInstanceSharesAnInstanceForEachTestCase()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleFixtureTestCountIsAlwaysOne));
+            var fixture = TestBuilder.MakeFixture(typeof(CountingLifeCycleTestFixture));
             var attr = new FixtureLifeCycleAttribute(LifeCycle.SingleInstance);
             attr.ApplyToTest(fixture);
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.AreEqual(result.Children.Count(), 2);
-            var childTests = result.Children.ToArray();
 
-            Assert.That(childTests.Any(x => x.ResultState == ResultState.Success));
-            Assert.That(childTests.Any(x => x.ResultState == ResultState.Failure));
+            Assert.That(
+                result.Children.Select(t => t.ResultState),
+                Is.EquivalentTo(new[] { ResultState.Success, ResultState.Failure }));
         }
 
         [Test]
         public void InstancePerTestCaseShouldDisposeForEachTestCase()
         {
-            LifeCycleFixtureInstancePerTestCaseDispose.DisposeCalls = 0;
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleFixtureInstancePerTestCaseDispose));
+            DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls = 0;
+            var fixture = TestBuilder.MakeFixture(typeof(DisposableLifeCycleFixtureInstancePerTestCase));
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.ToString(), Is.EqualTo("Passed"));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
-            Assert.AreEqual(2, LifeCycleFixtureInstancePerTestCaseDispose.DisposeCalls);
+            Assert.AreEqual(2, DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls);
         }
 
         [Test]
         public void InstancePerTestCaseWithRepeatShouldWorkAsExpected()
         {
-            LifeCycleFixtureInstancePerTestCaseRepeat.RepeatCounter = 0;
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleFixtureInstancePerTestCaseRepeat));
+            RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter = 0;
+            var fixture = TestBuilder.MakeFixture(typeof(RepeatingLifeCycleFixtureInstancePerTestCase));
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.ToString(), Is.EqualTo("Passed"));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
-            Assert.AreEqual(3, LifeCycleFixtureInstancePerTestCaseRepeat.RepeatCounter);
+            Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
         }
     }
 }

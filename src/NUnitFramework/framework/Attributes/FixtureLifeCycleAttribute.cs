@@ -31,39 +31,33 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Specify the lifecycle of a Fixture
+    /// Specify the life cycle of a Fixture
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public sealed class FixtureLifeCycleAttribute : PropertyAttribute
     {
         /// <summary>
-        /// Construct a FixtureLifeCycleAttribute using default LifeCycle.SingleInstance.
+        /// Construct a FixtureLifeCycleAttribute with a specified <see cref="LifeCycle"/>.
         /// </summary>
-        public FixtureLifeCycleAttribute() : this(LifeCycle.SingleInstance) { }
-
-        /// <summary>
-        /// Construct a FixtureLifeCycleAttribute with a specified lifeCycle.
-        /// </summary>
-        /// <param name="lifeCycle">The Lifecycle associated with this attribute.</param>
-        public FixtureLifeCycleAttribute(LifeCycle lifeCycle) : base()
+        public FixtureLifeCycleAttribute(LifeCycle lifeCycle)
         {
             LifeCycle = lifeCycle;
         }
 
         /// <summary>
-        /// Defines the lifecycle for this test fixture or assembly.
+        /// Defines the life cycle for this test fixture or assembly.
         /// </summary>
         public LifeCycle LifeCycle { get; }
 
         /// <summary>
         /// Overridden to set TestFixture LifeCycle
         /// </summary>
-        /// <param name="test"></param>
         public override void ApplyToTest(Test test)
         {
-            if (test is TestFixture)
+            var testFixture = test as TestFixture;
+            if (testFixture != null)
             {
-                ((TestFixture)test).LifeCycle = LifeCycle;
+                testFixture.LifeCycle = LifeCycle;
             }
 
             base.ApplyToTest(test);
