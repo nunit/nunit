@@ -34,7 +34,7 @@ namespace NUnit.Framework
     /// Specify the life cycle of a Fixture
     /// </summary>
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public sealed class FixtureLifeCycleAttribute : PropertyAttribute
+    public sealed class FixtureLifeCycleAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
         /// Construct a FixtureLifeCycleAttribute with a specified <see cref="LifeCycle"/>.
@@ -52,15 +52,13 @@ namespace NUnit.Framework
         /// <summary>
         /// Overridden to set a TestFixture's <see cref="LifeCycle"/>.
         /// </summary>
-        public override void ApplyToTest(Test test)
+        public void ApplyToTest(Test test)
         {
             var testFixture = test as TestFixture;
             if (testFixture != null)
             {
                 testFixture.LifeCycle = LifeCycle;
             }
-
-            base.ApplyToTest(test);
         }
     }
 }
