@@ -29,13 +29,13 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// ConstructFixtureCommand constructs the user test object if necessary.
     /// </summary>
-    public class ConstructFixturePerTestCaseCommand : BeforeTestCommand
+    public class FixturePerTestCaseCommand : BeforeAndAfterTestCommand
     {
         /// <summary>
-        /// Constructs a fixture per test case
+        /// Handles the construction and disposement of a fixture per test case
         /// </summary>
         /// <param name="innerCommand">The inner command to which the command applies</param>
-        public ConstructFixturePerTestCaseCommand(TestCommand innerCommand)
+        public FixturePerTestCaseCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
             TestSuite testSuite = null;
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Commands
                 currentTest = currentTest.Parent;
             }
 
-            Guard.ArgumentValid(testSuite != null, "ConstructFixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
+            Guard.ArgumentValid(testSuite != null, "FixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {
@@ -59,6 +59,27 @@ namespace NUnit.Framework.Internal.Commands
                 {
                     context.TestObject = typeInfo.Construct(testSuite.Arguments);
                     Test.Fixture = context.TestObject;
+                }
+            };
+
+            AfterTest = (context) =>
+            {
+                ITypeInfo typeInfo = Test.TypeInfo;
+                if (typeInfo != null && !typeInfo.IsStaticClass && typeof(IDisposable).IsAssignableFrom(typeInfo.Type))
+                {
+                    try
+                    {
+                        var disposable = context.TestObject as IDisposable;
+                        if (disposable != null)
+                        {
+                            disposable.Dispose();
+                            context.TestObject = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        context.CurrentResult.RecordTearDownException(ex);
+                    }
                 }
             };
         }
