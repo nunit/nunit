@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Commands
                 currentTest = currentTest.Parent;
             }
 
-            Guard.ArgumentValid(testSuite is TestSuite, "ConstructFixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
+            Guard.ArgumentValid(testSuite != null, "ConstructFixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
 
             BeforeTest = (context) =>
             {

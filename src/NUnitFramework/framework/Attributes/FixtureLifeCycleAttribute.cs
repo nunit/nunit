@@ -50,7 +50,7 @@ namespace NUnit.Framework
         public LifeCycle LifeCycle { get; }
 
         /// <summary>
-        /// Overridden to set TestFixture LifeCycle
+        /// Overridden to set a TestFixture's <see cref="LifeCycle"/>.
         /// </summary>
         public override void ApplyToTest(Test test)
         {
@@ -62,6 +62,5 @@ namespace NUnit.Framework
 
             base.ApplyToTest(test);
         }
-
     }
 }
