@@ -330,7 +330,11 @@ Task("GitLink")
     .Description("Source-indexes PDBs in the images directory to the current commit")
     .Does(() =>
     {
-        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"));
+        var settings = new GitLink3Settings
+        {
+            BaseDir = PROJECT_DIR
+        };
+        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"), settings);
     });
 
 Task("PackageFramework")
