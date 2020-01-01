@@ -310,7 +310,7 @@ namespace NUnit.Framework.Internal
                 }
                 else if (!(method.IsPublic || method.IsFamily))
                 {
-                    MakeInvalid("SetUp and TearDown methods must be public or internal: " + method.Name);
+                    MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
                 else if (method.GetParameters().Length != 0)
                 {
