@@ -31,6 +31,82 @@ using NUnit.Framework;
 namespace NUnit.TestData.LifeCycleTests
 {
     [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class DisposableFixture : IDisposable
+    {
+        public static int DisposeCount = 0;
+
+        [Test]
+        public void DummyTest1() { }
+
+        [Test]
+        public void DummyTest2() { }
+
+        public void Dispose()
+        {
+            DisposeCount++;
+        }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class SetupAndTearDownFixtureInstancePerTestCase
+    {
+        public int TotalSetupCount = 0;
+        public int TotalTearDownCount = 0;
+
+        [SetUp]
+        public void Setup()
+        {
+            TotalSetupCount++;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TotalTearDownCount++;
+        }
+
+        [Test]
+        public void DummyTest1() { }
+
+        [Test]
+        public void DummyTest2() { }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class OneTimeSetupAndTearDownFixtureInstancePerTestCase
+    {
+        public static int TotalOneTimeSetupCount = 0;
+        public static int TotalOneTimeTearDownCount = 0;
+
+        public Guid Guid = Guid.NewGuid();
+        public static Guid OneTimeSetupGuid = Guid.Empty;
+        public static Guid OneTimeTearDownGuid = Guid.Empty;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            TotalOneTimeSetupCount++;
+            OneTimeSetupGuid = Guid;
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            TotalOneTimeTearDownCount++;
+            OneTimeTearDownGuid = Guid;
+        }
+
+        [Test]
+        public void DummyTest1() {}
+
+        [Test]
+        public void DummyTest2() {}
+    }
+
+    [TestFixture]
     public class CountingLifeCycleTestFixture
     {
         public int Count { get; set; }

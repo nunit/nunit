@@ -214,7 +214,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new OneTimeSetUpCommand(command, item);
 
                 // Construct the fixture if necessary
-                if (!Test.TypeInfo.IsStaticClass && (Test as TestFixture)?.LifeCycle != LifeCycle.InstancePerTestCase)
+                if (!Test.TypeInfo.IsStaticClass)
                     command = new ConstructFixtureCommand(command);
             }
 
@@ -243,8 +243,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) &&
-                (Test as TestFixture)?.LifeCycle != LifeCycle.InstancePerTestCase)
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
                 command = new DisposeFixtureCommand(command);
 
             return command;

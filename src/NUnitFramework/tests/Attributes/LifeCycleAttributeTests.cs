@@ -36,6 +36,45 @@ namespace NUnit.Framework.Attributes
     public class LifeCycleAttributeTests
     {
         [Test]
+        public void OneTimeSetupTearDownIsCalledOnFirstInstance()
+        {
+            OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeSetupGuid = Guid.Empty;
+            OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeTearDownGuid = Guid.Empty;
+
+            var fixture = new OneTimeSetupAndTearDownFixtureInstancePerTestCase();
+            TestBuilder.RunTestFixture(fixture);
+
+            Assert.AreNotEqual(fixture.Guid, Guid.Empty);
+            Assert.AreEqual(fixture.Guid, OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeSetupGuid);
+            Assert.AreEqual(fixture.Guid, OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeTearDownGuid);
+        }
+
+        [Test]
+        public void SetupTearDownIsCalledOnce()
+        {
+            var fixture = new SetupAndTearDownFixtureInstancePerTestCase();
+            TestBuilder.RunTestFixture(fixture);
+
+            Assert.AreEqual(1, fixture.TotalSetupCount);
+            Assert.AreEqual(1, fixture.TotalTearDownCount);
+        }
+
+        [Test]
+        public void OneTimeSetupTearDownIsCalledOnce()
+        {
+            OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount = 0;
+            OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount = 0;
+
+            var fixture = TestBuilder.MakeFixture(typeof(OneTimeSetupAndTearDownFixtureInstancePerTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+
+            Assert.AreEqual(1, OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount);
+            Assert.AreEqual(1, OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount);
+        }
+
+        [Test]
         public void InstancePerTestCaseCreatesAnInstanceForEachTestCase()
         {
             var fixture = TestBuilder.MakeFixture(typeof(CountingLifeCycleTestFixture));

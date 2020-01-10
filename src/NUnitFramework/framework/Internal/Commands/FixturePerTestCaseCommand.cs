@@ -31,6 +31,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class FixturePerTestCaseCommand : BeforeAndAfterTestCommand
     {
+        private bool instanceCreated = false;
         /// <summary>
         /// Handles the construction and disposement of a fixture per test case
         /// </summary>
@@ -39,33 +40,32 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             TestSuite testSuite = null;
-            TestFixture testFixture = null;
 
             ITest currentTest = Test;
-            while (currentTest != null && (testSuite == null || testFixture == null))
+            while (currentTest != null && testSuite == null)
             {
                 testSuite = testSuite ?? currentTest as TestSuite;
-                testFixture = testFixture ?? currentTest as TestFixture;
                 currentTest = currentTest.Parent;
             }
 
             Guard.ArgumentValid(testSuite != null, "FixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
 
+            ITypeInfo typeInfo = testSuite.TypeInfo;
+
             BeforeTest = (context) =>
             {
-                ITypeInfo typeInfo = Test.TypeInfo;
-
-                if (typeInfo != null && !typeInfo.IsStaticClass)
+                if (typeInfo != null && !typeInfo.IsStaticClass && testSuite.Fixture == null)
                 {
                     context.TestObject = typeInfo.Construct(testSuite.Arguments);
                     Test.Fixture = context.TestObject;
+                    testSuite.Fixture = context.TestObject;
+                    instanceCreated = true;
                 }
             };
 
             AfterTest = (context) =>
             {
-                ITypeInfo typeInfo = Test.TypeInfo;
-                if (typeInfo != null && !typeInfo.IsStaticClass && typeof(IDisposable).IsAssignableFrom(typeInfo.Type))
+                if (instanceCreated && typeInfo != null && !typeInfo.IsStaticClass && typeof(IDisposable).IsAssignableFrom(typeInfo.Type))
                 {
                     try
                     {
@@ -73,7 +73,6 @@ namespace NUnit.Framework.Internal.Commands
                         if (disposable != null)
                         {
                             disposable.Dispose();
-                            context.TestObject = null;
                         }
                     }
                     catch (Exception ex)
@@ -81,6 +80,8 @@ namespace NUnit.Framework.Internal.Commands
                         context.CurrentResult.RecordTearDownException(ex);
                     }
                 }
+
+                testSuite.Fixture = null;
             };
         }
     }
