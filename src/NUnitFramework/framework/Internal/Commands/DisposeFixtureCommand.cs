@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -41,16 +41,15 @@ namespace NUnit.Framework.Internal.Commands
         public DisposeFixtureCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
+            Guard.OperationValid(Test is IDisposableFixture, "DisposeFixtureCommand does not apply to a " + Test.GetType().Name);
+
             AfterTest = (context) =>
             {
                 try
                 {
                     IDisposable disposable = context.TestObject as IDisposable;
                     if (disposable != null)
-                    {
                         disposable.Dispose();
-                        context.TestObject = null;
-                    }
                 }
                 catch (Exception ex)
                 {
