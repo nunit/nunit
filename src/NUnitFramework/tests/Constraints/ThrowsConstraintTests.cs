@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( new TestDelegate( TestDelegates.ThrowsArgumentException ), $"<System.ArgumentException: myMessage{Environment.NewLine}Parameter name: myParam" ),
+            new TestCaseData( new TestDelegate( TestDelegates.ThrowsArgumentException ), "<System.ArgumentException: myMessage" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" )
         };

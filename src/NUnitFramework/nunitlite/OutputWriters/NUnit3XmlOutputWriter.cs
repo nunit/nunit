@@ -86,9 +86,7 @@ namespace NUnitLite
 
             TNode testRun = MakeTestRunElement(result);
 
-#if !NETSTANDARD1_4
             testRun.ChildNodes.Add(MakeCommandLineElement());
-#endif
             testRun.ChildNodes.Add(MakeTestFilterElement(filter));
             testRun.ChildNodes.Add(resultNode);
 
@@ -108,8 +106,8 @@ namespace NUnitLite
             if (result.ResultState.Label != string.Empty)
                 testRun.AddAttribute("label", result.ResultState.Label);
 
-            testRun.AddAttribute("start-time", result.StartTime.ToString("u"));
-            testRun.AddAttribute("end-time", result.EndTime.ToString("u"));
+            testRun.AddAttribute("start-time", result.StartTime.ToString("o"));
+            testRun.AddAttribute("end-time", result.EndTime.ToString("o"));
             testRun.AddAttribute("duration", result.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
             testRun.AddAttribute("total", result.TotalCount.ToString());
@@ -128,17 +126,15 @@ namespace NUnitLite
             return testRun;
         }
 
-#if !NETSTANDARD1_4
         private static TNode MakeCommandLineElement()
         {
             return new TNode("command-line", Environment.CommandLine, true);
         }
-#endif
 
         private static TNode MakeTestFilterElement(TestFilter filter)
         {
             TNode result = new TNode("filter");
-            if (!filter.IsEmpty)
+            if (filter != null && !filter.IsEmpty)
                 filter.AddToXml(result, true);
             return result;
         }

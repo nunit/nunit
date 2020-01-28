@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { new int[] { 1, 3, 5 }, new int[] { 1, 2, 3, 4, 5 } };
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new object[] { new int[] { 1, 3, 7 }, "< 1, 3, 7 >" },
             new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >" } };
 
@@ -72,12 +72,10 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"b", 2}});
                     yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }, {'B', 2}}, new Dictionary<char, int> {{'a', 1}});
 
-#if !NETCOREAPP1_1
                     yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"}});
                     yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{2, 'b'}});
                     yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}});
                     yield return new TestCaseData(new Hashtable {{'A', 1}, {'B', 2}}, new Hashtable {{'a', 1}});
-#endif
                 }
             }
         }

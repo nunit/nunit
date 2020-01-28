@@ -115,7 +115,6 @@ namespace NUnit.Framework
             get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
         }
 
-#if PARALLEL
         /// <summary>
         /// Gets the unique name of the Worker that is executing this test.
         /// </summary>
@@ -123,7 +122,6 @@ namespace NUnit.Framework
         {
             get { return _testExecutionContext.TestWorker?.Name; }
         }
-#endif
 
         /// <summary>
         /// Gets the directory containing the current test assembly.
@@ -137,15 +135,9 @@ namespace NUnit.Framework
                 if (assembly != null)
                     return AssemblyHelper.GetDirectoryName(assembly);
 
-#if NETSTANDARD1_4
-                // Test is null, we may be loading tests rather than executing.
-                // Assume that the NUnit framework is in the same directory as the tests
-                return AssemblyHelper.GetDirectoryName(typeof(TestContext).GetTypeInfo().Assembly);
-#else
                 // Test is null, we may be loading tests rather than executing.
                 // Assume that calling assembly is the test assembly.
                 return AssemblyHelper.GetDirectoryName(Assembly.GetCallingAssembly());
-#endif
             }
         }
 

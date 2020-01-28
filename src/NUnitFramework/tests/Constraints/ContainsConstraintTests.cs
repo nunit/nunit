@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(result.IsSuccess);
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void HonorsIgnoreCaseForString()
         {
             var actualString = "ABCdef";

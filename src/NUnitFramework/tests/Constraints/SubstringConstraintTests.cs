@@ -54,7 +54,6 @@ namespace NUnit.Framework.Constraints
         [TestCase(" SS ", "ß", StringComparison.CurrentCultureIgnoreCase)]
         [TestCase(" ss ", "s", StringComparison.CurrentCultureIgnoreCase)]
         [TestCase(" SS ", "s", StringComparison.CurrentCultureIgnoreCase)]
-#if !NETCOREAPP1_1
         [TestCase(" ss ", "ß", StringComparison.InvariantCulture)]
         [TestCase(" SS ", "ß", StringComparison.InvariantCulture)]
         [TestCase(" ss ", "s", StringComparison.InvariantCulture)]
@@ -63,7 +62,6 @@ namespace NUnit.Framework.Constraints
         [TestCase(" SS ", "ß", StringComparison.InvariantCultureIgnoreCase)]
         [TestCase(" ss ", "s", StringComparison.InvariantCultureIgnoreCase)]
         [TestCase(" SS ", "s", StringComparison.InvariantCultureIgnoreCase)]
-#endif
         [TestCase(" ss ", "ß", StringComparison.Ordinal)]
         [TestCase(" SS ", "ß", StringComparison.Ordinal)]
         [TestCase(" ss ", "s", StringComparison.Ordinal)]
@@ -91,12 +89,10 @@ namespace NUnit.Framework.Constraints
             // Invoke Using method before IgnoreCase
             Assert.That(() => subStringConstraint.Using(StringComparison.CurrentCulture).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
-#if !NETCOREAPP1_1
             Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCulture).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
             Assert.That(() => subStringConstraint.Using(StringComparison.InvariantCultureIgnoreCase).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
-#endif
             Assert.That(() => subStringConstraint.Using(StringComparison.Ordinal).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
             Assert.That(() => subStringConstraint.Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
@@ -105,12 +101,10 @@ namespace NUnit.Framework.Constraints
             // Invoke IgnoreCase before Using method
             Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.CurrentCulture),
                 Throws.TypeOf<InvalidOperationException>());
-#if !NETCOREAPP1_1
             Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.InvariantCulture),
                 Throws.TypeOf<InvalidOperationException>());
             Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.InvariantCultureIgnoreCase),
                 Throws.TypeOf<InvalidOperationException>());
-#endif
             Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.Ordinal).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
             Assert.That(() => (subStringConstraint.IgnoreCase as SubstringConstraint).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
@@ -135,7 +129,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    [TestFixture]
+    [TestFixture, SetCulture("en-US")]
     public class SubstringConstraintTestsIgnoringCase : StringConstraintTests
     {
         [SetUp]
@@ -154,22 +148,4 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null, "null" ) };
     }
-
-    //[TestFixture]
-    //public class EqualIgnoringCaseTest : ConstraintTest
-    //{
-    //    [SetUp]
-    //    public void SetUp()
-    //    {
-    //        Matcher = new EqualConstraint("Hello World!").IgnoreCase;
-    //        Description = "\"Hello World!\", ignoring case";
-    //    }
-
-    //    static object[] SuccessData = new object[] { "hello world!", "Hello World!", "HELLO world!" };
-
-    //    static object[] FailureData = new object[] { "goodbye", "Hello Friends!", string.Empty, null };
-
-
-    //    string[] ActualValues = new string[] { "\"goodbye\"", "\"Hello Friends!\"", "<string.Empty>", "null" };
-    //}
 }

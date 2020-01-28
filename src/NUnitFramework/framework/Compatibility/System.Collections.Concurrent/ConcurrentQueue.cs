@@ -126,7 +126,7 @@ namespace System.Collections.Concurrent
         }
 
         /// <summary>
-        /// Construct the queue from a previously seiralized one
+        /// Construct the queue from a previously serialized one.
         /// </summary>
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
@@ -241,7 +241,7 @@ namespace System.Collections.Concurrent
         /// When this method returns, if the operation was successful, <paramref name="item"/> contains the
         /// object removed. If no object was available to be removed, the value is unspecified.
         /// </param>
-        /// <returns>true if an element was removed and returned succesfully; otherwise, false.</returns>
+        /// <returns>true if an element was removed and returned successfully; otherwise, false.</returns>
         /// <remarks>For <see cref="ConcurrentQueue{T}"/>, this operation will attempt to remove the object
         /// from the beginning of the <see cref="ConcurrentQueue{T}"/>.
         /// </remarks>
@@ -484,12 +484,12 @@ namespace System.Collections.Concurrent
             // This is inconsistent with existing generic collections. In order to prevent it, we capture the
             // value of m_head in a buffer and call out to a helper method.
             //The old way of doing this was to return the ToList().GetEnumerator(), but ToList() was an
-            // unnecessary perfomance hit.
+            // unnecessary performance hit.
             return GetEnumerator(head, tail, headLow, tailHigh);
         }
 
         /// <summary>
-        /// Helper method of GetEnumerator to seperate out yield return statement, and prevent lazy evaluation.
+        /// Helper method of GetEnumerator to separate out yield return statement, and prevent lazy evaluation.
         /// </summary>
         private IEnumerator<T> GetEnumerator(Segment head, Segment tail, int headLow, int tailHigh)
         {
@@ -592,9 +592,9 @@ namespace System.Collections.Concurrent
         /// When this method returns, if the operation was successful, <paramref name="result"/> contains the
         /// object removed. If no object was available to be removed, the value is unspecified.
         /// </param>
-        /// <returns>true if an element was removed and returned from the beggining of the <see
+        /// <returns>true if an element was removed and returned from the beginning of the <see
         /// cref="ConcurrentQueue{T}"/>
-        /// succesfully; otherwise, false.</returns>
+        /// successfully; otherwise, false.</returns>
         public bool TryDequeue(out T result)
         {
             while (!IsEmpty)
@@ -714,9 +714,9 @@ namespace System.Collections.Concurrent
 
             /// <summary>
             /// Add an element to the tail of the current segment
-            /// exclusively called by ConcurrentQueue.InitializedFromCollection
-            /// InitializeFromCollection is responsible to guaratee that there is no index overflow,
-            /// and there is no contention
+            /// exclusively called by ConcurrentQueue.InitializedFromCollection.
+            /// InitializeFromCollection is responsible to guarantee that there is no index overflow
+            /// and no contention.
             /// </summary>
             /// <param name="value"></param>
             internal void UnsafeAdd(T value)
@@ -731,7 +731,7 @@ namespace System.Collections.Concurrent
             /// Create a new segment and append to the current one
             /// Does not update the m_tail pointer
             /// exclusively called by ConcurrentQueue.InitializedFromCollection
-            /// InitializeFromCollection is responsible to guaratee that there is no index overflow,
+            /// InitializeFromCollection is responsible to guarantee that there is no index overflow,
             /// and there is no contention
             /// </summary>
             /// <returns>the reference to the new Segment</returns>
@@ -784,7 +784,7 @@ namespace System.Collections.Concurrent
                 int newhigh = SEGMENT_SIZE; //initial value set to be over the boundary
 
                 //We need do Interlocked.Increment and value/state update in a finally block to ensure that they run
-                //without interuption. This is to prevent anything from happening between them, and another dequeue
+                //without interruption. This is to prevent anything from happening between them, and another dequeue
                 //thread maybe spinning forever to wait for m_state[] to be true;
                 try
                 { }
@@ -847,7 +847,7 @@ namespace System.Collections.Concurrent
                         if (lowLocal + 1 >= SEGMENT_SIZE)
                         {
                             //  Invariant: we only dispose the current m_head, not any other segment
-                            //  In usual situation, disposing a segment is simply seting m_head to m_head.m_next
+                            //  In usual situation, disposing a segment is simply setting m_head to m_head.m_next
                             //  But there is one special case, where m_head and m_tail points to the same and ONLY
                             //segment of the queue: Another thread A is doing Enqueue and finds that it needs to grow,
                             //while the *current* thread is doing *this* Dequeue operation, and finds that it needs to
@@ -928,7 +928,7 @@ namespace System.Collections.Concurrent
 
             /// <summary>
             /// return the logical position of the tail of the current segment
-            /// Value range [-1, SEGMENT_SIZE-1]. When it's -1, it means this is a new segment and has no elemnet yet
+            /// Value range [-1, SEGMENT_SIZE-1]. When it's -1, it means this is a new segment and has no element yet
             /// </summary>
             internal int High
             {
@@ -944,8 +944,8 @@ namespace System.Collections.Concurrent
     }//end of class Segment
 
     /// <summary>
-    /// A wrapper struct for volatile bool, please note the copy of the struct it self will not be volatile
-    /// for example this statement will not include in volatilness operation volatileBool1 = volatileBool2 the jit will copy the struct and will ignore the volatile
+    /// A wrapper struct for volatile bool. Please note that a copy of the struct itself will not be volatile, e.g.
+    /// <c>volatileBool1 = volatileBool2</c>.
     /// </summary>
     struct VolatileBool
     {

@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal sealed class NumericsComparer : IChainComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             if (!Numerics.IsNumericType(x) || !Numerics.IsNumericType(y))
                 return null;

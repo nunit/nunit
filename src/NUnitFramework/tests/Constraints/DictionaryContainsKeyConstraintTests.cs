@@ -54,6 +54,7 @@ namespace NUnit.Framework.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.Not.ContainKey("NotKey"));
         }
+
         [Test]
         public void FailsWhenKeyIsMissing()
         {
@@ -75,7 +76,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("ContainsKey"));
         }
 
-#if !NETCOREAPP1_1
         [Test]
         public void WorksWithNonGenericDictionary()
         {
@@ -83,10 +83,9 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hello"));
         }
-#endif
 
 #pragma warning disable CS0618 // DictionaryContainsKeyConstraint.IgnoreCase and .Using are deprecated
-
+        [Test, SetCulture("en-US")]
         public void IgnoreCaseIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
@@ -94,7 +93,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
@@ -191,7 +190,8 @@ namespace NUnit.Framework.Constraints
         {
             var dictionary = new TestNonGenericDictionary(99);
 
-            Assert.Catch<ArgumentException>(() => Assert.That(dictionary, Does.ContainKey(99)));
+            Assert.That(dictionary, Does.ContainKey(99));
+            Assert.That(dictionary, !Does.ContainKey(35));
         }
 
         [Test]

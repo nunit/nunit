@@ -35,10 +35,8 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Fixtures)]
         [TestCase(typeof(SetCultureAttribute), PropertyNames.SetCulture, "fr-FR")]
         [TestCase(typeof(SetUICultureAttribute), PropertyNames.SetUICulture, "fr-FR")]
-#if APARTMENT_STATE
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.MTA)]
         [TestCase(typeof(ApartmentAttribute), PropertyNames.ApartmentState, ApartmentState.STA)]
-#endif
 #if THREAD_ABORT
         [TestCase(typeof(TimeoutAttribute), PropertyNames.Timeout, 50)]
 #endif
@@ -50,9 +48,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
-#if !NETCOREAPP1_1
         [TestCase(typeof(RequiresThreadAttribute), PropertyNames.RequiresThread, true)]
-#endif
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType) as PropertyAttribute;

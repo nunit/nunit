@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>NUnit.TestData</RootNamespace>
 
     <!-- Needed because we test stack traces and don't want to have to put
@@ -16,6 +16,10 @@
     <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
     <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
     <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+    <PackageReference Include="System.Security.Principal.Windows" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>

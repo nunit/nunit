@@ -44,9 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             string.Empty,
             new object[0],
-#if !NETCOREAPP1_1
             new ArrayList(),
-#endif
             new System.Collections.Generic.List<int>()
         };
 

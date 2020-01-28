@@ -1071,7 +1071,7 @@ use the NUnit NuGet packages for the framework, but a ZIP file with the binaries
 
 ### NUnit 3.0.0 Beta 2 - May 12, 2015
 
-####Framework
+#### Framework
 
  * The Compact Framework version of the framework is now packaged separately
    and will be distributed as a ZIP file and as a NuGet package.
@@ -1657,7 +1657,7 @@ NOTE: Bug Fixes below this point refer to the number of the bug in Launchpad.
  * 561436 	SetCulture broken with 2.5.4
  * 563532 	DatapointsAttribute should be allowed on properties and methods
 
-###NUnit 2.9.3 - October 26, 2009
+### NUnit 2.9.3 - October 26, 2009
 
 #### Main Features
 
@@ -1671,29 +1671,29 @@ NOTE: Bug Fixes below this point refer to the number of the bug in Launchpad.
  * 432805 	Some Framework Tests don't run on Linux
  * 440109 	Full Framework does not support "Contains"
 
-###NUnit 2.9.2 - September 19, 2009
+### NUnit 2.9.2 - September 19, 2009
 
-####Main Features
+#### Main Features
 
  * NUnitLite code is now merged with NUnit
  * Added NUnitLite runner to the framework code
  * Added Compact framework builds
 
-####Bug Fixes
+#### Bug Fixes
 
  * 430100 	`Assert.Catch<T>` should return T
  * 432566 	NUnitLite shows empty string as argument
  * 432573 	Mono test should be at runtime
 
-###NUnit 2.9.1 - August 27, 2009
+### NUnit 2.9.1 - August 27, 2009
 
-####General
+#### General
 
  * Created a separate project for the framework and framework tests
  * Changed license to MIT / X11
  * Created Windows installer for the framework
 
-####Bug Fixes
+#### Bug Fixes
 
  * 400502 	NUnitEqualityComparer.StreamsE­qual fails for same stream
  * 400508 	TestCaseSource attirbute is not working when Type is given
