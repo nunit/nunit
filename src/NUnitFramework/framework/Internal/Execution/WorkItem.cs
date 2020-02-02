@@ -478,18 +478,27 @@ namespace NUnit.Framework.Internal.Execution
             var previousState = SandboxedThreadState.Capture();
             try
             {
-                Context.CurrentTest = this.Test;
-                Context.CurrentResult = this.Result;
-                Context.Listener.TestStarted(this.Test);
-                Context.StartTime = DateTime.UtcNow;
-                Context.StartTicks = Stopwatch.GetTimestamp();
-                Context.TestWorker = this.TestWorker;
+                var executionContext = ExecutionContext.Capture()
+                    ?? throw new InvalidOperationException("Execution context flow must not be suppressed when starting a test.");
 
-                Context.EstablishExecutionEnvironment();
+                using ((object)executionContext as IDisposable)
+                {
+                    ExecutionContext.Run(executionContext, _ =>
+                    {
+                        Context.CurrentTest = this.Test;
+                        Context.CurrentResult = this.Result;
+                        Context.Listener.TestStarted(this.Test);
+                        Context.StartTime = DateTime.UtcNow;
+                        Context.StartTicks = Stopwatch.GetTimestamp();
+                        Context.TestWorker = this.TestWorker;
 
-                State = WorkItemState.Running;
+                        Context.EstablishExecutionEnvironment();
 
-                PerformWork();
+                        State = WorkItemState.Running;
+
+                        PerformWork();
+                    }, state: null);
+                }
             }
             finally
             {
