@@ -37,5 +37,25 @@ namespace NUnit.Framework
 
             result.AssertPassed();
         }
+
+        [Test]
+        public static void TestCaseSourceExecutionContextIsNotShared()
+        {
+            var result = TestBuilder.RunParameterizedMethodSuite(
+                typeof(ExecutionContextFixture),
+                nameof(ExecutionContextFixture.TestCaseSourceExecutionContextIsNotShared));
+
+            result.AssertPassed();
+        }
+
+        [Test]
+        public static void ValueSourceExecutionContextIsNotShared()
+        {
+            var result = TestBuilder.RunParameterizedMethodSuite(
+                typeof(ExecutionContextFixture),
+                nameof(ExecutionContextFixture.ValueSourceExecutionContextIsNotShared));
+
+            result.AssertPassed();
+        }
     }
 }
