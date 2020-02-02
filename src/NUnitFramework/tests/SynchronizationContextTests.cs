@@ -104,7 +104,7 @@ namespace NUnit.Framework
             });
         }
 
-#if NET40 || NET45
+#if NETFRAMEWORK
         // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread
         // to ensure that the message pump is shut down on the correct thread.
 
