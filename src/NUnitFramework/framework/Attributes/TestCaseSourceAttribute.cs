@@ -162,17 +162,7 @@ namespace NUnit.Framework
 
             try
             {
-                IEnumerable source;
-
-                var previousState = SandboxedThreadState.Capture();
-                try
-                {
-                    source = GetTestCaseSource(method);
-                }
-                finally
-                {
-                    previousState.Restore();
-                }
+                IEnumerable source = ContextUtils.DoIsolated(() => GetTestCaseSource(method));
 
                 if (source != null)
                 {

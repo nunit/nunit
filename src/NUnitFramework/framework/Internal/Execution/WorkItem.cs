@@ -475,35 +475,21 @@ namespace NUnit.Framework.Internal.Execution
         [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            var previousState = SandboxedThreadState.Capture();
-            try
+            ContextUtils.DoIsolated(() =>
             {
-                var executionContext = ExecutionContext.Capture()
-                    ?? throw new InvalidOperationException("Execution context flow must not be suppressed when starting a test.");
+                Context.CurrentTest = this.Test;
+                Context.CurrentResult = this.Result;
+                Context.Listener.TestStarted(this.Test);
+                Context.StartTime = DateTime.UtcNow;
+                Context.StartTicks = Stopwatch.GetTimestamp();
+                Context.TestWorker = this.TestWorker;
 
-                using ((object)executionContext as IDisposable)
-                {
-                    ExecutionContext.Run(executionContext, _ =>
-                    {
-                        Context.CurrentTest = this.Test;
-                        Context.CurrentResult = this.Result;
-                        Context.Listener.TestStarted(this.Test);
-                        Context.StartTime = DateTime.UtcNow;
-                        Context.StartTicks = Stopwatch.GetTimestamp();
-                        Context.TestWorker = this.TestWorker;
+                Context.EstablishExecutionEnvironment();
 
-                        Context.EstablishExecutionEnvironment();
+                State = WorkItemState.Running;
 
-                        State = WorkItemState.Running;
-
-                        PerformWork();
-                    }, state: null);
-                }
-            }
-            finally
-            {
-                previousState.Restore();
-            }
+                PerformWork();
+            });
         }
 
         private ParallelExecutionStrategy GetExecutionStrategy()
