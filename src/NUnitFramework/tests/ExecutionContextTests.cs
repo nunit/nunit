@@ -57,5 +57,13 @@ namespace NUnit.Framework
 
             result.AssertPassed();
         }
+
+        [Test]
+        public static void ExecutionContextFlow()
+        {
+            var result = TestBuilder.RunTestFixture(typeof(ExecutionContextFlowFixture));
+
+            result.AssertPassed();
+        }
     }
 }
