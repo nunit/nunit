@@ -31,7 +31,7 @@ namespace NUnit.Framework.Compatibility
         [Test]
         public void CanGetAttributesOnAssemblies()
         {
-            var assembly = typeof(AttributeHelperTests).GetTypeInfo().Assembly;
+            var assembly = typeof(TestAttribute).GetTypeInfo().Assembly;
             Assert.That(assembly, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(assembly, typeof(AssemblyCompanyAttribute), true);
             Assert.That(attr, Is.Not.Null);
