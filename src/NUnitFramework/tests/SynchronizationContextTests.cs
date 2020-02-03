@@ -158,7 +158,7 @@ namespace NUnit.Framework
             {
                 apiAdapter.Execute(() =>
                 {
-                    Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
+                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
                     return TaskEx.FromResult<object>(null);
                 });
             }
@@ -175,7 +175,7 @@ namespace NUnit.Framework
             {
                 apiAdapter.Execute(async () => await TaskEx.Yield());
 
-                Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
+                Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
             }
         }
 #endif
