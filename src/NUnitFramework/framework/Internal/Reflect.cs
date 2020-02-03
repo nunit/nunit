@@ -58,13 +58,13 @@ namespace NUnit.Framework.Internal
         #region Get Methods of a type
 
         /// <summary>
-        /// Examine a fixture type and return an array of methods having a
-        /// particular attribute. The array is order with base methods first.
+        /// Returns all methods declared by the specified fixture type that have the specified attribute, optionally
+        /// including base classes. Methods from a base class are always returned before methods from a class that
+        /// inherits from it.
         /// </summary>
-        /// <param name="fixtureType">The type to examine</param>
-        /// <param name="attributeType">The attribute Type to look for</param>
-        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
-        /// <returns>The array of methods found</returns>
+        /// <param name="fixtureType">The type to examine.</param>
+        /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
             if (!inherit)
