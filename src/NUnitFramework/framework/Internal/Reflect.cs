@@ -67,34 +67,23 @@ namespace NUnit.Framework.Internal
         /// <returns>The array of methods found</returns>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-            List<MethodInfo> list = new List<MethodInfo>();
-
-            var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
-            foreach (MethodInfo method in fixtureType.GetMethods(flags))
+            if (!inherit)
             {
-                if (method.IsDefined(attributeType, inherit))
-                    list.Add(method);
+                return fixtureType
+                   .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
+                   .Where(method => method.IsDefined(attributeType, inherit: false))
+                   .ToArray();
             }
 
-            list.Sort(new BaseTypesFirstComparer());
+            var methodsByDeclaringType = fixtureType
+                .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
+                .Where(method => method.IsDefined(attributeType, inherit: true))
+                .ToLookup(method => method.DeclaringType);
 
-            return list.ToArray();
-        }
-
-        private class BaseTypesFirstComparer : IComparer<MethodInfo>
-        {
-            public int Compare(MethodInfo m1, MethodInfo m2)
-            {
-                if (m1 == null || m2 == null) return 0;
-
-                Type m1Type = m1.DeclaringType;
-                Type m2Type = m2.DeclaringType;
-
-                if (m1Type == m2Type) return 0;
-                if (m1Type.IsAssignableFrom(m2Type)) return -1;
-
-                return 1;
-            }
+            return fixtureType.TypeAndBaseTypes()
+                .Reverse()
+                .SelectMany(declaringType => methodsByDeclaringType[declaringType])
+                .ToArray();
         }
 
         /// <summary>
