@@ -433,6 +433,16 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-#endregion
+        #endregion
+
+        /// <summary>Marks the NotNull argument as being validated for not being null, to satisfy the static code analysis.</summary>
+        /// <remarks>
+        /// Notice that it does not matter what this attribute does, as long as
+        /// it is named ValidatedNotNullAttribute.
+        /// </remarks>
+        [AttributeUsage(AttributeTargets.Parameter)]
+        private sealed class ValidatedNotNullAttribute : Attribute
+        {
+        }
     }
 }
