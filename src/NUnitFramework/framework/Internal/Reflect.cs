@@ -58,43 +58,32 @@ namespace NUnit.Framework.Internal
         #region Get Methods of a type
 
         /// <summary>
-        /// Examine a fixture type and return an array of methods having a
-        /// particular attribute. The array is order with base methods first.
+        /// Returns all methods declared by the specified fixture type that have the specified attribute, optionally
+        /// including base classes. Methods from a base class are always returned before methods from a class that
+        /// inherits from it.
         /// </summary>
-        /// <param name="fixtureType">The type to examine</param>
-        /// <param name="attributeType">The attribute Type to look for</param>
-        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
-        /// <returns>The array of methods found</returns>
+        /// <param name="fixtureType">The type to examine.</param>
+        /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-            List<MethodInfo> list = new List<MethodInfo>();
-
-            var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
-            foreach (MethodInfo method in fixtureType.GetMethods(flags))
+            if (!inherit)
             {
-                if (method.IsDefined(attributeType, inherit))
-                    list.Add(method);
+                return fixtureType
+                   .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
+                   .Where(method => method.IsDefined(attributeType, inherit: false))
+                   .ToArray();
             }
 
-            list.Sort(new BaseTypesFirstComparer());
+            var methodsByDeclaringType = fixtureType
+                .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
+                .Where(method => method.IsDefined(attributeType, inherit: true))
+                .ToLookup(method => method.DeclaringType);
 
-            return list.ToArray();
-        }
-
-        private class BaseTypesFirstComparer : IComparer<MethodInfo>
-        {
-            public int Compare(MethodInfo m1, MethodInfo m2)
-            {
-                if (m1 == null || m2 == null) return 0;
-
-                Type m1Type = m1.DeclaringType;
-                Type m2Type = m2.DeclaringType;
-
-                if (m1Type == m2Type) return 0;
-                if (m1Type.IsAssignableFrom(m2Type)) return -1;
-
-                return 1;
-            }
+            return fixtureType.TypeAndBaseTypes()
+                .Reverse()
+                .SelectMany(declaringType => methodsByDeclaringType[declaringType])
+                .ToArray();
         }
 
         /// <summary>

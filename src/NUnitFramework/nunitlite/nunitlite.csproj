@@ -10,6 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\framework\Schemas\*.xsd" LinkBase="Schemas" CopyToOutputDirectory="Always" />
     <None Update="Schemas\*.xsd" CopyToOutputDirectory="Always" />
   </ItemGroup>

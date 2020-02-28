@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-#if NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45 || NET46 // NET46 should be removed when the framework project adds a net46 target
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Assertions
                 throw testException;
         }
 
-#if !(NET35 || NET40 || NET45)
+#if !(NET35 || NET40 || NET45 || NET46) // NET46 should be removed when the framework project adds a net46 target
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;

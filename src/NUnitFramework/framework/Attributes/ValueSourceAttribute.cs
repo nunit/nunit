@@ -102,7 +102,7 @@ namespace NUnit.Framework
             MemberInfo[] members = sourceType.GetMember(SourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-            var dataSource = GetDataSourceValue(members);
+            var dataSource = ContextUtils.DoIsolated(() => GetDataSourceValue(members));
 
             if (dataSource == null)
             {

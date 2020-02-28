@@ -475,26 +475,18 @@ namespace NUnit.Framework.Internal.Execution
         [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            var previousState = SandboxedThreadState.Capture();
-            try
-            {
-                Context.CurrentTest = this.Test;
-                Context.CurrentResult = this.Result;
-                Context.Listener.TestStarted(this.Test);
-                Context.StartTime = DateTime.UtcNow;
-                Context.StartTicks = Stopwatch.GetTimestamp();
-                Context.TestWorker = this.TestWorker;
+            Context.CurrentTest = this.Test;
+            Context.CurrentResult = this.Result;
+            Context.Listener.TestStarted(this.Test);
+            Context.StartTime = DateTime.UtcNow;
+            Context.StartTicks = Stopwatch.GetTimestamp();
+            Context.TestWorker = this.TestWorker;
 
-                Context.EstablishExecutionEnvironment();
+            Context.EstablishExecutionEnvironment();
 
-                State = WorkItemState.Running;
+            State = WorkItemState.Running;
 
-                PerformWork();
-            }
-            finally
-            {
-                previousState.Restore();
-            }
+            PerformWork();
         }
 
         private ParallelExecutionStrategy GetExecutionStrategy()
