@@ -141,7 +141,7 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
@@ -153,7 +153,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the
+        /// Asserts that a condition is true. If the condition is false, the
         /// method throws an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
@@ -163,7 +163,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
@@ -178,7 +178,7 @@ namespace NUnit.Framework
         #region Lambda returning Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
@@ -190,7 +190,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
@@ -200,7 +200,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
