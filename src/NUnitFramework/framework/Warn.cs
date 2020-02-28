@@ -138,7 +138,7 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
@@ -149,7 +149,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void Unless(bool condition)
@@ -158,7 +158,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
@@ -172,8 +172,7 @@ namespace NUnit.Framework
         #region Lambda returning Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
@@ -184,8 +183,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         public static void Unless(Func<bool> condition)
@@ -194,8 +192,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
@@ -351,7 +348,7 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
@@ -362,7 +359,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void If(bool condition)
@@ -371,7 +368,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
