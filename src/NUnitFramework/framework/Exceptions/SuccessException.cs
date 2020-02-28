@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
+#nullable enable
+
 using System;
 
 namespace NUnit.Framework
@@ -33,7 +36,7 @@ namespace NUnit.Framework
     public class SuccessException : ResultStateException
     {
         /// <param name="message"></param>
-        public SuccessException(string message)
+        public SuccessException(string? message)
             : base(message)
         { }
 
@@ -41,7 +44,7 @@ namespace NUnit.Framework
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public SuccessException(string message, Exception inner)
+        public SuccessException(string? message, Exception? inner)
             :
             base(message, inner)
         { }
