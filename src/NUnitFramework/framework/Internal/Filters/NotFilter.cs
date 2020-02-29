@@ -47,20 +47,13 @@ namespace NUnit.Framework.Internal.Filters
 
         /// <summary>
         /// Determine if a particular test passes the filter criteria.
-        /// 
-        /// Overriden in NotFilter so that
-        /// 1. Two nested NotFilters are simply ignored
-        /// 2. Otherwise, we only look at the test itself and parents, ignoring
-        /// any child test matches.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
+        /// <param name="negated">If set to <c>true</c> we are carrying a negation through</param>
         /// <returns>True if the test passes the filter, otherwise false</returns>
-        public override bool Pass(ITest test)
+        public override bool Pass(ITest test, bool negated)
         {
-            var secondNotFilter = BaseFilter as NotFilter;
-            return secondNotFilter != null
-                ? secondNotFilter.BaseFilter.Pass(test) 
-                : !BaseFilter.Match (test) && !BaseFilter.MatchParent (test);
+            return BaseFilter.Pass(test, !negated);
         }
 
         /// <summary>
