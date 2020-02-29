@@ -80,7 +80,7 @@ namespace NUnit.Framework
         #region Properties
 
         /// <summary>
-        /// The name of a the method, property or fiend to be used as a source
+        /// The name of a the method, property or field to be used as a source
         /// </summary>
         public string SourceName { get; }
 
