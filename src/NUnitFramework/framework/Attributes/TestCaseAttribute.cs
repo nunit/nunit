@@ -346,7 +346,7 @@ namespace NUnit.Framework
                 if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 {
                     if (argsProvided > 1 ||
-                        argsProvided == 1 && parms.Arguments[0].GetType() != typeof(object[]))
+                        argsProvided == 1 && parms.Arguments[0]?.GetType() != typeof(object[]))
                     {
                         parms.Arguments = new object[] { parms.Arguments };
                     }
