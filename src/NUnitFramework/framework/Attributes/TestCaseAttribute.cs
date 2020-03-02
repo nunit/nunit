@@ -21,8 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -44,12 +47,12 @@ namespace NUnit.Framework
         /// This constructor is not CLS-Compliant
         /// </summary>
         /// <param name="arguments"></param>
-        public TestCaseAttribute(params object[] arguments)
+        public TestCaseAttribute(params object?[]? arguments)
         {
             RunState = RunState.Runnable;
 
             if (arguments == null)
-                Arguments = new object[] { null };
+                Arguments = new object?[] { null };
             else
                 Arguments = arguments;
 
@@ -60,10 +63,10 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a single argument
         /// </summary>
         /// <param name="arg"></param>
-        public TestCaseAttribute(object arg)
+        public TestCaseAttribute(object? arg)
         {
             RunState = RunState.Runnable;
-            Arguments = new object[] { arg };
+            Arguments = new object?[] { arg };
             Properties = new PropertyBag();
         }
 
@@ -72,10 +75,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
-        public TestCaseAttribute(object arg1, object arg2)
+        public TestCaseAttribute(object? arg1, object? arg2)
         {
             RunState = RunState.Runnable;
-            Arguments = new object[] { arg1, arg2 };
+            Arguments = new object?[] { arg1, arg2 };
             Properties = new PropertyBag();
         }
 
@@ -85,10 +88,10 @@ namespace NUnit.Framework
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         /// <param name="arg3"></param>
-        public TestCaseAttribute(object arg1, object arg2, object arg3)
+        public TestCaseAttribute(object? arg1, object? arg2, object? arg3)
         {
             RunState = RunState.Runnable;
-            Arguments = new object[] { arg1, arg2, arg3 };
+            Arguments = new object?[] { arg1, arg2, arg3 };
             Properties = new PropertyBag();
         }
 
@@ -100,7 +103,7 @@ namespace NUnit.Framework
         /// Gets or sets the name of the test.
         /// </summary>
         /// <value>The name of the test.</value>
-        public string TestName { get; set; }
+        public string? TestName { get; set; }
 
         /// <summary>
         /// Gets or sets the RunState of this test case.
@@ -110,7 +113,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the list of arguments to a test case
         /// </summary>
-        public object[] Arguments { get; }
+        public object?[] Arguments { get; }
 
         /// <summary>
         /// Gets the properties of the test case
@@ -125,7 +128,7 @@ namespace NUnit.Framework
         /// Gets or sets the expected result.
         /// </summary>
         /// <value>The result.</value>
-        public object ExpectedResult
+        public object? ExpectedResult
         {
             get { return _expectedResult; }
             set
@@ -134,7 +137,7 @@ namespace NUnit.Framework
                 HasExpectedResult = true;
             }
         }
-        private object _expectedResult;
+        private object? _expectedResult;
 
         /// <summary>
         /// Returns true if the expected result has been set
@@ -149,7 +152,8 @@ namespace NUnit.Framework
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        public string Description
+        [DisallowNull]
+        public string? Description
         {
             get { return Properties.Get(PropertyNames.Description) as string; }
             set { Properties.Set(PropertyNames.Description, value); }
@@ -158,7 +162,8 @@ namespace NUnit.Framework
         /// <summary>
         /// The author of this test
         /// </summary>
-        public string Author
+        [DisallowNull]
+        public string? Author
         {
             get { return Properties.Get(PropertyNames.Author) as string; }
             set { Properties.Set(PropertyNames.Author, value); }
@@ -167,7 +172,8 @@ namespace NUnit.Framework
         /// <summary>
         /// The type that this test is testing
         /// </summary>
-        public Type TestOf
+        [DisallowNull]
+        public Type? TestOf
         {
             get { return _testOf; }
             set
@@ -176,12 +182,13 @@ namespace NUnit.Framework
                 Properties.Set(PropertyNames.TestOf, value.FullName);
             }
         }
-        private Type _testOf;
+        private Type? _testOf;
 
         /// <summary>
         /// Gets or sets the reason for ignoring the test
         /// </summary>
-        public string Ignore
+        [DisallowNull]
+        public string? Ignore
         {
             get { return IgnoreReason; }
             set { IgnoreReason = value; }
@@ -203,7 +210,8 @@ namespace NUnit.Framework
         /// Gets or sets the reason for not running the test.
         /// </summary>
         /// <value>The reason.</value>
-        public string Reason
+        [DisallowNull]
+        public string? Reason
         {
             get { return Properties.Get(PropertyNames.SkipReason) as string; }
             set { Properties.Set(PropertyNames.SkipReason, value); }
@@ -214,7 +222,8 @@ namespace NUnit.Framework
         /// non-empty value, the test is marked as ignored.
         /// </summary>
         /// <value>The ignore reason.</value>
-        public string IgnoreReason
+        [DisallowNull]
+        public string? IgnoreReason
         {
             get { return Reason; }
             set
@@ -227,18 +236,19 @@ namespace NUnit.Framework
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
-        public string IncludePlatform { get; set; }
+        public string? IncludePlatform { get; set; }
 
         /// <summary>
         /// Comma-delimited list of platforms to not run the test for
         /// </summary>
-        public string ExcludePlatform { get; set; }
+        public string? ExcludePlatform { get; set; }
 
         /// <summary>
         /// Gets and sets the category for this test case.
         /// May be a comma-separated list of categories.
         /// </summary>
-        public string Category
+        [DisallowNull]
+        public string? Category
         {
             get { return Properties.Get(PropertyNames.Category) as string; }
             set
@@ -291,7 +301,7 @@ namespace NUnit.Framework
                         }
                         else
                         {
-                            object[] newArglist = new object[argsNeeded];
+                            object?[] newArglist = new object?[argsNeeded];
                             for (int i = 0; i < argsNeeded && i < argsProvided; i++)
                                 newArglist[i] = parms.Arguments[i];
 
@@ -310,7 +320,7 @@ namespace NUnit.Framework
                 //Special handling for optional parameters
                 if (parms.Arguments.Length < argsNeeded)
                 {
-                    object[] newArgList = new object[parameters.Length];
+                    object?[] newArgList = new object?[parameters.Length];
                     Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
 
                     //Fill with Type.Missing for remaining required parameters where optional
@@ -360,11 +370,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arglist">The arguments to be converted</param>
         /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object[] arglist, IParameterInfo[] parameters)
+        private static void PerformSpecialConversions(object?[] arglist, IParameterInfo[] parameters)
         {
             for (int i = 0; i < arglist.Length; i++)
             {
-                object arg = arglist[i];
+                object? arg = arglist[i];
                 Type targetType = parameters[i].ParameterType;
                 if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
                 {

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using NUnit.Framework.Interfaces;
 
@@ -50,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public TestFixtureParameters(params object[] args) : base(args) { }
+        public TestFixtureParameters(params object?[] args) : base(args) { }
 
         /// <summary>
         /// Construct a ParameterSet from an object implementing ITestCaseData
@@ -68,7 +70,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Type arguments used to create a generic fixture instance
         /// </summary>
-        public Type[] TypeArgs { get; }
+        public Type[]? TypeArgs { get; }
 
         #endregion
     }
