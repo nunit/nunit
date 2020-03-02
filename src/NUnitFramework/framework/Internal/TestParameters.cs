@@ -40,6 +40,7 @@ namespace NUnit.Framework.Internal
         public TestParameters()
         {
             RunState = RunState.Runnable;
+            InitializeArguments(new object[0]);
             Properties = new PropertyBag();
         }
 
@@ -61,6 +62,7 @@ namespace NUnit.Framework.Internal
         public TestParameters(Exception exception)
         {
             RunState = RunState.NotRunnable;
+            InitializeArguments(new object[0]);
             Properties = new PropertyBag();
 
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
@@ -148,7 +150,7 @@ namespace NUnit.Framework.Internal
         /// The original arguments provided by the user,
         /// used for display purposes.
         /// </summary>
-        public object?[]? OriginalArguments { get; private set; }
+        public object?[] OriginalArguments { get; private set; }
 
         private string[]? _argDisplayNames;
 

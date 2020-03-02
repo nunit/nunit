@@ -53,6 +53,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parms">The ParameterSet to be used, or null</param>
         public TestMethod BuildTestMethod(IMethodInfo method, Test parentSuite, TestCaseParameters? parms)
         {
+            if (method.Name == "ExpectedResultDoesNotBlockApplyToTestAttributes") { }
             var testMethod = new TestMethod(method, parentSuite)
             {
                 Seed = _randomizer.Next()
@@ -62,7 +63,7 @@ namespace NUnit.Framework.Internal.Builders
 
             CheckTestMethodSignature(testMethod, parms);
 
-            if (parms == null || parms.Arguments == null)
+            if (parms == null || parms.Arguments.Length == 0)
                 testMethod.ApplyAttributesToTest(method.MethodInfo);
 
             // NOTE: After the call to CheckTestMethodSignature, the Method
