@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
@@ -47,7 +49,7 @@ namespace NUnit.Framework
         /// Constructor taking one or more cultures
         /// </summary>
         /// <param name="cultures">Comma-delimited list of cultures</param>
-        public CultureAttribute(string cultures) : base(cultures) { }
+        public CultureAttribute(string? cultures) : base(cultures) { }
 
         #region IApplyToTest members
 

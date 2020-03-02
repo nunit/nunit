@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Reflection;
@@ -67,12 +69,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of a the method, property or field to be used as a source
         /// </summary>
-        public string SourceName { get; }
+        public string? SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; }
+        public Type? SourceType { get; }
 
         #endregion
 
@@ -112,7 +114,7 @@ namespace NUnit.Framework
             return dataSource;
         }
 
-        private static IEnumerable GetDataSourceValue(MemberInfo[] members)
+        private static IEnumerable? GetDataSourceValue(MemberInfo[] members)
         {
             if (members.Length != 1) return null;
 

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -28,6 +30,7 @@ using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
+    using System.Diagnostics.CodeAnalysis;
     using Interfaces;
     using Internal;
 
@@ -51,7 +54,7 @@ namespace NUnit.Framework
 
             if (fixture.RunState != RunState.NotRunnable)
             {
-                string reason = null;
+                string? reason = null;
                 if (!IsValidFixtureType(typeInfo, ref reason))
                     fixture.MakeInvalid(reason);
             }
@@ -65,7 +68,7 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private static bool IsValidFixtureType(ITypeInfo typeInfo, ref string reason)
+        private static bool IsValidFixtureType(ITypeInfo typeInfo, [NotNullWhen(false)] ref string? reason)
         {
             if (!typeInfo.IsStaticClass)
             {

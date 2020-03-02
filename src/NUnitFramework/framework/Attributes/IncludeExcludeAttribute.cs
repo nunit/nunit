@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
 
 namespace NUnit.Framework
 {
@@ -31,9 +31,9 @@ namespace NUnit.Framework
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute
     {
-        private string include;
-        private string exclude;
-        private string reason;
+        private string? include;
+        private string? exclude;
+        private string? reason;
 
         /// <summary>
         /// Constructor with no included items specified, for use
@@ -45,7 +45,7 @@ namespace NUnit.Framework
         /// Constructor taking one or more included items
         /// </summary>
         /// <param name="include">Comma-delimited list of included items</param>
-        public IncludeExcludeAttribute( string include )
+        public IncludeExcludeAttribute(string? include)
         {
             this.include = include;
         }
@@ -55,7 +55,7 @@ namespace NUnit.Framework
         /// a test to run. Multiple items may be given,
         /// separated by a comma.
         /// </summary>
-        public string Include
+        public string? Include
         {
             get { return this.include; }
             set { include = value; }
@@ -65,7 +65,7 @@ namespace NUnit.Framework
         /// Name of the item to be excluded. Multiple items
         /// may be given, separated by a comma.
         /// </summary>
-        public string Exclude
+        public string? Exclude
         {
             get { return this.exclude; }
             set { this.exclude = value; }
@@ -74,7 +74,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The reason for including or excluding the test
         /// </summary>
-        public string Reason
+        public string? Reason
         {
             get { return reason; }
             set { reason = value; }
