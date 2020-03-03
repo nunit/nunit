@@ -45,7 +45,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public TestFixtureAttribute() : this(new object?[0]) { }
+        public TestFixtureAttribute() : this(Internal.TestParameters.NoArguments) { }
 
         /// <summary>
         /// Construct with a object[] representing a set of arguments.

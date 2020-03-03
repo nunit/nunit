@@ -34,13 +34,20 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestParameters : ITestData, IApplyToTest
     {
+        internal static readonly object[] NoArguments =
+#if NET35 || NET40 || NET45 // New in net46
+            new object[0];
+#else
+            Array.Empty<object>();
+#endif
+
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
         public TestParameters()
         {
             RunState = RunState.Runnable;
-            InitializeArguments(new object[0]);
+            InitializeArguments(NoArguments);
             Properties = new PropertyBag();
         }
 
@@ -62,7 +69,7 @@ namespace NUnit.Framework.Internal
         public TestParameters(Exception exception)
         {
             RunState = RunState.NotRunnable;
-            InitializeArguments(new object[0]);
+            InitializeArguments(NoArguments);
             Properties = new PropertyBag();
 
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
