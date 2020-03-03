@@ -106,14 +106,8 @@ namespace NUnit.Framework
             MemberInfo[] members = sourceType.GetMember(SourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-            var dataSource = ContextUtils.DoIsolated(() => GetDataSourceValue(members));
-
-            if (dataSource == null)
-            {
-                ThrowInvalidDataSourceException();
-            }
-
-            return dataSource;
+            return ContextUtils.DoIsolated(() => GetDataSourceValue(members))
+                ?? throw CreateSourceNameException();
         }
 
         private static IEnumerable? GetDataSourceValue(MemberInfo[] members)
@@ -128,7 +122,7 @@ namespace NUnit.Framework
                 if (field.IsStatic)
                     return (IEnumerable)field.GetValue(null);
 
-                ThrowInvalidDataSourceException();
+                throw CreateSourceNameException();
             }
 
             var property = member as PropertyInfo;
@@ -137,7 +131,7 @@ namespace NUnit.Framework
                 if (property.GetGetMethod(true).IsStatic)
                     return (IEnumerable)property.GetValue(null, null);
 
-                ThrowInvalidDataSourceException();
+                throw CreateSourceNameException();
             }
 
             var m = member as MethodInfo;
@@ -146,15 +140,15 @@ namespace NUnit.Framework
                 if (m.IsStatic)
                     return (IEnumerable)m.Invoke(null, null);
 
-                ThrowInvalidDataSourceException();
+                throw CreateSourceNameException();
             }
 
             return null;
         }
 
-        private static void ThrowInvalidDataSourceException()
+        private static InvalidDataSourceException CreateSourceNameException()
         {
-            throw new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a non-null static field, property or method.");
+            return new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a non-null static field, property or method.");
         }
 
         #endregion
