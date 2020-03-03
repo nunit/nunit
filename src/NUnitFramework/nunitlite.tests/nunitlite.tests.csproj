@@ -4,7 +4,6 @@
     <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite.Tests</RootNamespace>
-    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
