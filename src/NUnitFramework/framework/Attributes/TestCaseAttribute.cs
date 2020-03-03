@@ -156,7 +156,11 @@ namespace NUnit.Framework
         public string? Description
         {
             get { return Properties.Get(PropertyNames.Description) as string; }
-            set { Properties.Set(PropertyNames.Description, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.Description, value);
+            }
         }
 
         /// <summary>
@@ -166,7 +170,11 @@ namespace NUnit.Framework
         public string? Author
         {
             get { return Properties.Get(PropertyNames.Author) as string; }
-            set { Properties.Set(PropertyNames.Author, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.Author, value);
+            }
         }
 
         /// <summary>
@@ -178,6 +186,7 @@ namespace NUnit.Framework
             get { return _testOf; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
                 Properties.Set(PropertyNames.TestOf, value.FullName);
             }
@@ -191,7 +200,11 @@ namespace NUnit.Framework
         public string? Ignore
         {
             get { return IgnoreReason; }
-            set { IgnoreReason = value; }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                IgnoreReason = value;
+            }
         }
 
         /// <summary>
@@ -214,7 +227,11 @@ namespace NUnit.Framework
         public string? Reason
         {
             get { return Properties.Get(PropertyNames.SkipReason) as string; }
-            set { Properties.Set(PropertyNames.SkipReason, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.SkipReason, value);
+            }
         }
 
         /// <summary>
@@ -228,6 +245,7 @@ namespace NUnit.Framework
             get { return Reason; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
                 RunState = RunState.Ignored;
                 Reason = value;
             }
@@ -253,6 +271,8 @@ namespace NUnit.Framework
             get { return Properties.Get(PropertyNames.Category) as string; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
+
                 foreach (string cat in value.Split(new char[] { ',' }) )
                     Properties.Add(PropertyNames.Category, cat);
             }
