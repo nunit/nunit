@@ -45,9 +45,8 @@ namespace NUnit.Framework.Internal
         /// Default Constructor creates an empty parameter set
         /// </summary>
         public TestParameters()
+            : this(RunState.Runnable, NoArguments)
         {
-            RunState = RunState.Runnable;
-            InitializeArguments(NoArguments);
             Properties = new PropertyBag();
         }
 
@@ -56,9 +55,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="args"></param>
         public TestParameters(object?[] args)
+            : this(RunState.Runnable, args)
         {
-            RunState = RunState.Runnable;
-            InitializeArguments(args);
             Properties = new PropertyBag();
         }
 
@@ -67,11 +65,9 @@ namespace NUnit.Framework.Internal
         /// the provider exception that made it invalid.
         /// </summary>
         public TestParameters(Exception exception)
+            : this(RunState.NotRunnable, NoArguments)
         {
-            RunState = RunState.NotRunnable;
-            InitializeArguments(NoArguments);
             Properties = new PropertyBag();
-
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
             Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
         }
@@ -81,26 +77,26 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="data"></param>
         public TestParameters(ITestData data)
+            : this(data.RunState, data.Arguments)
         {
-            RunState = data.RunState;
-            Properties = new PropertyBag();
-
             TestName = data.TestName;
-
-            InitializeArguments(data.Arguments);
 
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
         }
 
-        private void InitializeArguments(object?[] args)
+        private TestParameters(RunState runState, object?[] args)
         {
+            RunState = runState;
+
             OriginalArguments = args;
 
             // We need to copy args, since we may change them
             var numArgs = args.Length;
             Arguments = new object?[numArgs];
             Array.Copy(args, Arguments, numArgs);
+
+            Properties = new PropertyBag();
         }
 
         /// <summary>
