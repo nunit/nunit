@@ -97,9 +97,11 @@ namespace NUnit.Framework
         {
             Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
 
-            // TODO: Test this
             if (SourceName == null)
-                return Reflect.Construct(sourceType) as IEnumerable;
+            {
+                return Reflect.Construct(sourceType) as IEnumerable
+                    ?? throw new InvalidDataSourceException($"The value source type '{sourceType}' does not implement IEnumerable.");
+            }
 
             MemberInfo[] members = sourceType.GetMember(SourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
