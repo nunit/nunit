@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 
 namespace NUnit.Framework
@@ -35,7 +37,7 @@ namespace NUnit.Framework
     {
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
-        public InconclusiveException(string message)
+        public InconclusiveException(string? message)
             : base(message)
         { }
 
@@ -43,7 +45,7 @@ namespace NUnit.Framework
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public InconclusiveException(string message, Exception inner)
+        public InconclusiveException(string? message, Exception? inner)
             :
             base(message, inner)
         { }
