@@ -22,8 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
@@ -198,6 +202,61 @@ namespace NUnit.Framework
             this.RunState = RunState.Ignored;
             this.Properties.Set(PropertyNames.SkipReason, reason);
             return this;
+        }
+
+        #endregion
+        
+        #region Methods
+
+        /// <summary>
+        /// Returns a list of <see cref="TestCaseData"/> objects representing all possible combinations of the given parameters.
+        /// </summary>
+        /// <param name="values">Each array in this object array is to represent a parameter for the method being tested</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="TestCaseData"/> objects that represents all possible combinations for the given parameters</returns>
+        /// <remarks>
+        /// This method will generate a collection of <see cref="TestCaseData"/> instances where the collection represents every possible combination that could be made
+        /// with the given parameters.  That is to say, with the following code:
+        /// <code>
+        /// return TestCaseData.Combinatorial(
+        ///             new[] { true, false }.Cast&lt;object&gt;(),
+        ///             new[] { 0, 1, 10 }.Cast&lt;object&gt;());
+        /// </code>
+        /// 
+        /// The following test data will be returned:
+        /// <list type="bullet">
+        /// <item><description>TestCaseData(true, 0)</description></item>
+        /// <item><description>TestCaseData(true, 1)</description></item>
+        /// <item><description>TestCaseData(true, 10)</description></item>
+        /// <item><description>TestCaseData(false, 0)</description></item>
+        /// <item><description>TestCaseData(false, 1)</description></item>
+        /// <item><description>TestCaseData(false, 10)</description></item>
+        /// </list>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// public class TestClass
+        /// {
+        ///     #region TestCaseSource
+        /// 
+        ///     private static IEnumerable ExampleTest_TestCases
+        ///     {
+        ///         return TestCaseData.Combinatorial(
+        ///             new[] { true, false }(),
+        ///             new[] { 0, 1, 10 }());
+        ///     }
+        /// 
+        ///     #endregion
+        ///     [Test, TestCaseSource(typeof(TestClass), nameof(ExampleTest_TestCases))]
+        ///     public void ExampleTest(bool condition, int input)
+        ///     {
+        ///          // Execute test
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public static IEnumerable<TestCaseData> Combinatorial(params IEnumerable[] values)
+        {
+            return CombinatorialStrategy.GetCombinations<TestCaseData>(values, (o) => new TestCaseData(o));
         }
 
         #endregion
