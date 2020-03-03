@@ -116,11 +116,7 @@ namespace NUnitLite
             if (_options.OutFile != null)
             {
                 var outFile = Path.Combine(_options.WorkDirectory, _options.OutFile);
-#if NETSTANDARD1_4
-                var textWriter = File.CreateText(outFile);
-#else
                 var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
-#endif
                 outWriter = new ExtendedTextWrapper(textWriter);
                 Console.SetOut(outWriter);
             }
@@ -135,11 +131,7 @@ namespace NUnitLite
                 if (_options.ErrFile != null)
                 {
                     var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
-#if NETSTANDARD1_4
-                    errWriter = File.CreateText(errFile);
-#else
                     errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
-#endif
                     Console.SetError(errWriter);
                 }
 
@@ -439,11 +431,7 @@ namespace NUnitLite
                     ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 
-#if NETSTANDARD1_4
-            var id = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
-#else
             var id = Process.GetCurrentProcess().Id;
-#endif
 
             return string.Format(logFileFormat, id, baseName, ext);
         }
@@ -491,7 +479,7 @@ namespace NUnitLite
         /// <param name="message">A TestMessage object containing the text to send</param>
         public void SendMessage(TestMessage message)
         {
-            
+
         }
 
         #endregion

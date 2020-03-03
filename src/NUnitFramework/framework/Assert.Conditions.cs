@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections;
 using NUnit.Framework.Constraints;
 using System;
@@ -32,32 +34,29 @@ namespace NUnit.Framework
         #region True
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void True(bool? condition, string message, params object[] args)
+        public static void True(bool? condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.True ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void True(bool condition, string message, params object[] args)
+        public static void True(bool condition, string? message, params object?[]? args)
         {
            Assert.That(condition, Is.True, message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool? condition)
@@ -66,8 +65,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool condition)
@@ -76,32 +74,29 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsTrue(bool? condition, string message, params object[] args)
+        public static void IsTrue(bool? condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.True ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsTrue(bool condition, string message, params object[] args)
+        public static void IsTrue(bool condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.True ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool? condition)
@@ -110,8 +105,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool condition)
@@ -124,32 +118,31 @@ namespace NUnit.Framework
         #region False
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void False(bool? condition, string message, params object[] args)
+        public static void False(bool? condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void False(bool condition, string message, params object[] args)
+        public static void False(bool condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool? condition)
@@ -158,8 +151,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool condition)
@@ -168,32 +161,32 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsFalse(bool? condition, string message, params object[] args)
+        public static void IsFalse(bool? condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsFalse(bool condition, string message, params object[] args)
+        public static void IsFalse(bool condition, string? message, params object?[]? args)
         {
             Assert.That(condition, Is.False ,message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool? condition)
@@ -202,8 +195,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is false. If the condition is true the method throws
-        /// an <see cref="AssertionException"/>.
+        /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary> 
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool condition)
@@ -216,49 +209,45 @@ namespace NUnit.Framework
         #region NotNull
 
         /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is not equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotNull(object anObject, string message, params object[] args)
+        public static void NotNull(object? anObject, string? message, params object?[]? args)
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
 
         /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is not equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void NotNull(object anObject)
+        public static void NotNull(object? anObject)
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
 
         /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is not equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotNull(object anObject, string message, params object[] args)
+        public static void IsNotNull(object? anObject, string? message, params object?[]? args)
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
 
         /// <summary>
-        /// Verifies that the object that is passed in is not equal to <code>null</code>
-        /// If the object is <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is not equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void IsNotNull(object anObject)
+        public static void IsNotNull(object? anObject)
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
@@ -268,49 +257,45 @@ namespace NUnit.Framework
         #region Null
 
         /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Null(object anObject, string message, params object[] args)
+        public static void Null(object? anObject, string? message, params object?[]? args)
         {
             Assert.That(anObject, Is.Null ,message, args);
         }
 
         /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void Null(object anObject)
+        public static void Null(object? anObject)
         {
             Assert.That(anObject, Is.Null ,null, null);
         }
 
         /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNull(object anObject, string message, params object[] args)
+        public static void IsNull(object? anObject, string? message, params object?[]? args)
         {
             Assert.That(anObject, Is.Null ,message, args);
         }
 
         /// <summary>
-        /// Verifies that the object that is passed in is equal to <code>null</code>
-        /// If the object is not <code>null</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the object that is passed in is equal to <code>null</code>. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void IsNull(object anObject)
+        public static void IsNull(object? anObject)
         {
             Assert.That(anObject, Is.Null ,null, null);
         }
@@ -320,22 +305,20 @@ namespace NUnit.Framework
         #region IsNaN
 
         /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the double that is passed in is an <code>NaN</code> value. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNaN(double aDouble, string message, params object[] args)
+        public static void IsNaN(double aDouble, string? message, params object?[]? args)
         {
             Assert.That(aDouble, Is.NaN ,message, args);
         }
 
         /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the double that is passed in is an <code>NaN</code> value. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double aDouble)
@@ -344,22 +327,20 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the double that is passed in is an <code>NaN</code> value. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNaN(double? aDouble, string message, params object[] args)
+        public static void IsNaN(double? aDouble, string? message, params object?[]? args)
         {
             Assert.That(aDouble, Is.NaN ,message, args);
         }
 
         /// <summary>
-        /// Verifies that the double that is passed in is an <code>NaN</code> value.
-        /// If the object is not <code>NaN</code> then an <see cref="AssertionException"/>
-        /// is thrown.
+        /// Verifies that the double that is passed in is an <code>NaN</code> value. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double? aDouble)
@@ -374,21 +355,21 @@ namespace NUnit.Framework
         #region String
 
         /// <summary>
-        /// Assert that a string is empty - that is equal to string.Empty
+        /// Assert that a string is empty. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsEmpty(string aString, string message, params object[] args)
+        public static void IsEmpty(string? aString, string? message, params object?[]? args)
         {
             Assert.That(aString, new EmptyStringConstraint() ,message, args);
         }
 
         /// <summary>
-        /// Assert that a string is empty - that is equal to string.Empty
+        /// Assert that a string is empty. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="aString">The string to be tested</param>
-        public static void IsEmpty(string aString)
+        public static void IsEmpty(string? aString)
         {
             Assert.That(aString, new EmptyStringConstraint() ,null, null);
         }
@@ -398,18 +379,20 @@ namespace NUnit.Framework
         #region Collection
 
         /// <summary>
-        /// Assert that an array, list or other collection is empty
+        /// Assert that an array, list or other collection is empty. Returns without throwing an exception when inside a
+        /// multiple assert block.
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsEmpty(IEnumerable collection, string message, params object[] args)
+        public static void IsEmpty(IEnumerable collection, string? message, params object?[]? args)
         {
             Assert.That(collection, new EmptyCollectionConstraint() ,message, args);
         }
 
         /// <summary>
-        /// Assert that an array, list or other collection is empty
+        /// Assert that an array, list or other collection is empty. Returns without throwing an exception when inside a
+        /// multiple assert block.
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsEmpty(IEnumerable collection)
@@ -426,21 +409,23 @@ namespace NUnit.Framework
         #region String
 
         /// <summary>
-        /// Assert that a string is not empty - that is not equal to string.Empty
+        /// Assert that a string is not empty. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotEmpty(string aString, string message, params object[] args)
+        public static void IsNotEmpty(string? aString, string? message, params object?[]? args)
         {
             Assert.That(aString, Is.Not.Empty ,message, args);
         }
 
         /// <summary>
-        /// Assert that a string is not empty - that is not equal to string.Empty
+        /// Assert that a string is not empty. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="aString">The string to be tested</param>
-        public static void IsNotEmpty(string aString)
+        public static void IsNotEmpty(string? aString)
         {
             Assert.That(aString, Is.Not.Empty ,null, null);
         }
@@ -450,18 +435,20 @@ namespace NUnit.Framework
         #region Collection
 
         /// <summary>
-        /// Assert that an array, list or other collection is not empty
+        /// Assert that an array, list or other collection is not empty. Returns without throwing an exception when
+        /// inside a multiple assert block.
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotEmpty(IEnumerable collection, string message, params object[] args)
+        public static void IsNotEmpty(IEnumerable collection, string? message, params object?[]? args)
         {
             Assert.That(collection, Is.Not.Empty ,message, args);
         }
 
         /// <summary>
-        /// Assert that an array, list or other collection is not empty
+        /// Assert that an array, list or other collection is not empty. Returns without throwing an exception when
+        /// inside a multiple assert block.
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsNotEmpty(IEnumerable collection)
@@ -478,7 +465,7 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Asserts that an int is zero.
+        /// Asserts that an int is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Zero(int actual)
@@ -487,12 +474,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an int is zero.
+        /// Asserts that an int is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(int actual, string message, params object[] args)
+        public static void Zero(int actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -502,7 +489,8 @@ namespace NUnit.Framework
         #region UnsignedInts
 
         /// <summary>
-        /// Asserts that an unsigned int is zero.
+        /// Asserts that an unsigned int is zero. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -512,13 +500,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned int is zero.
+        /// Asserts that an unsigned int is zero. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Zero(uint actual, string message, params object[] args)
+        public static void Zero(uint actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -528,7 +517,7 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Asserts that a Long is zero.
+        /// Asserts that a Long is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Zero(long actual)
@@ -537,12 +526,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a Long is zero.
+        /// Asserts that a Long is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(long actual, string message, params object[] args)
+        public static void Zero(long actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -552,7 +541,8 @@ namespace NUnit.Framework
         #region UnsignedLongs
 
         /// <summary>
-        /// Asserts that an unsigned Long is zero.
+        /// Asserts that an unsigned Long is zero. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -562,13 +552,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned Long is zero.
+        /// Asserts that an unsigned Long is zero. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Zero(ulong actual, string message, params object[] args)
+        public static void Zero(ulong actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -578,7 +569,7 @@ namespace NUnit.Framework
         #region Decimals
 
         /// <summary>
-        /// Asserts that a decimal is zero.
+        /// Asserts that a decimal is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Zero(decimal actual)
@@ -587,12 +578,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a decimal is zero.
+        /// Asserts that a decimal is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(decimal actual, string message, params object[] args)
+        public static void Zero(decimal actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -602,7 +593,7 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Asserts that a double is zero.
+        /// Asserts that a double is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Zero(double actual)
@@ -611,12 +602,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a double is zero.
+        /// Asserts that a double is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(double actual, string message, params object[] args)
+        public static void Zero(double actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -626,7 +617,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Asserts that a float is zero.
+        /// Asserts that a float is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Zero(float actual)
@@ -635,12 +626,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a float is zero.
+        /// Asserts that a float is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(float actual, string message, params object[] args)
+        public static void Zero(float actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Zero, message, args);
         }
@@ -654,7 +645,7 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Asserts that an int is not zero.
+        /// Asserts that an int is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(int actual)
@@ -663,12 +654,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an int is not zero.
+        /// Asserts that an int is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(int actual, string message, params object[] args)
+        public static void NotZero(int actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -678,7 +669,8 @@ namespace NUnit.Framework
         #region UnsignedInts
 
         /// <summary>
-        /// Asserts that an unsigned int is not zero.
+        /// Asserts that an unsigned int is not zero. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -688,13 +680,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned int is not zero.
+        /// Asserts that an unsigned int is not zero. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void NotZero(uint actual, string message, params object[] args)
+        public static void NotZero(uint actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -704,7 +697,7 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Asserts that a Long is not zero.
+        /// Asserts that a Long is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(long actual)
@@ -713,12 +706,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a Long is not zero.
+        /// Asserts that a Long is not zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(long actual, string message, params object[] args)
+        public static void NotZero(long actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -728,7 +721,8 @@ namespace NUnit.Framework
         #region UnsignedLongs
 
         /// <summary>
-        /// Asserts that an unsigned Long is not zero.
+        /// Asserts that an unsigned Long is not zero. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -738,13 +732,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned Long is not zero.
+        /// Asserts that an unsigned Long is not zero. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void NotZero(ulong actual, string message, params object[] args)
+        public static void NotZero(ulong actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -754,7 +749,7 @@ namespace NUnit.Framework
         #region Decimals
 
         /// <summary>
-        /// Asserts that a decimal is zero.
+        /// Asserts that a decimal is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(decimal actual)
@@ -763,12 +758,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a decimal is zero.
+        /// Asserts that a decimal is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(decimal actual, string message, params object[] args)
+        public static void NotZero(decimal actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -778,7 +773,7 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Asserts that a double is zero.
+        /// Asserts that a double is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(double actual)
@@ -787,12 +782,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a double is zero.
+        /// Asserts that a double is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(double actual, string message, params object[] args)
+        public static void NotZero(double actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -802,7 +797,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Asserts that a float is zero.
+        /// Asserts that a float is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void NotZero(float actual)
@@ -811,12 +806,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a float is zero.
+        /// Asserts that a float is zero. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(float actual, string message, params object[] args)
+        public static void NotZero(float actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.Zero, message, args);
         }
@@ -830,7 +825,7 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Asserts that an int is positive.
+        /// Asserts that an int is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(int actual)
@@ -839,12 +834,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an int is positive.
+        /// Asserts that an int is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(int actual, string message, params object[] args)
+        public static void Positive(int actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -854,7 +849,8 @@ namespace NUnit.Framework
         #region UnsignedInts
 
         /// <summary>
-        /// Asserts that an unsigned int is positive.
+        /// Asserts that an unsigned int is positive. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -864,13 +860,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned int is positive.
+        /// Asserts that an unsigned int is positive. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Positive(uint actual, string message, params object[] args)
+        public static void Positive(uint actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -880,7 +877,7 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Asserts that a Long is positive.
+        /// Asserts that a Long is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(long actual)
@@ -889,12 +886,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a Long is positive.
+        /// Asserts that a Long is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(long actual, string message, params object[] args)
+        public static void Positive(long actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -904,7 +901,8 @@ namespace NUnit.Framework
         #region UnsignedLongs
 
         /// <summary>
-        /// Asserts that an unsigned Long is positive.
+        /// Asserts that an unsigned Long is positive. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -914,13 +912,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned Long is positive.
+        /// Asserts that an unsigned Long is positive. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Positive(ulong actual, string message, params object[] args)
+        public static void Positive(ulong actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -930,7 +929,8 @@ namespace NUnit.Framework
         #region Decimals
 
         /// <summary>
-        /// Asserts that a decimal is positive.
+        /// Asserts that a decimal is positive. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(decimal actual)
@@ -939,12 +939,13 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a decimal is positive.
+        /// Asserts that a decimal is positive. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(decimal actual, string message, params object[] args)
+        public static void Positive(decimal actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -954,7 +955,8 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Asserts that a double is positive.
+        /// Asserts that a double is positive. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(double actual)
@@ -963,12 +965,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a double is positive.
+        /// Asserts that a double is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(double actual, string message, params object[] args)
+        public static void Positive(double actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -978,7 +980,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Asserts that a float is positive.
+        /// Asserts that a float is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Positive(float actual)
@@ -987,12 +989,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a float is positive.
+        /// Asserts that a float is positive. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(float actual, string message, params object[] args)
+        public static void Positive(float actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Positive, message, args);
         }
@@ -1006,7 +1008,7 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Asserts that an int is negative.
+        /// Asserts that an int is negative. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Negative(int actual)
@@ -1015,12 +1017,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an int is negative.
+        /// Asserts that an int is negative. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(int actual, string message, params object[] args)
+        public static void Negative(int actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }
@@ -1030,7 +1032,8 @@ namespace NUnit.Framework
         #region UnsignedInts
 
         /// <summary>
-        /// Asserts that an unsigned int is negative.
+        /// Asserts that an unsigned int is negative. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -1040,13 +1043,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned int is negative.
+        /// Asserts that an unsigned int is negative. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Negative(uint actual, string message, params object[] args)
+        public static void Negative(uint actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }
@@ -1056,7 +1060,7 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Asserts that a Long is negative.
+        /// Asserts that a Long is negative. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Negative(long actual)
@@ -1065,12 +1069,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a Long is negative.
+        /// Asserts that a Long is negative. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(long actual, string message, params object[] args)
+        public static void Negative(long actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }
@@ -1080,7 +1084,8 @@ namespace NUnit.Framework
         #region UnsignedLongs
 
         /// <summary>
-        /// Asserts that an unsigned Long is negative.
+        /// Asserts that an unsigned Long is negative. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         [CLSCompliant(false)]
@@ -1090,13 +1095,14 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that an unsigned Long is negative.
+        /// Asserts that an unsigned Long is negative. Returns without throwing an exception when inside a multiple
+        /// assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Negative(ulong actual, string message, params object[] args)
+        public static void Negative(ulong actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }
@@ -1106,7 +1112,8 @@ namespace NUnit.Framework
         #region Decimals
 
         /// <summary>
-        /// Asserts that a decimal is negative.
+        /// Asserts that a decimal is negative. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Negative(decimal actual)
@@ -1115,12 +1122,13 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a decimal is negative.
+        /// Asserts that a decimal is negative. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(decimal actual, string message, params object[] args)
+        public static void Negative(decimal actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }
@@ -1130,7 +1138,8 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Asserts that a double is negative.
+        /// Asserts that a double is negative. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Negative(double actual)
@@ -1139,12 +1148,13 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a double is negative.
+        /// Asserts that a double is negative. Returns without throwing an exception when inside a multiple assert
+        /// block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(double actual, string message, params object[] args)
+        public static void Negative(double actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }
@@ -1154,7 +1164,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Asserts that a float is negative.
+        /// Asserts that a float is negative. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         public static void Negative(float actual)
@@ -1163,12 +1173,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a float is negative.
+        /// Asserts that a float is negative. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(float actual, string message, params object[] args)
+        public static void Negative(float actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Negative, message, args);
         }

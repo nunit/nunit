@@ -41,7 +41,7 @@ namespace NUnit.Framework.Attributes
         }
 
         #region CategoryAttribute
-        
+
         [TestCase('!')]
         [TestCase('+')]
         [TestCase(',')]
@@ -362,7 +362,6 @@ namespace NUnit.Framework.Attributes
 
         #region PlatformAttribute
 
-#if PLATFORM_DETECTION
         [Test]
         public void PlatformAttributeRunsTest()
         {
@@ -409,7 +408,6 @@ namespace NUnit.Framework.Attributes
             }
             return "Win";
         }
-#endif
 
         #endregion
 
@@ -432,9 +430,6 @@ namespace NUnit.Framework.Attributes
 
         #endregion
 
-#if PARALLEL
-
-#if APARTMENT_STATE
         #region RequiresMTAAttribute
 
         [Test]
@@ -476,7 +471,6 @@ namespace NUnit.Framework.Attributes
         }
 
         #endregion
-#endif
 
         #region RequiresThreadAttribute
 
@@ -495,7 +489,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
         }
 
-#if APARTMENT_STATE
         [Test]
         public void RequiresThreadAttributeMaySetApartmentState()
         {
@@ -504,10 +497,8 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
                 Is.EqualTo(ApartmentState.STA));
         }
-#endif
-        #endregion
 
-#endif
+        #endregion
 
         #region SequentialAttribute
 

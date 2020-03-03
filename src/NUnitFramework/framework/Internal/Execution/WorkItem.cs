@@ -67,9 +67,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
                 : ParallelScope.Default;
 
-#if APARTMENT_STATE
             TargetApartment = GetTargetApartment(Test);
-#endif
 
             State = WorkItemState.Ready;
         }
@@ -89,12 +87,8 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
-#if PARALLEL
             TestWorker = wrappedItem.TestWorker;
-#endif
-#if APARTMENT_STATE
             TargetApartment = wrappedItem.TargetApartment;
-#endif
 
             // State is independent of the wrapped item
             State = WorkItemState.Ready;
@@ -155,7 +149,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestExecutionContext Context { get; private set; }
 
-#if PARALLEL
         /// <summary>
         /// The worker executing this item.
         /// </summary>
@@ -181,7 +174,6 @@ namespace NUnit.Framework.Internal.Execution
         /// Indicates whether this work item should use a separate dispatcher.
         /// </summary>
         public virtual bool IsolateChildTests { get; } = false;
-#endif
 
         /// <summary>
         /// The test result
@@ -194,10 +186,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public ParallelScope ParallelScope { get; }
 
-#if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
-#endif
 
         #endregion
 
@@ -209,7 +199,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if PARALLEL
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -222,15 +211,11 @@ namespace NUnit.Framework.Internal.Execution
             // (--workers=0 option) it occurs routinely whenever a
             // different apartment is requested.
 
-#if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
             var needsNewThreadToSetApartmentState = targetApartment != CurrentApartment;
 
             if (Test.RequiresThread || needsNewThreadToSetApartmentState)
-#else
-            if (Test.RequiresThread)
-#endif
             {
                 // Handle error conditions in a single threaded fixture
                 if (Context.IsSingleThreaded)
@@ -248,17 +233,10 @@ namespace NUnit.Framework.Internal.Execution
                 log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
-#if APARTMENT_STATE
                 RunOnSeparateThread(targetApartment);
-#else
-                RunOnSeparateThread();
-#endif
             }
             else
                 RunOnCurrentThread();
-#else
-            RunOnCurrentThread();
-#endif
         }
 
         private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
@@ -462,14 +440,9 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-#if PARALLEL
         private Thread thread;
 
-#if APARTMENT_STATE
         private void RunOnSeparateThread(ApartmentState apartment)
-#else
-        private void RunOnSeparateThread()
-#endif
         {
             thread = new Thread(() =>
             {
@@ -481,7 +454,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
                 RunOnCurrentThread();
             });
-#if APARTMENT_STATE
+
             try
             {
                 thread.SetApartmentState(apartment);
@@ -494,40 +467,28 @@ namespace NUnit.Framework.Internal.Execution
                 WorkItemComplete();
                 return;
             }
-#endif
+
             thread.Start();
             thread.Join();
         }
-#endif
 
         [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            var previousState = SandboxedThreadState.Capture();
-            try
-            {
-                Context.CurrentTest = this.Test;
-                Context.CurrentResult = this.Result;
-                Context.Listener.TestStarted(this.Test);
-                Context.StartTime = DateTime.UtcNow;
-                Context.StartTicks = Stopwatch.GetTimestamp();
-#if PARALLEL
-                Context.TestWorker = this.TestWorker;
-#endif
+            Context.CurrentTest = this.Test;
+            Context.CurrentResult = this.Result;
+            Context.Listener.TestStarted(this.Test);
+            Context.StartTime = DateTime.UtcNow;
+            Context.StartTicks = Stopwatch.GetTimestamp();
+            Context.TestWorker = this.TestWorker;
 
-                Context.EstablishExecutionEnvironment();
+            Context.EstablishExecutionEnvironment();
 
-                State = WorkItemState.Running;
+            State = WorkItemState.Running;
 
-                PerformWork();
-            }
-            finally
-            {
-                previousState.Restore();
-            }
+            PerformWork();
         }
 
-#if PARALLEL
         private ParallelExecutionStrategy GetExecutionStrategy()
         {
             // If there is no fixture and so nothing to do but dispatch
@@ -561,9 +522,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? ParallelExecutionStrategy.Direct
                 : ParallelExecutionStrategy.NonParallel;
         }
-#endif
 
-#if APARTMENT_STATE
         /// <summary>
         /// Recursively walks up the test hierarchy to see if the
         /// <see cref="ApartmentState"/> has been set on any of the parent tests.
@@ -579,7 +538,6 @@ namespace NUnit.Framework.Internal.Execution
 
             return apartment;
         }
-#endif
 
 #endregion
     }

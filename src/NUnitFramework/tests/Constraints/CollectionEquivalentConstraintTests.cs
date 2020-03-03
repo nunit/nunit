@@ -141,12 +141,10 @@ namespace NUnit.Framework.Constraints
                     yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
                     yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
 
-#if !NETCOREAPP1_1
                     yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
                     yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
                     yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
                     yield return new TestCaseData(new Hashtable {{'A', 1}}, new Hashtable {{'a', 1}});
-#endif
                 }
             }
         }
@@ -159,7 +157,7 @@ namespace NUnit.Framework.Constraints
             ICollection set2 = new SimpleObjectCollection("z", "Y", "X");
 
             Assert.That(new CollectionEquivalentConstraint(set1)
-                .Using<string>((x, y) => StringUtil.Compare(x, y, true))
+                .Using<string>((x, y) => StringComparer.InvariantCultureIgnoreCase.Compare(x, y))
                 .ApplyTo(set2).IsSuccess);
         }
 

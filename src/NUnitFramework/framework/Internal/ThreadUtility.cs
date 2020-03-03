@@ -37,11 +37,7 @@ namespace NUnit.Framework.Internal
     {
         internal static void BlockingDelay(int milliseconds)
         {
-#if !PARALLEL
-            System.Threading.Tasks.Task.Delay(milliseconds).GetAwaiter().GetResult();
-#else
             Thread.Sleep(milliseconds);
-#endif
         }
 
 #if THREAD_ABORT
@@ -136,18 +132,18 @@ namespace NUnit.Framework.Internal
 #pragma warning restore 0618,0612   // Thread.Resume has been deprecated
             }
 
-            if ( (thread.ThreadState & ThreadState.WaitSleepJoin) != 0 )
+            if ((thread.ThreadState & ThreadState.WaitSleepJoin) != 0)
                 thread.Interrupt();
         }
 
         /// <summary>
-        /// Schedule a threadpool thread to check on the aborting thread in case it's in a message pump native blocking wait
+        /// Schedule a thread pool thread to check on the aborting thread in case it's in a message pump native blocking wait
         /// </summary>
         private static void DislodgeThreadInNativeMessageWait(Thread thread, int nativeId)
         {
             if (nativeId == 0) throw new ArgumentOutOfRangeException(nameof(nativeId), "Native thread ID must not be zero.");
 
-            // Schedule a threadpool thread to check on the aborting thread in case it's in a message pump native blocking wait
+            // Schedule a thread pool thread to check on the aborting thread in case it's in a message pump native blocking wait
             Delay(ThreadAbortedCheckDelay, CheckOnAbortingThread, new CheckOnAbortingThreadState(thread, nativeId));
         }
 
@@ -234,5 +230,30 @@ namespace NUnit.Framework.Internal
             CLOSE = 0x0010
         }
 #endif
+
+        /// <summary>Gets <see cref="Thread.CurrentPrincipal"/> or <see langword="null" /> if the current platform does not support it.</summary>
+        public static System.Security.Principal.IPrincipal GetCurrentThreadPrincipal()
+        {
+            try
+            {
+                return Thread.CurrentPrincipal;
+            }
+            catch (PlatformNotSupportedException) //E.g. Mono.WASM
+            {
+                return null;
+            }
+        }
+
+        /// <summary>Sets <see cref="Thread.CurrentPrincipal"/> if current platform supports it.</summary>
+        /// <param name="principal">Value to set. If the current platform does not support <see cref="Thread.CurrentPrincipal"/> then the only allowed value is <see langword="null"/>.</param>
+        public static void SetCurrentThreadPrincipal(System.Security.Principal.IPrincipal principal)
+        {
+            try
+            {
+                Thread.CurrentPrincipal = principal;
+            }
+            catch (PlatformNotSupportedException) when (principal == null) //E.g. Mono.WASM
+            { }
+        }
     }
 }

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -49,6 +49,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(act, Throws.Exception.TypeOf<AssertionException>());
         }
+
         [Test]
         public void SucceedsWhenValueIsPresentUsingContainKey()
         {
@@ -62,6 +63,7 @@ namespace NUnit.Framework.Constraints
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
             Assert.That(dictionary, Does.Not.ContainValue("NotValue"));
         }
+
         [Test]
         public void FailsWhenNotUsedAgainstADictionary()
         {
@@ -69,11 +71,10 @@ namespace NUnit.Framework.Constraints
                 new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } });
 
             TestDelegate act = () => Assert.That(keyValuePairs, new DictionaryContainsValueConstraint("Community"));
-          
+
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("IDictionary"));
         }
 
-#if !NETCOREAPP1_1
         [Test]
         public void WorksWithNonGenericDictionary()
         {
@@ -81,9 +82,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary, new DictionaryContainsValueConstraint("Universe"));
         }
-#endif
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void IgnoreCaseIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsValueConstraint("UNIVERSE").IgnoreCase);
         }
 
-        [Test]
+        [Test, SetCulture("en-US")]
         public void UsingIsHonored()
         {
             var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hi", "Universe" }, { "Hola", "Mundo" } };

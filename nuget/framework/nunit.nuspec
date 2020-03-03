@@ -18,8 +18,7 @@ This package includes the NUnit 3 framework assembly, which is referenced by you
 
 Supported platforms:
 - .NET Framework 3.5+
-- .NET Standard 1.4+
-- .NET Core</description>
+- .NET Standard 2.0+</description>
     <releaseNotes>This package includes the NUnit 3 framework assembly, which is referenced by your tests. You will need to install version 3 of the nunit3-console program or a third-party runner that supports NUnit 3 in order to execute tests. Runners intended for use with NUnit 2.x will not run NUnit 3 tests correctly.</releaseNotes>
     <language>en-US</language>
     <tags>nunit test testing tdd framework fluent assert theory plugin addin</tags>
@@ -28,11 +27,6 @@ Supported platforms:
       <group targetFramework="net35" />
       <group targetFramework="net40" />
       <group targetFramework="net45" />
-      <group targetFramework="netstandard1.4">
-        <dependency id="NETStandard.Library" version="1.6.1" />
-        <dependency id="System.ComponentModel.TypeConverter" version="4.3.0" />
-        <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="compile" />
-      </group>
       <group targetFramework="netstandard2.0">
         <dependency id="NETStandard.Library" version="2.0.0" />
       </group>
@@ -43,19 +37,12 @@ Supported platforms:
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
     <file src="bin/net35/nunit.framework.dll" target="lib\net35" />
-    <file src="bin/net35/nunit.framework.pdb" target="lib\net35" />
     <file src="bin/net35/nunit.framework.xml" target="lib\net35" />
     <file src="bin/net40/nunit.framework.dll" target="lib\net40" />
-    <file src="bin/net40/nunit.framework.pdb" target="lib\net40" />
     <file src="bin/net40/nunit.framework.xml" target="lib\net40" />
     <file src="bin/net45/nunit.framework.dll" target="lib\net45" />
-    <file src="bin/net45/nunit.framework.pdb" target="lib\net45" />
     <file src="bin/net45/nunit.framework.xml" target="lib\net45" />
-    <file src="bin/netstandard1.4/nunit.framework.dll" target="lib\netstandard1.4" />
-    <file src="bin/netstandard1.4/nunit.framework.pdb" target="lib\netstandard1.4" />
-    <file src="bin/netstandard1.4/nunit.framework.xml" target="lib\netstandard1.4" />
     <file src="bin/netstandard2.0/nunit.framework.dll" target="lib\netstandard2.0" />
-    <file src="bin/netstandard2.0/nunit.framework.pdb" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunit.framework.xml" target="lib\netstandard2.0" />
     <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>

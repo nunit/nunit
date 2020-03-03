@@ -86,9 +86,7 @@ namespace NUnitLite
 
             TNode testRun = MakeTestRunElement(result);
 
-#if !NETSTANDARD1_4
             testRun.ChildNodes.Add(MakeCommandLineElement());
-#endif
             testRun.ChildNodes.Add(MakeTestFilterElement(filter));
             testRun.ChildNodes.Add(resultNode);
 
@@ -108,17 +106,17 @@ namespace NUnitLite
             if (result.ResultState.Label != string.Empty)
                 testRun.AddAttribute("label", result.ResultState.Label);
 
-            testRun.AddAttribute("start-time", result.StartTime.ToString("u"));
-            testRun.AddAttribute("end-time", result.EndTime.ToString("u"));
+            testRun.AddAttribute("start-time", result.StartTime.ToString("o"));
+            testRun.AddAttribute("end-time", result.EndTime.ToString("o"));
             testRun.AddAttribute("duration", result.Duration.ToString("0.000000", NumberFormatInfo.InvariantInfo));
 
-            testRun.AddAttribute("total", (result.PassCount + result.FailCount + result.SkipCount + result.InconclusiveCount).ToString());
+            testRun.AddAttribute("total", result.TotalCount.ToString());
             testRun.AddAttribute("passed", result.PassCount.ToString());
             testRun.AddAttribute("failed", result.FailCount.ToString());
             testRun.AddAttribute("inconclusive", result.InconclusiveCount.ToString());
             testRun.AddAttribute("skipped", result.SkipCount.ToString());
+            testRun.AddAttribute("warnings", result.WarningCount.ToString());
             testRun.AddAttribute("asserts", result.AssertCount.ToString());
-
             testRun.AddAttribute("random-seed", Randomizer.InitialSeed.ToString());
 
             // NOTE: The console runner adds attributes for engine-version and clr-version
@@ -128,17 +126,15 @@ namespace NUnitLite
             return testRun;
         }
 
-#if !NETSTANDARD1_4
         private static TNode MakeCommandLineElement()
         {
             return new TNode("command-line", Environment.CommandLine, true);
         }
-#endif
 
         private static TNode MakeTestFilterElement(TestFilter filter)
         {
             TNode result = new TNode("filter");
-            if (!filter.IsEmpty)
+            if (filter != null && !filter.IsEmpty)
                 filter.AddToXml(result, true);
             return result;
         }

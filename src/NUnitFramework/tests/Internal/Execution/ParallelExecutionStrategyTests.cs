@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using NUnit.Framework.Interfaces;
 using NUnit.TestUtilities;
 
@@ -103,4 +102,3 @@ namespace NUnit.Framework.Internal.Execution
         private class MyFixture { }
     }
 }
-#endif

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
+#nullable enable
+
 using System;
 
 namespace NUnit.Framework
@@ -33,20 +36,19 @@ namespace NUnit.Framework
     public class SuccessException : ResultStateException
     {
         /// <param name="message"></param>
-        public SuccessException(string message)
+        public SuccessException(string? message)
             : base(message)
         { }
 
-        /// <param name="message">The error message that explains 
+        /// <param name="message">The error message that explains
         /// the reason for the exception</param>
-        /// <param name="inner">The exception that caused the 
+        /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public SuccessException(string message, Exception inner)
+        public SuccessException(string? message, Exception? inner)
             :
             base(message, inner)
         { }
 
-#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>
@@ -54,7 +56,6 @@ namespace NUnit.Framework
             System.Runtime.Serialization.StreamingContext context)
             : base(info, context)
         { }
-#endif
 
         /// <summary>
         /// Gets the ResultState provided by this exception

@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2007–2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -47,7 +47,7 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         [Test]
         public void ThrowsWithAggregateException()
         {
-            throw new AggregateException("Outer Aggregate Exception", 
+            throw new AggregateException("Outer Aggregate Exception",
                 new Exception("Inner Exception 1 of 2"),
                 new Exception("Inner Exception 2 of 2"));
         }
@@ -71,6 +71,18 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         public void ThrowsCustomException()
         {
             throw new CustomException("message", new CustomType());
+        }
+
+        [Test]
+        public void AssertThatWithRecursivelyThrowingExceptionAsActual()
+        {
+            Assert.That(new RecursivelyThrowingException(), Is.Null);
+        }
+
+        [Test]
+        public void AssertThatWithRecursivelyThrowingExceptionAsExpected()
+        {
+            Assert.That(null, Is.EqualTo(new RecursivelyThrowingException()));
         }
     }
 

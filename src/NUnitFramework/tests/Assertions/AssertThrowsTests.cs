@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Assertions
         {
             Console.WriteLine(1);
             Assert.That(
-                () => { Console.WriteLine(2); TestContext.WriteLine(3); throw new Exception("test"); }, 
+                () => { Console.WriteLine(2); TestContext.WriteLine(3); throw new Exception("test"); },
                 Throws.Exception);
             Console.WriteLine(4);
 
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ThrowsConstraintSucceedsWithLambda()
         {
-            Assert.That(() => { throw new ArgumentException(); }, 
+            Assert.That(() => { throw new ArgumentException(); },
                 Throws.Exception.TypeOf<ArgumentException>());
         }
 
@@ -116,8 +116,8 @@ namespace NUnit.Framework.Assertions
 
         [Test]
         public void ThrowsReturnsCorrectException()
-        { 
-            var ex = Assert.Throws(typeof(ArgumentException), 
+        {
+            var ex = Assert.Throws(typeof(ArgumentException),
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void NoExceptionThrown()
         {
-            var ex = CatchException(() => 
+            var ex = CatchException(() =>
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
 
             Assert.That(ex.Message, Is.EqualTo(
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void UnrelatedExceptionThrown()
         {
-            var ex = CatchException(() => 
+            var ex = CatchException(() =>
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
 
             Assert.That(ex.Message, Does.StartWith(
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void BaseExceptionThrown()
         {
-            var ex = CatchException(() => 
+            var ex = CatchException(() =>
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
 
             Assert.That(ex.Message, Does.StartWith(
@@ -169,12 +169,12 @@ namespace NUnit.Framework.Assertions
         [Test, SetUICulture("en-US")]
         public void DerivedExceptionThrown()
         {
-            var ex = CatchException(() => 
+            var ex = CatchException(() =>
                 Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
 
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Environment.NewLine +
-                "  But was:  <System.ArgumentException: myMessage" + Environment.NewLine + "Parameter name: myParam" + Environment.NewLine ));
+                "  But was:  <System.ArgumentException: myMessage"));
 
             CheckForSpuriousAssertionResults();
         }
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ThrowsConstraintWrappingAssertFail()
         {
-            Assert.That(() => { Assert.Fail(); }, 
+            Assert.That(() => { Assert.Fail(); },
                 Throws.Exception.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertDoesNotThrowFails()
         {
-            var ex = CatchException(() => 
+            var ex = CatchException(() =>
                 Assert.DoesNotThrow(TestDelegates.ThrowsArgumentException));
 
             Assert.That(ex, Is.Not.Null.With.TypeOf<AssertionException>());

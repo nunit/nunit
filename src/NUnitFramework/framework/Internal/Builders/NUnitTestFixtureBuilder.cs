@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Builders
         /// must always be returned, since the method is generally called
         /// because the user has marked the target class as a fixture.
         /// If something prevents the fixture from being used, it should
-        /// be returned nonetheless, labelled as non-runnable.
+        /// be returned nonetheless, labeled as non-runnable.
         /// </summary>
         /// <param name="typeInfo">An ITypeInfo for the fixture to be used.</param>
         /// <param name="filter">Filter used to select methods as tests.</param>

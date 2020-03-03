@@ -39,6 +39,13 @@ namespace NUnit.Framework
             new TaskReturningTearDownAdapter(),
             new TaskReturningOneTimeSetUpAdapter(),
             new TaskReturningOneTimeTearDownAdapter(),
+#if !NET40
+            new FSharpTaskReturningTestMethodAdapter(),
+            new FSharpTaskReturningSetUpAdapter(),
+            new FSharpTaskReturningTearDownAdapter(),
+            new FSharpTaskReturningOneTimeSetUpAdapter(),
+            new FSharpTaskReturningOneTimeTearDownAdapter(),
+#endif
             new AssertThrowsAsyncAdapter(),
             new AssertDoesNotThrowAsyncAdapter(),
             new AssertCatchAsyncAdapter(),

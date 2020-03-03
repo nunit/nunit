@@ -100,11 +100,7 @@ namespace NUnit.Tests
 
             public const int Inconclusive = MockTestFixture.Inconclusive;
 
-#if NETCOREAPP1_1
-            public static readonly Assembly ThisAssembly = typeof(MockAssembly).GetTypeInfo().Assembly;
-#else
             public static readonly Assembly ThisAssembly = typeof(MockAssembly).Assembly;
-#endif
             public static readonly string AssemblyPath = AssemblyHelper.GetAssemblyPath(ThisAssembly);
 
             public static void Main(string[] args)

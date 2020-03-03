@@ -52,10 +52,8 @@ namespace NUnit.Framework.Api
         private TextWriter _savedOut;
         private TextWriter _savedErr;
 
-#if PARALLEL
         // Event Pump
         private EventPump _pump;
-#endif
 
 #region Constructors
 
@@ -72,7 +70,6 @@ namespace NUnit.Framework.Api
 
 #region Properties
 
-#if PARALLEL
         /// <summary>
         /// Gets the default level of parallel execution (worker threads)
         /// </summary>
@@ -80,7 +77,6 @@ namespace NUnit.Framework.Api
         {
             get { return Math.Max(Environment.ProcessorCount, 2); }
         }
-#endif
 
         /// <summary>
         /// The tree of tests that was loaded by the builder
@@ -284,7 +280,6 @@ namespace NUnit.Framework.Api
             Console.SetOut(new TextCapture(Console.Out));
             Console.SetError(new EventListenerTextWriter("Error", Console.Error));
 
-#if PARALLEL
             // Queue and pump events, unless settings have SynchronousEvents == false
             if (!Settings.ContainsKey(FrameworkPackageSettings.SynchronousEvents) || !(bool)Settings[FrameworkPackageSettings.SynchronousEvents])
             {
@@ -294,7 +289,6 @@ namespace NUnit.Framework.Api
                 _pump = new EventPump(listener, queue.Events);
                 _pump.Start();
             }
-#endif
 
             if (!System.Diagnostics.Debugger.IsAttached &&
                 Settings.ContainsKey(FrameworkPackageSettings.DebugTests) &&
@@ -344,9 +338,7 @@ namespace NUnit.Framework.Api
 
             // Set the listener - overriding runners may replace this
             Context.Listener = listener;
-#if !PARALLEL
-            Context.Dispatcher = new MainThreadWorkItemDispatcher();
-#else
+
             int levelOfParallelism = GetLevelOfParallelism();
 
             if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
@@ -356,7 +348,6 @@ namespace NUnit.Framework.Api
                 Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
             else
                 Context.Dispatcher = new SimpleWorkItemDispatcher();
-#endif
         }
 
         /// <summary>
@@ -364,10 +355,8 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void OnRunCompleted(object sender, EventArgs e)
         {
-#if PARALLEL
             if (_pump != null)
                 _pump.Dispose();
-#endif
 
             Console.SetOut(_savedOut);
             Console.SetError(_savedErr);
@@ -388,7 +377,6 @@ namespace NUnit.Framework.Api
             return count;
         }
 
-#if PARALLEL
         private int GetLevelOfParallelism()
         {
             return Settings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers)
@@ -397,7 +385,6 @@ namespace NUnit.Framework.Api
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
                    : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
-#endif
 
 #if NET35 || NET40 || NET45
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of

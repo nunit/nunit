@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
@@ -101,7 +100,6 @@ namespace NUnit.Framework.Internal.Execution
         private int _addId = int.MinValue;
         private int _removeId = int.MinValue;
 
-#if APARTMENT_STATE
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
         /// </summary>
@@ -109,20 +107,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
         /// <param name="apartment">ApartmentState to use for items on this queue</param>
         public WorkItemQueue(string name, bool isParallel, ApartmentState apartment)
-#else
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WorkItemQueue"/> class.
-        /// </summary>
-        /// <param name="name">The name of the queue.</param>
-        /// <param name="isParallel">Flag indicating whether this is a parallel queue</param>
-        public WorkItemQueue(string name, bool isParallel)
-#endif
         {
             Name = name;
             IsParallelQueue = isParallel;
-#if APARTMENT_STATE
             TargetApartment = apartment;
-#endif
             State = WorkItemQueueState.Paused;
             ItemsProcessed = 0;
 
@@ -152,12 +140,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public bool IsParallelQueue { get; }
 
-#if APARTMENT_STATE
         /// <summary>
         /// Gets the target ApartmentState for work items on this queue
         /// </summary>
         public ApartmentState TargetApartment { get; }
-#endif
 
         private int _itemsProcessed;
         /// <summary>
@@ -417,4 +403,3 @@ namespace NUnit.Framework.Internal.Execution
 #endregion
     }
 }
-#endif

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,9 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 
-namespace NUnit.Framework 
+namespace NUnit.Framework
 {
     using Interfaces;
 
@@ -34,42 +36,30 @@ namespace NUnit.Framework
     public class MultipleAssertException : ResultStateException
     {
         /// <summary>
-        /// Default Constructor
-        /// </summary>
-        public MultipleAssertException(string message) : base(message) { }
-
-        /// <summary>
         /// Construct based on the TestResult so far. This is the constructor
         /// used normally, when exiting the multiple assert block with failures.
         /// Not used internally but provided to facilitate debugging.
         /// </summary>
         /// <param name="testResult">
-        /// The current result, up to this point. The result is not used 
+        /// The current result, up to this point. The result is not used
         /// internally by NUnit but is provided to facilitate debugging.
         /// </param>
         public MultipleAssertException(ITestResult testResult)
             : base(testResult?.Message)
         {
-            Guard.ArgumentNotNull(testResult, "testResult");
+            Guard.ArgumentNotNull(testResult!, "testResult");
             TestResult = testResult;
         }
 
-        /// <param name="message">The error message that explains 
-        /// the reason for the exception</param>
-        /// <param name="inner">The exception that caused the 
-        /// current exception</param>
-        public MultipleAssertException(string message, Exception inner) :
-            base(message, inner) 
-        {}
-
-#if SERIALIZATION
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         /// <summary>
         /// Serialization Constructor
         /// </summary>
-        protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info, 
+        protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info,context)
-        {}
-#endif
+        {
+        }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         /// <summary>
         /// Gets the <see cref="ResultState"/> provided by this exception.

@@ -105,7 +105,7 @@ namespace NUnit.Framework
         /// </summary>
         public object[] MethodParams { get; }
         /// <summary>
-        /// The name of a the method, property or fiend to be used as a source
+        /// The name of a the method, property or field to be used as a source
         /// </summary>
         public string SourceName { get; }
 
@@ -162,17 +162,7 @@ namespace NUnit.Framework
 
             try
             {
-                IEnumerable source;
-
-                var previousState = SandboxedThreadState.Capture();
-                try
-                {
-                    source = GetTestCaseSource(method);
-                }
-                finally
-                {
-                    previousState.Restore();
-                }
+                IEnumerable source = ContextUtils.DoIsolated(() => GetTestCaseSource(method));
 
                 if (source != null)
                 {

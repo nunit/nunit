@@ -24,9 +24,7 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-#if SERIALIZATION
     using System.Runtime.Serialization;
-#endif
 
     /// <summary>
     /// InvalidTestFixtureException is thrown when an appropriate test
@@ -55,12 +53,10 @@ namespace NUnit.Framework.Internal
         public InvalidDataSourceException(string message, Exception inner) : base(message, inner)
         { }
 
-#if SERIALIZATION
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected InvalidDataSourceException(SerializationInfo info,
             StreamingContext context) : base(info,context){}
-#endif
     }
 }

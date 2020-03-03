@@ -49,7 +49,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(TestExecutionContext.CurrentContext, Is.Not.TypeOf<TestExecutionContext.AdhocContext>());
         }
 
-#if PLATFORM_DETECTION && THREAD_ABORT
+#if THREAD_ABORT
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
         {

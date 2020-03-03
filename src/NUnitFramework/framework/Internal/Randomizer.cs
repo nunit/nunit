@@ -519,15 +519,12 @@ namespace NUnit.Framework.Internal
         /// <returns>A random string of arbitrary length</returns>
         public string GetString(int outputLength, string allowedChars)
         {
+            var data = new char[outputLength];
 
-            var sb = new StringBuilder(outputLength);
+            for (int i = 0; i < data.Length; i++)
+                data[i] = allowedChars[Next(0, allowedChars.Length)];
 
-            for (int i = 0; i < outputLength ; i++)
-            {
-                sb.Append(allowedChars[Next(0,allowedChars.Length)]);
-            }
-
-            return sb.ToString();
+            return new string(data);
         }
 
         /// <summary>

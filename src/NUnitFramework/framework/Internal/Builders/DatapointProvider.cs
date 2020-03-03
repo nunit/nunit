@@ -35,6 +35,8 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DatapointProvider : IParameterDataProvider
     {
+        private static readonly ProviderCache ProviderCache = new ProviderCache();
+
         #region IDataPointProvider Members
 
         /// <summary>

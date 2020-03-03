@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -71,7 +70,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Event that fires when the shift has ended
         /// </summary>
         public event ShiftChangeEventHandler EndOfShift;
-        
+
         /// <summary>
         /// The Name of this shift
         /// </summary>
@@ -161,7 +160,7 @@ namespace NUnit.Framework.Internal.Execution
 
             _firstStart = false;
         }
-    
+
         private void StartWorkers()
         {
             foreach (var worker in Workers)
@@ -233,5 +232,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-
-#endif

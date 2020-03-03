@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// The Test abstract class represents a test within the framework.
     /// </summary>
-    public abstract class Test : ITest, IComparable
+    public abstract class Test : ITest, IComparable, IComparable<Test>
     {
         #region Fields
 
@@ -330,43 +330,6 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
-#if NETSTANDARD1_4
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="MemberInfo"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(MemberInfo provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="TypeInfo"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(TypeInfo provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="Assembly"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(Assembly provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>());
-        }
-#else
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied <see cref="ICustomAttributeProvider"/>, which is
@@ -378,7 +341,6 @@ namespace NUnit.Framework.Internal
         {
             ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
         }
-#endif
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
         {
@@ -484,19 +446,18 @@ namespace NUnit.Framework.Internal
 
         #region IComparable Members
 
-        /// <summary>
-        /// Compares this test to another test for sorting purposes
-        /// </summary>
-        /// <param name="obj">The other test</param>
-        /// <returns>Value of -1, 0 or +1 depending on whether the current test is less than, equal to or greater than the other test</returns>
+        /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
+        /// <param name="obj">An object to compare with this instance. </param>
         public int CompareTo(object obj)
         {
-            Test other = obj as Test;
+            return CompareTo(obj as Test);
+        }
 
-            if (other == null)
-                return -1;
-
-            return this.FullName.CompareTo(other.FullName);
+        /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object. </summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        public int CompareTo(Test other)
+        {
+            return other == null ? -1 : this.FullName.CompareTo(other.FullName);
         }
 
         #endregion

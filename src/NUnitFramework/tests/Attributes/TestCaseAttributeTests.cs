@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Attributes
         {
             return offset;
         }
-        
+
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
         {
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Attributes
         public void CanPassObjectArrayAsFirstArgument(object[] a)
         {
         }
-  
+
         [TestCase(new object[] { "a", "b" })]
         public void CanPassArrayAsArgument(object[] array)
         {
@@ -298,7 +298,7 @@ namespace NUnit.Framework.Attributes
             IList categories = test.Properties["Category"];
             Assert.AreEqual(new string[] { "XYZ" }, categories);
         }
- 
+
         [Test]
         public void CanSpecifyMultipleCategories()
         {
@@ -307,7 +307,7 @@ namespace NUnit.Framework.Attributes
             IList categories = test.Properties["Category"];
             Assert.AreEqual(new string[] { "X", "Y", "Z" }, categories);
         }
- 
+
         [Test]
         public void CanIgnoreIndividualTestCases()
         {
@@ -317,10 +317,10 @@ namespace NUnit.Framework.Attributes
 
             Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
- 
+
             testCase = TestFinder.Find($"{methodName}(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
- 
+
             testCase = TestFinder.Find($"{methodName}(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
@@ -367,16 +367,15 @@ namespace NUnit.Framework.Attributes
 
             Test testCase = TestFinder.Find($"{methodName}(1)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
- 
+
             testCase = TestFinder.Find($"{methodName}(2)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
- 
+
             testCase = TestFinder.Find($"{methodName}(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
             Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
         }
 
-#if PLATFORM_DETECTION
         [Test]
         public void CanIncludePlatform()
         {
@@ -457,7 +456,7 @@ namespace NUnit.Framework.Attributes
             bool isNetCore;
             Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
             bool isMono = monoRuntimeType != null;
-#if NETCOREAPP2_0
+#if NETCOREAPP
             isNetCore = true;
 #else
             isNetCore = false;
@@ -496,7 +495,7 @@ namespace NUnit.Framework.Attributes
             bool isNetCore;
             Type monoRuntimeType = Type.GetType("Mono.Runtime", false);
             bool isMono = monoRuntimeType != null;
-#if NETCOREAPP2_0
+#if NETCOREAPP
             isNetCore = true;
 #else
             isNetCore = false;
@@ -528,7 +527,6 @@ namespace NUnit.Framework.Attributes
                 Assert.That(testCase3.RunState, Is.EqualTo(RunState.Runnable));
             }
         }
-#endif
 
         [Test]
         public void TestNameIntrospectsArrayValues()

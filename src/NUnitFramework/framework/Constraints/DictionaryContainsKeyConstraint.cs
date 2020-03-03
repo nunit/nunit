@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
             if (_isDeprecatedMode)
             {
                 var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-                foreach (object obj in dictionary.Keys)
+                foreach (var obj in dictionary.Keys)
                     if (ItemsEqual(obj, Expected))
                         return true;
 
@@ -231,7 +231,7 @@ namespace NUnit.Framework.Constraints
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
                 m.ReturnType == typeof(bool)
-                && m.Name == "ContainsKey"
+                && (m.Name == "ContainsKey" || (m.Name == nameof(IDictionary.Contains) && m.DeclaringType == typeof(IDictionary)))
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
@@ -252,14 +252,7 @@ namespace NUnit.Framework.Constraints
 
                     if (method != null)
                     {
-#if NETSTANDARD1_4
-                        method = methods.Single(m => m.Name == method.Name &&
-                                                     m.GetParameters().Length == 1 &&
-                                                     method.GetParameters().Length == 1 &&
-                                                     m.GetParameters()[0].Name == method.GetParameters()[0].Name);
-#else
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
-#endif
                     }
                 }
             }

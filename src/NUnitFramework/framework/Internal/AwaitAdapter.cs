@@ -25,6 +25,9 @@ using System;
 
 namespace NUnit.Framework.Internal
 {
+    /// <summary>
+    /// Adapts various styles of asynchronous waiting to a common API.
+    /// </summary>
     internal abstract class AwaitAdapter
     {
         public abstract bool IsCompleted { get; }
@@ -34,12 +37,16 @@ namespace NUnit.Framework.Internal
 
         public static bool IsAwaitable(Type awaitableType)
         {
-            return CSharpPatternBasedAwaitAdapter.IsAwaitable(awaitableType);
+            return
+                CSharpPatternBasedAwaitAdapter.IsAwaitable(awaitableType)
+                || FSharpAsyncAwaitAdapter.IsAwaitable(awaitableType);
         }
 
         public static Type GetResultType(Type awaitableType)
         {
-            return CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType);
+            return
+                CSharpPatternBasedAwaitAdapter.GetResultType(awaitableType)
+                ?? FSharpAsyncAwaitAdapter.GetResultType(awaitableType);
         }
 
         public static AwaitAdapter FromAwaitable(object awaitable)
@@ -56,9 +63,11 @@ namespace NUnit.Framework.Internal
             if (task != null) return TaskAwaitAdapter.Create(task);
 #endif
 
-            // Await all the (C#) things
-            var patternBasedAdapter = CSharpPatternBasedAwaitAdapter.TryCreate(awaitable);
-            if (patternBasedAdapter != null) return patternBasedAdapter;
+            // Await all the (C# and F#) things
+            var adapter =
+                CSharpPatternBasedAwaitAdapter.TryCreate(awaitable)
+                ?? FSharpAsyncAwaitAdapter.TryCreate(awaitable);
+            if (adapter != null) return adapter;
 
 #if NET40
             // If System.Threading.Tasks.Task does not have a GetAwaiter instance method
