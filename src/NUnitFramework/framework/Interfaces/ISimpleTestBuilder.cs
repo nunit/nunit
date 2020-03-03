@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
 
 namespace NUnit.Framework.Interfaces
@@ -38,6 +40,6 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="method">The method to be used as a test</param>
         /// <param name="suite">The TestSuite to which the method will be added</param>
-        TestMethod BuildFrom(IMethodInfo method, Test suite);
+        TestMethod BuildFrom(IMethodInfo method, Test? suite);
     }
 }

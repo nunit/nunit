@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections.Generic;
 using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
 
@@ -39,6 +41,6 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="method">The method to be used as a test</param>
         /// <param name="suite">The TestSuite to which the method will be added</param>
-        IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite);
+        IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite);
     }
 }
