@@ -201,6 +201,7 @@ namespace NUnit.Framework.Attributes
             [ValueSource(nameof(NullSource))] string nullSource,
             [ValueSource(nameof(NullDataSourceProvider))] string nullDataSourceProvided,
             [ValueSource(typeof(ValueProvider), nameof(ValueProvider.ForeignNullResultProvider))] string nullDataSourceProvider,
+            [ValueSource(typeof(object), sourceName: null)] string typeNotImplementingIEnumerableAndNullSourceName,
             [ValueSource(nameof(NullDataSourceProperty))] int nullDataSourceProperty,
             [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
         {
