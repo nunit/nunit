@@ -34,7 +34,7 @@ Issues that need confirmation will have the **confirm** label or be unlabeled an
 - Create unit tests to demonstrate the issue
 - Test issues and provide feedback
 
-If you’re getting ready to report a bug in NUnit, figuring out how to create a minimal repro is easier if you temporarily disable the debugger’ [Just My Code](https://docs.microsoft.com/en-us/visualstudio/debugger/just-my-code) setting. This allows you to step into NUnit's source code, set breakpoints, watch variables, etc.
+If you’re getting ready to report a bug in NUnit, figuring out how to create a minimal repro is easier if you temporarily disable the debugger’s [Just My Code](https://docs.microsoft.com/en-us/visualstudio/debugger/just-my-code) setting. This allows you to step into NUnit's source code, set breakpoints, watch variables, etc.
 
 ## Documentation
 
