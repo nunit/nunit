@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -83,7 +84,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public object Get(string key)
+        public object? Get(string key)
         {
             return inner.TryGetValue(key, out var list) && list.Count > 0
                 ? list[0]

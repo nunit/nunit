@@ -42,7 +42,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="value">The value to be tested</param>
         /// <param name="name">The name of the argument</param>
-        public static void ArgumentNotNull([NotNull] object value, string name)
+        public static void ArgumentNotNull([NotNull] object? value, string name)
         {
             if (value == null)
                 throw new ArgumentNullException(name, "Argument " + name + " must not be null");
@@ -53,7 +53,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="value">The value to be tested</param>
         /// <param name="name">The name of the argument</param>
-        public static void ArgumentNotNullOrEmpty([NotNull] string value, string name)
+        public static void ArgumentNotNullOrEmpty([NotNull] string? value, string name)
         {
             ArgumentNotNull(value, name);
 
