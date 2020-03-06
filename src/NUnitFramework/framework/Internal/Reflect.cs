@@ -21,8 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 #if !NET35
@@ -127,11 +130,11 @@ namespace NUnit.Framework.Internal
         /// <param name="type">The Type to be constructed</param>
         /// <param name="arguments">Arguments to the constructor</param>
         /// <returns>An instance of the Type</returns>
-        public static object Construct(Type type, object[] arguments)
+        public static object Construct(Type type, object?[]? arguments)
         {
             if (arguments == null) return Construct(type);
 
-            Type[] argTypes = GetTypeArray(arguments);
+            Type?[] argTypes = GetTypeArray(arguments);
             ConstructorInfo ctor = GetConstructors(type, argTypes).FirstOrDefault();
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
@@ -144,11 +147,11 @@ namespace NUnit.Framework.Internal
         /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see langword="null"/>
         /// for null elements rather than throwing <see cref="ArgumentNullException"/>.
         /// </summary>
-        internal static Type[] GetTypeArray(object[] objects)
+        internal static Type?[] GetTypeArray(object?[] objects)
         {
-            Type[] types = new Type[objects.Length];
+            Type?[] types = new Type?[objects.Length];
             int index = 0;
-            foreach (object o in objects)
+            foreach (object? o in objects)
             {
                 types[index++] = o?.GetType();
             }
@@ -158,7 +161,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the constructors to which the specified argument types can be coerced.
         /// </summary>
-        internal static IEnumerable<ConstructorInfo> GetConstructors(Type type, Type[] matchingTypes)
+        internal static IEnumerable<ConstructorInfo> GetConstructors(Type type, Type?[] matchingTypes)
         {
             return type
                 .GetConstructors()
@@ -168,7 +171,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Determines if the given types can be coerced to match the given parameters.
         /// </summary>
-        internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type[] ptypes)
+        internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
             if (pinfos.Length != ptypes.Length)
                 return false;
@@ -197,7 +200,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Determines whether the current type can be implicitly converted to the specified type.
         /// </summary>
-        internal static bool CanImplicitlyConvertTo(this Type from, Type to)
+        internal static bool CanImplicitlyConvertTo(this Type? from, Type to)
         {
             if (to.IsAssignableFrom(from))
                 return true;
@@ -223,7 +226,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="method">A MethodInfo for the method to be invoked</param>
         /// <param name="fixture">The object on which to invoke the method</param>
-        public static object InvokeMethod(MethodInfo method, object fixture)
+        public static object? InvokeMethod(MethodInfo method, object? fixture)
         {
             return InvokeMethod(method, fixture, null);
         }
@@ -238,7 +241,7 @@ namespace NUnit.Framework.Internal
 #if !NET35
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
-        public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
+        public static object? InvokeMethod(MethodInfo method, object? fixture, params object?[]? args)
         {
             if (method != null)
             {
@@ -288,7 +291,7 @@ namespace NUnit.Framework.Internal
         /// <param name="type">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         /// <param name="name">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         /// <param name="bindingFlags">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
-        public static PropertyInfo GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
+        public static PropertyInfo? GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
         {
             Guard.ArgumentNotNull(type, nameof(type));
             Guard.ArgumentNotNull(name, nameof(name));
@@ -352,7 +355,7 @@ namespace NUnit.Framework.Internal
         /// <see langword="null"/>)</c> except that it also chooses only non-generic methods.
         /// Useful for avoiding the <see cref="AmbiguousMatchException"/> you can have with <c>GetMethod</c>.
         /// </summary>
-        internal static MethodInfo GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
+        internal static MethodInfo? GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
         {
             foreach (var currentType in type.TypeAndBaseTypes())
             {
@@ -378,7 +381,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        internal static PropertyInfo GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
+        internal static PropertyInfo? GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
         {
             for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
             {
@@ -403,7 +406,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        internal static object InvokeWithTransparentExceptions(this MethodBase methodBase, object instance)
+        internal static object? InvokeWithTransparentExceptions(this MethodBase methodBase, object? instance)
         {
             // If we ever target .NET Core 2.1, we can keep from mucking with the exception stack trace
             // using BindingFlags.DoNotWrapExceptions rather than try…catch.
@@ -421,7 +424,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        internal static object DynamicInvokeWithTransparentExceptions(this Delegate @delegate)
+        internal static object? DynamicInvokeWithTransparentExceptions(this Delegate @delegate)
         {
             try
             {
@@ -436,7 +439,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        internal static bool IsFSharpOption(this Type type, out Type someType)
+        internal static bool IsFSharpOption(this Type type, [NotNullWhen(true)] out Type? someType)
         {
             Guard.ArgumentNotNull(type, nameof(type));
 

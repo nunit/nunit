@@ -240,7 +240,7 @@ namespace NUnit.Framework.Internal.Builders
             }
             else if (!fixture.TypeInfo.IsStaticClass)
             {
-                Type[] argTypes = Reflect.GetTypeArray(fixture.Arguments);
+                Type?[] argTypes = Reflect.GetTypeArray(fixture.Arguments);
 
                 if (!Reflect.GetConstructors(fixture.TypeInfo.Type, argTypes).Any())
                 {
