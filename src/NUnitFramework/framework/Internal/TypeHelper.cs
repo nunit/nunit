@@ -386,7 +386,7 @@ namespace NUnit.Framework.Internal
         /// <param name="obj">The object to cast.</param>
         internal static bool CanCast<T>(object obj)
         {
-            return obj is T || (obj == null && default(T) == null);
+            return obj is T || (obj == null && default(T)! == null);
         }
 
         /// <summary>
@@ -404,8 +404,8 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
-            value = default(T);
-            return obj == null && default(T) == null;
+            value = default(T)!;
+            return obj == null && default(T)! == null;
         }
     }
 }
