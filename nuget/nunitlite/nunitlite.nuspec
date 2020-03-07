@@ -55,8 +55,7 @@ How to use this package:
     <file src="bin/net40/nunitlite-runner.exe" target="tools\net40" />
     <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />
     <file src="bin/netcoreapp2.1/nunitlite-runner.dll" target="tools\netcoreapp2.1" />
-    <file src="bin/netcoreapp2.2/nunitlite-runner.dll" target="tools\netcoreapp2.2" />
-    <file src="bin/netcoreapp3.0/nunitlite-runner.dll" target="tools\netcoreapp3.0" />
+    <file src="bin/netcoreapp3.1/nunitlite-runner.dll" target="tools\netcoreapp3.1" />
     <file src="../../nuget/nunitlite/Program.cs" target="content" />
     <file src="../../nuget/nunitlite/Program.vb" target="content" />
     <file src="../../nuget/nunitlite/install.ps1" target="tools" />
