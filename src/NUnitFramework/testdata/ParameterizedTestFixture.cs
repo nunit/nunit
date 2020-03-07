@@ -62,4 +62,12 @@ namespace NUnit.TestData
         {
         }
     }
+
+    [TestFixture(null)]
+    public class TestFixtureWithNullArgumentForGenericParameter<T>
+    {
+        public TestFixtureWithNullArgumentForGenericParameter(T _)
+        {
+        }
+    }
 }

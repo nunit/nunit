@@ -291,7 +291,7 @@ namespace NUnit.Framework.Internal
                         {
                             if (!TypeHelper.TryGetBestCommonType(
                                 typeArgs[i],
-                                arglist[j].GetType(),
+                                arglist[j]?.GetType(),
                                 out typeArgs[i]))
                             {
                                 typeArgs[i] = null;

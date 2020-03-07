@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -191,6 +192,17 @@ namespace NUnit.Framework.Attributes
             Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithNullArgumentForOrdinaryValueTypeParameter));
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
             Assert.That(fixture.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("No suitable constructor was found"));
+        }
+
+        [Test]
+        public void NullArgumentForGenericParameterDoesNotThrowNullReferenceException()
+        {
+            Test parameterizedFixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithNullArgumentForGenericParameter<>));
+            ITest fixture = parameterizedFixture.Tests.Single();
+
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(fixture.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(
+                "Fixture type contains generic parameters. You must either provide Type arguments or specify constructor arguments that allow NUnit to deduce the Type arguments."));
         }
     }
 
