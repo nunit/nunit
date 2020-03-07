@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -176,12 +177,20 @@ namespace NUnit.Framework.Attributes
             Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithSingleCategory));
             Assert.AreEqual("XYZ", fixture.Properties.Get(PropertyNames.Category));
         }
- 
+
         [Test]
         public void CanSpecifyMultipleCategories()
         {
             Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithMultipleCategories));
             Assert.AreEqual(new string[] { "X", "Y", "Z" }, fixture.Properties[PropertyNames.Category]);
+        }
+
+        [Test]
+        public void NullArgumentForOrdinaryValueTypeParameterDoesNotThrowNullReferenceException()
+        {
+            Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithNullArgumentForOrdinaryValueTypeParameter));
+            Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(fixture.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("No suitable constructor was found"));
         }
     }
 
