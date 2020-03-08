@@ -52,34 +52,61 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            return TryFastAlgorithm(actual) ?? OriginalAlgorithm(actual);
+            var nonUniqueItems = TryFastAlgorithm(actual) ?? OriginalAlgorithm(actual);
+            return nonUniqueItems.Count == 0;
         }
 
         /// <inheritdoc />
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
-            var matches = Matches(enumerable);
-            var nonUnique = matches ? new object[0] : enumerable;
-            return new UniqueItemsContstraintResult(this, actual, nonUnique);
+
+            var nonUniqueItems = TryFastAlgorithm(enumerable) ?? OriginalAlgorithm(enumerable);
+
+            return new UniqueItemsContstraintResult(this, actual, nonUniqueItems);
         }
 
-        private bool OriginalAlgorithm(IEnumerable actual)
+        private ICollection OriginalAlgorithm(IEnumerable actual)
         {
-            var list = new List<object>();
+            var processedItems = new List<object>();
+            var nonUniques = new List<object>();
 
             foreach (object o1 in actual)
             {
-                foreach (object o2 in list)
+                var isNonUnique = false;
+                var knownNonUnique = false;
+
+                foreach (object o2 in processedItems)
+                {
                     if (ItemsEqual(o1, o2))
-                        return false;
-                list.Add(o1);
+                    {
+                        isNonUnique = true;
+                        break;
+                    }
+                }
+                    
+                if (isNonUnique)
+                {
+                    foreach (object o2 in nonUniques)
+                    {
+                        if (ItemsEqual(o1, o2))
+                        {
+                            knownNonUnique = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!isNonUnique)
+                    processedItems.Add(o1);
+                else if (!knownNonUnique)
+                    nonUniques.Add(o1);
             }
 
-            return true;
+            return nonUniques;
         }
 
-        private bool? TryFastAlgorithm(IEnumerable actual)
+        private ICollection TryFastAlgorithm(IEnumerable actual)
         {
             // If the user specified any external comparer with Using, exit
             if (UsingExternalComparer)
@@ -100,7 +127,7 @@ namespace NUnit.Framework.Constraints
                     return CharsUniqueIgnoringCase((IEnumerable<char>)actual);
             }
 
-            return (bool)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
+            return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
 
         private static bool IsSealed(Type type)
@@ -111,26 +138,37 @@ namespace NUnit.Framework.Constraints
         private static readonly MethodInfo ItemsUniqueMethod =
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
-        private static bool ItemsUnique<T>(IEnumerable<T> actual)
-            => ItemsUniqueInternal(actual, EqualityComparer<T>.Default);
+        private static ICollection ItemsUnique<T>(IEnumerable<T> actual)
+            => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
-        private static bool StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => ItemsUniqueInternal(actual, StringComparer.CurrentCultureIgnoreCase);
+        private static ICollection StringsUniqueIgnoringCase(IEnumerable<string> actual)
+            => NonUniqueItemsInternal(actual, StringComparer.CurrentCultureIgnoreCase);
 
-        private static bool CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => ItemsUniqueInternal(actual, new CaseInsensitiveCharComparer());
+        private static ICollection CharsUniqueIgnoringCase(IEnumerable<char> actual)
+            => NonUniqueItemsInternal(actual, new CaseInsensitiveCharComparer());
 
-        private static bool ItemsUniqueInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
+        private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
-            var hash = new HashSet<T>(comparer);
+            var hash = new Dictionary<T, int>(comparer);
+            var nonUniques = new List<T>();
 
             foreach (T item in actual)
             {
-                if (!hash.Add(item))
-                    return false;
+                if (!hash.TryGetValue(item, out var itemCount))
+                {
+                    hash.Add(item, 1);
+                }
+                else
+                {
+                    hash[item] = ++itemCount;
+                    if (itemCount == 2)
+                    {
+                        nonUniques.Add(item);
+                    }
+                }
             }
 
-            return true;
+            return nonUniques;
         }
 
         // Return true if NUnitEqualityHandler has special logic for Type
@@ -178,10 +216,10 @@ namespace NUnit.Framework.Constraints
 
         internal class UniqueItemsContstraintResult : ConstraintResult
         {
-            private ICollection<object> NonUniqueItems { get; }
+            private ICollection NonUniqueItems { get; }
 
-            public UniqueItemsContstraintResult(IConstraint constraint, object actualValue, ICollection<object> nonUniqueItems)
-            : base(constraint, actualValue, nonUniqueItems.Count > 0)
+            public UniqueItemsContstraintResult(IConstraint constraint, object actualValue, ICollection nonUniqueItems)
+            : base(constraint, actualValue, nonUniqueItems.Count == 0)
             {
                 NonUniqueItems = nonUniqueItems;
             }
