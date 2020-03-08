@@ -55,6 +55,15 @@ namespace NUnit.Framework.Constraints
             return TryFastAlgorithm(actual) ?? OriginalAlgorithm(actual);
         }
 
+        /// <inheritdoc />
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            var matches = Matches(enumerable);
+            var nonUnique = matches ? new object[0] : enumerable;
+            return new UniqueItemsContstraintResult(this, actual, nonUnique);
+        }
+
         private bool OriginalAlgorithm(IEnumerable actual)
         {
             var list = new List<object>();
@@ -94,7 +103,7 @@ namespace NUnit.Framework.Constraints
             return (bool)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
 
-        private bool IsSealed(Type type)
+        private static bool IsSealed(Type type)
         {
             return type.GetTypeInfo().IsSealed;
         }
@@ -103,42 +112,21 @@ namespace NUnit.Framework.Constraints
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static bool ItemsUnique<T>(IEnumerable<T> actual)
+            => ItemsUniqueInternal(actual, EqualityComparer<T>.Default);
+
+        private static bool StringsUniqueIgnoringCase(IEnumerable<string> actual)
+            => ItemsUniqueInternal(actual, StringComparer.CurrentCultureIgnoreCase);
+
+        private static bool CharsUniqueIgnoringCase(IEnumerable<char> actual)
+            => ItemsUniqueInternal(actual, new CaseInsensitiveCharComparer());
+
+        private static bool ItemsUniqueInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
-            var hash = new HashSet<T>();
+            var hash = new HashSet<T>(comparer);
 
             foreach (T item in actual)
             {
                 if (!hash.Add(item))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool StringsUniqueIgnoringCase(IEnumerable<string> actual)
-        {
-            var hash = new HashSet<string>();
-
-            foreach (string item in actual)
-            {
-                string s = item.ToLower();
-
-                if (!hash.Add(s))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static bool CharsUniqueIgnoringCase(IEnumerable<char> actual)
-        {
-            var hash = new HashSet<char>();
-
-            foreach (char item in actual)
-            {
-                char ch = char.ToLower(item);
-
-                if (!hash.Add(ch))
                     return false;
             }
 
@@ -158,7 +146,7 @@ namespace NUnit.Framework.Constraints
                 || type.FullName == "System.ValueTuple";
         }
 
-        private Type GetGenericTypeArgument(IEnumerable actual)
+        private static Type GetGenericTypeArgument(IEnumerable actual)
         {
             foreach (var type in actual.GetType().GetInterfaces())
             {
@@ -173,6 +161,45 @@ namespace NUnit.Framework.Constraints
             }
 
             return null;
+        }
+
+        internal class CaseInsensitiveCharComparer : IEqualityComparer<char>
+        {
+            public bool Equals(char x, char y)
+            {
+                return char.ToLower(x) == char.ToLower(y);
+            }
+
+            public int GetHashCode(char obj)
+            {
+                return char.ToLower(obj).GetHashCode();
+            }
+        }
+
+        internal class UniqueItemsContstraintResult : ConstraintResult
+        {
+            private ICollection<object> NonUniqueItems { get; }
+
+            public UniqueItemsContstraintResult(IConstraint constraint, object actualValue, ICollection<object> nonUniqueItems)
+            : base(constraint, actualValue, nonUniqueItems.Count > 0)
+            {
+                NonUniqueItems = nonUniqueItems;
+            }
+
+            public override void WriteActualValueTo(MessageWriter writer)
+            {
+                if (this.Status == ConstraintStatus.Failure)
+                {
+                    writer.Write("non-unique: ");
+
+                    // TODO: Expand MsgUtils so can write to StringWriter directly
+                    // https://github.com/nunit/nunit/issues/3498
+                    var output = MsgUtils.FormatCollection(NonUniqueItems, 0, NonUniqueItems.Count);
+                    writer.Write(output);
+                }
+                else
+                    base.WriteActualValueTo(writer);
+            }
         }
     }
 }
