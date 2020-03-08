@@ -147,16 +147,16 @@ namespace NUnit.Framework.Internal
             if (data.IsError(out var message))
             {
                 sb.AppendLine();
-                sb.AppendLine(message);
+                sb.Append(message);
             }
             else if (data.Value.Count != 0)
             {
                 sb.AppendLine();
-                sb.AppendLine("Data:");
+                sb.Append("Data:");
                 foreach (DictionaryEntry kvp in data.Value)
                 {
-                    sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
                     sb.AppendLine();
+                    sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
                 }
             }
         }
