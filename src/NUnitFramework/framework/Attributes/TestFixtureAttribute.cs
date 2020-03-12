@@ -26,6 +26,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -250,7 +252,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            yield return _builder.BuildFrom(typeInfo, PreFilter.Empty, this);
+            yield return this.BuildFrom(typeInfo, PreFilter.Empty, this);
         }
 
         #endregion
@@ -264,7 +266,15 @@ namespace NUnit.Framework
         /// <param name="filter">Filter used to select methods as tests.</param>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            yield return _builder.BuildFrom(typeInfo, filter, this);
+            yield return this.BuildFrom(typeInfo, filter, this);
+        }
+
+        private TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter, ITestFixtureData testFixtureData)
+        {
+            var fixture = _builder.BuildFrom(typeInfo, filter, testFixtureData);
+            fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+
+            return fixture;
         }
 
         #endregion
