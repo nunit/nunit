@@ -108,7 +108,7 @@ namespace NUnit.Framework.Assertions
         {
             var expectedMessage =
                 "  Expected: all items unique" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"x\" >" + Environment.NewLine;
+                "  But was:  non-unique: < \"x\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", "y", "x")));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -117,8 +117,13 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void UniqueFailure_WithTwoNulls()
         {
-            Assert.Throws<AssertionException>(
+            var expectedMessage =
+                "  Expected: all items unique" + Environment.NewLine +
+                "  But was:  non-unique: < null >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(
                 () => CollectionAssert.AllItemsAreUnique(new SimpleObjectCollection("x", null, "y", null, "z")));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
