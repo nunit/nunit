@@ -203,14 +203,15 @@ namespace NUnit.Framework.Constraints
 
         internal class CaseInsensitiveCharComparer : IEqualityComparer<char>
         {
+            private static readonly StringComparer Comparer = StringComparer.CurrentCultureIgnoreCase;
             public bool Equals(char x, char y)
             {
-                return StringComparer.CurrentCultureIgnoreCase.Equals(x, y);
+                return Comparer.Equals(x.ToString(), y.ToString());
             }
 
             public int GetHashCode(char obj)
             {
-                return char.ToLower(obj).GetHashCode();
+                return Comparer.GetHashCode(obj.ToString());
             }
         }
 
