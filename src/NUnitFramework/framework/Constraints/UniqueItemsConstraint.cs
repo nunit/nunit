@@ -151,24 +151,21 @@ namespace NUnit.Framework.Constraints
 
         private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T> hashValueFactory)
         {
-            var hash = new Dictionary<T, int>();
+            var hash = new Dictionary<T, bool>();
             var nonUniques = new List<T>();
 
             foreach (T item in actual)
             {
                 var itemToHash = hashValueFactory(item);
 
-                if (!hash.TryGetValue(itemToHash, out var itemCount))
+                if (!hash.TryGetValue(itemToHash, out var knownNonUnique))
                 {
-                    hash.Add(itemToHash, 1);
+                    hash.Add(itemToHash, false);
                 }
-                else
+                else if (!knownNonUnique)
                 {
-                    hash[itemToHash] = ++itemCount;
-                    if (itemCount == 2)
-                    {
-                        nonUniques.Add(item);
-                    }
+                    hash[itemToHash] = true;
+                    nonUniques.Add(item);
                 }
             }
 
