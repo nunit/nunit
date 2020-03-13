@@ -252,7 +252,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            yield return this.BuildFrom(typeInfo, PreFilter.Empty, this);
+            return this.BuildFrom(typeInfo, PreFilter.Empty);
         }
 
         #endregion
@@ -266,15 +266,10 @@ namespace NUnit.Framework
         /// <param name="filter">Filter used to select methods as tests.</param>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
-            yield return this.BuildFrom(typeInfo, filter, this);
-        }
-
-        private TestSuite BuildFrom(ITypeInfo typeInfo, IPreFilter filter, ITestFixtureData testFixtureData)
-        {
-            var fixture = _builder.BuildFrom(typeInfo, filter, testFixtureData);
+            var fixture = _builder.BuildFrom(typeInfo, filter, this);
             fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
 
-            return fixture;
+            yield return fixture;
         }
 
         #endregion
