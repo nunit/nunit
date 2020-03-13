@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -106,7 +108,7 @@ namespace NUnit.Framework.Constraints
             return nonUniques;
         }
 
-        private ICollection TryFastAlgorithm(IEnumerable actual)
+        private ICollection? TryFastAlgorithm(IEnumerable actual)
         {
             // If the user specified any external comparer with Using, exit
             if (UsingExternalComparer)
@@ -114,7 +116,7 @@ namespace NUnit.Framework.Constraints
 
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
-            Type memberType = GetGenericTypeArgument(actual);
+            Type? memberType = GetGenericTypeArgument(actual);
             if (memberType == null || !IsSealed(memberType) || IsHandledSpeciallyByNUnit(memberType))
                 return null;
 
@@ -139,38 +141,25 @@ namespace NUnit.Framework.Constraints
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static ICollection ItemsUnique<T>(IEnumerable<T> actual)
-            => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
+            => NonUniqueItemsInternal(actual);
 
         private static ICollection StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, EqualityComparer<string>.Default);
+            => NonUniqueItemsInternal(actual, v => v.ToLower());
 
         private static ICollection CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => NonUniqueItemsInternal(actual, EqualityComparer<char>.Default);
+            => NonUniqueItemsInternal(actual, char.ToLower);
 
-        //private static IEnumerable<char> CharValueFactory(IEnumerable<char> chars)
-        //{
-        //    foreach (var c in chars)
-        //        yield return char.ToLower(c);
-        //}
-
-        private static T GetHashSafeValue<T>(T item)
+        private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T>? hashValueFactory = null)
         {
-            if (typeof(T) == typeof(char))
-                return (T)(object)char.ToLower((char)(object)item);
-            else if (typeof(T) == typeof(string))
-                return (T)(object)(item as string).ToLower();
-            else
-                return item;
-        }
-
-        private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
-        {
-            var hash = new Dictionary<T, int>(comparer);
+            var hash = new Dictionary<T, int>();
             var nonUniques = new List<T>();
+
+            if (hashValueFactory == null)
+                hashValueFactory = t => t;
 
             foreach (T item in actual)
             {
-                var itemToHash = GetHashSafeValue(item);
+                var itemToHash = hashValueFactory(item);
 
                 if (!hash.TryGetValue(itemToHash, out var itemCount))
                 {
@@ -202,7 +191,7 @@ namespace NUnit.Framework.Constraints
                 || type.FullName == "System.ValueTuple";
         }
 
-        private static Type GetGenericTypeArgument(IEnumerable actual)
+        private static Type? GetGenericTypeArgument(IEnumerable actual)
         {
             foreach (var type in actual.GetType().GetInterfaces())
             {
