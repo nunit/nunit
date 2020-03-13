@@ -141,7 +141,7 @@ namespace NUnit.Framework.Constraints
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static ICollection ItemsUnique<T>(IEnumerable<T> actual)
-            => NonUniqueItemsInternal(actual);
+            => NonUniqueItemsInternal(actual, v => v);
 
         private static ICollection StringsUniqueIgnoringCase(IEnumerable<string> actual)
             => NonUniqueItemsInternal(actual, v => v.ToLower());
@@ -149,13 +149,10 @@ namespace NUnit.Framework.Constraints
         private static ICollection CharsUniqueIgnoringCase(IEnumerable<char> actual)
             => NonUniqueItemsInternal(actual, char.ToLower);
 
-        private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T>? hashValueFactory = null)
+        private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T> hashValueFactory)
         {
             var hash = new Dictionary<T, int>();
             var nonUniques = new List<T>();
-
-            if (hashValueFactory == null)
-                hashValueFactory = t => t;
 
             foreach (T item in actual)
             {
