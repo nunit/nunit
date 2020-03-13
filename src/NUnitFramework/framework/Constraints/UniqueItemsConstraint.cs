@@ -142,15 +142,25 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
         private static ICollection StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, StringComparer.CurrentCultureIgnoreCase);
+            => NonUniqueItemsInternal(actual, EqualityComparer<string>.Default);
 
         private static ICollection CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => NonUniqueItemsInternal(CharValueFactory(actual), EqualityComparer<char>.Default);
+            => NonUniqueItemsInternal(actual, EqualityComparer<char>.Default);
 
-        private static IEnumerable<char> CharValueFactory(IEnumerable<char> chars)
+        //private static IEnumerable<char> CharValueFactory(IEnumerable<char> chars)
+        //{
+        //    foreach (var c in chars)
+        //        yield return char.ToLower(c);
+        //}
+
+        private static T GetHashSafeValue<T>(T item)
         {
-            foreach (var c in chars)
-                yield return char.ToLower(c);
+            if (typeof(T) == typeof(char))
+                return (T)(object)char.ToLower((char)(object)item);
+            else if (typeof(T) == typeof(string))
+                return (T)(object)(item as string).ToLower();
+            else
+                return item;
         }
 
         private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
@@ -160,13 +170,15 @@ namespace NUnit.Framework.Constraints
 
             foreach (T item in actual)
             {
-                if (!hash.TryGetValue(item, out var itemCount))
+                var itemToHash = GetHashSafeValue(item);
+
+                if (!hash.TryGetValue(itemToHash, out var itemCount))
                 {
-                    hash.Add(item, 1);
+                    hash.Add(itemToHash, 1);
                 }
                 else
                 {
-                    hash[item] = ++itemCount;
+                    hash[itemToHash] = ++itemCount;
                     if (itemCount == 2)
                     {
                         nonUniques.Add(item);
@@ -206,19 +218,6 @@ namespace NUnit.Framework.Constraints
 
             return null;
         }
-
-        //internal class CaseInsensitiveCharComparer : IEqualityComparer<char>
-        //{
-        //    public bool Equals(char x, char y)
-        //    {
-        //        return char.ToLower(x) == char.ToLower(y);
-        //    }
-
-        //    public int GetHashCode(char obj)
-        //    {
-        //        return char.ToLower(obj).GetHashCode();
-        //    }
-        //}
 
         internal class UniqueItemsContstraintResult : ConstraintResult
         {
