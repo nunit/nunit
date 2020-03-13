@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
+using static NUnit.Framework.Constraints.UniqueItemsConstraint;
 
 namespace NUnit.Framework.Constraints
 {
@@ -57,6 +58,13 @@ namespace NUnit.Framework.Constraints
             new object[] {new[] {"a", "b", "c", "C"}}
         };
 
+        private static readonly object[] DuplicateItemsData =
+        {
+            new object[] {new[] { 1, 2, 3, 2 }, new[] { 2 }},
+            new object[] {new[] { 2, 1, 2, 3, 2 }, new[] { 2 }},
+            new object[] {new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 }}
+        };
+
         static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
 
         static readonly TestCaseData[] PerformanceData =
@@ -78,6 +86,15 @@ namespace NUnit.Framework.Constraints
                 else
                     Assert.That(values, Is.Unique);
             }, HelperConstraints.HasMaxTime(100));
+        }
+
+        [TestCaseSource(nameof(DuplicateItemsData))]
+        public void DuplicateItemsTests(IEnumerable items, IEnumerable expectedFailures)
+        {
+            var result = Is.Unique.ApplyTo(items) as UniqueItemsContstraintResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.NonUniqueItems, Is.EqualTo(expectedFailures));
         }
     }
 }
