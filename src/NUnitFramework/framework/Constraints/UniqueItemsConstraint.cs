@@ -145,7 +145,13 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, StringComparer.CurrentCultureIgnoreCase);
 
         private static ICollection CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => NonUniqueItemsInternal(actual, new CaseInsensitiveCharComparer());
+            => NonUniqueItemsInternal(CharValueFactory(actual), EqualityComparer<char>.Default);
+
+        private static IEnumerable<char> CharValueFactory(IEnumerable<char> chars)
+        {
+            foreach (var c in chars)
+                yield return char.ToLower(c);
+        }
 
         private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
@@ -201,19 +207,18 @@ namespace NUnit.Framework.Constraints
             return null;
         }
 
-        internal class CaseInsensitiveCharComparer : IEqualityComparer<char>
-        {
-            private static readonly StringComparer Comparer = StringComparer.CurrentCultureIgnoreCase;
-            public bool Equals(char x, char y)
-            {
-                return Comparer.Equals(x.ToString(), y.ToString());
-            }
+        //internal class CaseInsensitiveCharComparer : IEqualityComparer<char>
+        //{
+        //    public bool Equals(char x, char y)
+        //    {
+        //        return char.ToLower(x) == char.ToLower(y);
+        //    }
 
-            public int GetHashCode(char obj)
-            {
-                return Comparer.GetHashCode(obj.ToString());
-            }
-        }
+        //    public int GetHashCode(char obj)
+        //    {
+        //        return char.ToLower(obj).GetHashCode();
+        //    }
+        //}
 
         internal class UniqueItemsContstraintResult : ConstraintResult
         {
