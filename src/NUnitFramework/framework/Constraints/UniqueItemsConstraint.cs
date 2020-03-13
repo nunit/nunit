@@ -205,7 +205,7 @@ namespace NUnit.Framework.Constraints
         {
             public bool Equals(char x, char y)
             {
-                return char.ToLower(x) == char.ToLower(y);
+                return StringComparer.CurrentCultureIgnoreCase.Equals(x, y);
             }
 
             public int GetHashCode(char obj)
