@@ -202,8 +202,13 @@ namespace NUnit.Framework.Constraints
             return null;
         }
 
-        internal class UniqueItemsContstraintResult : ConstraintResult
+        internal sealed class UniqueItemsContstraintResult : ConstraintResult
         {
+            /// <summary>
+            /// The maximum count of list elements that are shown on the constraint result
+            /// </summary>
+            internal const int MaxDisplayCount = 10;
+
             internal ICollection NonUniqueItems { get; }
 
             public UniqueItemsContstraintResult(IConstraint constraint, object actualValue, ICollection nonUniqueItems)
@@ -212,19 +217,14 @@ namespace NUnit.Framework.Constraints
                 NonUniqueItems = nonUniqueItems;
             }
 
-            public override void WriteActualValueTo(MessageWriter writer)
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
                 if (this.Status == ConstraintStatus.Failure)
                 {
-                    writer.Write("non-unique: ");
-
-                    // TODO: Expand MsgUtils so can write to StringWriter directly
-                    // https://github.com/nunit/nunit/issues/3498
-                    var output = MsgUtils.FormatCollection(NonUniqueItems, 0, NonUniqueItems.Count);
-                    writer.Write(output);
+                    writer.Write("  Not unique items: ");
+                    var output = MsgUtils.FormatCollection(NonUniqueItems, 0, MaxDisplayCount);
+                    writer.WriteLine(output);
                 }
-                else
-                    base.WriteActualValueTo(writer);
             }
         }
     }

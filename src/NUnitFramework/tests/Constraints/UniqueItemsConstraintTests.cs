@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,10 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, new object[0] };
-        static object[] FailureData = new object[] { new object[] { new int[] { 1, 3, 17, 3, 34 }, "non-unique: < 3 >" } };
+        static object[] FailureData = new object[] { new object[] {
+            new int[] { 1, 3, 17, 3, 34 }, 
+            "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
+        };
 
         [Test]
         [TestCaseSource( nameof(IgnoreCaseData) )]
