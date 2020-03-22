@@ -21,8 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -33,6 +37,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionSupersetConstraint : CollectionItemsEqualConstraint
     {
         private readonly IEnumerable _expected;
+        private List<object>? _missingItems;
 
         /// <summary>
         /// Construct a CollectionSupersetConstraint
@@ -72,7 +77,19 @@ namespace NUnit.Framework.Constraints
             CollectionTally tally = Tally(actual);
             tally.TryRemove(_expected);
 
-            return tally.Result.ExtraItems.Count == 0;
+            _missingItems = tally.Result.ExtraItems;
+
+            return _missingItems.Count == 0;
+        }
+
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value.
+        /// </summary>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            bool matches = Matches(enumerable);
+            return new CollectionSupersetConstraintResult(this, actual, matches, _missingItems);
         }
 
         /// <summary>
@@ -87,5 +104,31 @@ namespace NUnit.Framework.Constraints
             base.Using(EqualityAdapter.For(invertedComparison));
             return this;
         }
+
+        #region Private CollectionSupersetConstraintResult Class
+
+        private sealed class CollectionSupersetConstraintResult : ConstraintResult
+        {
+            private readonly List<object>? _missingItems;
+
+            public CollectionSupersetConstraintResult(IConstraint constraint, object actualValue, bool isSuccess, List<object>? missingItems)
+                : base(constraint, actualValue, isSuccess)
+            {
+                _missingItems = missingItems;
+            }
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
+            {
+                if (_missingItems?.Count > 0)
+                {
+                    string missingItemsMessage = "Missing items: ";
+                    missingItemsMessage += MsgUtils.FormatCollection(_missingItems);
+
+                    writer.WriteMessageLine(missingItemsMessage);
+                }
+            }
+        }
+
+        #endregion
     }
 }
