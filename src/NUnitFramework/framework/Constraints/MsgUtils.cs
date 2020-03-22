@@ -53,6 +53,11 @@ namespace NUnit.Framework.Constraints
     internal static class MsgUtils
     {
         /// <summary>
+        /// Default amount of items used by <see cref="FormatCollection"/> method.
+        /// </summary>
+        private const int DefaultMaxItems = 10;
+
+        /// <summary>
         /// Static string used when strings are clipped
         /// </summary>
         private const string ELLIPSIS = "...";
@@ -161,7 +166,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-        public static string FormatCollection(IEnumerable collection, long start, int max)
+        public static string FormatCollection(IEnumerable collection, long start = 0, int max = DefaultMaxItems)
         {
             int count = 0;
             int index = 0;
