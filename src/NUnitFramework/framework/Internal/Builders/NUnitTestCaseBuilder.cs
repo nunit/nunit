@@ -33,7 +33,16 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class NUnitTestCaseBuilder
     {
-        private readonly Randomizer _randomizer = Randomizer.CreateRandomizer();
+        private Randomizer? _randomizer = null;
+        private Randomizer Randomizer 
+        {
+            get
+            {
+                return _randomizer ??= Randomizer.CreateRandomizer();
+            }
+
+        }
+
         private readonly TestNameGenerator _nameGenerator;
 
         /// <summary>
@@ -55,7 +64,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             var testMethod = new TestMethod(method, parentSuite)
             {
-                Seed = _randomizer.Next()
+                Seed = Randomizer.Next()
             };
 
             CheckTestMethodAttributes(testMethod);
