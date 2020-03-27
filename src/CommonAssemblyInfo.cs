@@ -42,10 +42,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
 #elif NETCOREAPP2_1
 [assembly: AssemblyConfiguration(".NET Core 2.1 Debug")]
-#elif NETCOREAPP2_2
-[assembly: AssemblyConfiguration(".NET Core 2.2 Debug")]
-#elif NETCOREAPP3_0
-[assembly: AssemblyConfiguration(".NET Core 3.0 Debug")]
+#elif NETCOREAPP3_1
+[assembly: AssemblyConfiguration(".NET Core 3.1 Debug")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
@@ -60,10 +58,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Standard 2.0")]
 #elif NETCOREAPP2_1
 [assembly: AssemblyConfiguration(".NET Core 2.1")]
-#elif NETCOREAPP2_2
-[assembly: AssemblyConfiguration(".NET Core 2.2")]
-#elif NETCOREAPP3_0
-[assembly: AssemblyConfiguration(".NET Core 3.0")]
+#elif NETCOREAPP3_1
+[assembly: AssemblyConfiguration(".NET Core 3.1")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
