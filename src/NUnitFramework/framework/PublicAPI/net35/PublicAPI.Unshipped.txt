@@ -1,0 +1,13 @@
+*REMOVED*NUnit.Framework.Constraints.NUnitEqualityComparer.AreEqual(object x, object y, ref NUnit.Framework.Constraints.Tolerance tolerance, bool topLevelComparison = true) -> bool
+NUnit.Framework.Constraints.NUnitEqualityComparer.AreEqual(object x, object y, ref NUnit.Framework.Constraints.Tolerance tolerance) -> bool
+NUnit.Framework.Constraints.NUnitEqualityComparer.AreEqual(object x, object y, ref NUnit.Framework.Constraints.Tolerance tolerance, bool topLevelComparison) -> bool
+NUnit.Framework.Interfaces.AssertionResult.Equals(NUnit.Framework.Interfaces.AssertionResult other) -> bool
+NUnit.Framework.Interfaces.ITestResult.TotalCount.get -> int
+NUnit.Framework.Interfaces.ResultState.Equals(NUnit.Framework.Interfaces.ResultState other) -> bool
+NUnit.Framework.Internal.Execution.WorkItem.State.set -> void
+NUnit.Framework.Internal.Test.CompareTo(NUnit.Framework.Internal.Test other) -> int
+abstract NUnit.Framework.Internal.TestResult.TotalCount.get -> int
+override NUnit.Framework.Internal.TestCaseResult.TotalCount.get -> int
+override NUnit.Framework.Internal.TestSuiteResult.TotalCount.get -> int
+static NUnit.Framework.Internal.ThreadUtility.GetCurrentThreadPrincipal() -> System.Security.Principal.IPrincipal
+static NUnit.Framework.Internal.ThreadUtility.SetCurrentThreadPrincipal(System.Security.Principal.IPrincipal principal) -> void
