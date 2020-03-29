@@ -1,4 +1,293 @@
 *REMOVED*NUnit.Framework.Constraints.NUnitEqualityComparer.AreEqual(object x, object y, ref NUnit.Framework.Constraints.Tolerance tolerance, bool topLevelComparison = true) -> bool
+NUnit.Framework.AssertionException.AssertionException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+NUnit.Framework.AssertionException.AssertionException(string? message) -> void
+NUnit.Framework.AssertionException.AssertionException(string? message, System.Exception? inner) -> void
+NUnit.Framework.AuthorAttribute.AuthorAttribute(string! name) -> void
+NUnit.Framework.AuthorAttribute.AuthorAttribute(string! name, string! email) -> void
+NUnit.Framework.CategoryAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.CategoryAttribute.CategoryAttribute(string! name) -> void
+NUnit.Framework.CategoryAttribute.Name.get -> string!
+NUnit.Framework.CategoryAttribute.categoryName -> string!
+NUnit.Framework.CombiningStrategyAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.CombiningStrategyAttribute.BuildFrom(NUnit.Framework.Interfaces.IMethodInfo! method, NUnit.Framework.Internal.Test! suite) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestMethod!>!
+NUnit.Framework.CombiningStrategyAttribute.CombiningStrategyAttribute(NUnit.Framework.Interfaces.ICombiningStrategy! strategy, NUnit.Framework.Interfaces.IParameterDataProvider! provider) -> void
+NUnit.Framework.CombiningStrategyAttribute.CombiningStrategyAttribute(object! strategy, object! provider) -> void
+NUnit.Framework.CultureAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.CultureAttribute.CultureAttribute(string? cultures) -> void
+NUnit.Framework.CultureAttribute.IsCultureSupported(string! culture) -> bool
+NUnit.Framework.CultureAttribute.IsCultureSupported(string![]! cultures) -> bool
+NUnit.Framework.DefaultFloatingPointToleranceAttribute.ApplyToContext(NUnit.Framework.Internal.TestExecutionContext! context) -> void
+NUnit.Framework.DescriptionAttribute.DescriptionAttribute(string! description) -> void
+NUnit.Framework.ExplicitAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.ExplicitAttribute.ExplicitAttribute(string? reason) -> void
+NUnit.Framework.IgnoreAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.IgnoreAttribute.IgnoreAttribute(string! reason) -> void
+NUnit.Framework.IgnoreAttribute.Until.get -> string?
+NUnit.Framework.IgnoreAttribute.Until.set -> void
+NUnit.Framework.IgnoreException.IgnoreException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+NUnit.Framework.IgnoreException.IgnoreException(string? message) -> void
+NUnit.Framework.IgnoreException.IgnoreException(string? message, System.Exception? inner) -> void
+NUnit.Framework.IncludeExcludeAttribute.Exclude.get -> string?
+NUnit.Framework.IncludeExcludeAttribute.Exclude.set -> void
+NUnit.Framework.IncludeExcludeAttribute.Include.get -> string?
+NUnit.Framework.IncludeExcludeAttribute.Include.set -> void
+NUnit.Framework.IncludeExcludeAttribute.IncludeExcludeAttribute(string? include) -> void
+NUnit.Framework.IncludeExcludeAttribute.Reason.get -> string?
+NUnit.Framework.IncludeExcludeAttribute.Reason.set -> void
+NUnit.Framework.InconclusiveException.InconclusiveException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+NUnit.Framework.InconclusiveException.InconclusiveException(string? message) -> void
+NUnit.Framework.InconclusiveException.InconclusiveException(string? message, System.Exception? inner) -> void
+NUnit.Framework.Interfaces.IApplyToContext.ApplyToContext(NUnit.Framework.Internal.TestExecutionContext! context) -> void
+NUnit.Framework.Interfaces.IApplyToTest.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.Interfaces.ICommandWrapper.Wrap(NUnit.Framework.Internal.Commands.TestCommand! command) -> NUnit.Framework.Internal.Commands.TestCommand!
+NUnit.Framework.Interfaces.IParameterDataSource.GetData(NUnit.Framework.Interfaces.IParameterInfo! parameter) -> System.Collections.IEnumerable!
+NUnit.Framework.Interfaces.IPropertyBag.Add(string! key, object! value) -> void
+NUnit.Framework.Interfaces.IPropertyBag.ContainsKey(string! key) -> bool
+NUnit.Framework.Interfaces.IPropertyBag.Get(string! key) -> object?
+NUnit.Framework.Interfaces.IPropertyBag.Keys.get -> System.Collections.Generic.ICollection<string!>!
+NUnit.Framework.Interfaces.IPropertyBag.Set(string! key, object! value) -> void
+NUnit.Framework.Interfaces.IPropertyBag.this[string! key].get -> System.Collections.IList!
+NUnit.Framework.Interfaces.IPropertyBag.this[string! key].set -> void
+NUnit.Framework.Interfaces.ITestCaseData.ExpectedResult.get -> object?
+NUnit.Framework.Interfaces.ITestData.Arguments.get -> object?[]!
+NUnit.Framework.Interfaces.ITestData.Properties.get -> NUnit.Framework.Interfaces.IPropertyBag!
+NUnit.Framework.Interfaces.ITestData.TestName.get -> string?
+NUnit.Framework.Interfaces.ITestFixtureData.TypeArgs.get -> System.Type![]?
+NUnit.Framework.Internal.Builders.NUnitTestCaseBuilder.BuildTestMethod(NUnit.Framework.Interfaces.IMethodInfo! method, NUnit.Framework.Internal.Test! parentSuite, NUnit.Framework.Internal.TestCaseParameters? parms) -> NUnit.Framework.Internal.TestMethod!
+NUnit.Framework.Internal.Builders.NUnitTestFixtureBuilder.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo, NUnit.Framework.Interfaces.IPreFilter! filter) -> NUnit.Framework.Internal.TestSuite!
+NUnit.Framework.Internal.Builders.NUnitTestFixtureBuilder.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo, NUnit.Framework.Interfaces.IPreFilter! filter, NUnit.Framework.Interfaces.ITestFixtureData! testFixtureData) -> NUnit.Framework.Internal.TestSuite!
+NUnit.Framework.Internal.PropertyBag.Add(string! key, object! value) -> void
+NUnit.Framework.Internal.PropertyBag.AddToXml(NUnit.Framework.Interfaces.TNode! parentNode, bool recursive) -> NUnit.Framework.Interfaces.TNode!
+NUnit.Framework.Internal.PropertyBag.ContainsKey(string! key) -> bool
+NUnit.Framework.Internal.PropertyBag.Get(string! key) -> object?
+NUnit.Framework.Internal.PropertyBag.Keys.get -> System.Collections.Generic.ICollection<string!>!
+NUnit.Framework.Internal.PropertyBag.Set(string! key, object! value) -> void
+NUnit.Framework.Internal.PropertyBag.ToXml(bool recursive) -> NUnit.Framework.Interfaces.TNode!
+NUnit.Framework.Internal.PropertyBag.this[string! key].get -> System.Collections.IList!
+NUnit.Framework.Internal.PropertyBag.this[string! key].set -> void
+NUnit.Framework.Internal.TestCaseParameters.ExpectedResult.get -> object?
+NUnit.Framework.Internal.TestCaseParameters.ExpectedResult.set -> void
+NUnit.Framework.Internal.TestCaseParameters.TestCaseParameters(NUnit.Framework.Interfaces.ITestCaseData! data) -> void
+NUnit.Framework.Internal.TestCaseParameters.TestCaseParameters(System.Exception! exception) -> void
+NUnit.Framework.Internal.TestCaseParameters.TestCaseParameters(object?[]! args) -> void
+NUnit.Framework.Internal.TestFixtureParameters.TestFixtureParameters(NUnit.Framework.Interfaces.ITestFixtureData! data) -> void
+NUnit.Framework.Internal.TestFixtureParameters.TestFixtureParameters(System.Exception! exception) -> void
+NUnit.Framework.Internal.TestFixtureParameters.TestFixtureParameters(params object?[]! args) -> void
+NUnit.Framework.Internal.TestFixtureParameters.TypeArgs.get -> System.Type![]?
+NUnit.Framework.Internal.TestParameters.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.Internal.TestParameters.Arguments.get -> object?[]!
+NUnit.Framework.Internal.TestParameters.OriginalArguments.get -> object?[]!
+NUnit.Framework.Internal.TestParameters.Properties.get -> NUnit.Framework.Interfaces.IPropertyBag!
+NUnit.Framework.Internal.TestParameters.TestName.get -> string?
+NUnit.Framework.Internal.TestParameters.TestName.set -> void
+NUnit.Framework.Internal.TestParameters.TestParameters(NUnit.Framework.Interfaces.ITestData! data) -> void
+NUnit.Framework.Internal.TestParameters.TestParameters(System.Exception! exception) -> void
+NUnit.Framework.Internal.TestParameters.TestParameters(object?[]! args) -> void
+NUnit.Framework.MultipleAssertException.MultipleAssertException(NUnit.Framework.Interfaces.ITestResult! testResult) -> void
+NUnit.Framework.MultipleAssertException.MultipleAssertException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+NUnit.Framework.MultipleAssertException.TestResult.get -> NUnit.Framework.Interfaces.ITestResult!
+NUnit.Framework.OrderAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.ParallelizableAttribute.ApplyToContext(NUnit.Framework.Internal.TestExecutionContext! context) -> void
+NUnit.Framework.PlatformAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.PlatformAttribute.PlatformAttribute(string? platforms) -> void
+NUnit.Framework.PropertyAttribute.Properties.get -> NUnit.Framework.Interfaces.IPropertyBag!
+NUnit.Framework.PropertyAttribute.PropertyAttribute(object! propertyValue) -> void
+NUnit.Framework.PropertyAttribute.PropertyAttribute(string! propertyName, double propertyValue) -> void
+NUnit.Framework.PropertyAttribute.PropertyAttribute(string! propertyName, int propertyValue) -> void
+NUnit.Framework.PropertyAttribute.PropertyAttribute(string! propertyName, string! propertyValue) -> void
+NUnit.Framework.RandomAttribute.GetData(NUnit.Framework.Interfaces.IParameterInfo! parameter) -> System.Collections.IEnumerable!
+NUnit.Framework.RangeAttribute.GetData(NUnit.Framework.Interfaces.IParameterInfo! parameter) -> System.Collections.IEnumerable!
+NUnit.Framework.RepeatAttribute.RepeatedTestCommand.RepeatedTestCommand(NUnit.Framework.Internal.Commands.TestCommand! innerCommand, int repeatCount) -> void
+NUnit.Framework.RepeatAttribute.Wrap(NUnit.Framework.Internal.Commands.TestCommand! command) -> NUnit.Framework.Internal.Commands.TestCommand!
+NUnit.Framework.ResultStateException.ResultStateException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+NUnit.Framework.ResultStateException.ResultStateException(string? message) -> void
+NUnit.Framework.ResultStateException.ResultStateException(string? message, System.Exception? inner) -> void
+NUnit.Framework.RetryAttribute.RetryCommand.RetryCommand(NUnit.Framework.Internal.Commands.TestCommand! innerCommand, int tryCount) -> void
+NUnit.Framework.RetryAttribute.Wrap(NUnit.Framework.Internal.Commands.TestCommand! command) -> NUnit.Framework.Internal.Commands.TestCommand!
+NUnit.Framework.SetCultureAttribute.SetCultureAttribute(string! culture) -> void
+NUnit.Framework.SetUICultureAttribute.SetUICultureAttribute(string! culture) -> void
+NUnit.Framework.SetUpFixtureAttribute.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestSuite!>!
+NUnit.Framework.SingleThreadedAttribute.ApplyToContext(NUnit.Framework.Internal.TestExecutionContext! context) -> void
+NUnit.Framework.SuccessException.SuccessException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
+NUnit.Framework.SuccessException.SuccessException(string? message) -> void
+NUnit.Framework.SuccessException.SuccessException(string? message, System.Exception? inner) -> void
+NUnit.Framework.TestAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+NUnit.Framework.TestAttribute.Author.get -> string?
+NUnit.Framework.TestAttribute.Author.set -> void
+NUnit.Framework.TestAttribute.BuildFrom(NUnit.Framework.Interfaces.IMethodInfo! method, NUnit.Framework.Internal.Test! suite) -> NUnit.Framework.Internal.TestMethod!
+NUnit.Framework.TestAttribute.Description.get -> string?
+NUnit.Framework.TestAttribute.Description.set -> void
+NUnit.Framework.TestAttribute.ExpectedResult.get -> object?
+NUnit.Framework.TestAttribute.ExpectedResult.set -> void
+NUnit.Framework.TestAttribute.TestOf.get -> System.Type?
+NUnit.Framework.TestAttribute.TestOf.set -> void
+NUnit.Framework.TestCaseAttribute.Arguments.get -> object?[]!
+NUnit.Framework.TestCaseAttribute.Author.get -> string?
+NUnit.Framework.TestCaseAttribute.Author.set -> void
+NUnit.Framework.TestCaseAttribute.BuildFrom(NUnit.Framework.Interfaces.IMethodInfo! method, NUnit.Framework.Internal.Test! suite) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestMethod!>!
+NUnit.Framework.TestCaseAttribute.Category.get -> string?
+NUnit.Framework.TestCaseAttribute.Category.set -> void
+NUnit.Framework.TestCaseAttribute.Description.get -> string?
+NUnit.Framework.TestCaseAttribute.Description.set -> void
+NUnit.Framework.TestCaseAttribute.ExcludePlatform.get -> string?
+NUnit.Framework.TestCaseAttribute.ExcludePlatform.set -> void
+NUnit.Framework.TestCaseAttribute.ExpectedResult.get -> object?
+NUnit.Framework.TestCaseAttribute.ExpectedResult.set -> void
+NUnit.Framework.TestCaseAttribute.Ignore.get -> string?
+NUnit.Framework.TestCaseAttribute.Ignore.set -> void
+NUnit.Framework.TestCaseAttribute.IgnoreReason.get -> string?
+NUnit.Framework.TestCaseAttribute.IgnoreReason.set -> void
+NUnit.Framework.TestCaseAttribute.IncludePlatform.get -> string?
+NUnit.Framework.TestCaseAttribute.IncludePlatform.set -> void
+NUnit.Framework.TestCaseAttribute.Properties.get -> NUnit.Framework.Interfaces.IPropertyBag!
+NUnit.Framework.TestCaseAttribute.Reason.get -> string?
+NUnit.Framework.TestCaseAttribute.Reason.set -> void
+NUnit.Framework.TestCaseAttribute.TestCaseAttribute(object? arg) -> void
+NUnit.Framework.TestCaseAttribute.TestCaseAttribute(object? arg1, object? arg2) -> void
+NUnit.Framework.TestCaseAttribute.TestCaseAttribute(object? arg1, object? arg2, object? arg3) -> void
+NUnit.Framework.TestCaseAttribute.TestCaseAttribute(params object?[]? arguments) -> void
+NUnit.Framework.TestCaseAttribute.TestName.get -> string?
+NUnit.Framework.TestCaseAttribute.TestName.set -> void
+NUnit.Framework.TestCaseAttribute.TestOf.get -> System.Type?
+NUnit.Framework.TestCaseAttribute.TestOf.set -> void
+NUnit.Framework.TestCaseData.Explicit() -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.Explicit(string! reason) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.Ignore(string! reason) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.Returns(object? result) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetArgDisplayNames(params string![]? displayNames) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetCategory(string! category) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetDescription(string! description) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetName(string? name) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetProperty(string! propName, double propValue) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetProperty(string! propName, int propValue) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.SetProperty(string! propName, string! propValue) -> NUnit.Framework.TestCaseData!
+NUnit.Framework.TestCaseData.TestCaseData(object? arg) -> void
+NUnit.Framework.TestCaseData.TestCaseData(object? arg1, object? arg2) -> void
+NUnit.Framework.TestCaseData.TestCaseData(object? arg1, object? arg2, object? arg3) -> void
+NUnit.Framework.TestCaseData.TestCaseData(params object?[]? args) -> void
+NUnit.Framework.TestCaseSourceAttribute.BuildFrom(NUnit.Framework.Interfaces.IMethodInfo! method, NUnit.Framework.Internal.Test! suite) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestMethod!>!
+NUnit.Framework.TestCaseSourceAttribute.Category.get -> string?
+NUnit.Framework.TestCaseSourceAttribute.Category.set -> void
+NUnit.Framework.TestCaseSourceAttribute.MethodParams.get -> object?[]?
+NUnit.Framework.TestCaseSourceAttribute.SourceName.get -> string?
+NUnit.Framework.TestCaseSourceAttribute.SourceType.get -> System.Type?
+NUnit.Framework.TestCaseSourceAttribute.TestCaseSourceAttribute(System.Type! sourceType) -> void
+NUnit.Framework.TestCaseSourceAttribute.TestCaseSourceAttribute(System.Type! sourceType, string! sourceName) -> void
+NUnit.Framework.TestCaseSourceAttribute.TestCaseSourceAttribute(System.Type! sourceType, string! sourceName, object?[]? methodParams) -> void
+NUnit.Framework.TestCaseSourceAttribute.TestCaseSourceAttribute(string! sourceName) -> void
+NUnit.Framework.TestCaseSourceAttribute.TestCaseSourceAttribute(string! sourceName, object?[]? methodParams) -> void
+NUnit.Framework.TestFixtureAttribute.Arguments.get -> object?[]!
+NUnit.Framework.TestFixtureAttribute.Author.get -> string?
+NUnit.Framework.TestFixtureAttribute.Author.set -> void
+NUnit.Framework.TestFixtureAttribute.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestSuite!>!
+NUnit.Framework.TestFixtureAttribute.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo, NUnit.Framework.Interfaces.IPreFilter! filter) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestSuite!>!
+NUnit.Framework.TestFixtureAttribute.Category.get -> string?
+NUnit.Framework.TestFixtureAttribute.Category.set -> void
+NUnit.Framework.TestFixtureAttribute.Description.get -> string?
+NUnit.Framework.TestFixtureAttribute.Description.set -> void
+NUnit.Framework.TestFixtureAttribute.Ignore.get -> string?
+NUnit.Framework.TestFixtureAttribute.Ignore.set -> void
+NUnit.Framework.TestFixtureAttribute.IgnoreReason.get -> string?
+NUnit.Framework.TestFixtureAttribute.IgnoreReason.set -> void
+NUnit.Framework.TestFixtureAttribute.Properties.get -> NUnit.Framework.Interfaces.IPropertyBag!
+NUnit.Framework.TestFixtureAttribute.Reason.get -> string?
+NUnit.Framework.TestFixtureAttribute.Reason.set -> void
+NUnit.Framework.TestFixtureAttribute.TestFixtureAttribute(params object?[]? arguments) -> void
+NUnit.Framework.TestFixtureAttribute.TestName.get -> string?
+NUnit.Framework.TestFixtureAttribute.TestName.set -> void
+NUnit.Framework.TestFixtureAttribute.TestOf.get -> System.Type?
+NUnit.Framework.TestFixtureAttribute.TestOf.set -> void
+NUnit.Framework.TestFixtureAttribute.TypeArgs.get -> System.Type![]!
+NUnit.Framework.TestFixtureAttribute.TypeArgs.set -> void
+NUnit.Framework.TestFixtureData.Explicit() -> NUnit.Framework.TestFixtureData!
+NUnit.Framework.TestFixtureData.Explicit(string! reason) -> NUnit.Framework.TestFixtureData!
+NUnit.Framework.TestFixtureData.Ignore(string! reason) -> NUnit.Framework.TestFixtureData!
+NUnit.Framework.TestFixtureData.SetArgDisplayNames(params string![]? displayNames) -> NUnit.Framework.TestFixtureData!
+NUnit.Framework.TestFixtureData.TestFixtureData(object? arg) -> void
+NUnit.Framework.TestFixtureData.TestFixtureData(object? arg1, object? arg2) -> void
+NUnit.Framework.TestFixtureData.TestFixtureData(object? arg1, object? arg2, object? arg3) -> void
+NUnit.Framework.TestFixtureData.TestFixtureData(params object?[]? args) -> void
+NUnit.Framework.TestFixtureSourceAttribute.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestSuite!>!
+NUnit.Framework.TestFixtureSourceAttribute.BuildFrom(NUnit.Framework.Interfaces.ITypeInfo! typeInfo, NUnit.Framework.Interfaces.IPreFilter! filter) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Internal.TestSuite!>!
+NUnit.Framework.TestFixtureSourceAttribute.Category.get -> string?
+NUnit.Framework.TestFixtureSourceAttribute.Category.set -> void
+NUnit.Framework.TestFixtureSourceAttribute.GetParametersFor(System.Type! sourceType) -> System.Collections.Generic.IEnumerable<NUnit.Framework.Interfaces.ITestFixtureData!>!
+NUnit.Framework.TestFixtureSourceAttribute.SourceName.get -> string?
+NUnit.Framework.TestFixtureSourceAttribute.SourceType.get -> System.Type?
+NUnit.Framework.TestFixtureSourceAttribute.TestFixtureSourceAttribute(System.Type! sourceType) -> void
+NUnit.Framework.TestFixtureSourceAttribute.TestFixtureSourceAttribute(System.Type! sourceType, string! sourceName) -> void
+NUnit.Framework.TestFixtureSourceAttribute.TestFixtureSourceAttribute(string! sourceName) -> void
+NUnit.Framework.TestOfAttribute.TestOfAttribute(System.Type! type) -> void
+NUnit.Framework.TestOfAttribute.TestOfAttribute(string! typeName) -> void
+NUnit.Framework.ValueSourceAttribute.GetData(NUnit.Framework.Interfaces.IParameterInfo! parameter) -> System.Collections.IEnumerable!
+NUnit.Framework.ValueSourceAttribute.SourceName.get -> string?
+NUnit.Framework.ValueSourceAttribute.SourceType.get -> System.Type?
+NUnit.Framework.ValueSourceAttribute.ValueSourceAttribute(System.Type! sourceType, string! sourceName) -> void
+NUnit.Framework.ValueSourceAttribute.ValueSourceAttribute(string! sourceName) -> void
+NUnit.Framework.ValuesAttribute.GetData(NUnit.Framework.Interfaces.IParameterInfo! parameter) -> System.Collections.IEnumerable!
+NUnit.Framework.ValuesAttribute.ValuesAttribute(object? arg1) -> void
+NUnit.Framework.ValuesAttribute.ValuesAttribute(object? arg1, object? arg2) -> void
+NUnit.Framework.ValuesAttribute.ValuesAttribute(object? arg1, object? arg2, object? arg3) -> void
+NUnit.Framework.ValuesAttribute.ValuesAttribute(params object?[]? args) -> void
+NUnit.Framework.ValuesAttribute.data -> object?[]!
+abstract NUnit.Framework.ResultStateException.ResultState.get -> NUnit.Framework.Interfaces.ResultState!
+const NUnit.Framework.TestFixtureSourceAttribute.MUST_BE_STATIC = "The sourceName specified on a TestCaseSourceAttribute must refer to a static field, property or method." -> string!
+override NUnit.Framework.AssertionException.ResultState.get -> NUnit.Framework.Interfaces.ResultState!
+override NUnit.Framework.IgnoreException.ResultState.get -> NUnit.Framework.Interfaces.ResultState!
+override NUnit.Framework.InconclusiveException.ResultState.get -> NUnit.Framework.Interfaces.ResultState!
+override NUnit.Framework.MultipleAssertException.ResultState.get -> NUnit.Framework.Interfaces.ResultState!
+override NUnit.Framework.ParallelizableAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+override NUnit.Framework.RangeAttribute.ToString() -> string!
+override NUnit.Framework.RepeatAttribute.RepeatedTestCommand.Execute(NUnit.Framework.Internal.TestExecutionContext! context) -> NUnit.Framework.Internal.TestResult!
+override NUnit.Framework.RetryAttribute.RetryCommand.Execute(NUnit.Framework.Internal.TestExecutionContext! context) -> NUnit.Framework.Internal.TestResult!
+override NUnit.Framework.SuccessException.ResultState.get -> NUnit.Framework.Interfaces.ResultState!
+static NUnit.Framework.Assert.That(NUnit.Framework.TestDelegate! code, NUnit.Framework.Constraints.IResolveConstraint! constraint, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assert.That(System.Func<bool>! condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assert.That(bool condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assert.That<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assert.That<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assume.Equals(object! a, object! b) -> bool
+static NUnit.Framework.Assume.ReferenceEquals(object! a, object! b) -> void
+static NUnit.Framework.Assume.That(NUnit.Framework.TestDelegate! code, NUnit.Framework.Constraints.IResolveConstraint! constraint) -> void
+static NUnit.Framework.Assume.That(System.Func<bool>! condition) -> void
+static NUnit.Framework.Assume.That(System.Func<bool>! condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assume.That(System.Func<bool>! condition, string? message, params object?[]? args) -> void
+static NUnit.Framework.Assume.That(bool condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assume.That(bool condition, string? message, params object?[]? args) -> void
+static NUnit.Framework.Assume.That<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr) -> void
+static NUnit.Framework.Assume.That<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assume.That<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, string? message, params object?[]? args) -> void
+static NUnit.Framework.Assume.That<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression) -> void
+static NUnit.Framework.Assume.That<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Assume.That<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.Equals(object! a, object! b) -> bool
+static NUnit.Framework.Warn.If(System.Func<bool>! condition) -> void
+static NUnit.Framework.Warn.If(System.Func<bool>! condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.If(System.Func<bool>! condition, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.If(bool condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.If(bool condition, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.If<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr) -> void
+static NUnit.Framework.Warn.If<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.If<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.If<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression) -> void
+static NUnit.Framework.Warn.If<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.If<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.ReferenceEquals(object! a, object! b) -> void
+static NUnit.Framework.Warn.Unless(NUnit.Framework.TestDelegate! code, NUnit.Framework.Constraints.IResolveConstraint! constraint) -> void
+static NUnit.Framework.Warn.Unless(System.Func<bool>! condition) -> void
+static NUnit.Framework.Warn.Unless(System.Func<bool>! condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.Unless(System.Func<bool>! condition, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.Unless(bool condition, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.Unless(bool condition, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.Unless<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr) -> void
+static NUnit.Framework.Warn.Unless<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.Unless<TActual>(NUnit.Framework.Constraints.ActualValueDelegate<TActual>! del, NUnit.Framework.Constraints.IResolveConstraint! expr, string? message, params object?[]? args) -> void
+static NUnit.Framework.Warn.Unless<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression) -> void
+static NUnit.Framework.Warn.Unless<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, System.Func<string?>! getExceptionMessage) -> void
+static NUnit.Framework.Warn.Unless<TActual>(TActual actual, NUnit.Framework.Constraints.IResolveConstraint! expression, string? message, params object?[]? args) -> void
+virtual NUnit.Framework.PropertyAttribute.ApplyToTest(NUnit.Framework.Internal.Test! test) -> void
+virtual NUnit.Framework.TestActionAttribute.AfterTest(NUnit.Framework.Interfaces.ITest! test) -> void
+virtual NUnit.Framework.TestActionAttribute.BeforeTest(NUnit.Framework.Interfaces.ITest! test) -> void
 ~NUnit.Framework.Constraints.NUnitEqualityComparer.AreEqual(object x, object y, ref NUnit.Framework.Constraints.Tolerance tolerance) -> bool
 ~NUnit.Framework.Constraints.NUnitEqualityComparer.AreEqual(object x, object y, ref NUnit.Framework.Constraints.Tolerance tolerance, bool topLevelComparison) -> bool
 ~NUnit.Framework.Interfaces.AssertionResult.Equals(NUnit.Framework.Interfaces.AssertionResult other) -> bool
@@ -11,3 +300,4 @@ override NUnit.Framework.Internal.TestCaseResult.TotalCount.get -> int
 override NUnit.Framework.Internal.TestSuiteResult.TotalCount.get -> int
 ~static NUnit.Framework.Internal.ThreadUtility.GetCurrentThreadPrincipal() -> System.Security.Principal.IPrincipal
 ~static NUnit.Framework.Internal.ThreadUtility.SetCurrentThreadPrincipal(System.Security.Principal.IPrincipal principal) -> void
+~virtual NUnit.Framework.Internal.TestFilter.Pass(NUnit.Framework.Interfaces.ITest test, bool negated) -> bool
