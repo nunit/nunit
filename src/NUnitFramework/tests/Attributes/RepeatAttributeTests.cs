@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,16 +29,19 @@
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
 using System;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
-    [TestFixture] 
-    public class RepeatAttributeTests
+    [TestFixture]
+    public partial class RepeatAttributeTests
     {
         [TestCase(typeof(RepeatFailOnFirstTryFixture), "Failed(Child)", 1)]
         [TestCase(typeof(RepeatFailOnSecondTryFixture), "Failed(Child)", 2)]
@@ -73,6 +76,60 @@ namespace NUnit.Framework.Attributes
             Assert.IsNotNull(categories);
             Assert.AreEqual(1, categories.Count);
             Assert.AreEqual("SAMPLE", categories[0]);
+        }
+
+        [Test]
+        public void NotRunnableWhenIMethodInfoAbstractionReturnsMultipleIRepeatTestAttributes()
+        {
+            var fixtureSuite = new DefaultSuiteBuilder().BuildFrom(new CustomTypeWrapper(
+                new TypeWrapper(typeof(FixtureWithMultipleRepeatAttributesOnSameMethod)),
+                extraMethodAttributes: new Attribute[]
+                {
+                    new CustomRepeatAttribute(),
+                    new RepeatAttribute(2)
+                }));
+
+            var method = fixtureSuite.Tests.Single();
+
+            Assert.That(method.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(method.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Multiple attributes that repeat a test may cause issues."));
+        }
+
+        [Test]
+        public void IRepeatTestAttributeIsEffectiveWhenAddedThroughIMethodInfoAbstraction()
+        {
+            var fixtureSuite = new DefaultSuiteBuilder().BuildFrom(new CustomTypeWrapper(
+                new TypeWrapper(typeof(FixtureWithMultipleRepeatAttributesOnSameMethod)),
+                extraMethodAttributes: new Attribute[]
+                {
+                    new RepeatAttribute(2)
+                }));
+
+            var fixtureInstance = new FixtureWithMultipleRepeatAttributesOnSameMethod();
+            fixtureSuite.Fixture = fixtureInstance;
+            TestBuilder.RunTest(fixtureSuite, fixtureInstance);
+
+            Assert.That(fixtureInstance.MethodRepeatCount, Is.EqualTo(2));
+        }
+
+        private sealed class FixtureWithMultipleRepeatAttributesOnSameMethod
+        {
+            public int MethodRepeatCount { get; private set; }
+
+            // The IRepeatTest attributes are dynamically applied via CustomTypeWrapper.
+            [Test]
+            public void MethodWithMultipleRepeatAttributes()
+            {
+                MethodRepeatCount++;
+            }
+        }
+
+        private sealed class CustomRepeatAttribute : Attribute, IRepeatTest
+        {
+            public TestCommand Wrap(TestCommand command)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

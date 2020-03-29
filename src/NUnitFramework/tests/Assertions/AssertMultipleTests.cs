@@ -106,8 +106,12 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
             Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "AssertCount");
             Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
-            if (result.ResultState.Status == TestStatus.Failed)
-                Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                if (result.ResultState.Status == TestStatus.Failed)
+                    Assert.That(result.StackTrace, Is.Not.Null.And.Contains(methodName), "StackTrace");
+            });
 
             if (result.AssertionResults.Count > 0)
             {
@@ -130,7 +134,11 @@ namespace NUnit.Framework.Assertions
                     // NOTE: This test expects the stack trace to contain the name of the method 
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
-                    Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
+
+                    PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+                    {
+                        Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
+                    });
                 }
             }
 

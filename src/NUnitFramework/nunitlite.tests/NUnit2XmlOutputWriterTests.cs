@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.IO;
 using System.Text;
@@ -127,16 +126,14 @@ namespace NUnitLite.Tests
         public void TestResults_HasValidDateAttribute()
         {
             string dateString = RequiredAttribute(topNode, "date");
-            DateTime date;
-            Assert.That(DateTime.TryParse(dateString, out date), "Invalid date attribute: {0}", dateString);
+            Assert.That(DateTime.TryParse(dateString, out _), "Invalid date attribute: {0}", dateString);
         }
 
         [Test]
         public void TestResults_HasValidTimeAttribute()
         {
             string timeString = RequiredAttribute(topNode, "time");
-            DateTime time;
-            Assert.That(DateTime.TryParse(timeString, out time), "Invalid time attribute: {0}", timeString);
+            Assert.That(DateTime.TryParse(timeString, out _), "Invalid time attribute: {0}", timeString);
         }
 
         [Test]
@@ -204,16 +201,10 @@ namespace NUnitLite.Tests
         [Test]
         public void TestSuite_HasValidTimeAttribute()
         {
-            double time;
             var timeString = RequiredAttribute(suiteNode, "time");
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
-            var success = double.TryParse(timeString,System.Globalization.NumberStyles.Float,System.Globalization.NumberFormatInfo.InvariantInfo, out time);
+            var success = double.TryParse(timeString, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out _);
             Assert.That(success, "{0} is an invalid value for time", timeString);
-        }
-
-        [Test]
-        public void TestSuite_ResultIsFailure()
-        {
         }
 
 #region Helper Methods
@@ -229,4 +220,3 @@ namespace NUnitLite.Tests
 #endregion
     }
 }
-#endif

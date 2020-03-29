@@ -56,11 +56,9 @@ namespace NUnit.Framework.Internal
         {
             if (IsTypeGeneric(expected) && IsTypeGeneric(actual))
             {
-                string shortenedGenericTypeExpected, shortenedGenericTypeActual;
-                GetShortenedGenericTypes(expected, actual, out shortenedGenericTypeExpected, out shortenedGenericTypeActual);
+                GetShortenedGenericTypes(expected, actual, out var shortenedGenericTypeExpected, out var shortenedGenericTypeActual);
 
-                List<string> shortenedParamsExpected, shortenedParamsActual;
-                GetShortenedGenericParams(expected, actual, out shortenedParamsExpected, out shortenedParamsActual);
+                GetShortenedGenericParams(expected, actual, out var shortenedParamsExpected, out var shortenedParamsActual);
 
                 expectedTypeShortened = ReconstructGenericTypeName(shortenedGenericTypeExpected, shortenedParamsExpected);
                 actualTypeShortened = ReconstructGenericTypeName(shortenedGenericTypeActual, shortenedParamsActual);
@@ -93,8 +91,7 @@ namespace NUnit.Framework.Internal
             shortenedParamsActual = new List<string>();
             while ((templateParamsExpected.Count > 0) && (templateParamsActual.Count > 0))
             {
-                string shortenedExpected, shortenedActual;
-                ResolveTypeNameDifference(templateParamsExpected[0], templateParamsActual[0], out shortenedExpected, out shortenedActual);
+                ResolveTypeNameDifference(templateParamsExpected[0], templateParamsActual[0], out var shortenedExpected, out var shortenedActual);
 
                 shortenedParamsExpected.Add(shortenedExpected);
                 shortenedParamsActual.Add(shortenedActual);

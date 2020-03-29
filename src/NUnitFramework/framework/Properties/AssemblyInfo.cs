@@ -56,8 +56,6 @@ using System.Security;
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.0)")]
 #elif NET35
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 3.5)")]
-#elif NETSTANDARD1_4
-[assembly: AssemblyTitle("NUnit Framework (.NET Standard 1.4)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnit Framework (.NET Standard 2.0)")]
 #else

@@ -41,8 +41,7 @@ namespace NUnit.Framework.Internal
         /// <typeparam name="T">The type to require.</typeparam>
         public static T RequireActual<T>(object actual, string paramName, bool allowNull = false)
         {
-            T result;
-            if (TypeHelper.TryCast(actual, out result) && (allowNull || result != null))
+            if (TypeHelper.TryCast(actual, out T result) && (allowNull || result != null))
             {
                 return result;
             }

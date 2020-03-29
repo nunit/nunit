@@ -23,12 +23,7 @@
 
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Xml;
-
-#if NETSTANDARD1_4
-using System.Xml.Linq;
-#endif
 
 namespace NUnit.Framework.Interfaces
 {
@@ -143,13 +138,9 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-#if NETSTANDARD1_4
-            return FromXml(XElement.Parse(xmlText));
-#else
             var doc = new XmlDocument();
             doc.LoadXml(xmlText);
             return FromXml(doc.FirstChild);
-#endif
         }
 
         #endregion
@@ -261,20 +252,6 @@ namespace NUnit.Framework.Interfaces
 
         #region Helper Methods
 
-#if NETSTANDARD1_4
-        private static TNode FromXml(XElement xElement)
-        {
-            TNode tNode = new TNode(xElement.Name.ToString(), xElement.Value);
-
-            foreach (var attr in xElement.Attributes())
-                tNode.AddAttribute(attr.Name.ToString(), attr.Value);
-
-            foreach (var child in xElement.Elements())
-                tNode.ChildNodes.Add(FromXml(child));
-
-            return tNode;
-        }
-#else
         private static TNode FromXml(XmlNode xmlNode)
         {
             TNode tNode = new TNode(xmlNode.Name, xmlNode.InnerText);
@@ -288,7 +265,6 @@ namespace NUnit.Framework.Interfaces
 
             return tNode;
         }
-#endif
 
         private static NodeList ApplySelection(NodeList nodeList, string xpath)
         {
@@ -351,7 +327,7 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
-                // Also check if the char is actually a high/low surogate pair of two characters.
+                // Also check if the char is actually a high/low surrogate pair of two characters.
                 // If it is, then it is a valid XML character (from above based on the surrogate blocks).
                 else if (char.IsHighSurrogate(c) &&
                     i + 1 != str.Length &&
@@ -482,12 +458,7 @@ namespace NUnit.Framework.Interfaces
         {
             get
             {
-                string value;
-
-                if (TryGetValue(key, out value))
-                    return value;
-
-                return null;
+                return TryGetValue(key, out var value) ? value : null;
             }
         }
     }

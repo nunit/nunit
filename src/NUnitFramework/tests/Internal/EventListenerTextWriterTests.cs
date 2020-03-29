@@ -48,11 +48,7 @@ namespace NUnit.Framework.Internal
             // Wrap the current listener, listening to events, and forwarding the original event
             ListenerResult = new TestListenerIntercepter(TestExecutionContext.CurrentContext.Listener);
             TestExecutionContext.CurrentContext.Listener = ListenerResult;
-#if NETCOREAPP1_1
-            ListenerWriter = new EventListenerTextWriter(STREAM_NAME, TextWriter.Null);
-#else
             ListenerWriter = TextWriter.Synchronized(new EventListenerTextWriter(STREAM_NAME, TextWriter.Null));
-#endif
         }
 
         [TearDown]
@@ -356,7 +352,7 @@ namespace NUnit.Framework.Internal
 
             void ITestListener.SendMessage(TestMessage message)
             {
-                
+
             }
         }
 

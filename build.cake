@@ -1,5 +1,5 @@
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
-#tool GitLink
+#tool NUnit.ConsoleRunner&version=3.10.0
+#tool GitLink&version=3.1.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -18,7 +18,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.12.0";
+var version = "3.13.0";
 var modifier = "";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
@@ -33,14 +33,14 @@ var AllFrameworks = new string[]
     "net45",
     "net40",
     "net35",
-    "netstandard1.4",
     "netstandard2.0"
 };
 
 var NetCoreTests = new String[]
 {
-    "netcoreapp1.1",
-    "netcoreapp2.0"
+    "netcoreapp2.1",
+    "netcoreapp2.2",
+    "netcoreapp3.0"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -146,15 +146,6 @@ Task("Build")
     .Does(() =>
     {
         MSBuild(SOLUTION_FILE, CreateSettings());
-
-        Information("Publishing netcoreapp1.1 tests so that dependencies are present...");
-
-        MSBuild("src/NUnitFramework/tests/nunit.framework.tests.csproj", CreateSettings()
-            .WithTarget("Publish")
-            .WithProperty("TargetFramework", "netcoreapp1.1")
-            .WithProperty("NoBuild", "true") // https://github.com/dotnet/cli/issues/5331#issuecomment-338392972
-            .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
-            .WithRawArgument("/nologo"));
     });
 
 MSBuildSettings CreateSettings()
@@ -207,6 +198,7 @@ Task("Test45")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test40")
@@ -219,6 +211,7 @@ Task("Test40")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test35")
@@ -231,31 +224,28 @@ Task("Test35")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
-Task("TestNetStandard14")
-    .Description("Tests the .NET Standard 1.4 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netcoreapp1.1";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-    });
+var testNetStandard20 = Task("TestNetStandard20")
+    .Description("Tests the .NET Standard 2.0 version of the framework");
 
-Task("TestNetStandard20")
-    .Description("Tests the .NET Standard 2.0 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netcoreapp2.0";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-    });
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp2.2", "netcoreapp3.0" })
+{
+    var task = Task("TestNetStandard20 on " + runtime)
+        .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
+        .IsDependentOn("Build")
+        .OnError(exception => { ErrorDetail.Add(exception.Message); })
+        .Does(() =>
+        {
+            var dir = BIN_DIR + runtime + "/";
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+            PublishTestResults(runtime);
+        });
+
+    testNetStandard20.IsDependentOn(task);
+}
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
@@ -340,7 +330,11 @@ Task("GitLink")
     .Description("Source-indexes PDBs in the images directory to the current commit")
     .Does(() =>
     {
-        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"));
+        var settings = new GitLink3Settings
+        {
+            BaseDir = PROJECT_DIR
+        };
+        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"), settings);
     });
 
 Task("PackageFramework")
@@ -503,6 +497,27 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
 }
 
+void PublishTestResults(string framework)
+{
+    if (EnvironmentVariable("TF_BUILD", false))
+    {
+        var fullTestRunTitle = framework;
+        var ciRunName = Argument<string>("test-run-name");
+        if (!string.IsNullOrEmpty(ciRunName))
+            fullTestRunTitle += '/' + ciRunName;
+
+        TFBuild.Commands.PublishTestResults(new TFBuildPublishTestResultsData
+        {
+            TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
+            TestRunTitle = fullTestRunTitle,
+            TestRunner = TFTestRunnerType.NUnit,
+            MergeTestResults = true,
+            PublishRunAttachments = true,
+            Configuration = configuration
+        });
+    }
+}
+
 public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
 {
     if (settings == null) throw new ArgumentNullException(nameof(settings));
@@ -534,7 +549,6 @@ Task("Test")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
-    .IsDependentOn("TestNetStandard14")
     .IsDependentOn("TestNetStandard20");
 
 Task("Package")

@@ -34,11 +34,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class AsyncTestMethodTests
     {
-#if !PLATFORM_DETECTION
-        private static readonly bool PLATFORM_IGNORE = true;
-#else
         private static readonly bool PLATFORM_IGNORE = OSPlatform.CurrentPlatform.IsUnix;
-#endif
 
         private DefaultTestCaseBuilder _builder;
         private object _testObject;

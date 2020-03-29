@@ -224,7 +224,6 @@ namespace NUnit.Framework
             }
         }
 
-#if PLATFORM_DETECTION
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
@@ -234,7 +233,6 @@ namespace NUnit.Framework
         /// Comma-delimited list of platforms to not run the test for
         /// </summary>
         public string ExcludePlatform { get; set; }
-#endif
 
         /// <summary>
         /// Gets and sets the category for this test case.
@@ -267,9 +265,8 @@ namespace NUnit.Framework
                 parms = new TestCaseParameters(this);
 
                 // Special handling for ExpectedResult (see if it needs to be converted into method return type)
-                object expectedResultInTargetType;
                 if (parms.HasExpectedResult
-                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out expectedResultInTargetType))
+                    && ParamAttributeTypeConversions.TryConvert(parms.ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
                 {
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
@@ -369,8 +366,7 @@ namespace NUnit.Framework
             {
                 object arg = arglist[i];
                 Type targetType = parameters[i].ParameterType;
-                object argAsTargetType;
-                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out argAsTargetType))
+                if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
                 {
                     arglist[i] = argAsTargetType;
                 }
@@ -389,7 +385,6 @@ namespace NUnit.Framework
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
 
-#if PLATFORM_DETECTION
             if (IncludePlatform != null || ExcludePlatform != null)
             {
                 if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
@@ -406,7 +401,6 @@ namespace NUnit.Framework
                     test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
                 }
             }
-#endif
 
             yield return test;
         }

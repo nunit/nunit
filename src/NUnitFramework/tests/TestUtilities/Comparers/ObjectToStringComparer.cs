@@ -37,10 +37,8 @@ namespace NUnit.TestUtilities.Comparers
         int System.Collections.IComparer.Compare(object x, object y)
         {
             WasCalled = true;
-            int intX = 0;
-            int intY = 0;
 
-            if(int.TryParse(x.ToString(), out intX) && int.TryParse(y.ToString(), out intY))
+            if (int.TryParse(x.ToString(), out var intX) && int.TryParse(y.ToString(), out var intY))
             {
                 return intX.CompareTo(intY);
             }

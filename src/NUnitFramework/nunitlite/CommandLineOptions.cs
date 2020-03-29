@@ -291,8 +291,7 @@ namespace NUnit.Common
 
         protected int RequiredInt(string val, string option)
         {
-            int result;
-            if (int.TryParse(val, out result)) return result;
+            if (int.TryParse(val, out var result)) return result;
 
             ErrorMessages.Add(string.IsNullOrEmpty(val)
                 ? "Missing required value for option '" + option + "'."
@@ -382,10 +381,9 @@ namespace NUnit.Common
                         }
                     }
                 });
-#if PARALLEL
             this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
-#endif
+
             this.Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => RandomSeed = RequiredInt(v, "--seed"));
 

@@ -26,7 +26,7 @@ using System.Threading;
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Useful when wrapping awaitables whose <c>GetResult</c> method does not block until complete.
+    /// Useful when wrapping awaiters whose <c>GetResult</c> method does not block until complete.
     /// Contains a default mechanism to implement <see cref="AwaitAdapter.BlockUntilCompleted"/>
     /// via <see cref="AwaitAdapter.IsCompleted"/> and <see cref="AwaitAdapter.OnCompleted"/>.
     /// </summary>

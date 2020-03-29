@@ -55,7 +55,11 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                Result = MakeTestCommand().Execute(Context);
+                var testCommand = MakeTestCommand();
+
+                // Isolate the Execute call because the WorkItemComplete below will run one-time teardowns. Execution
+                // context values should not flow from a particular test case into the shared one-time teardown.
+                Result = ContextUtils.DoIsolated(() => testCommand.Execute(Context));
             }
             catch (Exception ex)
             {
@@ -152,7 +156,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new TimeoutCommand(command, timeout);
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
-                foreach (var repeatableAttribute in method.MethodInfo.GetAttributes<IRepeatTest>(true))
+                foreach (var repeatableAttribute in method.GetCustomAttributes<IRepeatTest>(true))
                     command = repeatableAttribute.Wrap(command);
 
                 return command;

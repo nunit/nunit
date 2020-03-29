@@ -28,6 +28,7 @@ using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
+using System.Diagnostics;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -50,7 +51,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public List<WorkItem> Children { get; } = new List<WorkItem>();
 
-#if PARALLEL
         /// <summary>
         /// Indicates whether this work item should use a separate dispatcher.
         /// </summary>
@@ -58,7 +58,6 @@ namespace NUnit.Framework.Internal.Execution
         {
             get { return ExecutionStrategy == ParallelExecutionStrategy.NonParallel && Context.Dispatcher.LevelOfParallelism > 0; }
         }
-#endif
 
         private CountdownEvent _childTestCountdown;
 
@@ -287,10 +286,8 @@ namespace NUnit.Framework.Internal.Execution
                 child.Completed += new EventHandler(OnChildItemCompleted);
                 child.InitializeContext(new TestExecutionContext(Context));
 
-#if PARALLEL
                 // In case we run directly, on same thread
                 child.TestWorker = TestWorker;
-#endif
 
                 Context.Dispatcher.Dispatch(child);
                 childCount--;
@@ -382,8 +379,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void OnAllChildItemsCompleted()
         {
-            var teardown = new OneTimeTearDownWorkItem(this);
-            Context.Dispatcher.Dispatch(teardown);
+            if (Context.ExecutionStatus == TestExecutionStatus.AbortRequested)
+                WorkItemComplete();
+            else
+                Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
         private readonly object cancelLock = new object();
@@ -440,7 +439,6 @@ namespace NUnit.Framework.Internal.Execution
                 get { return string.Format("{0} OneTimeTearDown", base.Name); }
             }
 
-#if PARALLEL
             /// <summary>
             /// The ExecutionStrategy for use in running this work item
             /// </summary>
@@ -448,7 +446,6 @@ namespace NUnit.Framework.Internal.Execution
             {
                 get { return _originalWorkItem.ExecutionStrategy; }
             }
-#endif
 
             /// <summary>
             ///
@@ -457,9 +454,6 @@ namespace NUnit.Framework.Internal.Execution
             {
                 lock (_teardownLock)
                 {
-                    //if (Test.Parent != null && Test.Parent.Name.EndsWith("nunit.framework.tests.dll"))
-                    //    System.Diagnostics.Debugger.Launch();
-
                     if (Test.TestType == "Theory" && Result.ResultState == ResultState.Success && Result.PassCount == 0)
                         Result.SetResult(ResultState.Failure, "No test cases were provided");
 
@@ -481,6 +475,18 @@ namespace NUnit.Framework.Internal.Execution
             /// PerformWork is not used in CompositeWorkItem
             /// </summary>
             protected override void PerformWork() { }
+
+            /// <summary>
+            /// WorkItemCancelled is called directly by the parallel dispatcher
+            /// when a test suite is left hanging after a forced StopRun. We
+            /// simulate WorkItemComplete() but without the ripple effect to
+            /// higher level suites, since we are controlling it all directly.
+            /// </summary>
+            internal void WorkItemCancelled()
+            {
+                Result.SetResult(ResultState.Cancelled, TestResult.USER_CANCELLED_MESSAGE);
+                _originalWorkItem.WorkItemComplete();
+            }
         }
 
         #endregion

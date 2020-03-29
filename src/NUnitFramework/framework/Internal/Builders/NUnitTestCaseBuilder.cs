@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>True if the method signature is valid, false if not</returns>
         private static bool CheckTestMethodAttributes(TestMethod testMethod)
         {
-            if (testMethod.Method.MethodInfo.GetAttributes<IRepeatTest>(true).Length > 1)
+            if (testMethod.Method.GetCustomAttributes<IRepeatTest>(true).Length > 1)
                 return MarkAsNotRunnable(testMethod, "Multiple attributes that repeat a test may cause issues.");
 
             return true;
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (returnType == typeof(void))
                     return MarkAsNotRunnable(testMethod, "Async test method must have non-void return type");
 
-                var voidResult = AwaitAdapter.GetResultType(returnType) == typeof(void);
+                var voidResult = Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(returnType));
 
                 if (!voidResult && (parms == null || !parms.HasExpectedResult))
                     return MarkAsNotRunnable(testMethod,
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Internal.Builders
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a non-void result when a result is expected");
             }
-            else if (returnType == typeof(void))
+            else if (Reflect.IsVoidOrUnit(returnType))
             {
                 if (parms != null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
@@ -216,8 +216,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {
-                Type[] typeArguments;
-                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out typeArguments))
+                if (!new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
                     return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);

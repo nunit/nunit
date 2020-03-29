@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-#if SERIALIZATION
 using System.Runtime.Serialization;
-#endif
 
 namespace NUnit.Common
 {
@@ -47,11 +45,9 @@ namespace NUnit.Common
         /// <param name="innerException"></param>
         public TestSelectionParserException(string message, Exception innerException) : base(message, innerException) { }
 
-#if SERIALIZATION
         /// <summary>
         /// Serialization constructor
         /// </summary>
         public TestSelectionParserException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-#endif
     }
 }

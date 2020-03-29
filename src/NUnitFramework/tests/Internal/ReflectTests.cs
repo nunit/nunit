@@ -41,16 +41,6 @@ namespace NUnit.Framework.Internal
         {
         }
 
-#if NETCOREAPP1_1
-        [Test]
-        public static void GetInterfaceMatchesByFullName()
-        {
-            Assert.That(
-                Reflect.GetInterface(typeof(List<object>), typeof(IEnumerable<object>).FullName),
-                Is.EqualTo(typeof(IEnumerable<object>)));
-        }
-#endif
-
         [Test]
         public static void GetNonGenericPublicInstanceMethodSearchesBaseClasses()
         {
@@ -241,23 +231,29 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsPreservesStackTrace()
         {
-            Assert.That(
-                () => typeof(ReflectTests)
-                    .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
-                    .InvokeWithTransparentExceptions(instance: null),
-                Throws.Exception
-                    .With.Property(nameof(Exception.StackTrace))
-                        .Contains(nameof(MethodThrowingTargetInvocationException)));
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.IgnoreOnAffectedPlatform(() =>
+            {
+                Assert.That(
+                    () => typeof(ReflectTests)
+                        .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
+                        .InvokeWithTransparentExceptions(instance: null),
+                    Throws.Exception
+                        .With.Property(nameof(Exception.StackTrace))
+                            .Contains(nameof(MethodThrowingTargetInvocationException)));
+            });
         }
 
         [Test]
         public static void DynamicInvokeWithTransparentExceptionsPreservesStackTrace()
         {
-            Assert.That(
-                () => new Func<int>(MethodThrowingTargetInvocationException).DynamicInvokeWithTransparentExceptions(),
-                Throws.Exception
-                    .With.Property(nameof(Exception.StackTrace))
-                        .Contains(nameof(MethodThrowingTargetInvocationException)));
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.IgnoreOnAffectedPlatform(() =>
+            {
+                Assert.That(
+                    () => new Func<int>(MethodThrowingTargetInvocationException).DynamicInvokeWithTransparentExceptions(),
+                    Throws.Exception
+                        .With.Property(nameof(Exception.StackTrace))
+                            .Contains(nameof(MethodThrowingTargetInvocationException)));
+            });
         }
 
         private static int MethodReturning42() => 42;

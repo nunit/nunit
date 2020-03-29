@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -46,7 +45,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(Thread.CurrentThread, Is.EqualTo(SetupThread));
         }
 
-#if APARTMENT_STATE
         [Test]
         public void ApartmentStateUnknownIsNotRunnable()
         {
@@ -54,7 +52,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -74,7 +72,7 @@ namespace NUnit.Framework.Attributes
                 Assert.That(Thread.CurrentThread, Is.Not.EqualTo(ParentThread));
             }
         }
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Unix")]
         [TestFixture]
         public class ApartmentStateRequiredToFailOnUnixNetCoreTests
@@ -101,7 +99,6 @@ namespace NUnit.Framework.Attributes
                 Assert.That(result.Message, Is.EqualTo("Apartment state cannot be set on this platform."));
             }
         }
-#endif
 #endif
 
         [TestFixture, RequiresThread]
@@ -130,4 +127,3 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#endif

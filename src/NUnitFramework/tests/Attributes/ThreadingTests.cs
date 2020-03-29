@@ -28,7 +28,6 @@ namespace NUnit.Framework.Attributes
 {
     public class ThreadingTests
     {
-#if !NETCOREAPP1_1
         protected Thread ParentThread { get; private set; }
         protected Thread SetupThread { get; private set; }
         protected ApartmentState ParentThreadApartment { get; private set; }
@@ -66,6 +65,5 @@ namespace NUnit.Framework.Attributes
         {
             return thread.GetApartmentState();
         }
-#endif
     }
 }

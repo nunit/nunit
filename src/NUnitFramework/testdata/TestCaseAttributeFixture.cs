@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -48,12 +48,12 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         [TestCase(2, 3, 4, Category = "XYZ")]
         public void MethodHasSingleCategory(int x, int y, int z)
         { }
- 
+
         [TestCase(2, 3, 4, Category = "X,Y,Z")]
         public void MethodHasMultipleCategories(int x, int y, int z)
         { }
- 
-        [TestCase(2, 2000000, ExpectedResult=4)]
+
+        [TestCase(2, 2_000_000, ExpectedResult=4)]
         public int MethodCausesConversionOverflow(short x, short y)
         {
             return x + y;
@@ -83,7 +83,6 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         {
         }
 
-#if PLATFORM_DETECTION
         [TestCase(1, IncludePlatform = "Win")]
         [TestCase(2, IncludePlatform = "Linux")]
         [TestCase(3, IncludePlatform = "MacOSX")]
@@ -112,7 +111,6 @@ namespace NUnit.TestData.TestCaseAttributeFixture
         public void MethodWithExcludeRuntime(int num)
         {
         }
-#endif
 
         [TestCase((object)new object[] { })]
         [TestCase((object)new object[] { 1, "text", null })]

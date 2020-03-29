@@ -43,12 +43,12 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Construct a range of ints using default step of 1
+        /// Constructs a range of <see cref="int"/> values using the default step of 1.
         /// </summary>
         public RangeAttribute(int from, int to) : this(from, to, from > to ? -1 : 1) { }
 
         /// <summary>
-        /// Construct a range of ints specifying the step size
+        /// Constructs a range of <see cref="int"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(int from, int to, int step)
         {
@@ -65,13 +65,13 @@ namespace NUnit.Framework
         #region Unsigned Ints
 
         /// <summary>
-        /// Construct a range of unsigned ints using default step of 1
+        /// Constructs a range of <see cref="uint"/> values using the default step of 1.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(uint from, uint to) : this(from, to, 1u) { }
 
         /// <summary>
-        /// Construct a range of unsigned ints specifying the step size
+        /// Constructs a range of <see cref="uint"/> values with the specified step size.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(uint from, uint to, uint step)
@@ -89,12 +89,12 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Construct a range of longs using a default step of 1
+        /// Constructs a range of <see cref="long"/> values using a default step of 1.
         /// </summary>
         public RangeAttribute(long from, long to) : this(from, to, from > to ? -1L : 1L) { }
 
         /// <summary>
-        /// Construct a range of longs
+        /// Constructs a range of <see cref="long"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(long from, long to, long step)
         {
@@ -111,13 +111,13 @@ namespace NUnit.Framework
         #region Unsigned Longs
 
         /// <summary>
-        /// Construct a range of unsigned longs using default step of 1
+        /// Constructs a range of <see cref="ulong"/> values using the default step of 1.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(ulong from, ulong to) : this(from, to, 1ul) { }
 
         /// <summary>
-        /// Construct a range of unsigned longs specifying the step size
+        /// Constructs a range of <see cref="ulong"/> values with the specified step size.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(ulong from, ulong to, ulong step)
@@ -135,7 +135,7 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Construct a range of doubles
+        /// Constructs a range of <see cref="double"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(double from, double to, double step)
         {
@@ -152,7 +152,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Construct a range of floats
+        /// Constructs a range of <see cref="float"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(float from, float to, float step)
         {
@@ -177,8 +177,7 @@ namespace NUnit.Framework
 
             var valueGenerator = ValueGenerator.Create(parameter.ParameterType);
 
-            ValueGenerator.Step step;
-            if (!valueGenerator.TryCreateStep(_step, out step))
+            if (!valueGenerator.TryCreateStep(_step, out var step))
             {
                 // ValueGenerator.CreateStep has the responsibility to enable Byte values to be incremented
                 // by the Int32 value -1. Or perhaps in the future, DateTime values to be incremented by a TimeSpan.
@@ -188,8 +187,7 @@ namespace NUnit.Framework
                 // that are only of a different type due to IL limitations or NUnit smoothing over overload differences.
                 // See the XML docs for the ParamAttributeTypeConversions class.
 
-                object stepValueToRequire;
-                if (!ParamAttributeTypeConversions.TryConvert(_step, parameter.ParameterType, out stepValueToRequire))
+                if (!ParamAttributeTypeConversions.TryConvert(_step, parameter.ParameterType, out var stepValueToRequire))
                 {
                     // This will cause CreateStep to throw the same exception as it would throw if TryConvert
                     // succeeded but the value generator still didn’t recognize the step value.

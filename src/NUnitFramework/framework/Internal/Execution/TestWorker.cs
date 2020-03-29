@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -157,7 +156,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
             _workerThread.Name = Name;
-#if APARTMENT_STATE
+
             try
             {
                 _workerThread.SetApartmentState(WorkQueue.TargetApartment);
@@ -165,7 +164,7 @@ namespace NUnit.Framework.Internal.Execution
             catch (PlatformNotSupportedException)
             {
             }
-#endif
+
             log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }
@@ -191,5 +190,3 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
-
-#endif

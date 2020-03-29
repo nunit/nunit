@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal.Results
         public void SuiteResultIsSuccess()
         {
             Assert.True(_suiteResult.ResultState == ResultState.Success);
-
+            Assert.AreEqual(1, _suiteResult.TotalCount);
             Assert.AreEqual(1, _suiteResult.PassCount);
             Assert.AreEqual(0, _suiteResult.FailCount);
             Assert.AreEqual(0, _suiteResult.WarningCount);
@@ -117,6 +117,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual("Passed", suiteNode.Attributes["result"]);
             Assert.AreEqual(null, suiteNode.Attributes["label"]);
             Assert.AreEqual(null, suiteNode.Attributes["site"]);
+            Assert.AreEqual("1", suiteNode.Attributes["total"]);
             Assert.AreEqual("1", suiteNode.Attributes["passed"]);
             Assert.AreEqual("0", suiteNode.Attributes["failed"]);
             Assert.AreEqual("0", suiteNode.Attributes["warnings"]);

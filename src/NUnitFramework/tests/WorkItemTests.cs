@@ -98,8 +98,6 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 
-#if APARTMENT_STATE
-
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)
         {
@@ -135,7 +133,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 Parent = new FakeTest("Fixture", fixtureApartment)
                 {
-                    Parent  = new FakeTest("Assembly", assemblyApartment)
+                    Parent = new FakeTest("Assembly", assemblyApartment)
                 }
             };
 
@@ -172,6 +170,8 @@ namespace NUnit.Framework.Internal.Execution
             {
             }
 
+            public override int TotalCount => 1;
+
             public override int FailCount => 0;
 
             public override int WarningCount => 0;
@@ -202,6 +202,5 @@ namespace NUnit.Framework.Internal.Execution
                 throw new System.NotImplementedException();
             }
         }
-#endif
     }
 }

@@ -127,7 +127,7 @@ namespace System.Threading
                 // We prefer to call Thread.Yield first, triggering a SwitchToThread. This
                 // unfortunately doesn't consider all runnable threads on all OS SKUs. In
                 // some cases, it may only consult the runnable threads whose ideal processor
-                // is the one currently executing code. Thus we oc----ionally issue a call to
+                // is the one currently executing code. Thus we occasionally issue a call to
                 // Sleep(0), which considers all runnable threads at equal priority. Even this
                 // is insufficient since we may be spin waiting for lower priority threads to
                 // execute; we therefore must call Sleep(1) once in a while too, which considers
@@ -142,14 +142,19 @@ namespace System.Threading
                 {
                     Thread.Sleep(1);
                 }
-                else // if ((yieldsSoFar % SLEEP_0_EVERY_HOW_MANY_TIMES) == (SLEEP_0_EVERY_HOW_MANY_TIMES - 1))
+                else if ((yieldsSoFar % SLEEP_0_EVERY_HOW_MANY_TIMES) == (SLEEP_0_EVERY_HOW_MANY_TIMES - 1))
                 {
                     Thread.Sleep(0);
                 }
-                //else
-                //{
-                //    Thread.Yield();
-                //}
+                else
+                {
+                    // Polyfill note:
+                    // Thread.Yield() is not available in the 2.0 CLR, and the native implementation
+                    // is much more nuanced than p/invoking SwitchToThread.
+                    // Replace with Thread.Sleep(1) since Thread.Sleep(0) kills performance by often not actually yielding.
+                    // http://joeduffyblog.com/2006/08/22/priorityinduced-starvation-why-sleep1-is-better-than-sleep0-and-the-windows-balance-set-manager/
+                    Thread.Sleep(1);
+                }
             }
             else
             {
@@ -283,7 +288,7 @@ namespace System.Threading
     /// </summary>
     internal static class PlatformHelper
     {
-        private const int PROCESSOR_COUNT_REFRESH_INTERVAL_MS = 30000; // How often to refresh the count, in milliseconds.
+        private const int PROCESSOR_COUNT_REFRESH_INTERVAL_MS = 30_000; // How often to refresh the count, in milliseconds.
         private static volatile int s_processorCount; // The last count seen.
         private static volatile int s_lastProcessorCountRefreshTicks; // The last time we refreshed.
 
@@ -317,13 +322,13 @@ namespace System.Threading
     }
 
     /// <summary>
-    /// A helper class to capture a start time using Environment.TickCout as a time in milliseconds, also updates a given timeout bu subtracting the current time from
+    /// A helper class to capture a start time using Environment.TickCount as a time in milliseconds, also updates a given timeout bu subtracting the current time from
     /// the start time
     /// </summary>
     internal static class TimeoutHelper
     {
         /// <summary>
-        /// Returns the Environment.TickCount as a start time in milliseconds as a uint, TickCount tools over from postive to negative every ~ 25 days
+        /// Returns the Environment.TickCount as a start time in milliseconds as a uint, TickCount tools over from positive to negative every ~ 25 days
         /// then ~25 days to back to positive again, uint is sued to ignore the sign and double the range to 50 days
         /// </summary>
         /// <returns></returns>
@@ -336,7 +341,7 @@ namespace System.Threading
         /// Helper function to measure and update the elapsed time
         /// </summary>
         /// <param name="startTime"> The first time (in milliseconds) observed when the wait started</param>
-        /// <param name="originalWaitMillisecondsTimeout">The orginal wait timeoutout in milliseconds</param>
+        /// <param name="originalWaitMillisecondsTimeout">The original wait timeout in milliseconds</param>
         /// <returns>The new wait time in milliseconds, -1 if the time expired</returns>
         public static int UpdateTimeOut(uint startTime, int originalWaitMillisecondsTimeout)
         {

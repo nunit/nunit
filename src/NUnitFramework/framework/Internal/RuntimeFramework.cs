@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -36,26 +33,6 @@ using Microsoft.Win32;
 
 namespace NUnit.Framework.Internal
 {
-    /// <summary>
-    /// Enumeration identifying a common language
-    /// runtime implementation.
-    /// </summary>
-    public enum RuntimeType
-    {
-        /// <summary>Any supported runtime framework</summary>
-        Any,
-        /// <summary>Microsoft .NET Framework</summary>
-        Net,
-        /// <summary>Microsoft Shared Source CLI</summary>
-        SSCLI,
-        /// <summary>Mono</summary>
-        Mono,
-        /// <summary>MonoTouch</summary>
-        MonoTouch,
-        /// <summary>Microsoft .NET Core</summary>
-        NetCore
-    }
-
     /// <summary>
     /// RuntimeFramework represents a particular version
     /// of a common language runtime implementation.
@@ -387,7 +364,7 @@ namespace NUnit.Framework.Internal
         private static bool IsNetCore()
         {
 #if NETSTANDARD2_0
-            // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch 
+            // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch
             // block to stop any inlining in release builds and check whether the type exists
             Type runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
             if (runtimeInfoType != null)
@@ -443,4 +420,3 @@ namespace NUnit.Framework.Internal
         #endregion
     }
 }
-#endif

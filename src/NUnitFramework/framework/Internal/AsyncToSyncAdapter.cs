@@ -49,21 +49,20 @@ namespace NUnit.Framework.Internal
 
             using (InitializeExecutionEnvironment())
             {
-                var awaitAdapter = AwaitAdapter.FromAwaitable(invoke.Invoke());
+                var awaiter = AwaitAdapter.FromAwaitable(invoke.Invoke());
 
-                if (!awaitAdapter.IsCompleted)
+                if (!awaiter.IsCompleted)
                 {
                     var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
-                    waitStrategy.WaitForCompletion(awaitAdapter);
+                    waitStrategy.WaitForCompletion(awaiter);
                 }
 
-                return awaitAdapter.GetResult();
+                return awaiter.GetResult();
             }
         }
 
         private static IDisposable InitializeExecutionEnvironment()
         {
-#if APARTMENT_STATE
             if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
                 var context = SynchronizationContext.Current;
@@ -81,7 +80,7 @@ namespace NUnit.Framework.Internal
                     });
                 }
             }
-#endif
+
             return null;
         }
 

@@ -98,6 +98,15 @@ namespace NUnit.Framework.Interfaces
         }
 
         /// <summary>
+        /// Gets the total number of tests executed
+        /// when running the test and all its children.
+        /// </summary>
+        int TotalCount
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the number of asserts executed
         /// when running the test and all its children.
         /// </summary>

@@ -300,7 +300,6 @@ namespace NUnit.Framework.Internal
         /// Check that setup and teardown methods marked by certain attributes
         /// meet NUnit's requirements and mark the tests not runnable otherwise.
         /// </summary>
-        /// <param name="methods">A list of methodinfos to check</param>
         protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
             foreach (MethodInfo method in methods)
@@ -311,7 +310,7 @@ namespace NUnit.Framework.Internal
                 }
                 else if (!(method.IsPublic || method.IsFamily))
                 {
-                    MakeInvalid("SetUp and TearDown methods must be public or internal: " + method.Name);
+                    MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
                 else if (method.GetParameters().Length != 0)
                 {
@@ -321,12 +320,12 @@ namespace NUnit.Framework.Internal
                 {
                     if (method.ReturnType == typeof(void))
                         MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
-                    else if (AwaitAdapter.GetResultType(method.ReturnType) != typeof(void))
+                    else if (!Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(method.ReturnType)))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
                 else
                 {
-                    if (method.ReturnType != typeof(void))
+                    if (!Reflect.IsVoidOrUnit(method.ReturnType))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
             }

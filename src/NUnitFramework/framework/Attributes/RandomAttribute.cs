@@ -59,7 +59,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of ints within a specified range
+        /// Generates <see cref="int"/> values within a specified range.
         /// </summary>
         public RandomAttribute(int min, int max, int count)
         {
@@ -67,7 +67,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of unsigned ints within a specified range
+        /// Generates <see cref="uint"/> values within a specified range.
         /// </summary>
         [CLSCompliant(false)]
         public RandomAttribute(uint min, uint max, int count)
@@ -76,7 +76,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of longs within a specified range
+        /// Generates <see cref="long"/> values within a specified range.
         /// </summary>
         public RandomAttribute(long min, long max, int count)
         {
@@ -84,7 +84,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of unsigned longs within a specified range
+        /// Generates <see cref="ulong"/> values within a specified range.
         /// </summary>
         [CLSCompliant(false)]
         public RandomAttribute(ulong min, ulong max, int count)
@@ -93,7 +93,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of shorts within a specified range
+        /// Generates <see cref="short"/> values within a specified range.
         /// </summary>
         public RandomAttribute(short min, short max, int count)
         {
@@ -101,7 +101,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of unsigned shorts within a specified range
+        /// Generates <see cref="ushort"/> values within a specified range.
         /// </summary>
         [CLSCompliant(false)]
         public RandomAttribute(ushort min, ushort max, int count)
@@ -110,7 +110,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of doubles within a specified range
+        /// Generates <see cref="double"/> values within a specified range.
         /// </summary>
         public RandomAttribute(double min, double max, int count)
         {
@@ -118,7 +118,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of floats within a specified range
+        /// Generates <see cref="float"/> values within a specified range.
         /// </summary>
         public RandomAttribute(float min, float max, int count)
         {
@@ -126,7 +126,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of bytes within a specified range
+        /// Generates <see cref="byte"/> values within a specified range.
         /// </summary>
         public RandomAttribute(byte min, byte max, int count)
         {
@@ -134,7 +134,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Construct a set of sbytes within a specified range
+        /// Generates <see cref="sbyte"/> values within a specified range.
         /// </summary>
         [CLSCompliant(false)]
         public RandomAttribute(sbyte min, sbyte max, int count)
@@ -647,14 +647,9 @@ namespace NUnit.Framework
 
         #region DecimalDataSource
 
-        // Currently, Randomizer doesn't implement methods for decimal
-        // so we use random Ulongs and convert them. This doesn't cover
-        // the full range of decimal, so it's temporary.
         class DecimalDataSource : RandomDataSource<decimal>
         {
             public DecimalDataSource(int count) : base(count) { }
-
-            public DecimalDataSource(decimal min, decimal max, int count) : base(min, max, count) { }
 
             protected override decimal GetNext()
             {

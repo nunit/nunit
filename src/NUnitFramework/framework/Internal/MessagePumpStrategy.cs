@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
 {
     internal abstract class MessagePumpStrategy
     {
-        public abstract void WaitForCompletion(AwaitAdapter awaitable);
+        public abstract void WaitForCompletion(AwaitAdapter awaiter);
 
         public static MessagePumpStrategy FromCurrentSynchronizationContext()
         {
@@ -59,9 +59,9 @@ namespace NUnit.Framework.Internal
             public static readonly NoMessagePumpStrategy Instance = new NoMessagePumpStrategy();
             private NoMessagePumpStrategy() { }
 
-            public override void WaitForCompletion(AwaitAdapter awaitable)
+            public override void WaitForCompletion(AwaitAdapter awaiter)
             {
-                awaitable.BlockUntilCompleted();
+                awaiter.BlockUntilCompleted();
             }
         }
 
@@ -72,14 +72,14 @@ namespace NUnit.Framework.Internal
             private WindowsFormsMessagePumpStrategy() { }
 
             [SecuritySafeCritical]
-            public override void WaitForCompletion(AwaitAdapter awaitable)
+            public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
 
                 if (!(context is WindowsFormsSynchronizationContext))
                     throw new InvalidOperationException("This strategy must only be used from a WindowsFormsSynchronizationContext.");
 
-                if (awaitable.IsCompleted) return;
+                if (awaiter.IsCompleted) return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal
                 // Application.Run and never return.
                 context.Post(
                     state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, Application.Exit),
-                    state: awaitable);
+                    state: awaiter);
 
                 try
                 {
@@ -105,14 +105,14 @@ namespace NUnit.Framework.Internal
             public static readonly WpfMessagePumpStrategy Instance = new WpfMessagePumpStrategy();
             private WpfMessagePumpStrategy() { }
 
-            public override void WaitForCompletion(AwaitAdapter awaitable)
+            public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
 
                 if (!(context is DispatcherSynchronizationContext))
                     throw new InvalidOperationException("This strategy must only be used from a DispatcherSynchronizationContext.");
 
-                if (awaitable.IsCompleted) return;
+                if (awaiter.IsCompleted) return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
                 // Dispatcher.Run and never return.
                 context.Post(
                     state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, Dispatcher.ExitAllFrames),
-                    state: awaitable);
+                    state: awaiter);
 
                 Dispatcher.Run();
             }
@@ -132,34 +132,34 @@ namespace NUnit.Framework.Internal
             public static readonly SingleThreadedTestMessagePumpStrategy Instance = new SingleThreadedTestMessagePumpStrategy();
             private SingleThreadedTestMessagePumpStrategy() { }
 
-            public override void WaitForCompletion(AwaitAdapter awaitable)
+            public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext;
 
                 if (context == null)
                     throw new InvalidOperationException("This strategy must only be used from a SingleThreadedTestSynchronizationContext.");
 
-                if (awaitable.IsCompleted) return;
+                if (awaiter.IsCompleted) return;
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the message loop runs *before*
                 // shutting it down. Otherwise context.ShutDown will throw.
                 context.Post(
                     state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, context.ShutDown),
-                    state: awaitable);
+                    state: awaiter);
 
                 context.Run();
             }
         }
 
-        private static void ContinueOnSameSynchronizationContext(AwaitAdapter adapter, Action continuation)
+        private static void ContinueOnSameSynchronizationContext(AwaitAdapter awaiter, Action continuation)
         {
-            if (adapter == null) throw new ArgumentNullException(nameof(adapter));
+            if (awaiter == null) throw new ArgumentNullException(nameof(awaiter));
             if (continuation == null) throw new ArgumentNullException(nameof(continuation));
 
             var context = SynchronizationContext.Current;
 
-            adapter.OnCompleted(() =>
+            awaiter.OnCompleted(() =>
             {
                 if (SynchronizationContext.Current == context)
                     continuation.Invoke();
