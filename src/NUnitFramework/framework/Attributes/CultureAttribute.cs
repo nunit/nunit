@@ -21,7 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -47,7 +50,7 @@ namespace NUnit.Framework
         /// Constructor taking one or more cultures
         /// </summary>
         /// <param name="cultures">Comma-delimited list of cultures</param>
-        public CultureAttribute(string cultures) : base(cultures) { }
+        public CultureAttribute(string? cultures) : base(cultures) { }
 
         #region IApplyToTest members
 
@@ -57,10 +60,13 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            if (test.RunState != RunState.NotRunnable && !IsCultureSupported())
+            if (test.RunState != RunState.NotRunnable && !IsCultureSupported(out var reason))
             {
                 test.RunState = RunState.Skipped;
-                test.Properties.Set(PropertyNames.SkipReason, Reason);
+
+                // Discards the existing user-specified reason, if any.
+                Reason = reason;
+                test.Properties.Set(PropertyNames.SkipReason, reason);
             }
         }
 
@@ -71,20 +77,21 @@ namespace NUnit.Framework
         /// based on the properties of this attribute.
         /// </summary>
         /// <returns>True, if the current culture is supported</returns>
-        private bool IsCultureSupported()
+        private bool IsCultureSupported([NotNullWhen(false)] out string? reason)
         {
             if (Include != null && !cultureDetector.IsCultureSupported(Include))
             {
-                Reason = string.Format("Only supported under culture {0}", Include);
+                reason = string.Format("Only supported under culture {0}", Include);
                 return false;
             }
 
             if (Exclude != null && cultureDetector.IsCultureSupported(Exclude))
             {
-                Reason = string.Format("Not supported under culture {0}", Exclude);
+                reason = string.Format("Not supported under culture {0}", Exclude);
                 return false;
             }
 
+            reason = null;
             return true;
         }
 

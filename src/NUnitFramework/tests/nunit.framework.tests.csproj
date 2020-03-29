@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
-    <DebugType>Full</DebugType>
 
     <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->

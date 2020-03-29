@@ -3,9 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net35;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>NUnit.Tests</RootNamespace>
-
-    <!-- Required for NUnitLite.Tests.TextUIReportTests.ErrorsAndFailuresReportTest -->
-    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using NUnit.Framework.Interfaces;
 
@@ -38,7 +40,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The expected result to be returned
         /// </summary>
-        private object _expectedResult;
+        private object? _expectedResult;
 
         #endregion
 
@@ -59,7 +61,7 @@ namespace NUnit.Framework.Internal
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public TestCaseParameters(object[] args) : base(args) { }
+        public TestCaseParameters(object?[] args) : base(args) { }
 
         /// <summary>
         /// Construct a ParameterSet from an object implementing ITestCaseData
@@ -79,7 +81,7 @@ namespace NUnit.Framework.Internal
         /// The expected result of the test, which
         /// must match the method return type.
         /// </summary>
-        public object ExpectedResult
+        public object? ExpectedResult
         {
             get { return _expectedResult; }
             set

@@ -1,5 +1,4 @@
 #tool NUnit.ConsoleRunner&version=3.10.0
-#tool GitLink&version=3.1.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -39,8 +38,7 @@ var AllFrameworks = new string[]
 var NetCoreTests = new String[]
 {
     "netcoreapp2.1",
-    "netcoreapp2.2",
-    "netcoreapp3.0"
+    "netcoreapp3.1"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -152,9 +150,6 @@ MSBuildSettings CreateSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
-    // Only needed when packaging
-    settings.WithProperty("DebugType", "pdbonly");
-
     if (IsRunningOnWindows())
     {
         // Find MSBuild for Visual Studio 2019 and newer
@@ -230,7 +225,7 @@ Task("Test35")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp2.2", "netcoreapp3.0" })
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
@@ -266,18 +261,15 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
-    "nunit.framework.pdb",
     "nunit.framework.xml",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
-    "nunitlite.pdb",
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
     "nunitlite-runner.dll",
-    "nunitlite-runner.pdb",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
     "Microsoft.Threading.Tasks.Extensions.dll",
@@ -325,21 +317,9 @@ Task("CreateImage")
         }
     });
 
-Task("GitLink")
-    .IsDependentOn("CreateImage")
-    .Description("Source-indexes PDBs in the images directory to the current commit")
-    .Does(() =>
-    {
-        var settings = new GitLink3Settings
-        {
-            BaseDir = PROJECT_DIR
-        };
-        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"), settings);
-    });
-
 Task("PackageFramework")
     .Description("Creates NuGet packages of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -357,7 +337,7 @@ Task("PackageFramework")
 
 Task("PackageZip")
     .Description("Creates a ZIP file of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);

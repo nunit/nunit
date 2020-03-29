@@ -21,8 +21,15 @@
 
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'
                             and '$(TargetFramework)' != 'netcoreapp2.1'
-                            and '$(TargetFramework)' != 'netcoreapp2.2'
-                            and '$(TargetFramework)' != 'netcoreapp3.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp3.1'">$(DefineConstants);THREAD_ABORT</DefineConstants>
+  </PropertyGroup>
+
+  <!-- We always want a good debugging experience in tests -->
+  <PropertyGroup>
+    <Optimize>false</Optimize>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
 
 </Project>

@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the suite.</param>
         public TestSuite(string name) : base(name)
         {
-            Arguments = new object[0];
+            Arguments = TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(string parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
-            Arguments = new object[0];
+            Arguments = TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
             : base(fixtureType)
         {
-            Arguments = arguments ?? new object[0];
+            Arguments = arguments ?? TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(Type fixtureType)
             : base(new TypeWrapper(fixtureType))
         {
-            Arguments = new object[0];
+            Arguments = TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }

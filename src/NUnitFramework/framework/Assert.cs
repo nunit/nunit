@@ -314,8 +314,8 @@ namespace NUnit.Framework
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
         public static void Multiple(TestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext
-                ?? throw new InvalidOperationException("There is no current test execution context.");
+            TestExecutionContext context = TestExecutionContext.CurrentContext;
+            Guard.OperationValid(context != null, "There is no current test execution context.");
 
             context.MultipleAssertLevel++;
 
@@ -344,8 +344,8 @@ namespace NUnit.Framework
         /// <param name="testDelegate">A TestDelegate to be executed in Multiple Assertion mode.</param>
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
-            TestExecutionContext context = TestExecutionContext.CurrentContext
-                ?? throw new InvalidOperationException("There is no current test execution context.");
+            TestExecutionContext context = TestExecutionContext.CurrentContext;
+            Guard.OperationValid(context != null, "There is no current test execution context.");
 
             context.MultipleAssertLevel++;
 

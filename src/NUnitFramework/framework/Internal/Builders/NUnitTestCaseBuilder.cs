@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -50,7 +51,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The MethodInfo from which to construct the TestMethod</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
         /// <param name="parms">The ParameterSet to be used, or null</param>
-        public TestMethod BuildTestMethod(IMethodInfo method, Test parentSuite, TestCaseParameters parms)
+        public TestMethod BuildTestMethod(IMethodInfo method, Test parentSuite, TestCaseParameters? parms)
         {
             var testMethod = new TestMethod(method, parentSuite)
             {
@@ -61,7 +62,7 @@ namespace NUnit.Framework.Internal.Builders
 
             CheckTestMethodSignature(testMethod, parms);
 
-            if (parms == null || parms.Arguments == null)
+            if (parms == null || parms.Arguments.Length == 0)
                 testMethod.ApplyAttributesToTest(method.MethodInfo);
 
             // NOTE: After the call to CheckTestMethodSignature, the Method
@@ -140,7 +141,7 @@ namespace NUnit.Framework.Internal.Builders
         /// The return value is no longer used internally, but is retained
         /// for testing purposes.
         /// </remarks>
-        private static bool CheckTestMethodSignature(TestMethod testMethod, TestCaseParameters parms)
+        private static bool CheckTestMethodSignature(TestMethod testMethod, TestCaseParameters? parms)
         {
             if (testMethod.Method.IsAbstract)
                 return MarkAsNotRunnable(testMethod, "Method is abstract");
@@ -160,7 +161,7 @@ namespace NUnit.Framework.Internal.Builders
 
             int maxArgsNeeded = parameters.Length;
 
-            object[] arglist = null;
+            object?[]? arglist = null;
             int argsProvided = 0;
 
             if (parms != null)

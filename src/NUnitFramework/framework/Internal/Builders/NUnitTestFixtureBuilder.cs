@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -94,25 +96,25 @@ namespace NUnit.Framework.Internal.Builders
         {
             Guard.ArgumentNotNull(testFixtureData, nameof(testFixtureData));
 
-            object[] arguments = testFixtureData.Arguments;
+            object?[] arguments = testFixtureData.Arguments;
 
             if (typeInfo.ContainsGenericParameters)
             {
-                Type[] typeArgs = testFixtureData.TypeArgs;
+                Type[]? typeArgs = testFixtureData.TypeArgs;
                 if (typeArgs == null || typeArgs.Length == 0)
                 {
                     int cnt = 0;
-                    foreach (object o in arguments)
+                    foreach (object? o in arguments)
                         if (o is Type) cnt++;
                         else break;
 
                     typeArgs = new Type[cnt];
                     for (int i = 0; i < cnt; i++)
-                        typeArgs[i] = (Type)arguments[i];
+                        typeArgs[i] = (Type)arguments[i]!;
 
                     if (cnt > 0)
                     {
-                        object[] args = new object[arguments.Length - cnt];
+                        object?[] args = new object?[arguments.Length - cnt];
                         for (int i = 0; i < args.Length; i++)
                             args[i] = arguments[cnt + i];
 
@@ -198,7 +200,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 if (filter.IsMatch(fixture.TypeInfo.Type, method.MethodInfo))
                 {
-                    Test test = BuildTestCase(method, fixture);
+                    Test? test = BuildTestCase(method, fixture);
 
                     if (test != null)
                         fixture.Add(test);
@@ -223,7 +225,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="method">The method for which a test is to be created</param>
         /// <param name="suite">The test suite being built.</param>
         /// <returns>A newly constructed Test</returns>
-        private Test BuildTestCase(IMethodInfo method, TestSuite suite)
+        private Test? BuildTestCase(IMethodInfo method, TestSuite suite)
         {
             return _testBuilder.CanBuildFrom(method, suite)
                 ? _testBuilder.BuildFrom(method, suite)

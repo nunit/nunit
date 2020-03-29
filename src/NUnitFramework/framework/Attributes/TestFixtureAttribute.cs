@@ -21,8 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -42,17 +45,17 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public TestFixtureAttribute() : this( new object[0] ) { }
+        public TestFixtureAttribute() : this(Internal.TestParameters.NoArguments) { }
 
         /// <summary>
         /// Construct with a object[] representing a set of arguments.
         /// The arguments may later be separated into type arguments and constructor arguments.
         /// </summary>
         /// <param name="arguments"></param>
-        public TestFixtureAttribute(params object[] arguments)
+        public TestFixtureAttribute(params object?[]? arguments)
         {
             RunState = RunState.Runnable;
-            Arguments = arguments ?? new object[] { null };
+            Arguments = arguments ?? new object?[] { null };
             TypeArgs = new Type[0];
             Properties = new PropertyBag();
         }
@@ -65,7 +68,7 @@ namespace NUnit.Framework
         /// Gets or sets the name of the test.
         /// </summary>
         /// <value>The name of the test.</value>
-        public string TestName { get; set; }
+        public string? TestName { get; set; }
 
         /// <summary>
         /// Gets or sets the RunState of this test fixture.
@@ -75,7 +78,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The arguments originally provided to the attribute
         /// </summary>
-        public object[] Arguments { get; }
+        public object?[] Arguments { get; }
 
         /// <summary>
         /// Properties pertaining to this fixture
@@ -100,53 +103,75 @@ namespace NUnit.Framework
         /// <summary>
         /// Descriptive text for this fixture
         /// </summary>
-        public string Description
+        [DisallowNull]
+        public string? Description
         {
             get { return Properties.Get(PropertyNames.Description) as string; }
-            set { Properties.Set(PropertyNames.Description, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.Description, value);
+            }
         }
 
         /// <summary>
         /// The author of this fixture
         /// </summary>
-        public string Author
+        [DisallowNull]
+        public string? Author
         {
             get { return Properties.Get(PropertyNames.Author) as string; }
-            set { Properties.Set(PropertyNames.Author, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.Author, value);
+            }
         }
 
         /// <summary>
         /// The type that this fixture is testing
         /// </summary>
-        public Type TestOf
+        [DisallowNull]
+        public Type? TestOf
         {
             get { return _testOf;  }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
                 Properties.Set(PropertyNames.TestOf, value.FullName);
             }
         }
-        private Type _testOf;
+        private Type? _testOf;
 
         /// <summary>
         /// Gets or sets the ignore reason. May set RunState as a side effect.
         /// </summary>
         /// <value>The ignore reason.</value>
-        public string Ignore
+        [DisallowNull]
+        public string? Ignore
         {
             get { return IgnoreReason;  }
-            set { IgnoreReason = value; }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                IgnoreReason = value;
+            }
         }
 
         /// <summary>
         /// Gets or sets the reason for not running the fixture.
         /// </summary>
         /// <value>The reason.</value>
-        public string Reason
+        [DisallowNull]
+        public string? Reason
         {
             get { return this.Properties.Get(PropertyNames.SkipReason) as string; }
-            set { this.Properties.Set(PropertyNames.SkipReason, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                this.Properties.Set(PropertyNames.SkipReason, value);
+            }
         }
 
         /// <summary>
@@ -154,11 +179,13 @@ namespace NUnit.Framework
         /// non-empty value, the test is marked as ignored.
         /// </summary>
         /// <value>The ignore reason.</value>
-        public string IgnoreReason
+        [DisallowNull]
+        public string? IgnoreReason
         {
             get { return Reason; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
                 RunState = RunState.Ignored;
                 Reason = value;
             }
@@ -180,7 +207,8 @@ namespace NUnit.Framework
         /// Gets and sets the category for this fixture.
         /// May be a comma-separated list of categories.
         /// </summary>
-        public string Category
+        [DisallowNull]
+        public string? Category
         {
             get
             {
@@ -206,6 +234,8 @@ namespace NUnit.Framework
             }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
+
                 foreach (string cat in value.Split(new char[] { ',' }))
                     Properties.Add(PropertyNames.Category, cat);
             }

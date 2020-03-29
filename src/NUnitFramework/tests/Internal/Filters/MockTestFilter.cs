@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Filters
             return AssertAndGetEquality(test, MatchFunction.IsExplicitMatch);
         }
 
-        public override bool Pass(ITest test)
+        public override bool Pass(ITest test, bool negated)
         {
             return AssertAndGetEquality(test, MatchFunction.Pass);
         }

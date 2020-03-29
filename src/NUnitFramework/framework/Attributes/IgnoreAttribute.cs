@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
@@ -36,7 +38,7 @@ namespace NUnit.Framework
     {
         private readonly string _reason;
         private DateTime? _untilDate;
-        private string _until;
+        private string? _until;
 
         /// <summary>
         /// Constructs the attribute giving a reason for ignoring the test
@@ -58,7 +60,7 @@ namespace NUnit.Framework
         /// property set which will appear in the test results.
         /// </remarks>
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception> 
-        public string Until
+        public string? Until
         {
             get { return _until; }
             set
