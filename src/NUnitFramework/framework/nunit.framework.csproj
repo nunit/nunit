@@ -4,6 +4,9 @@
     <TargetFrameworks>net35;net40;net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Reenable once all public APIs are annotated -->
+    <NoWarn>RS0041</NoWarn>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
