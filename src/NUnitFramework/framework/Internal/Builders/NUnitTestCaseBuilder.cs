@@ -79,7 +79,8 @@ namespace NUnit.Framework.Internal.Builders
             {
                 parms.ApplyToTest(testMethod);
 
-                if (parms.TestName != null && !string.IsNullOrEmpty(parms.TestName?.Replace(" ", "")))
+                //if (parms.TestName != null && !string.IsNullOrEmpty(parms.TestName?.Replace(" ", "")))
+                if (parms.TestName != null)
                 {
                     // The test is simply for efficiency
                     testMethod.Name = parms.TestName.Contains("{")
