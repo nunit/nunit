@@ -48,13 +48,18 @@ namespace NUnit.Framework
     /// }
     /// </example>
     ///
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TestAttribute : NUnitAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object? _expectedResult;
-        private bool _hasExpectedResult = false; // needed in case result is set to null
 
         private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+
+        /// <summary>
+        /// Gets or sets the name of the test.
+        /// </summary>
+        /// <value>The name of the test.</value>
+        public string? TestName { get; set; }
 
         /// <summary>
         /// Descriptive text for this test
@@ -72,6 +77,11 @@ namespace NUnit.Framework
         public Type? TestOf { get; set; }
 
         /// <summary>
+        /// Returns true if the expected result has been set
+        /// </summary>
+        public bool HasExpectedResult { get; private set; }
+
+        /// <summary>
         /// Gets or sets the expected result. Not valid if the test
         /// method has parameters.
         /// </summary>
@@ -82,7 +92,7 @@ namespace NUnit.Framework
             set
             {
                 _expectedResult = value;
-                _hasExpectedResult = true;
+                HasExpectedResult = true;
             }
         }
 
@@ -103,7 +113,7 @@ namespace NUnit.Framework
             if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
                 test.Properties.Set(PropertyNames.TestOf, TestOf.FullName);
 
-            if (_hasExpectedResult && test.Method.GetParameters().Length > 0)
+            if (HasExpectedResult && test.Method.GetParameters().Length > 0)
                 test.MakeInvalid("The 'TestAttribute.ExpectedResult' property may not be used on parameterized methods.");
 
         }
@@ -119,12 +129,14 @@ namespace NUnit.Framework
         /// <param name="suite">The suite to which the test will be added.</param>
         public TestMethod BuildFrom(IMethodInfo method, Test suite)
         {
-            TestCaseParameters? parms = null;
+            TestCaseParameters? parms = new TestCaseParameters();
+            parms.TestName = TestName;
 
-            if (_hasExpectedResult)
+            // Special handling for ExpectedResult (see if it needs to be converted into method return type)
+            if (HasExpectedResult
+                && ParamAttributeTypeConversions.TryConvert(ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
             {
-                parms = new TestCaseParameters();
-                parms.ExpectedResult = ExpectedResult;
+                parms.ExpectedResult = expectedResultInTargetType;
             }
 
             return _builder.BuildTestMethod(method, suite, parms);

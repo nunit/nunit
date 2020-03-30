@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 parms.ApplyToTest(testMethod);
 
-                if (parms.TestName != null)
+                if (parms.TestName != null && !string.IsNullOrEmpty(parms.TestName?.Replace(" ", "")))
                 {
                     // The test is simply for efficiency
                     testMethod.Name = parms.TestName.Contains("{")
@@ -92,7 +92,14 @@ namespace NUnit.Framework.Internal.Builders
                 }
                 else
                 {
-                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    if (parms.OriginalArguments.Length > 0)
+                    {
+                        testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    }
+                    else
+                    {
+                        testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
+                    }                  
                 }
             }
             else
