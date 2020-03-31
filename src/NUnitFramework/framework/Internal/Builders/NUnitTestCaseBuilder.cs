@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal.Builders
             object?[]? arglist = null;
             int argsProvided = 0;
 
-            if (parms != null)
+            if (parms != null && testMethod.RunState > RunState.NotRunnable)
             {
                 testMethod.parms = parms;
                 testMethod.RunState = parms.RunState;
