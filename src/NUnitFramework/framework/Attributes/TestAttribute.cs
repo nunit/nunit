@@ -132,12 +132,8 @@ namespace NUnit.Framework
             TestCaseParameters? parms = new TestCaseParameters();
             parms.TestName = TestName;
 
-            // Special handling for ExpectedResult (see if it needs to be converted into method return type)
-            if (HasExpectedResult
-                && ParamAttributeTypeConversions.TryConvert(ExpectedResult, method.ReturnType.Type, out var expectedResultInTargetType))
-            {
-                parms.ExpectedResult = expectedResultInTargetType;
-            }
+            if (HasExpectedResult)
+                parms.ExpectedResult = ExpectedResult;
 
             return _builder.BuildTestMethod(method, suite, parms);
         }
