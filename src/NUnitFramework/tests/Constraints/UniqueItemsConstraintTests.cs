@@ -69,7 +69,8 @@ namespace NUnit.Framework.Constraints
         {
             new object[] {new[] { 1, 2, 3, 2 }, new[] { 2 }},
             new object[] {new[] { 2, 1, 2, 3, 2 }, new[] { 2 }},
-            new object[] {new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 }}
+            new object[] {new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 }},
+            new object[] {new[] { "x", null, "x" }, new[] { "x" }}
         };
 
         static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
