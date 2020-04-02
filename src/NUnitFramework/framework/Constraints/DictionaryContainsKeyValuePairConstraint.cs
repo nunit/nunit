@@ -85,11 +85,11 @@ namespace NUnit.Framework.Constraints
         private bool Matches(object actual)
         {
             var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-			foreach (DictionaryEntry entry in dictionary)
-				if (ItemsEqual(entry.Key, ExpectedKey) && ItemsEqual(entry.Value, ExpectedValue))
-					return true;
+            foreach (DictionaryEntry entry in dictionary)
+                if (ItemsEqual(entry.Key, ExpectedKey) && ItemsEqual(entry.Value, ExpectedValue))
+                    return true;
 
-			return false;
+            return false;
         }
 
         /// <summary>
