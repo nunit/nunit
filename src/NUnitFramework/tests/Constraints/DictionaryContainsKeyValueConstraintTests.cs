@@ -30,7 +30,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class DictionaryContainsKeyValueConstraintTests
+    public class DictionaryContainsKeyValuePairConstraintTests
     {
         [Test]
         public void SucceedsWhenKeyValuePairIsPresent()
