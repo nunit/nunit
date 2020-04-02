@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new DictionaryContainsKeyValuePairConstraint checking for the
         /// presence of a particular key-value-pair in the dictionary.
         /// </summary>
-        public DictionaryContainsKeyValuePairConstraint WithValue(object expected)
+        public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
         {
             var builder = this.Builder;
             if (builder == null)
