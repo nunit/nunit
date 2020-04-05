@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Default amount of items used by <see cref="FormatCollection"/> method.
         /// </summary>
-        private const int DefaultMaxItems = 10;
+        internal const int DefaultMaxItems = 10;
 
         /// <summary>
         /// Static string used when strings are clipped
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
 
-            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val, 0, 10) : next(val));
+            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val) : next(val));
 
             AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
 
