@@ -38,8 +38,7 @@ var AllFrameworks = new string[]
 var NetCoreTests = new String[]
 {
     "netcoreapp2.1",
-    "netcoreapp2.2",
-    "netcoreapp3.0"
+    "netcoreapp3.1"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -226,7 +225,7 @@ Task("Test35")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp2.2", "netcoreapp3.0" })
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)

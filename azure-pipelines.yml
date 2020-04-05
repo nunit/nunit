@@ -45,12 +45,6 @@ jobs:
       packageType: runtime
       version: 2.1.x
 
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core runtime 2.2'
-    inputs:
-      packageType: runtime
-      version: 2.2.x
-
   - bash: sudo apt-get install fsharp
     displayName: Install F# for Mono
 
@@ -81,12 +75,6 @@ jobs:
     inputs:
       packageType: runtime
       version: 2.1.x
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core runtime 2.2'
-    inputs:
-      packageType: runtime
-      version: 2.2.x
 
   - bash: |
      curl -o mono.pkg -sSL https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.198.macos10.xamarin.universal.pkg
