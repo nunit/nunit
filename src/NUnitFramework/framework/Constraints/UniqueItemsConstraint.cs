@@ -203,11 +203,6 @@ namespace NUnit.Framework.Constraints
 
         internal sealed class UniqueItemsContstraintResult : ConstraintResult
         {
-            /// <summary>
-            /// The maximum count of list elements that are shown on the constraint result
-            /// </summary>
-            internal const int MaxDisplayCount = 10;
-
             internal ICollection NonUniqueItems { get; }
 
             public UniqueItemsContstraintResult(IConstraint constraint, object actualValue, ICollection nonUniqueItems)
