@@ -221,7 +221,7 @@ namespace NUnit.Framework.Constraints
                 if (this.Status == ConstraintStatus.Failure)
                 {
                     writer.Write("  Not unique items: ");
-                    var output = MsgUtils.FormatCollection(NonUniqueItems, 0, MaxDisplayCount);
+                    var output = MsgUtils.FormatCollection(NonUniqueItems);
                     writer.WriteLine(output);
                 }
             }
