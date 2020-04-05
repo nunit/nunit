@@ -404,7 +404,7 @@ namespace NUnit.Framework.Internal
                 AddAttachmentsElement(thisNode);
 
             if (recursive && HasChildren)
-                foreach (TestResult child in Children)
+                foreach (var child in Children)
                     child.AddToXml(thisNode, recursive);
 
             return thisNode;
