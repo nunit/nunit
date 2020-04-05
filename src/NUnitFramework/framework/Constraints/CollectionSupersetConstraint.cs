@@ -74,6 +74,8 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
+            // Create tally from 'actual' collection, and remove '_expected'.
+            // ExtraItems from tally would be missing items for '_expected' collection. 
             CollectionTally tally = Tally(actual);
             tally.TryRemove(_expected);
 
