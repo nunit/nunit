@@ -26,6 +26,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
@@ -70,38 +71,17 @@ namespace NUnit.Framework.Constraints
 
         private ICollection OriginalAlgorithm(IEnumerable actual)
         {
-            var processedItems = new List<object>();
             var nonUniques = new List<object>();
+            var processedItems = new List<object>();
 
-            foreach (object o1 in actual)
+            foreach (var o1 in actual)
             {
-                var isNonUnique = false;
-                var knownNonUnique = false;
+                var isUnique = !processedItems.Any(o2 => ItemsEqual(o1, o2));
+                var unknownNonUnique = !isUnique && !nonUniques.Any(o2 => ItemsEqual(o1, o2));
 
-                foreach (object o2 in processedItems)
-                {
-                    if (ItemsEqual(o1, o2))
-                    {
-                        isNonUnique = true;
-                        break;
-                    }
-                }
-                    
-                if (isNonUnique)
-                {
-                    foreach (object o2 in nonUniques)
-                    {
-                        if (ItemsEqual(o1, o2))
-                        {
-                            knownNonUnique = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!isNonUnique)
+                if (isUnique)
                     processedItems.Add(o1);
-                else if (!knownNonUnique)
+                else if (unknownNonUnique)
                     nonUniques.Add(o1);
             }
 
@@ -124,9 +104,9 @@ namespace NUnit.Framework.Constraints
             if (IgnoringCase)
             {
                 if (memberType == typeof(string))
-                    return StringsUniqueIgnoringCase((IEnumerable<string>)actual);
+                    return (ICollection)StringsUniqueIgnoringCase((IEnumerable<string>)actual);
                 else if (memberType == typeof(char))
-                    return CharsUniqueIgnoringCase((IEnumerable<char>)actual);
+                    return (ICollection)CharsUniqueIgnoringCase((IEnumerable<char>)actual);
             }
 
             return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
@@ -140,25 +120,25 @@ namespace NUnit.Framework.Constraints
         private static readonly MethodInfo ItemsUniqueMethod =
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
-        private static ICollection ItemsUnique<T>(IEnumerable<T> actual)
+        private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, v => v);
 
-        private static ICollection StringsUniqueIgnoringCase(IEnumerable<string> actual)
+        private static ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
             => NonUniqueItemsInternal(actual, v => v.ToLower());
 
-        private static ICollection CharsUniqueIgnoringCase(IEnumerable<char> actual)
+        private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
             => NonUniqueItemsInternal(actual, char.ToLower);
 
-        private static ICollection NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T> hashValueFactory)
+        private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T> hashValueFactory)
         {
-            var hash = new HashSet<T>();
+            var processedItems = new HashSet<T>();
             var knownNonUniques = new HashSet<T>();
             var nonUniques = new List<T>();
 
             foreach (T item in actual)
             {
                 var itemToHash = hashValueFactory(item);
-                if (!hash.Add(itemToHash))
+                if (!processedItems.Add(itemToHash))
                 {
                     // in order to only record 1 of each non-unique
                     if (knownNonUniques.Add(itemToHash))
