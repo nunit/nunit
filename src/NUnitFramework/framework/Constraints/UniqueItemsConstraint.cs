@@ -198,7 +198,7 @@ namespace NUnit.Framework.Constraints
             internal ICollection NonUniqueItems { get; }
 
             public UniqueItemsContstraintResult(IConstraint constraint, object actualValue, ICollection nonUniqueItems)
-            : base(constraint, actualValue, nonUniqueItems.Count == 0)
+                : base(constraint, actualValue, nonUniqueItems.Count == 0)
             {
                 NonUniqueItems = nonUniqueItems;
             }
