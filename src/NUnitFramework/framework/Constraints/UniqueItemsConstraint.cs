@@ -121,27 +121,26 @@ namespace NUnit.Framework.Constraints
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
-            => NonUniqueItemsInternal(actual, v => v);
+            => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
         private static ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, v => v.ToLower());
+            => NonUniqueItemsInternal(actual, StringComparer.CurrentCultureIgnoreCase);
 
         private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => NonUniqueItemsInternal(actual, char.ToLower);
+            => NonUniqueItemsInternal(actual, new CaseInsensitiveCharComparer());
 
-        private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, Func<T,T> hashValueFactory)
+        private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
-            var processedItems = new HashSet<T>();
+            var processedItems = new HashSet<T>(comparer);
             var knownNonUniques = new HashSet<T>();
             var nonUniques = new List<T>();
 
             foreach (T item in actual)
             {
-                var itemToHash = hashValueFactory(item);
-                if (!processedItems.Add(itemToHash))
+                if (!processedItems.Add(item))
                 {
                     // in order to only record 1 of each non-unique
-                    if (knownNonUniques.Add(itemToHash))
+                    if (knownNonUniques.Add(item))
                     {
                         nonUniques.Add(item);
                     }
@@ -179,6 +178,19 @@ namespace NUnit.Framework.Constraints
             }
 
             return null;
+        }
+
+        private sealed class CaseInsensitiveCharComparer : IEqualityComparer<char>
+        {
+            public bool Equals(char x, char y)
+            {
+                return char.ToLower(x) == char.ToLower(y);
+            }
+
+            public int GetHashCode(char obj)
+            {
+                return char.ToLower(obj).GetHashCode();
+            }
         }
 
         internal sealed class UniqueItemsContstraintResult : ConstraintResult
