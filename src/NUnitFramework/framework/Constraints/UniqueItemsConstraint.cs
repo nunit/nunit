@@ -76,8 +76,18 @@ namespace NUnit.Framework.Constraints
 
             foreach (var o1 in actual)
             {
-                var isUnique = !processedItems.Any(o2 => ItemsEqual(o1, o2));
-                var unknownNonUnique = !isUnique && !nonUniques.Any(o2 => ItemsEqual(o1, o2));
+                var isUnique = true;
+                var unknownNonUnique = false;
+
+                foreach (var o2 in processedItems)
+                {
+                    if (ItemsEqual(o1, o2))
+                    {
+                        isUnique = false;
+                        unknownNonUnique = !nonUniques.Any(o2 => ItemsEqual(o1, o2));
+                        break;
+                    }
+                }
 
                 if (isUnique)
                     processedItems.Add(o1);
