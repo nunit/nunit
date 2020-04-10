@@ -120,6 +120,9 @@ namespace NUnit.Framework.Constraints
         private static readonly MethodInfo ItemsUniqueMethod =
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
+        private static readonly CaseInsensitiveCharComparer InsensitiveCharComparer =
+            new CaseInsensitiveCharComparer();
+
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
@@ -127,7 +130,7 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, StringComparer.CurrentCultureIgnoreCase);
 
         private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => NonUniqueItemsInternal(actual, new CaseInsensitiveCharComparer());
+            => NonUniqueItemsInternal(actual, InsensitiveCharComparer);
 
         private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
