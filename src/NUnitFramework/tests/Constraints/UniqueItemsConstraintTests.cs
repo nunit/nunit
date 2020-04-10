@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
             var constraint = new UniqueItemsConstraint().IgnoreCase;
             var result = constraint.ApplyTo(actual);
 
-            Assert.That(result.IsSuccess, Is.False, "{0} should not be unique ignoring case", actual );
+            Assert.That(result.IsSuccess, Is.False, "{0} should not be unique ignoring case", actual);
         }
 
         private static readonly object[] IgnoreCaseData =
