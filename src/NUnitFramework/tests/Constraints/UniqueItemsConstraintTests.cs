@@ -32,7 +32,7 @@ using static NUnit.Framework.Constraints.UniqueItemsConstraint;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class UniqueItemsTests : ConstraintTestBase
+    public class UniqueItemsConstraintTests : ConstraintTestBase
     {
         [SetUp]
         public void SetUp()
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
 
-        [Test]
+        [Test, SetCulture("en-US")]
         [TestCaseSource( nameof(IgnoreCaseData) )]
         public void HonorsIgnoreCase( IEnumerable actual )
         {
@@ -93,13 +93,14 @@ namespace NUnit.Framework.Constraints
                     Assert.That(values, Is.Unique.IgnoreCase);
                 else
                     Assert.That(values, Is.Unique);
-            }, HelperConstraints.HasMaxTime(100));
+            }, HelperConstraints.HasMaxTime(150));
         }
 
         [TestCaseSource(nameof(DuplicateItemsData))]
         public void DuplicateItemsTests(IEnumerable items, IEnumerable expectedFailures)
         {
-            var result = Is.Unique.ApplyTo(items) as UniqueItemsContstraintResult;
+            var constraint = new UniqueItemsConstraint().IgnoreCase;
+            var result = constraint.ApplyTo(items) as UniqueItemsContstraintResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.NonUniqueItems, Is.EqualTo(expectedFailures));
