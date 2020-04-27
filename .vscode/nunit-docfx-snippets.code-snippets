@@ -19,8 +19,8 @@
         "scope": "yml,yaml",
         "prefix": "nav",
         "body": [
-            "- name: Assert.$1",
-            "  href: Assert.$1.md"
+            "- name: $1Constraint",
+            "  href: $1Constraint.md"
         ],
         "description": "Add a new nav entry with appropriate spacing"
     }
