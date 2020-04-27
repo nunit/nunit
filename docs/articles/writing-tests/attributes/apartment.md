@@ -18,7 +18,7 @@ are now considered obsolete.
    
 #### Assembly Level Examples
    
-```C#
+```csharp
 
 // All the tests in this assembly will use the MTA by default. Since
 // this is the general default, the attribute is not actually needed.
@@ -33,7 +33,7 @@ are now considered obsolete.
 
 #### Test Fixture Examples
    
-```C#
+```csharp
 
 // TestFixture requiring use of the MTA. The attribute is not 
 // needed unless the STA was specified at a higher level.
@@ -54,7 +54,7 @@ public class FixtureRequiringSTA
 
 #### Test Method Examples
    
-```C#
+```csharp
 [TestFixture]
 public class AnotherFixture
 {

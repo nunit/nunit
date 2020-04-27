@@ -13,7 +13,7 @@ gray and the status bar color is not affected.
 
 #### Test Fixture Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -30,7 +30,7 @@ namespace NUnit.Tests
 
 #### Test Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

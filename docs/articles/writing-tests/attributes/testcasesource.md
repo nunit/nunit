@@ -11,7 +11,7 @@ Consider a test of the divide operation, taking three arguments: the numerator, 
 
 #### Form 1 - [TestCaseSource(string sourceName)]
 
-```C#
+```csharp
 public class MyTestClass
 {
     [TestCaseSource("DivideCases")]
@@ -44,7 +44,7 @@ to provide test cases. It has the following characteristics:
 
 Sometimes we would like to parameterise the source, e.g. if we use the same source for multiple tests, to this end it is possible to pass parameters to the source, if the source is a method. The parameters are specified as an array of parameters that are passed to the source method.
 
-```C#
+```csharp
 public class MyTestClass
 {
     [TestCaseSource(nameof(TestStrings), new object[] { true })]
@@ -72,7 +72,7 @@ public class MyTestClass
 
 #### Form 2 - [TestCaseSource(Type sourceType, string sourceName)]
 
-```C#
+```csharp
 public class MyTestClass
 {
     [TestCaseSource(typeof(AnotherClass), "DivideCases")]
@@ -113,7 +113,7 @@ Similar to Form 1 it is possible to pass parameters to the source, if the source
 
 #### Form 3 - [TestCaseSource(Type sourceType)]
 
-```C#
+```csharp
 public class MyTestClass
 {
     [TestCaseSource(typeof(DivideCases))]
@@ -163,7 +163,7 @@ the enumerator as follows:
    This can eliminate a bit of extra typing by the programmer, 
    as in this example:
 
-   ```C#
+   ```csharp
    static int[] EvenNumbers = new int[] { 2, 4, 6, 8 };
 
    [Test, TestCaseSource("EvenNumbers")]

@@ -76,7 +76,7 @@ the following definition:
 > is always non-negative and, when multiplied by itself, gives 
 > the original number.
 
-```C#
+```csharp
 public class SqrtTests
 {
     [DatapointSource]
@@ -102,7 +102,7 @@ a parameter type or not generic, since `T` has been resolved to an actual
 Type in instantiating the fixture instance. You may use such methods as
 theories and any data of the appropriate type will be used.
 
-```C#
+```csharp
 [TestFixture(typeof(int))]
 [TestFixture(typeof(double))]
 public class TheorySampleTestsGeneric<T>

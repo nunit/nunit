@@ -3,7 +3,7 @@ parameters as a test method and providing inline data to be used when
 invoking that method. Here is an example of a test being run three
 times, with three different sets of data:
    
-```C#
+```csharp
 [TestCase(12, 3, 4)]
 [TestCase(12, 2, 6)]
 [TestCase(12, 4, 3)]
@@ -24,7 +24,7 @@ The method may optionally be marked with the [[Test Attribute]] as well.
 By using the named parameter `ExpectedResult` this test set may be simplified
 further:
 
-```C#
+```csharp
 [TestCase(12, 3, ExpectedResult=4)]
 [TestCase(12, 2, ExpectedResult=6)]
 [TestCase(12, 4, ExpectedResult=3)]

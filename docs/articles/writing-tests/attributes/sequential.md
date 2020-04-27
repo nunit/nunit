@@ -13,7 +13,7 @@ data attribute on each parameter.
 
 The following test will be executed three times.
 
-```C#
+```csharp
 [Test, Sequential]
 public void MyTest(
     [Values(1, 2, 3)] int x,
@@ -25,7 +25,7 @@ public void MyTest(
 
 MyTest is called three times, as follows:
 
-```c#
+```csharp
 MyTest(1, "A")
 MyTest(2, "B")
 MyTest(3, null)

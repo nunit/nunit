@@ -6,7 +6,7 @@ of "Critical"
 
 #### Example:
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -43,7 +43,7 @@ Here's an example that creates a Severity property. It works
 just like any other property, but has a simpler syntax and is type-safe.
 A custom test reporting system might make use of the property to provide special reports.
 
-```C#
+```csharp
 public enum SeverityLevel
 {
     Critical,

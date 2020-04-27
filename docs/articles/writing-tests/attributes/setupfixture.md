@@ -23,7 +23,7 @@ A SetUpFixture outside of any namespace provides SetUp and TearDown for the enti
 
 #### Example:
 
-```C#
+```csharp
 using System;
 using NUnit.Framework;
 

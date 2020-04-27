@@ -7,7 +7,7 @@ Note that the **IgnoreAttribute** is attached to a method. If you have multiple 
 
 #### Test Fixture Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -24,7 +24,7 @@ namespace NUnit.Tests
 
 #### Test Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -46,7 +46,7 @@ The `Until` named parameter allows you to ignore a test for a specific period of
 after which the test will run normally. The until date must be a string
 that can be parsed to a date.
 
-```C#
+```csharp
 [TestFixture]
 [Ignore("Waiting for Joe to fix his bugs", Until = "2014-07-31 12:00:00Z"]
 public class MyTests

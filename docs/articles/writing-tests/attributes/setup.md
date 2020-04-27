@@ -12,7 +12,7 @@ and a failure or error is reported.
 
 #### Example:
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

@@ -9,7 +9,7 @@ whichever is greater. For example, on a four processor machine the default value
 
 The following code, which might be placed in AssemblyInfo.cs, sets the level of parallelism to 3:
 
-```C#
+```csharp
   [assembly:LevelOfParallelism(3)]
 ```
 

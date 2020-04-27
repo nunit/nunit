@@ -11,7 +11,7 @@ test method itself.
 
 RandomAttribute supports the following constructors:
 
-```C#
+```csharp
 public Random(int count);
 public Random(int min, int max, int count);
 public Random(uint min, uint max, int count);
@@ -40,7 +40,7 @@ Note that there is no constructor taking decimal values for min and max. This is
 The following test will be executed fifteen times, three times
 for each value of x, each combined with 5 random doubles from -1.0 to +1.0.
 
-```C#
+```csharp
 [Test]
 public void MyTest(
     [Values(1, 2, 3)] int x,

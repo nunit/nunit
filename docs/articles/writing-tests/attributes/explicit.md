@@ -41,7 +41,7 @@ However, the following options will __not__ include explicit tests
 
 #### Test Fixture Syntax
 ##### C#
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -95,7 +95,7 @@ namespace NUnitTests {
 #### Test Syntax
 
 ##### C#
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

@@ -24,7 +24,7 @@ to using the `DescriptionAttribute` on the test.
    
 #### Examples:
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

@@ -27,7 +27,7 @@ at least one method marked with the **Test**, **TestCase** or
 
 #### Example:
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -64,7 +64,7 @@ attributes are ignored, using the following rules:
 This permits code like the following, which would cause an error if the
 attribute on the base class were not ignored.
 
-```C#
+```csharp
 [TestFixture]
 public class AbstractFixtureBase
 {
@@ -99,7 +99,7 @@ passing in each set of arguments to the appropriate constructor. Note
 that there are three different constructors, matching the data types
 provided as arguments.
    
-```C#
+```csharp
 [TestFixture("hello", "hello", "goodbye")]
 [TestFixture("zip", "zip")]
 [TestFixture(42, 42, 99)]
@@ -158,7 +158,7 @@ you provide.
 The following test fixture would be instantiated by NUnit twice,
 once using an `ArrayList` and once using a `List<int>`.
    
-```C#
+```csharp
 [TestFixture(typeof(ArrayList))]
 [TestFixture(typeof(List<int>))]
 public class IList_Tests<TList> where TList : IList, new()
@@ -191,7 +191,7 @@ and which are normal constructor parameters.
    any remaining arguments are used to construct the instance. In the
    following example, this leads to some obvious duplication...
 
-   ```C#
+   ```csharp
    [TestFixture(typeof(double), typeof(int), 100.0, 42)]
    [TestFixture(typeof(int) typeof(double), 42, 100.0)]
    public class SpecifyBothSetsOfArgs<T1, T2>
@@ -219,7 +219,7 @@ and which are normal constructor parameters.
    arguments. Again, for this example, the type info is duplicated, but
    it is at least more cleanly separated from the normal arguments...
 
-   ```C#
+   ```csharp
    [TestFixture(100.0, 42, TypeArgs=new Type[] { typeof(double), typeof(int) })]
    [TestFixture(42, 100.0, TypeArgs=new Type[] { typeof(int), typeof(double) })]
    public class SpecifyTypeArgsSeparately<T1, T2>
@@ -247,7 +247,7 @@ and which are normal constructor parameters.
    That's the case here and the following is the preferred way to
    write this example...
    
-   ```C#
+   ```csharp
    [TestFixture(100.0, 42)]
    [TestFixture(42, 100.0)]
    public class DeduceTypeArgsFromArgs<T1, T2>

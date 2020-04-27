@@ -7,7 +7,7 @@ The following tests will be run in the order:
  * TestB
  * TestC
 
-```C#
+```csharp
 public class MyFixture
 {
     [Test, Order(1)]

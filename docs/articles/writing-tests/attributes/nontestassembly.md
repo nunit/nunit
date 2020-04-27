@@ -8,7 +8,7 @@ console to skip assemblies without failing.
 The following code, which might be placed in AssemblyInfo.cs, specifies that the
 assembly does not contain any tests.
 
-```C#
+```csharp
   [assembly: NonTestAssembly]
 ```
 

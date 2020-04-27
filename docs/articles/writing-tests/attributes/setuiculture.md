@@ -11,7 +11,7 @@ that is called by each individual test method.
 
 #### Examples:
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

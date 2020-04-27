@@ -6,7 +6,7 @@ comparison.
 
 #### Examples
    
-```C#
+```csharp
 [TestFixture]
 [DefaultFloatingPointTolerance(1)]
 public class ToleranceTest

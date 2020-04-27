@@ -11,7 +11,7 @@ test method itself.
 
 RangeAttribute supports the following constructors:
 
-```C#
+```csharp
 public RangeAttribute(int from, int to);
 public RangeAttribute(int from, int to, int step);
 public RangeAttribute(long from, long to, long step);
@@ -23,7 +23,7 @@ public RangeAttribute(double from, double to, double step);
 
 The following test will be executed nine times.
 
-```C#
+```csharp
 [Test]
 public void MyTest(
     [Values(1, 2, 3)] int x,
@@ -35,7 +35,7 @@ public void MyTest(
 
 The MyTest method is called nine times, as follows:
 
-```c#
+```csharp
 MyTest(1, 0.2)
 MyTest(1, 0.4)
 MyTest(1, 0.6)

@@ -12,7 +12,7 @@ exception.
 
 #### Example:
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

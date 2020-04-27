@@ -15,7 +15,7 @@ current releases.
 	
 #### Test Fixture Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -33,7 +33,7 @@ namespace NUnit.Tests
 
 #### Test Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -59,7 +59,7 @@ Here's an example that creates a category of Critical tests. It works
 just like any other category, but has a simpler syntax. A test reporting
 system might make use of the attribute to provide special reports.
 
-```C#
+```csharp
 [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
 public class CriticalAttribute : CategoryAttribute 
 { }

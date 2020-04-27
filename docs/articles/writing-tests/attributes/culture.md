@@ -6,7 +6,7 @@ One use of the Culture attribute is to provide alternative tests under different
 
 #### Test Fixture Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;
@@ -23,7 +23,7 @@ namespace NUnit.Tests
 
 #### Test Syntax
 
-```C#
+```csharp
 namespace NUnit.Tests
 {
   using System;

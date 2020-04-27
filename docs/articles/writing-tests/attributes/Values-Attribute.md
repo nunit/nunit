@@ -11,7 +11,7 @@ test method itself.
 
 #### Example
 
-```C#
+```csharp
 [Test]
 public void MyTest([Values(1, 2, 3)] int x, [Values("A", "B")] string s)
 {
@@ -21,7 +21,7 @@ public void MyTest([Values(1, 2, 3)] int x, [Values("A", "B")] string s)
 
 The above test will be executed six times, as follows:
 
-```c#
+```csharp
 MyTest(1, "A")
 MyTest(1, "B")
 MyTest(2, "A")
@@ -37,7 +37,7 @@ The values attribute works in a special way with Enums and Boolean parameters.
 When used without any arguments, the **[Values]** attribute on an enum parameter 
 will automatically include all possible values of the enumeration.
 
-```C#
+```csharp
 [Test]
 public void MyEnumTest([Values]MyEnumType myEnumArgument)
 {
@@ -48,7 +48,7 @@ public void MyEnumTest([Values]MyEnumType myEnumArgument)
 There is the same support for Boolean values. Add the **[Values]** attribute to a bool
 and the method will be run with true and false.
 
-```C#
+```csharp
 [Test]
 public void MyBoolTest([Values]bool value)
 {

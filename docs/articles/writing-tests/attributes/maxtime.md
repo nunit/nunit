@@ -4,7 +4,7 @@ specified time to complete, it is reported as a failure.
    
 #### Example
 
-```C#
+```csharp
 [Test, MaxTime(2000)]
 public void TimedTest()
 {

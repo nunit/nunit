@@ -7,7 +7,7 @@ default, use of this attribute is optional.
 
 The following test will be executed six times:
 
-```C#
+```csharp
 [Test, Combinatorial]
 public void MyTest(
     [Values(1, 2, 3)] int x,
@@ -18,7 +18,7 @@ public void MyTest(
 ```
 
 MyTest is called six times, as follows:
-```c#
+```csharp
 MyTest(1, "A")
 MyTest(1, "B")
 MyTest(2, "A")

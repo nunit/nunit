@@ -10,7 +10,7 @@ Consider a test fixture class taking two parameters in its constructor, a string
 
 #### Form 1 - [TestFixtureSource(string sourceName)]
 
-```C#
+```csharp
 [TestFixtureSource("FixtureArgs")]
 public class MyTestClass
 {
@@ -38,7 +38,7 @@ to provide arguments for constructing the `TestFixture`. It has the following ch
 
 #### Form 2 - [TestFixtureSource(Type sourceType, string sourceName)]
 
-```C#
+```csharp
 [TestFixtureSource(typeof(AnotherClass), "FixtureArgs")]
 public class MyTestClass
 {
@@ -72,7 +72,7 @@ to provide test fixtures. It has the following characteristics:
 
 #### Form 3 - [TestFixtureSource(Type sourceType)]
 
-```C#
+```csharp
 [TestFixtureSource(typeof(FixtureArgs))]
 public class MyTestClass
 {

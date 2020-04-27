@@ -3,7 +3,7 @@ The TestOf attribute adds information about the class that is being tested. It c
 The constructor takes the string name or the type of the class being tested. TestOf can also be specified on
 a TestFixture or Test attribute.
 
-```C#
+```csharp
 [TestFixture]
 [TestOf(typeof(MyClass)]
 public class MyTests

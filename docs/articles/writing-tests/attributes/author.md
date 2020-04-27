@@ -7,7 +7,7 @@ The **Author** Attribute adds information about the author of the tests. It can 
 The constructor takes the name of the test author and optionally the author's email address. Author can also be specified on
 a TestFixture or Test attribute.
 
-```C#
+```csharp
 [TestFixture]
 [Author("Jane Doe", "jane.doe@example.com")]
 [Author("Another Developer", "email@example.com")]

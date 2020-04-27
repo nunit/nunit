@@ -9,7 +9,7 @@ use the **ApartmentAttribute**.
    
 #### Examples
    
-```C#
+```csharp
 // A thread will be created and used to run
 // all the tests in the assembly
 [assembly:RequiresThread]

@@ -4,7 +4,7 @@ shown in the Test Properties dialog.
 
 #### Example:
 
-```C#
+```csharp
 [assembly: Description("Assembly description here")]
 
 namespace NUnit.Tests

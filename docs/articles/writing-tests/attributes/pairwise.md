@@ -9,7 +9,7 @@ two features (parameters) are involved.
 Using the Combinatorial attribute, the following test would be executed 12 (3x2x2) times.
 With **Pairwise** it is executed only enough times so that each possible pair is covered..
 
-```C#
+```csharp
 [Test, Pairwise]
 public void MyTest(
     [Values("a", "b", "c")] string a,
