@@ -1,0 +1,4 @@
+- name: Installation
+  href: installation.md
+- name: Upgrading
+  href: upgrading.md
