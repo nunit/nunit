@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 FalseConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.False
 ```
 
 #### Example of Use
 
-```C#
+```csharp
 Assert.That(condition, Is.False);
 ```
 

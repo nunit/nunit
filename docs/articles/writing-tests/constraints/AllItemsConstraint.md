@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 AllItemsConstraint(Constraint itemConstraint)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.All...
 Has.All...
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 };
 string[] sarray = new string[] { "a", "b", "c" };
 Assert.That(iarray, Is.All.Not.Null);

@@ -2,7 +2,7 @@ Sometimes - especially in integration testing - it's desirable to give a warning
 
 ### Syntax
 
-```C#
+```csharp
   // Use Warn with reversed condition
   Warn.If(2+2 != 5);
   Warn.If(() => 2 + 2 != 5);

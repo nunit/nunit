@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 NoItemConstraint(Constraint itemConstraint)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Has.None...
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 };
 string[] sarray = new string[] { "a", "b", "c" };
 Assert.That(iarray, Has.None.Null);

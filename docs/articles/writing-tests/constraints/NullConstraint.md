@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
     NullConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
     Is.Null
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
    Assert.That(anObject, Is.Null);
    Assert.That(anObject, Is.Not.Null);
 ```

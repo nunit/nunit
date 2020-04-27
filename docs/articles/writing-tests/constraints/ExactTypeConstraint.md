@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 ExactTypeConstraint(Type)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.TypeOf(Type)
 Is.TypeOf<T>()
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That("Hello", Is.TypeOf(typeof(string)));
 Assert.That("Hello", Is.Not.TypeOf(typeof(int)));
 

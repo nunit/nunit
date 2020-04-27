@@ -2,13 +2,13 @@
 
 #### Constructor
 
-```C#
+```csharp
 AttributeExistsConstraint(Type type)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Has.Attribute(typeof(TestFixtureAttribute))
 Has.Attribute<TestFixtureAttribute>()
 ```
@@ -17,7 +17,7 @@ Has.Attribute<TestFixtureAttribute>()
 #### Examples of Use
 
 
-```C#
+```csharp
 Assert.That(someObject, Has.Attribute(typeof(TestFixtureAttribute)));
 Assert.That(someObject, Has.Attribute<TestFixtureAttribute>());
 ```

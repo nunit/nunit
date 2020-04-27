@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 LessThanOrEqualConstraint(object expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.LessThanOrEqualTo(object expected)
 Is.AtMost(object expected)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using<T>(IComparer<T> comparer)
 ...Using<T>(Comparison<T> comparer)
@@ -23,7 +23,7 @@ Is.AtMost(object expected)
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(3, Is.LessThanOrEqualTo(7));
 Assert.That(3, Is.AtMost(7));
 Assert.That(3, Is.LessThanOrEqualTo(3));

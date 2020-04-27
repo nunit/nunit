@@ -2,19 +2,19 @@ The **EmptyDirectoryConstraint** tests if a Directory is empty.
 
 #### Constructor
 
-```C#
+```csharp
 EmptyDirectoryConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.Empty
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(new DirectoryInfo(actual), Is.Empty);
 Assert.That(new DirectoryInfo(actual), Is.Not.Empty);
 ```

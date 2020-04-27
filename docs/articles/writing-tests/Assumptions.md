@@ -4,7 +4,7 @@ Assumptions make use of the `Assume` static class.
 
 ### Syntax
 
-```C#
+```csharp
 Assume.That(myString, Is.EqualTo("Hello"));
 ```
 

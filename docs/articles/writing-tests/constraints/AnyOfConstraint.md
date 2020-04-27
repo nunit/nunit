@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 AnyOfConstraint(object[] expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.AnyOf(object[] expected)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using<T>(IEqualityComparer comparer)
 ...Using<T>(Func<T, T, bool>)
@@ -25,7 +25,7 @@ Is.AnyOf(object[] expected)
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 0, -1, 42, 100 }
 
 Assert.That(42, Is.AnyOf(iarray));

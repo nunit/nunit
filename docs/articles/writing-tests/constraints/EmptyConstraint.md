@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 EmptyConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.Empty
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(aString, Is.Empty);
 Assert.That(dirInfo, Is.Empty);
 Assert.That(collection, Is.Empty);

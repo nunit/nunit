@@ -3,13 +3,13 @@ contains an expected object as a key.
 
 #### Constructor
 
-```C#
+```csharp
 DictionaryContainsKeyConstraint(object)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Contains.Key(object)
 Does.ContainKey(object)
 Does.Not.ContainKey(object)
@@ -17,7 +17,7 @@ Does.Not.ContainKey(object)
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using(IEqualityComparer comparer)
 ...Using<T>(IComparer<T> comparer)
@@ -29,7 +29,7 @@ Does.Not.ContainKey(object)
 
 #### Examples of Use
 
-```C#
+```csharp
 IDictionary<int, int> idict = new IDictionary<int, string> { { 1, 4 }, { 2, 5 } };
 
 Assert.That(idict, Contains.Key(1));

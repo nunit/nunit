@@ -3,19 +3,19 @@ applies a constraint test to the property value.
 
 #### Constructor
 
-```C#
+```csharp
 PropertyConstraint(string name, IConstraint baseConstraint)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Has.Property(string name)... // followed by further constraint syntax
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(someObject, Has.Property("Version").EqualTo("2.0"));
 Assert.That(collection, Has.Property("Count").GreaterThan(10));
 Assert.That(collection, Has.Count.GreaterThan(10);
@@ -24,7 +24,7 @@ Assert.That(collection, Has.Count.GreaterThan(10);
 **Note:** As shown in the example, certain common properties are known to NUnit and 
 may be tested using a shorter form. The following properties are supported:
 
-```C#
+```csharp
 Has.Length...
 Has.Count...
 Has.Message...

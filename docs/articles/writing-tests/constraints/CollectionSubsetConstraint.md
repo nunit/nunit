@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 CollectionSubsetConstraint(IEnumerable)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.SubsetOf(IEnumerable)
 ```
 
 #### Example of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 3 };
 Assert.That(iarray, Is.SubsetOf(new int[] { 1, 2, 3 }));
 ```

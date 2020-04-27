@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 NotConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.Not...
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(collection, Is.Not.Unique);
 Assert.That(2 + 2, Is.Not.EqualTo(5));
 ```

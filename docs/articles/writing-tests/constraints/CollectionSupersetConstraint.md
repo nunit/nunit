@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 CollectionSupersetConstraint(IEnumerable)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.SupersetOf(IEnumerable)
 ```
 
 #### Example of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 };
 Assert.That(iarray, Is.SupersetOf(new int[] { 1, 3 }));
 ```

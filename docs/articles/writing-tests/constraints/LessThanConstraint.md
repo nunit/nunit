@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 LessThanConstraint(object expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.LessThan(object expected)
 Is.Negative // Equivalent to Is.LessThan(0)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using<T>(IComparer<T> comparer)
 ...Using<T>(Comparison<T> comparer)
@@ -23,7 +23,7 @@ Is.Negative // Equivalent to Is.LessThan(0)
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(3, Is.LessThan(7));
 Assert.That(myOwnObject, 
     Is.LessThan(theExpected).Using(myComparer));

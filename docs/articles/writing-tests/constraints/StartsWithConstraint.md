@@ -2,26 +2,26 @@
 
 #### Constructor
 
-```C#
+```csharp
 StartsWithConstraint(string expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Does.StartWith(string expected)
 StartsWith(string expected)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...IgnoreCase
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 string phrase = "Make your tests fail before passing!"
 
 Assert.That(phrase, Does.StartWith("Make"));

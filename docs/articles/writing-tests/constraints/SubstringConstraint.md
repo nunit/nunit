@@ -2,25 +2,25 @@
 
 #### Constructor
 
-```C#
+```csharp
 SubstringConstraint(string expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Does.Contain(string expected)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...IgnoreCase
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 string phrase = "Make your tests fail before passing!"
 
 Assert.That(phrase, Does.Contain("tests fail"));

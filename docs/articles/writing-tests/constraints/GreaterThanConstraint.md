@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 GreaterThanConstraint(object expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.GreaterThan(object expected)
 Is.Positive // Equivalent to Is.GreaterThan(0)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using<T>(IComparer<T> comparer)
 ...Using<T>(Comparison<T> comparer)
@@ -23,7 +23,7 @@ Is.Positive // Equivalent to Is.GreaterThan(0)
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(7, Is.GreaterThan(3));
 Assert.That(myOwnObject, 
     Is.GreaterThan(theExpected).Using(myComparer));

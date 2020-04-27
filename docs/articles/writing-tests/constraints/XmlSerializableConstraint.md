@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 XmlSerializableConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.XmlSerializable
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(someObject, Is.XmlSerializable));
 ```
 

@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 TrueConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.True
 ```
 
 #### Example of Use
 
-```C#
+```csharp
 Assert.That(condition, Is.True);
 ```
 

@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 BinarySerializableConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.BinarySerializable
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(someObject, Is.BinarySerializable));
 ```
 

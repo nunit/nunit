@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 InstanceOfTypeConstraint(Type)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.InstanceOf(Type)
 Is.InstanceOf<T>()
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That("Hello", Is.InstanceOf(typeof(string)));
 Assert.That(5, Is.Not.InstanceOf(typeof(string)));
 

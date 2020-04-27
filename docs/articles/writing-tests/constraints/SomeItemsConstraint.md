@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 SomeItemsConstraint(Constraint itemConstraint)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Has.Some...
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 };
 string[] sarray = new string[] { "a", "b", "c" };
 Assert.That(iarray, Has.Some.GreaterThan(2));

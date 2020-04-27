@@ -2,27 +2,27 @@
 
 #### Constructor
 
-```C#
+```csharp
 FileOrDirectoryExistsConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Does.Exist
 Does.Not.Exist
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 IgnoreDirectories
 IgnoreFiles
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(fileStr, Does.Exist);
 Assert.That(dirStr, Does.Exist);
 Assert.That(fileStr, Does.Not.Exist);

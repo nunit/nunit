@@ -2,13 +2,13 @@
 
 #### Constructor
 
-```C#
+```csharp
 CollectionContainsConstraint(object)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Has.Member(object)
 Contains.Item(object)
 Does.Contain(object)
@@ -16,7 +16,7 @@ Does.Contain(object)
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using<T>(IComparer<T> comparer)
 ...Using<T>(Comparison<T> comparer)
@@ -24,7 +24,7 @@ Does.Contain(object)
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 };
 string[] sarray = new string[] { "a", "b", "c" };
 Assert.That(iarray, Has.Member(3));

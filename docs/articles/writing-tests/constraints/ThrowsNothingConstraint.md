@@ -2,18 +2,18 @@
 
 #### Constructor
 
-```C#
+```csharp
 ThrowsNothingConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Throws.Nothing
 ```
 
 #### Example of Use
 
-```C#
+```csharp
 Assert.That(() => SomeMethod(actual), Throws.Nothing);
 ```

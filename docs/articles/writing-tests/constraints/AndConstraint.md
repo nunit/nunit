@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 AndConstraint(Constraint left, Constraint right)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 <Constraint>.And.<Constraint>
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(2.3, Is.GreaterThan(2.0).And.LessThan(3.0));
 ```
 

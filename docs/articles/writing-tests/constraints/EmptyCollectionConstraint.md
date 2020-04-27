@@ -2,19 +2,19 @@ The **EmptyCollectionConstraint** tests if a Collection or other `IEnumerable` i
 
 #### Constructor
 
-```C#
+```csharp
 EmptyCollectionConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.Empty
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(new int[] { }, Is.Empty);
 Assert.That(new int[] { 1, 2, 3 }, Is.Not.Empty);
 ```

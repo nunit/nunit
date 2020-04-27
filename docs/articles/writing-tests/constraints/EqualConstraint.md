@@ -4,20 +4,20 @@ optionally within a specified tolerance.
 
 #### Constructor
 
-```C#
+```csharp
 EqualConstraint(object expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.EqualTo(object expected)
 Is.Zero // Equivalent to Is.EqualTo(0)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...IgnoreCase
 ...AsCollection
 ...NoClip
@@ -45,7 +45,7 @@ may be compared successfully if their values are equal.
 Using the **Within** modifier, numerics may be tested
 for equality within a fixed or percent tolerance.
 
-```C#
+```csharp
 Assert.That(2 + 2, Is.EqualTo(4.0));
 Assert.That(2 + 2 == 4);
 Assert.That(2 + 2, Is.Not.EqualTo(5));
@@ -66,7 +66,7 @@ in "Units in the Last Place" or ULPs. For certain types of numerical work,
 this is safer than a fixed tolerance because it automatically compensates
 for the added inaccuracy of larger numbers.
 
-```C#
+```csharp
 Assert.That(2.1 + 1.2, Is.EqualTo(3.3).Within(.0005));
 Assert.That(double.PositiveInfinity, Is.EqualTo(double.PositiveInfinity));
 Assert.That(double.NegativeInfinity, Is.EqualTo(double.NegativeInfinity));
@@ -80,7 +80,7 @@ String comparisons normally respect case. The **IgnoreCase** modifier
 causes the comparison to be case-insensitive. It may also be used when 
 comparing arrays or collections of strings.
 
-```C#
+```csharp
 Assert.That("Hello!", Is.Not.EqualTo("HELLO!"));
 Assert.That("Hello!", Is.EqualTo("HELLO!").IgnoreCase);
 
@@ -99,7 +99,7 @@ the time conversion modifiers: **Days**, **Hours**, **Minutes**,
 When comparing **DateTimeOffsets** you can use the optional **WithSameOffset**
 modifier to check the offset along with the date and time.
 
-```C#
+```csharp
 DateTime now = DateTime.Now;
 DateTime later = now + TimeSpan.FromHours(1.0);
 
@@ -128,7 +128,7 @@ and `IEquatable`. Without the modifier, the `IEquatable` implementation is used 
 test equality. With the modifier specified, `IEquatable` is ignored and the contents
 of the enumeration are compared one by one.
 
-```C#
+```csharp
 int[] i3 = new int[] { 1, 2, 3 };
 double[] d3 = new double[] { 1.0, 2.0, 3.0 };
 int[] iunequal = new int[] { 1, 3, 2 };
@@ -157,7 +157,7 @@ may be successfully compared.
 Two DirectoryInfo objects are considered equal if
 both have the same path, creation time and last access time.
 
-```C#
+```csharp
 Assert.That(new DirectoryInfo(actual), Is.EqualTo(expected));
 ```
 
@@ -170,7 +170,7 @@ may supply an `IEqualityComparer`, `IEqualityComparer<T>`,
 `IComparer`, `IComparer<T>` or `Comparison<T>`
 as the argument to `Using`.
 
-```C#
+```csharp
 Assert.That(myObj1, Is.EqualTo(myObj2).Using(myComparer));
 ```
 
@@ -182,7 +182,7 @@ it is now possible to provide a comparer for an array, a collection type or
 a dictionary. The user-provided comparer will be used directly, bypassing the
 default NUnit logic for array, collection or dictionary equality.
 
-```C#
+```csharp
 class ListOfIntComparer : IEqualityComparer<List<int>>
 {
 	...

@@ -8,7 +8,7 @@ does not throw an exception.
 
 #### Constructors
 
-```C#
+```csharp
 ThrowsConstraint(Type expectedType)
 ThrowsConstraint<T>()
 ThrowsConstraint(Type expectedType, Constraint constraint)
@@ -17,7 +17,7 @@ ThrowsConstraint<T>(Constraint constraint)
 
 #### Syntax
 
-```C#
+```csharp
 Throws.Exception
 Throws.TargetInvocationException
 Throws.ArgumentException
@@ -33,7 +33,7 @@ Throws.InnerException
 
 ### Examples of Use
 
-```C#
+```csharp
 Assert.That(SomeMethod, Throws.TypeOf<ArgumentException>());
 Assert.That(SomeMethod, Throws.Exception.TypeOf<ArgumentException>());
 Assert.That(SomeMethod, Throws.TypeOf<ArgumentException>()

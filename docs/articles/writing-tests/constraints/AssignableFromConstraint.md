@@ -2,20 +2,20 @@
 
 #### Constructor
 
-```C#
+```csharp
 AssignableFromConstraint(Type)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.AssignableFrom(Type)
 Is.AssignableFrom<T>()
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That("Hello", Is.AssignableFrom(typeof(string)));
 Assert.That(5, Is.Not.AssignableFrom(typeof(string)));
 ```

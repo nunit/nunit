@@ -5,21 +5,21 @@ in its constructor.
 #### Constructor
 
 
-```C#
+```csharp
 SameAsConstraint(object expected)
 ```
 
 
 #### Syntax
 
-```C#
+```csharp
 Is.SameAs(object expected)
 ```
 
 
 #### Examples of Use
 
-```C#
+```csharp
 Exception ex1 = new Exception();
 Exception ex2 = ex1;
 Assert.That(ex2, Is.SameAs(ex1));

@@ -2,26 +2,26 @@
 
 #### Constructor
 
-```C#
+```csharp
 RegexConstraint(string pattern)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Does.Match(string pattern)
 Matches(string pattern)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...IgnoreCase
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 string phrase = "Make your tests fail before passing!"
 
 Assert.That(phrase, Does.Match("Make.*tests.*pass"));

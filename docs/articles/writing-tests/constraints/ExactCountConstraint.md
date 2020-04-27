@@ -8,20 +8,20 @@ An exception is thrown if the actual value passed does not implement `IEnumerabl
 
 #### Constructor
 
-```C#
+```csharp
 ExactCountConstraint(int expectedCount)
 ExactCountConstraint(int expectedCount, Constraint itemConstraint)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Has.Exactly(int expectedCount)...
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] array = new int[] { 1, 2, 3 };
 
 Assert.That(array, Has.Exactly(3).Items);

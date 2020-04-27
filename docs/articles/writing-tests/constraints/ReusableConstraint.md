@@ -3,7 +3,7 @@ same constraint in several places can lead to unexpected results.
 
 Consider the following code as an example:
 
-```C#
+```csharp
     Constraint myConstraint = Is.Not.Null;
     Assert.That("not a null", myConstraint); // Passes, of course
     Assert.That("not a null", myConstraint); // Fails! What's that about?
@@ -12,7 +12,7 @@ Consider the following code as an example:
 We'll save the technical explanation for later and show the
 solution first:
 
-```C#
+```csharp
     ReusableConstraint myConstraint = Is.Not.Null;
     Assert.That("not a null", myConstraint); // Passes
     Assert.That("not a null", myConstraint); // Passes
@@ -20,7 +20,7 @@ solution first:
 
 Or alternatively..
 
-```C#
+```csharp
     var myConstraint = new ReusableConstraint(Is.Not.Null);
     Assert.That("not a null", myConstraint); // Passes
     Assert.That("not a null", myConstraint); // Passes
@@ -48,7 +48,7 @@ only sees the NullConstraint and not the NotConstraint.
 So, for reusability, what we want to save is the result
 of resolving the constraint, in this case
 
-```C#
+```csharp
     NotConstraint => NullConstraint
 ```
 
@@ -66,7 +66,7 @@ avoid using it in the following cases...
 
  1. With a simple constraint involving no operators, like...
 
-    ```C#
+    ```csharp
         Constraint myConstraint = Is.Null;
         Constraint myConstraint = Is.EqualTo(42);
     ```
@@ -74,7 +74,7 @@ avoid using it in the following cases...
  2. With any constraint you construct using new, without
     using the "dotted" constraint syntax...
 
-    ```C#
+    ```csharp
         Constraint myConstraint = new NotConstraint(new NullConstraint());
         Constraint myConstraint = new AndConstraint(
             new GreaterThanConstraint(0),

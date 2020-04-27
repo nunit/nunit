@@ -2,26 +2,26 @@
 
 #### Constructor
 
-```C#
+```csharp
 SubPathConstraint(string expectedPath)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.SubPath(string expectedPath)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...IgnoreCase
 ...RespectCase
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That("/folder1/./junk/../folder2",
 	Is.SubPath("/folder1/folder2"));
 Assert.That("/folder1/junk/folder2",

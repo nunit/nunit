@@ -3,18 +3,18 @@ of unique items with no duplicates.
 
 #### Constructor
 
-```C#
+```csharp
 UniqueItemsConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.Unique
 ```
 
 #### Example of Use
 
-```C#
+```csharp
 Assert.That(collection, Is.Unique);
 ```

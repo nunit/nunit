@@ -3,13 +3,13 @@ contains an expected object as a value.
 
 #### Constructor
 
-```C#
+```csharp
 DictionaryContainsValueConstraint(object)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Contains.Value(object)
 Does.ContainValue(object)
 Does.Not.ContainValue(object)
@@ -17,7 +17,7 @@ Does.Not.ContainValue(object)
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using(IEqualityComparer comparer)
 ...Using<T>(IComparer<T> comparer)
@@ -29,7 +29,7 @@ Does.Not.ContainValue(object)
 
 #### Examples of Use
 
-```C#
+```csharp
 IDictionary<int, int> idict = new IDictionary<int, int> { { 1, 4 }, { 2, 5 } };
 
 Assert.That(idict, Contains.Value(4));

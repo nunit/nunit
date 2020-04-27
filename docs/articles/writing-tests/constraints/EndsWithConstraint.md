@@ -2,26 +2,26 @@
 
 #### Constructor
 
-```C#
+```csharp
 EndsWithConstraint(string expected)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Does.EndWith(string expected)
 EndsWith(string expected)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...IgnoreCase
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 string phrase = "Make your tests fail before passing!"
 
 Assert.That(phrase, Does.EndWith("!"));

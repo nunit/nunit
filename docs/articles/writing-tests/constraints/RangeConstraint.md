@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 RangeConstraint(IComparable from, IComparable to)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.InRange(IComparable from, IComparable to)
 ```
 
 #### Modifiers
 
-```C#
+```csharp
 ...Using(IComparer comparer)
 ...Using<T>(IComparer<T> comparer)
 ...Using<T>(Comparison<T> comparer)
@@ -22,7 +22,7 @@ Is.InRange(IComparable from, IComparable to)
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 }
 
 Assert.That(42, Is.InRange(1, 100));

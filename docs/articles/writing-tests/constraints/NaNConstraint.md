@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 NaNConstraint()
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.NaN
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(aDouble, Is.NaN);
 Assert.That(aDouble, Is.Not.NaN);
 ```

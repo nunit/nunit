@@ -3,19 +3,19 @@ the same items, in any order. If the actual value passed does not implement `IEn
 
 #### Constructor
 
-```C#
+```csharp
 CollectionEquivalentConstraint(IEnumerable other)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 Is.EquivalentTo(IEnumerable other)
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 int[] iarray = new int[] { 1, 2, 3 };
 string[] sarray = new string[] { "a", "b", "c" };
 Assert.That(new string[] { "c", "a", "b" }, Is.EquivalentTo(sarray));

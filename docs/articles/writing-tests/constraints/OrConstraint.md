@@ -2,19 +2,19 @@
 
 #### Constructor
 
-```C#
+```csharp
 OrConstraint(Constraint left, Constraint right)
 ```
 
 #### Syntax
 
-```C#
+```csharp
 <Constraint>.Or.<Constraint>
 ```
 
 #### Examples of Use
 
-```C#
+```csharp
 Assert.That(3, Is.LessThan(5).Or.GreaterThan(10));
 ```
 
