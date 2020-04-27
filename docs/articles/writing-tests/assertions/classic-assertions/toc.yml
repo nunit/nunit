@@ -66,3 +66,11 @@
   href: Assert.Ignore.md
 - name: Assert.Inconclusive
   href: Assert.Inconclusive.md
+- name: String Assert
+  href: String-Assert.md
+- name: Collection Assert
+  href: Collection-Assert.md
+- name: File Assert
+  href: File-Assert.md
+- name: Directory Assert
+  href: Directory-Assert.md
