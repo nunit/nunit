@@ -1,4 +1,4 @@
-// ***********************************************************************
+﻿// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -75,18 +75,15 @@ namespace NUnit.Framework.Internal
         [TestCase(1, 2, 3)]
         public void TestWithParamsArgument(params int[] array)
         {
-            var sb = new StringBuilder("TestWithParamsArgument");
+            var sb = new StringBuilder("TestWithParamsArgument(");
 
-            if (array.Length > 0)
+            foreach (int n in array)
             {
-                sb.Append("(");
-                foreach (int n in array)
-                {
-                    if (n > 1) sb.Append(",");
-                    sb.Append(n.ToString());
-                }
-                sb.Append(")");
+                if (n > 1) sb.Append(",");
+                sb.Append(n.ToString());
             }
+
+            sb.Append(")");
 
             CheckNames(sb.ToString(), "TestWithParamsArgument", OUTER_CLASS);
         }
