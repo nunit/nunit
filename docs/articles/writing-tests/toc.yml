@@ -4,3 +4,9 @@
   href: attributes/toc.yml
 - name: Assertions
   href: assertions/toc.yml
+- name: Assumptions
+  href: Assumptions.md
+- name: Warnings
+  href: Warnings.md
+- name: Constraints
+  href: constraints/toc.yml
