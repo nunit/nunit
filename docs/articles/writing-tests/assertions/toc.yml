@@ -4,3 +4,5 @@
   href: assertion-models/toc.yml
 - name: Multiple Asserts
   href: multiple-asserts.md
+- name: Classic Assertions
+  href: classic-assertions/toc.yml
