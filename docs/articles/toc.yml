@@ -2,3 +2,5 @@
   href: intro.md
 - name: Getting Started
   href: getting-started/installation.md
+- name: Release Notes
+  href: release-notes/framework.md

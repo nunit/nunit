@@ -4,3 +4,7 @@
   href: upgrading.md
 - name: .NET Core and .NET Standard
   href: dotnet-core-and-dotnet-standard.md
+- name: Samples
+  href: samples.md
+- name: Breaking Changes
+  href: breaking-changes.md
