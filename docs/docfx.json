@@ -13,8 +13,7 @@
           ],
           "src": "../src"
         }],
-      "dest": "api",
-      "filter": "filterConfig.yml"
+      "dest": "api"
     }
   ],
   "build": {
