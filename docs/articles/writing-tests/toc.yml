@@ -2,3 +2,5 @@
   href: attributes.md
 - name: Attribute Descriptions
   href: attributes/toc.yml
+- name: Assertions
+  href: assertions/toc.yml
