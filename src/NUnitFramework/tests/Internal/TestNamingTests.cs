@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -41,6 +41,12 @@ namespace NUnit.Framework.Internal
         public void SimpleTest()
         {
             CheckNames("SimpleTest", "SimpleTest", OUTER_CLASS);
+        }
+
+        [Test(TestName = "Test With Test Name")]
+        public void SimpleTestWithTestName()
+        {
+            CheckNames("Test With Test Name", "SimpleTestWithTestName", OUTER_CLASS);
         }
 
         [TestCase(5, 7, "ABC")]
