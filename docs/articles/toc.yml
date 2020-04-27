@@ -6,3 +6,5 @@
   href: license.md
 - name: Getting Started
   href: getting-started/toc.yml
+- name: Writing Tests
+  href: writing-tests/toc.yml
