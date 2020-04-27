@@ -1,18 +1,40 @@
-- name: Apartment Attribute
-  href: apartment-attribute.md
-- name: Author Attribute
-  href: author-attribute.md
-- name: Category Attribute
-  href: category-attribute.md
-- name: Combinatorial Attribute
-  href: combinatorial-attribute.md
-- name: Culture Attribute
-  href: culture-attribute.md
-- name: Datapoint Attribute
-  href: datapoint-attribute.md
-- name: DatapointSource Attribute
-  href: datapointsource-attribute.md
-- name: DefaultFloatingPointTolerance Attribute
-  href: defaultfloatingpointtolerance-attribute.md
-
-
+- name: "[Apartment]"
+  href: apartment.md
+- name: "[Author]"
+  href: author.md
+- name: "[Category]"
+  href: category.md
+- name: "[Combinatorial]"
+  href: combinatorial.md
+- name: "[Culture]"
+  href: culture.md
+- name: "[Datapoint]"
+  href: datapoint.md
+- name: "[DatapointSource]"
+  href: datapointsource.md
+- name: "[DefaultFloatingPointTolerance]"
+  href: defaultfloatingpointtolerance.md
+- name: "[Description]"
+  href: description.md
+- name: "[Explicit]"
+  href: explicit.md
+- name: "[Ignore]"
+  href: ignore.md
+- name: "[LevelOfParallelism]"
+  href: levelofparallelism.md  
+- name: "[MaxTime]"
+  href: maxtime.md  
+- name: "[NonTestAssembly]"
+  href: nontestassembly.md  
+- name: "[OneTimeSetUp]"
+  href: onetimesetup.md  
+- name: "[OneTimeTearDown]"
+  href: onetimeteardown.md  
+- name: "[Order]"
+  href: order.md  
+- name: "[Pairwise]"
+  href: pairwise.md  
+- name: "[Parallelizable]"
+  href: parallelizable.md
+- name: "[Platform]"
+  href: platform.md  
