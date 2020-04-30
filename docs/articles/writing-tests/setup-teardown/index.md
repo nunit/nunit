@@ -1,14 +1,14 @@
 #### Attribute Usage
 
-  * [SetUpAttribute](SetUp-Attribute) is now used exclusively for per-test setup.
+  * [SetUpAttribute](../attributes/setup.md) is now used exclusively for per-test setup.
 
-  * [TearDownAttribute](TearDown-Attribute) is now used exclusively for per-test teardown. 
+  * [TearDownAttribute](../attributes/teardown.md) is now used exclusively for per-test teardown. 
 
-  * [OneTimeSetUpAttribute](OneTimeSetUp-Attribute) is used for one-time setup per test-run. If you run _n_ tests, this event will only occur once.
+  * [OneTimeSetUpAttribute](../attributes/onetimesetup.md) is used for one-time setup per test-run. If you run _n_ tests, this event will only occur once.
 
-  * [OneTimeTearDownAttribute](OneTimeTearDown-Attribute) is used for one-time teardown per test-run. If you run _n_ tests, this event will only occur once
+  * [OneTimeTearDownAttribute](../attributes/onetimeteardown.md) is used for one-time teardown per test-run. If you run _n_ tests, this event will only occur once
 
-  * [SetUpFixtureAttribute](SetUpFixture-Attribute) continues to be used as at before, but with changed method attributes.
+  * [SetUpFixtureAttribute](../attributes/setupfixture.md) continues to be used as at before, but with changed method attributes.
 
 #### Attribute Usage by Fixture Type
 
@@ -62,4 +62,4 @@ rather than
 * DerivedTearDown
 * BaseTearDown
 
-See also: [SetUp and TearDown Changes](SetUp-and-TearDown-Changes)
+See also: [SetUp and TearDown Changes](SetUp-and-TearDown-Changes.md)
