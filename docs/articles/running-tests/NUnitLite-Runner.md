@@ -15,7 +15,7 @@ To run tests under NUnitLite, proceed as follows:
 2. Make sure your test assembly references both **nunit.framework** and **nunitlite**.
 
 3. The Main() for your console application should look something like this...
-   ```C#
+   ```csharp
     public static int Main(string[] args)
     {
       return new AutoRun().Execute(args);

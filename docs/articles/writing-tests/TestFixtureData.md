@@ -3,7 +3,7 @@ The `TestFixtureData` class provides specific instance information for a paramet
 The following example varies the example shown under [[TestFixture Attribute]] by using
 a `TestFixtureSourceAttribute` with a data source in a separately defined class.
 
-```C#
+```csharp
 [TestFixtureSource(typeof(MyFixtureData), "FixtureParms")]
 public class ParameterizedTestFixture
 {

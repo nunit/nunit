@@ -46,7 +46,7 @@ The TestParameters object supports the following methods:
 
 Writes text to the current test result.
 
-```C#
+```csharp
     Write(bool value)
     Write(char value)
     Write(char[] value)
@@ -68,7 +68,7 @@ Writes text to the current test result.
 
 Writes text to the current test result, followed by a newline.
 
-```C#
+```csharp
     WriteLine()
     WriteLine(bool value)
     WriteLine(char value)
@@ -91,7 +91,7 @@ Writes text to the current test result, followed by a newline.
 
 Adds a formatter for values based on some criterion, such as the Type of the value. The provided formatter will be used when an expected or actual value needs to be displayed as part of a message from a constraint.
 
-```C#
+```csharp
     AddFormatter(ValueFormatter formatter);
     AddFormatter(ValueFormatterFactory formatterFactory);
 ```
@@ -102,7 +102,7 @@ Both `ValueFormatter` and `ValueFormatterFactory` are delegates. `ValueFormatter
 
 Attaches a file, with optional description, to the current test.
 
-```C#
+```csharp
     AddTestAttachment(string filePath, string description = null);
 ```
 

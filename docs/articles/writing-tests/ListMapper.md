@@ -7,7 +7,7 @@ a collection of property values.
 Normally, `ListMapper` will be used through the `List.Map()` syntax helper. The following example
 shows two forms of the same assert.
 
-```C#
+```csharp
 string[] strings = new string[] { "a", "ab", "abc" };
 int[] lengths = new int[] { 1, 2, 3 };
 

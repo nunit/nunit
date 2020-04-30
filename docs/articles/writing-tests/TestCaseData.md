@@ -1,6 +1,6 @@
 The `TestCaseData` class provides extended test case information for a parameterized test, although any object deriving from `TestCaseParameters` may be used. Unlike NUnit 2, you cannot implement `ITestCaseData`, you must derive from `TestCaseParameters`. 
 
-```C#
+```csharp
 [TestFixture]
 public class MyTests
 {
