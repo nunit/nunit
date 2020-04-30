@@ -1,3 +1,7 @@
+---
+uid: setup-attribute
+---
+
 This attribute is used inside a [[TestFixture|TestFixture-Attribute]]
 to provide a common set of functions that are performed just before each test method is called. 
 

@@ -1,3 +1,7 @@
+---
+uid: setupfixture-attribute
+---
+
 This is the attribute that marks a class that contains the one-time
 setup or teardown methods for all the test fixtures under a given
 namespace. The class may contain at most one method marked with the

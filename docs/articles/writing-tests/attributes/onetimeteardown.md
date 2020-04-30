@@ -1,3 +1,7 @@
+---
+uid: onetimeteardown-attribute
+---
+
 This attribute is to identify methods that are called once after executing all the tests
 in a fixture. It may appear on methods of a TestFixture or a SetUpFixture.
 
