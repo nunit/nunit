@@ -7,7 +7,7 @@ It automatically saves its results in XML format, allowing you to produce report
 or otherwise process the results. The following is a screenshot of the console 
 program output.
 
-![Screen shot of nunit-console](nunit/images/console-mock.png)
+![Screen shot of nunit-console](~/images/console-mock.png)
 
 In this example, nunit3-console has just run selected tests in the mock-nunit-assembly.exe 
 assembly that is part of the NUnit distribution. This assembly contains a number of tests, some

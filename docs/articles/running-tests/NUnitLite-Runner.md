@@ -37,5 +37,5 @@ that the NuGet package added to your test project.
 
 As seen in the following screen shot, the output from an NUnitLite run is quite similar to that from the console runner.
 	
-![Screenshot of NUnitLite](nunit/images/nunitlite-mock.png)
+![Screenshot of NUnitLite](~/images/nunitlite-mock.png)
 
