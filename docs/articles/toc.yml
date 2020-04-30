@@ -8,3 +8,5 @@
   href: getting-started/toc.yml
 - name: Writing Tests
   href: writing-tests/toc.yml
+- name: Running Tests
+  href: running-tests/toc.yml
