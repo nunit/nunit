@@ -14,8 +14,8 @@
   href: AttributeConstraint.md
 - name: AttributeExistsConstraint
   href: AttributeExistsConstraint.md
-- name: BinarySerializiableConstraint
-  href: BinarySerializiableConstraint.md
+- name: BinarySerializableConstraint
+  href: BinarySerializableConstraint.md
 - name: CollectionContainsConstraint
   href: CollectionContainsConstraint.md
 - name: CollectionEquivalentConstraint
