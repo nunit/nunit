@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -27,13 +27,13 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// Mocks a <see cref="TestFilter"/>. Checks that only one specific match-function 
+    /// Mocks a <see cref="TestFilter"/>. Checks that only one specific match-function
     /// (<see cref=MatchFunction"/> is called and only for a specific <see cref="ITest"/>.
-    /// 
+    ///
     /// For the specific test and match-function one could set the return value of the function.
     /// Furthermore one could read out the number of valid calls to the match-function through
     /// <see cref="NumberOfMatchCalls"/>.
-    /// 
+    ///
     /// It would be better to use a Mocking-Framework for this.
     /// </summary>
     public class MockTestFilter : TestFilter
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal.Filters
 
         /// <summary>
         /// The result of the match-function <see cref="_expectedFunctionToBeCalled"/>
-        /// for the teste <see cref="_expectedTest"/>.
+        /// for the test <see cref="_expectedTest"/>.
         /// </summary>
         private readonly bool _matchFunctionResult;
 
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Internal.Filters
             return AssertAndGetEquality(test, MatchFunction.IsExplicitMatch);
         }
 
-        public override bool Pass(ITest test)
+        public override bool Pass(ITest test, bool negated)
         {
             return AssertAndGetEquality(test, MatchFunction.Pass);
         }

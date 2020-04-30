@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.Reflection;
 
@@ -31,7 +30,7 @@ namespace NUnit.Framework.Internal
     public class RuntimeFrameworkTests
     {
         static readonly RuntimeType currentRuntime =
-#if NETCOREAPP2_0
+#if NETCOREAPP
             RuntimeType.NetCore;
 #else
             Type.GetType("Mono.Runtime", false) != null
@@ -80,12 +79,6 @@ namespace NUnit.Framework.Internal
 #endif
 
         [Test]
-        public void CurrentFrameworkHasBuildSpecified()
-        {
-            Assert.That(RuntimeFramework.CurrentFramework.ClrVersion.Build, Is.GreaterThan(0));
-        }
-
-        [Test]
         [TestCaseSource(nameof(netcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
         {
@@ -98,7 +91,7 @@ namespace NUnit.Framework.Internal
         {
             PlatformHelper platformHelper = new PlatformHelper();
             bool isNetCore;
-#if NETCOREAPP2_0
+#if NETCOREAPP
             isNetCore = true;
 #else
             isNetCore = false;
@@ -370,4 +363,3 @@ namespace NUnit.Framework.Internal
         };
     }
 }
-#endif

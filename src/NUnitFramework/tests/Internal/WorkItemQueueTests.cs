@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Threading;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.TestUtilities;
@@ -35,11 +34,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateQueue()
         {
-#if APARTMENT_STATE
             _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
-#else
-            _queue = new WorkItemQueue("TestQ", true);
-#endif
         }
 
         [Test]
@@ -218,5 +213,3 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
-
-#endif

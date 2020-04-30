@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,7 +61,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method.
         ///                     If the source name is a field or property has no effect.</param>
-        public TestCaseSourceAttribute(Type sourceType, string sourceName, object[] methodParams)
+        public TestCaseSourceAttribute(Type sourceType, string sourceName, object?[]? methodParams)
         {
             this.MethodParams = methodParams;
             this.SourceType = sourceType;
@@ -82,7 +84,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         /// <param name="methodParams">A set of parameters passed to the method, works only if the Source Name is a method.
         ///                     If the source name is a field or property has no effect.</param>
-        public TestCaseSourceAttribute(string sourceName, object[] methodParams)
+        public TestCaseSourceAttribute(string sourceName, object?[]? methodParams)
         {
             this.MethodParams = methodParams;
             this.SourceName = sourceName;
@@ -103,22 +105,22 @@ namespace NUnit.Framework
         /// A set of parameters passed to the method, works only if the Source Name is a method.
         /// If the source name is a field or property has no effect.
         /// </summary>
-        public object[] MethodParams { get; }
+        public object?[]? MethodParams { get; }
         /// <summary>
-        /// The name of a the method, property or fiend to be used as a source
+        /// The name of a the method, property or field to be used as a source
         /// </summary>
-        public string SourceName { get; }
+        public string? SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; }
+        public Type? SourceType { get; }
 
         /// <summary>
         /// Gets or sets the category associated with every fixture created from
         /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
         #endregion
 
@@ -162,21 +164,11 @@ namespace NUnit.Framework
 
             try
             {
-                IEnumerable source;
-
-                var previousState = SandboxedThreadState.Capture();
-                try
-                {
-                    source = GetTestCaseSource(method);
-                }
-                finally
-                {
-                    previousState.Restore();
-                }
+                IEnumerable? source = ContextUtils.DoIsolated(() => GetTestCaseSource(method));
 
                 if (source != null)
                 {
-                    foreach (object item in source)
+                    foreach (object? item in source)
                     {
                         // First handle two easy cases:
                         // 1. Source is null. This is really an error but if we
@@ -185,13 +177,13 @@ namespace NUnit.Framework
                         //    single null argument will cause an error to be
                         //    reported at the test level, in most cases.
                         // 2. User provided an ITestCaseData and we just use it.
-                        ITestCaseData parms = item == null
-                            ? new TestCaseParameters(new object[] { null })
+                        ITestCaseData? parms = item == null
+                            ? new TestCaseParameters(new object?[] { null })
                             : item as ITestCaseData;
 
                         if (parms == null)
                         {
-                            object[] args = null;
+                            object?[]? args = null;
 
                             // 3. An array was passed, it may be an object[]
                             //    or possibly some other kind of array, which
@@ -207,7 +199,7 @@ namespace NUnit.Framework
                                 var argsNeeded = parameters.Length;
                                 if (argsNeeded > 0 && argsNeeded == array.Length && parameters[0].ParameterType != array.GetType())
                                 {
-                                    args = new object[array.Length];
+                                    args = new object?[array.Length];
                                     for (var i = 0; i < array.Length; i++)
                                         args[i] = array.GetValue(i);
                                 }
@@ -215,7 +207,7 @@ namespace NUnit.Framework
 
                             if (args == null)
                             {
-                                args = new object[] { item };
+                                args = new object?[] { item };
                             }
 
                             parms = new TestCaseParameters(args);
@@ -243,7 +235,7 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestCaseSource(IMethodInfo method)
+        private IEnumerable? GetTestCaseSource(IMethodInfo method)
         {
             Type sourceType = SourceType ?? method.TypeInfo.Type;
 

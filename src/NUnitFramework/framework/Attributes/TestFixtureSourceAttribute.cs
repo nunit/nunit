@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -80,20 +82,20 @@ namespace NUnit.Framework
         #region Properties
 
         /// <summary>
-        /// The name of a the method, property or fiend to be used as a source
+        /// The name of a the method, property or field to be used as a source
         /// </summary>
-        public string SourceName { get; }
+        public string? SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; }
+        public Type? SourceType { get; }
 
         /// <summary>
         /// Gets or sets the category associated with every fixture created from
         /// this attribute. May be a single category or a comma-separated list.
         /// </summary>
-        public string Category { get; set; }
+        public string? Category { get; set; }
 
         #endregion
 
@@ -141,20 +143,20 @@ namespace NUnit.Framework
 
             try
             {
-                IEnumerable source = GetTestFixtureSource(sourceType);
+                IEnumerable? source = GetTestFixtureSource(sourceType);
 
                 if (source != null)
                 {
-                    foreach (object item in source)
+                    foreach (object? item in source)
                     {
                         var parms = item as ITestFixtureData;
 
                         if (parms == null)
                         {
-                            object[] args = item as object[];
+                            object?[]? args = item as object?[];
                             if (args == null)
                             {
-                                args = new object[] { item };
+                                args = new object?[] { item };
                             }
 
                             parms = new TestFixtureParameters(args);
@@ -177,7 +179,7 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable GetTestFixtureSource(Type sourceType)
+        private IEnumerable? GetTestFixtureSource(Type sourceType)
         {
             // Handle Type implementing IEnumerable separately
             if (SourceName == null)

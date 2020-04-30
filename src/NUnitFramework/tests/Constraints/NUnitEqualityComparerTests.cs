@@ -24,13 +24,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    public class EqualityComparerTests
+    public class NUnitEqualityComparerTests
     {
         private Tolerance tolerance;
         private NUnitEqualityComparer comparer;
@@ -306,6 +308,102 @@ namespace NUnit.Framework.Constraints
             Assert.True(comparer.AreEqual(enumeration, enumeration, ref tolerance));
             Assert.That(enumeration.EnumeratorsDisposed);
         }
+
+        [TestCaseSource(nameof(GetRecursiveContainsTestCases))]
+        public void SelfContainedItemFoundInCollection<T>(T x, ICollection y)
+        {
+            var equalityComparer = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Default;
+            var equality = equalityComparer.AreEqual(x, y, ref tolerance);
+
+            Assert.IsFalse(equality);
+            Assert.Contains(x, y);
+            Assert.That(y, Contains.Item(x));
+            Assert.That(y, Does.Contain(x));
+        }
+
+        [TestCaseSource(nameof(GetRecursiveComparerTestCases))]
+        public void SelfContainedItemDoesntRecurseForever<T>(T x, ICollection y)
+        {
+            var equalityComparer = new NUnitEqualityComparer();
+            var tolerance = Tolerance.Default;
+            equalityComparer.ExternalComparers.Add(new DetectRecursionComparer(30));
+
+            Assert.DoesNotThrow(() => equalityComparer.AreEqual(x, y, ref tolerance));
+        }
+
+        [Test]
+        public void SelfContainedDuplicateItemsAreCompared()
+        {
+            var equalityComparer = new NUnitEqualityComparer();
+            var equalInstance1 = new[] { 1 };
+            var equalInstance2 = new[] { 1 };
+
+            var x = new[] { equalInstance1, equalInstance1 };
+            var y = new[] { equalInstance2, equalInstance2 };
+
+            Assert.True(equalityComparer.AreEqual(x, y, ref tolerance));
+        }
+
+        public static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
+        {
+            // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in 
+            // 'MsgUtils.FormatValue()' can be fixed for the below cases
+            foreach (var testCase in GetRecursiveContainsTestCases())
+                yield return testCase;
+
+            var dict = new Dictionary<object, object>();
+            var dictItem = "nunit";
+
+            dict[1] = dictItem;
+            dict[2] = dict;
+
+            yield return new TestCaseData(dictItem, dict);
+        }
+
+        public static IEnumerable<TestCaseData> GetRecursiveContainsTestCases()
+        {
+            var enumerable = new SelfContainer();
+            var enumerableContainer = new SelfContainer[] { new SelfContainer(), enumerable };
+
+            yield return new TestCaseData(enumerable, enumerableContainer);
+
+            object itemB = 1;
+            object[] itemBSet = new object[2];
+            itemBSet[0] = itemB;
+            itemBSet[1] = itemBSet;
+
+            yield return new TestCaseData(itemB, itemBSet);
+        }
+    }
+
+    internal class DetectRecursionComparer : EqualityAdapter
+    {
+        private readonly int maxRecursion;
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public DetectRecursionComparer(int maxRecursion)
+        {
+            var callerDepth = new StackTrace().FrameCount - 1;
+            this.maxRecursion = callerDepth + maxRecursion;
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public override bool CanCompare(object x, object y)
+        {
+            var currentDepth = new StackTrace().FrameCount - 1;
+            return currentDepth >= maxRecursion;
+        }
+
+        public override bool AreEqual(object x, object y)
+        {
+            throw new InvalidOperationException("Recurses");
+        }
+    }
+
+    internal class SelfContainer : IEnumerable
+    {
+        public IEnumerator GetEnumerator() { yield return this; }
     }
 
     internal class EnumerableWithDisposeChecks<T> : IEnumerable<T>

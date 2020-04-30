@@ -7,7 +7,7 @@ jobs:
 
 - job: Windows
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-latest
   steps:
 
   - powershell: .\build.ps1 --target=Test --test-run-name=Windows
@@ -22,27 +22,73 @@ jobs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)
       ArtifactName: Package
 
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    condition: always()
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (Windows)
+
 - job: Linux
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      useGlobalJson: true
+      
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 2.1'
+    inputs:
+      packageType: runtime
+      version: 2.1.x
+
+  - bash: sudo apt-get install fsharp
+    displayName: Install F# for Mono
+
   - bash: |
-     wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-     sudo dpkg -i packages-microsoft-prod.deb
-     sudo apt-get install apt-transport-https
-     sudo apt-get update
-     sudo apt-get install dotnet-sdk-2.2
      dotnet tool install --global Cake.Tool
-     export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
-     ~/.dotnet/tools/dotnet-cake --target=Test --test-run-name=Linux --configuration=Release
+     dotnet cake --target=Test --test-run-name=Linux --configuration=Release
     displayName: Build, test, and publish results
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    condition: always()
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (Linux)
 
 - job: macOS
   pool:
-    vmImage: macOS-10.13
+    vmImage: macOS-latest
   steps:
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      useGlobalJson: true
+      
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 2.1'
+    inputs:
+      packageType: runtime
+      version: 2.1.x
+
+  - bash: |
+     curl -o mono.pkg -sSL https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.198.macos10.xamarin.universal.pkg
+     sudo installer -pkg mono.pkg -target /
+    displayName: Install Mono 6.4.0
+
   - bash: |
      dotnet tool install --global Cake.Tool
-     export DOTNET_ROOT="$(dirname "$(readlink "$(command -v dotnet)")")"
-     ~/.dotnet/tools/dotnet-cake --target=Test --test-run-name=macOS --configuration=Release
+     dotnet cake --target=Test --test-run-name=macOS --configuration=Release
     displayName: Build, test, and publish results
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    condition: always()
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (macOS)

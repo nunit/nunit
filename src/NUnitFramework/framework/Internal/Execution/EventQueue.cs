@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Collections.Concurrent;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -220,7 +219,7 @@ namespace NUnit.Framework.Internal.Execution
             } while (true);
 
             // Setting this to anything other than 0 causes NUnit to be sensitive
-            // to the windows timer resolution - see issue #2217 
+            // to the windows timer resolution - see issue #2217
             Thread.Sleep(0);  // give EventPump thread a chance to process the event
         }
 
@@ -311,5 +310,3 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
-
-#endif

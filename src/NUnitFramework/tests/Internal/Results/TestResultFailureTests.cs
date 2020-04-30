@@ -148,7 +148,7 @@ namespace NUnit.Framework.Internal.Results
             Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, _suiteResult.Message);
             Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.That(_suiteResult.StackTrace, Is.Null);
-
+            Assert.AreEqual(1, _suiteResult.TotalCount);
             Assert.AreEqual(0, _suiteResult.PassCount);
             Assert.AreEqual(1, _suiteResult.FailCount);
             Assert.AreEqual(0, _suiteResult.WarningCount);
@@ -174,16 +174,16 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResultXmlNodeEscapesInvalidXmlCharacters()
         {
-            _testResult.SetResult( ResultState.Failure, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00" );
-            TNode testNode = _testResult.ToXml( true );
-            TNode failureNode = testNode.SelectSingleNode( "failure" );
+            _testResult.SetResult(ResultState.Failure, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00");
+            TNode testNode = _testResult.ToXml(true);
+            TNode failureNode = testNode.SelectSingleNode("failure");
 
-            Assert.That( failureNode, Is.Not.Null, "No <failure> element found" );
+            Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
 
-            TNode messageNode = failureNode.SelectSingleNode( "message" );
+            TNode messageNode = failureNode.SelectSingleNode("message");
 
-            Assert.That( messageNode, Is.Not.Null, "No <message> element found" );
-            Assert.That( messageNode.Value, Is.EqualTo( "Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00" ) );
+            Assert.That(messageNode, Is.Not.Null, "No <message> element found");
+            Assert.That(messageNode.Value, Is.EqualTo("Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00"));
         }
 
         [Test]

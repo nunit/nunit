@@ -356,7 +356,6 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !NETCOREAPP1_1
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
@@ -385,7 +384,6 @@ namespace NUnit.Framework.Constraints
                 Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
-#endif
         }
 
         #endregion
@@ -589,7 +587,7 @@ namespace NUnit.Framework.Constraints
                 Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));
             }
 
-            [Test]
+            [Test, SetCulture("en-US")]
             public void UsesProvidedLambda_StringArgs()
             {
                 Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
@@ -654,7 +652,7 @@ namespace NUnit.Framework.Constraints
                 Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
             }
 
-            [Test]
+            [Test, SetCulture("en-US")]
             public void UsesProvidedPredicateForItemComparison()
             {
                 var expected = new[] { "yeti", "łysy", "rysiu" };

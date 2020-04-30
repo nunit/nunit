@@ -44,11 +44,7 @@ namespace NUnit.Framework.Api
     public class TestAssemblyRunnerTests : ITestListener
     {
         private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
-#if NETCOREAPP1_1
-        private const string COULD_NOT_LOAD_MSG = "The system cannot find the file specified.";
-#else
         private const string COULD_NOT_LOAD_MSG = "Could not load";
-#endif
         private const string BAD_FILE = "mock-assembly.pdb";
         private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
         private const string MISSING_FILE = "junk.dll";
@@ -460,10 +456,8 @@ namespace NUnit.Framework.Api
         {
             new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
             new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
-#if PARALLEL // Currently, all THREAD_ABORT platforms are also PARALLEL, but just in case...
             new TestCaseData(2, false).SetName("{m}(Parallel dispatcher, cooperative stop)"),
             new TestCaseData(2, true).SetName("{m}(Parallel dispatcher, forced stop)")
-#endif
         };
 
         [TestCaseSource(nameof(StopRunCases))]

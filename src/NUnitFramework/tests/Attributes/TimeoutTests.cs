@@ -242,7 +242,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(_testRanToCompletion, () => "Test did not run to completion");
         }
 
-#if PLATFORM_DETECTION && THREAD_ABORT
+#if THREAD_ABORT
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
         {

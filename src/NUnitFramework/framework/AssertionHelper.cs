@@ -140,7 +140,8 @@ namespace NUnit.Framework
         /// Returns a ListMapper based on a collection.
         /// </summary>
         /// <param name="original">The original collection</param>
-        /// <returns></returns>
+        [Obsolete("The ListMapper class has been deprecated and will be removed in a future release. "
+            + "Please use the extension method System.Linq.Enumerable.Select instead.")]
         public ListMapper Map( ICollection original )
         {
             return new ListMapper( original );
@@ -422,8 +423,6 @@ namespace NUnit.Framework
 
         #endregion
 
-#if SERIALIZATION
-
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -439,8 +438,6 @@ namespace NUnit.Framework
         {
             get { return new XmlSerializableConstraint(); }
         }
-
-#endif
 
         #region EqualTo
 

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using NUnit.Framework.Interfaces;
 
@@ -32,12 +34,19 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestParameters : ITestData, IApplyToTest
     {
+        internal static readonly object[] NoArguments =
+#if NET35 || NET40 || NET45 // New in net46
+            new object[0];
+#else
+            Array.Empty<object>();
+#endif
+
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
         public TestParameters()
+            : this(RunState.Runnable, NoArguments)
         {
-            RunState = RunState.Runnable;
             Properties = new PropertyBag();
         }
 
@@ -45,10 +54,9 @@ namespace NUnit.Framework.Internal
         /// Construct a parameter set with a list of arguments
         /// </summary>
         /// <param name="args"></param>
-        public TestParameters(object[] args)
+        public TestParameters(object?[] args)
+            : this(RunState.Runnable, args)
         {
-            RunState = RunState.Runnable;
-            InitializeArguments(args);
             Properties = new PropertyBag();
         }
 
@@ -57,10 +65,9 @@ namespace NUnit.Framework.Internal
         /// the provider exception that made it invalid.
         /// </summary>
         public TestParameters(Exception exception)
+            : this(RunState.NotRunnable, NoArguments)
         {
-            RunState = RunState.NotRunnable;
             Properties = new PropertyBag();
-
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));
             Properties.Set(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
         }
@@ -70,26 +77,26 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="data"></param>
         public TestParameters(ITestData data)
+            : this(data.RunState, data.Arguments)
         {
-            RunState = data.RunState;
-            Properties = new PropertyBag();
-
             TestName = data.TestName;
-
-            InitializeArguments(data.Arguments);
 
             foreach (string key in data.Properties.Keys)
                 this.Properties[key] = data.Properties[key];
         }
 
-        private void InitializeArguments(object[] args)
+        private TestParameters(RunState runState, object?[] args)
         {
+            RunState = runState;
+
             OriginalArguments = args;
 
             // We need to copy args, since we may change them
             var numArgs = args.Length;
-            Arguments = new object[numArgs];
+            Arguments = new object?[numArgs];
             Array.Copy(args, Arguments, numArgs);
+
+            Properties = new PropertyBag();
         }
 
         /// <summary>
@@ -101,16 +108,16 @@ namespace NUnit.Framework.Internal
         /// The arguments to be used in running the test,
         /// which must match the method signature.
         /// </summary>
-        public object[] Arguments { get; internal set; }
+        public object?[] Arguments { get; internal set; }
 
-        private string _testName;
+        private string? _testName;
 
         /// <summary>
         /// A name to be used for this test case in lieu
         /// of the standard generated name containing
         /// the argument list.
         /// </summary>
-        public string TestName
+        public string? TestName
         {
             get
             {
@@ -146,14 +153,14 @@ namespace NUnit.Framework.Internal
         /// The original arguments provided by the user,
         /// used for display purposes.
         /// </summary>
-        public object[] OriginalArguments { get; private set; }
+        public object?[] OriginalArguments { get; private set; }
 
-        private string[] _argDisplayNames;
+        private string[]? _argDisplayNames;
 
         /// <summary>
         /// The list of display names to use as the parameters in the test name.
         /// </summary>
-        internal string[] ArgDisplayNames
+        internal string[]? ArgDisplayNames
         {
             get
             {

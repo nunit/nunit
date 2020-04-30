@@ -60,7 +60,11 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                Result = MakeTestCommand().Execute(Context);
+                var testCommand = MakeTestCommand();
+
+                // Isolate the Execute call because the WorkItemComplete below will run one-time teardowns. Execution
+                // context values should not flow from a particular test case into the shared one-time teardown.
+                Result = ContextUtils.DoIsolated(() => testCommand.Execute(Context));
             }
             catch (Exception ex)
             {

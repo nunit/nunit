@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
+#nullable enable
+
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -41,7 +42,6 @@ namespace NUnit.Framework
         public RequiresThreadAttribute()
             : base(true) { }
 
-#if APARTMENT_STATE
         /// <summary>
         /// Construct a RequiresThreadAttribute, specifying the apartment
         /// </summary>
@@ -52,7 +52,6 @@ namespace NUnit.Framework
 
             this.Properties.Add(PropertyNames.ApartmentState, apartment);
         }
-#endif
 
         void IApplyToTest.ApplyToTest(Test test)
         {
@@ -61,4 +60,3 @@ namespace NUnit.Framework
         }
     }
 }
-#endif

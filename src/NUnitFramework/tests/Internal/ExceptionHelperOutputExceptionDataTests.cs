@@ -60,5 +60,14 @@ namespace NUnit.Framework.Internal
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, !Contains.Substring("Data"));
         }
+
+        [Test]
+        public static void NoTrailingNewline()
+        {
+            var exception = new Exception("blah") { Data = { ["Foo"] = "Bar" } };
+
+            var message = ExceptionHelper.BuildMessage(exception);
+            Assert.That(message, Does.Not.EndWith("\n"));
+        }
     }
 }

@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -53,6 +53,11 @@ namespace NUnit.Framework.Constraints
     internal static class MsgUtils
     {
         /// <summary>
+        /// Default amount of items used by <see cref="FormatCollection"/> method.
+        /// </summary>
+        internal const int DefaultMaxItems = 10;
+
+        /// <summary>
         /// Static string used when strings are clipped
         /// </summary>
         private const string ELLIPSIS = "...";
@@ -70,6 +75,7 @@ namespace NUnit.Framework.Constraints
         private static readonly string Fmt_DateTimeOffset = "yyyy-MM-dd HH:mm:ss.FFFFFFFzzz";
         private static readonly string Fmt_ValueType = "{0}";
         private static readonly string Fmt_Default = "<{0}>";
+        private static readonly string Fmt_ExceptionThrown = "<! {0} !>";
 
         /// <summary>
         /// Current head of chain of value formatters. Public for testing.
@@ -79,7 +85,7 @@ namespace NUnit.Framework.Constraints
         static MsgUtils()
         {
             // Initialize formatter to default for values of indeterminate type.
-            DefaultValueFormatter = val => string.Format(Fmt_Default, val);
+            DefaultValueFormatter = FormatValueWithoutThrowing;
 
             AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
 
@@ -95,7 +101,7 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
 
-            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val, 0, 10) : next(val));
+            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val) : next(val));
 
             AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
 
@@ -106,6 +112,24 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsTuple, GetValueFromTuple) ?? next(val));
 
             AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
+        }
+
+#if !NET35
+        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+#endif
+        private static string FormatValueWithoutThrowing(object val)
+        {
+            string asString;
+            try
+            {
+                asString = val?.ToString();
+            }
+            catch (Exception ex)
+            {
+                return string.Format(Fmt_ExceptionThrown, $"{ex.GetType().Name} was thrown by {val.GetType().Name}.ToString()");
+            }
+
+            return string.Format(Fmt_Default, asString);
         }
 
         /// <summary>
@@ -142,7 +166,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="collection">The collection containing elements to write.</param>
         /// <param name="start">The starting point of the elements to write</param>
         /// <param name="max">The maximum number of elements to write</param>
-        public static string FormatCollection(IEnumerable collection, long start, int max)
+        public static string FormatCollection(IEnumerable collection, long start = 0, int max = DefaultMaxItems)
         {
             int count = 0;
             int index = 0;
@@ -376,7 +400,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Converts any control characters in a string 
+        /// Converts any control characters in a string
         /// to their escaped representation.
         /// </summary>
         /// <param name="s">The string to be converted</param>
@@ -444,7 +468,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Converts any null characters in a string 
+        /// Converts any null characters in a string
         /// to their escaped representation.
         /// </summary>
         /// <param name="s">The string to be converted</param>
@@ -551,7 +575,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Clip the expected and actual strings in a coordinated fashion, 
+        /// Clip the expected and actual strings in a coordinated fashion,
         /// so that they may be displayed together.
         /// </summary>
         /// <param name="expected"></param>
@@ -578,7 +602,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Shows the position two strings start to differ.  Comparison 
+        /// Shows the position two strings start to differ.  Comparison
         /// starts at the start index.
         /// </summary>
         /// <param name="expected">The expected string</param>

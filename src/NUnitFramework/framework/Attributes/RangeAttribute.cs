@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Reflection;
@@ -43,12 +45,12 @@ namespace NUnit.Framework
         #region Ints
 
         /// <summary>
-        /// Construct a range of ints using default step of 1
+        /// Constructs a range of <see cref="int"/> values using the default step of 1.
         /// </summary>
         public RangeAttribute(int from, int to) : this(from, to, from > to ? -1 : 1) { }
 
         /// <summary>
-        /// Construct a range of ints specifying the step size
+        /// Constructs a range of <see cref="int"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(int from, int to, int step)
         {
@@ -65,13 +67,13 @@ namespace NUnit.Framework
         #region Unsigned Ints
 
         /// <summary>
-        /// Construct a range of unsigned ints using default step of 1
+        /// Constructs a range of <see cref="uint"/> values using the default step of 1.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(uint from, uint to) : this(from, to, 1u) { }
 
         /// <summary>
-        /// Construct a range of unsigned ints specifying the step size
+        /// Constructs a range of <see cref="uint"/> values with the specified step size.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(uint from, uint to, uint step)
@@ -89,12 +91,12 @@ namespace NUnit.Framework
         #region Longs
 
         /// <summary>
-        /// Construct a range of longs using a default step of 1
+        /// Constructs a range of <see cref="long"/> values using a default step of 1.
         /// </summary>
         public RangeAttribute(long from, long to) : this(from, to, from > to ? -1L : 1L) { }
 
         /// <summary>
-        /// Construct a range of longs
+        /// Constructs a range of <see cref="long"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(long from, long to, long step)
         {
@@ -111,13 +113,13 @@ namespace NUnit.Framework
         #region Unsigned Longs
 
         /// <summary>
-        /// Construct a range of unsigned longs using default step of 1
+        /// Constructs a range of <see cref="ulong"/> values using the default step of 1.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(ulong from, ulong to) : this(from, to, 1ul) { }
 
         /// <summary>
-        /// Construct a range of unsigned longs specifying the step size
+        /// Constructs a range of <see cref="ulong"/> values with the specified step size.
         /// </summary>
         [CLSCompliant(false)]
         public RangeAttribute(ulong from, ulong to, ulong step)
@@ -135,7 +137,7 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Construct a range of doubles
+        /// Constructs a range of <see cref="double"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(double from, double to, double step)
         {
@@ -152,7 +154,7 @@ namespace NUnit.Framework
         #region Floats
 
         /// <summary>
-        /// Construct a range of floats
+        /// Constructs a range of <see cref="float"/> values with the specified step size.
         /// </summary>
         public RangeAttribute(float from, float to, float step)
         {

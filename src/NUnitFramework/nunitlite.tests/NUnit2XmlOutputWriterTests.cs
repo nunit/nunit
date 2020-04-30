@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NETCOREAPP1_1
 using System;
 using System.IO;
 using System.Text;
@@ -208,11 +207,6 @@ namespace NUnitLite.Tests
             Assert.That(success, "{0} is an invalid value for time", timeString);
         }
 
-        [Test]
-        public void TestSuite_ResultIsFailure()
-        {
-        }
-
 #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
@@ -226,4 +220,3 @@ namespace NUnitLite.Tests
 #endregion
     }
 }
-#endif

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Collections.Generic;
 using System.Linq;
 
@@ -46,10 +45,8 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     "ParallelQueue",
                     "NonParallelQueue",
-#if APARTMENT_STATE
                     "ParallelSTAQueue",
                     "NonParallelSTAQueue"
-#endif
                 }));
         }
 
@@ -60,7 +57,6 @@ namespace NUnit.Framework.Internal.Execution
 
             Assert.That(shifts, Is.Unique);
 
-#if APARTMENT_STATE
             Assert.That(shifts.Count, Is.EqualTo(3));
 
             // Parallel Shift
@@ -81,22 +77,6 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(shifts[2].Queues.Count, Is.EqualTo(1));
             Assert.That(shifts[2].Queues[0].Name, Is.EqualTo("NonParallelSTAQueue"));
             Assert.That(shifts[2].Workers.Count, Is.EqualTo(1));
-#else
-            Assert.That(shifts.Count, Is.EqualTo(2));
-
-            // Parallel Shift
-            Assert.That(shifts[0].Name, Is.EqualTo("Parallel"));
-            Assert.That(shifts[0].Queues.Count, Is.EqualTo(1));
-            Assert.That(shifts[0].Queues[0].Name, Is.EqualTo("ParallelQueue"));
-            Assert.That(shifts[0].Workers.Count, Is.EqualTo(LEVEL_OF_PARALLELISM));
-
-            // NonParallel Shift
-            Assert.That(shifts[1].Name, Is.EqualTo("NonParallel"));
-            Assert.That(shifts[1].Queues.Count, Is.EqualTo(1));
-            Assert.That(shifts[1].Queues[0].Name, Is.EqualTo("NonParallelQueue"));
-            Assert.That(shifts[1].Workers.Count, Is.EqualTo(1));
-#endif
         }
     }
 }
-#endif

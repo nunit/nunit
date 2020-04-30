@@ -21,9 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
-using System.Collections;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework

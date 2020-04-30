@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;netcoreapp1.1;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
