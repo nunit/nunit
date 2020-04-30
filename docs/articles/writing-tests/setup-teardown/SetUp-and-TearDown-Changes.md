@@ -26,7 +26,7 @@ For NUnit 3.0 we standardized the use of attributes for setup and teardown and r
 
   * [OneTimeSetUpAttribute](xref:onetimesetup-attribute) is used for one-time setup per test-run. If you run _n_ tests, this event will only occur once.
 
-  * [OneTimeTearDownAttribute](xref:onetime-attribute) is used for one-time teardown per test-run. If you run _n_ tests, this event will only occur once
+  * [OneTimeTearDownAttribute](xref:onetimeteardown-attribute) is used for one-time teardown per test-run. If you run _n_ tests, this event will only occur once
 
   * [SetUpFixtureAttribute](xref:setupfixture-attribute) continues to be used as at before, but with changed method attributes.
 
