@@ -7,4 +7,4 @@ Assert.AreNotSame(object expected, object actual,
 ```
 
 #### See also...
- * [SameAs Constraint](SameAsConstraint)
+ * [SameAs Constraint](xref:SameAsConstraint)

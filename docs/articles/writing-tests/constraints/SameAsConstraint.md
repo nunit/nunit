@@ -1,3 +1,7 @@
+---
+uid: SameAsConstraint
+---
+
 A SameAsConstraint is used to test whether the object passed
 as an actual value has the same identity as the object supplied
 in its constructor.
