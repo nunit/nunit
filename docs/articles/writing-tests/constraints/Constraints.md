@@ -1,3 +1,7 @@
+---
+uid: constraints
+---
+
 This page lists all the constraints available in NUnit.
 * [Alphabetical List of Constraints](#alphabetical-list-of-constraints)
 * [Constraints by Category](#constraints-by-category)

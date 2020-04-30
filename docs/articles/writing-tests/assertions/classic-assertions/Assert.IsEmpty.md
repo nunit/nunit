@@ -14,4 +14,4 @@ Assert.IsEmpty(IEnumerable collection, string message,
 **Note:** When used with an IEnumerable that is not also an ICollection, **Assert.IsEmpty** attempts to enumerate the contents. It should not be used in cases where this results in an unwanted side effect.
 
 #### See also...
- * [Condition Constraints](constraints#condition-constraints)
+ * [Condition Constraints](xref:constraints#condition-constraints)

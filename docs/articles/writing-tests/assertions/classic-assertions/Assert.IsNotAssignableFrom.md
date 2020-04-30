@@ -10,4 +10,4 @@ Assert.IsNotAssignableFrom<T>(object actual,
 ```
 
 See also...
- * [Type Constraints](constraints#type-constraints)
+ * [Type Constraints](xref:constraints#type-constraints)

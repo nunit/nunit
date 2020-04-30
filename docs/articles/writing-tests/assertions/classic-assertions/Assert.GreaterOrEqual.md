@@ -41,4 +41,4 @@ Assert.GreaterOrEqual(IComparable arg1, IComparable arg2,
  * [[Assert.Greater]]
  * [[Assert.Less]]
  * [[Assert.LessOrEqual]]
- * [Comparison Constraints](constraints#comparison-constraints)
+ * [Comparison Constraints](xref:constraints#comparison-constraints)
