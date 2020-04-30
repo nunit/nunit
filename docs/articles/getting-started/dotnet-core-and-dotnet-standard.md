@@ -28,7 +28,7 @@ For a more complete walkthrough, please see [Testing .NET Core with NUnit in Vis
 
 ### Install the NUnit project template
 
-The NUnit test project templates need to be installed before creating a test project. This only needs to be done once. Run [`dotnet new -i NUnit3.DotNetNew.Template`](../tools/dotnet-new.md) to install the NUnit templates.
+The NUnit test project templates need to be installed before creating a test project. This only needs to be done once. Run `dotnet new -i NUnit3.DotNetNew.Template` to install the NUnit templates.
 
 Once you do this, you can then run `dotnet new nunit` to create an NUnit test project.
 
