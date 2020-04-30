@@ -1,3 +1,9 @@
+## Specific overrides for NUNit
+
+# Because they are ignored at the root level of the source but are needed here.
+!/images**
+
+
 ###############
 #    folder   #
 ###############
