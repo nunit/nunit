@@ -41,5 +41,5 @@ if they have the same dimensions and if each pair of corresponding elements is e
 NUnit 3.0 adds the ability to compare generic collections and dictionaries.
 
 #### See also...
- * [Equal Constraint](EqualConstraint)
+ * [Equal Constraint](xref:EqualConstraint)
  * [[DefaultFloatingPointTolerance Attribute]]

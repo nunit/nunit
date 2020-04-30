@@ -10,4 +10,4 @@ See [[Assert.AreEqual]] for details of how NUnit performs equality comparisons.
 
 #### See also...
  * [[Assert.AreEqual]]
- * [Equal Constraint](EqualConstraint)
+ * [Equal Constraint](xref:EqualConstraint)

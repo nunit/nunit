@@ -1,3 +1,7 @@
+---
+uid: EqualConstraint
+---
+
 An EqualConstraint is used to test whether an actual value
 is equal to the expected value supplied in its constructor,
 optionally within a specified tolerance.
