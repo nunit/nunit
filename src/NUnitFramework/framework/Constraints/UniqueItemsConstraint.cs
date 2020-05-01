@@ -206,7 +206,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        internal sealed class UniqueItemsContstraintResult : ConstraintResult
+        internal sealed class UniqueItemsConstraintResult : ConstraintResult
         {
             internal ICollection NonUniqueItems { get; }
 
