@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
                     Assert.That(values, Is.Unique.IgnoreCase);
                 else
                     Assert.That(values, Is.Unique);
-            }, HelperConstraints.HasMaxTime(150));
+            }, HelperConstraints.HasMaxTime(100));
         }
 
         [TestCaseSource(nameof(DuplicateItemsData))]

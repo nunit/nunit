@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
-            var nonUniqueItems = TryFastAlgorithm(actual) ?? OriginalAlgorithm(actual);
+            var nonUniqueItems = GetNonUniqueItems(actual);
             return nonUniqueItems.Count == 0;
         }
 
@@ -64,51 +64,22 @@ namespace NUnit.Framework.Constraints
         {
             IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
 
-            var nonUniqueItems = TryFastAlgorithm(enumerable) ?? OriginalAlgorithm(enumerable);
+            var nonUniqueItems = GetNonUniqueItems(enumerable);
 
             return new UniqueItemsConstraintResult(this, actual, nonUniqueItems);
         }
 
-        private ICollection OriginalAlgorithm(IEnumerable actual)
-        {
-            var nonUniques = new List<object>();
-            var processedItems = new List<object>();
-
-            foreach (var o1 in actual)
-            {
-                var isUnique = true;
-                var unknownNonUnique = false;
-
-                foreach (var o2 in processedItems)
-                {
-                    if (ItemsEqual(o1, o2))
-                    {
-                        isUnique = false;
-                        unknownNonUnique = !nonUniques.Any(o2 => ItemsEqual(o1, o2));
-                        break;
-                    }
-                }
-
-                if (isUnique)
-                    processedItems.Add(o1);
-                else if (unknownNonUnique)
-                    nonUniques.Add(o1);
-            }
-
-            return nonUniques;
-        }
-
-        private ICollection? TryFastAlgorithm(IEnumerable actual)
+        private ICollection GetNonUniqueItems(IEnumerable actual)
         {
             // If the user specified any external comparer with Using, exit
             if (UsingExternalComparer)
-                return null;
+                return (ICollection)NonUniqueItemsInternal(actual.Cast<object>(), Comparer);
 
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type? memberType = GetGenericTypeArgument(actual);
             if (memberType == null || !IsSealed(memberType) || IsHandledSpeciallyByNUnit(memberType))
-                return null;
+                return (ICollection)NonUniqueItemsInternal(actual.Cast<object>(), Comparer);
 
             // Special handling for ignore case with strings and chars
             if (IgnoringCase)
@@ -145,17 +116,21 @@ namespace NUnit.Framework.Constraints
         private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
             var processedItems = new HashSet<T>(comparer);
-            var knownNonUniques = new HashSet<T>();
+            var knownNonUniques = new HashSet<T>(comparer);
             var nonUniques = new List<T>();
 
             foreach (T item in actual)
             {
+                // Check if 'item' is a duplicate of a previously-processed item
                 if (!processedItems.Add(item))
                 {
-                    // in order to only record 1 of each non-unique
+                    // Check if 'item' has previously been flagged as a duplicate
                     if (knownNonUniques.Add(item))
                     {
                         nonUniques.Add(item);
+
+                        if (nonUniques.Count > MsgUtils.DefaultMaxItems)
+                            break;
                     }
                 }
             }
