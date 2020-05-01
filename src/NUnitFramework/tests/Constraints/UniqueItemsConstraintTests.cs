@@ -100,7 +100,7 @@ namespace NUnit.Framework.Constraints
         public void DuplicateItemsTests(IEnumerable items, IEnumerable expectedFailures)
         {
             var constraint = new UniqueItemsConstraint().IgnoreCase;
-            var result = constraint.ApplyTo(items) as UniqueItemsContstraintResult;
+            var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.NonUniqueItems, Is.EqualTo(expectedFailures));
