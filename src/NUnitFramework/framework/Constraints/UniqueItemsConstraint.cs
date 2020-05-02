@@ -268,8 +268,10 @@ namespace NUnit.Framework.Constraints
                 var tolerance = Tolerance.Default;
                 if (Comparer.AreEqual(x, y, ref tolerance))
                     return 0;
+                else if (Comparer.IgnoreCase && x is string xStr && y is string yStr)
+                    return string.Compare(xStr, yStr, StringComparison.CurrentCultureIgnoreCase);
                 else
-                    return Comparer<object>.Default.Compare(x, y);
+                    return System.Collections.Comparer.Default.Compare(x, y);
             }
         }
 
