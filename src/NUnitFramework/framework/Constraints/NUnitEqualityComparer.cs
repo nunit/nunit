@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
     /// NUnitEqualityComparer encapsulates NUnit's handling of
     /// equality tests between objects.
     /// </summary>
-    public sealed class NUnitEqualityComparer : IEqualityComparer<object>
+    public sealed class NUnitEqualityComparer
     {
         #region Static and Instance Fields
         /// <summary>
@@ -208,36 +208,6 @@ namespace NUnit.Framework.Constraints
                     return adapter;
 
             return null;
-        }
-
-        /// <summary>
-        /// Compare two objects for equality using default tolerance.
-        /// </summary>
-        /// <param name="x">The first object to compare.</param>
-        /// <param name="y">The second object to compare.</param>
-        /// <returns></returns>
-        public new bool Equals(object x, object y)
-        {
-            var tolerance = Tolerance.Default;
-            return AreEqual(x, y, ref tolerance);
-        }
-
-        /// <summary>
-        /// Get a hashcode for the specified object according to the NUnitEqualityComparer's configuration.
-        /// </summary>
-        /// <param name="obj">The object to get a hashcode for.</param>
-        /// <returns></returns>
-        public int GetHashCode(object obj)
-        {
-            if (obj is null)
-                return 0;
-            else if (obj is string && IgnoreCase)
-            {
-                // Ensures that strings differing only by case end up in same hash bucket
-                return StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj);
-            }
-            else
-                return obj.GetHashCode();
         }
 
         #endregion

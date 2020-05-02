@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
@@ -69,17 +70,68 @@ namespace NUnit.Framework.Constraints
             return new UniqueItemsConstraintResult(this, actual, nonUniqueItems);
         }
 
+        private ICollection OriginalAlgorithm(IEnumerable actual)
+        {
+#if !NET35
+            var hasAllComparable = true;
+            var comparables = new List<IComparable>();
+
+            foreach(var item in actual)
+            {
+                if (item is IComparable comparable)
+                {
+                    comparables.Add(comparable);
+                }
+                else
+                {
+                    hasAllComparable = false;
+                    break;
+                }
+            }
+                
+
+            if (hasAllComparable)
+                return (ICollection)NonUniqueItemsInternal(comparables, new NUnitSortingComparer(Comparer));
+#endif
+            var nonUniques = new List<object>();
+            var processedItems = new List<object>();
+
+            foreach (var o1 in actual)
+            {
+                var isUnique = true;
+                var unknownNonUnique = false;
+
+                foreach (var o2 in processedItems)
+                {
+                    if (ItemsEqual(o1, o2))
+                    {
+                        isUnique = false;
+                        unknownNonUnique = !nonUniques.Any(o2 => ItemsEqual(o1, o2));
+                        break;
+                    }
+                }
+
+                if (isUnique)
+                    processedItems.Add(o1);
+                else if (unknownNonUnique)
+                    nonUniques.Add(o1);
+            }
+
+            return nonUniques;
+      
+        }
+
         private ICollection GetNonUniqueItems(IEnumerable actual)
         {
             // If the user specified any external comparer with Using, exit
             if (UsingExternalComparer)
-                return (ICollection)NonUniqueItemsInternal(actual.Cast<object>(), Comparer);
+                return OriginalAlgorithm(actual);
 
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type? memberType = GetGenericTypeArgument(actual);
             if (memberType == null || !IsSealed(memberType) || IsHandledSpeciallyByNUnit(memberType))
-                return (ICollection)NonUniqueItemsInternal(actual.Cast<object>(), Comparer);
+                return OriginalAlgorithm(actual);
 
             // Special handling for ignore case with strings and chars
             if (IgnoringCase)
@@ -93,6 +145,9 @@ namespace NUnit.Framework.Constraints
             return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
 
+#if !NET35 && !NET40
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
         private static bool IsSealed(Type type)
         {
             return type.GetTypeInfo().IsSealed;
@@ -108,10 +163,37 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
         private static ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, StringComparer.CurrentCultureIgnoreCase);
+            => NonUniqueItemsInternal(actual, (IEqualityComparer<string>)StringComparer.CurrentCultureIgnoreCase);
 
         private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
             => NonUniqueItemsInternal(actual, InsensitiveCharComparer);
+
+#if !NET35
+        private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IComparer<T> comparer)
+        {
+            var processedItems = new SortedSet<T>(comparer);
+            var knownNonUniques = new SortedSet<T>(comparer);
+            var nonUniques = new List<T>();
+
+            foreach (T item in actual)
+            {
+                // Check if 'item' is a duplicate of a previously-processed item
+                if (!processedItems.Add(item))
+                {
+                    // Check if 'item' has previously been flagged as a duplicate
+                    if (knownNonUniques.Add(item))
+                    {
+                        nonUniques.Add(item);
+
+                        if (nonUniques.Count > MsgUtils.DefaultMaxItems)
+                            break;
+                    }
+                }
+            }
+
+            return nonUniques;
+        }
+#endif
 
         private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
@@ -166,6 +248,25 @@ namespace NUnit.Framework.Constraints
             }
 
             return null;
+        }
+
+        private sealed class NUnitSortingComparer : IComparer<object>
+        {
+            public NUnitEqualityComparer Comparer { get; }
+
+            public NUnitSortingComparer(NUnitEqualityComparer comparer)
+            {
+                Comparer = comparer;
+            }
+
+            public int Compare(object x, object y)
+            {
+                var tolerance = Tolerance.Default;
+                if (Comparer.AreEqual(x, y, ref tolerance))
+                    return 0;
+                else
+                    return Comparer<object>.Default.Compare(x, y);
+            }
         }
 
         private sealed class CaseInsensitiveCharComparer : IEqualityComparer<char>
