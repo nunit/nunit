@@ -139,9 +139,9 @@ namespace NUnit.Framework.Attributes
 
         private class SampleTests
         {
-            private const int TimeExceedingTimeout = 200;
+            private const int TimeExceedingTimeout = 500;
 
-            public const int Timeout = 100;
+            public const int Timeout = 50;
 
             [Timeout(Timeout)]
             public void TestThatTimesOut()
