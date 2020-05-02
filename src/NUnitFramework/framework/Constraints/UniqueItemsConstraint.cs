@@ -114,7 +114,11 @@ namespace NUnit.Framework.Constraints
                 if (isUnique)
                     processedItems.Add(o1);
                 else if (unknownNonUnique)
+                {
                     nonUniques.Add(o1);
+                    if (nonUniques.Count == MsgUtils.DefaultMaxItems)
+                        break;
+                }
             }
 
             return nonUniques;
@@ -185,7 +189,7 @@ namespace NUnit.Framework.Constraints
                     {
                         nonUniques.Add(item);
 
-                        if (nonUniques.Count > MsgUtils.DefaultMaxItems)
+                        if (nonUniques.Count == MsgUtils.DefaultMaxItems)
                             break;
                     }
                 }
@@ -211,7 +215,7 @@ namespace NUnit.Framework.Constraints
                     {
                         nonUniques.Add(item);
 
-                        if (nonUniques.Count > MsgUtils.DefaultMaxItems)
+                        if (nonUniques.Count == MsgUtils.DefaultMaxItems)
                             break;
                     }
                 }
@@ -297,7 +301,7 @@ namespace NUnit.Framework.Constraints
                 if (this.Status == ConstraintStatus.Failure)
                 {
                     writer.Write("  Not unique items: ");
-                    var output = MsgUtils.FormatCollection(NonUniqueItems);
+                    var output = MsgUtils.FormatCollection(NonUniqueItems, 0, MsgUtils.DefaultMaxItems);
                     writer.WriteLine(output);
                 }
             }
