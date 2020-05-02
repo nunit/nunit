@@ -122,7 +122,6 @@ namespace NUnit.Framework.Constraints
             }
 
             return nonUniques;
-      
         }
 
         private ICollection GetNonUniqueItems(IEnumerable actual)
