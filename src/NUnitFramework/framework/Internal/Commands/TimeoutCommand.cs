@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
         /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
-        public TimeoutCommand(TestCommand innerCommand, int timeout, IDebugger debugger) : base(innerCommand)
+        internal TimeoutCommand(TestCommand innerCommand, int timeout, IDebugger debugger) : base(innerCommand)
         {
             _timeout = timeout;
             _debugger = debugger;

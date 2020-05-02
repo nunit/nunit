@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Creates a new instance of <see cref="WorkItemBuilder"/>.
         /// </summary>
         /// <param name="debugger">An <see cref="IDebugger"/> used to access debugger-related properties in a controlled manner</param>
-        public WorkItemBuilder(IDebugger debugger)
+        internal WorkItemBuilder(IDebugger debugger)
         {
             _debugger = debugger;
         }

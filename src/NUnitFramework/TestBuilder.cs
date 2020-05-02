@@ -111,7 +111,7 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, testObject, null);
         }
 
-        public static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger)
+        internal static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger)
         {
             var context = new TestExecutionContext
             {
@@ -127,7 +127,7 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context, null);
         }
 
-        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger)
+        internal static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger)
         {
             var workItemBuilder = new WorkItemBuilder(debugger ?? new DebuggerProxy());
             var work = workItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
@@ -196,7 +196,7 @@ namespace NUnit.TestUtilities
             return RunTest(test, testObject, null);
         }
 
-        public static ITestResult RunTest(Test test, object testObject, IDebugger debugger)
+        internal static ITestResult RunTest(Test test, object testObject, IDebugger debugger)
         {
             return ExecuteWorkItem(CreateWorkItem(test, testObject, debugger));
         }

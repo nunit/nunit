@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal.Abstractions
     /// <summary>
     /// A layer of abstraction around <see cref="System.Diagnostics.Debugger"/> to facilitate testing.
     /// </summary>
-    public interface IDebugger
+    internal interface IDebugger
     {
         /// <summary>
         /// Whether a debugger is currently attached to the process.

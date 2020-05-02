@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
         /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter, IDebugger debugger)
+        internal SimpleWorkItem(TestMethod test, ITestFilter filter, IDebugger debugger)
             : base(test, filter)
         {
             _debugger = debugger;
