@@ -166,7 +166,7 @@ namespace NUnitLite
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
             Writer.WriteLabelLine("   OS Version: ", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);

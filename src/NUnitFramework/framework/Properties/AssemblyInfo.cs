@@ -58,6 +58,8 @@ using System.Security;
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 3.5)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnit Framework (.NET Standard 2.0)")]
+#elif NETCOREAPP2_1
+[assembly: AssemblyTitle("NUnit Framework (.NET Core 2.1)")]
 #else
 #error Missing AssemblyTitle attribute for this target.
 #endif

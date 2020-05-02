@@ -41,6 +41,9 @@ How to use this package:
         <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="2.0.0" />
       </group>
+      <group targetFramework="netcoreapp2.1">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
     </dependencies>
   </metadata>
   <files>
@@ -51,6 +54,7 @@ How to use this package:
     <file src="bin/net40/nunitlite.dll" target="lib\net40" />
     <file src="bin/net45/nunitlite.dll" target="lib\net45" />
     <file src="bin/netstandard2.0/nunitlite.dll" target="lib\netstandard2.0" />
+    <file src="bin/netcoreapp2.1/nunitlite.dll" target="lib\netcoreapp2.1" />
     <file src="bin/net35/nunitlite-runner.exe" target="tools\net35" />
     <file src="bin/net40/nunitlite-runner.exe" target="tools\net40" />
     <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />

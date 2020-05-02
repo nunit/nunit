@@ -25,7 +25,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
 using System.Runtime.Versioning;
 #else
 using Microsoft.Win32;
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal
                 minor = 0;
             }
             else /* It's windows */
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
             {
                 minor = 5;
             }
@@ -363,7 +363,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsNetCore()
         {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
             // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch
             // block to stop any inlining in release builds and check whether the type exists
             Type runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
@@ -383,7 +383,7 @@ namespace NUnit.Framework.Internal
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool IsNetCore_Internal()
         {
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
             // Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
             // so we wrap it in a try/catch block in IsNetCore to catch it in case it ever gets this far
             if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase))

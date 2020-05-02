@@ -355,7 +355,7 @@ namespace NUnit.Framework.Api
 
             env.AddAttribute("framework-version", typeof(FrameworkController).GetTypeInfo().Assembly.GetName().Version.ToString());
             env.AddAttribute("clr-version", Environment.Version.ToString());
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
             env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else
             env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());

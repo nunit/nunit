@@ -120,7 +120,7 @@ namespace NUnitLite
                                            assemblyName.Version.ToString());
             xmlWriter.WriteAttributeString("clr-version",
                 Environment.Version.ToString());
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
             xmlWriter.WriteAttributeString("os-version",
                                            System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else

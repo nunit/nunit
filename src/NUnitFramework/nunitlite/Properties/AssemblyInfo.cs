@@ -40,6 +40,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 3.5)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
+#elif NETCOREAPP2_1
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Core 2.1)")]
 #else
 #error Missing AssemblyTitle attribute for this target.
 #endif

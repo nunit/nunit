@@ -32,7 +32,8 @@ var AllFrameworks = new string[]
     "net45",
     "net40",
     "net35",
-    "netstandard2.0"
+    "netstandard2.0",
+    "netcoreapp2.1"
 };
 
 var NetCoreTests = new String[]
@@ -242,6 +243,26 @@ foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
     testNetStandard20.IsDependentOn(task);
 }
 
+var testNetCore21 = Task("TestNetCore21")
+    .Description("Tests the .NET Core 2.1 version of the framework");
+
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
+{
+    var task = Task("TestNetCore21 on " + runtime)
+        .Description("Tests the .NET Core 2.1 version of the framework on " + runtime)
+        .IsDependentOn("Build")
+        .OnError(exception => { ErrorDetail.Add(exception.Message); })
+        .Does(() =>
+        {
+            var dir = BIN_DIR + runtime + "/";
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+            PublishTestResults(runtime);
+        });
+
+    testNetCore21.IsDependentOn(task);
+}
+
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
 //////////////////////////////////////////////////////////////////////
@@ -347,10 +368,9 @@ Task("PackageZip")
             GetFiles(CurrentImageDir + "bin/net35/**/*.*") +
             GetFiles(CurrentImageDir + "bin/net40/**/*.*") +
             GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard1.4/**/*.*") +
             GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
+            GetFiles(CurrentImageDir + "bin/netcoreapp2.1/**/*.*") +
+            GetFiles(CurrentImageDir + "bin/netcoreapp3.1/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
@@ -529,7 +549,8 @@ Task("Test")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
-    .IsDependentOn("TestNetStandard20");
+    .IsDependentOn("TestNetStandard20")
+    .IsDependentOn("TestNetCore21");
 
 Task("Package")
     .Description("Packages all versions of the framework")

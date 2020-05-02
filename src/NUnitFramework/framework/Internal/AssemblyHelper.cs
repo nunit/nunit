@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP2_1
         private sealed class ReflectionAssemblyLoader
         {
             private static ReflectionAssemblyLoader instance;
