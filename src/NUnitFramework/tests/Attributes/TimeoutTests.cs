@@ -147,6 +147,7 @@ namespace NUnit.Framework.Attributes
             public void TestThatTimesOut()
             {
                 Thread.Sleep(TimeExceedingTimeout);
+                _testRanToCompletion = true;
             }
 
             [Timeout(Timeout)]
@@ -161,6 +162,7 @@ namespace NUnit.Framework.Attributes
             public void TestThatInvokesActionImmediately()
             {
                 _testAction.Invoke();
+                _testRanToCompletion = true;
             }
 
             [Timeout(Timeout)]
