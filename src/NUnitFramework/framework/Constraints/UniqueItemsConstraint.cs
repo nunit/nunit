@@ -167,7 +167,7 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
         private static ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, (IEqualityComparer<string>)StringComparer.CurrentCultureIgnoreCase);
+            => NonUniqueItemsInternal(actual, (IEqualityComparer<string>)StringComparer.InvariantCultureIgnoreCase);
 
         private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
             => NonUniqueItemsInternal(actual, InsensitiveCharComparer);
@@ -269,7 +269,7 @@ namespace NUnit.Framework.Constraints
                 if (Comparer.AreEqual(x, y, ref tolerance))
                     return 0;
                 else if (Comparer.IgnoreCase && x is string xStr && y is string yStr)
-                    return string.Compare(xStr, yStr, StringComparison.CurrentCultureIgnoreCase);
+                    return string.Compare(xStr, yStr, StringComparison.InvariantCultureIgnoreCase);
                 else
                     return System.Collections.Comparer.Default.Compare(x, y);
             }
@@ -279,12 +279,12 @@ namespace NUnit.Framework.Constraints
         {
             public bool Equals(char x, char y)
             {
-                return char.ToLower(x) == char.ToLower(y);
+                return char.ToLowerInvariant(x) == char.ToLowerInvariant(y);
             }
 
             public int GetHashCode(char obj)
             {
-                return char.ToLower(obj).GetHashCode();
+                return char.ToLowerInvariant(obj).GetHashCode();
             }
         }
 
