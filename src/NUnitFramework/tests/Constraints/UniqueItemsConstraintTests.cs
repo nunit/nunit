@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
 
-        [Test, SetCulture("en-US")]
+        [Test, SetCulture("")]
         [TestCaseSource( nameof(IgnoreCaseData) )]
         public void HonorsIgnoreCase( IEnumerable actual )
         {
@@ -100,7 +100,22 @@ namespace NUnit.Framework.Constraints
 #if !NET35
         static readonly TestCaseData[] PerformanceData_MediumPath =
         {
-            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => v.ToString())), true)
+            new TestCaseData(new SimpleObjectCollection(RANGE.Cast<object>()), false)
+            {
+                ArgDisplayNames = new[] { "IEnumerable<int>", "false" }
+            },
+            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => (double)v).Cast<object>()), false)
+            {
+                ArgDisplayNames = new[] { "IEnumerable<double>", "false" }
+            },
+            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => v.ToString()).Cast<object>()), false)
+            {
+                ArgDisplayNames = new[] { "IEnumerable<string>", "false" }
+            },
+            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => v.ToString()).Cast<object>()), true)
+            {
+                ArgDisplayNames = new[] { "IEnumerable<string>", "true" }
+            },
         };
 
         [TestCaseSource(nameof(PerformanceData_MediumPath))]

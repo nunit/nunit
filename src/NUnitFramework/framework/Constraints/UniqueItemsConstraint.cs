@@ -159,9 +159,6 @@ namespace NUnit.Framework.Constraints
         private static readonly MethodInfo ItemsUniqueMethod =
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
 
-        private static readonly CaseInsensitiveCharComparer InsensitiveCharComparer =
-            new CaseInsensitiveCharComparer();
-
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
@@ -169,7 +166,13 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, (IEqualityComparer<string>)StringComparer.CurrentCultureIgnoreCase);
 
         private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
-            => NonUniqueItemsInternal(actual, InsensitiveCharComparer);
+        {
+            var result = NonUniqueItemsInternal(
+                actual.Select(x => x.ToString()),
+                (IEqualityComparer<string>)StringComparer.CurrentCultureIgnoreCase
+            );
+            return result.Select(x => x[0]).ToList();
+        }
 
 #if !NET35
         private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IComparer<T> comparer)
@@ -265,25 +268,12 @@ namespace NUnit.Framework.Constraints
             public int Compare(object x, object y)
             {
                 var tolerance = Tolerance.Default;
-                if (x is string xStr && y is string yStr)
-                    return string.Compare(xStr, yStr, Comparer.IgnoreCase); 
-                else if (Comparer.AreEqual(x, y, ref tolerance))
+                if (Comparer.AreEqual(x, y, ref tolerance))
                     return 0;
+                else if (x is string xStr && y is string yStr)
+                    return string.Compare(xStr, yStr, Comparer.IgnoreCase);
                 else
                     return System.Collections.Comparer.Default.Compare(x, y);
-            }
-        }
-
-        private sealed class CaseInsensitiveCharComparer : IEqualityComparer<char>
-        {
-            public bool Equals(char x, char y)
-            {
-                return char.ToLower(x) == char.ToLower(y);
-            }
-
-            public int GetHashCode(char obj)
-            {
-                return char.ToLower(obj).GetHashCode();
             }
         }
 
