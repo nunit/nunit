@@ -75,17 +75,18 @@ namespace NUnit.Framework.Constraints
 
         static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
 
-        static readonly TestCaseData[] PerformanceData =
+        static readonly TestCaseData[] PerformanceData_FastPath =
         {
+            // Fast path
             new TestCaseData(RANGE, false),
             new TestCaseData(new List<int>(RANGE), false),
             new TestCaseData(new List<double>(RANGE.Select(v => (double)v)), false),
             new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), false),
-            new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), true)
+            new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), true),
         };
 
-        [TestCaseSource(nameof(PerformanceData))]
-        public void PerformanceTests(IEnumerable values, bool ignoreCase)
+        [TestCaseSource(nameof(PerformanceData_FastPath))]
+        public void PerformanceTests_FastPath(IEnumerable values, bool ignoreCase)
         {
             Warn.Unless(() =>
             {
@@ -95,6 +96,25 @@ namespace NUnit.Framework.Constraints
                     Assert.That(values, Is.Unique);
             }, HelperConstraints.HasMaxTime(100));
         }
+
+#if !NET35
+        static readonly TestCaseData[] PerformanceData_MediumPath =
+        {
+            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => v.ToString())), true)
+        };
+
+        [TestCaseSource(nameof(PerformanceData_MediumPath))]
+        public void PerformanceTests_MediumPath(IEnumerable values, bool ignoreCase)
+        {
+            Warn.Unless(() =>
+            {
+                if (ignoreCase)
+                    Assert.That(values, Is.Unique.IgnoreCase);
+                else
+                    Assert.That(values, Is.Unique);
+            }, HelperConstraints.HasMaxTime(500));
+        }
+#endif
 
         [TestCaseSource(nameof(DuplicateItemsData))]
         public void DuplicateItemsTests(IEnumerable items, IEnumerable expectedFailures)
