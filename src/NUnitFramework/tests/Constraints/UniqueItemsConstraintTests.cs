@@ -112,7 +112,7 @@ namespace NUnit.Framework.Constraints
                     Assert.That(values, Is.Unique.IgnoreCase);
                 else
                     Assert.That(values, Is.Unique);
-            }, HelperConstraints.HasMaxTime(500));
+            }, HelperConstraints.HasMaxTime(300));
         }
 #endif
 
