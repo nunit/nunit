@@ -47,7 +47,8 @@ The `ExtensionPropertyAttribute` avoids the problem. NUnit's own extension for l
 
 By use of the `ExtensionPropertyAttribute` NUnit is able to postpone loading the extension until the user actually uses a file of type `.nunit`. If the extension is never needed, then it won't be loaded at all. For information about what properties are used by each extension point, see the individual pages for each type of extension.
 
-**Note:** Extensions are usually created each in their own assembly for efficiency. It's possible to have several related extensions in the same assembly, but they will all be loaded into memory as soon as one is used.
+> [!NOTE]
+> Extensions are usually created each in their own assembly for efficiency. It's possible to have several related extensions in the same assembly, but they will all be loaded into memory as soon as one is used.
 
 ## Kinds of Extensions
 
