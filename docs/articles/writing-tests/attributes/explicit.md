@@ -13,8 +13,8 @@ running tests, it is skipped unless it has been specifically selected by one
 of the above means. The test does not affect the overall result of the test run.
 Explicit tests are displayed in the gui as skipped.
 
-> **Warning:** While the C# syntax allows you to place an Explicit attribute on a
-SetUpFixture class, the attribute is ignored by NUnit and has no effect in current releases.
+> [!WARNING]
+> While the C# syntax allows you to place an Explicit attribute on a SetUpFixture class, the attribute is ignored by NUnit and has no effect in current releases.
 
 #### Examples of Use
 

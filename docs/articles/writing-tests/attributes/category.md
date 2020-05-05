@@ -9,9 +9,8 @@ This feature is accessible by use of the /include and /exclude arguments to the
 console runner and through a separate "Categories" tab in the gui. The gui
 provides a visual indication of which categories are selected at any time.
 
-> **Warning:** While the C# syntax allows you to place a Category attribute on a
-SetUpFixture class, the attribute is ignored by NUnit and has no effect in 
-current releases.
+> [!WARNING]
+> While the C# syntax allows you to place a Category attribute on a SetUpFixture class, the attribute is ignored by NUnit and has no effect in current releases.
 	
 #### Test Fixture Syntax
 
