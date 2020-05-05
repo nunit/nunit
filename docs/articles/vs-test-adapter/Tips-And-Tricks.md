@@ -16,7 +16,7 @@ The following options are available:
 |[Verbosity](#verbosity)| int | -1, 0-5 . -1 means quiet mode | 0|
 |[UseVsKeepEngineRunning](#usevskeepenginerunning)| bool | True, False| False|
 |BasePath| string | path| ?|
-|[PrivateBinPath](#privatebinpath) | string| directory1;directory2;etc |?|
+|PrivateBinPath | string| directory1;directory2;etc |?|
 |[RandomSeed](#randomseed) int | seed integer| random|
 |[DefaultTimeout](#defaulttimeout)|int|timeout in mS, 0 means infinite|0|
 |[DefaultTestNamePattern](#defaulttestnamepattern)|string|Pattern for display name|{m}{a}|
