@@ -10,27 +10,27 @@ The following options are available:
 
 |Key|Type|Options| Default|
 |---|----|-------|--------------|
-|[InternalTraceLevel](#InternalTraceLevel)| string |  Off, Error, Warning, Info, Verbose,  Debug| Nothing => Off|
-|[NumberOfTestWorkers](#NumberOfTestWorkers)| int | nr of workers | -1|
-|[ShadowCopyFiles](#ShadowCopyFiles)| bool |True, False | False|
-|[Verbosity](#Verbosity)| int | -1, 0-5 . -1 means quiet mode | 0|
-|[UseVsKeepEngineRunning](#UseVsKeepEngineRunning)| bool | True, False| False|
-|[BasePath](#BasePath)| string | path| ?|
-|[PrivateBinPath](#PrivateBinPath) | string| directory1;directory2;etc |?|
-|[RandomSeed](#RandomSeed) int | seed integer| random|
-|[DefaultTimeout](#DefaultTimeout)|int|timeout in mS, 0 means infinite|0|
-|[DefaultTestNamePattern](#DefaultTestNamePattern)|string|Pattern for display name|{m}{a}|
-|[WorkDirectory](#WorkDirectory)|string|specify directory|Test assembly location|
-|[TestOutputXml](#TestOutputXml)|string|specify directory|Test Result Xml output folder|
-|[DumpXmlTestDiscovery](#DumpXmlTestDiscovery-and-DumpXmlTestResults)|bool|Enable dumping of NUnit discovery response xml|false|
-|[DumpXmlTestResults](#DumpXmlTestDiscovery-and-DumpXmlTestResults)|bool|Enable dumping of NUnit execution response xml|false|
-|[PreFilter](#PreFilter)|bool|Enable prefiltering to increase performance for Visual Studio testing|false|
-|[ShowInternalProperties](#ShowInternalProperties)| bool | Turn on showing internal NUnit properties in Test Explorer| false|
-|[Where](#Where)|string| NUnit Filter expression|
-|[UseParentFQNForParametrizedTests](#UseParentFQNForParametrizedTests)|bool|Enable parent as FQN for parametrized tests|false|
-|[UseNUnitIdforTestCaseId](#UseNUnitIdforTestCaseId)|bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
-|[ConsoleOut](#ConsoleOut)|int|Sends standard console output to the output window|1|
-|[StopOnError]("StopOnError)|bool|Stops on first error|false|
+|[InternalTraceLevel](#internaltracelevel)| string |  Off, Error, Warning, Info, Verbose,  Debug| Nothing => Off|
+|[NumberOfTestWorkers](#numberoftestworkers)| int | nr of workers | -1|
+|[ShadowCopyFiles](#shadowcopyfiles)| bool |True, False | False|
+|[Verbosity](#verbosity)| int | -1, 0-5 . -1 means quiet mode | 0|
+|[UseVsKeepEngineRunning](#usevskeepenginerunning)| bool | True, False| False|
+|[BasePath](#basepath)| string | path| ?|
+|[PrivateBinPath](#privatebinpath) | string| directory1;directory2;etc |?|
+|[RandomSeed](#randomseed) int | seed integer| random|
+|[DefaultTimeout](#defaulttimeout)|int|timeout in mS, 0 means infinite|0|
+|[DefaultTestNamePattern](#defaulttestnamepattern)|string|Pattern for display name|{m}{a}|
+|[WorkDirectory](#workdirectory)|string|specify directory|Test assembly location|
+|[TestOutputXml](#testoutputxml)|string|specify directory|Test Result Xml output folder|
+|[DumpXmlTestDiscovery](#dumpxmltestdiscovery-and-dumpxmltestresults)|bool|Enable dumping of NUnit discovery response xml|false|
+|[DumpXmlTestResults](#dumpxmltestdiscovery-and-dumpxmltestresults)|bool|Enable dumping of NUnit execution response xml|false|
+|[PreFilter](#prefilter)|bool|Enable prefiltering to increase performance for Visual Studio testing|false|
+|[ShowInternalProperties](#showinternalproperties)| bool | Turn on showing internal NUnit properties in Test Explorer| false|
+|[Where](#where)|string| NUnit Filter expression|
+|[UseParentFQNForParametrizedTests](#useparentfqnforparametrizedtests)|bool|Enable parent as FQN for parametrized tests|false|
+|[UseNUnitIdforTestCaseId](#usenunitidfortestcaseid)|bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
+|[ConsoleOut](#consoleout)|int|Sends standard console output to the output window|1|
+|[StopOnError]("stoponerror)|bool|Stops on first error|false|
 
 
 ### Visual Studio templates for runsettings
