@@ -1,2 +1,6 @@
 - name: NUnit
   href: nunit/toc.yml
+- name: NUnit Xamarin Runners
+  href: xamarin-runners/toc.yml
+- name: VS Test Adapter
+  href: vs-test-adapter/toc.yml
