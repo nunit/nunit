@@ -9,7 +9,7 @@ Every extension is implemented by a class with specific characteristics:
 
 The code for a typical extension might look like this.
 
-```C#
+```csharp
     [Extension]
     public class MyExtension : ISomeInterface // Depending on the extension point
     {
@@ -35,7 +35,7 @@ Using only the `ExtensionAttribute`, NUnit would have to create instances of eve
 
 The `ExtensionPropertyAttribute` avoids the problem. NUnit's own extension for loading NUnit projects is a good example:
 
-```C#
+```csharp
     [Extension]
     [ExtensionProperty("FileExtension", ".nunit")]
     public class NUnitProjectLoader : IProjectLoader
