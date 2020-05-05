@@ -30,7 +30,7 @@ The following options are available:
 |[UseParentFQNForParametrizedTests](#useparentfqnforparametrizedtests)|bool|Enable parent as FQN for parametrized tests|false|
 |[UseNUnitIdforTestCaseId](#usenunitidfortestcaseid) |bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
 |[ConsoleOut](#consoleout)|int|Sends standard console output to the output window|1|
-|[StopOnError]("StopOnError)|bool|Stops on first error|false|
+|[StopOnError](#stoponerror)|bool|Stops on first error|false|
 
 
 ### Visual Studio templates for runsettings
