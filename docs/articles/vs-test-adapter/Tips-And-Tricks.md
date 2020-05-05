@@ -18,8 +18,8 @@ The following options are available:
 |BasePath| string | path| ?|
 |PrivateBinPath | string| directory1;directory2;etc |?|
 |RandomSeed | int | seed integer| random|
-|[DefaultTimeout](#defaulttimeout)|int|timeout in mS, 0 means infinite|0|
-|[DefaultTestNamePattern](#defaulttestnamepattern)|string|Pattern for display name|{m}{a}|
+|DefaultTimeout |int|timeout in mS, 0 means infinite|0|
+|DefaultTestNamePattern |string|Pattern for display name|{m}{a}|
 |[WorkDirectory](#workdirectory)|string|specify directory|Test assembly location|
 |[TestOutputXml](#testoutputxml)|string|specify directory|Test Result Xml output folder|
 |[DumpXmlTestDiscovery](#dumpxmltestdiscovery-and-dumpxmltestresults)|bool|Enable dumping of NUnit discovery response xml|false|
@@ -28,7 +28,7 @@ The following options are available:
 |[ShowInternalProperties](#showinternalproperties)| bool | Turn on showing internal NUnit properties in Test Explorer| false|
 |[Where](#where)|string| NUnit Filter expression|
 |[UseParentFQNForParametrizedTests](#useparentfqnforparametrizedtests)|bool|Enable parent as FQN for parametrized tests|false|
-|[UseNUnitIdforTestCaseId](#usenunitidfortestcaseid)|bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
+|UseNUnitIdforTestCaseId |bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
 |[ConsoleOut](#consoleout)|int|Sends standard console output to the output window|1|
 |[StopOnError]("StopOnError)|bool|Stops on first error|false|
 
