@@ -1,16 +1,2 @@
-- name: Introduction
-  href: intro.md
-- name: Release Notes
-  href: release-notes/toc.yml
-- name: License
-  href: license.md
-- name: Getting Started
-  href: getting-started/toc.yml
-- name: Writing Tests
-  href: writing-tests/toc.yml
-- name: Running Tests
-  href: running-tests/toc.yml
-- name: Extending NUnit
-  href: extending-nunit/toc.yml
-- name: Technical Notes
-  href: technical-notes/toc.yml
+- name: NUnit
+  href: nunit/toc.yml
