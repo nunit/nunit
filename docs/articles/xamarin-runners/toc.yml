@@ -1,0 +1,6 @@
+- name: "Index & Options"
+  href: index.md
+- name: Getting Started in Visual Studio
+  href: Getting-Started-in-Visual-Studio.md
+- name: Getting Started in VS for Mac
+  href: Getting-Started-in-Visual-Studio-for-Mac.md
