@@ -15,7 +15,7 @@ The following options are available:
 |[ShadowCopyFiles](#shadowcopyfiles)| bool |True, False | False|
 |[Verbosity](#verbosity)| int | -1, 0-5 . -1 means quiet mode | 0|
 |[UseVsKeepEngineRunning](#usevskeepenginerunning)| bool | True, False| False|
-|[BasePath](#basepath)| string | path| ?|
+|BasePath| string | path| ?|
 |[PrivateBinPath](#privatebinpath) | string| directory1;directory2;etc |?|
 |[RandomSeed](#randomseed) int | seed integer| random|
 |[DefaultTimeout](#defaulttimeout)|int|timeout in mS, 0 means infinite|0|
@@ -30,7 +30,7 @@ The following options are available:
 |[UseParentFQNForParametrizedTests](#useparentfqnforparametrizedtests)|bool|Enable parent as FQN for parametrized tests|false|
 |[UseNUnitIdforTestCaseId](#usenunitidfortestcaseid)|bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
 |[ConsoleOut](#consoleout)|int|Sends standard console output to the output window|1|
-|[StopOnError]("stoponerror)|bool|Stops on first error|false|
+|[StopOnError]("StopOnError)|bool|Stops on first error|false|
 
 
 ### Visual Studio templates for runsettings
