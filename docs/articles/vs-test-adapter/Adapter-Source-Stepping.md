@@ -10,7 +10,7 @@ The NUnit adapter PDBs are source-linked and work with Visual Studio 2017 or lat
 
     ℹ️ This is something you’ll want to leave on and only turn off when you want to step into source that isn’t contained in your solution.
 
-    <img src="images/disable-just-my-code.png" width="50%" />
+    ![Screenshot of how to disable just my code in Visual Studio](~/images/disable-just-my-code.png)
 
     (Next time you can make this faster by installing the excellent extension
     [Just My Code Toggle](https://marketplace.visualstudio.com/items?itemName=SamHarwell.JustMyCodeToggle).
