@@ -12,3 +12,5 @@
   href: running-tests/toc.yml
 - name: Extending NUnit
   href: extending-nunit/toc.yml
+- name: Technical Notes
+  href: technical-notes/toc.yml
