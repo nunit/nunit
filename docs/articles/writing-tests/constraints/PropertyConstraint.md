@@ -21,8 +21,7 @@ Assert.That(collection, Has.Property("Count").GreaterThan(10));
 Assert.That(collection, Has.Count.GreaterThan(10);
 ```
 
-**Note:** As shown in the example, certain common properties are known to NUnit and 
-may be tested using a shorter form. The following properties are supported:
+As shown in the example, certain common properties are known to NUnit and may be tested using a shorter form. The following properties are supported:
 
 ```csharp
 Has.Length...

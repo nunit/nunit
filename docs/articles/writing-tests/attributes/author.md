@@ -33,4 +33,5 @@ public class MyOtherTests
 }
 ```
 
-**Note:** From NUnit version 3.7  you can have multiple Author attributes per fixture or test. Before version 3.7 you could only have one Author attribute  per fixture or test.
+> [!NOTE]
+> From NUnit version 3.7  you can have multiple Author attributes per fixture or test. Before version 3.7 you could only have one Author attribute  per fixture or test.

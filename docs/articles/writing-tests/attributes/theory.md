@@ -42,10 +42,8 @@ data without any action by the user. All possible values are supplied
 to the argument. This feature is disabled if the user supplies any 
 values for the argument.
 
-> **Note:** Because NUnit searches for datapoints based on the type of
-> the argument, generic methods may not currently be used as theories.
-> This limitation may be removed in a future release. See below for
-> a workaround using a generic fixture.
+> [!NOTE]
+> Because NUnit searches for datapoints based on the type of the argument, generic methods may not currently be used as theories. This limitation may be removed in a future release. See below for a workaround using a generic fixture.
    
 #### Assumptions
 

@@ -51,11 +51,9 @@ namespace NUnit.Tests
 }
 ```
 
-**Note:** Prior to NUnit 3.0, SetUpFixture used the SetUp and 
-TearDown attributes rather than OneTimeSetUp and OneTimeTearDown.
-The older attributes are no longer supported in SetUpFixtures
-in NUnit 3.0 and later.
-
+> [!NOTE]
+> Prior to NUnit 3.0, SetUpFixture used the SetUp and TearDown attributes rather than OneTimeSetUp and OneTimeTearDown.
+The older attributes are no longer supported in SetUpFixtures in NUnit 3.0 and later.
 
 #### See also...
 

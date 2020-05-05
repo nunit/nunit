@@ -27,4 +27,5 @@ public class MyOtherTests
 }
 ```
 
-**Note:** you can currently only have one TestOf attribute per fixture or test.
+> [!NOTE]
+> you can currently only have one TestOf attribute per fixture or test.

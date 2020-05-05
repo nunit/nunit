@@ -13,9 +13,8 @@ public void DivideTest(int n, int d, int q)
 }
 ```
 
-**Note:** Because arguments to .NET attributes are limited in terms of the 
-Types that may be used, NUnit will make some attempt to convert the supplied
-values using `Convert.ChangeType()` before supplying it to the test.
+> [!NOTE]
+> Because arguments to .NET attributes are limited in terms of the Types that may be used, NUnit will make some attempt to convert the supplied values using `Convert.ChangeType()` before supplying it to the test.
 
 **TestCaseAttribute** may appear one or more times on a test method,
 which may also carry other attributes providing test data.
