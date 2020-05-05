@@ -17,7 +17,7 @@ The following options are available:
 |[UseVsKeepEngineRunning](#usevskeepenginerunning)| bool | True, False| False|
 |BasePath| string | path| ?|
 |PrivateBinPath | string| directory1;directory2;etc |?|
-|[RandomSeed](#randomseed) int | seed integer| random|
+|RandomSeed | int | seed integer| random|
 |[DefaultTimeout](#defaulttimeout)|int|timeout in mS, 0 means infinite|0|
 |[DefaultTestNamePattern](#defaulttestnamepattern)|string|Pattern for display name|{m}{a}|
 |[WorkDirectory](#workdirectory)|string|specify directory|Test assembly location|
