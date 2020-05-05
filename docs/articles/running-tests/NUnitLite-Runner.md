@@ -30,8 +30,8 @@ automatically. Both assemblies are installed and referenced for you.
 In addition, if you are using C#, step 3 is handled as well. A file, Program.cs, 
 is added to your project with a Main() like that above. 
 
-**Note:** If you are not working in C#, you should delete the Program.cs file
-that the NuGet package added to your test project.
+> [!NOTE]
+> If you are not working in C#, you should delete the Program.cs file that the NuGet package added to your test project.
 
 #### NUnitLite Output
 

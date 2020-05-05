@@ -1,6 +1,7 @@
 Each NUnit test runs in an execution context, which includes information about the environment as well as the test itself. The `TestContext` class allows tests to access certain information about the execution context.
 
-**Note:** It's important to remember that "test" in NUnit may refer to an individual test cases or a suite such as a `TestFixture`. Within a test method, `SetUp` method or `TearDown` method, the context is that of the individual test case. Within a `OneTimeSetUp` or `OneTimeTearDown` method, the context refers to the fixture as a whole. This can lead to confusion, since most runners display information about fixtures differently from test cases. In fact, some runners may not display information about fixtures at all!
+> [!NOTE]
+> It's important to remember that "test" in NUnit may refer to an individual test cases or a suite such as a `TestFixture`. Within a test method, `SetUp` method or `TearDown` method, the context is that of the individual test case. Within a `OneTimeSetUp` or `OneTimeTearDown` method, the context refers to the fixture as a whole. This can lead to confusion, since most runners display information about fixtures differently from test cases. In fact, some runners may not display information about fixtures at all!
 
 ### Static Properties
 
