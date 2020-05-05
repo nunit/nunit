@@ -28,7 +28,7 @@ The following options are available:
 |[ShowInternalProperties](#showinternalproperties)| bool | Turn on showing internal NUnit properties in Test Explorer| false|
 |[Where](#where)|string| NUnit Filter expression|
 |[UseParentFQNForParametrizedTests](#useparentfqnforparametrizedtests)|bool|Enable parent as FQN for parametrized tests|false|
-|UseNUnitIdforTestCaseId |bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
+|[UseNUnitIdforTestCaseId](#usenunitidfortestcaseid) |bool|Uses NUnit test id as VSTest Testcase Id, instead of FUllyQualifiedName|false|
 |[ConsoleOut](#consoleout)|int|Sends standard console output to the output window|1|
 |[StopOnError]("StopOnError)|bool|Stops on first error|false|
 
@@ -133,7 +133,7 @@ Using the runsettings should be like:
 
 Setting this may give more stable results when you have complex data driven/parametrized tests.  However, when this is set selecting a single test within such a group, means that **all** tests in that group is executed.
 
-Note that this often has to be set together with [UseNUnitIdforTestCaseId](####UseNUnitIdforTestCaseId)
+Note that this often has to be set together with [UseNUnitIdforTestCaseId](#usenunitidfortestcaseid)
 
 *(From version 3.16.1)*
 
