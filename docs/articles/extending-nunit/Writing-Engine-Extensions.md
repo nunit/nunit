@@ -27,7 +27,8 @@ The attribute has four named properties, all optional:
 
 * **EngineVersion** The minimum engine version supported by the extension. Although optional, you should use this property if your extension will not work with all versions of the engine. If you don't use it and your extension requires engine services that are not present, then it might throw an exception or cause other errors.
 
-  **Note:** Only engine versions 3.4 or later check this property. The only way to avoid errors in the case of lower engine versions is to not install such extensions.
+> [!NOTE]
+> Only engine versions 3.4 or later check this property. The only way to avoid errors in the case of lower engine versions is to not install such extensions.
 
 ## ExtensionPropertyAttribute
 
