@@ -18,6 +18,6 @@ The NUnit adapter PDBs are source-linked and work with Visual Studio 2017 or lat
 
  2. If needed, turn **on** Debug > Options > ‘Enable Source Link support.’ This can usually be left on.
 
-    <img src="images/enable-source-link-support.png" width="50%" />
+![Screenshot of how to enable source link support in Visual Studio](~/images/enable-source-link-support.png)
 
  3. Congratulations! You can now use the debugger to step into method calls to the NUnit adapter and to set breakpoints and watch variables in the source! Keep in mind that it’s still a release build of the adapter, so variables and sequence points may not be available depending on runtime optimizations.
