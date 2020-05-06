@@ -62,4 +62,4 @@ rather than
 * DerivedTearDown
 * BaseTearDown
 
-See also: [SetUp and TearDown Changes](SetUp-and-TearDown-Changes)
+See also: [SetUp and TearDown Changes](xref:setupteardownchanges)
