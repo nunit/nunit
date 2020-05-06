@@ -154,7 +154,7 @@ the enumerator as follows:
 
 1. If it is an object derived from the `TestCaseDataParameters` class, 
    its properties are used to provide the test case. NUnit provides
-   the [[TestCaseData]] type for this purpose.
+   the [TestCaseData](xref:TestCaseData)]] type for this purpose.
 
 2. If the test has a single argument and the returned value matches the type of
    that argument it is used directly.

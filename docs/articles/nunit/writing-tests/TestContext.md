@@ -1,3 +1,7 @@
+---
+uid: TestContext
+---
+
 Each NUnit test runs in an execution context, which includes information about the environment as well as the test itself. The `TestContext` class allows tests to access certain information about the execution context.
 
 > [!NOTE]

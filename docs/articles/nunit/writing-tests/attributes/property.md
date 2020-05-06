@@ -30,7 +30,7 @@ dialog of the gui. You may also use properties with the `--where` option on the
 command-line in order to select tests to run. See [[Test Selection Language]]. Note 
 that his filtering will only work for properties where the values have type string.
 
-User tests may access properties through the [[TestContext]] or by reflection.
+User tests may access properties through the [TestContext](xref:TestContext)]] or by reflection.
    
 #### Custom Property Attributes
 

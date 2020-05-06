@@ -242,5 +242,5 @@ Assert.That(list1, Is.EqualTo(list2).Using(myComparer));
    For a **DirectoryInfo**, the first-level directory contents are compared.
 
 #### See also...
- * [[Assert.AreEqual]]
- * [[DefaultFloatingPointTolerance Attribute]]
+ * [Assert.AreEqual](../assertions/classic-assertions/Assert.AreEqual.md)
+ * [DefaultFloatingPointTolerance Attribute](../attributes/defaultfloatingpointtolerance.md)

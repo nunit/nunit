@@ -89,7 +89,7 @@ Other breaking changes are grouped in the following tables.
 | NUnitLite          | NUnitLite executable tests must now reference nunit.framework in addition to NUnitLite. |
 | SetUpFixture       | Now uses `OneTimeSetUpAttribute` and `OneTimeTearDownAttribute` to designate higher-level setup and teardown methods. `SetUpAttribute` and `TearDownAttribute` are no longer allowed. |
 | TestCaseData       | The `Throws` Named Property is no longer available. Use `Assert.Throws` or `Assert.That` in your test case. |
-| TestContext        | The fields available in the [[TestContext]] have changed, although the same information remains available as for NUnit V2. |
+| TestContext        | The fields available in the [TestContext](xref:TestContext)]] have changed, although the same information remains available as for NUnit V2. |
 | Async void tests   | No longer supported. Use `async Task` as the method signature instead. |
 
 ###### Console Features
