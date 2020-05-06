@@ -45,5 +45,5 @@ public class ToleranceTest
 
 #### See also...
 
- * [[Assert.AreEqual]]
- * [[EqualConstraint]]
+ * [Assert.AreEqual](../assertions/classic-assertions/Assert.AreEqual.md)
+ * [EqualConstraint](../constraints/EqualConstraint.md)
