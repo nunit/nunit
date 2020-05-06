@@ -18,7 +18,7 @@ public void DivideTest(int n, int d, int q)
 
 **TestCaseAttribute** may appear one or more times on a test method,
 which may also carry other attributes providing test data.
-The method may optionally be marked with the [[Test Attribute]] as well.
+The method may optionally be marked with the [Test Attribute](Test.md) as well.
 
 By using the named parameter `ExpectedResult` this test set may be simplified
 further:

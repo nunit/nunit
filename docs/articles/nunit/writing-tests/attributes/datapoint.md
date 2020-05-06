@@ -24,10 +24,10 @@ is suppressed.
    
 #### Example
 
-For an example of use, see [[Theory Attribute]]
+For an example of use, see [Theory Attribute](Theory.md)
    
 #### See also...
 
- * [[Theory Attribute]]
+ * [Theory Attribute](Theory.md)
  * [[Parameterized Tests]]
    

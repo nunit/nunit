@@ -61,6 +61,6 @@ class OneTimeSetUp methods before those in the derived classes.
  3. OneTimeSetUp methods run in the context of the TestFixture or SetUpFixture, which is separate from the context of    any individual test cases. It's important to keep this in mind when using [[TestContext]] methods and properties within the method.
 
 #### See also...
- * [[SetUp Attribute]]
- * [[TearDown Attribute]]
- * [[OneTimeTearDown Attribute]]
+ * [SetUp Attribute](SetUp.md)
+ * [TearDown Attribute](TearDown.md)
+ * [OneTimeTearDown Attribute](OneTimeTearDown.md)

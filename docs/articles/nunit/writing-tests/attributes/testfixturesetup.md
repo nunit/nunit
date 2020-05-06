@@ -1,2 +1,2 @@
-The TestFixtureSetUp attribute has been deprecated, use [[OneTimeSetUp Attribute]] instead.
+The TestFixtureSetUp attribute has been deprecated, use [OneTimeSetUp Attribute](OneTimeSetUp.md) instead.
 

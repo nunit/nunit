@@ -23,7 +23,7 @@ make general statements and are more than just a set of examples.
 #### Data for Theories
 
 The primary source of data for a **Theory** is the
-[[Datapoint Attribute]] or [[DatapointSource Attribute]]. 
+[Datapoint Attribute](Datapoint.md) or [DatapointSource Attribute](DatapointSource.md). 
 NUnit will use any class members of the required types, which are annotated
 with one of these attributes, to provide data for each parameter
 of the Theory. NUnit assembles the values for individual arguments 
@@ -126,6 +126,6 @@ public class TheorySampleTestsGeneric<T>
    
 #### See also...
 
- * [[Datapoint Attribute]]
- * [[DatapointSource Attribute]]
+ * [Datapoint Attribute](Datapoint.md)
+ * [DatapointSource Attribute](DatapointSource.md)
  * [[Parameterized Tests]]

@@ -35,5 +35,5 @@ use the same generic type (e.g.: T) this may not be possible and the
 attribute may generate invalid test cases.
 
 #### See also...
- * [[Sequential Attribute]]
- * [[Pairwise Attribute]]
+ * [Sequential Attribute](Sequential.md)
+ * [Pairwise Attribute](Pairwise.md)

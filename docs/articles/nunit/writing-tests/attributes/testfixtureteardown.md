@@ -1,1 +1,1 @@
-The TextFixtureTearDown attribute has been deprecated, use [[OneTimeTearDown Attribute]] instead.
+The TextFixtureTearDown attribute has been deprecated, use [OneTimeTearDown Attribute](OneTimeTearDown.md) instead.

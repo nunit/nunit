@@ -40,5 +40,5 @@ namespace NUnit.Tests
 ```
 
 #### See also...
- * [[SetCulture Attribute]]
+ * [SetCulture Attribute](SetCulture.md)
 

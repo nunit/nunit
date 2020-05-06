@@ -48,8 +48,8 @@ MyTest(3, 0.6)
 ```
 
 #### See also...
- * [[Values Attribute]]
- * [[Random Attribute]]
- * [[Sequential Attribute]]
- * [[Combinatorial Attribute]]
- * [[Pairwise Attribute]]
+ * [Values Attribute](Values.md)
+ * [Random Attribute](Random.md)
+ * [Sequential Attribute](Sequential.md)
+ * [Combinatorial Attribute](Combinatorial.md)
+ * [Pairwise Attribute](Pairwise.md)
