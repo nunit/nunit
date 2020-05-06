@@ -43,7 +43,7 @@ If you've followed the steps above, you can now replace the AppDelegate.cs or Ma
 
 **MainActivity.cs**
 
-```C#
+```csharp
 [Activity(Label = "NUnit 3", MainLauncher = true, Theme = "@android:style/Theme.Holo.Light", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 {
@@ -73,7 +73,7 @@ public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicat
 
 **AppDelegate.cs**
 
-```C#
+```csharp
 [Register("AppDelegate")]
 public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
 {

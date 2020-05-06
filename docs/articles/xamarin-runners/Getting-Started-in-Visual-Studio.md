@@ -16,7 +16,7 @@ In your solution;
 If you tests are in a separate portable project, note that:
  - You need to add that assembly to the `NUnit.Runner.App` in the startup code
 
-```C#
+```csharp
 nunit.AddTestAssembly(typeof(MyTests).Assembly);
 ```
 
@@ -29,7 +29,7 @@ The startup code for each platform is as follows;
 
 **MainActivity.cs**
 
-```C#
+```csharp
 [Activity(Label = "NUnit 3", MainLauncher = true, Theme = "@android:style/Theme.Holo.Light", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 {
@@ -59,7 +59,7 @@ public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicat
 
 **AppDelegate.cs**
 
-```C#
+```csharp
 [Register("AppDelegate")]
 public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
 {
@@ -117,7 +117,7 @@ public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsAppli
 
 **MainPage.xaml.cs**
 
-```C#
+```csharp
 public sealed partial class MainPage : WindowsPage
 {
     public MainPage()
@@ -145,7 +145,7 @@ public sealed partial class MainPage : WindowsPage
 
 **App.xaml.cs**
 
-```C#
+```csharp
 protected override void OnLaunched(LaunchActivatedEventArgs e)
 {
     // <SNIP>
