@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
-        /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
+        /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
         internal TimeoutCommand(TestCommand innerCommand, int timeout, IDebugger debugger) : base(innerCommand)
         {
             _timeout = timeout;
@@ -120,17 +120,28 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
-                var testExecution = RunTestWithTimeoutAsync(context);
-                if (_debugger.IsAttached)
+                var testExecution = RunTestOnSeparateThread(context);
+
+                Wait(testExecution, _timeout);
+
+                if (testExecution.IsCompleted)
                 {
-                    AwaitCompletionWithoutExceptionWrapping(testExecution);
+                    context.CurrentResult = testExecution.GetAwaiter().GetResult();
                 }
-                else if (!testExecution.IsCompleted)
+                else
                 {
-                    context.CurrentResult.SetResult(new ResultState(
-                        TestStatus.Failed,
-                        $"Test exceeded Timeout value {_timeout}ms.",
-                        FailureSite.Test));
+                    if (_debugger.IsAttached)
+                    {
+                        // Wait for the test to complete
+                        context.CurrentResult = testExecution.GetAwaiter().GetResult();
+                    }
+                    else
+                    {
+                        context.CurrentResult.SetResult(new ResultState(
+                            TestStatus.Failed,
+                            $"Test exceeded Timeout value {_timeout}ms.",
+                            FailureSite.Test));
+                    }
                 }
             }
             catch (Exception exception)
@@ -141,27 +152,16 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private Task RunTestWithTimeoutAsync(TestExecutionContext context)
+        private Task<TestResult> RunTestOnSeparateThread(TestExecutionContext context)
         {
-            var testExecution = Task.Run(() => context.CurrentResult = innerCommand.Execute(context));
-
-            AwaitWithoutExceptionWrapping(testExecution, _timeout);
-
-            return testExecution;
+            return Task.Run(() => innerCommand.Execute(context));
         }
 
-        private static void AwaitWithoutExceptionWrapping(Task<TestResult> testExecution, int timeoutMilliseconds)
+        private static void Wait(Task task, int timeoutMilliseconds)
         {
-            var timeoutOrCompletion = Task
-                .WhenAny(testExecution, Task.Delay(timeoutMilliseconds))
-                .Unwrap();
+            var timeoutOrCompletion = Task.WhenAny(task, Task.Delay(timeoutMilliseconds));
 
-            AwaitCompletionWithoutExceptionWrapping(timeoutOrCompletion);
-        }
-
-        private static void AwaitCompletionWithoutExceptionWrapping(Task task)
-        {
-            task.GetAwaiter().GetResult();
+            timeoutOrCompletion.GetAwaiter().GetResult();
         }
 #endif
     }
