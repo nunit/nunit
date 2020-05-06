@@ -45,10 +45,10 @@ The Assert class provides the most common assertions in NUnit:
  * [Assert.Inconclusive](../classic-assertions/Assert.Inconclusive.md)
  
 Additional assertions are provided by the following classes:
- * [[String Assert]]
- * [[Collection Assert]]
- * [[File Assert]]
- * [[Directory Assert]]
+ * [String Assert](../classic-assertions/String-Assert.md)
+ * [Collection Assert](../classic-assertions/Collection-Assert.md)
+ * [File Assert](../classic-assertions/File-Assert.md)
+ * [Directory Assert](../classic-assertions/Directory-Assert.md)
 
 #### See also... 
  * [[Constraint Model]]
