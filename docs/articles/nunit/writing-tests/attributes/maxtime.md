@@ -19,4 +19,4 @@ public void TimedTest()
 2. This attribute does not cancel the test if the time
    is exceeded. It merely waits for the test to complete and then
    compares the elapsed time to the specified maximum. If you want to
-   cancel long-running tests, see [[Timeout Attribute]].
+   cancel long-running tests, see [Timeout Attribute](timeout.md).
