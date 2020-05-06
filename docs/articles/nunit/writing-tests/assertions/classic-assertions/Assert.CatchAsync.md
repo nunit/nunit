@@ -19,4 +19,4 @@ T Assert.CatchAsync<T>(AsyncTestDelegate code,
  * [Assert.Catch](Assert.Catch.md)
  * [Assert.Throws](Assert.Throws.md)
  * [Assert.ThrowsAsync](Assert.ThrowsAsync.md)
- * [[ThrowsConstraint]]
+ * [ThrowsConstraint](xref:ThrowsConstraint)

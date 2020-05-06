@@ -9,4 +9,4 @@ void Assert.DoesNotThrow(TestDelegate code,
 
 #### See also...
  * [Assert.Throws](Assert.Throws.md)
- * [[ThrowsConstraint]]
+ * [ThrowsConstraint](xref:ThrowsConstraint)

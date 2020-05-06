@@ -128,4 +128,4 @@ Assert.Catch(code);
  * [Assert.Catch](Assert.Catch.md)
  * [Assert.CatchAsync](Assert.CatchAsync.md)
  * [Assert.ThrowsAsync](Assert.ThrowsAsync.md)
- * [[ThrowsConstraint]]
+ * [ThrowsConstraint](xref:ThrowsConstraint)

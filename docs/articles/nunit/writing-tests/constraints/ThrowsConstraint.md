@@ -1,3 +1,7 @@
+---
+uid: ThrowsConstraint
+---
+
 **ThrowsConstraint** is used to test that some code, represented as a delegate,
 throws a particular exception. It may be used alone, to merely test the type
 of constraint, or with an additional constraint to be applied to the exception
