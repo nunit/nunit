@@ -15,7 +15,7 @@ provided text and arguments.
 
 In NUnit 3.0, assertions are written primarily using the `Assert.That` method,
 which takes [[constraint objects|Constraints]] as an argument. We call this
-the [[Constraint Model]] of assertions.
+the [Constraint Model](xref:constraintmodel) of assertions.
 
 In earlier versions of NUnit, a separate method of the Assert class was used 
 for each different assertion. This [[Classic Model]] is still supported but

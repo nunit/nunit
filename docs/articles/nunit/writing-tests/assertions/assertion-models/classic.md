@@ -51,4 +51,4 @@ Additional assertions are provided by the following classes:
  * [Directory Assert](../classic-assertions/Directory-Assert.md)
 
 #### See also... 
- * [[Constraint Model]]
+ * [Constraint Model](xref:constraintmodel)

@@ -137,5 +137,5 @@ Constraint Name                      |
 [InstanceOfTypeConstraint](InstanceOfTypeConstraint.md)         |
 
 **See also:**
- * [[Constraint Model]]
+ * [Constraint Model](xref:constraintmodel)
    
