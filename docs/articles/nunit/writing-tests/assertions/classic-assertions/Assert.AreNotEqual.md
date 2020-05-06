@@ -6,8 +6,8 @@ Assert.AreNotEqual(object expected, object actual,
                    string message, params object[] parms);
 ```
 
-See [[Assert.AreEqual]] for details of how NUnit performs equality comparisons.
+See [Assert.AreEqual](Assert.AreEqual.md) for details of how NUnit performs equality comparisons.
 
 #### See also...
- * [[Assert.AreEqual]]
+ * [Assert.AreEqual](Assert.AreEqual.md)
  * [Equal Constraint](xref:EqualConstraint)

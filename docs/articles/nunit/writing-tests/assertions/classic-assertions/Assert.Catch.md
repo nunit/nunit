@@ -16,7 +16,7 @@ T Assert.Catch<T>(TestDelegate code,
 ```
 
 #### See also...>
- * [[Assert.CatchAsync]]
- * [[Assert.Throws]]
- * [[Assert.ThrowsAsync]]
+ * [Assert.CatchAsync](Assert.CatchAsync.md)
+ * [Assert.Throws](Assert.Throws.md)
+ * [Assert.ThrowsAsync](Assert.ThrowsAsync.md)
  * [[ThrowsConstraint]]

@@ -1,4 +1,4 @@
-**Assert.CatchAsync** is similar to [[Assert.ThrowsAsync]] but will pass for an exception
+**Assert.CatchAsync** is similar to [Assert.ThrowsAsync](Assert.ThrowsAsync.md) but will pass for an exception
 that is derived from the one specified.
 
 ```csharp
@@ -16,7 +16,7 @@ T Assert.CatchAsync<T>(AsyncTestDelegate code,
 ```
 
 #### See also...
- * [[Assert.Catch]]
- * [[Assert.Throws]]
- * [[Assert.ThrowsAsync]]
+ * [Assert.Catch](Assert.Catch.md)
+ * [Assert.Throws](Assert.Throws.md)
+ * [Assert.ThrowsAsync](Assert.ThrowsAsync.md)
  * [[ThrowsConstraint]]

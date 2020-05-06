@@ -38,7 +38,7 @@ Assert.GreaterOrEqual(IComparable arg1, IComparable arg2,
 ```
 
 #### See also...
- * [[Assert.Greater]]
- * [[Assert.Less]]
- * [[Assert.LessOrEqual]]
+ * [Assert.Greater](Assert.Greater.md)
+ * [Assert.Less](Assert.Less.md)
+ * [Assert.LessOrEqual](Assert.LessOrEqual.md)
  * [Comparison Constraints](xref:constraints#comparison-constraints)

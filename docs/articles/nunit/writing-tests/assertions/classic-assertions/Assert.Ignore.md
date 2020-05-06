@@ -11,6 +11,6 @@ Assert.Ignore(string message, params object[] parms);
 ```
 
 #### See also...
- * [[Assert.Pass]]
- * [[Assert.Fail]]
- * [[Assert.Inconclusive]]
+ * [Assert.Pass](Assert.Pass.md)
+ * [Assert.Fail](Assert.Fail.md)
+ * [Assert.Inconclusive](Assert.Inconclusive.md)

@@ -33,7 +33,7 @@ Assert.Positive(float actual, string message, params object[] args);
 You may also use **Assert.That** with a **Is.Positive** constraint to achieve the same result.
 
 #### See also...
-*  [[Assert.Negative]]
- * [[Assert.Zero]]
- * [[Assert.NotZero]]
- * [[Assert.IsNaN]]
+*  [Assert.Negative](Assert.Negative.md)
+ * [Assert.Zero](Assert.Zero.md)
+ * [Assert.NotZero](Assert.NotZero.md)
+ * [Assert.IsNaN](Assert.IsNaN.md)

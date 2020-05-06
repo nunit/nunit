@@ -1,5 +1,5 @@
-The **Assert.ThrowsAsync** is the async equivalent to [[Assert.Throws]]
-for asynchronous code. See [[Assert.Throws]] for more information.
+The **Assert.ThrowsAsync** is the async equivalent to [Assert.Throws](Assert.Throws.md)
+for asynchronous code. See [Assert.Throws](Assert.Throws.md) for more information.
 
 ```csharp
 Exception Assert.ThrowsAsync(Type expectedExceptionType, AsyncTestDelegate code);
@@ -59,7 +59,7 @@ public class UsingReturnValue
 ```
 
 #### See also...
- * [[Assert.Catch]]
- * [[Assert.CatchAsync]]
- * [[Assert.Throws]]
+ * [Assert.Catch](Assert.Catch.md)
+ * [Assert.CatchAsync](Assert.CatchAsync.md)
+ * [Assert.Throws](Assert.Throws.md)
  * [[ThrowsConstraint]]

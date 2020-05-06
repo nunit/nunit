@@ -10,7 +10,7 @@ a few ways to use this.
 to the actual exception thrown, or with the Type of exception expected.
 The Type format is available in both a non-generic and generic form.
 
-If the code under test is async, you must use [[Assert.ThrowsAsync]].
+If the code under test is async, you must use [Assert.ThrowsAsync](Assert.ThrowsAsync.md).
 
 ```csharp
 Exception Assert.Throws(Type expectedExceptionType, TestDelegate code);
@@ -104,7 +104,7 @@ Use the form that matches your style of coding.
 When used with a Type argument, **Assert.Throws** requires
 that exact type to be thrown. If you want to test for any
 derived Type, use one of the forms that allows specifying
-a constraint. Alternatively, you may use [[Assert.Catch]],
+a constraint. Alternatively, you may use [Assert.Catch](Assert.Catch.md),
 which differs from **Assert.Throws** in allowing derived
 types. See the following code for examples:
 
@@ -125,7 +125,7 @@ Assert.Catch(code);
 ```
 
 #### See also...
- * [[Assert.Catch]]
- * [[Assert.CatchAsync]]
- * [[Assert.ThrowsAsync]]
+ * [Assert.Catch](Assert.Catch.md)
+ * [Assert.CatchAsync](Assert.CatchAsync.md)
+ * [Assert.ThrowsAsync](Assert.ThrowsAsync.md)
  * [[ThrowsConstraint]]

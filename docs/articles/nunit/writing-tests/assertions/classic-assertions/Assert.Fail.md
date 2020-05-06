@@ -24,6 +24,6 @@ public void AssertStringContains(string expected, string actual, string message)
 ```
 
 #### See also...
- * [[Assert.Pass]]
- * [[Assert.Ignore]]
- * [[Assert.Inconclusive]]
+ * [Assert.Pass](Assert.Pass.md)
+ * [Assert.Ignore](Assert.Ignore.md)
+ * [Assert.Inconclusive](Assert.Inconclusive.md)
