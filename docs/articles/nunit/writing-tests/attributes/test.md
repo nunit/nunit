@@ -1,7 +1,7 @@
 The Test attribute is one way of marking a method inside a TestFixture class
 as a test. It is normally used for simple (non-parameterized) tests but may
 also be applied to parameterized tests without causing any extra test cases
-to be generated. See [[Parameterized Tests]] for more info.
+to be generated. See [Parameterized Tests](xref:ParameterizedTests) for more info.
 
 The test method may be either an instance or a static method.
    

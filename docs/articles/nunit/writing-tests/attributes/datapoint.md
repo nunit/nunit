@@ -29,5 +29,5 @@ For an example of use, see [Theory Attribute](Theory.md)
 #### See also...
 
  * [Theory Attribute](Theory.md)
- * [[Parameterized Tests]]
+ * [Parameterized Tests](xref:ParameterizedTests)
    

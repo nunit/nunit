@@ -1,3 +1,7 @@
+---
+uid: ParameterizedTests
+---
+
 NUnit supports parameterized tests. Test methods
 may have parameters and various attributes are available
 to indicate what arguments should be supplied by NUnit.
