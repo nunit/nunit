@@ -1,3 +1,7 @@
+---
+uid: BreakingChanges
+---
+
 ## NUnit 3.10
 
 * `NUnit.Framework.Constraints.NUnitEqualityComparer.Default` was deprecated in favor of `new NUnitEqualityComparer()`.

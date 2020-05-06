@@ -45,7 +45,7 @@ For NUnit 3.0 we standardized the use of attributes for setup and teardown and r
 
 **TestFixtureSetUpAttribute** and **TestFixtureTearDownAttribute** continue to be supported as synonyms for **OneTimeSetUpAttribute** and **OneTimeTearDownAttribute** in test fixtures, but are deprecated.
 
-Since **SetUpAttribute** and **TearDownAttribute** are used in two different ways, it's not possible to simply deprecate their usage in SetUpFixture. They have been disallowed in that context, which is a [[breaking change|breaking-changes]].
+Since **SetUpAttribute** and **TearDownAttribute** are used in two different ways, it's not possible to simply deprecate their usage in SetUpFixture. They have been disallowed in that context, which is a [breaking change](xref:BreakingChanges).
 
 #### How Setup and TearDown Methods Are Called
 
@@ -89,7 +89,7 @@ In NUnit 3.0, execution will proceed as follows:
 * BaseSetUp
 * BaseTearDown
 
-This is potentially a [[breaking change|breaking-changes]] for some users.
+This is potentially a [breaking change](xref:BreakingChanges) for some users.
 
 #### Unresolved Issues
 
