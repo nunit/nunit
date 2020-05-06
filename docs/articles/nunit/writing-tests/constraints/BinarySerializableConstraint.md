@@ -19,5 +19,5 @@ Assert.That(someObject, Is.BinarySerializable));
 ```
 
 #### See also...
- * [[XmlSerializableConstraint]]
+ * [XmlSerializableConstraint](XmlSerializableConstraint.md)
 

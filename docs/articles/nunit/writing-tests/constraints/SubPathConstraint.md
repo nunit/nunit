@@ -49,5 +49,5 @@ use the **IgnoreCase** and **RespectCase** modifiers to provide
 behavior other than the system default.
       
 #### See also...
- * [[SamePathConstraint]]
- * [[SamePathOrUnderConstraint]]
+ * [SamePathConstraint](SamePathConstraint.md)
+ * [SamePathOrUnderConstraint](SamePathOrUnderConstraint.md)

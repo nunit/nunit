@@ -36,4 +36,4 @@ Assert.That(iarray, Does.Contain(3));
 
 #### Note
 
-`Has.Member()`, `Contains.Item()` and `Does.Contain()` work the same as `Has.Some.EqualTo()`. The last statement generates a [[SomeItemsConstraint]] based on an [[EqualConstraint]] and offers additional options such as ignoring case or specifying a tolerance. The syntax on this page may be viewed as a shortcut for specifying simpler cases.
+`Has.Member()`, `Contains.Item()` and `Does.Contain()` work the same as `Has.Some.EqualTo()`. The last statement generates a [SomeItemsConstraint](SomeItemsConstraint.md) based on an [EqualConstraint](EqualConstraint.md) and offers additional options such as ignoring case or specifying a tolerance. The syntax on this page may be viewed as a shortcut for specifying simpler cases.

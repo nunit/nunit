@@ -50,5 +50,5 @@ behavior other than the system default.
 
 
 ### See also...
- * [[SubPathConstraint]]
- * [[SamePathOrUnderConstraint]]
+ * [SubPathConstraint](SubPathConstraint.md)
+ * [SamePathOrUnderConstraint](SamePathOrUnderConstraint.md)

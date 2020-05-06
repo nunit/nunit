@@ -19,5 +19,5 @@ Assert.That(someObject, Has.Property("Version"));
 ```
 
 #### See also...
- * [[PropertyConstraint]]
+ * [PropertyConstraint](PropertyConstraint.md)
 

@@ -39,4 +39,4 @@ Assert.That(mydict, Contains.Key(myOwnObject).Using(myComparer));
 ```
 
 **See also:**
- * [[DictionaryContainsValueConstraint]]
+ * [DictionaryContainsValueConstraint](DictionaryContainsValueConstraint.md)

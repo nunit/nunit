@@ -7,7 +7,7 @@ throws a particular exception. It may be used alone, to merely test the type
 of constraint, or with an additional constraint to be applied to the exception
 specified as an argument.
 
-The related [[ThrowsNothingConstraint]] simply asserts that the delegate
+The related [ThrowsNothingConstraint](ThrowsNothingConstraint.md) simply asserts that the delegate
 does not throw an exception.
 
 #### Constructors

@@ -26,4 +26,4 @@ Note that the constraint evaluates the sub-constraints left to right, meaning th
 The **OrConstraint** has precedence over the **AndConstraint**.
 
 #### See also...
- * [[AndConstraint]]
+ * [AndConstraint](AndConstraint.md)
