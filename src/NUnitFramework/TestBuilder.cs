@@ -37,7 +37,7 @@ namespace NUnit.TestUtilities
     /// <summary>
     /// Utility Class used to build and run NUnit tests used as test data
     /// </summary>
-    public static class TestBuilder
+    internal static class TestBuilder
     {
         #region Build Tests
 
@@ -106,12 +106,7 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context);
         }
 
-        public static WorkItem CreateWorkItem(Test test, object testObject)
-        {
-            return CreateWorkItem(test, testObject, null);
-        }
-
-        internal static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger)
+        public static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger = null)
         {
             var context = new TestExecutionContext
             {
@@ -122,12 +117,7 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context, debugger);
         }
 
-        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context)
-        {
-            return CreateWorkItem(test, context, null);
-        }
-
-        internal static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger)
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger = null)
         {
             var workItemBuilder = new WorkItemBuilder(debugger ?? new DebuggerProxy());
             var work = workItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);

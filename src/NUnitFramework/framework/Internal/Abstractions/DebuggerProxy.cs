@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Abstractions
     /// <summary>
     /// A production <see cref="IDebugger"/> implementation that delegates directly to .NET's <see cref="Debugger"/>.
     /// </summary>
-    internal class DebuggerProxy : IDebugger
+    internal sealed class DebuggerProxy : IDebugger
     {
         /// <summary>
         /// Returns whether a debugger is currently attached to the process
