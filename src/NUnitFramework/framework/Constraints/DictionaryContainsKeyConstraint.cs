@@ -89,7 +89,7 @@ namespace NUnit.Framework.Constraints
                 builder.Append(this);
             }
 
-            var constraint = new DictionaryContainsKeyValuePairConstraint(Expected, expected);
+            var constraint = new DictionaryContainsKeyValuePairConstraint(Expected, expectedValue);
             builder.Append(constraint);
             return constraint;
         }
