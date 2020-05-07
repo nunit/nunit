@@ -15,8 +15,6 @@
   href: Framework-Design.md
 - name: Active Attributes
   href: Active-Attributes.md
-- name: Internal Trace
-  href: Internal-Trace.md
 - name: NUnit Agent
   href: NUnit-Agent.md
 - name: Attribute Hierarchy
