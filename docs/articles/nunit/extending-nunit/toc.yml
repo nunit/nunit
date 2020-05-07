@@ -1,5 +1,14 @@
 - name: Framework Extensibility
   href: Framework-Extensibility.md
+  items: 
+    - name: Action Attributes
+      href: Action-Attributes.md
+    - name: Custom Asserts
+      href: Custom-Asserts.md
+    - name: Custom Attributes
+      href: Custom-Attributes.md
+    - name: Custom Constraints
+      href: Custom-Constraints.md
 - name: Writing Engine Extensions
   href: Writing-Engine-Extensions.md
   items: 

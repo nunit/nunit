@@ -56,7 +56,7 @@ The overloads that take a bool work exactly like `Assert.IsTrue`, except that `A
 For overloads taking a constraint, the argument must be a object implementing 
 the **IResolveConstraint** interface, which supports performing a test
 on an actual value and generating appropriate messages. This interface
-is described in more detail under [[Custom Constraints]].
+is described in more detail under [Custom Constraints](xref:customconstraints).
    
 NUnit provides a number of constraint classes similar to the **EqualConstraint**
 used in the example above. Generally, these classes may be used directly or
