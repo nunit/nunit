@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The NUnitEqualityComparer in use for this constraint
         /// </summary>
-        protected internal NUnitEqualityComparer Comparer { get; } = new NUnitEqualityComparer();
+        private protected NUnitEqualityComparer Comparer { get; } = new NUnitEqualityComparer();
 
         /// <summary>
         /// Construct an empty CollectionConstraint
