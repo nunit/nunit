@@ -50,7 +50,7 @@ Other breaking changes are grouped in the following tables.
 | SuiteAttribute               | No longer supported. |
 | System.MTAThreadAttribute    | No longer treated as `RequiresMTAAttribute`             |
 | System.STAThreadAttribute    | No longer treated as `RequiresSTAAttribute`             | 
-| TearDown and OneTimeTearDown | There is a change to the logic by which teardown methods are called. See [[SetUp and TearDown Changes]] for details. |
+| TearDown and OneTimeTearDown | There is a change to the logic by which teardown methods are called. See [Setup and Teardown Changes](xref:setupteardownchanges for details. |
 | TestCaseAttribute            | Named parameter `Result=` is no longer supported. Use `ExpectedResult=`. Named parameter `Ignore=` now takes a string, giving the reason for ignoring the test.|
 | TestCaseSourceAttribute      | The attribute forms using a string argument to refer to the data source must now use only static fields, properties or methods. |
 | TestFixtureAttribute         | Named parameter `Ignore=` now takes a string, giving the reason for ignoring the test. |
