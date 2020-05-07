@@ -6,7 +6,7 @@
    * [[Framework API]]
  * [[Framework Design]]
  * [[Active Attributes]]
- * [[Internal Trace]]
+ * Internal Trace
  * [[NUnit Agent]]
  * [[Attribute Hierarchy]]
  * [[Test Discovery And Execution]]
