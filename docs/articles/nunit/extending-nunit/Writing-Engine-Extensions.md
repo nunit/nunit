@@ -54,10 +54,10 @@ By use of the `ExtensionPropertyAttribute` NUnit is able to postpone loading the
 
 As of version 3.4, the NUnit Engine supports four types of extensions. The individual pages for each type give specific details on implementing each of them.
 
-* [[Project Loaders]]
-* [[Result Writers]]
-* [[Framework Drivers]]
-* [[Event Listeners]]
+* [Project Loaders](Project-Loaders.md)
+* [Result Writers](Result-Writers.md)
+* [Framework Drivers](Framework-Drivers.md)
+* [Event Listeners](Event-Listeners.md)
 
 ## Installing Extensions
 
