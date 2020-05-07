@@ -88,7 +88,7 @@ Other breaking changes are grouped in the following tables.
 
 |      Feature       |          Notes                                        |
 |--------------------|-------------------------------------------------------|
-| Addins             | No longer supported. See [[Addin Replacement in the Framework]]. |
+| Addins             | No longer supported. See [Addin Replacement in the Framework](xref:addinreplacementintheframework). |
 | CurrentDirectory   | No longer set to the directory containing the test assembly. Use `TestContext.CurrentContext.TestDirectory` to locate that directory. |
 | NUnitLite          | NUnitLite executable tests must now reference nunit.framework in addition to NUnitLite. |
 | SetUpFixture       | Now uses `OneTimeSetUpAttribute` and `OneTimeTearDownAttribute` to designate higher-level setup and teardown methods. `SetUpAttribute` and `TearDownAttribute` are no longer allowed. |

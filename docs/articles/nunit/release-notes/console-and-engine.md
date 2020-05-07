@@ -270,7 +270,7 @@ aggregate NuGet packages also include updated versions of several extensions.
  * [159](https://github.com/nunit/nunit-console/issues/159) Update extension versions in the NuSpec Files
 
 ### Earlier Releases
- * Release Notes for [[NUnit 2.9.1 through 3.5|Pre-3.5-Release-Notes]].
+ * Release Notes for [NUnit 2.9.1 through 3.5](xref:pre35releasenotes).
  * Release Notes for [NUnit 2.6 through 2.6.4](http://www.nunit.org/?p=releaseNotes&r=2.6.4)
  * Release Notes for [NUnit 2.5 through 2.5.10](http://www.nunit.org/?p=releaseNotes&r=2.5.10)
  * Release Notes for [NUnit 2.4 through 2.4.8](http://www.nunit.org/?p=releaseNotes&r=2.4.8)
