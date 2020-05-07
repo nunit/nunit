@@ -45,9 +45,12 @@ namespace NUnit.Framework.Constraints.Comparers
             string xString = (string)x;
             string yString = (string)y;
 
-            var comparison = _equalityComparer.IgnoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            bool caseInsensitive = _equalityComparer.IgnoreCase;
 
-            return string.Equals(xString, yString, comparison);
+            string s1 = caseInsensitive ? xString.ToLower() : xString;
+            string s2 = caseInsensitive ? yString.ToLower() : yString;
+
+            return s1.Equals(s2);
         }
     }
 }
