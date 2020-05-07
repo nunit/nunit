@@ -97,6 +97,21 @@ namespace NUnit.Framework.Constraints
             }, HelperConstraints.HasMaxTime(100));
         }
 
+        static readonly object[] CultureAwareData_German =
+        {
+            new object[] {new SimpleObjectCollection("ss", "ß") },
+            new object[] {new[] {"SS", "ß" } }
+        };
+
+        [TestCaseSource(nameof(CultureAwareData_German)), SetCulture("de-DE")]
+        public void UniqueItems_CultureAware(IEnumerable values)
+        {
+            var constraint = new UniqueItemsConstraint().IgnoreCase;
+            var result = constraint.ApplyTo(values);
+
+            Assert.That(result.IsSuccess, Is.False, "{0} should not be unique ignoring case", values);
+        }
+
 #if !NET35
         static readonly TestCaseData[] PerformanceData_MediumPath =
         {
