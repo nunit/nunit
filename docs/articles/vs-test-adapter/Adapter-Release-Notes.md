@@ -207,7 +207,7 @@ This is a hotfix release to fix the duplicated traits issue.
 
 * Indentation of the test log format makes it easier to see what information belongs to which assembly.
 
-* Quiet mode added, if you don't want all the information, see [[Tips and Tricks]].
+* Quiet mode added, if you don't want all the information, see [Tips and Tricks](xref:tipsandtricks).
 
 ##### Resolved Issues
 

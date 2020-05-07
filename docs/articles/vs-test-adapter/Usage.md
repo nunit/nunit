@@ -14,4 +14,4 @@ Tests may be organized by play lists in Visual Studio under Update 2 or later. P
 
 Parameterized tests will show up as separate test cases for each set of parameters.
 
-For settings options, see the [[Tips and Tricks]]
+For settings options, see the [Tips and Tricks](xref:tipsandtricks)
