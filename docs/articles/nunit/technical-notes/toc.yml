@@ -1,4 +1,4 @@
 - name: Usage Notes
   href: usage/toc.yml
 - name: NUnit Internals
-  href: NUnit-Internals.md
+  href: nunit-internals/toc.yml
