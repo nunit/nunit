@@ -73,7 +73,7 @@ Without the V2 driver, only version 3.0 and higher tests may be run.
     <td>Set the random SEED used to generate test cases.</td></tr>
     
 <tr><th>--workers=NUMBER</th>
-    <td>Specify the NUMBER of worker threads to be used in running tests. This setting is used to control running your tests in parallel and is used in conjunction with the [[Parallelizable Attribute]]. If not specified, workers defaults to the number of processors on the machine, or 2, whichever is greater.</td></tr>
+    <td>Specify the NUMBER of worker threads to be used in running tests. This setting is used to control running your tests in parallel and is used in conjunction with the [Parallelizable Attribute](xref:parallelizableattribute). If not specified, workers defaults to the number of processors on the machine, or 2, whichever is greater.</td></tr>
     
 <tr><th>--stoponerror</th>
     <td>Stop run immediately upon any test failure or error.</td></tr>

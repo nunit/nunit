@@ -1,3 +1,7 @@
+---
+uid: parallelizableattribute
+---
+
 The **ParallelizableAttribute** is used to indicate that a test and/or its descendants may be run in parallel with other tests. By default, no parallel execution takes place.
 
 When used without an argument, **Parallelizable** causes the test fixture or method on which it is placed to be queued for execution in parallel with other parallelizable tests. It may be used at the assembly, class or method level.
