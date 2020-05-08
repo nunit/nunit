@@ -1,3 +1,7 @@
+---
+uid: testcaseattribute
+---
+
 **TestCaseAttribute** serves the dual purpose of marking a method with
 parameters as a test method and providing inline data to be used when
 invoking that method. Here is an example of a test being run three

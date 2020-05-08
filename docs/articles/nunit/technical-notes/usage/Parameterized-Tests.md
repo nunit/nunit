@@ -20,16 +20,16 @@ as shown in the following table.
    
 |              | Complete Test Cases          | Data for One Argument |
 |--------------|------------------------------|-----------------------|
-| **Inline**   | [[TestCase Attribute]]       | [[Random Attribute]]<br/>[[Range Attribute]]<br/>[[Values Attribute]] |
-| **Separate** | [[TestCaseSource Attribute]] | [[ValueSource Attribute]] |
+| **Inline**   | [TestCase Attribute](xref:testcaseattribute)       | [Random Attribute](xref:testcaseattribute)<br/>[Range Attribute](xref:rangeattribute)<br/>[Values Attribute](xref:valuesattribute) |
+| **Separate** | [TestCaseSource Attribute](xref:testcasesourceattribute) | [ValueSource Attribute](xref:valuesource) |
 
 In addition, when data is specified for individual arguments, special attributes
 may be added to the test method itself in order to tell NUnit how
 to go about combining the arguments. Currently, the following attributes
 are provided:
- * [[Combinatorial Attribute]] (default)
- * [[Pairwise Attribute]]
- * [[Sequential Attribute]]
+ * [Combinatorial Attribute](xref:combinatorialattribute) (default)
+ * [Pairwise Attribute](xref:pairwiseattribute)
+ * [Sequential Attribute](xref:sequentialattribute)
 
 ### Order of Execution
 

@@ -1,3 +1,7 @@
+---
+uid: testcasesourceattribute
+---
+
 **TestCaseSourceAttribute** is used on a parameterized test method to
 identify the source from which the required arguments will be provided. 
 The attribute additionally identifies the method as a test method.

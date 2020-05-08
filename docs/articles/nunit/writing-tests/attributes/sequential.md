@@ -1,3 +1,7 @@
+---
+uid: sequentialattribute
+---
+
 The **SequentialAttribute** is used on a test to specify that NUnit should
 generate test cases by selecting individual data items provided
 for the parameters of the test, without generating additional

@@ -1,3 +1,7 @@
+---
+uid: valuesattribute
+---
+
 The **ValuesAttribute** is used to specify a set of values to be provided
 for an individual parameter of a parameterized test method. Since
 NUnit combines the data provided for each parameter into a set of

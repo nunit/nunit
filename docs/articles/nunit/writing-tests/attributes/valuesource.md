@@ -1,3 +1,7 @@
+---
+uid: valuesource
+---
+
 **ValueSourceAttribute** is used on individual parameters of a test method to
 identify a named source for the argument values to be supplied. The attribute has 
 two public constructors.

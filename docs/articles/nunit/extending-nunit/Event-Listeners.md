@@ -43,4 +43,4 @@ The argument to `OnTestEvent` is an XML-formatted string, with a different top-l
  * Start of a test case - `<start-test...>`
  * End of a test case - `<test-case...>`
 
-The XML report signalling the end of a test case contains all available information, including the result. The start events only provide basic identifying information. See [[XML Formats]] for a full description of each report.
+The XML report signalling the end of a test case contains all available information, including the result. The start events only provide basic identifying information. See [XML Formats](xref:xmlformats) for a full description of each report.

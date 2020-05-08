@@ -1,3 +1,7 @@
+---
+uid: combinatorialattribute
+---
+
 The **CombinatorialAttribute** is used on a test to specify that NUnit should
 generate test cases for all possible combinations of the individual
 data items provided for the parameters of a test. Since this is the
