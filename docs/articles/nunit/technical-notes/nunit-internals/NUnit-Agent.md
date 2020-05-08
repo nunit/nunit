@@ -1,3 +1,7 @@
+---
+uid: nunitagent
+---
+
 The nunit-agent.exe program is used by other runners when the tests are being
 run in a separate process. It is not intended for direct execution by users.
 

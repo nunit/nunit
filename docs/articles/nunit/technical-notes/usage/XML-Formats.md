@@ -44,11 +44,11 @@ Optionally, NUnit 3.0 is able to save results in the NUnit 2.x format for use wi
 
 When using the -explore option, a list of tests without results is returned. The format used is simply a subset of the test result format, without the result information.
 
-See [[Test Result XML Format]] for details.
+See [Test Result XML Format](Test-Result-XML-Format.md) for details.
 
 #### Test Filters
 
-Information about which tests to run is provided to the framework using a test filter, represented as an XML fragment. See [[Test Filters]] for details.
+Information about which tests to run is provided to the framework using a test filter, represented as an XML fragment. See [Test Filters](xref:testfilters) for details.
 
 #### Test Packages
 
