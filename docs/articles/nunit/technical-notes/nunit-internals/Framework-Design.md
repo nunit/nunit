@@ -46,7 +46,7 @@ See [[Framework Boundary]]
 
 The internal (core) interfaces used by earlier versions of NUnit are not suitable for external use because they tend to change as features are added. The 3.0 release incorporates a new interface, supporting the same functionality as the existing interfaces, but with fewer dependencies on custom types. It is usable by both NUnit and third-party runners and will provide functions of test discovery, loading and execution.
 
-See [[Framework Api]]
+See [Framework Api](Framework-Api.md)
 
 #### Active Attributes
 
@@ -54,7 +54,7 @@ In the NUnit 2.x series, Attributes are fundamentally passive objects. They are 
 
 In NUnit 3.0, since the test loader is part of the framework assembly, we'll be able to identify attributes without use of reflection, which should improve load performance. Attributes will actually contain the code that carries out the necessary functionality.
 
-See [[DRAFT:Active Attributes]]
+See [DRAFT:Active Attributes](Active-Attributes.md)
 
 #### Test Loading
 
