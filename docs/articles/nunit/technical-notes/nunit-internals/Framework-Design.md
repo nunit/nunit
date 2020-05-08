@@ -10,16 +10,11 @@ design change subheading.
 
 NUnit 3.0 introduces separate framework builds for each supported runtime version, including .NET 2.0, 3.5, 4.0 and 4.5. We will continue to use the same framework assemblies for both the Microsoft and Mono implementations.
 
-
-See [[Framework Distributions]]
-
 #### Merge NUnitLite
 
 NUnitLite is a light-weight version of NUnit, requiring minimal resources and running on platforms not supported by full NUnit. NUnitLite is approximately equivalent to the framework portion of NUnit, with the addition of a rudimentary test runner.
 
 For the NUnit 3.0 release, the NUnitLite project code has been merged with the code of NUnit itself, using conditional compilation to support a reduced feature set.
-
-See [[merge_nunitlite_with_nunit|Merge NUnitLite]]
 
 #### Framework Boundary
 
