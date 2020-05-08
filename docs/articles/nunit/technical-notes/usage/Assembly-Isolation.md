@@ -9,4 +9,4 @@ for which it was built. Within the agent process, NUnit's own code runs in the p
    
 If desired, multiple test assemblies may be loaded into the same process and
 even the same domain by use of the **-process** and **-domain** command-line
-options. See [[Console Command Line]].
+options. See Console Command Line](xref:ConsoleCommandLine).

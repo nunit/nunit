@@ -1,3 +1,7 @@
+---
+uid: ConsoleCommandLine
+---
+
 The console interface runner is invoked by a command in the form
 
 ```
