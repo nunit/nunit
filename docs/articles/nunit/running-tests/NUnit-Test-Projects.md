@@ -30,7 +30,7 @@ File and PrivateBinPath.
 The [Project Editor](https://github.com/CharliePoole/nunit-project-editor/wiki/Project-Editor) may be used to create or modify NUnit projects. If you edit the XML manually, you should make sure to
 use a path relative to the directory containing the project file as the location of any assemblies.
 
-For details, see [[NUnit Project XML Format]]
+For details, see [NUnit Project XML Format](xref:nunitprojectxmlformat)
 
 #### Command-line Overrides
 

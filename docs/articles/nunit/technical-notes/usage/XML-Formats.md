@@ -15,7 +15,7 @@ An NUnit project is stored as a file with the extension .nunit and describes one
 
 Currently, the format is the same as for NUnit 2.x but it is likely to change as the project proceeds. Note that NUnitLite does not use or recognize NUnit projects, but only assemblies.
 
-For details of the file contents, see [[NUnit Project XML Format]]
+For details of the file contents, see [NUnit Project XML Format](xref:nunitprojectxmlformat)
 
 #### NUnit Settings
 
