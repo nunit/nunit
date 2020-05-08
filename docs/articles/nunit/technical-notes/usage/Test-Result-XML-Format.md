@@ -227,7 +227,7 @@ Optional element that appears when files are attached to a test. Contains a list
 ## `<attachment>`
 Groups together the file path and description of a test attachment.
  * **Containing Elements:** [`<attachments>`](#attachments)
- * **Contained Elements:** [`<filePath>`](#filePath), [`<description>`](#description)
+ * **Contained Elements:** [`<filePath>`](#filepath), [`<description>`](#description)
  * **Attributes** None
 
 ## `<filePath>`
