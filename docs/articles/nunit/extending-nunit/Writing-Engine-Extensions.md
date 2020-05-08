@@ -1,4 +1,4 @@
-The NUnit Test Engine uses a plugin architecture that allows users and third parties to add new functionality to the engine. The extensibility model defines a number of Extension Points to which Extensions may be added. This page gives general information that applies to all types of extensions you may want to write. The individual pages for each type of extension give specific details. For a detailed description of the engine extensibility architecture, see [[Engine Extensibility]].
+The NUnit Test Engine uses a plugin architecture that allows users and third parties to add new functionality to the engine. The extensibility model defines a number of Extension Points to which Extensions may be added. This page gives general information that applies to all types of extensions you may want to write. The individual pages for each type of extension give specific details. For a detailed description of the engine extensibility architecture, see [Engine Extensibility](xref:engineextensibility).
 
 ## Extension Attribute
 

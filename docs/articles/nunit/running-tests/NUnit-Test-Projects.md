@@ -1,3 +1,7 @@
+---
+uid: nunittestprojects
+---
+
 Although you may simply enter multiple assembly names on the console command-line, running tests from multiple assemblies is facilitated by the use of NUnit test projects. These are
 files with the extension .nunit containing information about the assemblies to be loaded. The
 following is an example of a hypothetical test project file:

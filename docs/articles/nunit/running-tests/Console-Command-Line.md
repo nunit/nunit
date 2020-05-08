@@ -17,7 +17,7 @@ relative. Relative paths are interpreted based on the current directory.
 In addition to assemblies, you may specify any project type that is
 understood by NUnit. Out of the box, this includes various
 Visual Studio project types as well as NUnit (.nunit) test projects (see 
-[[NUnit Test Projects]] for a description of NUnit test projects).
+[NUnit Test Projects](xref:nunittestprojects) for a description of NUnit test projects).
 
 If the NUnit V2 framework driver is installed, test assemblies may
 be run based on any version of the NUnit framework beginning with 2.0.
