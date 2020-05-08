@@ -67,8 +67,6 @@ whatever display hierarchy the user chooses as a view of the tests.
 This will simplify the loading of tests and is compatible with NUnitLite,
 which already loads tests this way.
 
-See [[Test Loading]]
-
 #### Test Execution
 
 Currently, the sequencing of tests is the responsibility of the tests 
@@ -82,5 +80,3 @@ test execution and cancellation of running tests with restart.
 In NUnit 3.0, the objects representing tests will no longer have the
 responsibility of running any subordinate tests and a separate test runner
 will sequence through the tests to execute them in the desired order.
-
-See [[Test Execution]]
