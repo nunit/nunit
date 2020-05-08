@@ -2,7 +2,7 @@
 
 The `ExtensionPoint` for framework drivers uses the Path "NUnit.Engine.DriverService" and accepts an extension of Type `NUnit.Engine.Extensibility.IDriverFactory`. The definition of a driver factory might look like this:
 
-```C#
+```csharp
 [Extension]
 public class MyOwnFrameworkDriverFactory : IDriverFactory
 {
@@ -12,7 +12,7 @@ public class MyOwnFrameworkDriverFactory : IDriverFactory
 
 The `IDriverFactory` interface is defined as follows:
 
-```C#
+```csharp
 public interface IDriverFactory
 {
     // Gets a flag indicating whether the provided assembly name and version
@@ -25,7 +25,7 @@ public interface IDriverFactory
 ```
 
 The `IFrameworkDriver` interface is defined as follows:
-```C#
+```csharp
 public interface IFrameworkDriver
 {
     // Gets and sets the unique identifer for this driver

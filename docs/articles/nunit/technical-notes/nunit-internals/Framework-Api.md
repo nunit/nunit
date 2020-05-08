@@ -4,7 +4,7 @@ This document describes the interface between the driver and framework and the r
 
 The following is a simplified example of how a calling program might use the framework to load and run tests in a particular `AppDomain`. This sort of code is expected to reside only in a driver. User-created runners should use the Engine API rather than dealing with the framework at this low level. See below for explanations of each call.
 
-```C#
+```csharp
 var myHandler = new MyHandlerClass(); // implements ICallbackEventHandler
 
 // Create the controller
@@ -54,7 +54,7 @@ As new versions of the framework are released, settings in this file are not cha
     
 The driver creates a `FrameworkController` instance using reflection for each test assembly that must be loaded for browsing or execution. The constructor is defined as follows:
 
-```C#
+```csharp
 public FrameworkController(string assemblyPath, string idPrefix, IDictionary settings)
 ```
 where
@@ -81,7 +81,7 @@ Some actions take the string representation of a test filter as an argument. The
 
 `LoadTestsAction` must be used before any other action can be called. Its constructor is as follows:
 
-```C#
+```csharp
 public LoadTestsAction(FrameworkController controller, object handler);
 ```
 
@@ -97,7 +97,7 @@ If the assembly can not be found or loaded, the same result is returned, but wit
 
 `ExploreTestsAction` is used to get the full tree of tests, as for display in a Gui. Its constructor is as follows:
 
-```C#
+```csharp
 public ExploreTestsAction(FrameworkController controller, string filter, object handler);
 ```
 where
@@ -115,7 +115,7 @@ If this action is invoked without first invoking `LoadTestsAction`, an `InvalidO
 
 CountTestsAction is used to get the number of test cases that will be executed under a specified filter, for use in a progress display. Its constructor is as follows.
 
-```C#
+```csharp
 public CountTestsAction(FrameworkController controller, string filter, object handler);
 ```
 
@@ -134,7 +134,7 @@ If this action is invoked without first invoking `LoadTestsAction`, an `InvalidO
 
 `RunTestsAction` is used to execute the loaded tests. Its constructor is as follows:
 
-```C#
+```csharp
 public RunTestsAction(FrameworkController controller, string filter, object handler);
 ```
 where
@@ -152,7 +152,7 @@ If this action is invoked without first invoking `LoadTestsAction`, an `InvalidO
 
 `RunAsyncAction` is used to initiate an asynchronous test run, returning immediately. Its constructor is as follows:
 
-```C#
+```csharp
 public RunAsyncAction(FrameworkController controller, string filter, object handler);
 ```
 where
@@ -170,7 +170,7 @@ If this action is invoked without first invoking `LoadTestsAction`, an `InvalidO
 
 `StopRunAction` is used to stop an ongoing test run. Its constructor is as follows:
 
-```C#
+```csharp
 public StopRunAction(FrameworkController controller, bool force, object handler);
 ```
 where

@@ -4,7 +4,7 @@
 
 The extension point for project loaders accepts extensions that implement the `NUnit.Engine.Extensibility.IProjectLoader` interface. The definition of a project loader extension might look something like the following...
 
-```C#
+```csharp
 [Extension]
 [ExtensionProperty("FileExtension", ".xxx")]
 [ExtensionProperty("FileExtension", ".yyy")]
@@ -18,7 +18,7 @@ The engine will only load the extension if it encounters a potential project fil
 
 The `IProjectLoader` interface is defined as follows:
 
-```C#
+```csharp
 /// <summary>
 /// The IProjectLoader interface is implemented by any class
 /// that knows how to load projects in a specific format.
@@ -45,7 +45,7 @@ public interface IProjectLoader
 ```
 
 An `IProject`, which is returned by `LoadFrom` is defined as:
-```C#
+```csharp
 /// <summary>
 /// Interface for the various project types that the engine can load.
 /// </summary>

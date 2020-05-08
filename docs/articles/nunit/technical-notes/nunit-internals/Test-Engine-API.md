@@ -10,7 +10,7 @@ The actual engine is contained in the `nunit.engine` assembly. This assembly is 
 
 The static class [TestEngineActivator](https://github.com/nunit/nunit-console/blob/master/src/NUnitEngine/nunit.engine.api/TestEngineActivator.cs) is used to get an interface to the engine. Its `CreateInstance` member has two overloads, depending on whether a particular minimum version of the engine is required.
 
-```C#
+```csharp
 public static ITestEngine CreateInstance(bool unused = false);
 public static ITestEngine CreateInstance(Version minVersion, bool unused = false);
 ```
@@ -30,7 +30,7 @@ The runner deals with the engine through a set of interfaces. These are quite ge
 
 This is the primary interface to the engine. 
 
-```C#
+```csharp
 namespace NUnit.Engine
 {
     /// <summary>
@@ -87,7 +87,7 @@ namespace NUnit.Engine
 
 The normal sequence of calls for initially acquiring this interface is:
 
-```C#
+```csharp
 ITestEngine engine = TestEngineActivator.CreateInstance(...);
 engine.WorkDirectory = ...; // Defaults to the current directory
 engine.InternalTraceLevel = ...; // Defaults to Off
@@ -101,7 +101,7 @@ The final and probably most frequently used method on the interface is `GetRunne
 
 This interface allows loading test assemblies, exploring the tests contained in them and running the tests. 
 
-```C#
+```csharp
 namespace NUnit.Engine
 {
     /// <summary>
@@ -187,7 +187,7 @@ The progress of a run is reported to the `ITestEventListener` passed to one of t
 
 The following example shows how to get a copy of the engine, create a runner and run tests using the interfaces.
 
-```C#
+```csharp
 // Get an interface to the engine
 ITestEngine engine = TestEngineActivator.CreateInstance();
 
@@ -207,7 +207,7 @@ The call to `Run` assumes that the calling class implements ITestEventListener. 
 
 The engine `Services` property exposes the `IServiceLocator` interface, which allows the runner to use public services of the engine.
 
-```C#
+```csharp
 namespace NUnit.Engine
 {
     /// <summary>

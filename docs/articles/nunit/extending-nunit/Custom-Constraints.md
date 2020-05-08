@@ -17,7 +17,7 @@ overridden to change some default behaviors.
 
 The relevant portions of the `Constraint` class are represented below.
    
-```C#
+```csharp
 namespace NUnit.Framework.Constraints
 {
     public abstract class Constraint
@@ -52,7 +52,7 @@ method.
 For example, a very naive implementation of a reference equality constraint might look 
 like this:
 
-```C#
+```csharp
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             return new ConstraintResult(this, actual, ReferenceEquals(actual, Arguments[0]));
@@ -92,7 +92,7 @@ needed, override the property and provide a custom implementation of `get`.
 
 Here are a few simple examples from built-in constraints.
 
-```C#
+```csharp
 public class FalseConstraint : Constraint
 {
     public FalseConstraint()
@@ -112,7 +112,7 @@ public class NullConstraint : Constraint
     
 Here are a few complex examples from built-in constraints.
 
-```C#
+```csharp
 public class AndConstraint : BinaryConstraint
 {
     public override string Description
@@ -155,13 +155,13 @@ any generic suffixes.
 
 Having written a custom constraint class, you can use it directly through its constructor:
 
-```C#
+```csharp
 Assert.That(myObject, new CustomConstraint());
 ```
 
 You may also use it in expressions through NUnit's `Matches` syntax element:
 
-```C#
+```csharp
 Assert.That(myObject, Is.Not.Null.And.Matches(new CustomConstraint());
 ```
 
@@ -169,14 +169,14 @@ The direct construction approach is not very convenient or easy to read.
 For its built-in constraints, NUnit includes classes that implement a special 
 constraint syntax, allowing you to write things like...
 
-```C#
+```csharp
 Assert.That(actual, Is.All.InRange(1, 100));
 ```
 
 Custom constraints can support this syntax by providing a static helper class and
 extension method on `ConstraintExpression`, such as this.
 
-```C#
+```csharp
 public static class CustomConstraintExtensions
 {
     public static ContentsEqualConstraint ContentsEqual(this ConstraintExpression expression, object expected)
@@ -197,13 +197,13 @@ for each custom constraint).
    `Is` and extend NUnit's `Is`, provided you place it in your own namespace and avoid 
    any conflicts. This allows you to write things like:
 
-   ```C#
+   ```csharp
    Assert.That(actual, Is.Custom(x, y));
    ```
    
    with this sample implementation:
    
-   ```C#
+   ```csharp
     public class Is : NUnit.Framework.Is
     {
         public static CustomConstraint Custom(object expected)
@@ -216,13 +216,13 @@ for each custom constraint).
 2. Provide an extension method for NUnit's `ConstraintExpression`, allowing
    you to write things like:
 
-   ```C#
+   ```csharp
    Assert.That(actual, Is.Not.Custom(x, y));
    ```
 
     with this sample implementation:
     
-    ```C#
+    ```csharp
     public static class CustomConstraintExtensions
     {
         public static CustomConstraint Custom(this ConstraintExpression expression, object expected)

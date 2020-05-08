@@ -19,7 +19,7 @@ If we now discover a third piece of functionality we need to reuse, like configu
 
 `Action Attributes` get us out of our bind. Consider this example:
 
-```C#
+```csharp
 [TestFixture, ResetServiceLocator]
 public class MyTests
 {
@@ -54,7 +54,7 @@ We can even develop and distribute a library of common test actions.
 Action attributes are defined by the programmer. They implement the `ITestAction`
 interface, which is defined as follows:
 
-```C#
+```csharp
 public interface ITestAction
 {
     void BeforeTest(ITest test);
@@ -74,7 +74,7 @@ may derive from `System.Attribute` and implement the interface directly.
 The value returned from the `Targets` property determines when the `BeforeTest` and
 `AfterTest` methods will be called. The ActionTargets enum is defined as follows:
 
-```C#
+```csharp
 [Flags]
 public enum ActionTargets
 {
@@ -108,7 +108,7 @@ interface is an internal NUnit interface to the representation of a test, which 
 either a test case or a suite. The before and after methods may use the interface 
 to decide what actions to take or retrieve information about the test.
 
-```C#
+```csharp
 public interface ITest : IXmlNodeBuilder
 {
     // Gets the id of the test
@@ -156,7 +156,7 @@ public interface ITest : IXmlNodeBuilder
 
 The examples that follow all use the following sample Action Attribute:
 
-```C#
+```csharp
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class |
                 AttributeTargets.Interface | AttributeTargets.Assembly,
                 AllowMultiple = true)]
@@ -199,7 +199,7 @@ Note that the above Action Attribute returns the union of ActionTargets.Test and
 
 #### Example 1 (applied to simple test method):
 
-```C#
+```csharp
 [TestFixture]
 public class ActionAttributeSampleTests
 {
@@ -220,7 +220,7 @@ public class ActionAttributeSampleTests
 
 #### Example 2 (applied action twice to test method):
 
-```C#
+```csharp
 [TestFixture]
 public class ActionAttributeSampleTests
 {
@@ -249,7 +249,7 @@ it will generally be stable for a single release of .NET.
 
 #### Example 3 (applied to a test method with test cases):
 
-```C#
+```csharp
 [TestFixture]
 public class ActionAttributeSampleTests
 {
@@ -285,7 +285,7 @@ Note that the order in which test cases are executed is indeterminate.
 
 #### Example 1:
 
-```C#
+```csharp
 [TestFixture] [ConsoleAction("Hello")]
 public class ActionAttributeSampleTests
 {
@@ -320,7 +320,7 @@ In this case, the class is the test suite. BeforeTest and AfterTest are run once
 
 #### Example 2 (attached to interface):
 
-```C#
+```csharp
 [ConsoleAction("Hello")]
 public interface IHaveAnAction
 {
@@ -351,7 +351,7 @@ Action attributes can be applied to an interface.  If a class marked with [TestF
 
 #### Example 3 (action attribute is applied to interface and attribute uses interface to provide data to tests):
 
-```C#
+```csharp
 [AttributeUsage(AttributeTargets.Interface)]
 public class InterfaceAwareActionAttribute : TestActionAttribute
 {
@@ -389,7 +389,7 @@ public class ActionAttributeSampleTests : IHaveAnAction
 ```
 
 ##### Console Output:
-```C#
+```csharp
   Hello, World!
 ```
 
@@ -403,7 +403,7 @@ of `AfterTest` and overrides both `BeforeTest` and `Target`.
 
 #### Example 1:
 
-```C#
+```csharp
 [assembly: ConsoleAction("Hello")]
 
 [TestFixture]
@@ -418,7 +418,7 @@ public class ActionAttributeSampleTests
 ```
 
 ##### Console Output:
-```C#
+```csharp
   Before Suite: Hello, from {no fixture}.{no method}.
   Before Case: Hello, from ActionAttributeSampleTests.SimpleTest.
   Test run.

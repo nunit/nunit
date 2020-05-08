@@ -29,7 +29,7 @@ Setup methods (both types) are called on base classes first, then on derived cla
 
 Teardown methods (again, both types) are called on derived classes first, then on the base class. The teardown methods at any level in the inheritance hierarchy will be called only if a setup method **at the same level** was called. The following example is illustrates the difference.
 
-```C#
+```csharp
 public class BaseClass
 {
    [SetUp]

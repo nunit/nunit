@@ -9,7 +9,7 @@ of standard NUnit messages.
 The standard NUnit Asserts create an object known as an **asserter** and
 pass it to the **DoAssert** method, which includes code similar to this...
 
-```c#
+```csharp
 if (!asserter.Test())
 	throw new AssertionException(asserter.Message);
 ```
@@ -18,7 +18,7 @@ if (!asserter.Test())
 objects being compared. They implement the **IAsserter** interface, 
 defined as follows:
 
-```c#
+```csharp
 public interface IAsserter
 {
 	// Test the condition for the assertion.

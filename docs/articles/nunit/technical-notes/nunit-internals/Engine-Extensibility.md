@@ -22,7 +22,7 @@ This is the most common way we identify `ExtensionPoints` in NUnit. The `TypeExt
 
 For example, here is the code used to define the extension point for driver factories - classes that know how to create an appropriate driver for a test assembly.
 
-```C#
+```csharp
     /// <summary>
     /// Interface implemented by a Type that knows how to create a driver for a test assembly.
     /// </summary>
@@ -58,7 +58,7 @@ Extensions may also defined by use of the `ExtensionPointAttribute` at the assem
 
 The following example shows an alternative way we might have identified the same driver factory extension point shown above. _This is not actual NUnit code, but only a hypothetical example._
 
-```C#
+```csharp
 [assembly: ExtensionPoint(
                "/NUnit/Engine/TypeExtensions/IDriverFactory",
                typeof(IDriverFactory),
@@ -90,7 +90,7 @@ The `ExtensionAttribute` has only a default constructor, as well as two named pr
 
 Assuming the extension point definition used above, any of the following would identify the classes as driver factories.
 
-```C#
+```csharp
     [Extension(Path = "/NUnit/Engine/TypeExtensions/IDriverFactory")]
     public class DriverFactory1 : IDriverFactory
     {
@@ -116,7 +116,7 @@ To illustrate this, we will use the example of the engine's project loader `Exte
 
 If we only knew what file extensions were used by the particular format, we could avoid loading the extension unnecessarily. That's where `ExtensionPropertyAttribute` comes in. The following is an example taken from NUnit's own extension for loading NUnit projects.
 
-```C#
+```csharp
     [Extension]
     [ExtensionProperty("FileExtension", ".nunit")]
     public class NUnitProjectLoader : IProjectLoader

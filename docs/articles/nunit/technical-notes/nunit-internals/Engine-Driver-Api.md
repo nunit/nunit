@@ -12,7 +12,7 @@ The driver API is encapsulated in the `IDriverFactory` and `IFrameworkDriver` in
 
 The IDriverFactory interface is called by the engine to determine if a particular extension is able to create a driver for a particular framework assembly. The engine passes the AssemblyName of each assembly referenced by the test assembly to the factory to see if it is a supported framework. If it finds one, then it uses that driver. If not, it goes on to check the next driver extension.
 
-```C#
+```csharp
 namespace NUnit.Engine.Extensibility
 {
     /// <summary>
@@ -44,7 +44,7 @@ namespace NUnit.Engine.Extensibility
 
 The `IFrameworkDriver` interface is returned from `IDriverFactory` and is the key interface for actually loading, exploring and running the tests in the test assembly. In theory, a single driver factory could return different drivers in different situations, but we expect a one-to-one mapping of factories to drivers to be most commonly used.
 
-```C#
+```csharp
 namespace NUnit.Engine.Extensibility
 {
     /// <summary>
@@ -105,7 +105,7 @@ The filter argument passed to several of the interface methods is an XML string 
 
 The `ITestEventListener` interface is implemented by the Engine and used by each driver to report significant events during the execution of tests.
 
-```C#
+```csharp
 namespace NUnit.Engine
 {
     /// <summary>

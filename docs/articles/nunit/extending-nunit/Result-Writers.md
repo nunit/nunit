@@ -1,6 +1,6 @@
 **Result Writers** take the result of a test run, in NUnit 3.0 XML format, and use it to create a result file in some other format. NUnit itself provides a two result writers, one to create output in NUnit V2 format and another to write test cases to the console. The definition of a result writer extension might look something like this:
 
-```C#
+```csharp
 [Extension]
 [ExtensionProperty("Format", "custom")]
 public class CustomResultWriterFactory : IResultWriter
@@ -17,7 +17,7 @@ You must provide an `ExtensionPropertyAttribute` giving the name of the format y
 
 The `IResultWriter` interface, which you must implement, is defined as follows:
 
-```C#
+```csharp
 /// <summary>
 /// Common interface for objects that process and write out test results
 /// </summary>
