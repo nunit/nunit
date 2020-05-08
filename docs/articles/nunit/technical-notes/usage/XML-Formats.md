@@ -11,7 +11,7 @@ The samples given here represent the current state of the application and are su
 
 An NUnit project is stored as a file with the extension .nunit and describes one or more test assemblies to be executed, together with certain parameters used in running them. No schema is used for this file.
 
-  * [[Sample NUnit Project|http://nunit.org/files/nunit_project_25.txt]] 
+  * [Sample NUnit Project](http://nunit.org/files/nunit_project_25.txt)
 
 Currently, the format is the same as for NUnit 2.x but it is likely to change as the project proceeds. Note that NUnitLite does not use or recognize NUnit projects, but only assemblies.
 
@@ -21,14 +21,14 @@ For details of the file contents, see [NUnit Project XML Format](xref:nunitproje
 
 The NUnitSettings30.xml file holds default settings for NUnit 3.0. No schema is used for this file. The format is the same as for 2.x but new settings may be added and the names of certain keys are likely to change.
 
-  * [[Sample NUnit Settings File|http://nunit.org/files/sample_nunitsettings_file.txt]]
+  * [Sample NUnit Settings File](http://nunit.org/files/sample_nunitsettings_file.txt)
   * List of [[NUnit Setting Names]]
 
 #### Test Results
 
 The results of an test run are saved in a file with the default name of TestResult.xml. The schema of this file is being modified substantially for NUnit 3.0.
 
-  * [[Sample|http://nunit.org/files/testresult_30.txt]]
+  * [Sample](http://nunit.org/files/testresult_30.txt)
   * Schema not yet available
 
 For details of the file layout see [[Test Result XML Format]].
@@ -37,8 +37,8 @@ For details of the file layout see [[Test Result XML Format]].
 
 Optionally, NUnit 3.0 is able to save results in the NUnit 2.x format for use with CI servers that do not yet understand the new format.
 
-  * [[Sample|http://nunit.org/files/testresult_25.txt]]
-  * [[Schema|http://nunit.org/files/testresult_schema_25.txt]]
+  * [Sample](http://nunit.org/files/testresult_25.txt)
+  * [Schema](http://nunit.org/files/testresult_schema_25.txt)
 
 #### Test Representation
 
@@ -60,5 +60,5 @@ As a test run progresses, individual test run results are sent as xml fragments 
 
 The Gui runner uses a file with the suffix .VisualState.xml to save the current visual state of a project so that it may be restored upon re-opening. This file is private to the Gui but is included here for completeness. The current format is identical to that used in NUnit 2.x.
 
-  * [[Sample Visual State File|http://nunit.org/files/sample_visual_state_25.txt]]
+  * [Sample Visual State File](http://nunit.org/files/sample_visual_state_25.txt)
 
