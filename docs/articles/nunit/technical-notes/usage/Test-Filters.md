@@ -1,7 +1,3 @@
----
-uid: testfilters
-----
-
 Test Filters represent a selection of tests to be displayed, run or loaded. When a filter needs to be passed to the framework, it is passed as a string containing an XML fragment. This page describes the elements present in the XML for a filter.
 
 #### `<filter>`

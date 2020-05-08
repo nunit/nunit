@@ -48,7 +48,7 @@ See [Test Result XML Format](Test-Result-XML-Format.md) for details.
 
 #### Test Filters
 
-Information about which tests to run is provided to the framework using a test filter, represented as an XML fragment. See [Test Filters](xref:testfilters) for details.
+Information about which tests to run is provided to the framework using a test filter, represented as an XML fragment. See [Test Filters](Test-Filters.md) for details.
 
 #### Test Packages
 
