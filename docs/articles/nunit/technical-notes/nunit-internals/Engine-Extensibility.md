@@ -73,10 +73,10 @@ Again, `Description` is the only named property for this attribute.
 
 The following extension types are supported by the engine:
 
-* [[Project Loaders]]
-* [[Result Writers]]
-* [[Framework Drivers]]
-* [[Event Listeners]] (NUnit 3.4 and later only)
+* [Project Loaders](xref:ProjectLoaders)
+* [Result Writers](xref:ResultWriters)
+* [Framework Drivers](xref:FrameworkDrivers)
+* [Event Listeners](xref:EventListeners) (NUnit 3.4 and later only)
 
 ## Extensions
 

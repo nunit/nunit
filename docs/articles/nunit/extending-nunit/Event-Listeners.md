@@ -1,3 +1,7 @@
+---
+uid: EventListeners
+---
+
 **Event Listeners** are extensions that respond to specific events occurring during the running of a test. They implement the `ITestEventListener` interface. NUnit itself makes extensive use of this interface when running tests. By creating an extension, user code may also respond to test events.
 
 The definition of an Event Listener extension will look something like this:

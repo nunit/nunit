@@ -1,3 +1,7 @@
+---
+uid: ProjectLoaders
+---
+
 **Project Loaders** are extensions that know how to load a project in a particular format and create a package suitable for running tests under NUnit. NUnit itself provides two of them:
   * NUnitProjectLoader
   * VisualStudioProjectLoader
