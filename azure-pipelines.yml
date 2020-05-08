@@ -1,6 +1,11 @@
+pr:
+  branches:
+    include: [ 'master', 'release' ]
+    exclude: [ 'refs/tags/*' ]
+
 trigger:
   branches:
-    include: [ '*' ]
+    include: [ 'master', 'release' ]
     exclude: [ 'refs/tags/*' ]
 
 jobs:
