@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -31,23 +30,16 @@ namespace NUnit.Framework.Constraints
     /// DictionaryContainsKeyValuePairConstraint is used to test whether a dictionary
     /// contains an expected object as a key-value-pair.
     /// </summary>
-    public class DictionaryContainsKeyValuePairConstraint : CollectionItemsEqualConstraint
+    public sealed class DictionaryContainsKeyValuePairConstraint : CollectionItemsEqualConstraint
     {
-        /// <summary>
-        /// Construct a DictionaryContainsKeyValuePairConstraint
-        /// </summary>
-        public DictionaryContainsKeyValuePairConstraint(object key, object value)
-            : this(new KeyValuePair<object, object>(key, value))
-        {
-        }
+        private readonly DictionaryEntry _expected;
 
         /// <summary>
         /// Construct a DictionaryContainsKeyValuePairConstraint
         /// </summary>
-        protected DictionaryContainsKeyValuePairConstraint(KeyValuePair<object, object> arg)
-            : base(arg)
+        public DictionaryContainsKeyValuePairConstraint(object key, object value)
         {
-            Expected = arg;
+            _expected = new DictionaryEntry(key, value);
         }
 
         /// <summary>
@@ -64,29 +56,14 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return "dictionary containing entry " + MsgUtils.FormatValue(Expected); }
+            get { return "dictionary containing entry " + MsgUtils.FormatValue(_expected); }
         }
-
-        /// <summary>
-        /// Gets the expected key
-        /// </summary>
-        protected object ExpectedKey { get { return Expected.Key; } }
-
-        /// <summary>
-        /// Gets the expected value
-        /// </summary>
-        protected object ExpectedValue { get { return Expected.Value; } }
-
-        /// <summary>
-        /// Gets the expected entry
-        /// </summary>
-        protected KeyValuePair<object, object> Expected { get; }
 
         private bool Matches(object actual)
         {
             var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
-            foreach (DictionaryEntry entry in dictionary)
-                if (ItemsEqual(entry, new DictionaryEntry(ExpectedKey, ExpectedValue)))
+            foreach (var entry in dictionary)
+                if (ItemsEqual(entry, _expected))
                     return true;
 
             return false;
