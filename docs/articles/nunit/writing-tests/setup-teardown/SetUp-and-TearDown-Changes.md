@@ -97,4 +97,4 @@ This is potentially a [breaking change](xref:BreakingChanges) for some users.
 
 #### Unresolved Issues
 
-  * We need to define how setup and teardown methods are ordered with respect to the newly introduced [[Action Attributes]] and how they interact.
+  * We need to define how setup and teardown methods are ordered with respect to the newly introduced [Action Attributes](xref:ActionAttributes) and how they interact.
