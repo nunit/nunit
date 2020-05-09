@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -143,7 +145,7 @@ namespace NUnit.Framework.Internal.Builders
         /// class. This is by design.
         /// </summary>
         /// <param name="typeInfo">The type being examined for attributes</param>
-        private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo typeInfo)
+        private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo? typeInfo)
         {
             IFixtureBuilder[] attrs = new IFixtureBuilder[0];
 

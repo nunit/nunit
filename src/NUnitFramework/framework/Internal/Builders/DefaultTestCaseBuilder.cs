@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -88,7 +90,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="method">An IMethodInfo for the method being used as a test method</param>
         /// <param name="parentSuite">The test suite being built, to which the new test would be added</param>
-        public bool CanBuildFrom(IMethodInfo method, Test parentSuite)
+        public bool CanBuildFrom(IMethodInfo method, Test? parentSuite)
         {
             return CanBuildFrom(method);
         }
@@ -99,7 +101,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="method">The method for which a test is to be built</param>
         /// <param name="parentSuite">The test fixture being populated, or null</param>
-        public Test BuildFrom(IMethodInfo method, Test parentSuite)
+        public Test BuildFrom(IMethodInfo method, Test? parentSuite)
         {
             var tests = new List<TestMethod>();
 
@@ -147,7 +149,7 @@ namespace NUnit.Framework.Internal.Builders
         /// </summary>
         /// <param name="method">The MethodInfo for which a test is to be built</param>
         /// <param name="suite">The test suite for which the method is being built</param>
-        private Test BuildSingleTestMethod(IMethodInfo method, Test suite)
+        private Test BuildSingleTestMethod(IMethodInfo method, Test? suite)
         {
             var builders = method.GetCustomAttributes<ISimpleTestBuilder>(false);
             return builders.Length > 0

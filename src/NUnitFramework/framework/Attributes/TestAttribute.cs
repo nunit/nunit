@@ -117,7 +117,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The method for which a test is to be constructed.</param>
         /// <param name="suite">The suite to which the test will be added.</param>
-        public TestMethod BuildFrom(IMethodInfo method, Test suite)
+        public TestMethod BuildFrom(IMethodInfo method, Test? suite)
         {
             TestCaseParameters? parms = null;
 
