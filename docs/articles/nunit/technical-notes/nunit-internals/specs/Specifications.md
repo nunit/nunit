@@ -8,12 +8,12 @@ Specifications are descriptions of work we are doing or plan to do. They may var
 
 |  Component      |  Title                                     |  Implemented?  |
 |-----------------|--------------------------------------------|----------------|
-|   **General**   | [[Internal Trace Spec]]                    | Partial?       |
-|  **Framework**  | [[Include and Exclude Attributes Spec]]    | No             |
-|                 | [[Extended Constraint Syntax Spec]]        | No             |
-|                 | [[Dynamic Test Cases Spec]]                | No             |
-|                 | [[Text Output from Tests Spec]]            | Yes            |
-|                 | [[Generation of Test Names Spec]]          | Yes            |
-|                 | [[Parameterized Test Fixtures Spec]]       | Partial        |
-|                 | [[Test Dependency Attribute Spec]]         | No             |
-| **Test Engine** | [[Engine Addins Spec]]                     | Partial        |
+|   **General**   | [Internal Trace Spec](Internal-Trace-Spec.md)                    | Partial?       |
+|  **Framework**  | [Include and Exclude Attributes Spec](Include-and-Exclude-Attributes-Spec.md)    | No             |
+|                 | [Extended Constraint Syntax Spec](Extended-Constraint-Syntax-Spec.md)        | No             |
+|                 | [Dynamic Test Cases Spec](Dynamic-Test-Cases-Spec.md)               | No             |
+|                 | [Text Output from Tests Spec](Text-Output-From-Tests-Spec.md)            | Yes            |
+|                 | [Generation of Test Names Spec](Generation-of-Test-Names-Spec.md)          | Yes            |
+|                 | [Parameterized Test Fixtures Spec](Parameterized-Test-Fixtures-Spec.md)      | Partial        |
+|                 | [Test Dependency Attribute Spec](Test-Dependency-Attribute-Spec.md)         | No             |
+| **Test Engine** | [Engine Addins Spec](Engine-Addins-Spec.md)                     | Partial        |
