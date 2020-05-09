@@ -47,7 +47,7 @@ namespace NUnit.Framework
         public MultipleAssertException(ITestResult testResult)
             : base(testResult?.Message)
         {
-            Guard.ArgumentNotNull(testResult!, "testResult");
+            Guard.ArgumentNotNull(testResult, "testResult");
             TestResult = testResult;
         }
 
