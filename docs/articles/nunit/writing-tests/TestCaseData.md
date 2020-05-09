@@ -44,7 +44,7 @@ and methods, which may be appended to an instance in any order.
 
  * **SetDescription(string)** sets the description property of the test.
 
- * **SetName(string)** provides a name for the test. If not specified, a name is generated based on the method name and the arguments provided. See [[Template Based Test Naming]].
+ * **SetName(string)** provides a name for the test. If not specified, a name is generated based on the method name and the arguments provided. See [Template Based Test Naming](xref:TemplateBasedTestNaming).
 
  * **SetProperty(string, string)**, **SetProperty(string, int)** and **SetProperty(string, double)** apply a named property and value to the test.
 

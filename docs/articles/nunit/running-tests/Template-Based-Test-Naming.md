@@ -1,3 +1,7 @@
+---
+uid: TemplateBasedTestNaming
+---
+
 NUnit uses a standard naming convention for all tests - however, this can be overridden by the user if required. TestName generation is driven by a name formatting string, which may contain any of the following format specifiers:
 
   * `{n}` The namespace of the test or empty if there is no namespace. If empty, any immediately following '.' is ignored.
