@@ -137,7 +137,7 @@ A label appears at the start of every test, whether it produces output or not. A
 </tr>
 
 <tr><th>--test-name-format=VALUE</th>
-    <td>Specify a non-standard naming pattern to use when generating all test names. See [[Template Based Test Naming]].</td></tr>
+    <td>Specify a non-standard naming pattern to use when generating all test names. See [Template Based Test Naming](Template-Based-Test-Naming.md).</td></tr>
     
 <tr><th>--encoding=CODEPAGE</th>
     <td>Specify the Console CODEPAGE, such as utf-8, ascii, etc. This option is not normally needed unless your output includes special characters. The page specified must be available on the system.</td></tr>
