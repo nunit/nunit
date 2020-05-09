@@ -1,20 +1,46 @@
-### DRAFT
+---
+uid: NUnit3Architecture2009
+---
+
+> This is the original - now out of date - document created to describe the planned architecture for NUnit 3.0. We are keeping it for whatever historical interest it may have.
+
+>The diagram was created first and was shown for the first time by Charlie Poole at a Mono gathering in Madrid in 2008.  The complete document was published the following year.
+
+### Summary
 
 This specification describes the overall layered architecture of the NUnit Platform. Details of individual components are covered only as they are relevant to the overall architecture.
+
+##### Launchpad Blueprint
+  * http://blueprints.launchpad.net/nunit-3.0/+spec/nunit-3.0-architecture
+
+### User Stories
+
+##### An NUnit User...
+
+  * upgrades selected components of the NUnit platform without changing others.
+  * runs tests using alternate runners and frameworks under the NUnit platform.
+  * installs and uses addins and other extensions to the NUnit platform.
+
+##### An NUnit Developer...
+
+  * understands how each component fits into the overall architecture of NUnit.
+  * chooses the proper component and project for making a fix or adding a feature.
+  * is able to focus attention on the component being modified, without worrying about the details of other components.
+
+##### An NUnit Extension Developer...
+
+  * can develop an extension to a specific NUnit component, without dealing with other parts.
+  * can develop extensions to multiple NUnit components, which work together to achieve their result.
 
 ### Layers
 
 The basic architecture of the NUnit Extended testing platform consists of three layers: 
 
-  * [Test Runner Layer](#test-runner-layer)
-  * [Test Engine Layer](#test-engine-layer)
-  * [Framework Layer](#framework-layer)
+  * [[Architectural Overview#Test Runner Layer]] 
+  * [[Architectural Overview#Test Engine Layer]] 
+  * [[Architectural Overview#Framework Layer]]
 
-The layering can be seen in the diagram below.
-
-> This is the original architectural document, which is a bit out of date with regard to some details. A replacement is being created.
-
-![](~/images/nunit-xtp-2008.png)
+[[images/nunit-xtp-2008.png]]
 
 #### Test Runner Layer
 
@@ -22,7 +48,7 @@ The Test Runner or UI layer contains various runners, some provided by the NUnit
 
 Programs in this layer are able to participate in the NUnit platform plugin architecture, providing extension points that allow them to be extended. Plugins at this level will usually add some functionality to the UI. Some of them may be standalone while others may require the presence of specific test engine plugins in order to operate.
 
-The NUnit project will continue to provide both a console runner and a WinForms-based GUI with extended capabilities those in NUnit 2.6. In addition, two new GUI runners will be developed, one based on WPF, the other on GTK#.
+The NUnit project will continue to provide both a console runner and a WinForms-based GUI with extended capabilities those in NUnit 2.5. In addition, two new GUI runners will be developed, one based on WPF, the other on GTK#.
 
 We’ll work with the NAnt project to provide updates to the NAnt task for use with NUnit 3.0, with the goal of keeping that task current as new versions of NUnit are released. We will provide an NUnit plugin for the new Gallio platform.
 
@@ -34,13 +60,13 @@ Each of the runners will have the option of participating in the NUnit plugin ar
 
 #### Test Engine Layer
 
-The Test Engine Layer is the core of the NUnit platform. It provides a public API for use by applications that want to locate, load and run tests and display test results. Many aspects of the Test Engine are already present in NUnit 2.6, while others are new. I’ll focus on the new features here.
+The Test Engine Layer is the core of the NUnit platform. It provides a public API for use by applications that want to locate, load and run tests and display test results. Many aspects of the Test Engine are already present in NUnit 2.4, while others are new. I’ll focus on the new features here.
 
-NUnit 2.6 already supports running tests in a separate process, allowing selection of the CLR version under which the test is to be run. NUnit 3.0 will extend this feature to allow test processes to run on other machines. It will also support distribution of test execution across a network of remote Test Agents. This facility is intended to be used in several distinct scenarios:
+NUnit 2.5 already supports running tests in a separate process, allowing selection of the CLR version under which the test is to be run. NUnit 3.0 will extend this feature to allow test processes to run on other machines. It will also support distribution of test execution across a network of remote Test Agents. This facility is intended to be used in several distinct scenarios:
   * Simple load sharing when test execution time is excessive
   * Testing applications on multiple platforms 
   * Testing applications, which are themselves distributed
-A great deal of distributed function is already present in NUnit 2.6 through pNUnit, the distributed testing runner contributed to our project by Codice Software. With NUnit 3.0, we plan to integrate this function more completely into NUnit, allowing them to be executed by any runner that uses the NUnit Test Engine.
+A great deal of distributed function is already present in NUnit 2.5 through pNUnit, the distributed testing runner contributed to our project by Codice Software. With NUnit 3.0, we plan to integrate this function more completely into NUnit, allowing them to be executed by any runner that uses the NUnit Test Engine.
 
 NUnit will support performance and coverage analysis, test result reporting and maintenance of a history of test results. These features will function only as called upon by the user. That is, we will not carry on data collection activities with the potential of impacting performance when the user simply wants to run tests.
 
@@ -57,9 +83,9 @@ Through use of plugins, NUnit will be able to support a wide variety of test typ
 
 #### Framework Layer
 
-In NUnit 3.0, the NUnit framework itself – the assembly that is referenced by user tests – will be split along two dimensions. First, there will be separate framework assemblies for different version levels of the Common Language Runtime. By splitting the framework in this way, we will be able to take advantage of newer features, and allow users to take advantage of them, without compromising basic support for older runtimes.
+In NUnit 3.0, the NUnit framework itself – the assembly that is referenced by user tests – will be split along two dimensions. First, there will be separate framework assemblies for different version levels of the Common Language Runtime. By splitting the framework in this way, we will be able to take advantage of newer features, and allow users to take advantage of them, without compromising basic support for older runtimes. For a list of what we currently expect to support see the [[Framework Distributions]] page.
 
-The second split we plan is between the core framework capabilities and the syntactic features that make it easy to access those features. A key example of this is the fluent interface introduced in NUnit 2.4 – the “Assert.That” syntax. One thing we learned through that experiment is that the same syntactic “sugar” does not work well for different language environments. Many of the 2.4/2.5/2.6 constructs are unusable or very difficult to use in other languages – C++ for example. By a combination of separate namespaces and separate assemblies, we will allow users to select the appropriate syntax for the work they are doing. Other people will be able to build on the syntax we provide or create entirely new syntactic overlays for their own purposes.
+The second split we plan is between the core framework capabilities and the syntactic features that make it easy to access those features. A key example of this is the fluent interface introduced in NUnit 2.4 – the “Assert.That” syntax. One thing we learned through that experiment is that the same syntactic “sugar” does not work well for different language environments. Many of the 2.4/2.5 constructs are unusable or very difficult to use in other languages – C++ for example. By a combination of separate namespaces and separate assemblies, we will allow users to select the appropriate syntax for the work they are doing. Other people will be able to build on the syntax we provide or create entirely new syntactic overlays for their own purposes.
 
 Through use of plugins in the Test Engine layer, NUnit will be able to recognize, load and run tests written using other frameworks. Our focus will be on facilitating the creation of plugins in support of external frameworks by the projects that produce those frameworks or by interested users. For frameworks where that sort of support is not possible – commercial frameworks, for example – we have the option of creating the plugins ourselves.
 
@@ -69,7 +95,8 @@ NUnit will also provide or re-package some framework extensions for specific typ
 
 The NUnitLite framework will be supported running on devices and reporting results back to the Test Engine through a communications channel.
 
-Various popular mock frameworks will be supported. NUnit's own self-tests now use the NSubstitute framework, which is packaged with NUnit, but users may make use of whatever mocking framework they prefer.
+Various popular mock frameworks will be supported. One framework will be selected for use by NUnit’s own self-tests and will be packaged with NUnit.
 
-#### See also...
-> You can also view the [Original Architectural Overview Document](xref:NUnit3Architecture2009) created for NUnit 3.0 in 2009.
+### Further Details
+
+More detailed specifications are being developed for each of the layers. Consult the [[Specifications]] index for their current status.
