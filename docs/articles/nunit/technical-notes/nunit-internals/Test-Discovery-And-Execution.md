@@ -14,7 +14,7 @@ The three APIs, from highest to lowest level, are:
 
 The NUnit TestEngine is a separate component, new to NUnit 3.0, which knows how to discover and execute tests. It provides an API for both simple batch execution and more complex interaction as needed by typical Gui test runners. It also provides additional Engine services beyond what the framework provides.
 
-This API is currently under development. See [[Test Engine API]] for more info.
+This API is currently under development. See [Test Engine API](Test-Engine-API.md) for more info.
 
 #### Engine Driver API
 
@@ -26,5 +26,5 @@ The driver API is only intended to be implemented by drivers and is only used by
 
 This is a primitive API implemented by the nunit.framework and NUnitLite assemblies. The NUnitFrameworkDriver in the engine uses this API. The API is a bit complicated to use. Since it needs to support multiple versions of the framework, it uses well-known framework class names, which are constructed via reflection. All results are returned as raw XML. 
 
-This API is not intended for any use except by NUnit itself. See [[Framework API]] for more info.
+This API is not intended for any use except by NUnit itself. See [Framework API](Framework-Api.md) for more info.
 
