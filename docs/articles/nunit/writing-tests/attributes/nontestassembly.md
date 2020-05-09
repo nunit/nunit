@@ -14,4 +14,4 @@ assembly does not contain any tests.
 
 
 #### See also...
- * `--skipnontestassemblies` in [[Console-Command-Line]]
+ * `--skipnontestassemblies` in [Console-Command-Line](xref:ConsoleCommandLine)
