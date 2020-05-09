@@ -21,7 +21,7 @@ However, this approach has some drawbacks:
   * Inheritance from attributes does not work as users would expect with NUnit failing to automatically recognize those attributes as equivalent to their base classes. In a few cases, NUnit contains special code to scan the base classes of any attributes found but it is not easy for users to discover which attributes allow this.
   * NUnit must examine all attributes of a given class or method, comparing their names with the names it understands. This is quite inefficient and can slow down loading of assemblies containing large numbers of classes or methods.
 
-By locating the code to load and run tests in the framework assembly (see [[Framework Boundary Change]]), NUnit 3.0 eliminates the first problem above. Test runners now need only be aware of a much narrower API. The design section below describes how we are handling the second and third issues.
+By locating the code to load and run tests in the framework assembly, NUnit 3.0 eliminates the first problem above. Test runners now need only be aware of a much narrower API. The design section below describes how we are handling the second and third issues.
 
 ### Design
 
