@@ -1,4 +1,4 @@
-The NUnit test engine is able to offer a certain degree of parallelization by running the tests in each test assembly in a different `Process`. This is a separate facility from [[Framework Parallel Test Execution]] although the two may be used concurrently.
+The NUnit test engine is able to offer a certain degree of parallelization by running the tests in each test assembly in a different `Process`. This is a separate facility from [Framework Parallel Test Execution](Framework-Parallel-Test-Execution.md) although the two may be used concurrently.
 
 If tests are already split across multiple assemblies, this is the simplest way to improve performance through parallel execution. By running in separate processes, the tests in each assembly are independent of one another so long as they do not use any common external resources such as files or databases. **Parallel execution is the default behavior** when running multiple assemblies together using the `nunit3-console` runner.
 
