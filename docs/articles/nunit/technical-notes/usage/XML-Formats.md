@@ -22,7 +22,6 @@ For details of the file contents, see [NUnit Project XML Format](xref:nunitproje
 The NUnitSettings30.xml file holds default settings for NUnit 3.0. No schema is used for this file. The format is the same as for 2.x but new settings may be added and the names of certain keys are likely to change.
 
   * [Sample NUnit Settings File](http://nunit.org/files/sample_nunitsettings_file.txt)
-  * List of [[NUnit Setting Names]]
 
 #### Test Results
 
