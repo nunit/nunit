@@ -175,4 +175,4 @@ NUnit began but may be changed by use of the **--work** option of nunit-console.
 
 Returns a `Randomizer` object, which may be used in the test code to generate random values. These values are repeatable on reruns of the tests so long as (a) the test assembly is not changed and (b) the same seed is used. The initial random seed used in any test run may be found in the XML result file and may be provided to a subsequent run on the command line.
 
-See [[Randomizer Methods]] for details about each available random data type.
+See [Randomizer Methods](Randomizer-Methods.md) for details about each available random data type.
