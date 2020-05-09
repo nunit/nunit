@@ -1,6 +1,6 @@
 ### DRAFT - Not Yet Implemented
 
-This spec describes proposed new attributes to replace and extend the existing CultureAttribute and PlatformAttribute. We considered several alternative approaches to doing this and selected the approach described here. See [[Include and Exclude Attributes (Alternatives)]] for the original discussion of choices.
+This spec describes proposed new attributes to replace and extend the existing CultureAttribute and PlatformAttribute. We considered several alternative approaches to doing this and selected the approach described here. See [Include and Exclude Attributes (Alternatives)](xref:IncludeExcludeAttributesAlternatives) for the original discussion of choices.
 
 #### Attributes
 
