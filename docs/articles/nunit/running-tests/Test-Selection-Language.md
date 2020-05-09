@@ -75,7 +75,7 @@ Although the syntax will accept any property name - including names that don't a
 
 In general, these properties were not created with filtering in mind, but you can use them if it suits your needs. Using the Category property currently accomplishes the same thing as the cat keyword. You should be aware that the use of these properties by NUnit is considered an implementation detail and they may change in the future.
 
-We envision that most filtering by property will be based on user-defined properties, created for this purpose by inheriting from [[Property Attribute]]. When defining a property, you should keep the limitation to string values in mind. For example, a PriorityAttribute taking values of "High", "Medium" and "Low" could be used for filtering, while one that took the integers 1, 2 and 3 could not.
+We envision that most filtering by property will be based on user-defined properties, created for this purpose by inheriting from [Property Attribute](xref:PropertyAttribute). When defining a property, you should keep the limitation to string values in mind. For example, a PriorityAttribute taking values of "High", "Medium" and "Low" could be used for filtering, while one that took the integers 1, 2 and 3 could not.
 
 #### Filtering by Test Id
 
