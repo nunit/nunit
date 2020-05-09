@@ -121,27 +121,17 @@ namespace NUnit.Framework.Internal.Commands
             try
             {
                 var testExecution = RunTestOnSeparateThread(context);
-
-                Wait(testExecution, _timeout);
-
-                if (testExecution.IsCompleted)
+                if (Task.WaitAny(new Task[] { testExecution }, _timeout) != -1
+                    || _debugger.IsAttached)
                 {
                     context.CurrentResult = testExecution.GetAwaiter().GetResult();
                 }
                 else
                 {
-                    if (_debugger.IsAttached)
-                    {
-                        // Wait for the test to complete
-                        context.CurrentResult = testExecution.GetAwaiter().GetResult();
-                    }
-                    else
-                    {
-                        context.CurrentResult.SetResult(new ResultState(
-                            TestStatus.Failed,
-                            $"Test exceeded Timeout value {_timeout}ms.",
-                            FailureSite.Test));
-                    }
+                    context.CurrentResult.SetResult(new ResultState(
+                        TestStatus.Failed,
+                        $"Test exceeded Timeout value {_timeout}ms.",
+                        FailureSite.Test));
                 }
             }
             catch (Exception exception)
@@ -155,13 +145,6 @@ namespace NUnit.Framework.Internal.Commands
         private Task<TestResult> RunTestOnSeparateThread(TestExecutionContext context)
         {
             return Task.Run(() => innerCommand.Execute(context));
-        }
-
-        private static void Wait(Task task, int timeoutMilliseconds)
-        {
-            var timeoutOrCompletion = Task.WhenAny(task, Task.Delay(timeoutMilliseconds));
-
-            timeoutOrCompletion.GetAwaiter().GetResult();
         }
 #endif
     }
