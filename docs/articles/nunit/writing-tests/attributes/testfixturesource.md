@@ -109,7 +109,7 @@ the enumerator as follows:
 
 1. If it is an object deriving from `TestFixtureParameters`, 
    its properties are used to provide the test case. NUnit provides
-   the [[TestFixtureData]] class for this purpose.
+   the [TestFixtureData](xref:TestFixtureData) class for this purpose.
 
 3. If it is an `object[]`, its members are used to provide
    the arguments for the method. This is the approach taken in
