@@ -99,4 +99,4 @@ Various popular mock frameworks will be supported. One framework will be selecte
 
 ### Further Details
 
-More detailed specifications are being developed for each of the layers. Consult the [[Specifications]] index for their current status.
+More detailed specifications are being developed for each of the layers. Consult the [Specifications](xref:Specifications) index for their current status.
