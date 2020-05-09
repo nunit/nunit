@@ -40,7 +40,7 @@ The basic architecture of the NUnit Extended testing platform consists of three 
   * [Architectural-Overview.md#Test-Engine-Layer)
   * [Architectural-Overview.md#Framework-Layer)
 
-[[images/nunit-xtp-2008.png]]
+![](~/images/nunit-xtp-2008.png)
 
 #### Test Runner Layer
 
