@@ -4,8 +4,6 @@ This technical note describes the inheritance hierarchy used for attributes in N
 
 Essentially, we use attribute inheritance to define the "what" of an attribute... that is, what it primarily **is** and what it primarily is used for. The actual functionality of an attribute is defined by the use of interfaces.
 
-For information on interfaces used by NUnit attributes, see [[Attribute Interfaces]].
-
 ### Abstract Attribute Classes
 
 The base of the hierarchy is formed by a number of abstract classes. They generally incorporate no code.
