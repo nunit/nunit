@@ -386,6 +386,8 @@ namespace NUnit.Framework.Internal
         /// <param name="obj">The object to cast.</param>
         internal static bool CanCast<T>(object obj)
         {
+            // Workaround for https://github.com/dotnet/roslyn/issues/34757, fixed in VS 16.5
+            //                                           ↓
             return obj is T || (obj == null && default(T)! == null);
         }
 
@@ -404,7 +406,11 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
+            // Workaround for https://github.com/dotnet/roslyn/issues/36039, fixed in VS 16.5
+            //                ↓
             value = default(T)!;
+            // Workaround for https://github.com/dotnet/roslyn/issues/34757, fixed in VS 16.5
+            //                              ↓
             return obj == null && default(T)! == null;
         }
     }
