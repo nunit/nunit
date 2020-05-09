@@ -119,8 +119,7 @@ namespace NUnit.TestUtilities
 
         public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger = null)
         {
-            var workItemBuilder = new WorkItemBuilder(debugger ?? new DebuggerProxy());
-            var work = workItemBuilder.CreateWorkItem(test, TestFilter.Empty, true);
+            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, debugger ?? new DebuggerProxy(), true);
             work.InitializeContext(context);
 
             return work;
@@ -181,14 +180,9 @@ namespace NUnit.TestUtilities
             return RunTest(test, null);
         }
 
-        public static ITestResult RunTest(Test test, object testObject)
+        public static ITestResult RunTest(Test test, object testObject, IDebugger debugger = null)
         {
-            return RunTest(test, testObject, null);
-        }
-
-        internal static ITestResult RunTest(Test test, object testObject, IDebugger debugger)
-        {
-            return ExecuteWorkItem(CreateWorkItem(test, testObject, debugger));
+            return ExecuteWorkItem(CreateWorkItem(test, testObject, debugger ?? new DebuggerProxy()));
         }
 
         public static ITestResult ExecuteWorkItem(WorkItem work)

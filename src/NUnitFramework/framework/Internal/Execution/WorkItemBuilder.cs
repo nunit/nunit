@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -31,18 +32,9 @@ namespace NUnit.Framework.Internal.Execution
     /// <summary>
     /// WorkItemBuilder class knows how to build a tree of work items from a tree of tests
     /// </summary>
-    public class WorkItemBuilder
+    public static class WorkItemBuilder
     {
-        private readonly IDebugger _debugger;
-
-        /// <summary>
-        /// Creates a new instance of <see cref="WorkItemBuilder"/>.
-        /// </summary>
-        /// <param name="debugger">An <see cref="IDebugger"/> used to access debugger-related properties in a controlled manner</param>
-        internal WorkItemBuilder(IDebugger debugger)
-        {
-            _debugger = debugger;
-        }
+        #region Static Factory Method
 
         /// <summary>
         /// Creates a work item.
@@ -51,11 +43,25 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <returns></returns>
-        public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        [Obsolete("This member will be removed in a future major release.")]
+        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        {
+            return CreateWorkItem(test, filter, new DebuggerProxy(), recursive);
+        }
+
+        /// <summary>
+        /// Creates a work item.
+        /// </summary>
+        /// <param name="test">The test for which this WorkItem is being created.</param>
+        /// <param name="filter">The filter to be used in selecting any child Tests.</param>
+        /// <param name="debugger">An <see cref="IDebugger" /> instance.</param>
+        /// <param name="recursive">True if child work items should be created and added.</param>
+        /// <returns></returns>
+        internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false)
         {
             TestSuite suite = test as TestSuite;
             if (suite == null)
-                return new SimpleWorkItem((TestMethod)test, filter, _debugger);
+                return new SimpleWorkItem((TestMethod)test, filter, debugger);
 
             var work = new CompositeWorkItem(suite, filter);
 
@@ -67,7 +73,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     if (filter.Pass(childTest))
                     {
-                        var childItem = CreateWorkItem(childTest, filter, recursive);
+                        var childItem = CreateWorkItem(childTest, filter, debugger, recursive);
 
                         if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
                             childItem.TargetApartment = work.TargetApartment;
@@ -88,6 +94,8 @@ namespace NUnit.Framework.Internal.Execution
 
             return work;
         }
+
+        #endregion
 
         private class WorkItemOrderComparer : IComparer<WorkItem>
         {

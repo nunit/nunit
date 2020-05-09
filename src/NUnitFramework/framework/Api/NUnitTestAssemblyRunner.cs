@@ -232,8 +232,7 @@ namespace NUnit.Framework.Api
 
             CreateTestExecutionContext(listener);
 
-            var workItemBuilder = new WorkItemBuilder(new DebuggerProxy());
-            TopLevelWorkItem = workItemBuilder.CreateWorkItem(LoadedTest, filter, true);
+            TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, new DebuggerProxy(), true);
             TopLevelWorkItem.InitializeContext(Context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 

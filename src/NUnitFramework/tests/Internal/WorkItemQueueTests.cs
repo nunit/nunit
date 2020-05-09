@@ -164,9 +164,8 @@ namespace NUnit.Framework.Internal.Execution
         {
             var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
 
-            var workItemBuilder = new WorkItemBuilder(new DebuggerProxy());
-            var fixtureItem = workItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty) as CompositeWorkItem;
-            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem);
+            var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem as CompositeWorkItem);
             EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
             EnqueueWorkItem("Test2");

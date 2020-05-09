@@ -45,6 +45,16 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
+        [Obsolete("This member will be removed in a future major release.")]
+        public SimpleWorkItem(TestMethod test, ITestFilter filter) : this(test, filter, new DebuggerProxy())
+        {
+        }
+
+        /// <summary>
+        /// Construct a simple work item for a test.
+        /// </summary>
+        /// <param name="test">The test to be executed</param>
+        /// <param name="filter">The filter used to select this test</param>
         /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
         internal SimpleWorkItem(TestMethod test, ITestFilter filter, IDebugger debugger)
             : base(test, filter)
