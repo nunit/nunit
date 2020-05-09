@@ -1,7 +1,4 @@
-pr:
-  branches:
-    include: [ 'master', 'release' ]
-    exclude: [ 'refs/tags/*' ]
+pr: [ '*' ]
 
 trigger:
   branches:
