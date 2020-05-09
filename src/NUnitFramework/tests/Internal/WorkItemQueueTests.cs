@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Threading;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
@@ -162,8 +163,9 @@ namespace NUnit.Framework.Internal.Execution
         public void OneTimeTearDownGetsPriority()
         {
             var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
-            var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty) as CompositeWorkItem;
-            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem);
+
+            var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem as CompositeWorkItem);
             EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
             EnqueueWorkItem("Test2");
