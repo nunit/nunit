@@ -35,8 +35,6 @@ For NUnit 3.0, the boundary has been moved. Each version of the framework
 incorporates a test runner that knows how to load and execute the
 tests supported by that version.
 
-See [[Framework Boundary]]
-
 #### Framework Api
 
 The internal (core) interfaces used by earlier versions of NUnit are not suitable for external use because they tend to change as features are added. The 3.0 release incorporates a new interface, supporting the same functionality as the existing interfaces, but with fewer dependencies on custom types. It is usable by both NUnit and third-party runners and will provide functions of test discovery, loading and execution.
