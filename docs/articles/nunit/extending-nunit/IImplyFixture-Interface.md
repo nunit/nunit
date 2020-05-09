@@ -1,6 +1,6 @@
 The `IImplyFixture` interface is an empty interface, used solely as a marker:
 
-```C#
+```csharp
 public interface IImplyFixture
 {
 }

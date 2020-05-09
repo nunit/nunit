@@ -2,7 +2,7 @@ In NUnit 3, test execution is done using command objects, which are constructed 
 
 Attributes add to the command chain by implementing one of the two interfaces that derive from the `ICommandWrapper` interface. The interfaces are defined as follows:
 
-```C#
+```csharp
 public interface ICommandWrapper
 {
     TestCommand Wrap(TestCommand command);

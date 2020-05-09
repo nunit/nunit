@@ -1,6 +1,6 @@
 This interface is used by attributes that know how to build a single, non-parameterized test from a `MethodInfo`. `ISimpleTestBuilder` is defined as follows:
 
-```C#
+```csharp
 public interface ISimpleTestBuilder
 {
     TestMethod BuildFrom(IMethodInfo method, Test suite);

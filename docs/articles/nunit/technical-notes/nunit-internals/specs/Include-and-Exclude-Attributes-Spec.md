@@ -6,7 +6,7 @@ This spec describes proposed new attributes to replace and extend the existing C
 
 We would define two new attributes, **IncludeAttribute** and **ExcludeAttribute**:
 
-```C#
+```csharp
 [Include(Culture="fr-FR")]
 [Include(Platform="Win7,Win8")]
 [Exclude("Runtime:Net-4.5")]

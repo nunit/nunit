@@ -1,6 +1,6 @@
 This interface is used by attributes that know how to build a fixture from a user class. `IFixtureBuilder` is defined as follows:
 
-```C#
+```csharp
 public interface IFixtureBuilder
 {
     TestSuite BuildFrom(ITypeInfo type);

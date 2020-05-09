@@ -1,7 +1,7 @@
 NUnit tests run within a context, known as the `TestExecutionContext`. The context for a test case is nested within the context for its containing suite and so on, up to the assembly level. Attributes that implement `IApplyToContext` are called immediately after the context is created and before the test is run in order to make changes to the context. Once the test execution has completed, the context is discarded so that - effectively - any changes are reverted to their original values.
 
 The `IApplyToContext` interface is defined as follows:
-```C#
+```csharp
 public interface IApplyToContext
 {
     void ApplyToContext(TestExecutionContext context);

@@ -26,7 +26,7 @@ In our initial implementation, all extension points must be known in advance and
 `ExtensionPoints` in the engine will be identified by use of `ExtensionPointAttribute` at the assembly level. Each attribute identifies one extension point, specifying an identifying string (the Path) and the required Type of any extension objects to be registered with it.
 
 ###### Example:
-```C#
+```csharp
 [assembly: ExtensionPoint(Path="/NUnit/Engine/DriverService"
                           Type="NUnit.Engine.Extensibility.IDriverFactory")]
 ```
@@ -38,7 +38,7 @@ In this example, the Path identifying the extension point is "/NUnit/Engine/Driv
 An `Extension` is a single object of the required type, which is registered with an `ExtensionPoint`. Extensions are identified by the `ExtensionAttribute` which is applied to the class. Extensions identified in this way must have a default constructor. See the `Addins` section below for dealing with more complex situations.
 
 ###### Example:
-```C#
+```csharp
     [Extension(Path = "/NUnit/Engine/DriverService")]
     public class NUnit2DriverFactory : IDriverFactory
     {
@@ -51,7 +51,7 @@ The example above shows an extension Type being used with the `ExtensionPoint` d
 The Path is actually optional so long as NUnit is able to deduce the correct ExtensionPoint based on the Type.
 In fact, that's the case in this example, which can be rewritten more simply as...
 
-```C#
+```csharp
     [Extension]
     public class NUnit2DriverFactory : IDriverFactory
     {
@@ -80,7 +80,7 @@ An `Addin` is a Type that provides `Extensions`. As indicated in the previous se
 Addins would be identified by the `AddinAttribute` and implement the IAddin interface. They actively participate in the installation of extensions and may be used to create objects that require parameters, to install multiple extensions or to select among different extensions.
 
 ###### Example:
-```C#
+```csharp
     [Addin]
     public class MyAddin : IAddin
     {

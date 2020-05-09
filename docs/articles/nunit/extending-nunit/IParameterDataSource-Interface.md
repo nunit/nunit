@@ -1,7 +1,7 @@
 The `IParameterDataSource` interface is implemented by attributes that provide data for use as an argument to a single paramerter. Other attributes and test builders combine the values in various ways to produce test cases.
 The interface is defined as follows:
 
-```C#
+```csharp
 public interface IParameterDataSource
 {
     IEnumerable GetData(IParameterInfo parameter);

@@ -1,6 +1,6 @@
 This interface is used by attributes that know how to build one or more parameterized `TestMethod` instances from a `MethodInfo`. `ITestMethodBuilder` is defined as follows:
 
-```C#
+```csharp
 public interface ITestBuilder
 {
     IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite);

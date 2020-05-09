@@ -4,7 +4,7 @@ uid: IncludeExcludeAttributesAlternatives
 
 This spec describes proposed new attributes to replace and extend the existing CultureAttribute and PlatformAttribute. These attributes derive from the abstract IncludeExcludeAttribute, which provides `Include` and `Exclude` named properties. The following examples show how these attributes are currently used:
 
-```C#
+```csharp
 [Culture("fr-FR")]
 [Culture(Include="fr-FR")]
 [Culture(Exclude="fr-FR")]
@@ -56,7 +56,7 @@ Create a new attribute that inherits from IncludeExcludeAttribute and implement 
 ##### How It Would Work
 Invert the implied hierarchy by providing an IncludeAttribute and an ExcludeAttribute, which specify what is to be tested in one of several ways. For example:
 
-```C#
+```csharp
 [Include(Culture="fr-FR")]
 [Exclude("Runtime:Net-4.5")]
 ```
@@ -77,7 +77,7 @@ For this alternative we will want to use a separate namespace for each domain. T
 #### 3A. Create Replacement Attributes Using Named Properties
 
 Map each domain to a separate named property. For example:
-```C#
+```csharp
 [Include(Culture="fr-FR")]
 [Exclude(Runtime="Net-2.0")]
 ```
@@ -97,7 +97,7 @@ We would need to provide a registration mechanism, whereby a program provided th
 
 Prefix each value with the domain name, thereby creating a unified namespace.
 
-```C#
+```csharp
 [Include("Culture:fr-FR")]
 [Exclude("Runtime:Net-2.0")]
 ```
