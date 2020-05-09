@@ -30,7 +30,7 @@ The results of an test run are saved in a file with the default name of TestResu
   * [Sample](http://nunit.org/files/testresult_30.txt)
   * Schema not yet available
 
-For details of the file layout see [[Test Result XML Format]].
+For details of the file layout see [Test Result XML Format](Test-Result-XML-Format.md).
 
 #### V2 Test Results
 
