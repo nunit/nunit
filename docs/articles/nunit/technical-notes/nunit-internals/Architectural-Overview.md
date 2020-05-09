@@ -6,9 +6,9 @@ This specification describes the overall layered architecture of the NUnit Platf
 
 The basic architecture of the NUnit Extended testing platform consists of three layers: 
 
-  * [[Test Runner Layer|Architectural-Overview#test-runner-layer]] 
-  * [[Test Engine Layer|Architectural-Overview#test-engine-layer]] 
-  * [[Framework Layer|Architectural-Overview#framework-layer]]
+  * [Test Runner Layer](#test-runner-layer)
+  * [Test Engine Layer](#test-engine-layer)
+  * [Framework Layer](#framework-layer)
 
 The layering can be seen in the diagram below.
 
