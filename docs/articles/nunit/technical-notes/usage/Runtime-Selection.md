@@ -8,7 +8,7 @@ no suitable runtime can be found, an error is reported.
 The default runtime framework may be overridden using command line options.
 In all cases, NUnit will attempt to honor the options given, issuing an
 error message if the assembly cannot be loaded.
-See [[Console Command Line]] for more information.
+See [Console Command Line](xref:ConsoleCommandLine) for more information.
 
  * The **/framework** option of console runner allows you to specify
    the framework type and version to be used for a test run. When this option
