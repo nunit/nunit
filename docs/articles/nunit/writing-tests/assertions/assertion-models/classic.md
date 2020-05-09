@@ -1,3 +1,7 @@
+---
+uid: classicmodel
+---
+
 The classic Assert model uses a separate method to express each 
 individual assertion of which it is capable.
    

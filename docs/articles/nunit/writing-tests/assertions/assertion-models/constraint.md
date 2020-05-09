@@ -64,4 +64,4 @@ through a syntax helper. The valid forms are described on the pages related to
 each constraint.
    
 ### See also...
- * [[Classic Model]]
+ * [Classic Model](xref:classicmodel)
