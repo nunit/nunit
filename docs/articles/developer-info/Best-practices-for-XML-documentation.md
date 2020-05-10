@@ -17,13 +17,11 @@ The compiler checks the validity of the names and overloads. Future refactoring 
 
 This also provides a seamless experience by creating links in the Object Browser and intellisense and colorizes intellisense. Consider using `<see langword="null"/>` for keywords to maintain the seamlessness.
 
-
 ## `<summary>`
 
 Add a `<summary>` tag for each public type and member.
 
 However, prefer to give each type and member a really communicative name. If those names end up covering all the user could need to know, remove the `<summary>` tag (if this does not cause a build warning) to avoid super redundant documentation. If they do not, add relevant details.
-
 
 ## `<param>` and `<typeparam>`
 
@@ -33,16 +31,13 @@ However, prefer to give each parameter a really communicative name. If those nam
 
 The same applies to `<typeparam>` tags. They are shown by intellisense as the user enters type parameter lists exactly the way `<param>` descriptions are shown as the user enters method parameter lists. `<typeparam>` elements are just as important on generic methods as they are on generic type definitions.
 
-
 ## `<returns>` and `<value>`
 
 Don't spend any time on the `<returns>` or `<value>` tags since the contents are not typically seen. Important details should all be in the `<summary>`. If the IDE auto-inserts them, just remove them.
 
-
 ## Empty tags
 
 Do not leave any empty tags. Either remove them or fill them out. This includes the compiler's all-or-none `<param>` and `<typeparam>` tag enforcement.
-
 
 ## `<exception>`
 
