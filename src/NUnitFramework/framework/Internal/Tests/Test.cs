@@ -62,11 +62,8 @@ namespace NUnit.Framework.Internal
         /// Constructs a test given its name
         /// </summary>
         /// <param name="name">The name of the test</param>
-        protected Test(string name) : this(
-            name,
-            fullName: name,
-            typeInfo: null,
-            method: null)
+        protected Test(string name)
+            : this(pathName: null, name, typeInfo: null, method: null)
         {
         }
 
@@ -76,43 +73,37 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
-        protected Test(string pathName, string name) : this(
-            name,
-            fullName: !string.IsNullOrEmpty(pathName) ? pathName + "." + name : name,
-            typeInfo: null,
-            method: null)
+        protected Test(string? pathName, string name)
+            : this(pathName, name, typeInfo: null, method: null)
         {
         }
 
         /// <summary>
         /// Constructs a test for a specific type.
         /// </summary>
-        protected Test(ITypeInfo typeInfo) : this(
-            typeInfo.GetDisplayName(),
-            fullName: !string.IsNullOrEmpty(typeInfo.Namespace) ? typeInfo.Namespace + "." + typeInfo.GetDisplayName() : typeInfo.GetDisplayName(),
-            typeInfo,
-            method: null)
+        protected Test(ITypeInfo typeInfo)
+            : this(pathName: typeInfo.Namespace, name: typeInfo.GetDisplayName(), typeInfo: typeInfo, method: null)
         {
         }
 
         /// <summary>
         /// Constructs a test for a specific method.
         /// </summary>
-        protected Test(IMethodInfo method) : this(
-            method.Name,
-            fullName: method.TypeInfo.FullName + "." + method.Name,
-            method.TypeInfo,
-            method)
+        protected Test(IMethodInfo method)
+            : this(pathName: method.TypeInfo.FullName, name: method.Name, typeInfo: method.TypeInfo, method: method)
         {
         }
 
-        private Test(string name, string fullName, ITypeInfo? typeInfo, IMethodInfo? method)
+        private Test(string? pathName, string name, ITypeInfo? typeInfo, IMethodInfo? method)
         {
             Guard.ArgumentNotNullOrEmpty(name, nameof(name));
 
             Id = GetNextId();
             Name = name;
-            FullName = fullName;
+            FullName = !string.IsNullOrEmpty(pathName)
+                ? pathName + '.' + name
+                : name;
+
             TypeInfo = typeInfo;
             Method = method;
             Properties = new PropertyBag();
