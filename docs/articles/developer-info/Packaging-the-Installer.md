@@ -51,4 +51,5 @@ Packages are archived on nunit.org in the downloads directory. Add the MSI and Z
 4. Create a Pull Request, have it reviewed, merged and delete the branch
 5. Close the milestone if one exists
 
-**Note:** The release branch in this project is not like the release branches in other projects, we don't save it. If we need to go back and do hotfixes, we will branch off the tag that was created for the release. We do this because there are usually no changes required to this repository for a release except incrementing the version post release. Any larger changes to this repository should be done and tested prior to a release using the normal Pull Request workflow.
+> [!NOTE]
+> The release branch in this project is not like the release branches in other projects, we don't save it. If we need to go back and do hotfixes, we will branch off the tag that was created for the release. We do this because there are usually no changes required to this repository for a release except incrementing the version post release. Any larger changes to this repository should be done and tested prior to a release using the normal Pull Request workflow.

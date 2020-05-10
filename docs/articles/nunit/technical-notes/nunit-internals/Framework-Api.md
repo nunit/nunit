@@ -75,7 +75,8 @@ As the driver needs to perform some action, it creates a temporary instance of a
 
 Some actions take the string representation of a test filter as an argument. The NUnit Engine and Framework have shared knowledge of the format of a filter. For an empty filter (no filtering) use `"<filter/>"`. A null or empty string is also accepted for an empty filter as of NUnit 3.7.1, but `"<filter/>"` should be used for backwards compatibility.
 
-**Note:** The `ICallbackEventHandler` is actually passed as an object and cast to the interface by the framework. This is intended to allow future use of other interfaces for progress.
+> [!NOTE]
+> The `ICallbackEventHandler` is actually passed as an object and cast to the interface by the framework. This is intended to allow future use of other interfaces for progress.
 
 #### LoadTestsAction
 

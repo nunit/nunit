@@ -14,7 +14,8 @@ public class MyEventListener : ITestEventListener
 }
 ```
 
-**Note:** The `EngineVersion` property is used to document the fact that the event listener extension point was only added to the engine with version 3.4. It's function here is purely documentary because the `EngineVersion` property itself was also added in version 3.4. Event listeners should not be installed with earlier versions.
+> [!NOTE]
+> The `EngineVersion` property is used to document the fact that the event listener extension point was only added to the engine with version 3.4. It's function here is purely documentary because the `EngineVersion` property itself was also added in version 3.4. Event listeners should not be installed with earlier versions.
 
 The `ITestEventListener` interface is defined as follows:
 ```csharp

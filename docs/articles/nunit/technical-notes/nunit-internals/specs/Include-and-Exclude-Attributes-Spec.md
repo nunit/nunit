@@ -36,7 +36,8 @@ We can define a DSL that allows us to specify arbitrary expressions for includin
 
 #### Comparison of Options
 
-**Note:** The following are Charlie's ratings. Feel free to disagree!
+> [!NOTE]
+> The following are Charlie's ratings. Feel free to disagree!
 
 ##### Ease of implementation (easy to hard):
     1 > 2 > 3 > 4

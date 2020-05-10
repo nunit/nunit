@@ -2,8 +2,8 @@
 uid: ActionAttributes
 ---
 
-> **Note:** `Action Attributes` are a feature of NUnit V2, designed to better enable composability of test logic. They are carried over to NUnit 3, but are not the recommended approach for most new work. Instead, for most problems of extensibility, NUnit 3 [Custom Attributes](Custom-Attributes.md)  are a better approach and are more likely to be supported in future releases.
-
+> [!NOTE]
+> `Action Attributes` are a feature of NUnit V2, designed to better enable composability of test logic. They are carried over to NUnit 3, but are not the recommended approach for most new work. Instead, for most problems of extensibility, NUnit 3 [Custom Attributes](Custom-Attributes.md)  are a better approach and are more likely to be supported in future releases.
 > However, at this time, `Action Attributes` provide the only approach that allows placing an attribute on a higher-level element and having it affect the behavior of lower-level elements. The rest of this page describes `Action Attribute` usage in NUnit 3.
 
 Often when writing unit tests we have logic that we want to run upon certain events in the test cycle (e.g. SetUp, TearDown, FixtureSetUp, FixtureTearDown, etc.). NUnit has had the ability to execute code upon these events by decorating fixture classes and methods with the appropriate NUnit- provided attributes.

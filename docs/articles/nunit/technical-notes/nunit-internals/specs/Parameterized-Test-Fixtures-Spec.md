@@ -1,6 +1,8 @@
-> **NOTE:** This page is a specification that was used as a starting point for creating the feature in NUnit. It needs to be reviewed and revised in order to accurately reflect what was actually built. If you take it with a grain of salt, it may still be helpful to you as documentation. This notice will be removed when the page is brought up to date.
+> [!NOTE]
+> This page is a specification that was used as a starting point for creating the feature in NUnit. It needs to be reviewed and revised in order to accurately reflect what was actually built. If you take it with a grain of salt, it may still be helpful to you as documentation. This notice will be removed when the page is brought up to date.
 
-> **NOTE:** Partially implemented feature
+> [!NOTE]
+> Partially implemented feature
 
 NUnit 2.6.4 supports parameterized test fixtures using constructor arguments specified on the `TestFixtureAttribute`. This is similar to the way that `TestCaseAttribute` handles parameterized methods. However, methods in 2.6.4 benefit from a very rich set of attributes in addition, allowing the data to be kept separately from the test and permitting use of data types that cannot appear as arguments to an Attribute constructor in .NET.
 

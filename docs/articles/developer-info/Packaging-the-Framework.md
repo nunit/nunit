@@ -1,6 +1,7 @@
 This note describes how to create release packages for the NUnit Framework. Currently, all the builds and packaging must be done on a single Windows machine. This is likely to change in the future as we add more platforms.
 
-> **Note:** These instructions assume that you are creating releases for SilverLight and the Compact Framework at the same time as the general release. If that's not the case, you may skip the steps marked CF or SL. To release either build separately, perform those steps in sequence.
+> [!NOTE]
+> These instructions assume that you are creating releases for SilverLight and the Compact Framework at the same time as the general release. If that's not the case, you may skip the steps marked CF or SL. To release either build separately, perform those steps in sequence.
 
 Software Prerequisites
 ----------------------
@@ -77,7 +78,8 @@ For NUnit, the major version is updated only rarely. Normal releases will update
 
 For pre-release versions, a non-empty modifier is specified. This is a suffix added to the version. Our standard suffixes are currently `-alpha-n`, `-beta-n` and `-rc-n` The build script adds an additional suffix of -dbg to any packages created using a Debug build.
 
-**NOTE:** The first alpha, beta or rc release may omit the `-n`. In that case, any following alpha, beta or rc should use `-2`.
+> [!NOTE]
+> The first alpha, beta or rc release may omit the `-n`. In that case, any following alpha, beta or rc should use `-2`.
 
 #### Update CHANGES File
 
@@ -91,8 +93,8 @@ You should commit the CHANGES file separately from the version number changes si
 
 The [Release Notes](https://github.com/nunit/docs/wiki/Release-Notes) section of the documentation wiki should match the content of the CHANGES.txt file except for any format differences.
 
-> **NOTE:** Now that the documentation is being kept in a github wiki, it may be possible to use the 
-> github markdown text directly in this file for future releases.
+> [!NOTE]
+Now that the documentation is being kept in a github wiki, it may be possible to use the github markdown text directly in this file for future releases.
 
 For any significant changes to how NUnit is used or what it does, the appropriate pages of the documentation should be updated or new pages created. If you do this in advance of the release (which is actually a good idea) you should do it in a way that the new documentation is not visible until the release is actually made.
 
@@ -164,8 +166,8 @@ Archiving the Release
 
 Packages are archived on nunit.org in the downloads directory. Create a new subfolder under downloads/nunit/v3 for the release. Upload all the package files into that directory.
 
-> **Note:** We need to develop a plan for additionally archiving the image directory. For the moment,
-  the binary zip package provides a backup but it's possible that the two may diverge in the future.
+> [!NOTE]
+> We need to develop a plan for additionally archiving the image directory. For the moment, the binary zip package provides a backup but it's possible that the two may diverge in the future.
 
 Publishing the Release
 ----------------------

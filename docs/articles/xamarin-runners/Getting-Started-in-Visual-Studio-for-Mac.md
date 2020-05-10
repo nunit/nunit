@@ -19,7 +19,10 @@ Project Solution
 ...Project.Tests (Holds your testing code)
 ```
 
-Edit the references of the newly created test project so that it contains a reference to the standard PCL. Afterwards, add a NuGet dependency on NUnit by right-clicking on Project.Tests and selection Add -> Add NuGet Package. **Note:** Ensure you reference the same version of NUnit as the version of nunit.xamarin you are using. e.g. If you are using nunit.xamarin 3.0.1, add the v3.0.1 NUnit NuGet package. Afterwards, your test project is ready.
+Edit the references of the newly created test project so that it contains a reference to the standard PCL. Afterwards, add a NuGet dependency on NUnit by right-clicking on Project.Tests and selection Add -> Add NuGet Package. 
+
+> [!NOTE]
+> Ensure you reference the same version of NUnit as the version of nunit.xamarin you are using. e.g. If you are using nunit.xamarin 3.0.1, add the v3.0.1 NUnit NuGet package. Afterwards, your test project is ready.
 
 ### Platform runners
 

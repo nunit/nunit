@@ -15,7 +15,8 @@ This spec describes proposed new attributes to replace and extend the existing C
 
 ### Alternative Approaches
 
-**NOTE:** Three alternative approaches were identified in March, 2014. This is the final update of the document prior to choosing an alternative. Approach #3 seems to be the front-runner at this time.
+> [!NOTE]
+> Three alternative approaches were identified in March, 2014. This is the final update of the document prior to choosing an alternative. Approach #3 seems to be the front-runner at this time.
 
 #### 1. Keep the current approach
 

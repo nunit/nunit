@@ -25,7 +25,8 @@ This is a `[Flags]` type enumeration used to specify which tests may run in para
   * `ParallelScope.Children` indicates that the descendants of the test may be run in parallel with respect to one another.
   * `ParallelScope.Fixtures` indicates that test fixtures that are the descendants of the test may be run in parallel with one another.`
 
-**Note:** Additional values of the enumerator are used internally. They do not show up in the Intellisense and are not documented here. The value `ParallelScope.None`, which was used before the creation of the `NonParallelizableAttribute` is still accepted for the purpose of backward compatibility.
+> [!NOTE]
+> Additional values of the enumerator are used internally. They do not show up in the Intellisense and are not documented here. The value `ParallelScope.None`, which was used before the creation of the `NonParallelizableAttribute` is still accepted for the purpose of backward compatibility.
 
 ##### Specifying Parallelism at Multiple Test Levels
 

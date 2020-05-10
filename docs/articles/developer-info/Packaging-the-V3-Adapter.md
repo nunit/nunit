@@ -80,8 +80,8 @@ Test both the vsix and NuGet packages using each version of Visual Studio you ha
 
 5. Publicize the release, first announcing it on the nunit-developer and nunit-discuss lists and then more widely as appropriate. [We should develop a list of places.]
 
-##### Note:
-  * Publishing the release requires access to various online accounts, which are mentioned above. For obvious reasons, the passwords are not provided. Contact Charlie or Terje if you need this access.
+> [!NOTE]
+> Publishing the release requires access to various online accounts, which are mentioned above. For obvious reasons, the passwords are not provided. Contact Charlie or Terje if you need this access.
 
 Prerequisites
 -----
