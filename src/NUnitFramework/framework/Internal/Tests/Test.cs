@@ -62,11 +62,13 @@ namespace NUnit.Framework.Internal
         /// Constructs a test given its name
         /// </summary>
         /// <param name="name">The name of the test</param>
-        protected Test( string name )
+        protected Test(string name) : this(
+            name,
+            fullName: name,
+            typeInfo: null,
+            method: null)
         {
             Guard.ArgumentNotNullOrEmpty(name, nameof(name));
-
-            Initialize(name);
         }
 
         /// <summary>
@@ -75,43 +77,43 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
-        protected Test( string pathName, string name )
+        protected Test(string pathName, string name) : this(
+            name,
+            fullName: !string.IsNullOrEmpty(pathName) ? pathName + "." + name : name,
+            typeInfo: null,
+            method: null)
         {
-            Initialize(name);
-
-            if (!string.IsNullOrEmpty(pathName))
-                FullName = pathName + "." + name;
         }
 
         /// <summary>
         /// Constructs a test for a specific type.
         /// </summary>
-        protected Test(ITypeInfo typeInfo)
+        protected Test(ITypeInfo typeInfo) : this(
+            typeInfo.GetDisplayName(),
+            fullName: !string.IsNullOrEmpty(typeInfo.Namespace) ? typeInfo.Namespace + "." + typeInfo.GetDisplayName() : typeInfo.GetDisplayName(),
+            typeInfo,
+            method: null)
         {
-            Initialize(typeInfo.GetDisplayName());
-
-            string nspace = typeInfo.Namespace;
-            if (nspace != null && nspace != "")
-                FullName = nspace + "." + Name;
-            TypeInfo = typeInfo;
         }
 
         /// <summary>
         /// Constructs a test for a specific method.
         /// </summary>
-        protected Test(IMethodInfo method)
+        protected Test(IMethodInfo method) : this(
+            method.Name,
+            fullName: method.TypeInfo.FullName + "." + method.Name,
+            method.TypeInfo,
+            method)
         {
-            Initialize(method.Name);
-
-            Method = method;
-            TypeInfo = method.TypeInfo;
-            FullName = method.TypeInfo.FullName + "." + Name;
         }
 
-        private void Initialize(string name)
+        private Test(string name, string fullName, ITypeInfo? typeInfo, IMethodInfo? method)
         {
-            FullName = Name = name;
             Id = GetNextId();
+            Name = name;
+            FullName = fullName;
+            TypeInfo = typeInfo;
+            Method = method;
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
             SetUpMethods = new MethodInfo[0];
