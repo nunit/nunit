@@ -68,7 +68,6 @@ namespace NUnit.Framework.Internal
             typeInfo: null,
             method: null)
         {
-            Guard.ArgumentNotNullOrEmpty(name, nameof(name));
         }
 
         /// <summary>
@@ -109,6 +108,8 @@ namespace NUnit.Framework.Internal
 
         private Test(string name, string fullName, ITypeInfo? typeInfo, IMethodInfo? method)
         {
+            Guard.ArgumentNotNullOrEmpty(name, nameof(name));
+
             Id = GetNextId();
             Name = name;
             FullName = fullName;
