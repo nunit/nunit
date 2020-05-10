@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
 
         private ICollection OriginalAlgorithm(IEnumerable actual)
         {
-#if !NET35
+#if !NET35  // The IComparable fastpath uses a SortedList<T>, which doesn't exist in NET35
             var hasAllComparable = true;
             var comparables = new List<IComparable>();
 
