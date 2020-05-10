@@ -382,12 +382,7 @@ namespace NUnit.Framework
             /// </summary>
             public string? MethodName
             {
-                get
-                {
-                    return _test is TestMethod
-                        ? _test.Method!.Name
-                        : null;
-                }
+                get { return (_test as TestMethod)?.Method.Name; }
             }
 
             /// <summary>
