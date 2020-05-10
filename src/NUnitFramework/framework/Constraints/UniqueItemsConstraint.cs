@@ -162,14 +162,14 @@ namespace NUnit.Framework.Constraints
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
-        private static ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, (IEqualityComparer<string>)StringComparer.CurrentCultureIgnoreCase);
+        private ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
+            => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(Comparer.IgnoreCase));
 
-        private static ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
+        private ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
         {
             var result = NonUniqueItemsInternal(
                 actual.Select(x => x.ToString()),
-                (IEqualityComparer<string>)StringComparer.CurrentCultureIgnoreCase
+                new NUnitStringEqualityComparer(Comparer.IgnoreCase)
             );
             return result.Select(x => x[0]).ToList();
         }
@@ -254,6 +254,34 @@ namespace NUnit.Framework.Constraints
             }
 
             return null;
+        }
+
+        private sealed class NUnitStringEqualityComparer : IEqualityComparer<string>
+        {
+            private readonly bool _ignoreCase;
+
+            public NUnitStringEqualityComparer(bool ignoreCase)
+            {
+                _ignoreCase = ignoreCase;
+            }
+
+            public bool Equals(string x, string y)
+            {
+                string s1 = _ignoreCase ? x.ToLower() : x;
+                string s2 = _ignoreCase ? y.ToLower() : y;
+
+                return s1.Equals(s2);
+            }
+
+            public int GetHashCode(string obj)
+            {
+                if (obj is null)
+                    return 0;
+                else if (_ignoreCase)
+                    return obj.ToLower().GetHashCode();
+                else
+                    return obj.GetHashCode();
+            }
         }
 
         private sealed class NUnitSortingComparer : IComparer<object>
