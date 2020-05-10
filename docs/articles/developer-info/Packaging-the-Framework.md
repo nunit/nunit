@@ -1,20 +1,20 @@
+# Packaging the Framework
+
 This note describes how to create release packages for the NUnit Framework. Currently, all the builds and packaging must be done on a single Windows machine. This is likely to change in the future as we add more platforms.
 
 > [!NOTE]
 > These instructions assume that you are creating releases for SilverLight and the Compact Framework at the same time as the general release. If that's not the case, you may skip the steps marked CF or SL. To release either build separately, perform those steps in sequence.
 
-Software Prerequisites
-----------------------
+## Software Prerequisites
 
 Various software combinations and environments may be used to build NUnit components. The following software is what we have used and tested for building everything and creating the release packages. We'll add options to the list as we find them.
 
 1. Visual Studio 2017 with the NuGet Package manager.
 2. .NET Core 1.1.4
 
-Preparing for Release
----------------------
+## Preparing for Release
 
-#### Create a Release Branch
+### Create a Release Branch
 
 All work on releases should be done on a branch.
 
@@ -24,7 +24,7 @@ All work on releases should be done on a branch.
 4. As you make the changes below, push the branch to GitHub and create a Pull Request to allow other team members to review your changes.
 5. **Do not merge the release branch or PR**, we will create a separate PR to merge the changes back into master.
 
-#### Make Sure it Works!
+### Make Sure it Works
 
 1. Close all instances of Visual Studio or other IDE to ensure that no changes are left unsaved.
 
@@ -39,7 +39,7 @@ All work on releases should be done on a branch.
 
 4. Make sure that the most recent commits of master passed all tests in the CI builds. Check the builds on both Travis and AppVeyor.
 
-#### Review Milestone Status
+### Review Milestone Status
 
 1. Check the milestone for the current release to see that there are no open issues. Any issues that are not going to be in this release should be moved to a future milestone. This may be the time to create the next milestone.
 
@@ -47,7 +47,7 @@ All work on releases should be done on a branch.
 
 3. Check all future open milestones for completed issues. Anything that is completed will be included in this release so change its milestone to the current release.
 
-#### Check Assembly Versioning
+### Check Assembly Versioning
 
 AssemblyVersion and AssemblyFileVersion are set separately for the framework, engine, engine api and console runner. Each is kept in a separate file and they may be updated separately. Using the 3.4.1 release as an example, version information was set as follows:
 
@@ -55,7 +55,7 @@ AssemblyVersion and AssemblyFileVersion are set separately for the framework, en
       --------------------- | ------------------- | --------------- | -------------------
       Framework             | FrameworkVersion.cs |     3.6.0.0     |      3.6.0.0
 
-#### Update Copyright Year
+### Update Copyright Year
 
 The copyright year in all the source files is only updated as they are changed, but the copyright in the `[assembly: AssemblyCopyright("...")]` and the copyright text displayed by `nunitlite` should be updated to the year of the release. Search for `AssemblyCopyright` in the solution and update it where needed, then check `TextUI.cs` in `nunitlite-runner` for default values used when no attribute is found.
 
@@ -63,25 +63,25 @@ If necessary, update the year in the general copyright notice LICENSE.txt. Note 
 
 Notices at the top of each source code file are only updated when copyrightable changes are made to the file, not at the time of release.
 
-#### Update Package Versions
+### Update Package Versions
 
 The package version is updated in the `build.cake` file. The following lines appear near the beginning of the file. Update the versions and modifiers as necessary.
 
-```csharp
-var version="3.6.0";
-var modifier=""
-```
+      ```csharp
+      var version="3.6.0";
+      var modifier=""
+      ```
 
-The version variables are three-part version numbers that follow the basic principles of [semantic versioning]. Since we publish a number of NuGet packages, we use the NuGet implementation of semantic versioning. 
+The version variables are three-part version numbers that follow the basic principles of [semantic versioning]. Since we publish a number of NuGet packages, we use the NuGet implementation of semantic versioning.
 
-For NUnit, the major version is updated only rarely. Normal releases will update the minor version and set the third component to zero. The third component is incremented when "hot fixes" are made to a production release or for builds created for a special purpose. 
+For NUnit, the major version is updated only rarely. Normal releases will update the minor version and set the third component to zero. The third component is incremented when "hot fixes" are made to a production release or for builds created for a special purpose.
 
 For pre-release versions, a non-empty modifier is specified. This is a suffix added to the version. Our standard suffixes are currently `-alpha-n`, `-beta-n` and `-rc-n` The build script adds an additional suffix of -dbg to any packages created using a Debug build.
 
 > [!NOTE]
 > The first alpha, beta or rc release may omit the `-n`. In that case, any following alpha, beta or rc should use `-2`.
 
-#### Update CHANGES File
+### Update CHANGES File
 
 The `CHANGES.md` file in the project root contains all relevant changes for each release. It contains the same information as the release notes in the project documentation, in text format. Because the CHANGES file includes the **date** of the release, you must know when the release is coming out in order to edit it. Otherwise, it will be necessary to make a final change to the file at the point of making the release.
 
@@ -89,7 +89,7 @@ Create new sections in the CHANGES file to match those for prior releases. To en
 
 You should commit the CHANGES file separately from the version number changes since that commit will be merged back into master while the version changes will not.
 
-#### Update the Documentation
+### Update the Documentation
 
 The [Release Notes](https://github.com/nunit/docs/wiki/Release-Notes) section of the documentation wiki should match the content of the CHANGES.txt file except for any format differences.
 
@@ -98,18 +98,17 @@ Now that the documentation is being kept in a github wiki, it may be possible to
 
 For any significant changes to how NUnit is used or what it does, the appropriate pages of the documentation should be updated or new pages created. If you do this in advance of the release (which is actually a good idea) you should do it in a way that the new documentation is not visible until the release is actually made.
 
-#### Regenerate the Public API Files
+### Regenerate the Public API Files
 
 TODO: Add detail during the next release...
 
 During each release, we will have to manually delete the entire contents of each of the eight Shipped/Unshipped files, then use the light bulb fix on the warnings in the error list to repopulate the Unshipped files, then cut the contents of each Unshipped file and paste
 
-#### Push All Changes
+### Push All Changes
 
 If you made any changes to the files in git as part of the preceding steps. Make sure you have pushed them and they have been reviewed in the PR.
 
-Creating the Release
---------------------
+## Creating the Release
 
 1. Clear the package directory to avoid confusion:
 
@@ -120,7 +119,7 @@ Creating the Release
 
 2. You should be working on the release branch. Do a pull to make sure you have everything up to date. If changes of any significance were merged, you should test again before creating the release.
 
-3. Ensure that the release build is up to date. If you have any doubt whether the latest code changes 
+3. Ensure that the release build is up to date. If you have any doubt whether the latest code changes
    have actually been built, do a clean build. If the build is up to date you may skip this step.
 
       `build -Target Build`
@@ -139,42 +138,39 @@ Creating the Release
 
 6. Verify that the correct packages have been created in the `package` sub-directory:
 
-  * NUnit-VERSION.zip
-  * NUnit.VERSION.nupkg
-  * NUnitLite.VERSION.nupkg
+* NUnit-VERSION.zip
+* NUnit.VERSION.nupkg
+* NUnitLite.VERSION.nupkg
 
-Testing the Release
--------------------
+## Testing the Release
 
 The degree to which each package needs testing may vary depending on what has been changed. Here is a minimal set of tests for each package.
 
- * **Binary Zip** Unzip the file, change into the bin directory and use an install of the console to run all the tests.
+* **Binary Zip** Unzip the file, change into the bin directory and use an install of the console to run all the tests.
 
-```
-nunit3-console.exe net-2.0\nunit.framework.tests.dll
-nunit3-console.exe net-3.5\nunit.framework.tests.dll
-nunit3-console.exe net-4.0\nunit.framework.tests.dll
-nunit3-console.exe net-4.5\nunit.framework.tests.dll
-portable\nunitlite-runner.exe portable\nunit.framework.tests.dll
-portable\nunitlite.tests.exe
-```
+      ```
+      nunit3-console.exe net-2.0\nunit.framework.tests.dll
+      nunit3-console.exe net-3.5\nunit.framework.tests.dll
+      nunit3-console.exe net-4.0\nunit.framework.tests.dll
+      nunit3-console.exe net-4.5\nunit.framework.tests.dll
+      portable\nunitlite-runner.exe portable\nunit.framework.tests.dll
+      portable\nunitlite.tests.exe
+      ```
 
- * **NuGet Packages** Create a test project. Install the packages and verify that they apply to the project correctly. Run tests.
+* **NuGet Packages** Create a test project. Install the packages and verify that they apply to the project correctly. Run tests.
 
-Archiving the Release
----------------------
+## Archiving the Release
 
 Packages are archived on nunit.org in the downloads directory. Create a new subfolder under downloads/nunit/v3 for the release. Upload all the package files into that directory.
 
 > [!NOTE]
 > We need to develop a plan for additionally archiving the image directory. For the moment, the binary zip package provides a backup but it's possible that the two may diverge in the future.
 
-Publishing the Release
-----------------------
+## Publishing the Release
 
-#### Github
+### Github
 
-1. Log onto Github and go to the main nunit repository at https://github.com/nunit.nunit.
+1. Log onto Github and go to the main nunit repository at <https://github.com/nunit/nunit>.
 
 2. Select Releases and then click on the "Draft a new release" button.
 
@@ -190,7 +186,7 @@ Publishing the Release
 
 8. Click the "Publish release" button to publish the release on Github.
 
-#### NuGet
+### NuGet
 
 1. Sign on to nuget.org.
 
@@ -202,7 +198,7 @@ Publishing the Release
 
 5. Repeat steps 2-4 for NUnitLite.VERSION.nupkg
 
-#### Merge into Master
+### Merge into Master
 
 1. Close your release Pull Request
 2. Create a new branch off of your release branch
@@ -210,16 +206,16 @@ Publishing the Release
 4. Push your changes to GitHub
 5. Create a pull request from your branch making sure it is based off master
 
-#### Website
+### Website
 
 If changes to the website have been accumulated in a branch, now is the time to merge it and upload the pages to the site.
 
-#### Notify Users
+### Notify Users
 
 Send notifications to the mailing list and twitter.
 
-#### Close the Milestone
+### Close the Milestone
 
 The milestone representing this release should be closed at this time.
 
-[semantic versioning]:http://semver.org/
+[semantic versioning]:http://semver.org
