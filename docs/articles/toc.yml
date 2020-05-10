@@ -6,3 +6,5 @@
   href: vs-test-adapter/toc.yml
 - name: VS Test Generator
   href: vs-test-generator/toc.yml
+- name: NUnit Analyzers
+  href: nunit-analyzers/toc.yml
