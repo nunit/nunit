@@ -192,7 +192,7 @@ namespace NUnit.Framework.Internal
         /// Gets the TypeInfo of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>
-        public ITypeInfo? TypeInfo { get; private set; }
+        public ITypeInfo? TypeInfo { get; }
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
@@ -241,7 +241,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the properties for this test
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         /// <summary>
         /// Returns true if this is a TestSuite
