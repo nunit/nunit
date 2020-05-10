@@ -392,7 +392,10 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Inconclusive:
                 case TestStatus.Warning:
                     if (Message != null && Message.Trim().Length > 0)
-                        AddReasonElement(thisNode);
+                    {
+                        TNode reasonNode = thisNode.AddElement("reason");
+                        reasonNode.AddElementWithCDATA("message", Message);
+                    }
                     break;
             }
 
@@ -656,17 +659,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Helper Methods
-
-        /// <summary>
-        /// Adds a reason element to a node and returns it.
-        /// </summary>
-        /// <param name="targetNode">The target node.</param>
-        /// <returns>The new reason element.</returns>
-        private TNode AddReasonElement(TNode targetNode)
-        {
-            TNode reasonNode = targetNode.AddElement("reason");
-            return reasonNode.AddElementWithCDATA("message", Message);
-        }
 
         /// <summary>
         /// Adds a failure element to a node and returns it.
