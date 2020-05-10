@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -73,7 +75,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
-        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
+        public TestSuite(ITypeInfo fixtureType, object?[]? arguments = null)
             : base(fixtureType)
         {
             Arguments = arguments ?? TestParameters.NoArguments;
@@ -139,7 +141,7 @@ namespace NUnit.Framework.Internal
 
                 foreach (Test test in Tests)
                 {
-                    TestSuite suite = test as TestSuite;
+                    TestSuite? suite = test as TestSuite;
                     if (suite != null)
                         suite.Sort();
                 }
@@ -218,7 +220,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in creating the fixture, or empty array if none are provided.
         /// </summary>
-        public override object[] Arguments { get; }
+        public override object?[] Arguments { get; }
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents

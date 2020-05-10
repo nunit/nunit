@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -45,12 +47,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Used to cache the declaring type for this MethodInfo
         /// </summary>
-        private ITypeInfo _declaringTypeInfo;
+        private ITypeInfo? _declaringTypeInfo;
 
         /// <summary>
         /// Method property backing field
         /// </summary>
-        private IMethodInfo _method;
+        private IMethodInfo? _method;
 
         #endregion
 
@@ -146,11 +148,11 @@ namespace NUnit.Framework.Internal
         /// Gets the name of the class where this test was declared.
         /// Returns null if the test is not associated with a class.
         /// </summary>
-        public string ClassName
+        public string? ClassName
         {
             get
             {
-                ITypeInfo typeInfo = TypeInfo;
+                ITypeInfo? typeInfo = TypeInfo;
 
                 if (Method != null)
                 {
@@ -173,7 +175,7 @@ namespace NUnit.Framework.Internal
         /// Gets the name of the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public virtual string MethodName
+        public virtual string? MethodName
         {
             get { return null; }
         }
@@ -181,19 +183,19 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in creating the test or empty array if none required.
         /// </summary>
-        public abstract object[] Arguments { get; }
+        public abstract object?[] Arguments { get; }
 
         /// <summary>
         /// Gets the TypeInfo of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>
-        public ITypeInfo TypeInfo { get; private set; }
+        public ITypeInfo? TypeInfo { get; private set; }
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public IMethodInfo Method
+        public IMethodInfo? Method
         {
             get { return _method; }
             set
@@ -256,7 +258,7 @@ namespace NUnit.Framework.Internal
         /// Gets the parent as a Test object.
         /// Used by the core to set the parent.
         /// </summary>
-        public ITest Parent { get; set; }
+        public ITest? Parent { get; set; }
 
         /// <summary>
         /// Gets this test's child tests
@@ -267,7 +269,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets a fixture object for running this test.
         /// </summary>
-        public virtual object Fixture { get; set; }
+        public virtual object? Fixture { get; set; }
 
         #endregion
 
@@ -277,7 +279,7 @@ namespace NUnit.Framework.Internal
         /// Static prefix used for ids in this AppDomain.
         /// Set by FrameworkController.
         /// </summary>
-        public static string IdPrefix { get; set; }
+        public static string? IdPrefix { get; set; }
 
         /// <summary>
         /// Gets or Sets the Int value representing the seed for the RandomGenerator
@@ -301,7 +303,7 @@ namespace NUnit.Framework.Internal
 
         internal bool RequiresThread { get; set; }
 
-        private ITestAction[] _actions;
+        private ITestAction[]? _actions;
 
         internal ITestAction[] Actions
         {
@@ -448,14 +450,14 @@ namespace NUnit.Framework.Internal
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
         /// <param name="obj">An object to compare with this instance. </param>
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             return CompareTo(obj as Test);
         }
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object. </summary>
         /// <param name="other">An object to compare with this instance.</param>
-        public int CompareTo(Test other)
+        public int CompareTo(Test? other)
         {
             return other == null ? -1 : this.FullName.CompareTo(other.FullName);
         }

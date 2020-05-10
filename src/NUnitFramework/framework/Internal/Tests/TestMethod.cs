@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
@@ -36,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
-        internal TestCaseParameters parms;
+        internal TestCaseParameters? parms;
 
         #endregion
 
@@ -53,7 +55,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="method">The method to be used as a test.</param>
         /// <param name="parentSuite">The suite or fixture to which the new test will be added</param>
-        public TestMethod(IMethodInfo method, Test parentSuite) : base(method)
+        public TestMethod(IMethodInfo method, Test? parentSuite) : base(method)
         {
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
@@ -70,7 +72,7 @@ namespace NUnit.Framework.Internal
             get { return parms != null && parms.HasExpectedResult; }
         }
 
-        internal object ExpectedResult
+        internal object? ExpectedResult
         {
             get { return parms != null ? parms.ExpectedResult : null; }
         }
@@ -79,9 +81,14 @@ namespace NUnit.Framework.Internal
         #region Test Overrides
 
         /// <summary>
+        /// Gets a MethodInfo for the method implementing this test.
+        /// </summary>
+        public new IMethodInfo Method { get => base.Method!; set => base.Method = value; }
+
+        /// <summary>
         /// The arguments to use in executing the test method, or empty array if none are provided.
         /// </summary>
-        public override object[] Arguments
+        public override object?[] Arguments
         {
             get { return parms != null ? parms.Arguments : TestParameters.NoArguments; }
         }
