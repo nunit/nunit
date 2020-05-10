@@ -101,14 +101,14 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The <see cref="TestSuite"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
         public TestSuite(TestSuite suite, ITestFilter filter)
-            : base(suite.Name)
+            : this(suite.Name)
         {
             this.FullName = suite.FullName;
             this.Method   = suite.Method;
             this.RunState = suite.RunState;
             this.Fixture  = suite.Fixture;
 
-            foreach(var child in suite.tests)
+            foreach (var child in suite.tests)
             {
                 if(filter.Pass(child))
                 {
