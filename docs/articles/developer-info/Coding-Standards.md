@@ -1,12 +1,14 @@
+# Coding Standards
+
 In order to keep the code consistent, we follow certain conventions. Many of the choices we have made are somewhat arbitrary and could easily have gone another way. At this point, most of these conventions are already well-established, so please don't re-open a discussion about them unless you have new issues to present.
 
 Notice that these standards are all stylistic. Do not write standards that tell people how to program. For example, we don't need a standard that tells us to always dispose of disposable objects because that's part of the normal "standard" for C# programming. In other words, these standards are about relatively trivial things that we have all agreed to do the same way.
 
-### Making Changes
+## Making Changes
 
 If you do want to make changes, please don't just edit the wiki. Initiate a discussion of what you want to change on the developer list first. If you add an entire new section, you can edit first and then present it to the list for discussion. However, if you are intending to standardize more things than we usually standardize, it's wise to discuss it first to avoid wasting time!
 
-### General - Please Read This!
+## General - Please Read This
 
 Follow these guidelines unless you have an extremely good reason not to. Add a comment explaining why you are not following them so others will know your reasoning.
 
@@ -16,18 +18,15 @@ In cases where we make broad changes in layout or naming, they should be committ
 
 Visual Studio can be set up to match the coding standards by importing the [nunit.vssettings](https://github.com/nunit/docs/blob/master/nunit.vssettings) file from this repository. This file will only change the C# indentation and formatting settings. It will not modify any other Visual Studio settings. It can be imported into Visual Studio 2010 and later by going to Tools | Import and Export Settings...
 
-### Copyright
+## Copyright
 
 NUnit is licensed under the MIT / X11 license. Each file is prefixed by the [NUnit Copyright Notice](NUnit-Copyright-Notice.md) enclosed in appropriate comment characters for the language of the file.
 
-##### Notes:
+### Notes
 
 1. Charlie Poole is the copyright holder for the NUnit code on behalf of the NUnit community, at least until some other arrangement is made. Do not place your name on the copyright line if you wish to contribute code.
 
-2. The year given is the year of the file's creation. Subsequently, as copyrightable (non-trivial) changes are made, additional years or ranges of years may be added. For example, some file might include the statement
-   ```
-                 Copyright (c) 2007-2015 Charlie Poole
-   ```
+2. The year given is the year of the file's creation. Subsequently, as copyrightable (non-trivial) changes are made, additional years or ranges of years may be added. For example, some file might include the statement `Copyright (c) 2007-2015 Charlie Poole`.
 
 3. Do not update the copyright years when no changes or only trivial changes are made to a file.
 
@@ -74,7 +73,7 @@ public string SomeProperty { get; private set; }
 If a getter or setter has only one statement, a single line should normally be used
 
 ```csharp
-public string SomeProperty 
+public string SomeProperty
 {
     get { return _innerList.SomeProperty; }
 }
@@ -130,7 +129,7 @@ Use four consecutive spaces per level of indent. Don't use tabs - except where t
 
 Indent content of code blocks.
 
-In switch statements, indent both the case labels and the case blocks. Indent case blocks even if not using braces. 
+In switch statements, indent both the case labels and the case blocks. Indent case blocks even if not using braces.
 
 ```csharp
 switch (name)
@@ -167,18 +166,17 @@ The following table shows our naming standard for various types of names. All na
 
 For items that may vary by project, the project’s root .editorconfig and solution DotSettings may provide the defaults and diagnostics expected for PRs in that project.
 
-<table>
-<tr><th>Named Item</th><th>Naming Standard</th><th>Notes</th></tr>
-<tr><td>Namespaces</td><td>PascalCasing</td><td></td></tr>
-<tr><td>Types</td><td>PascalCasing</td><td>For framework types with a special C# name, we use the C# name. So... <code>int</code> rather than <code>System.Int32</code>.</td></tr>
-<tr><td>Methods</td><td>PascalCasing</td><td></td></tr>
-<tr><td>Properties</td><td>PascalCasing</td><td></td></tr>
-<tr><td>Events</td><td>PascalCasing</td><td></td></tr>
-<tr><td>Public and Protected Fields</td><td>PascalCasing<br/>(with allowance for API compatibility)</td><td><p>Includes constant fields.</p><p>Public and protected variable fields should be avoided.</p></td></tr>
-<tr><td>Private and Internal Fields</td><td>(may vary by project)</td><td><p>Includes constant fields.</p><p>Do not use <code>this</code> with fields designated by a leading underscore. Keep each file to the same standard, renaming when changes are made.</p><p>Use `readonly` wherever appropriate for private fields.</p></td></tr>
-<tr><td>Parameters</td><td>camelCasing</td><td></td></tr>
-<tr><td>Local Variables</td><td>camelCasing</td><td></td></tr>
-</table>
+|Named Item|Naming Standard|Notes|
+|--- |--- |--- |
+|Namespaces|PascalCasing||
+|Types|PascalCasing|For framework types with a special C# name, we use the C# name. So... int rather than System.Int32.|
+|Methods|PascalCasing||
+|Properties|PascalCasing||
+|Events|PascalCasing||
+|Public and Protected Fields|PascalCasing(with allowance for API compatibility)|Includes constant fields.Public and protected variable fields should be avoided.|
+|Private and Internal Fields|(may vary by project)|Includes constant fields.Do not use this with fields designated by a leading underscore. Keep each file to the same standard, renaming when changes are made.Use `readonly` wherever appropriate for private fields.|
+|Parameters|camelCasing||
+|Local Variables|camelCasing||
 
 ### Comments
 
@@ -210,9 +208,10 @@ Wherever possible, classes should be laid out in the following order,
 8. Protected Methods
 9. Private Methods
 
-Using statements should be sorted as follows: 
-  * All System namespaces
-  * All Other namespaces, including NUnit's
+Using statements should be sorted as follows:
+
+* All System namespaces
+* All Other namespaces, including NUnit's
 
 It is permissible, but not required, to place using statements inside the namespace block, in shortened form, for namespaces that are descendants of the namespace itself. Note that the compiler will permit other uses of shortened namespaces within the namespace block, but we prefer to limit ourselves to descendants. Non-descendant namespaces should be listed in full form in the main using block.
 
@@ -243,4 +242,4 @@ The `var` keyword should be used where the type is obvious to someone reading th
 var i = 12;
 var list = new List<int>();
 Foo foo = GetFoo();
-``` 
+``
