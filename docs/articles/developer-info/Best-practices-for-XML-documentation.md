@@ -50,7 +50,7 @@ Consider documenting things that lead to exceptions being thrown using the `<exc
 This can really get the end user up to speed on things that aren't immediately obvious from the method signature.
 
 Sadly intellisense will only show the `<exception>` type thrown, not the message, so for important messages it's good to also include the message a second time in the summary:
-```c#
+```csharp
 /// <summary>
 /// Does foo. If <see cref="OtherProperty"/> is not set, throws <see cref="InvalidOperationException"/>.
 /// </summary>

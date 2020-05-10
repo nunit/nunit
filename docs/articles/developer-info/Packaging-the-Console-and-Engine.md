@@ -67,7 +67,7 @@ Notices at the top of each source code file are only updated when copyrightable 
 
 The package version is updated in the `build.cake` file. The following lines appear near the beginning of the file. Update the versions and modifiers if necessary. Normally, they will already have been set correctly.
 
-```c#
+```csharp
 var version="3.4.1";
 var modifier=""
 ```

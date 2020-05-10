@@ -43,7 +43,7 @@ Note that targeting a particular level of C# does not mean that all features are
 
 Place the opening and closing braces on a line by themselves and at the same level of indentation as their parent.
 
-```C#
+```csharp
 public class MyClass : BaseClass, SomeInterface
 {
     public void SomeMethod(int num, string name)
@@ -55,11 +55,11 @@ public class MyClass : BaseClass, SomeInterface
 
 An exception may be made if a method body or class definition is empty
 
-```C#
+```csharp
 public virtual void SomeMethod(int num, string name) { }
 ```
 
-```C#
+```csharp
 public class GadgetList : List<Gadget> { }
 ```
 
@@ -67,13 +67,13 @@ public class GadgetList : List<Gadget> { }
 
 Prefer automatic backing variables wherever possible
 
-```C#
+```csharp
 public string SomeProperty { get; private set; }
 ```
 
 If a getter or setter has only one statement, a single line should normally be used
 
-```C#
+```csharp
 public string SomeProperty 
 {
     get { return _innerList.SomeProperty; }
@@ -82,7 +82,7 @@ public string SomeProperty
 
 If there is more than one statement, use the same layout as for method definitions
 
-```C#
+```csharp
 public string SomeProperty
 {
     get
@@ -99,7 +99,7 @@ public string SomeProperty
 
 Method declarations and method calls should not have spaces between the method name and the parenthesis, nor within the parenthesis. Put a space after a comma between parameters.
 
-```C#
+```csharp
 public void SomeMethod(int x, int y)
 {
     Console.WriteLine("{0}+{1}={2}", x, y, x + y);
@@ -108,7 +108,7 @@ public void SomeMethod(int x, int y)
 
 Control flow statements should have a space between the keyword and the parenthesis, but not within the parenthesis.
 
-```C#
+```csharp
 for (int i = 1; i < 10; i++)
 {
     // Do Something
@@ -117,7 +117,7 @@ for (int i = 1; i < 10; i++)
 
 There should be no spaces in expression parenthesis, type casts, generics or array brackets, but there should be a space before and after binary operators.
 
-```C#
+```csharp
 int x = a * (b + c);
 var list = new List<int>();
 list.Add(x);
@@ -132,7 +132,7 @@ Indent content of code blocks.
 
 In switch statements, indent both the case labels and the case blocks. Indent case blocks even if not using braces. 
 
-```C#
+```csharp
 switch (name)
 {
     case "John":
@@ -148,7 +148,7 @@ Blocks of related code should have not have any blank lines. Blank lines can be 
 
 If brackets are not used on a control flow statement with a single line, a blank line should follow.
 
-```C#
+```csharp
 public static double GetAttribute(XmlNode result, string name, double defaultValue)
 {
     var attr = result.Attributes[name];
@@ -216,7 +216,7 @@ Using statements should be sorted as follows:
 
 It is permissible, but not required, to place using statements inside the namespace block, in shortened form, for namespaces that are descendants of the namespace itself. Note that the compiler will permit other uses of shortened namespaces within the namespace block, but we prefer to limit ourselves to descendants. Non-descendant namespaces should be listed in full form in the main using block.
 
-```C#
+```csharp
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -239,7 +239,7 @@ namespace NUnit.Engine.Internal
 
 The `var` keyword should be used where the type is obvious to someone reading the code, for example when creating a new object. Use the full type whenever the type is not obvious, for example when initializing a variable with the return value of a method.
 
-```C#
+```csharp
 var i = 12;
 var list = new List<int>();
 Foo foo = GetFoo();
