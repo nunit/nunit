@@ -371,7 +371,7 @@ Task("InstallSigningTool")
 Task("SignPackages")
     .Description("Signs the NuGet packages")
     .IsDependentOn("InstallSigningTool")
-    //.IsDependentOn("PackageFramework")
+    .IsDependentOn("PackageFramework")
     .Does(() =>
     {
         // Get the secret.
@@ -379,14 +379,12 @@ Task("SignPackages")
         if(string.IsNullOrWhiteSpace(secret)) {
             throw new InvalidOperationException("Could not resolve signing secret.");
         }
-        Information($"Signing secret: {secret}");
 
         // Get the user.
         var user = EnvironmentVariable("SIGNING_USER");
         if(string.IsNullOrWhiteSpace(user)) {
             throw new InvalidOperationException("Could not resolve signing user.");
         }
-        Information($"Signing user: {user}");
 
         var signClientPath = Context.Tools.Resolve("SignClient.exe") ?? Context.Tools.Resolve("SignClient") ?? throw new Exception("Failed to locate sign tool");
 
