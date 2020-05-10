@@ -30,4 +30,4 @@ Visual Studio 2017 15.9 and forward should have the adapter added to each test p
 
 
 ##### Notes
- * The TestGenerator extension is released as separate VSIXes for VS 2015 and VS 2017.  See [[Installation|TestGenerator Installation]] for details.  The Version 2 is for VS2017, the Version 1 is for VS 2015. 
+ * The TestGenerator extension is released as separate VSIXes for VS 2015 and VS 2017.  See [Installation](TestGenerator-Installation.md) for details.  The Version 2 is for VS2017, the Version 1 is for VS 2015. 
