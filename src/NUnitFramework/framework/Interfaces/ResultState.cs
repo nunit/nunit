@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,7 +53,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="status">The TestStatus.</param>
         /// <param name="label">The label.</param>
-        public ResultState(TestStatus status, string label) : this (status, label, FailureSite.Test)
+        public ResultState(TestStatus status, string? label) : this (status, label, FailureSite.Test)
         {
         }
 
@@ -70,7 +72,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="status">The TestStatus.</param>
         /// <param name="label">The label.</param>
         /// <param name="site">The stage at which the result was produced</param>
-        public ResultState(TestStatus status, string label, FailureSite site)
+        public ResultState(TestStatus status, string? label, FailureSite site)
         {
             Status = status;
             Label = label == null ? string.Empty : label;
@@ -173,7 +175,7 @@ namespace NUnit.Framework.Interfaces
 
         /// <summary>
         /// Gets the label under which this test result is
-        /// categorized, if any.
+        /// categorized, or <see cref="string.Empty"/> if none.
         /// </summary>
         public string Label { get; }
 
@@ -212,14 +214,14 @@ namespace NUnit.Framework.Interfaces
 
         /// <summary>Determines whether the specified object is equal to the current object.</summary>
         /// <param name="obj">The object to compare with the current object.</param>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return Equals(obj as ResultState);
         }
 
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(ResultState other)
+        public bool Equals(ResultState? other)
         {
             return other != null &&
                    Status == other.Status &&
@@ -244,7 +246,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Overload == operator for ResultStates
         /// </summary>
-        public static bool operator ==(ResultState left, ResultState right)
+        public static bool operator ==(ResultState? left, ResultState? right)
         {
             if (object.ReferenceEquals(left, null))
                 return object.ReferenceEquals(right, null);
@@ -255,7 +257,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Overload != operator for ResultStates
         /// </summary>
-        public static bool operator !=(ResultState left, ResultState right)
+        public static bool operator !=(ResultState? left, ResultState? right)
         {
             return !(left == right);
         }

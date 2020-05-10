@@ -21,9 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -117,16 +120,16 @@ namespace NUnit.Framework.Constraints
 #if !NET35
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
 #endif
-        private static string FormatValueWithoutThrowing(object val)
+        private static string FormatValueWithoutThrowing(object? val)
         {
-            string asString;
+            string? asString;
             try
             {
                 asString = val?.ToString();
             }
             catch (Exception ex)
             {
-                return string.Format(Fmt_ExceptionThrown, $"{ex.GetType().Name} was thrown by {val.GetType().Name}.ToString()");
+                return string.Format(Fmt_ExceptionThrown, $"{ex.GetType().Name} was thrown by {val!.GetType().Name}.ToString()");
             }
 
             return string.Format(Fmt_Default, asString);
@@ -146,7 +149,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="val">The value</param>
         /// <returns>The formatted text</returns>
-        public static string FormatValue(object val)
+        public static string FormatValue(object? val)
         {
             if (val == null)
                 return Fmt_Null;
@@ -177,7 +180,7 @@ namespace NUnit.Framework.Constraints
             if (start > 0)
                 sb.Append("...");
 
-            foreach (object obj in collection)
+            foreach (object? obj in collection)
             {
                 if (index++ >= start)
                 {
@@ -240,7 +243,7 @@ namespace NUnit.Framework.Constraints
             return sb.ToString();
         }
 
-        private static string TryFormatKeyValuePair(object value)
+        private static string? TryFormatKeyValuePair(object? value)
         {
             if (value == null)
                 return null;
@@ -253,28 +256,28 @@ namespace NUnit.Framework.Constraints
             if (baseValueType != typeof(KeyValuePair<,>))
                 return null;
 
-            object k = valueType.GetProperty("Key").GetValue(value, null);
-            object v = valueType.GetProperty("Value").GetValue(value, null);
+            object? k = valueType.GetProperty("Key").GetValue(value, null);
+            object? v = valueType.GetProperty("Value").GetValue(value, null);
 
             return FormatKeyValuePair(k, v);
         }
 
-        private static string FormatKeyValuePair(object key, object value)
+        private static string FormatKeyValuePair(object? key, object? value)
         {
             return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
         }
 
-        private static object GetValueFromTuple(Type type, string propertyName, object obj)
+        private static object? GetValueFromTuple(Type type, string propertyName, object obj)
         {
             return type.GetProperty(propertyName).GetValue(obj, null);
         }
 
-        private static object GetValueFromValueTuple(Type type, string propertyName, object obj)
+        private static object? GetValueFromValueTuple(Type type, string propertyName, object obj)
         {
             return type.GetField(propertyName).GetValue(obj);
         }
 
-        private static string TryFormatTuple(object value, Func<Type, bool> isTuple, Func<Type, string, object, object> getValue)
+        private static string? TryFormatTuple(object? value, Func<Type, bool> isTuple, Func<Type, string, object, object?> getValue)
         {
             if (value == null)
                 return null;
@@ -286,7 +289,7 @@ namespace NUnit.Framework.Constraints
             return FormatTuple(value, true, getValue);
         }
 
-        private static string FormatTuple(object value, bool printParentheses, Func<Type, string, object, object> getValue)
+        private static string FormatTuple(object value, bool printParentheses, Func<Type, string, object, object?> getValue)
         {
             Type valueType = value.GetType();
             int numberOfGenericArgs = valueType.GetGenericArguments().Length;
@@ -301,8 +304,8 @@ namespace NUnit.Framework.Constraints
 
                 bool notLastElement = i < 7;
                 string propertyName = notLastElement ? "Item" + (i + 1) : "Rest";
-                object itemValue = getValue(valueType, propertyName, value);
-                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatTuple(itemValue, false, getValue);
+                object? itemValue = getValue(valueType, propertyName, value);
+                string formattedValue = notLastElement ? FormatValue(itemValue) : FormatTuple(itemValue!, false, getValue);
                 sb.Append(formattedValue);
             }
             if (printParentheses)
@@ -372,7 +375,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public static string GetTypeRepresentation(object obj)
         {
-            Array array = obj as Array;
+            Array? array = obj as Array;
             if (array == null)
                 return string.Format("<{0}>", obj.GetType());
 
@@ -405,7 +408,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="s">The string to be converted</param>
         /// <returns>The converted string</returns>
-        public static string EscapeControlChars(string s)
+        [return: NotNullIfNotNull("s")]
+        public static string? EscapeControlChars(string? s)
         {
             if (s != null)
             {
@@ -473,7 +477,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="s">The string to be converted</param>
         /// <returns>The converted string</returns>
-        public static string EscapeNullCharacters(string s)
+        [return: NotNullIfNotNull("s")]
+        public static string? EscapeNullCharacters(string? s)
         {
             if (s != null)
             {
@@ -525,14 +530,14 @@ namespace NUnit.Framework.Constraints
         /// <returns>Array of indices</returns>
         public static int[] GetArrayIndicesFromCollectionIndex(IEnumerable collection, long index)
         {
-            Array array = collection as Array;
+            Array? array = collection as Array;
 
             int rank = array == null ? 1 : array.Rank;
             int[] result = new int[rank];
 
             for (int r = rank; --r > 0;)
             {
-                int l = array.GetLength(r);
+                int l = array!.GetLength(r);
                 result[r] = (int)index % l;
                 index /= l;
             }

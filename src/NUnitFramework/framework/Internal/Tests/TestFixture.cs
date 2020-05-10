@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -38,7 +40,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used</param>
-        public TestFixture(ITypeInfo fixtureType, object[] arguments = null) : base(fixtureType, arguments)
+        public TestFixture(ITypeInfo fixtureType, object?[]? arguments = null) : base(fixtureType, arguments)
         {
             SetUpMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(SetUpAttribute), true);
             TearDownMethods = Reflect.GetMethodsWithAttribute(TypeInfo.Type, typeof(TearDownAttribute), true); 
@@ -64,6 +66,11 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Test Suite Overrides
+
+        /// <summary>
+        /// Gets the TypeInfo of the fixture used in running this test.
+        /// </summary>
+        public new ITypeInfo TypeInfo => base.TypeInfo!;
 
         /// <summary>
         /// Creates a filtered copy of the test suite.

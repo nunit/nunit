@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
@@ -55,25 +57,25 @@ namespace NUnit.Framework.Interfaces
         /// Gets the name of the class containing this test. Returns
         /// null if the test is not associated with a class.
         /// </summary>
-        string ClassName { get; }
+        string? ClassName { get; }
 
         /// <summary>
         /// Gets the name of the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        string MethodName { get; }
+        string? MethodName { get; }
 
         /// <summary>
         /// Gets the Type of the test fixture, if applicable, or
         /// null if no fixture type is associated with this test.
         /// </summary>
-        ITypeInfo TypeInfo { get; }
+        ITypeInfo? TypeInfo { get; }
 
         /// <summary>
         /// Gets the method which declares the test, or <see langword="null"/>
         /// if no method is associated with this test.
         /// </summary>
-        IMethodInfo Method { get; }
+        IMethodInfo? Method { get; }
 
         /// <summary>
         /// Gets the RunState of the test, indicating whether it can be run.
@@ -94,7 +96,7 @@ namespace NUnit.Framework.Interfaces
         /// Gets the parent test, if any.
         /// </summary>
         /// <value>The parent test or null if none exists.</value>
-        ITest Parent { get; }
+        ITest? Parent { get; }
 
         /// <summary>
         /// Returns true if this is a test suite
@@ -116,12 +118,12 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets a fixture object for running this test.
         /// </summary>
-        object Fixture { get; }
+        object? Fixture { get; }
 
         /// <summary>
         /// The arguments to use in creating the test or empty array if none are required.
         /// </summary>
-        object[] Arguments { get; }
+        object?[] Arguments { get; }
     }
 }
 

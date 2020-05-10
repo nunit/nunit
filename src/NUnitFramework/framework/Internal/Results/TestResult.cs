@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -78,8 +80,8 @@ namespace NUnit.Framework.Internal
         protected int InternalAssertCount;
 
         private ResultState _resultState;
-        private string _message;
-        private string _stackTrace;
+        private string? _message;
+        private string? _stackTrace;
 
         private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
         private readonly List<TestAttachment> _testAttachments = new List<TestAttachment>();
@@ -100,7 +102,7 @@ namespace NUnit.Framework.Internal
         public TestResult(ITest test)
         {
             Test = test;
-            ResultState = ResultState.Inconclusive;
+            _resultState = ResultState.Inconclusive;
 
             OutWriter = TextWriter.Synchronized(new StringWriter(_output));
         }
@@ -188,7 +190,7 @@ namespace NUnit.Framework.Internal
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        public string Message
+        public string? Message
         {
             get
             {
@@ -213,7 +215,7 @@ namespace NUnit.Framework.Internal
         /// Gets any stack trace associated with an
         /// error or failure.
         /// </summary>
-        public virtual string StackTrace
+        public virtual string? StackTrace
         {
             get
             {
@@ -390,7 +392,10 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Inconclusive:
                 case TestStatus.Warning:
                     if (Message != null && Message.Trim().Length > 0)
-                        AddReasonElement(thisNode);
+                    {
+                        TNode reasonNode = thisNode.AddElement("reason");
+                        reasonNode.AddElementWithCDATA("message", Message);
+                    }
                     break;
             }
 
@@ -448,7 +453,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="resultState">The ResultState to use in the result</param>
         /// <param name="message">A message associated with the result state</param>
-        public void SetResult(ResultState resultState, string message)
+        public void SetResult(ResultState resultState, string? message)
         {
             SetResult(resultState, message, null);
         }
@@ -459,7 +464,7 @@ namespace NUnit.Framework.Internal
         /// <param name="resultState">The ResultState to use in the result</param>
         /// <param name="message">A message associated with the result state</param>
         /// <param name="stackTrace">Stack trace giving the location of the command</param>
-        public void SetResult(ResultState resultState, string message, string stackTrace)
+        public void SetResult(ResultState resultState, string? message, string? stackTrace)
         {
             RwLock.EnterWriteLock();
             try
@@ -617,7 +622,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Record an assertion result
         /// </summary>
-        public void RecordAssertion(AssertionStatus status, string message, string stackTrace)
+        public void RecordAssertion(AssertionStatus status, string? message, string? stackTrace)
         {
             RecordAssertion(new AssertionResult(status, message, stackTrace));
         }
@@ -625,7 +630,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Record an assertion result
         /// </summary>
-        public void RecordAssertion(AssertionStatus status, string message)
+        public void RecordAssertion(AssertionStatus status, string? message)
         {
             RecordAssertion(status, message, null);
         }
@@ -654,17 +659,6 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Helper Methods
-
-        /// <summary>
-        /// Adds a reason element to a node and returns it.
-        /// </summary>
-        /// <param name="targetNode">The target node.</param>
-        /// <returns>The new reason element.</returns>
-        private TNode AddReasonElement(TNode targetNode)
-        {
-            TNode reasonNode = targetNode.AddElement("reason");
-            return reasonNode.AddElementWithCDATA("message", Message);
-        }
 
         /// <summary>
         /// Adds a failure element to a node and returns it.

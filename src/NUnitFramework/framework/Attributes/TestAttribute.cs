@@ -94,6 +94,8 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
+            Guard.ArgumentValid(test.Method is object, "This attribute must only be applied to tests that have an associated method.", nameof(test));
+
             if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
                 test.Properties.Set(PropertyNames.Description, Description);
 

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Globalization;
@@ -165,18 +167,16 @@ namespace NUnit.Framework.Internal
         {
             var result = new List<Exception>();
 
-            if (exception is ReflectionTypeLoadException)
+            if (exception is ReflectionTypeLoadException reflectionException)
             {
-                var reflectionException = exception as ReflectionTypeLoadException;
                 result.AddRange(reflectionException.LoaderExceptions);
 
                 foreach (var innerException in reflectionException.LoaderExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
 #if TASK_PARALLEL_LIBRARY_API
-            if (exception is AggregateException)
+            if (exception is AggregateException aggregateException)
             {
-                var aggregateException = (exception as AggregateException);
                 result.AddRange(aggregateException.InnerExceptions);
 
                 foreach (var innerException in aggregateException.InnerExceptions)
@@ -196,7 +196,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Executes a parameterless synchronous or async delegate and returns the exception it throws, if any.
         /// </summary>
-        internal static Exception RecordException(Delegate parameterlessDelegate, string parameterName)
+        internal static Exception? RecordException(Delegate parameterlessDelegate, string parameterName)
         {
             Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
 
