@@ -1,22 +1,23 @@
-**TODO:** This documentation was copied from the original packaging info and needs to be updated for packaging just the Console and Engine.
+# Packaging the Console and Engine
+
+> [!NOTE]
+> **TODO:** This documentation was copied from the original packaging info and needs to be updated for packaging just the Console and Engine.
 
 This note describes how to create release packages for the NUnit console runner and test engine. Currently, all the builds and packaging must be done on a single Windows machine. This is likely to change in the future as we add more platforms.
 
-Software Prerequisites
-----------------------
+## Software Prerequisites
 
 Various software combinations and environments may be used to build the NUnit 3 console runner and engine. Our standard environment is Visual Studio 2017 15.6+ Community Edition.
 
-Preparing for Release
----------------------
+## Preparing for Release
 
-#### Merge latest into the release branch
+### Merge latest into the release branch
 
 1. Fetch and pull latest from master
 2. Checkout the release branch and merge master
 3. **Do not merge the release branch**, we will create a separate PR to merge the changes back into master.
 
-#### Make Sure it Works!
+### Make Sure it Works!
 
 1. Close all instances of Visual Studio or other IDE to ensure that no changes are left unsaved.
 
@@ -31,7 +32,7 @@ Preparing for Release
 
 4. Make sure that the most recent commits of master passed all tests in the CI builds. Check the builds on both Travis and AppVeyor. Check on TeamCity once we get that build working again.
 
-#### Review Milestone Status
+### Review Milestone Status
 
 1. Check the milestone for the current release to see that there are no open issues. Any issues that are not going to be in this release should be moved to a future milestone. This may be the time to create the next milestone.
 
@@ -39,7 +40,7 @@ Preparing for Release
 
 3. Check all future open milestones for completed issues. Anything that is completed will be included in this release so change its milestone to the current release.
 
-#### Check Assembly Versioning
+### Check Assembly Versioning
 
 AssemblyVersion and AssemblyFileVersion are set separately for the framework, engine, engine api and console runner. Each is kept in a separate file and they may be updated separately. Using the 3.4.1 release as an example, version information would be set as follows:
 
@@ -49,13 +50,13 @@ AssemblyVersion and AssemblyFileVersion are set separately for the framework, en
       Engine API            | EngineApiVersion.cs |     3.0.0.0     |      3.4.1.0
       Console               | ConsoleVersion.cs   |     3.4.1.0     |      3.4.1.0
 
-##### Notes:
+#### Notes:
 
 1. The Engine API AssemblyVersion is fixed and will not be changed unless it becomes necessary to modify the API in a non-additive manner.
 
 2. These values will normally already be correct for the release, since they should have been set immediately following the prior release.
 
-#### Update Copyright Year
+### Update Copyright Year
 
 The copyright year in all the source files is only updated as they are changed, but the copyright in the `[assembly: AssemblyCopyright("...")]` and the copyright text displayed by `nunit3-console` and `nunitlite` should be updated to the year of the release. Search for `AssemblyCopyright` in the solution and update it where needed, then check `Program.cs` in `nunit3-console` for default values used when no attribute is found.
 
@@ -63,7 +64,7 @@ If necessary, update the year in the general copyright notice LICENSE.txt. Note 
 
 Notices at the top of each source code file are only updated when copyrightable changes are made to the file, not at the time of release.
 
-#### Update Package Versions
+### Update Package Versions
 
 The package version is updated in the `build.cake` file. The following lines appear near the beginning of the file. Update the versions and modifiers if necessary. Normally, they will already have been set correctly.
 
@@ -81,7 +82,7 @@ For pre-release versions, a non-empty modifier is specified. This is a suffix ad
 > [!NOTE]
 > The first alpha, beta or rc release may omit the `-n`. In that case, any following alpha, beta or rc should use `-2`.
 
-#### Update CHANGES File
+### Update CHANGES File
 
 The CHANGES.txt file in the project root contains all relevant changes for each release. It contains the same information as the release notes in the project documentation, in text format. Because the CHANGES file includes the **date** of the release, you must know when the release is coming out in order to edit it. Otherwise, it will be necessary to make a final change to the file at the point of making the release.
 
@@ -89,7 +90,7 @@ Create new sections in the CHANGES file to match those for prior releases. To en
 
 You should commit the CHANGES file separately from the version number changes since that commit will be merged back into master while the version changes will not.
 
-#### Update the Documentation
+### Update the Documentation
 
 The [Release Notes](https://github.com/nunit/docs/wiki/Release-Notes) section of the documentation wiki should match the content of the CHANGES.txt file except for any format differences.
 
@@ -98,12 +99,11 @@ The [Release Notes](https://github.com/nunit/docs/wiki/Release-Notes) section of
 
 For any significant changes to how NUnit is used or what it does, the appropriate pages of the documentation should be updated or new pages created. If you do this in advance of the release (which is actually a good idea) you should do it in a way that the new documentation is not visible until the release is actually made.
 
-#### Push All Changes
+### Push All Changes
 
 If you made any changes to the files in git as part of the preceding steps. Make sure you have pushed them and they have been reviewed in the PR.
 
-Creating the Release
---------------------
+## Creating the Release
 
 1. Clear the package directory to avoid confusion:
 
@@ -127,20 +127,17 @@ Creating the Release
   * NUnit.Engine.Tool.VERSION.nupkg **(Do not release)**
   * NUnit.Runners.VERSION.nupkg
 
-Testing the Release
--------------------
+## Testing the Release
 
 The degree to which each package needs testing may vary depending on what has been changed. Usually, you should install all the NuGet packages into a test project, verifying that the
 
-Archiving the Release
----------------------
+## Archiving the Release
 
 Packages are archived on nunit.org in the downloads directory. Create a new subfolder under downloads/nunit/v3 for the release. Upload all the package files into that directory.
 
-Publishing the Release
-----------------------
+## Publishing the Release
 
-#### Github
+### Github
 
 1. Log onto Github and go to the main nunit repository at https://github.com/nunit.nunit.
 
@@ -158,7 +155,7 @@ Publishing the Release
 
 8. Click the "Publish release" button to publish the release on Github.
 
-#### NuGet
+### NuGet
 
 1. Sign on to nuget.org.
 
@@ -170,7 +167,7 @@ Publishing the Release
 
 5. Repeat steps 2-4 for the other NuGet packages. **Do not upload NUnit.Engine.Tool.VERSION.nupkg.**
 
-#### Merge into Master
+### Merge into Master
 
 1. Close your release Pull Request
 2. Create a new branch off of your release branch
@@ -178,15 +175,15 @@ Publishing the Release
 4. Push your changes to GitHub
 5. Create a pull request from your branch making sure it is based off master
 
-#### Website
+### Website
 
 If changes to the website have been accumulated in a branch, now is the time to merge it and upload the pages to the site.
 
-#### Notify Users
+### Notify Users
 
 Send notifications to the mailing list and twitter.
 
-#### Close the Milestone
+### Close the Milestone
 
 The milestone representing this release should be closed at this time.
 
