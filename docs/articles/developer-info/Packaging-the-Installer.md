@@ -1,4 +1,4 @@
-Before packaging the installer, you must first package and release the Console and Engine. See [[Packaging the Console and Engine]]
+Before packaging the installer, you must first package and release the Console and Engine. See [Packaging the Console and Engine](Packaging-the-Console-and-Engine.md)
 
 ## Prepare the Release
 

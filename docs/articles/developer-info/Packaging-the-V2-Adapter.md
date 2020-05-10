@@ -1,6 +1,6 @@
 Introduction
 ------------
-There are two purposes for building the adapter, one is for creating the packages for a  release - which is what this page is about, the other is for creating whatever you need for debugging or testing purposes.  For the latter, see [How to build and debug the adapter]
+There are two purposes for building the adapter, one is for creating the packages for a  release - which is what this page is about, the other is for creating whatever you need for debugging or testing purposes.
 
 The procedure described here is for those people who need to release a new version of the adapter.
 
@@ -51,7 +51,7 @@ The resulting files can be found in the "package" folder:
 
 3. Upload the two NuGet packages to nuget.org. You use your own account for this but you must have been pre-authorized in order for it to work. If you are not authorized, ask a committer with access to do it for you.
 
-4. Update the documentation pages in this wiki as needed. This will usually affect the [[VS Adapter Introduction|NUnit-Test-Adapter-for-Visual-Studio-2012-and-2013]] page. In order to do this quickly after publishing the packages, you may want to clone the wiki repository and prepare the update in advance.
+4. Update the documentation pages in this wiki as needed. In order to do this quickly after publishing the packages, you may want to clone the wiki repository and prepare the update in advance.
 
 5. Update the website as needed. The website is maintained in the [nunit.org repository] to which all committers have access. You should create a branch like 'release-n.n' and make the necessary changes there. There are three vsAdapterXxxxx files that will probably require updating. Add an announcement to the home page and remove any announcement for an older version of the adapter.Create a pull request to merge your changes into the master branch. For rapid publication, you should create the PR and have it reviewed in advance, performing the merge after the packages are published.
 
