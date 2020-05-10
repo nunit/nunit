@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 1000 1000">
+  <title>NUnit Icon</title>
+  <defs>
+    <style>
+      #circles, #ring, #letter_n {
+        display: none;	
+      }
+      @media all and (min-width: 16px) {
+        #letter_n {
+          display: block;	
+        }
+      }
+      @media all and (min-width: 28px) {
+        #ring {
+          display: block;	
+        }
+      }
+      @media all and (min-width: 32px) {
+        #circles {
+          display: block;	
+        }
+      }
+    </style>
+  </defs>
+  <circle cx="500" cy="500" r="480" fill="#005b0c"/>
+  <circle id="ring" cx="500" stroke="#fff" cy="500" r="385" stroke-width="49.288" fill="none"/>
+  <path id="letter_n" d="m417.47 355.35v11.815q25.779-34.014 56.213-49.768 30.792-16.112 70.534-16.112 38.669 0 69.102 16.828 30.434 16.828 45.471 47.62 9.6671 17.902 12.531 38.669 2.8643 20.766 2.8643 52.99v181.89q0 29.359-13.606 44.397-13.248 15.038-34.73 15.038-21.841 0-35.446-15.396-13.606-15.396-13.606-44.039v-162.91q0-48.336-13.606-73.757-13.248-25.779-53.348-25.779-26.137 0-47.62 15.754-21.483 15.396-31.508 42.607-7.1608 21.841-7.1608 81.634v122.45q0 29.717-13.964 44.755-13.606 14.68-35.446 14.68-21.124 0-34.73-15.396t-13.606-44.039v-282.5q0-27.927 12.173-41.533 12.173-13.964 33.298-13.964 12.89 0 23.273 6.0867t16.47 18.26q6.4448 12.173 6.4448 29.717z" fill="#fff"/>
+  <g id="circles" fill="#fff">
+    <circle cx="500" cy="118.74" r="60"/>
+    <circle transform="rotate(120)" cy="-1064.3" cx="183.01" r="60"/>
+    <circle cx="-683.01" transform="rotate(240)" cy="-198.24" r="60"/>
+  </g>
+</svg>
