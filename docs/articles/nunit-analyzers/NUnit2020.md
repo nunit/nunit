@@ -40,20 +40,20 @@ Fix your assertion (i.e. fix actual or expected value, or choose another constra
 Configure the severity per project, for more info see [MSDN](https://msdn.microsoft.com/en-us/library/dd264949.aspx).
 
 ### Via #pragma directive.
-```C#
+```csharp
 #pragma warning disable NUnit2020 // Incompatible types for SameAs constraint.
 Code violating the rule here
 #pragma warning restore NUnit2020 // Incompatible types for SameAs constraint.
 ```
 
 Or put this at the top of the file to disable all instances.
-```C#
+```csharp
 #pragma warning disable NUnit2020 // Incompatible types for SameAs constraint.
 ```
 
 ### Via attribute `[SuppressMessage]`.
 
-```C#
+```csharp
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertion", 
     "NUnit2020:Incompatible types for SameAs constraint.",
     Justification = "Reason...")]

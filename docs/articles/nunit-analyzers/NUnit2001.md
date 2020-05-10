@@ -48,20 +48,20 @@ public void Test()
 Configure the severity per project, for more info see [MSDN](https://msdn.microsoft.com/en-us/library/dd264949.aspx).
 
 ### Via #pragma directive.
-```C#
+```csharp
 #pragma warning disable NUnit2001 // Consider using Assert.That(expr, Is.False) instead of Assert.False(expr).
 Code violating the rule here
 #pragma warning restore NUnit2001 // Consider using Assert.That(expr, Is.False) instead of Assert.False(expr).
 ```
 
 Or put this at the top of the file to disable all instances.
-```C#
+```csharp
 #pragma warning disable NUnit2001 // Consider using Assert.That(expr, Is.False) instead of Assert.False(expr).
 ```
 
 ### Via attribute `[SuppressMessage]`.
 
-```C#
+```csharp
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertion", 
     "NUnit2001:Consider using Assert.That(expr, Is.False) instead of Assert.False(expr).",
     Justification = "Reason...")]

@@ -64,20 +64,20 @@ public void NUnit1007SampleTest(int inputValue)
 Configure the severity per project, for more info see [MSDN](https://msdn.microsoft.com/en-us/library/dd264949.aspx).
 
 ### Via #pragma directive.
-```C#
+```csharp
 #pragma warning disable NUnit1007 // Method has non-void return type, but no result is expected in ExpectedResult.
 Code violating the rule here
 #pragma warning restore NUnit1007 // Method has non-void return type, but no result is expected in ExpectedResult.
 ```
 
 Or put this at the top of the file to disable all instances.
-```C#
+```csharp
 #pragma warning disable NUnit1007 // Method has non-void return type, but no result is expected in ExpectedResult.
 ```
 
 ### Via attribute `[SuppressMessage]`.
 
-```C#
+```csharp
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Structure", 
     "NUnit1007:Method has non-void return type, but no result is expected in ExpectedResult.",
     Justification = "Reason...")]

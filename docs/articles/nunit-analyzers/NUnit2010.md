@@ -48,20 +48,20 @@ public void Test()
 Configure the severity per project, for more info see [MSDN](https://msdn.microsoft.com/en-us/library/dd264949.aspx).
 
 ### Via #pragma directive.
-```C#
+```csharp
 #pragma warning disable NUnit2010 // Use EqualConstraint.
 Code violating the rule here
 #pragma warning restore NUnit2010 // Use EqualConstraint.
 ```
 
 Or put this at the top of the file to disable all instances.
-```C#
+```csharp
 #pragma warning disable NUnit2010 // Use EqualConstraint.
 ```
 
 ### Via attribute `[SuppressMessage]`.
 
-```C#
+```csharp
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Assertion", 
     "NUnit2010:Use EqualConstraint.",
     Justification = "Reason...")]
