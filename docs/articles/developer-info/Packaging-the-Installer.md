@@ -1,3 +1,5 @@
+# Packaging the Installer
+
 Before packaging the installer, you must first package and release the Console and Engine. See [Packaging the Console and Engine](Packaging-the-Console-and-Engine.md)
 
 ## Prepare the Release
@@ -52,4 +54,4 @@ Packages are archived on nunit.org in the downloads directory. Add the MSI and Z
 5. Close the milestone if one exists
 
 > [!NOTE]
-> The release branch in this project is not like the release branches in other projects, we don't save it. If we need to go back and do hotfixes, we will branch off the tag that was created for the release. We do this because there are usually no changes required to this repository for a release except incrementing the version post release. Any larger changes to this repository should be done and tested prior to a release using the normal Pull Request workflow.
+> The release branch in this project is not like the release branches in other projects, we don't save it. If we need to go back and do hotfixes, we will branch off the tag that was created for the release. We do this because there are usually no changes required to this repository for a release except incrementing the version post release. Any larger changes to this repository should be done and tested prior to a release using the normal Pull Request workflow
