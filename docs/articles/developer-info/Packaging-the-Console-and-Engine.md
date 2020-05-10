@@ -17,7 +17,7 @@ Various software combinations and environments may be used to build the NUnit 3 
 2. Checkout the release branch and merge master
 3. **Do not merge the release branch**, we will create a separate PR to merge the changes back into master.
 
-### Make Sure it Works!
+### Make Sure it Works
 
 1. Close all instances of Visual Studio or other IDE to ensure that no changes are left unsaved.
 
@@ -50,7 +50,7 @@ AssemblyVersion and AssemblyFileVersion are set separately for the framework, en
       Engine API            | EngineApiVersion.cs |     3.0.0.0     |      3.4.1.0
       Console               | ConsoleVersion.cs   |     3.4.1.0     |      3.4.1.0
 
-#### Notes:
+#### Notes
 
 1. The Engine API AssemblyVersion is fixed and will not be changed unless it becomes necessary to modify the API in a non-additive manner.
 
@@ -68,14 +68,14 @@ Notices at the top of each source code file are only updated when copyrightable 
 
 The package version is updated in the `build.cake` file. The following lines appear near the beginning of the file. Update the versions and modifiers if necessary. Normally, they will already have been set correctly.
 
-```csharp
-var version="3.4.1";
-var modifier=""
-```
+      ```csharp
+      var version="3.4.1";
+      var modifier=""
+      ```
 
-The version variables are three-part version numbers that follow the basic principles of [semantic versioning]. Since we publish a number of nuget packages, we use the nuget implementation of semantic versioning. 
+The version variables are three-part version numbers that follow the basic principles of [semantic versioning]. Since we publish a number of nuget packages, we use the nuget implementation of semantic versioning.
 
-For NUnit, the major version is updated only rarely. Normal releases will update the minor version and set the third component to zero. The third component is incremented when "hot fixes" are made to a production release or for builds created for a special purpose. 
+For NUnit, the major version is updated only rarely. Normal releases will update the minor version and set the third component to zero. The third component is incremented when "hot fixes" are made to a production release or for builds created for a special purpose.
 
 For pre-release versions, a non-empty modifier is specified. This is a suffix added to the version. Our standard suffixes are currently `-alpha-n`, `-beta-n` and `-rc-n` The build script adds an additional suffix of -dbg to any packages created using a Debug build.
 
@@ -120,12 +120,12 @@ If you made any changes to the files in git as part of the preceding steps. Make
 
 4. Verify that the correct packages have been created in the `package` sub-directory:
 
-  * NUnit.Console.VERSION.nupkg
-  * NUnit.ConsoleRunner.VERSION.nupkg
-  * NUnit.Engine.VERSION.nupkg
-  * NUnit.Engine.Api.VERSION.nupkg
-  * NUnit.Engine.Tool.VERSION.nupkg **(Do not release)**
-  * NUnit.Runners.VERSION.nupkg
+* NUnit.Console.VERSION.nupkg
+* NUnit.ConsoleRunner.VERSION.nupkg
+* NUnit.Engine.VERSION.nupkg
+* NUnit.Engine.Api.VERSION.nupkg
+* NUnit.Engine.Tool.VERSION.nupkg **(Do not release)**
+* NUnit.Runners.VERSION.nupkg
 
 ## Testing the Release
 
@@ -139,7 +139,7 @@ Packages are archived on nunit.org in the downloads directory. Create a new subf
 
 ### Github
 
-1. Log onto Github and go to the main nunit repository at https://github.com/nunit.nunit.
+1. Log onto Github and go to the main nunit repository at <https://github.com/nunit/nunit>.
 
 2. Select Releases and then click on the "Draft a new release" button.
 
