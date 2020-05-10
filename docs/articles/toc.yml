@@ -4,3 +4,5 @@
   href: xamarin-runners/toc.yml
 - name: VS Test Adapter
   href: vs-test-adapter/toc.yml
+- name: VS Test Generator
+  href: vs-test-generator/toc.yml

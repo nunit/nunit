@@ -1,0 +1,8 @@
+- name: Visual Studio Test Generator
+  href: Visual-Studio-Test-Generator.md
+- name: Installation
+  href: TestGenerator-Installation.md
+- name: Release Notes VS2017
+  href: TestGenerator-Release-Notes.md
+- name: Release Notes VS2015
+  href: TestGenerator-Release-Notes-VS2015.md
