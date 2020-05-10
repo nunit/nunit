@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,8 +42,8 @@ namespace NUnit.Framework
     public class TestContext
     {
         private readonly TestExecutionContext _testExecutionContext;
-        private TestAdapter _test;
-        private ResultAdapter _result;
+        private TestAdapter? _test;
+        private ResultAdapter? _result;
 
         #region Constructor
 
@@ -97,7 +99,7 @@ namespace NUnit.Framework
         /// of the public instance property WorkDirectory. This is
         /// a bit odd but necessary to avoid breaking user tests.
         /// </summary>
-        internal static string DefaultWorkDirectory;
+        internal static string? DefaultWorkDirectory;
 
         /// <summary>
         /// Get a representation of the current test.
@@ -118,7 +120,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the unique name of the Worker that is executing this test.
         /// </summary>
-        public string WorkerId
+        public string? WorkerId
         {
             get { return _testExecutionContext.TestWorker?.Name; }
         }
@@ -130,7 +132,7 @@ namespace NUnit.Framework
         {
             get
             {
-                Assembly assembly = _testExecutionContext?.CurrentTest?.TypeInfo?.Assembly;
+                Assembly? assembly = _testExecutionContext?.CurrentTest?.TypeInfo?.Assembly;
 
                 if (assembly != null)
                     return AssemblyHelper.GetDirectoryName(assembly);
@@ -145,13 +147,8 @@ namespace NUnit.Framework
         /// Gets the directory to be used for outputting files created
         /// by this test run.
         /// </summary>
-        public string WorkDirectory
-        {
-            get
-            {
-                return DefaultWorkDirectory;
-            }
-        }
+        public string WorkDirectory => DefaultWorkDirectory
+            ?? throw new InvalidOperationException("TestContext.WorkDirectory must not be accessed before DefaultTestAssemblyBuilder.Build runs.");
 
         /// <summary>
         /// Gets the random generator.
@@ -194,7 +191,7 @@ namespace NUnit.Framework
         public static void Write(char value) { Out.Write(value); }
 
         /// <summary>Write a char array to the current result</summary>
-        public static void Write(char[] value) { Out.Write(value); }
+        public static void Write(char[]? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a double to the current result</summary>
         public static void Write(double value) { Out.Write(value); }
@@ -209,13 +206,13 @@ namespace NUnit.Framework
         public static void Write(decimal value) { Out.Write(value); }
 
         /// <summary>Write the string representation of an object to the current result</summary>
-        public static void Write(object value) { Out.Write(value); }
+        public static void Write(object? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a Single value to the current result</summary>
         public static void Write(Single value) { Out.Write(value); }
 
         /// <summary>Write a string to the current result</summary>
-        public static void Write(string value) { Out.Write(value); }
+        public static void Write(string? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a UInt32 value to the current result</summary>
         [CLSCompliant(false)]
@@ -226,16 +223,16 @@ namespace NUnit.Framework
         public static void Write(UInt64 value) { Out.Write(value); }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, object arg1) { Out.Write(format, arg1); }
+        public static void Write(string format, object? arg1) { Out.Write(format, arg1); }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, object arg1, object arg2) { Out.Write(format, arg1, arg2); }
+        public static void Write(string format, object? arg1, object? arg2) { Out.Write(format, arg1, arg2); }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, object arg1, object arg2, object arg3) { Out.Write(format, arg1, arg2, arg3); }
+        public static void Write(string format, object? arg1, object? arg2, object? arg3) { Out.Write(format, arg1, arg2, arg3); }
 
         /// <summary>Write a formatted string to the current result</summary>
-        public static void Write(string format, params object[] args) { Out.Write(format, args); }
+        public static void Write(string format, params object?[] args) { Out.Write(format, args); }
 
         /// <summary>Write a line terminator to the current result</summary>
         public static void WriteLine() { Out.WriteLine(); }
@@ -247,7 +244,7 @@ namespace NUnit.Framework
         public static void WriteLine(char value) { Out.WriteLine(value); }
 
         /// <summary>Write a char array to the current result followed by a line terminator</summary>
-        public static void WriteLine(char[] value) { Out.WriteLine(value); }
+        public static void WriteLine(char[]? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a double to the current result followed by a line terminator</summary>
         public static void WriteLine(double value) { Out.WriteLine(value); }
@@ -262,13 +259,13 @@ namespace NUnit.Framework
         public static void WriteLine(decimal value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of an object to the current result followed by a line terminator</summary>
-        public static void WriteLine(object value) { Out.WriteLine(value); }
+        public static void WriteLine(object? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a Single value to the current result followed by a line terminator</summary>
         public static void WriteLine(Single value) { Out.WriteLine(value); }
 
         /// <summary>Write a string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string value) { Out.WriteLine(value); }
+        public static void WriteLine(string? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a UInt32 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
@@ -279,16 +276,16 @@ namespace NUnit.Framework
         public static void WriteLine(UInt64 value) { Out.WriteLine(value); }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, object arg1) { Out.WriteLine(format, arg1); }
+        public static void WriteLine(string format, object? arg1) { Out.WriteLine(format, arg1); }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, object arg1, object arg2) { Out.WriteLine(format, arg1, arg2); }
+        public static void WriteLine(string format, object? arg1, object? arg2) { Out.WriteLine(format, arg1, arg2); }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, object arg1, object arg2, object arg3) { Out.WriteLine(format, arg1, arg2, arg3); }
+        public static void WriteLine(string format, object? arg1, object? arg2, object? arg3) { Out.WriteLine(format, arg1, arg2, arg3); }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
-        public static void WriteLine(string format, params object[] args) { Out.WriteLine(format, args); }
+        public static void WriteLine(string format, params object?[] args) { Out.WriteLine(format, args); }
 
         /// <summary>
         /// This method adds the a new ValueFormatterFactory to the
@@ -306,7 +303,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="filePath">Relative or absolute file path to attachment</param>
         /// <param name="description">Optional description of attachment</param>
-        public static void AddTestAttachment(string filePath, string description = null)
+        public static void AddTestAttachment(string filePath, string? description = null)
         {
             Guard.ArgumentNotNull(filePath, nameof(filePath));
             Guard.ArgumentValid(filePath.IndexOfAny(Path.GetInvalidPathChars()) == -1,
@@ -383,12 +380,12 @@ namespace NUnit.Framework
             /// <summary>
             /// The name of the method representing the test.
             /// </summary>
-            public string MethodName
+            public string? MethodName
             {
                 get
                 {
                     return _test is TestMethod
-                        ? _test.Method.Name
+                        ? _test.Method!.Name
                         : null;
                 }
             }
@@ -404,7 +401,7 @@ namespace NUnit.Framework
             /// <summary>
             /// The ClassName of the test
             /// </summary>
-            public string ClassName
+            public string? ClassName
             {
                 get { return _test.ClassName;  }
             }
@@ -420,7 +417,7 @@ namespace NUnit.Framework
             /// <summary>
             /// The arguments to use in creating the test or empty array if none are required.
             /// </summary>
-            public object[] Arguments
+            public object?[] Arguments
             {
                 get { return _test.Arguments; }
             }
@@ -477,7 +474,7 @@ namespace NUnit.Framework
             /// Gets the message associated with a test
             /// failure or with not running the test
             /// </summary>
-            public string Message
+            public string? Message
             {
                 get { return _result.Message; }
             }
@@ -486,7 +483,7 @@ namespace NUnit.Framework
             /// Gets any stack trace associated with an
             /// error or failure.
             /// </summary>
-            public virtual string StackTrace
+            public virtual string? StackTrace
             {
                 get { return _result.StackTrace; }
             }
@@ -564,7 +561,7 @@ namespace NUnit.Framework
             /// Get the first property with the given <paramref name="key"/>, if it can be found, otherwise
             /// returns null.
             /// </summary>
-            public object Get(string key)
+            public object? Get(string key)
             {
                 return _source.Get(key);
             }

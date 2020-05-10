@@ -39,14 +39,14 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// User specified description of attachment. May be null.
         /// </summary>
-        public string Description { get; }
+        public string? Description { get; }
 
         /// <summary>
         /// Creates a TestAttachment class to represent a file attached to a test result.
         /// </summary>
         /// <param name="filePath">Absolute file path to attachment file</param>
         /// <param name="description">User specified description of attachment. May be null.</param>
-        public TestAttachment(string filePath, string description)
+        public TestAttachment(string filePath, string? description)
         {
             FilePath = filePath;
             Description = description;

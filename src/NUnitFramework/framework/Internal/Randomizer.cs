@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,7 +63,7 @@ namespace NUnit.Framework.Internal
 
         // Static Random instance used exclusively for the generation
         // of seed values for new Randomizers.
-        private static Random _seedGenerator;
+        private static Random _seedGenerator = null!; // Initialized by the InitialSeed setter called by the static constructor.
 
         /// <summary>
         /// Initial seed used to create randomizers for this run
