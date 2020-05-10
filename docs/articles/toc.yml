@@ -8,3 +8,11 @@
   href: vs-test-generator/toc.yml
 - name: NUnit Analyzers
   href: nunit-analyzers/toc.yml
+- name: Related Project Links
+  items:
+    - name: NUnit GUI
+      href: https://github.com/CharliePoole/nunit-gui/wiki
+    - name: NUnit Project Editor
+      href: https://github.com/CharliePoole/nunit-project-editor/wiki/Project-Editor
+- name: Developer Info
+  href: developer-info/toc.yml
