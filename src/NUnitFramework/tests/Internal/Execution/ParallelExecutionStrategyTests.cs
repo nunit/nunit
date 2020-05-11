@@ -86,15 +86,12 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(strategy, Is.EqualTo(expectedStrategy));
         }
 
-        private WorkItem MakeWorkItem(ITest test, ParallelScope testScope, ParallelScope contextScope)
+        private WorkItem MakeWorkItem(Test test, ParallelScope testScope, ParallelScope contextScope)
         {
             test.Properties.Set(PropertyNames.ParallelScope, testScope);
             _context.ParallelScope = contextScope;
 
-            var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty);
-            work.InitializeContext(_context);
-
-            return work;
+            return TestBuilder.CreateWorkItem(test, _context);
         }
 
         private void TestMethod() { }

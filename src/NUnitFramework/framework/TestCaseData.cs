@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
 using System;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
@@ -43,8 +44,8 @@ namespace NUnit.Framework
         /// Initializes a new instance of the <see cref="TestCaseData"/> class.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        public TestCaseData(params object[] args)
-            : base(args == null ? new object[] { null } : args)
+        public TestCaseData(params object?[]? args)
+            : base(args == null ? new object?[] { null } : args)
         {
         }
 
@@ -52,8 +53,8 @@ namespace NUnit.Framework
         /// Initializes a new instance of the <see cref="TestCaseData"/> class.
         /// </summary>
         /// <param name="arg">The argument.</param>
-        public TestCaseData(object arg)
-            : base(new object[] { arg })
+        public TestCaseData(object? arg)
+            : base(new object?[] { arg })
         {
         }
 
@@ -62,8 +63,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
-        public TestCaseData(object arg1, object arg2)
-            : base(new object[] { arg1, arg2 })
+        public TestCaseData(object? arg1, object? arg2)
+            : base(new object?[] { arg1, arg2 })
         {
         }
 
@@ -73,8 +74,8 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
-        public TestCaseData(object arg1, object arg2, object arg3)
-            : base( new object[] { arg1, arg2, arg3 })
+        public TestCaseData(object? arg1, object? arg2, object? arg3)
+            : base(new object?[] { arg1, arg2, arg3 })
         {
         }
 
@@ -87,7 +88,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="result">The expected result</param>
         /// <returns>A modified TestCaseData</returns>
-        public TestCaseData Returns(object result)
+        public TestCaseData Returns(object? result)
         {
             this.ExpectedResult = result;
             return this;
@@ -97,7 +98,7 @@ namespace NUnit.Framework
         /// Sets the name of the test case
         /// </summary>
         /// <returns>The modified TestCaseData instance</returns>
-        public TestCaseData SetName(string name)
+        public TestCaseData SetName(string? name)
         {
             this.TestName = name;
             return this;
@@ -106,7 +107,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the list of display names to use as the parameters in the test name.
         /// </summary>
-        public TestCaseData SetArgDisplayNames(params string[] displayNames)
+        public TestCaseData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;
             return this;

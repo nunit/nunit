@@ -56,8 +56,8 @@ namespace NUnit.Framework.Attributes
         public void CheckNotRunnable(Type type)
         {
             var suite = TestBuilder.MakeFixture(type);
-            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(TestFixtureSourceAttribute.MUST_BE_STATIC));
+            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(suite.Tests[0].Properties.Get(PropertyNames.SkipReason), Is.EqualTo(TestFixtureSourceAttribute.MUST_BE_STATIC));
             //var result = TestBuilder.RunTestSuite(suite, null);
             //Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
@@ -141,10 +141,13 @@ namespace NUnit.Framework.Attributes
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(NoNamespaceTestFixtureSourceWithSingleValue));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(suite, Is.TypeOf<TestFixture>());
+            Assert.That(suite, Is.TypeOf<ParameterizedFixtureSuite>());
             Assert.That(suite.TestCaseCount, Is.EqualTo(1));
             Assert.That(suite.Tests.Count, Is.EqualTo(1));
-            Assert.That(suite.Tests[0], Is.TypeOf<TestMethod>());
+            Assert.That(suite.Tests[0], Is.TypeOf<TestFixture>());
+            Assert.That(suite.Tests[0].TestCaseCount, Is.EqualTo(1));
+            Assert.That(suite.Tests[0].Tests.Count, Is.EqualTo(1));
+            Assert.That(suite.Tests[0].Tests[0], Is.TypeOf<TestMethod>());
         }
 
         [Test]
@@ -153,7 +156,9 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithProperArgsProvided<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
+            Assert.That(suite.Tests.Count, Is.EqualTo(1));
+            Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests[0].Tests.Count, Is.EqualTo(GenericFixtureSource.Source.Length));
         }
 
         [Test]
@@ -162,7 +167,9 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithTypeAndConstructorArgs<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithTypeAndConstructorArgsSource.Source.Length));
+            Assert.That(suite.Tests.Count, Is.EqualTo(1));
+            Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests[0].Tests.Count, Is.EqualTo(GenericFixtureWithTypeAndConstructorArgsSource.Source.Length));
         }
 
         [Test]
@@ -171,7 +178,9 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureSourceWithConstructorArgs<>));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
+            Assert.That(suite.Tests.Count, Is.EqualTo(1));
+            Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
+            Assert.That(suite.Tests[0].Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
         }
     }
 }

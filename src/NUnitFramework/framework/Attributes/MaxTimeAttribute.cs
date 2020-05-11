@@ -21,10 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
-using System.Collections.Generic;
-using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework
 {

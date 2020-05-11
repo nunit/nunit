@@ -21,8 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
+#nullable enable
 
 namespace NUnit.Framework.Interfaces
 {
@@ -35,7 +34,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the name to be used for the test
         /// </summary>
-        string TestName { get; }
+        string? TestName { get; }
 
         /// <summary>
         /// Gets the RunState for this test case.
@@ -45,7 +44,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the argument list to be provided to the test
         /// </summary>
-        object[] Arguments { get; }
+        object?[] Arguments { get; }
 
         /// <summary>
         /// Gets the property dictionary for the test case

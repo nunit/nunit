@@ -1,4 +1,4 @@
-﻿// **********************************************************************************
+// **********************************************************************************
 // The MIT License (MIT)
 // 
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
@@ -22,13 +22,10 @@
 // 
 // **********************************************************************************
 
-
-#region Using Directives
+#nullable enable
 
 using System;
 using NUnit.Framework.Internal;
-
-#endregion
 
 namespace NUnit.Framework
 {

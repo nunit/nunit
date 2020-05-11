@@ -38,8 +38,7 @@ var AllFrameworks = new string[]
 var NetCoreTests = new String[]
 {
     "netcoreapp2.1",
-    "netcoreapp2.2",
-    "netcoreapp3.0"
+    "netcoreapp3.1"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -226,7 +225,7 @@ Task("Test35")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp2.2", "netcoreapp3.0" })
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
@@ -353,6 +352,70 @@ Task("PackageZip")
             GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
             GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
+    });
+
+Task("CreateToolManifest")
+    .Does(() =>
+    {
+        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "new tool-manifest --force" });
+    });
+
+Task("InstallSigningTool")
+    .Description("Installs the signing tool")
+    .IsDependentOn("CreateToolManifest")
+    .Does(() =>
+    {
+        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "tool install SignClient" });
+    });
+
+Task("SignPackages")
+    .Description("Signs the NuGet packages")
+    .IsDependentOn("InstallSigningTool")
+    .IsDependentOn("PackageFramework")
+    .Does(() =>
+    {
+        // Get the secret.
+        var secret = EnvironmentVariable("SIGNING_SECRET");
+        if(string.IsNullOrWhiteSpace(secret)) {
+            throw new InvalidOperationException("Could not resolve signing secret.");
+        }
+
+        // Get the user.
+        var user = EnvironmentVariable("SIGNING_USER");
+        if(string.IsNullOrWhiteSpace(user)) {
+            throw new InvalidOperationException("Could not resolve signing user.");
+        }
+
+        var signClientPath = Context.Tools.Resolve("SignClient.exe") ?? Context.Tools.Resolve("SignClient") ?? throw new Exception("Failed to locate sign tool");
+
+        var settings = File("./signclient.json");
+
+        // Get the files to sign.
+        var files = GetFiles(string.Concat(PACKAGE_DIR, "*.nupkg"));
+
+        foreach(var file in files)
+        {
+            Information("Signing {0}...", file.FullPath);
+
+            // Build the argument list.
+            var arguments = new ProcessArgumentBuilder()
+                .Append("sign")
+                .AppendSwitchQuoted("-c", MakeAbsolute(settings.Path).FullPath)
+                .AppendSwitchQuoted("-i", MakeAbsolute(file).FullPath)
+                .AppendSwitchQuotedSecret("-s", secret)
+                .AppendSwitchQuotedSecret("-r", user)
+                .AppendSwitchQuoted("-n", "NUnit.org")
+                .AppendSwitchQuoted("-d", "NUnit is a unit-testing framework for all .NET languages.")
+                .AppendSwitchQuoted("-u", "https://nunit.org/");
+
+            // Sign the binary.
+            var result = StartProcess(signClientPath.FullPath, new ProcessSettings {  Arguments = arguments });
+            if(result != 0)
+            {
+                // We should not recover from this.
+                throw new InvalidOperationException("Signing failed!");
+            }
+        }
     });
 
 //////////////////////////////////////////////////////////////////////

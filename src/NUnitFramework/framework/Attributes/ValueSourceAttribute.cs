@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Reflection;
@@ -67,12 +69,12 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of a the method, property or field to be used as a source
         /// </summary>
-        public string SourceName { get; }
+        public string? SourceName { get; }
 
         /// <summary>
         /// A Type to be used as a source
         /// </summary>
-        public Type SourceType { get; }
+        public Type? SourceType { get; }
 
         #endregion
 
@@ -95,24 +97,20 @@ namespace NUnit.Framework
         {
             Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
 
-            // TODO: Test this
             if (SourceName == null)
-                return Reflect.Construct(sourceType) as IEnumerable;
+            {
+                return Reflect.Construct(sourceType) as IEnumerable
+                    ?? throw new InvalidDataSourceException($"The value source type '{sourceType}' does not implement IEnumerable.");
+            }
 
             MemberInfo[] members = sourceType.GetMember(SourceName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-            var dataSource = ContextUtils.DoIsolated(() => GetDataSourceValue(members));
-
-            if (dataSource == null)
-            {
-                ThrowInvalidDataSourceException();
-            }
-
-            return dataSource;
+            return ContextUtils.DoIsolated(() => GetDataSourceValue(members))
+                ?? throw CreateSourceNameException();
         }
 
-        private static IEnumerable GetDataSourceValue(MemberInfo[] members)
+        private static IEnumerable? GetDataSourceValue(MemberInfo[] members)
         {
             if (members.Length != 1) return null;
 
@@ -124,7 +122,7 @@ namespace NUnit.Framework
                 if (field.IsStatic)
                     return (IEnumerable)field.GetValue(null);
 
-                ThrowInvalidDataSourceException();
+                throw CreateSourceNameException();
             }
 
             var property = member as PropertyInfo;
@@ -133,7 +131,7 @@ namespace NUnit.Framework
                 if (property.GetGetMethod(true).IsStatic)
                     return (IEnumerable)property.GetValue(null, null);
 
-                ThrowInvalidDataSourceException();
+                throw CreateSourceNameException();
             }
 
             var m = member as MethodInfo;
@@ -142,15 +140,15 @@ namespace NUnit.Framework
                 if (m.IsStatic)
                     return (IEnumerable)m.Invoke(null, null);
 
-                ThrowInvalidDataSourceException();
+                throw CreateSourceNameException();
             }
 
             return null;
         }
 
-        private static void ThrowInvalidDataSourceException()
+        private static InvalidDataSourceException CreateSourceNameException()
         {
-            throw new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a non-null static field, property or method.");
+            return new InvalidDataSourceException("The sourceName specified on a ValueSourceAttribute must refer to a non-null static field, property or method.");
         }
 
         #endregion
