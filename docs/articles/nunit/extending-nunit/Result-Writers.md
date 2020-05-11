@@ -2,6 +2,8 @@
 uid: ResultWriters
 ---
 
+# Result Writers
+
 **Result Writers** take the result of a test run, in NUnit 3.0 XML format, and use it to create a result file in some other format. NUnit itself provides a two result writers, one to create output in NUnit V2 format and another to write test cases to the console. The definition of a result writer extension might look something like this:
 
 ```csharp
@@ -15,7 +17,7 @@ public class CustomResultWriterFactory : IResultWriter
 
 You must provide an `ExtensionPropertyAttribute` giving the name of the format you support. Users would access your format from the nunit-console command-line by using that name in a result specification, like
 
-```
+```cmd
    nunit-console test.dll --result=CustomResult.xml;format=custom
 ```
 

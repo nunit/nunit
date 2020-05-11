@@ -1,3 +1,5 @@
+# IApplyToTest Interface
+
 The `IApplyToTest` interface is used to make modifications to a test immediately after it is constructed. It is defined as follows:
 
 ```csharp
@@ -9,7 +11,7 @@ public interface IApplyToTest
 
 The `Test` Type is quite general and the argument may represent a suite or an individual test case. If the distinction is important, then you must code the attribute to examine the argument and react accordingly.
 
-The interface may appear on the same attribute that is used to construct the test or on a separate attribute. In either case, it will only be called after the test is built. 
+The interface may appear on the same attribute that is used to construct the test or on a separate attribute. In either case, it will only be called after the test is built.
 
 The order in which `ApplyToTest` is called on multiple attributes is indeterminate. If two attributes make completely independent changes to a test, then the order is not relevant. But if they both change the same property, or related properties, then it may necessary to make tests in the attribute code to ensure that the correct value 'wins'.
 
@@ -26,6 +28,7 @@ if (test.RunState != RunState.NotRunnable)
 ```
 
 The following NUnit attributes implement `IApplyToTest`:
+
 * `CategoryAttribute`
 * `CombiningStrategyAttribute`
 * `CultureAttribute`
@@ -37,4 +40,3 @@ The following NUnit attributes implement `IApplyToTest`:
 * `RequiresThreadAttribute`
 * `TestAttribute`
 * `TestFixtureAttribute`
-

@@ -2,9 +2,12 @@
 uid: ProjectLoaders
 ---
 
+# Project Loaders
+
 **Project Loaders** are extensions that know how to load a project in a particular format and create a package suitable for running tests under NUnit. NUnit itself provides two of them:
-  * NUnitProjectLoader
-  * VisualStudioProjectLoader
+
+* NUnitProjectLoader
+* VisualStudioProjectLoader
 
 The extension point for project loaders accepts extensions that implement the `NUnit.Engine.Extensibility.IProjectLoader` interface. The definition of a project loader extension might look something like the following...
 
@@ -49,6 +52,7 @@ public interface IProjectLoader
 ```
 
 An `IProject`, which is returned by `LoadFrom` is defined as:
+
 ```csharp
 /// <summary>
 /// Interface for the various project types that the engine can load.
@@ -74,7 +78,7 @@ public interface IProject
 
     /// <summary>
     /// Gets a test package for the primary or active
-    /// configuration within the project. The package 
+    /// configuration within the project. The package
     /// includes all the assemblies and any settings
     /// specified in the project format.
     /// </summary>
@@ -84,7 +88,7 @@ public interface IProject
     /// <summary>
     /// Gets a TestPackage for a specific configuration
     /// within the project. The package includes all the
-    /// assemblies and any settings specified in the 
+    /// assemblies and any settings specified in the
     /// project format.
     /// </summary>
     /// <param name="configName">The name of the config to use</param>

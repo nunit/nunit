@@ -1,3 +1,5 @@
+# ISimpleTestBuilder
+
 This interface is used by attributes that know how to build a single, non-parameterized test from a `MethodInfo`. `ISimpleTestBuilder` is defined as follows:
 
 ```csharp
@@ -14,4 +16,3 @@ Custom attributes implementing `ISimpleTestFixture` should examine the IMethodIn
 NUnit treats attributes implementing this interface specially. They are ignored if any other attributes are present that implement `ITestBuilder`. This allows, for example, use of `[Test]` on a method that also has `[Combinatorial]` specified, without any error arising. Such usage has existed in NUnit for some time and this special handling of the interface allows us to preserve it.
 
 In the current build, only `TestAttribute` implements this interface.
-

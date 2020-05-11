@@ -1,3 +1,5 @@
+# Framework Extensibility
+
 The NUnit Framework is the part of NUnit that is referenced by user tests. It contains the definition of all of NUnit's Attributes, Constraints and Asserts as well as the code that discovers and executes tests. Most extensions to exactly how tests are recognized and how they execute are Framework extensions.
 
 In this documentation, we refer to four different types of Framework extension:
@@ -10,9 +12,8 @@ In this documentation, we refer to four different types of Framework extension:
 
 [Custom Asserts](Custom-Asserts.md) are, for the most part, no longer needed as a result the constraint-based assertion model. However, it is still possible to create them and custom asserts created for NUnit V2 are still usable.
 
-### Links to blogposts
+## Links to blogposts
 
-#### On Custom constraints
+### On Custom constraints
+
 [How to extend the NUnit constraints](http://hermit.no/how-to-extend-the-nunit-constraints/)
-
-
