@@ -23,15 +23,15 @@
 
 using System;
 using System.ComponentModel;
-using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
     /// <summary>
     /// The IgnoredTestCaseData class represents a ignored TestCaseData. It adds
-    /// the ability to set an ignore until date on a test case.
+    /// the ability to set a date until which the test will be ignored.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public sealed class IgnoredTestCaseData : TestCaseData
@@ -65,26 +65,25 @@ namespace NUnit.Framework
         #region Fluent Instance Modifiers
 
         /// <summary>
-        /// 
+        /// Set the date that the test is being ignored until
         /// </summary>
-        /// <param name="datetime">The ignore until date</param>
+        /// <param name="datetime">The date that the test is being ignored until</param>
         /// <returns>A modified TestCaseData.</returns>
         public TestCaseData Until(DateTimeOffset datetime)
         {
-            if (this._prevRunState != RunState.NotRunnable)
+            if (_prevRunState != RunState.NotRunnable)
             {
                 if (datetime > DateTimeOffset.UtcNow)
                 {
-                    this.RunState = RunState.Ignored;
-                    string reason = (string)this.Properties.Get(PropertyNames.SkipReason);
-                    reason = string.Format("Ignoring until {0}. {1}", datetime.ToString("u"), reason);
-                    this.Properties.Set(PropertyNames.SkipReason, reason);
+                    RunState = RunState.Ignored;
+                    string reason = (string)Properties.Get(PropertyNames.SkipReason);
+                    this.AddIgnoreUntilReason(datetime, reason);
                 }
                 else
                 {
-                    this.RunState = this._prevRunState;
+                    RunState = _prevRunState;
                 }
-                this.Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u") );
+                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u") );
             }
             return this;
         }

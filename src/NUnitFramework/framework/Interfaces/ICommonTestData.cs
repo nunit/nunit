@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2020 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,14 +26,24 @@
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestData interface is implemented by a class that
-    /// represents a single instance of a parameterized test.
+    /// Represents data that is common between an <see cref="ITest"/>
+    /// and <see cref="ITestData"/> to allow for de-duplication of code.
     /// </summary>
-    public interface ITestData : ICommonTestData
+    public interface ICommonTestData
     {
         /// <summary>
-        /// Gets the name to be used for the test
+        /// Gets the RunState for this test case.
         /// </summary>
-        string? TestName { get; }
+        RunState RunState { get; }
+
+        /// <summary>
+        /// Gets the argument list to be provided to the test
+        /// </summary>
+        object?[] Arguments { get; }
+
+        /// <summary>
+        /// Gets the property dictionary for the test case
+        /// </summary>
+        IPropertyBag Properties { get; }
     }
 }

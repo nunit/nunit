@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
+// Copyright (c) 2020 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,17 +23,26 @@
 
 #nullable enable
 
-namespace NUnit.Framework.Interfaces
+using System;
+using NUnit.Framework.Interfaces;
+
+namespace NUnit.Framework.Internal.Extensions
 {
     /// <summary>
-    /// The ITestData interface is implemented by a class that
-    /// represents a single instance of a parameterized test.
+    /// Extensions to <see cref="ICommonTestData"/>.
     /// </summary>
-    public interface ITestData : ICommonTestData
+    internal static class ICommonTestDataExtensions
     {
         /// <summary>
-        /// Gets the name to be used for the test
+        /// Adds the skip reason to tests that are ignored until a specific date.
         /// </summary>
-        string? TestName { get; }
+        /// <param name="test">The test to add the skip reason to</param>
+        /// <param name="untilDate">The date that the test is being ignored until</param>
+        /// <param name="reason">The reason the test is being ignored until that date</param>
+        internal static void AddIgnoreUntilReason(this ICommonTestData test, DateTimeOffset untilDate, string reason)
+        {
+            string skipReason = string.Format("Ignoring until {0}. {1}", untilDate.ToString("u"), reason);
+            test.Properties.Set(PropertyNames.SkipReason, skipReason);
+        }
     }
 }

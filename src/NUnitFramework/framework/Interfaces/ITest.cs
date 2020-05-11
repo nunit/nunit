@@ -31,7 +31,7 @@ namespace NUnit.Framework.Interfaces
     /// The Run method is specifically excluded to allow
     /// for data-only representations of a test.
     /// </summary>
-    public interface ITest : IXmlNodeBuilder
+    public interface ITest : ICommonTestData, IXmlNodeBuilder
     {
         /// <summary>
         /// Gets the id of the test
@@ -78,19 +78,9 @@ namespace NUnit.Framework.Interfaces
         IMethodInfo? Method { get; }
 
         /// <summary>
-        /// Gets the RunState of the test, indicating whether it can be run.
-        /// </summary>
-        RunState RunState { get; }
-
-        /// <summary>
         /// Count of the test cases ( 1 if this is a test case )
         /// </summary>
         int TestCaseCount { get; }
-
-        /// <summary>
-        /// Gets the properties of the test
-        /// </summary>
-        IPropertyBag Properties { get; }
 
         /// <summary>
         /// Gets the parent test, if any.
@@ -119,11 +109,6 @@ namespace NUnit.Framework.Interfaces
         /// Gets a fixture object for running this test.
         /// </summary>
         object? Fixture { get; }
-
-        /// <summary>
-        /// The arguments to use in creating the test or empty array if none are required.
-        /// </summary>
-        object?[] Arguments { get; }
     }
 }
 
