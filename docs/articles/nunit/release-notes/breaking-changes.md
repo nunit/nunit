@@ -1,3 +1,5 @@
+# Breaking Changes
+
 ## NUnit 3.10
 
 * `NUnit.Framework.Constraints.NUnitEqualityComparer.Default` was deprecated in favor of `new NUnitEqualityComparer()`.
@@ -5,16 +7,18 @@
 ## NUnit 3.8
 
 * Removed some deprecated attributes:
-  - TestFixtureSetUpAttribute (use OneTimeSetUpAttribute)
-  - TestFixtureTearDownAttribute (use OneTimeTearDownAttribute)
-  - RequiresSTAAttribute (use ApartmentAttribute)
-  - RequiresMTAAttribute (use ApartmentAttribute)
+
+* TestFixtureSetUpAttribute (use OneTimeSetUpAttribute)
+* TestFixtureTearDownAttribute (use OneTimeTearDownAttribute)
+* RequiresSTAAttribute (use ApartmentAttribute)
+* RequiresMTAAttribute (use ApartmentAttribute)
 
 * Removed deprecated Is.StringXxxx syntax elements:
-  - Is.StringStarting (use Does.StartWith)
-  - Is.StringEnding (use Does.EndWith)
-  - Is.StringContaining (use Does.Contain)
-  - Is.StringMatching (use Does.Match)
+
+* Is.StringStarting (use Does.StartWith)
+* Is.StringEnding (use Does.EndWith)
+* Is.StringContaining (use Does.Contain)
+* Is.StringMatching (use Does.Match)
 
 ## NUnit 3.7
 
@@ -24,11 +28,11 @@
 
 Breaking changes introduced in NUnit 3.4
 
- * The `--teamcity` console command-line option now requires the TeamCityEventListener extension to be installed. This only affects users who install the extensions individually or copy them to another directory. If you install using the Windows installer or the NUnit.Console NuGet package the TeamCity extension is included.
+* The `--teamcity` console command-line option now requires the TeamCityEventListener extension to be installed. This only affects users who install the extensions individually or copy them to another directory. If you install using the Windows installer or the NUnit.Console NuGet package the TeamCity extension is included.
 
- * String arguments in the names of test cases are no longer truncated to 40 characters.
+* String arguments in the names of test cases are no longer truncated to 40 characters.
 
- * The .NET 2.0 build of the nunit framework uses a private implementation of System.Linq. NUnit installs the NUnit.System.Linq assembly alongside the nunit.framework assembly. If you copy the framework to another location, you must ensure that both are copied. The extra assembly is not used in other builds because System.Linq is already supported in those environments.
+* The .NET 2.0 build of the nunit framework uses a private implementation of System.Linq. NUnit installs the NUnit.System.Linq assembly alongside the nunit.framework assembly. If you copy the framework to another location, you must ensure that both are copied. The extra assembly is not used in other builds because System.Linq is already supported in those environments.
 
 ## NUnit 3.0
 
@@ -38,7 +42,7 @@ A key change is that the NUnit Test Engine will not recognize a test assembly th
 
 Other breaking changes are grouped in the following tables.
 
-###### Attributes
+### Attributes
 
 |            Name              |          Notes                                        |
 |------------------------------|-------------------------------------------------------|
@@ -49,7 +53,7 @@ Other breaking changes are grouped in the following tables.
 | RequiresSTAAttribute         | Deprecated. Use `ApartmentAttribute`                    |
 | SuiteAttribute               | No longer supported. |
 | System.MTAThreadAttribute    | No longer treated as `RequiresMTAAttribute`             |
-| System.STAThreadAttribute    | No longer treated as `RequiresSTAAttribute`             | 
+| System.STAThreadAttribute    | No longer treated as `RequiresSTAAttribute`             |
 | TearDown and OneTimeTearDown | There is a change to the logic by which teardown methods are called. See [Setup and Teardown Changes](xref:setupteardownchanges for details. |
 | TestCaseAttribute            | Named parameter `Result=` is no longer supported. Use `ExpectedResult=`. Named parameter `Ignore=` now takes a string, giving the reason for ignoring the test.|
 | TestCaseSourceAttribute      | The attribute forms using a string argument to refer to the data source must now use only static fields, properties or methods. |
@@ -58,7 +62,7 @@ Other breaking changes are grouped in the following tables.
 | TestFixtureTearDownAttribute | Deprecated. Use `OneTimeTearDownAttribute`.  |
 | ValueSourceAttribute         | The source name of the data source must now use only static fields, properties or  methods. |
 
-###### Assertions and Constraints
+### Assertions and Constraints
 
 |          Feature                 |          Notes                                        |
 |----------------------------------|-------------------------------------------------------|
