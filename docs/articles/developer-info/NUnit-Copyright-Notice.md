@@ -1,4 +1,6 @@
-```
+# NUnit Copyright Notice
+
+```text
 // ***********************************************************************
 // Copyright (c) yyyy Charlie Poole
 //

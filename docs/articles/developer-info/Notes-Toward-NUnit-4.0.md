@@ -1,3 +1,5 @@
+# Notes Toward NUnit 4.0
+
 This page describes plans for the next major releases of NUnit, focusing on major changes we expect to make.
 
 ## Extensions
@@ -6,4 +8,4 @@ With the release of nunit3-console 4.0, we intend to stop distributing the **tea
 
 ## API possibilities
 
-https://github.com/nunit/nunit/issues/2437
+<https://github.com/nunit/nunit/issues/2437>
