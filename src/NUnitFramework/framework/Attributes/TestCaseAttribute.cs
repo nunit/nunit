@@ -290,7 +290,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets and sets the ignore until date for this test case.
         /// </summary>
-        public string Until
+        public string? Until
         {
             get { return Properties.Get(PropertyNames.IgnoreUntilDate) as string; }
             set
