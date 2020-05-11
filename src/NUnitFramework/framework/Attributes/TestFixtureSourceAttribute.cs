@@ -27,6 +27,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -123,8 +124,16 @@ namespace NUnit.Framework
         {
             Type sourceType = SourceType ?? typeInfo.Type;
 
+            var fixtureSuite = new ParameterizedFixtureSuite(typeInfo);
+            fixtureSuite.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+
             foreach (ITestFixtureData parms in GetParametersFor(sourceType))
-                yield return _builder.BuildFrom(typeInfo, filter, parms);
+            {
+                TestSuite fixture = _builder.BuildFrom(typeInfo, filter, parms);
+                fixtureSuite.Add(fixture);
+            }
+
+            yield return fixtureSuite;
         }
 
         #endregion
