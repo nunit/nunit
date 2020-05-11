@@ -1,8 +1,10 @@
-NUnit 3 implements a great deal of its functionality in its attributes. This functionality is accessed through a number of standard interfaces, which are implemented by the attributes. Users may create their own attributes by implementing these interfaces. 
+# Custom Attributes
+
+NUnit 3 implements a great deal of its functionality in its attributes. This functionality is accessed through a number of standard interfaces, which are implemented by the attributes. Users may create their own attributes by implementing these interfaces.
 
 For ease of understanding, the interfaces are grouped according to the stage in the life-cycle of a test at which they are used. The two primary stages in the life of a test are Load-Time and Execution-Time.
 
-### Load-Time Interfaces
+## Load-Time Interfaces
 
 _Loading_ tests means loading the assembly into memory and examining its content to discover the classes and fixtures that represent tests. The internal structures that represent tests are built at this time. If requested by the application, information about the tests may be returned for display, as is done in the NUnit GUI runner.
 
@@ -26,4 +28,4 @@ The following interfaces are called at execution time.
 | Interface              | Used By |
 |------------------------|---------|
 | [IApplyToContext](IApplyToContext-Interface.md) | Attributes that set up the context prior to execution
-| [ICommandWrapper](ICommandWrapper-Interface.md) | Attributes that can wrap a `TestCommand` with another command 
+| [ICommandWrapper](ICommandWrapper-Interface.md) | Attributes that can wrap a `TestCommand` with another command
