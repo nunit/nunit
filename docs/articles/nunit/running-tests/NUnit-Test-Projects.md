@@ -2,6 +2,8 @@
 uid: nunittestprojects
 ---
 
+# NUnit Test Projects
+
 Although you may simply enter multiple assembly names on the console command-line, running tests from multiple assemblies is facilitated by the use of NUnit test projects. These are
 files with the extension .nunit containing information about the assemblies to be loaded. The
 following is an example of a hypothetical test project file:
@@ -25,14 +27,14 @@ configuration is currently active. By default, the assemblies will be loaded usi
 containing this file as the ApplicationBase. The PrivateBinPath will be set automatically to
 `LibraryCore\bin\Debug;LibraryUI\bin\Debug` or to the corresonding release path.
 XML attributes are used to specify non-default values for the ApplicationBase, Configuration
-File and PrivateBinPath. 
+File and PrivateBinPath.
 
 The [Project Editor](https://github.com/CharliePoole/nunit-project-editor/wiki/Project-Editor) may be used to create or modify NUnit projects. If you edit the XML manually, you should make sure to
 use a path relative to the directory containing the project file as the location of any assemblies.
 
 For details, see [NUnit Project XML Format](xref:nunitprojectxmlformat)
 
-#### Command-line Overrides
+## Command-line Overrides
 
 The following command-line options override what is specified in the NUnit project file:
 
