@@ -86,7 +86,7 @@ namespace NUnit.Framework
                     if (_untilDate.Value > DateTime.Now)
                     {
                         test.RunState = RunState.Ignored;
-                        test.AddIgnoreUntilReason(_untilDate.Value, _reason);
+                        test.Properties.AddIgnoreUntilReason(_untilDate.Value, _reason);
                     }
                     test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u") );
 

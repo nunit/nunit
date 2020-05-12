@@ -77,7 +77,7 @@ namespace NUnit.Framework
                 {
                     RunState = RunState.Ignored;
                     string reason = (string)Properties.Get(PropertyNames.SkipReason);
-                    this.AddIgnoreUntilReason(datetime, reason);
+                    Properties.AddIgnoreUntilReason(datetime, reason);
                 }
                 else
                 {
