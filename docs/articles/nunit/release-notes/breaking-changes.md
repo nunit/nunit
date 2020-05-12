@@ -84,7 +84,7 @@ Other breaking changes are grouped in the following tables.
 | Text.Matches                     | No longer supported. Use `Does.Match` |
 | Text.DoesNotMatch                | No longer supported. Use `Does.Not.Match` |
 
-###### Other Framework Features
+### Other Framework Features
 
 |      Feature       |          Notes                                        |
 |--------------------|-------------------------------------------------------|
@@ -96,7 +96,7 @@ Other breaking changes are grouped in the following tables.
 | TestContext        | The fields available in the [TestContext](xref:TestContext)]] have changed, although the same information remains available as for NUnit V2. |
 | Async void tests   | No longer supported. Use `async Task` as the method signature instead. |
 
-###### Console Features
+### Console Features
 
 The console runner is now called `nunit3-console`. The following breaking changes apply to the options that  the new runner supports.
 

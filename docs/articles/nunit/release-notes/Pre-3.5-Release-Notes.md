@@ -2,6 +2,7 @@
 uid: pre35releasenotes
 ---
 
+# Pre 3.5 Release Notes
 
 > [!NOTE]
 > Combined Release Notes for the nunit framework, console and engine, up to version 3.5. For later releases, see:
@@ -9,7 +10,7 @@ uid: pre35releasenotes
 > * [Console Release Notes](console-and-engine.md)
 
 
-### NUnit 3.5 -  October 3, 2016
+## NUnit 3.5 -  October 3, 2016
 
 This is the last version of NUnit where the framework, console runner, engine and extensions are being
 released together. From this point forward, the NUnit Framework will be
