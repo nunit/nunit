@@ -258,13 +258,13 @@ namespace NUnit.Framework.Constraints
 
                     ConstraintResult result = BaseConstraint.ApplyTo(actual);
                     if (result.IsSuccess)
-                        return new ConstraintResult(this, actual, true);
+                        return new DelegatingConstraintResult(this, result);
                 }
             }
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
-            return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
+            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace NUnit.Framework.Constraints
                     {
                         ConstraintResult result = BaseConstraint.ApplyTo(actual);
                         if (result.IsSuccess)
-                            return new ConstraintResult(this, actual, true);
+                            return new DelegatingConstraintResult(this, result);
                     }
                     catch (Exception)
                     {
@@ -305,7 +305,7 @@ namespace NUnit.Framework.Constraints
                 ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
             actual = InvokeDelegate(del);
-            return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
+            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace NUnit.Framework.Constraints
                     {
                         ConstraintResult result = BaseConstraint.ApplyTo(actual);
                         if (result.IsSuccess)
-                            return new ConstraintResult(this, actual, true);
+                            return new DelegatingConstraintResult(this, result);
                     }
                     catch (Exception)
                     {
@@ -344,7 +344,7 @@ namespace NUnit.Framework.Constraints
             if ((now = Stopwatch.GetTimestamp()) < delayEnd)
                 ThreadUtility.BlockingDelay((int)TimestampDiff(delayEnd, now).TotalMilliseconds);
 
-            return new ConstraintResult(this, actual, BaseConstraint.ApplyTo(actual).IsSuccess);
+            return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
         }
 
         private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
@@ -383,6 +383,21 @@ namespace NUnit.Framework.Constraints
         private static TimeSpan TimestampDiff(long timestamp1, long timestamp2)
         {
             return TimeSpan.FromSeconds((double)(timestamp1 - timestamp2) / Stopwatch.Frequency);
+        }
+
+        private class DelegatingConstraintResult : ConstraintResult
+        {
+            private readonly ConstraintResult _innerResult;
+
+            public DelegatingConstraintResult(IConstraint constraint, ConstraintResult innerResult)
+                : base(constraint, innerResult.ActualValue, innerResult.Status)
+            {
+                _innerResult = innerResult;
+            }
+
+            public override void WriteActualValueTo(MessageWriter writer) => _innerResult.WriteActualValueTo(writer);
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer) => _innerResult.WriteAdditionalLinesTo(writer);
         }
     }
 }
