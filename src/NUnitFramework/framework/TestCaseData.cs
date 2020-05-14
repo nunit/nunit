@@ -22,7 +22,8 @@
 // ***********************************************************************
 
 #nullable enable
-
+using System;
+using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -194,11 +195,13 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="reason">The reason.</param>
         /// <returns></returns>
-        public TestCaseData Ignore(string reason)
+        public IgnoredTestCaseData Ignore(string reason)
         {
+            RunState prevRunState = this.RunState;
             this.RunState = RunState.Ignored;
             this.Properties.Set(PropertyNames.SkipReason, reason);
-            return this;
+            var ignoredData = new IgnoredTestCaseData(this, prevRunState);
+            return ignoredData;
         }
 
         #endregion
