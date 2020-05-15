@@ -44,13 +44,13 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, new object[0] };
         static object[] FailureData = new object[] { new object[] {
-            new int[] { 1, 3, 17, 3, 34 }, 
+            new int[] { 1, 3, 17, 3, 34 },
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
 
         [Test, SetCulture("")]
-        [TestCaseSource( nameof(IgnoreCaseData) )]
-        public void HonorsIgnoreCase( IEnumerable actual )
+        [TestCaseSource(nameof(IgnoreCaseData))]
+        public void HonorsIgnoreCase(IEnumerable actual)
         {
             var constraint = new UniqueItemsConstraint().IgnoreCase;
             var result = constraint.ApplyTo(actual);
@@ -127,6 +127,70 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.NonUniqueItems, Is.EqualTo(expectedFailures));
+        }
+
+        private static TestCaseData[] RequiresDefaultComparer
+        {
+            get
+            {
+                return new TestCaseData[] {
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(
+                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 1 },
+                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 2 }
+                            ),
+                            true
+                        },
+                        ArgDisplayNames = new[] { "ValueTypes", "true" }
+                    },
+
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(
+                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 1 },
+                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 1 }
+                            ),
+                            false
+                        },
+                        ArgDisplayNames = new[] { "ValueTypes", "false" }
+                    },
+
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(
+                                new TestReferenceTypeWithNoExplicitEqualityComparer() { A = 1 },
+                                new TestReferenceTypeWithNoExplicitEqualityComparer() { A = 1 }
+                            ),
+                            true
+                        },
+                        ArgDisplayNames = new[] { "ReferenceTypes", "true" }
+                    }
+                };
+            }
+        }
+
+        [TestCaseSource(nameof(RequiresDefaultComparer))]
+        public void DuplicateItemsTests_RequiresDefaultComparer(IEnumerable items, bool success)
+        {
+            var constraint = new UniqueItemsConstraint();
+            var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsSuccess, Is.EqualTo(success));
+        }
+
+        private sealed class TestReferenceTypeWithNoExplicitEqualityComparer
+        {
+            public int A { get; set; }
+        }
+
+        private struct TestValueTypeWithNoExplicitEqualityComparer
+        {
+            public int A { get; set; }
         }
     }
 }

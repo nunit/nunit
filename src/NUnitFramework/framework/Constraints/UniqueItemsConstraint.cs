@@ -26,12 +26,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -114,7 +110,7 @@ namespace NUnit.Framework.Constraints
             // Partly optimization, partly makes any subsequent all()/any() calls reliable
             if (allTypes.Count == 0)
                 return new object[0];
-
+            
             var distinctTypes = allTypes.Distinct().ToList();
             if (distinctTypes.Count == 1)
             {
@@ -180,13 +176,13 @@ namespace NUnit.Framework.Constraints
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
 
         private ICollection<string> StringsUniqueIgnoringCase(IEnumerable<string> actual)
-            => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(Comparer.IgnoreCase));
+            => NonUniqueItemsInternal(actual, new NUnitStringEqualityComparer(IgnoringCase));
 
         private ICollection<char> CharsUniqueIgnoringCase(IEnumerable<char> actual)
         {
             var result = NonUniqueItemsInternal(
                 actual.Select(x => x.ToString()),
-                new NUnitStringEqualityComparer(Comparer.IgnoreCase)
+                new NUnitStringEqualityComparer(IgnoringCase)
             );
             return result.Select(x => x[0]).ToList();
         }
