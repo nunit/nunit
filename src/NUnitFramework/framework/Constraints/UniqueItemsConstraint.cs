@@ -104,8 +104,13 @@ namespace NUnit.Framework.Constraints
         private ICollection? TryInferFastPath(IEnumerable actual)
         {
             var allTypes = new List<Type>();
+            var allItems = new List<object>();
             foreach (var item in actual)
-                allTypes.Add(item.GetType());
+            {
+                allItems.Add(item);
+                if (item != null)
+                    allTypes.Add(item.GetType());
+            }
 
             // Partly optimization, partly makes any subsequent all()/any() calls reliable
             if (allTypes.Count == 0)
@@ -128,6 +133,14 @@ namespace NUnit.Framework.Constraints
                     }
 
                     return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new object[] { itemsOfT });
+                }
+            }
+            else
+            {
+                var nunitSpecialTypes = new[] { typeof(string), typeof(char), typeof(DateTimeOffset) };
+                if (distinctTypes.All(o => IsTypeSafeForFastPath(o) && !Numerics.IsNumericType(o) && !nunitSpecialTypes.Contains(o)))
+                {
+                    return (ICollection)ItemsUnique(allItems);
                 }
             }
 

@@ -105,9 +105,33 @@ namespace NUnit.Framework.Constraints
             {
                 ArgDisplayNames = new[] { "IEnumerable<string>", "true" }
             },
+            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => new TestReferenceType() { A = v }).Cast<object>()), true)
+            {
+                ArgDisplayNames = new[] { "IEnumerable<TestReferenceType>", "true" }
+            },
         };
+        static TestCaseData[] PerformanceData_FastPath_MixedTypes
+        {
+            get
+            {
+                var refTypes = RANGE.Take(5000).Select(o => new TestReferenceType() { A = o }).Cast<object>();
+                var valueTypes = RANGE.Skip<int>(5000).Select(o => new TestValueType() { A = o }).Cast<object>();
+                var container = new List<object>();
+
+                container.AddRange(refTypes);
+                container.AddRange(valueTypes);
+
+                return new TestCaseData[] {
+                    new TestCaseData(new SimpleObjectCollection(container.Cast<object>()), true)
+                    {
+                        ArgDisplayNames = new[] { "IEnumerable<dynamic>", "true" }
+                    }
+                };
+            }
+        }
 
         [TestCaseSource(nameof(PerformanceData_FastPath))]
+        [TestCaseSource(nameof(PerformanceData_FastPath_MixedTypes))]
         public void PerformanceTests_FastPath(IEnumerable values, bool ignoreCase)
         {
             Warn.Unless(() =>
@@ -133,14 +157,13 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
+                var sameRef = new TestReferenceType() { A = 1 };
+
                 return new TestCaseData[] {
                     new TestCaseData() {
                         Arguments = new object[]
                         {
-                            new SimpleObjectCollection(
-                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 1 },
-                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 2 }
-                            ),
+                            new SimpleObjectCollection(new TestValueType() { A = 1 }, new TestValueType() { A = 2 }),
                             true
                         },
                         ArgDisplayNames = new[] { "ValueTypes", "true" }
@@ -149,10 +172,7 @@ namespace NUnit.Framework.Constraints
                     new TestCaseData() {
                         Arguments = new object[]
                         {
-                            new SimpleObjectCollection(
-                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 1 },
-                                new TestValueTypeWithNoExplicitEqualityComparer() { A = 1 }
-                            ),
+                            new SimpleObjectCollection(new TestValueType() { A = 1 }, new TestValueType() { A = 1 }),
                             false
                         },
                         ArgDisplayNames = new[] { "ValueTypes", "false" }
@@ -161,13 +181,49 @@ namespace NUnit.Framework.Constraints
                     new TestCaseData() {
                         Arguments = new object[]
                         {
-                            new SimpleObjectCollection(
-                                new TestReferenceTypeWithNoExplicitEqualityComparer() { A = 1 },
-                                new TestReferenceTypeWithNoExplicitEqualityComparer() { A = 1 }
-                            ),
+                            new SimpleObjectCollection(new TestReferenceType() { A = 1 }, new TestReferenceType() { A = 1 }),
                             true
                         },
                         ArgDisplayNames = new[] { "ReferenceTypes", "true" }
+                    },
+
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(sameRef, sameRef),
+                            false
+                        },
+                        ArgDisplayNames = new[] { "ReferenceTypes", "false" }
+                    },
+
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(
+                                new TestReferenceType_OverridesEquals() { A = 1 },
+                                new TestReferenceType_OverridesEquals() { A = 1 }
+                            ),
+                            false
+                        },
+                        ArgDisplayNames = new[] { "ReferenceTypesOverridesEquals", "false" }
+                    },
+
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(new TestValueType() { A = 1 }, new TestReferenceType() { A = 1 }),
+                            true
+                        },
+                        ArgDisplayNames = new[] { "MixedTypes", "true" }
+                    },
+
+                    new TestCaseData() {
+                        Arguments = new object[]
+                        {
+                            new SimpleObjectCollection(new TestValueType() { A = 1 }, sameRef, sameRef),
+                            false
+                        },
+                        ArgDisplayNames = new[] { "MixedTypes", "false" }
                     }
                 };
             }
@@ -183,12 +239,29 @@ namespace NUnit.Framework.Constraints
             Assert.That(result.IsSuccess, Is.EqualTo(success));
         }
 
-        private sealed class TestReferenceTypeWithNoExplicitEqualityComparer
+        private sealed class TestReferenceType
         {
             public int A { get; set; }
         }
 
-        private struct TestValueTypeWithNoExplicitEqualityComparer
+        private sealed class TestReferenceType_OverridesEquals
+        {
+            public int A { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is TestReferenceType_OverridesEquals other)
+                    return other.A == this.A;
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return this.A.GetHashCode();
+            }
+        }
+
+        private struct TestValueType
         {
             public int A { get; set; }
         }
