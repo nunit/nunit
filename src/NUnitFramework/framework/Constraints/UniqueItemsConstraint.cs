@@ -137,14 +137,27 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                var nunitSpecialTypes = new[] { typeof(string), typeof(char), typeof(DateTimeOffset) };
-                if (distinctTypes.All(o => IsTypeSafeForFastPath(o) && !Numerics.IsNumericType(o) && !nunitSpecialTypes.Contains(o)))
+                if (distinctTypes.All(o => IsTypeSafeForFastPath(o) && !IsSpecialComparisonType(o)))
                 {
                     return (ICollection)ItemsUnique(allItems);
                 }
             }
 
             return null;
+        }
+
+        private static bool IsSpecialComparisonType(Type type)
+        {
+            if (type.IsGenericType)
+                return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2");
+            else if (Numerics.IsNumericType(type))
+                return true;
+            else
+                return
+                    type == typeof(string)
+                    || type == typeof(char)
+                    || type == typeof(DateTimeOffset)
+                    || type == typeof(DictionaryEntry);
         }
 
         private ICollection GetNonUniqueItems(IEnumerable actual)

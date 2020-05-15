@@ -43,6 +43,11 @@ namespace NUnit.Framework.Constraints
             return IsFloatingPointNumeric(obj) || IsFixedPointNumeric(obj);
         }
 
+        internal static bool IsNumericType(Type type)
+        {
+            return IsFloatingPointNumeric(type) || IsFixedPointNumeric(type);
+        }
+
         /// <summary>
         /// Checks the type of the object, returning true if
         /// the object is a floating point numeric type.
@@ -58,6 +63,18 @@ namespace NUnit.Framework.Constraints
             }
             return false;
         }
+
+        internal static bool IsFloatingPointNumeric(Type type)
+        {
+            if (null != type)
+            {
+                if (type == typeof(double)) return true;
+                if (type == typeof(System.Single)) return true;
+            }
+            return false;
+        }
+
+
         /// <summary>
         /// Checks the type of the object, returning true if
         /// the object is a fixed point numeric type.
@@ -78,6 +95,23 @@ namespace NUnit.Framework.Constraints
                 if (obj is System.Int16) return true;
                 if (obj is System.UInt16) return true;
                 if (obj is System.Char) return true;
+            }
+            return false;
+        }
+
+        internal static bool IsFixedPointNumeric(Type type)
+        {
+            if (null != type)
+            {
+                if (type == typeof(byte)) return true;
+                if (type == typeof(sbyte)) return true;
+                if (type == typeof(int)) return true;
+                if (type == typeof(uint)) return true;
+                if (type == typeof(long)) return true;
+                if (type == typeof(ulong)) return true;
+                if (type == typeof(short)) return true;
+                if (type == typeof(ushort)) return true;
+                if (type == typeof(char)) return true;
             }
             return false;
         }

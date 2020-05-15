@@ -24,6 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
@@ -141,6 +142,53 @@ namespace NUnit.Framework.Constraints
                 else
                     Assert.That(values, Is.Unique);
             }, HelperConstraints.HasMaxTime(100));
+        }
+
+        private static IEnumerable<int> RANGE_SLOWPATH = Enumerable.Range(0, 750);
+        private static readonly TestCaseData[] SlowpathData =
+        {
+            new TestCaseData(RANGE_SLOWPATH.Select(o => o.ToString()).Cast<object>())
+            {
+                ArgDisplayNames = new[] { "IEnumerable<string>" }
+            },
+            new TestCaseData(RANGE_SLOWPATH.Select(o => new DateTimeOffset(o, TimeSpan.Zero)).Cast<object>())
+            {
+                ArgDisplayNames = new[] { "IEnumerable<DateTimeOffset>" }
+            },
+            new TestCaseData(RANGE_SLOWPATH.Select(o => (char)o).Cast<object>())
+            {
+                ArgDisplayNames = new[] { "IEnumerable<char>" }
+            },
+            new TestCaseData(RANGE_SLOWPATH.Select(o => (double)o).Cast<object>())
+            {
+                ArgDisplayNames = new[] { "IEnumerable<double>" }
+            },
+            new TestCaseData(RANGE_SLOWPATH.Select(o => new KeyValuePair<int, int>(o, o)).Cast<object>())
+            {
+                ArgDisplayNames = new[] { "IEnumerable<KeyValuePair<,>>" }
+            },
+            new TestCaseData(RANGE_SLOWPATH.Select(o => new DictionaryEntry(o, o)).Cast<object>())
+            {
+                ArgDisplayNames = new[] { "IEnumerable<DictionaryEntry>" }
+            }
+        };
+
+        [TestCaseSource(nameof(SlowpathData))]
+        public void SlowPath_TakenWhenSpecialTypes(IEnumerable<object> testData)
+        {
+            var allData = new List<object>();
+            allData.Add(new TestValueType() { A = 1 });
+            allData.AddRange(testData);
+
+            var items = new SimpleObjectCollection((IEnumerable<object>)allData);
+            var constraint = new UniqueItemsConstraint();
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+            constraint.ApplyTo(items);
+            stopwatch.Stop();
+
+            Assert.That(stopwatch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(50));
         }
 
         [TestCaseSource(nameof(DuplicateItemsData))]
