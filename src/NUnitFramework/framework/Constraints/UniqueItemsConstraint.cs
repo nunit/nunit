@@ -26,6 +26,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -72,27 +74,6 @@ namespace NUnit.Framework.Constraints
 
         private ICollection OriginalAlgorithm(IEnumerable actual)
         {
-#if !NET35  // The IComparable fastpath uses a SortedList<T>, which doesn't exist in NET35
-            var hasAllComparable = true;
-            var comparables = new List<IComparable>();
-
-            foreach(var item in actual)
-            {
-                if (item is IComparable comparable)
-                {
-                    comparables.Add(comparable);
-                }
-                else
-                {
-                    hasAllComparable = false;
-                    break;
-                }
-            }
-                
-
-            if (hasAllComparable)
-                return (ICollection)NonUniqueItemsInternal(comparables, new NUnitSortingComparer(Comparer));
-#endif
             var nonUniques = new List<object>();
             var processedItems = new List<object>();
 
@@ -124,6 +105,39 @@ namespace NUnit.Framework.Constraints
             return nonUniques;
         }
 
+        private ICollection? TryInferFastPath(IEnumerable actual)
+        {
+            var allTypes = new List<Type>();
+            foreach (var item in actual)
+                allTypes.Add(item.GetType());
+
+            // Partly optimization, partly makes any subsequent all()/any() calls reliable
+            if (allTypes.Count == 0)
+                return new object[0];
+
+            var distinctTypes = allTypes.Distinct().ToList();
+            if (distinctTypes.Count == 1)
+            {
+                var itemsType = distinctTypes.FirstOrDefault();
+                if (IsTypeSafeForFastPath(itemsType))
+                {
+                    var itemsOfT = ItemsCastMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { actual });
+
+                    if (IgnoringCase)
+                    {
+                        if (itemsType == typeof(string))
+                            return (ICollection)StringsUniqueIgnoringCase((IEnumerable<string>)itemsOfT);
+                        else if (itemsType == typeof(char))
+                            return (ICollection)CharsUniqueIgnoringCase((IEnumerable<char>)itemsOfT);
+                    }
+
+                    return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new object[] { itemsOfT });
+                }
+            }
+
+            return null;
+        }
+
         private ICollection GetNonUniqueItems(IEnumerable actual)
         {
             // If the user specified any external comparer with Using, exit
@@ -133,8 +147,11 @@ namespace NUnit.Framework.Constraints
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type? memberType = GetGenericTypeArgument(actual);
-            if (memberType == null || !IsSealed(memberType) || IsHandledSpeciallyByNUnit(memberType))
+            if (memberType == null)
+                return TryInferFastPath(actual) ?? OriginalAlgorithm(actual);
+            else if (!IsTypeSafeForFastPath(memberType))
                 return OriginalAlgorithm(actual);
+
 
             // Special handling for ignore case with strings and chars
             if (IgnoringCase)
@@ -148,16 +165,16 @@ namespace NUnit.Framework.Constraints
             return (ICollection)ItemsUniqueMethod.MakeGenericMethod(memberType).Invoke(null, new object[] { actual });
         }
 
-#if !NET35 && !NET40
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
-        private static bool IsSealed(Type type)
+        private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type.GetTypeInfo().IsSealed;
+            return type != null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
             typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static readonly MethodInfo ItemsCastMethod =
+            typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public);
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);
@@ -173,33 +190,6 @@ namespace NUnit.Framework.Constraints
             );
             return result.Select(x => x[0]).ToList();
         }
-
-#if !NET35
-        private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IComparer<T> comparer)
-        {
-            var processedItems = new SortedSet<T>(comparer);
-            var knownNonUniques = new SortedSet<T>(comparer);
-            var nonUniques = new List<T>();
-
-            foreach (T item in actual)
-            {
-                // Check if 'item' is a duplicate of a previously-processed item
-                if (!processedItems.Add(item))
-                {
-                    // Check if 'item' has previously been flagged as a duplicate
-                    if (knownNonUniques.Add(item))
-                    {
-                        nonUniques.Add(item);
-
-                        if (nonUniques.Count == MsgUtils.DefaultMaxItems)
-                            break;
-                    }
-                }
-            }
-
-            return nonUniques;
-        }
-#endif
 
         private static ICollection<T> NonUniqueItemsInternal<T>(IEnumerable<T> actual, IEqualityComparer<T> comparer)
         {
@@ -281,27 +271,6 @@ namespace NUnit.Framework.Constraints
                     return obj.ToLower().GetHashCode();
                 else
                     return obj.GetHashCode();
-            }
-        }
-
-        private sealed class NUnitSortingComparer : IComparer<object>
-        {
-            public NUnitEqualityComparer Comparer { get; }
-
-            public NUnitSortingComparer(NUnitEqualityComparer comparer)
-            {
-                Comparer = comparer;
-            }
-
-            public int Compare(object x, object y)
-            {
-                var tolerance = Tolerance.Default;
-                if (Comparer.AreEqual(x, y, ref tolerance))
-                    return 0;
-                else if (x is string xStr && y is string yStr)
-                    return string.Compare(xStr, yStr, Comparer.IgnoreCase);
-                else
-                    return System.Collections.Comparer.Default.Compare(x, y);
             }
         }
 
