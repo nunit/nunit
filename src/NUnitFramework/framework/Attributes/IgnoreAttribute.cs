@@ -56,9 +56,9 @@ namespace NUnit.Framework
         /// "2014-12-25". If just a date is given, the Ignore will expire at midnight UTC.
         /// </summary>
         /// <remarks>
-        /// Once the ignore until date has passed, the test will be marked
+        /// <para>Once the ignore until date has passed, the test will be marked
         /// as runnable. Tests with an ignore until date will have an IgnoreUntilDate
-        /// property set which will appear in the test results.
+        /// property set which will appear in the test results.</para>
         /// </remarks>
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception> 
         public string? Until

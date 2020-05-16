@@ -201,8 +201,8 @@ namespace NUnit.Framework.Constraints
         /// extra and missing elements when the collections are not equivalent.
         /// </summary>
         /// <remarks>
-        /// This is not intended to fully test the display of missing/extra elements, but to ensure
-        /// that the functionality is actually there.
+        /// <para>This is not intended to fully test the display of missing/extra elements, but to ensure
+        /// that the functionality is actually there.</para>
         /// </remarks>
         [Test]
         public void TestConstraintResultMessageDisplaysMissingAndExtraElements()

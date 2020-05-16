@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     /// <param name="next">The next formatter function</param>
     /// <returns>ValueFormatter</returns>
-    /// <remarks>If the given formatter is unable to handle a certain format, it must call the next formatter in the chain</remarks>
+    /// <remarks><para>If the given formatter is unable to handle a certain format, it must call the next formatter in the chain</para></remarks>
     public delegate ValueFormatter ValueFormatterFactory(ValueFormatter next);
 
     /// <summary>

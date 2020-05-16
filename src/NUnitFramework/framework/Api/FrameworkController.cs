@@ -581,7 +581,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">The FrameworkController for which a run is to be stopped.</param>
             /// <param name="force">True the stop should be forced, false for a cooperative stop.</param>
             /// <param name="handler">>A callback handler used to report results</param>
-            /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
+            /// <remarks><para>A forced stop will cause threads and processes to be killed as needed.</para></remarks>
             public StopRunAction(FrameworkController controller, bool force, object handler)
             {
                 controller.StopRun((ICallbackEventHandler)handler, force);

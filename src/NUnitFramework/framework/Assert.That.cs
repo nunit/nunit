@@ -272,8 +272,8 @@ namespace NUnit.Framework
         /// error.
         /// </summary>
         /// <remarks>
-        /// This method is provided for use by VB developers needing to test the value of properties with private
-        /// setters.
+        /// <para>This method is provided for use by VB developers needing to test the value of properties with private
+        /// setters.</para>
         /// </remarks>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>

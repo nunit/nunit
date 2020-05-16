@@ -32,10 +32,10 @@ namespace NUnit.Framework.Interfaces
     /// objects able to wrap a TestCommand with another command.
     /// </summary>
     /// <remarks>
-    /// Attributes or other objects should implement one of the
+    /// <para>Attributes or other objects should implement one of the
     /// derived interfaces, rather than this one, since they
     /// indicate in which part of the command chain the wrapper
-    /// should be applied.
+    /// should be applied.</para>
     /// </remarks>
     public interface ICommandWrapper
     {

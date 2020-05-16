@@ -103,13 +103,13 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets a list of the queues associated with this shift.
         /// </summary>
-        /// <remarks>Internal for testing - immutable once initialized</remarks>
+        /// <remarks><para>Internal for testing - immutable once initialized</para></remarks>
         internal IList<WorkItemQueue> Queues { get; } = new List<WorkItemQueue>();
 
         /// <summary>
         /// Gets the list of workers associated with this shift.
         /// </summary>
-        /// <remarks>Internal for testing - immutable once initialized</remarks>
+        /// <remarks><para>Internal for testing - immutable once initialized</para></remarks>
         internal IList<TestWorker> Workers { get; } = new List<TestWorker>();
 
         #endregion

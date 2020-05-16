@@ -186,7 +186,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the assembly path from code base.
         /// </summary>
-        /// <remarks>Public for testing purposes</remarks>
+        /// <remarks><para>Public for testing purposes</para></remarks>
         /// <param name="codeBase">The code base.</param>
         /// <returns></returns>
         public static string GetAssemblyPathFromCodeBase(string codeBase)
