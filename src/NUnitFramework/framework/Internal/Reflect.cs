@@ -280,7 +280,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// <para>
-        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
+        /// Selects the ultimate shadowing property just like <c>dynamic</c> would,
         /// rather than throwing <see cref="AmbiguousMatchException"/>
         /// for properties that shadow properties of a different property type
         /// which is what <see cref="Type.GetProperty(string, BindingFlags)"/> does.
