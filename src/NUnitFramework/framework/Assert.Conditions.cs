@@ -209,7 +209,7 @@ namespace NUnit.Framework
         #region NotNull
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is not equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -221,7 +221,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is not equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -231,7 +231,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is not equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -243,7 +243,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is not equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -257,7 +257,7 @@ namespace NUnit.Framework
         #region Null
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -269,7 +269,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -279,7 +279,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is equal to <see langword="null"/>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -291,7 +291,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the object that is passed in is equal to</para> <code>null</code><para>. Returns without throwing an
+        /// <para>Verifies that the object that is passed in is equal to <see langword="null"/> . Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
@@ -305,7 +305,7 @@ namespace NUnit.Framework
         #region IsNaN
 
         /// <summary>
-        /// <para>Verifies that the double that is passed in is an</para> <code>NaN</code> <para>value. Returns without throwing an
+        /// <para>Verifies that the double that is passed in is an <c>NaN</c>. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
@@ -317,7 +317,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the double that is passed in is an</para> <code>NaN</code> <para>value. Returns without throwing an
+        /// <para>Verifies that the double that is passed in is an <c>NaN</c> value. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
@@ -327,7 +327,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the double that is passed in is an</para> <code>NaN</code> <para>value. Returns without throwing an
+        /// <para>Verifies that the double that is passed in is an <c>NaN</c> value. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
@@ -339,7 +339,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// <para>Verifies that the double that is passed in is an</para> <code>NaN</code> <para>value. Returns without throwing an
+        /// <para>Verifies that the double that is passed in is an <c>NaN</c> value. Returns without throwing an
         /// exception when inside a multiple assert block.</para>
         /// </summary>
         /// <param name="aDouble">The value that is to be tested</param>
