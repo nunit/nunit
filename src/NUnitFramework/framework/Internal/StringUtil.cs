@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="strA">The first string.</param>
         /// <param name="strB">The second string..</param>
-        /// <param name="ignoreCase">if set to <c>true</c>, the case of the letters in the strings is ignored.</param>
+        /// <param name="ignoreCase">if set to <see langword="true"/>, the case of the letters in the strings is ignored.</param>
         /// <returns>Zero if the strings are equivalent, a negative number if strA is sorted first, a positive number if
         /// strB is sorted first</returns>
         public static int Compare(string strA, string strB, bool ignoreCase)
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="strA">The first string.</param>
         /// <param name="strB">The second string..</param>
-        /// <param name="ignoreCase">if set to <c>true</c>, the case of the letters in the strings is ignored.</param>
+        /// <param name="ignoreCase">if set to <see langword="true"/>, the case of the letters in the strings is ignored.</param>
         /// <returns>True if the strings are equivalent, false if not.</returns>
         public static bool StringsEqual(string strA, string strB, bool ignoreCase)
         {

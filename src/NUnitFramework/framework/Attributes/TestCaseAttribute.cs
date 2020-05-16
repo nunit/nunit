@@ -219,7 +219,7 @@ namespace NUnit.Framework
         /// Gets or sets a value indicating whether this <see cref="NUnit.Framework.TestCaseAttribute"/> is explicit.
         /// </summary>
         /// <value>
-        /// <c>true</c> if explicit; otherwise, <c>false</c>.
+        /// <see langword="true"/> if explicit; otherwise, <see langword="false"/>.
         /// </value>
         public bool Explicit
         {

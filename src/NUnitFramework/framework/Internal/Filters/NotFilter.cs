@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Filters
         /// Determine if a particular test passes the filter criteria.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
-        /// <param name="negated">If set to <c>true</c> we are carrying a negation through</param>
+        /// <param name="negated">If set to <see langword="true"/> we are carrying a negation through</param>
         /// <returns>True if the test passes the filter, otherwise false</returns>
         public override bool Pass(ITest test, bool negated)
         {

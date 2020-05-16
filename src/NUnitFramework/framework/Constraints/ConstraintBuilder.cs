@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Gets a value indicating whether this <see cref="OperatorStack"/> is empty.
             /// </summary>
-            /// <value><c>true</c> if empty; otherwise, <c>false</c>.</value>
+            /// <value><see langword="true"/> if empty; otherwise, <see langword="false"/>.</value>
             public bool Empty
             {
                 get { return stack.Count == 0; }
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Gets a value indicating whether this <see cref="ConstraintStack"/> is empty.
             /// </summary>
-            /// <value><c>true</c> if empty; otherwise, <c>false</c>.</value>
+            /// <value><see langword="true"/> if empty; otherwise, <see langword="false"/>.</value>
             public bool Empty
             {
                 get { return stack.Count == 0; }
@@ -270,7 +270,7 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether this instance is resolvable.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is resolvable; otherwise, <c>false</c>.
+        /// 	<see langword="true"/> if this instance is resolvable; otherwise, <see langword="false"/>.
         /// </value>
         private bool IsResolvable
         {

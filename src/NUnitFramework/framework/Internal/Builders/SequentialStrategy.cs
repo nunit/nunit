@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// SequentialStrategy creates test cases by using all of the
-    /// parameter data sources in parallel, substituting <c>null</c>
+    /// parameter data sources in parallel, substituting <see langword="null"/>
     /// when any of them run out of data.
     /// </summary>
     public class SequentialStrategy : ICombiningStrategy

@@ -97,8 +97,8 @@ namespace NUnit.Framework.Internal
         /// <param name="targetType">The target <see cref="Type"/> in which the <paramref name="value"/> should be converted</param>
         /// <param name="convertedValue">If conversion was successfully applied, the <paramref name="value"/> converted into <paramref name="targetType"/></param>
         /// <returns>
-        /// <c>true</c> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
-        /// <c>false</c> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
+        /// <see langword="true"/> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
+        /// <see langword="false"/> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
         /// </returns>
         public static bool TryConvert(object? value, Type targetType, out object? convertedValue)
         {

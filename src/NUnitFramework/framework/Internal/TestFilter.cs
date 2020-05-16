@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
         /// to change the behavior of the filter.
         /// </summary>
         /// <param name="test">The test to which the filter is applied</param>
-        /// <param name="negated">If set to <c>true</c> we are carrying a negation through</param>
+        /// <param name="negated">If set to <see langword="true"/> we are carrying a negation through</param>
         /// <returns>True if the test passes the filter, otherwise false</returns>
         public virtual bool Pass(ITest test, bool negated)
         {

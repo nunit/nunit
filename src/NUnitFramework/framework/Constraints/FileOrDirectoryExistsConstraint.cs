@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
         /// will only check files if ignoreDirectories is true.
         /// </summary>
-        /// <param name="ignoreDirectories">if set to <c>true</c> [ignore directories].</param>
+        /// <param name="ignoreDirectories">if set to <see langword="true"/> [ignore directories].</param>
         public FileOrDirectoryExistsConstraint(bool ignoreDirectories)
         {
             _ignoreDirectories = ignoreDirectories;
