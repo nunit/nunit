@@ -32,4 +32,8 @@
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59"/>
+  </ItemGroup>
+
 </Project>

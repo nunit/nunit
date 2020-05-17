@@ -49,7 +49,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="enumerable">The enumerable.</param>
         /// <returns>
-        /// <c>true</c> if the specified enumerable is empty; otherwise, <c>false</c>.
+        /// <see langword="true"/> if the specified enumerable is empty; otherwise, <see langword="false"/>.
         /// </returns>
         protected static bool IsEmpty(IEnumerable enumerable)
         {

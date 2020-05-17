@@ -42,13 +42,13 @@ namespace NUnit.Framework.Internal
     /// the TestContext.Random property.
     /// </summary>
     /// <remarks>
-    /// For consistency with the underlying Random Type, methods
+    /// <para>For consistency with the underlying Random Type, methods
     /// returning a single value use the prefix "Next..." Those
     /// without an argument return a non-negative value up to
     /// the full positive range of the Type. Overloads are provided
     /// for specifying a maximum or a range. Methods that return
     /// arrays or strings use the prefix "Get..." to avoid
-    /// confusion with the single-value methods.
+    /// confusion with the single-value methods.</para>
     /// </remarks>
     public class Randomizer : Random
     {
@@ -508,7 +508,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Default characters for random functions.
         /// </summary>
-        /// <remarks>Default characters are the English alphabet (uppercase &amp; lowercase), Arabic numerals, and underscore</remarks>
+        /// <remarks><para>Default characters are the English alphabet (uppercase &amp; lowercase), Arabic numerals, and underscore</para></remarks>
         public const string DefaultStringChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789_";
 
         private const int DefaultStringLength = 25;
@@ -534,7 +534,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="outputLength">desired length of output string.</param>
         /// <returns>A random string of arbitrary length</returns>
-        /// <remarks>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set </remarks>
+        /// <remarks><para>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set</para> </remarks>
         public string GetString(int outputLength)
         {
             return GetString(outputLength, DefaultStringChars);
@@ -544,7 +544,7 @@ namespace NUnit.Framework.Internal
         /// Generate a random string based on the characters from the input string.
         /// </summary>
         /// <returns>A random string of the default length</returns>
-        /// <remarks>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set </remarks>
+        /// <remarks><para>Uses <see cref="DefaultStringChars">DefaultStringChars</see> as the input character set</para> </remarks>
         public string GetString()
         {
             return GetString(DefaultStringLength, DefaultStringChars);
@@ -641,8 +641,8 @@ namespace NUnit.Framework.Internal
         /// permitted to exceed decimal.MaxVal in the current implementation.
         /// </summary>
         /// <remarks>
-        /// A limitation of this implementation is that the range from min
-        /// to max must not exceed decimal.MaxVal.
+        /// <para>A limitation of this implementation is that the range from min
+        /// to max must not exceed decimal.MaxVal.</para>
         /// </remarks>
         public decimal NextDecimal(decimal min, decimal max)
         {

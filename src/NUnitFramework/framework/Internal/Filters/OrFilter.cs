@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal.Filters
         /// Checks whether the OrFilter is matched by a test
         /// </summary>
         /// <param name="test">The test to be matched</param>
-        /// <param name="negated">If set to <c>true</c> we are carrying a negation through</param>
+        /// <param name="negated">If set to <see langword="true"/> we are carrying a negation through</param>
         /// <returns>True if any of the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test, bool negated )
         {

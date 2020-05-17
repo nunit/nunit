@@ -38,8 +38,8 @@ namespace System.Collections.Concurrent
     /// </summary>
     /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
     /// <remarks>
-    /// All public  and protected members of <see cref="ConcurrentQueue{T}"/> are thread-safe and may be used
-    /// concurrently from multiple threads.
+    /// <para>All public  and protected members of <see cref="ConcurrentQueue{T}"/> are thread-safe and may be used
+    /// concurrently from multiple threads.</para>
     /// </remarks>
     [ComVisible(false)]
     [DebuggerDisplay("Count = {Count}")]
@@ -224,9 +224,9 @@ namespace System.Collections.Concurrent
         /// reference (Nothing in Visual Basic) for reference types.
         /// </param>
         /// <returns>true if the object was added successfully; otherwise, false.</returns>
-        /// <remarks>For <see cref="ConcurrentQueue{T}"/>, this operation will always add the object to the
+        /// <remarks><para>For <see cref="ConcurrentQueue{T}"/>, this operation will always add the object to the
         /// end of the <see cref="ConcurrentQueue{T}"/>
-        /// and return true.</remarks>
+        /// and return true.</para></remarks>
         bool IProducerConsumerCollection<T>.TryAdd(T item)
         {
             Enqueue(item);
@@ -242,8 +242,8 @@ namespace System.Collections.Concurrent
         /// object removed. If no object was available to be removed, the value is unspecified.
         /// </param>
         /// <returns>true if an element was removed and returned successfully; otherwise, false.</returns>
-        /// <remarks>For <see cref="ConcurrentQueue{T}"/>, this operation will attempt to remove the object
-        /// from the beginning of the <see cref="ConcurrentQueue{T}"/>.
+        /// <remarks><para>For <see cref="ConcurrentQueue{T}"/>, this operation will attempt to remove the object
+        /// from the beginning of the <see cref="ConcurrentQueue{T}"/>.</para>
         /// </remarks>
         bool IProducerConsumerCollection<T>.TryTake(out T item)
         {
@@ -255,11 +255,11 @@ namespace System.Collections.Concurrent
         /// </summary>
         /// <value>true if the <see cref="ConcurrentQueue{T}"/> is empty; otherwise, false.</value>
         /// <remarks>
-        /// For determining whether the collection contains any items, use of this property is recommended
+        /// <para>For determining whether the collection contains any items, use of this property is recommended
         /// rather than retrieving the number of items from the <see cref="Count"/> property and comparing it
         /// to 0.  However, as this collection is intended to be accessed concurrently, it may be the case
         /// that another thread will modify the collection after <see cref="IsEmpty"/> returns, thus invalidating
-        /// the result.
+        /// the result.</para>
         /// </remarks>
         public bool IsEmpty
         {
@@ -388,9 +388,9 @@ namespace System.Collections.Concurrent
         /// </summary>
         /// <value>The number of elements contained in the <see cref="ConcurrentQueue{T}"/>.</value>
         /// <remarks>
-        /// For determining whether the collection contains any items, use of the <see cref="IsEmpty"/>
+        /// <para>For determining whether the collection contains any items, use of the <see cref="IsEmpty"/>
         /// property is recommended rather than retrieving the number of items from the <see cref="Count"/>
-        /// property and comparing it to 0.
+        /// property and comparing it to 0.</para>
         /// </remarks>
         public int Count
         {
@@ -461,10 +461,10 @@ namespace System.Collections.Concurrent
         /// <returns>An enumerator for the contents of the <see
         /// cref="ConcurrentQueue{T}"/>.</returns>
         /// <remarks>
-        /// The enumeration represents a moment-in-time snapshot of the contents
+        /// <para>The enumeration represents a moment-in-time snapshot of the contents
         /// of the queue.  It does not reflect any updates to the collection after
         /// GetEnumerator was called.  The enumerator is safe to use
-        /// concurrently with reads from and writes to the queue.
+        /// concurrently with reads from and writes to the queue.</para>
         /// </remarks>
         public IEnumerator<T> GetEnumerator()
         {
@@ -763,8 +763,8 @@ namespace System.Collections.Concurrent
             /// </summary>
             /// <param name="value">the element to append</param>
             /// <returns>true if the element is appended, false if the current segment is full</returns>
-            /// <remarks>if appending the specified element succeeds, and after which the segment is full,
-            /// then grow the segment</remarks>
+            /// <remarks><para>if appending the specified element succeeds, and after which the segment is full,
+            /// then grow the segment</para></remarks>
             internal bool TryAppend(T value)
             {
                 //quickly check if m_high is already over the boundary, if so, bail out

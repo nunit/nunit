@@ -32,8 +32,8 @@ namespace NUnit.Compatibility
     /// across multiple frameworks
     /// </summary>
     /// <remarks>
-    /// This version of the class supplies GetTypeInfo() on platforms
-    /// that don't support it.
+    /// <para>This version of the class supplies GetTypeInfo() on platforms
+    /// that don't support it.</para>
     /// </remarks>
     public static class TypeExtensions
     {

@@ -86,7 +86,7 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether to compare case insensitive.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if comparing case insensitive; otherwise, <c>false</c>.
+        ///   <see langword="true"/> if comparing case insensitive; otherwise, <see langword="false"/>.
         /// </value>
         public bool CaseInsensitive
         {
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether or not to clip strings.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if set to clip strings otherwise, <c>false</c>.
+        ///   <see langword="true"/> if set to clip strings otherwise, <see langword="false"/>.
         /// </value>
         public bool ClipStrings { get; private set; }
 
@@ -172,8 +172,8 @@ namespace NUnit.Framework.Constraints
         /// property in comparison of two <see cref="DateTimeOffset"/> values.
         /// </summary>
         /// <remarks>
-        /// Using this modifier does not allow to use the <see cref="Within"/>
-        /// constraint modifier.
+        /// <para>Using this modifier does not allow to use the <see cref="Within"/>
+        /// constraint modifier.</para>
         /// </remarks>
         public EqualConstraint WithSameOffset
         {
@@ -190,13 +190,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <returns>Self.</returns>
         /// <remarks>
-        /// Ulp stands for "unit in the last place" and describes the minimum
+        /// <para>Ulp stands for "unit in the last place" and describes the minimum
         /// amount a given value can change. For any integers, an ulp is 1 whole
         /// digit. For floating point values, the accuracy of which is better
         /// for smaller numbers and worse for larger numbers, an ulp depends
         /// on the size of the number. Using ulps for comparison of floating
         /// point results instead of fixed tolerances is safer because it will
-        /// automatically compensate for the added inaccuracy of larger numbers.
+        /// automatically compensate for the added inaccuracy of larger numbers.</para>
         /// </remarks>
         public EqualConstraint Ulps
         {
