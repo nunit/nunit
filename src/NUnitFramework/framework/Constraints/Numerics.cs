@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
             if (null != type)
             {
                 if (type == typeof(double)) return true;
-                if (type == typeof(System.Single)) return true;
+                if (type == typeof(float)) return true;
             }
             return false;
         }
