@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
@@ -10,6 +10,12 @@
 
     <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+
+    <!-- Suppress Microsoft.NET.Sdk.WindowsDesktop warning that netcoreapp2.1 doesn't support desktop applications -->
+    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);NETSDK1105</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,8 +44,6 @@
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
 
   <ItemGroup>
