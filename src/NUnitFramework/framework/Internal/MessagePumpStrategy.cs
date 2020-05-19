@@ -22,8 +22,11 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Threading;
+using NUnit.Compatibility;
 
 #if NET40 || NET45
 using System.Windows.Forms;
@@ -43,15 +46,9 @@ namespace NUnit.Framework.Internal
             if (context is SingleThreadedTestSynchronizationContext)
                 return SingleThreadedTestMessagePumpStrategy.Instance;
 
-#if NET40 || NET45
-            if (context is WindowsFormsSynchronizationContext)
-                return WindowsFormsMessagePumpStrategy.Instance;
-
-            if (context is DispatcherSynchronizationContext)
-                return WpfMessagePumpStrategy.Instance;
-#endif
-
-            return NoMessagePumpStrategy.Instance;
+            return WindowsFormsMessagePumpStrategy.GetIfApplicable()
+                ?? WpfMessagePumpStrategy.GetIfApplicable()
+                ?? NoMessagePumpStrategy.Instance;
         }
 
         private sealed class NoMessagePumpStrategy : MessagePumpStrategy
@@ -65,33 +62,52 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if NET40 || NET45
         private sealed class WindowsFormsMessagePumpStrategy : MessagePumpStrategy
         {
-            public static readonly WindowsFormsMessagePumpStrategy Instance = new WindowsFormsMessagePumpStrategy();
+            private static readonly WindowsFormsMessagePumpStrategy _instance = new WindowsFormsMessagePumpStrategy();
             private WindowsFormsMessagePumpStrategy() { }
+
+            public static MessagePumpStrategy GetIfApplicable()
+            {
+                return IsApplicable(SynchronizationContext.Current) ? _instance : null;
+            }
+
+            private static bool IsApplicable(SynchronizationContext context)
+            {
+                return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
+            }
 
             [SecuritySafeCritical]
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
 
-                if (!(context is WindowsFormsSynchronizationContext))
+                if (!IsApplicable(context))
                     throw new InvalidOperationException("This strategy must only be used from a WindowsFormsSynchronizationContext.");
 
                 if (awaiter.IsCompleted) return;
+
+                var applicationType = context.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true);
+
+                var applicationRun = (Action)applicationType
+                    .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                    .CreateDelegate(typeof(Action));
+
+                var applicationExit = (Action)applicationType
+                    .GetMethod("Exit", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                    .CreateDelegate(typeof(Action));
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
                 // shutting it down. Otherwise Application.Exit is a no-op and we would then proceed to do
                 // Application.Run and never return.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, Application.Exit),
+                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, applicationExit),
                     state: awaiter);
 
                 try
                 {
-                    Application.Run();
+                    applicationRun.Invoke();
                 }
                 finally
                 {
@@ -102,30 +118,49 @@ namespace NUnit.Framework.Internal
 
         private sealed class WpfMessagePumpStrategy : MessagePumpStrategy
         {
-            public static readonly WpfMessagePumpStrategy Instance = new WpfMessagePumpStrategy();
+            private static readonly WpfMessagePumpStrategy _instance = new WpfMessagePumpStrategy();
             private WpfMessagePumpStrategy() { }
+
+            public static MessagePumpStrategy GetIfApplicable()
+            {
+                return IsApplicable(SynchronizationContext.Current) ? _instance : null;
+            }
+
+            private static bool IsApplicable(SynchronizationContext context)
+            {
+                return context?.GetType().FullName == "System.Windows.Threading.DispatcherSynchronizationContext";
+            }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
 
-                if (!(context is DispatcherSynchronizationContext))
+                if (!IsApplicable(context))
                     throw new InvalidOperationException("This strategy must only be used from a DispatcherSynchronizationContext.");
 
                 if (awaiter.IsCompleted) return;
+
+                var dispatcherType = context.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true);
+
+                var dispatcherRun = (Action)dispatcherType
+                    .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                    .CreateDelegate(typeof(Action));
+
+                var dispatcherExitAllFrames = (Action)dispatcherType
+                    .GetMethod("ExitAllFrames", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)
+                    .CreateDelegate(typeof(Action));
 
                 // Wait for a post rather than scheduling the continuation now. If there has been a race condition
                 // and it completed after the IsCompleted check, it will wait until the application runs *before*
                 // shutting it down. Otherwise Dispatcher.ExitAllFrames is a no-op and we would then proceed to do
                 // Dispatcher.Run and never return.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, Dispatcher.ExitAllFrames),
+                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, dispatcherExitAllFrames),
                     state: awaiter);
 
-                Dispatcher.Run();
+                dispatcherRun.Invoke();
             }
         }
-#endif
 
         private sealed class SingleThreadedTestMessagePumpStrategy : MessagePumpStrategy
         {
