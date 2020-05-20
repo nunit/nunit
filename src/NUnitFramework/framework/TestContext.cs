@@ -369,6 +369,14 @@ namespace NUnit.Framework
             }
 
             /// <summary>
+            /// Gets the current <see cref="NUnit.Framework.Internal.Test"/>.
+            /// </summary>
+            public Test Test
+            {
+                get { return _test; }
+            }
+
+            /// <summary>
             /// The name of the test, which may or may not be
             /// the same as the method name.
             /// </summary>
