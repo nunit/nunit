@@ -107,10 +107,10 @@ namespace NUnit.Framework.Internal
         /// returned for Win 8.1 and Win 10
         /// </summary>
         /// <remarks>
-        /// <para>If an application is not manifested as Windows 8.1 or Windows 10,
+        /// If an application is not manifested as Windows 8.1 or Windows 10,
         /// the version returned from Environment.OSVersion will not be 6.3 and 10.0
         /// respectively, but will be 6.2 and 6.3. The correct value can be found in
-        /// the registry.</para>
+        /// the registry.
         /// </remarks>
         /// <param name="version">The original version</param>
         /// <returns>The correct OS version</returns>

@@ -102,8 +102,8 @@ namespace System.Threading
         /// <value>Whether the next call to <see cref="SpinOnce"/> will yield the processor, triggering a
         /// forced context switch.</value>
         /// <remarks>
-        /// <para>On a single-CPU machine, <see cref="SpinOnce"/> always yields the processor. On machines with
-        /// multiple CPUs, <see cref="SpinOnce"/> may yield after an unspecified number of calls.</para>
+        /// On a single-CPU machine, <see cref="SpinOnce"/> always yields the processor. On machines with
+        /// multiple CPUs, <see cref="SpinOnce"/> may yield after an unspecified number of calls.
         /// </remarks>
         public bool NextSpinWillYield
         {
@@ -114,8 +114,8 @@ namespace System.Threading
         /// Performs a single spin.
         /// </summary>
         /// <remarks>
-        /// <para>This is typically called in a loop, and may change in behavior based on the number of times a
-        /// <see cref="SpinOnce"/> has been called thus far on this instance.</para>
+        /// This is typically called in a loop, and may change in behavior based on the number of times a
+        /// <see cref="SpinOnce"/> has been called thus far on this instance.
         /// </remarks>
         public void SpinOnce()
         {
@@ -180,9 +180,9 @@ namespace System.Threading
         /// Resets the spin counter.
         /// </summary>
         /// <remarks>
-        /// <para>This makes <see cref="SpinOnce"/> and <see cref="NextSpinWillYield"/> behave as though no calls
+        /// This makes <see cref="SpinOnce"/> and <see cref="NextSpinWillYield"/> behave as though no calls
         /// to <see cref="SpinOnce"/> had been issued on this instance. If a <see cref="SpinWait"/> instance
-        /// is reused many times, it may be useful to reset it to avoid yielding too soon.</para>
+        /// is reused many times, it may be useful to reset it to avoid yielding too soon.
         /// </remarks>
         public void Reset()
         {

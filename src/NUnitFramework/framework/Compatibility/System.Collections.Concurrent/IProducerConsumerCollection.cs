@@ -26,8 +26,8 @@ namespace System.Collections.Concurrent
     /// </summary>
     /// <typeparam name="T">Specifies the type of elements in the collection.</typeparam>
     /// <remarks>
-    /// <para>All implementations of this interface must enable all members of this interface
-    /// to be used concurrently from multiple threads.</para>
+    /// All implementations of this interface must enable all members of this interface
+    /// to be used concurrently from multiple threads.
     /// </remarks>
     internal interface IProducerConsumerCollection<T> : IEnumerable<T>, ICollection
     {

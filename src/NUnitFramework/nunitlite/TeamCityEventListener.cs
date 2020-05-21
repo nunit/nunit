@@ -40,8 +40,8 @@ namespace NUnitLite
         /// Default constructor using Console.Out
         /// </summary>
         /// <remarks>
-        /// <para>This constructor must be called before Console.Out is
-        /// redirected in order to work correctly under TeamCity.</para>
+        /// This constructor must be called before Console.Out is
+        /// redirected in order to work correctly under TeamCity.
         /// </remarks>
         public TeamCityEventListener() : this(Console.Out) { }
 

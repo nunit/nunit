@@ -144,8 +144,8 @@ namespace NUnit.Framework.Constraints
         /// property in comparison of two <see cref="DateTimeOffset"/> values.
         /// </summary>
         /// <remarks>
-        /// <para>Using this modifier does not allow to use the <see cref="Tolerance"/>
-        /// modifier.</para>
+        /// Using this modifier does not allow to use the <see cref="Tolerance"/>
+        /// modifier.
         /// </remarks>
         public bool WithSameOffset { get; set; }
         #endregion

@@ -219,8 +219,8 @@ namespace NUnit.Framework.Api
         /// <param name="listener">Interface to receive EventListener notifications.</param>
         /// <param name="filter">A test filter used to select tests to be run</param>
         /// <remarks>
-        /// <para>RunAsync is a template method, calling various abstract and
-        /// virtual methods to be overridden by derived classes.</para>
+        /// RunAsync is a template method, calling various abstract and
+        /// virtual methods to be overridden by derived classes.
         /// </remarks>
         public void RunAsync(ITestListener listener, ITestFilter filter)
         {
