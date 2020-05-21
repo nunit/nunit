@@ -417,6 +417,24 @@ namespace NUnit.Framework
                 get { return _test.Arguments; }
             }
 
+            /// <summary>
+            /// The Type of the test.
+            /// Returns null if no fixture type is associated with it.
+            /// </summary>
+            public Type? TypeInfo
+            {
+                get { return _test.TypeInfo?.Type; }
+            }
+
+            /// <summary>
+            /// The MethodInfo of the test.
+            /// Returns null if the test is not implemented as a method
+            /// </summary>
+            public MethodInfo? MethodInfo
+            {
+                get { return _test.Method?.MethodInfo; }
+            }
+
             #endregion
         }
 
