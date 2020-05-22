@@ -16,9 +16,6 @@
 
     <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-
-    <!-- Suppress Microsoft.NET.Sdk.WindowsDesktop warning that netcoreapp2.1 doesn't support desktop applications -->
-    <!--<MSBuildWarningsAsMessages Condition="'$(TargetFramework)' == 'netcoreapp2.1'">$(MSBuildWarningsAsMessages);NETSDK1105</MSBuildWarningsAsMessages>-->
   </PropertyGroup>
 
   <!-- Decide if we can use windows forms and wpf -->
