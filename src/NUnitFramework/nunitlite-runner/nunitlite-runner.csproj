@@ -1,15 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project>
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT' and '$(TargetFramework)' != 'netcoreapp2.1'">
+    <UseWindowsFormsAndWPF>true</UseWindowsFormsAndWPF>
+    <DefineConstants>$(DefineConstants);UseWindowsFormsAndWPF</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 
   <PropertyGroup>
     <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite</RootNamespace>
-
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-
-    <!-- Suppress Microsoft.NET.Sdk.WindowsDesktop warning that netcoreapp2.1 doesn't support desktop applications -->
-    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);NETSDK1105</MSBuildWarningsAsMessages>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,4 +24,6 @@
     <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
   </ItemGroup>
 
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 </Project>
