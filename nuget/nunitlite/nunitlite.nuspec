@@ -9,7 +9,7 @@
     <license type="file">LICENSE.txt</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
-    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
+    <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
     <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner.
@@ -47,6 +47,7 @@ How to use this package:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
+    <file src="..\..\nuget\icon.png" />
     <file src="bin/net35/nunitlite.dll" target="lib\net35" />
     <file src="bin/net40/nunitlite.dll" target="lib\net40" />
     <file src="bin/net45/nunitlite.dll" target="lib\net45" />
