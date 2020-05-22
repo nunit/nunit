@@ -1,4 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project>
+  <PropertyGroup>
+    <UseWindowsFormsAndWPF>false</UseWindowsFormsAndWPF>
+    <UseWindowsFormsAndWPF Condition="'$(OS)' == 'Windows_NT' and '$(TargetFramework)' != 'netcoreapp2.1'">true</UseWindowsFormsAndWPF>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="$(UseWindowsFormsAndWPF) == false" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="$(UseWindowsFormsAndWPF)" />
 
   <PropertyGroup>
     <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
@@ -11,11 +17,15 @@
     <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
 
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-
     <!-- Suppress Microsoft.NET.Sdk.WindowsDesktop warning that netcoreapp2.1 doesn't support desktop applications -->
-    <MSBuildWarningsAsMessages>$(MSBuildWarningsAsMessages);NETSDK1105</MSBuildWarningsAsMessages>
+    <!--<MSBuildWarningsAsMessages Condition="'$(TargetFramework)' == 'netcoreapp2.1'">$(MSBuildWarningsAsMessages);NETSDK1105</MSBuildWarningsAsMessages>-->
+  </PropertyGroup>
+
+  <!-- Decide if we can use windows forms and wpf -->
+  <PropertyGroup Condition="$(UseWindowsFormsAndWPF)">
+      <DefineConstants>$(DefineConstants);UseWindowsFormsAndWPF</DefineConstants>
+      <UseWindowsForms>true</UseWindowsForms>
+      <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,6 +54,8 @@
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,4 +77,6 @@
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
 
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition="$(UseWindowsFormsAndWPF) == false" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="$(UseWindowsFormsAndWPF)" />
 </Project>
