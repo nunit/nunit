@@ -138,8 +138,8 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parms">Parameters to be used for this test, or null</param>
         /// <returns>True if the method signature is valid, false if not</returns>
         /// <remarks>
-        /// <para>The return value is no longer used internally, but is retained
-        /// for testing purposes.</para>
+        /// The return value is no longer used internally, but is retained
+        /// for testing purposes.
         /// </remarks>
         private static bool CheckTestMethodSignature(TestMethod testMethod, TestCaseParameters? parms)
         {

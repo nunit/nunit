@@ -99,10 +99,10 @@ namespace NUnit.Framework.Internal.Execution
         /// before executing the WorkItem.
         /// </summary>
         /// <remarks>
-        /// <para>Originally, the context was provided in the constructor
+        /// Originally, the context was provided in the constructor
         /// but delaying initialization of the context until the item
         /// is about to be dispatched allows changes in the parent
-        /// context during OneTimeSetUp to be reflected in the child.</para>
+        /// context during OneTimeSetUp to be reflected in the child.
         /// </remarks>
         /// <param name="context">The TestExecutionContext to use</param>
         public void InitializeContext(TestExecutionContext context)
