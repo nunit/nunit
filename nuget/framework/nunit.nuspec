@@ -10,6 +10,7 @@
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
+    <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnit is a unit-testing framework for all .NET languages with a strong TDD focus.</summary>
     <description>NUnit features a fluent assert syntax, parameterized, generic and theory tests and is user-extensible.
@@ -36,6 +37,7 @@ Supported platforms:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
+    <file src="..\..\nuget\icon.png" />
     <file src="bin/net35/nunit.framework.dll" target="lib\net35" />
     <file src="bin/net35/nunit.framework.xml" target="lib\net35" />
     <file src="bin/net40/nunit.framework.dll" target="lib\net40" />
