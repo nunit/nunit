@@ -1,4 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT' and '$(TargetFramework)' != 'netcoreapp2.1'">
+    <UseWindowsFormsAndWPF>true</UseWindowsFormsAndWPF>
+    <DefineConstants>$(DefineConstants);UseWindowsFormsAndWPF</DefineConstants>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 
   <PropertyGroup>
     <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
@@ -38,8 +46,6 @@
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
     <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,4 +67,6 @@
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
 
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 </Project>
