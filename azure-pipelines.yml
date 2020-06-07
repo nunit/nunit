@@ -12,6 +12,17 @@ jobs:
     vmImage: windows-latest
   steps:
 
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 5.0.100-preview.6.20318.15
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 3.1'
+    inputs:
+      packageType: runtime
+      version: 3.1.x
+
   - powershell: .\build.ps1 --target=Test --test-run-name=Windows
     displayName: Build, test, and publish results
 
@@ -39,13 +50,19 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      useGlobalJson: true
-      
+      version: 5.0.100-preview.6.20318.15
+
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
     inputs:
       packageType: runtime
       version: 2.1.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 3.1'
+    inputs:
+      packageType: runtime
+      version: 3.1.x
 
   - bash: sudo apt-get install fsharp
     displayName: Install F# for Mono
@@ -70,13 +87,19 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      useGlobalJson: true
-      
+      version: 5.0.100-preview.6.20318.15
+
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
     inputs:
       packageType: runtime
       version: 2.1.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 3.1'
+    inputs:
+      packageType: runtime
+      version: 3.1.x
 
   - bash: |
      curl -o mono.pkg -sSL https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.198.macos10.xamarin.universal.pkg

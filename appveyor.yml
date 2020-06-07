@@ -4,6 +4,10 @@ branches:
   except:
     - /travis-.*/
 
+install:
+  - ps: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
+  - ps: .\dotnet-install.ps1 -Version 5.0.100-preview.6.20318.15
+
 build_script:
   - ps: .\build.ps1 -Target "Appveyor" -Configuration "Release"
 
