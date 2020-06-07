@@ -291,7 +291,7 @@ namespace NUnit.Framework.Internal
             switch (platformName.ToUpper())
             {
                 case "NET":
-                    return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
+                    return IsRuntimeSupported(RuntimeType.NetFramework, versionSpecification);
 
                 case "NETCORE":
                     return IsNetCoreRuntimeSupported(RuntimeType.NetCore, versionSpecification);

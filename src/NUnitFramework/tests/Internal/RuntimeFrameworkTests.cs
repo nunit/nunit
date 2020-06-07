@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
 #else
             Type.GetType("Mono.Runtime", false) != null
                 ? RuntimeType.Mono
-                : RuntimeType.Net;
+                : RuntimeType.NetFramework;
 #endif
 
         [Test]
@@ -146,76 +146,76 @@ namespace NUnit.Framework.Internal
 
         internal static TestCaseData[] matchData = new TestCaseData[] {
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0,50727)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0,50727)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0,50727)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0,50727)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0,50727)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0,50727)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
                 new RuntimeFramework(RuntimeType.Mono, new Version(2,0)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(1,1)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(1,1)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0,50727)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0,40607)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0,50727)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0,40607)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(4,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,0)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(4,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(4,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(4,5)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,5)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(4,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(4,5)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,5)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
-                new RuntimeFramework(RuntimeType.Net, new Version(4,5)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,5)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(4,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(4,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(3,5)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(4,5)),
-                new RuntimeFramework(RuntimeType.Net, new Version(4,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,0)))
             .Returns(true),
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.NetCore, new Version(1,0)),
@@ -282,19 +282,19 @@ namespace NUnit.Framework.Internal
                 new RuntimeFramework(RuntimeType.Any, new Version(4,0)))
             .Returns(false),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, RuntimeFramework.DefaultVersion),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, RuntimeFramework.DefaultVersion),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
-                new RuntimeFramework(RuntimeType.Net, RuntimeFramework.DefaultVersion))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, RuntimeFramework.DefaultVersion))
             .Returns(true),
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion),
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)))
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
             .Returns(true),
             new TestCaseData(
-                new RuntimeFramework(RuntimeType.Net, new Version(2,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)),
                 new RuntimeFramework(RuntimeType.Any, RuntimeFramework.DefaultVersion))
             .Returns(true)
         };
@@ -324,19 +324,19 @@ namespace NUnit.Framework.Internal
         }
 
         internal static FrameworkData[] frameworkData = new FrameworkData[] {
-            new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
-            // new FrameworkData(RuntimeType.Net, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
-            // new FrameworkData(RuntimeType.Net, new Version(1,0), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
-            new FrameworkData(RuntimeType.Net, new Version(1,1), new Version(1,1,4322), "net-1.1", "Net 1.1"),
-            // new FrameworkData(RuntimeType.Net, new Version(1,1,4322), new Version(1,1,4322), "net-1.1.4322", "Net 1.1.4322"),
-            new FrameworkData(RuntimeType.Net, new Version(2,0), new Version(2,0,50727), "net-2.0", "Net 2.0"),
-            // new FrameworkData(RuntimeType.Net, new Version(2,0,40607), new Version(2,0,40607), "net-2.0.40607", "Net 2.0.40607"),
-            // new FrameworkData(RuntimeType.Net, new Version(2,0,50727), new Version(2,0,50727), "net-2.0.50727", "Net 2.0.50727"),
-            new FrameworkData(RuntimeType.Net, new Version(3,0), new Version(2,0,50727), "net-3.0", "Net 3.0"),
-            new FrameworkData(RuntimeType.Net, new Version(3,5), new Version(2,0,50727), "net-3.5", "Net 3.5"),
-            new FrameworkData(RuntimeType.Net, new Version(4,0), new Version(4,0,30319), "net-4.0", "Net 4.0"),
-            new FrameworkData(RuntimeType.Net, new Version(4,5), new Version(4,0,30319), "net-4.5", "Net 4.5"),
-            new FrameworkData(RuntimeType.Net, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
+            // new FrameworkData(RuntimeType.NetFramework, new Version(1,0,3705), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
+            // new FrameworkData(RuntimeType.NetFramework, new Version(1,0), new Version(1,0,3705), "net-1.0.3705", "Net 1.0.3705"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(1,1), new Version(1,1,4322), "net-1.1", "Net 1.1"),
+            // new FrameworkData(RuntimeType.NetFramework, new Version(1,1,4322), new Version(1,1,4322), "net-1.1.4322", "Net 1.1.4322"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(2,0), new Version(2,0,50727), "net-2.0", "Net 2.0"),
+            // new FrameworkData(RuntimeType.NetFramework, new Version(2,0,40607), new Version(2,0,40607), "net-2.0.40607", "Net 2.0.40607"),
+            // new FrameworkData(RuntimeType.NetFramework, new Version(2,0,50727), new Version(2,0,50727), "net-2.0.50727", "Net 2.0.50727"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(3,0), new Version(2,0,50727), "net-3.0", "Net 3.0"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(3,5), new Version(2,0,50727), "net-3.5", "Net 3.5"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(4,0), new Version(4,0,30319), "net-4.0", "Net 4.0"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(4,5), new Version(4,0,30319), "net-4.5", "Net 4.5"),
+            new FrameworkData(RuntimeType.NetFramework, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
             new FrameworkData(RuntimeType.NetCore, new Version(2, 0), new Version(4,0,30319), "netcore-2.0", "NetCore 2.0"),
             new FrameworkData(RuntimeType.NetCore, new Version(2, 1), new Version(4,0,30319), "netcore-2.1", "NetCore 2.1"),
             new FrameworkData(RuntimeType.NetCore, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "netcore", "NetCore"),
