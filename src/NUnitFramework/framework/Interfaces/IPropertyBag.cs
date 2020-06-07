@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -87,7 +88,7 @@ namespace NUnit.Framework.Interfaces
         /// one if multiple values are present and returning
         /// null if the value is not found.
         /// </summary>
-        object Get(string key);
+        object? Get(string key);
 
         /// <summary>
         /// Gets a flag indicating whether the specified key has

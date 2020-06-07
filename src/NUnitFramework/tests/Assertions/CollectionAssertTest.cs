@@ -610,7 +610,8 @@ namespace NUnit.Framework.Assertions
 
             var expectedMessage =
                 "  Expected: subset of < \"y\", \"z\", \"a\" >" + Environment.NewLine +
-                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine +
+                "  Extra items: < \"x\" >" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => CollectionAssert.IsSubsetOf(set1,set2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));

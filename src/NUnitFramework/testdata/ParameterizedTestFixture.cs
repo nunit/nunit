@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -49,5 +49,25 @@ namespace NUnit.TestData
     [TestFixture(Category = "X,Y,Z")]
     public class TestFixtureWithMultipleCategories
     {
+    }
+
+    [TestFixture(null)]
+    public class TestFixtureWithNullArgumentForOrdinaryValueTypeParameter
+    {
+        public TestFixtureWithNullArgumentForOrdinaryValueTypeParameter(OrdinaryValueType _)
+        {
+        }
+
+        public struct OrdinaryValueType
+        {
+        }
+    }
+
+    [TestFixture(null)]
+    public class TestFixtureWithNullArgumentForGenericParameter<T>
+    {
+        public TestFixtureWithNullArgumentForGenericParameter(T _)
+        {
+        }
     }
 }

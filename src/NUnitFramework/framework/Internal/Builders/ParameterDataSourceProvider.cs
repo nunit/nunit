@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -50,11 +52,11 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parameter">The parameter of a parameterized test</param>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
-            var data = new List<object>();
+            var data = new List<object?>();
 
             foreach (IParameterDataSource source in parameter.GetCustomAttributes<IParameterDataSource>(false))
             {
-                foreach (object item in source.GetData(parameter))
+                foreach (object? item in source.GetData(parameter))
                     data.Add(item);
             }
 

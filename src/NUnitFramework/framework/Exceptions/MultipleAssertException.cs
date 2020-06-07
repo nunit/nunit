@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 
 namespace NUnit.Framework
@@ -33,11 +35,6 @@ namespace NUnit.Framework
     [Serializable]
     public class MultipleAssertException : ResultStateException
     {
-        /// <summary>
-        /// Default Constructor
-        /// </summary>
-        public MultipleAssertException(string message) : base(message) { }
-
         /// <summary>
         /// Construct based on the TestResult so far. This is the constructor
         /// used normally, when exiting the multiple assert block with failures.
@@ -54,20 +51,15 @@ namespace NUnit.Framework
             TestResult = testResult;
         }
 
-        /// <param name="message">The error message that explains
-        /// the reason for the exception</param>
-        /// <param name="inner">The exception that caused the
-        /// current exception</param>
-        public MultipleAssertException(string message, Exception inner) :
-            base(message, inner)
-        {}
-
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info,
             System.Runtime.Serialization.StreamingContext context) : base(info,context)
-        {}
+        {
+        }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
 
         /// <summary>
         /// Gets the <see cref="ResultState"/> provided by this exception.

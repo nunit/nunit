@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Web.UI;
 using NUnit.Framework.Interfaces;
@@ -140,7 +142,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test"></param>
         /// <returns>parent test item</returns>
-        private static ITest GetParent(ITest test)
+        private static ITest? GetParent(ITest test)
         {
             if (test == null || test.Parent == null)
             {

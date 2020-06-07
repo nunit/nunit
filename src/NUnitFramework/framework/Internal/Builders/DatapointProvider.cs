@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
+#nullable enable
+
 using System;
 using System.Reflection;
 using System.Collections;
@@ -73,7 +76,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="parameter">The parameter of a parameterized test</param>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
-            var datapoints = new List<object>();
+            var datapoints = new List<object?>();
 
             Type parameterType = parameter.ParameterType;
             Type fixtureType = parameter.Method.TypeInfo.Type;
@@ -95,11 +98,11 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     if (GetElementTypeFromMemberInfo(member) == parameterType)
                     {
-                        object instance;
+                        object? instance;
 
-                        FieldInfo field = member as FieldInfo;
-                        PropertyInfo property = member as PropertyInfo;
-                        MethodInfo method = member as MethodInfo;
+                        FieldInfo? field = member as FieldInfo;
+                        PropertyInfo? property = member as PropertyInfo;
+                        MethodInfo? method = member as MethodInfo;
                         if (field != null)
                         {
                             instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
@@ -153,7 +156,7 @@ namespace NUnit.Framework.Internal.Builders
             return datapoints;
         }
 
-        private Type GetTypeFromMemberInfo(MemberInfo member)
+        private Type? GetTypeFromMemberInfo(MemberInfo member)
         {
             var field = member as FieldInfo;
             if (field != null)
@@ -170,9 +173,9 @@ namespace NUnit.Framework.Internal.Builders
             return null;
         }
 
-        private Type GetElementTypeFromMemberInfo(MemberInfo member)
+        private Type? GetElementTypeFromMemberInfo(MemberInfo member)
         {
-            Type type = GetTypeFromMemberInfo(member);
+            Type? type = GetTypeFromMemberInfo(member);
 
             if (type == null)
                 return null;

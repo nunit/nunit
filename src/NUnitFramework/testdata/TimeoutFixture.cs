@@ -113,20 +113,6 @@ namespace NUnit.TestData
 
         [Test]
         [Timeout(TIME_OUT_TIME)]
-        public void TestTimeOutNotElapsed()
-        {
-            TestTimeOutTestCase(NOT_TIMEOUTED_TIME);
-        }
-
-        [Test]
-        [Timeout(TIME_OUT_TIME)]
-        public void TestTimeOutElapsed()
-        {
-            TestTimeOutTestCase(TIMEOUTED_TIME);
-        }
-
-        [Test]
-        [Timeout(TIME_OUT_TIME)]
         [TestCase(NOT_TIMEOUTED_TIME)]
         [TestCase(TIMEOUTED_TIME)]
         public void TestTimeOutTestCase(int delay)

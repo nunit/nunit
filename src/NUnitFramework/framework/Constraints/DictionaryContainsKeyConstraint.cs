@@ -77,6 +77,24 @@ namespace NUnit.Framework.Constraints
         protected object Expected { get; }
 
         /// <summary>
+        /// Returns a new DictionaryContainsKeyValuePairConstraint checking for the
+        /// presence of a particular key-value-pair in the dictionary.
+        /// </summary>
+        public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
+        {
+            var builder = this.Builder;
+            if (builder == null)
+            {
+                builder = new ConstraintBuilder();
+                builder.Append(this);
+            }
+
+            var constraint = new DictionaryContainsKeyValuePairConstraint(Expected, expectedValue);
+            builder.Append(constraint);
+            return constraint;
+        }
+
+        /// <summary>
         /// Flag the constraint to ignore case and return self.
         /// </summary>
         [Obsolete(ComparerMemberObsoletionMessage)]

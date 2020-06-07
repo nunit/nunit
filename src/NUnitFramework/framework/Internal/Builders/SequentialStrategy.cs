@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -30,7 +31,7 @@ namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>
     /// SequentialStrategy creates test cases by using all of the
-    /// parameter data sources in parallel, substituting <c>null</c>
+    /// parameter data sources in parallel, substituting <see langword="null"/>
     /// when any of them run out of data.
     /// </summary>
     public class SequentialStrategy : ICombiningStrategy
@@ -50,7 +51,7 @@ namespace NUnit.Framework.Internal.Builders
             for (; ; )
             {
                 bool gotData = false;
-                object[] testdata = new object[sources.Length];
+                object?[] testdata = new object?[sources.Length];
 
                 for (int i = 0; i < sources.Length; i++)
                     if (enumerators[i].MoveNext())

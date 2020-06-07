@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Interfaces
@@ -43,7 +45,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="method">The test method to examine</param>
         /// <param name="suite">The suite being populated</param>
-        bool CanBuildFrom(IMethodInfo method, Test suite);
+        bool CanBuildFrom(IMethodInfo method, Test? suite);
 
         /// <summary>
         /// Builds a single test from the specified method and context,
@@ -51,6 +53,6 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="method">The method to be used as a test case</param>
         /// <param name="suite">The test suite being populated, or null</param>
-        Test BuildFrom(IMethodInfo method, Test suite);
+        Test? BuildFrom(IMethodInfo method, Test? suite);
     }
 }

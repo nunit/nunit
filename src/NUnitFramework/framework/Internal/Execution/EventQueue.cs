@@ -224,10 +224,10 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// Removes the first element from the queue and returns it (or <c>null</c>).
+        /// Removes the first element from the queue and returns it (or <see langword="null"/>).
         /// </summary>
         /// <param name="blockWhenEmpty">
-        /// If <c>true</c> and the queue is empty, the calling thread is blocked until
+        /// If <see langword="true"/> and the queue is empty, the calling thread is blocked until
         /// either an element is enqueued, or <see cref="Stop"/> is called.
         /// </param>
         /// <returns>
@@ -237,9 +237,9 @@ namespace NUnit.Framework.Internal.Execution
         ///     <description>the first element.</description>
         ///   </item>
         ///   <item>
-        ///     <term>otherwise, if <paramref name="blockWhenEmpty"/>==<c>false</c>
+        ///     <term>otherwise, if <paramref name="blockWhenEmpty"/>==<see langword="false"/>
         ///       or <see cref="Stop"/> has been called</term>
-        ///     <description><c>null</c>.</description>
+        ///     <description><see langword="null"/>.</description>
         ///   </item>
         /// </list>
         /// </returns>

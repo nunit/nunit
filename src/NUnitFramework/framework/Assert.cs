@@ -21,11 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -92,7 +92,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Pass(string message, params object[] args)
+        static public void Pass(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
@@ -111,7 +111,7 @@ namespace NUnit.Framework
         /// of success returned to NUnit.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Pass(string message)
+        static public void Pass(string? message)
         {
             Assert.Pass(message, null);
         }
@@ -131,12 +131,12 @@ namespace NUnit.Framework
         #region Fail
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/> with the message and arguments
-        /// that are passed in. This is used by the other Assert functions.
+        /// Marks the test as failed with the message and arguments that are passed in. Returns without throwing an
+        /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Fail(string message, params object[] args)
+        static public void Fail(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
@@ -146,18 +146,17 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/> with the message that is
-        /// passed in. This is used by the other Assert functions.
+        /// Marks the test as failed with the message that is passed in. Returns without throwing an exception when
+        /// inside a multiple assert block.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Fail(string message)
+        static public void Fail(string? message)
         {
             Assert.Fail(message, null);
         }
 
         /// <summary>
-        /// Throws an <see cref="AssertionException"/>.
-        /// This is used by the other Assert functions.
+        /// Marks the test as failed. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         static public void Fail()
         {
@@ -173,7 +172,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Warn(string message, params object[] args)
+        static public void Warn(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
@@ -186,7 +185,7 @@ namespace NUnit.Framework
         /// Issues a warning using the message provided.
         /// </summary>
         /// <param name="message">The message to display.</param>
-        static public void Warn(string message)
+        static public void Warn(string? message)
         {
             IssueWarning(message);
         }
@@ -201,7 +200,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Ignore(string message, params object[] args)
+        static public void Ignore(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
@@ -219,7 +218,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as ignored.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Ignore(string message)
+        static public void Ignore(string? message)
         {
             Assert.Ignore(message, null);
         }
@@ -243,7 +242,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Inconclusive(string message, params object[] args)
+        static public void Inconclusive(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
             else if (args != null && args.Length > 0)
@@ -261,7 +260,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as inconclusive.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
-        static public void Inconclusive(string message)
+        static public void Inconclusive(string? message)
         {
             Assert.Inconclusive(message, null);
         }
@@ -280,23 +279,25 @@ namespace NUnit.Framework
         #region Contains
 
         /// <summary>
-        /// Asserts that an object is contained in a collection.
+        /// Asserts that an object is contained in a collection. Returns without throwing an exception when inside a
+        /// multiple assert block.
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The collection to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Contains(object expected, ICollection actual, string message, params object[] args)
+        public static void Contains(object? expected, ICollection? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)) ,message, args);
         }
 
         /// <summary>
-        /// Asserts that an object is contained in a collection.
+        /// Asserts that an object is contained in a collection. Returns without throwing an exception when inside a
+        /// multiple assert block.
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The collection to be examined</param>
-        public static void Contains(object expected, ICollection actual)
+        public static void Contains(object? expected, ICollection? actual)
         {
             Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)) ,null, null);
         }
@@ -369,12 +370,12 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private static void ReportFailure(ConstraintResult result, string message)
+        private static void ReportFailure(ConstraintResult result, string? message)
         {
             ReportFailure(result, message, null);
         }
 
-        private static void ReportFailure(ConstraintResult result, string message, params object[] args)
+        private static void ReportFailure(ConstraintResult result, string? message, params object?[]? args)
         {
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
@@ -382,7 +383,7 @@ namespace NUnit.Framework
             ReportFailure(writer.ToString());
         }
 
-        private static void ReportFailure(string message)
+        private static void ReportFailure(string? message)
         {
             // Record the failure in an <assertion> element
             var result = TestExecutionContext.CurrentContext.CurrentResult;
@@ -394,7 +395,7 @@ namespace NUnit.Framework
                 throw new AssertionException(result.Message);
         }
 
-        private static void IssueWarning(string message)
+        private static void IssueWarning(string? message)
         {
             var result = TestExecutionContext.CurrentContext.CurrentResult;
             result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());

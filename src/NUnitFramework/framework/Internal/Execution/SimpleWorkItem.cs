@@ -24,6 +24,7 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Execution
@@ -35,6 +36,8 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class SimpleWorkItem : WorkItem
     {
+        private readonly IDebugger _debugger;
+
         readonly TestMethod _testMethod;
 
         /// <summary>
@@ -42,9 +45,21 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="test">The test to be executed</param>
         /// <param name="filter">The filter used to select this test</param>
-        public SimpleWorkItem(TestMethod test, ITestFilter filter)
+        [Obsolete("This member will be removed in a future major release.")]
+        public SimpleWorkItem(TestMethod test, ITestFilter filter) : this(test, filter, new DebuggerProxy())
+        {
+        }
+
+        /// <summary>
+        /// Construct a simple work item for a test.
+        /// </summary>
+        /// <param name="test">The test to be executed</param>
+        /// <param name="filter">The filter used to select this test</param>
+        /// <param name="debugger">An <see cref="IDebugger"/> instance</param>
+        internal SimpleWorkItem(TestMethod test, ITestFilter filter, IDebugger debugger)
             : base(test, filter)
         {
+            _debugger = debugger;
             _testMethod = test;
         }
 
@@ -55,7 +70,11 @@ namespace NUnit.Framework.Internal.Execution
         {
             try
             {
-                Result = MakeTestCommand().Execute(Context);
+                var testCommand = MakeTestCommand();
+
+                // Isolate the Execute call because the WorkItemComplete below will run one-time teardowns. Execution
+                // context values should not flow from a particular test case into the shared one-time teardown.
+                Result = ContextUtils.DoIsolated(() => testCommand.Execute(Context));
             }
             catch (Exception ex)
             {
@@ -149,7 +168,7 @@ namespace NUnit.Framework.Internal.Execution
                     timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
 
                 if (timeout > 0)
-                    command = new TimeoutCommand(command, timeout);
+                    command = new TimeoutCommand(command, timeout, _debugger);
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
                 foreach (var repeatableAttribute in method.GetCustomAttributes<IRepeatTest>(true))

@@ -53,8 +53,8 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Dispatch a single work item for execution by
         /// executing it directly.
-        /// <param name="work">The item to dispatch</param>
         /// </summary>
+        /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
             if (work != null)

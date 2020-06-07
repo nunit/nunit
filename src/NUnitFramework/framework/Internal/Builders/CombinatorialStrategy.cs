@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -53,7 +54,7 @@ namespace NUnit.Framework.Internal.Builders
                         return testCases;
                 }
 
-                object[] testdata = new object[sources.Length];
+                object?[] testdata = new object?[sources.Length];
 
                 for (int i = 0; i < sources.Length; i++)
                     testdata[i] = enumerators[i].Current;

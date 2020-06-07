@@ -57,7 +57,7 @@ namespace NUnit.Framework.Api
         {
             get
             {
-                yield return new TestCaseData(null);
+                yield return new TestCaseData((object[])null);
                 yield return new TestCaseData("");
                 yield return new TestCaseData(EMPTY_FILTER);
             }

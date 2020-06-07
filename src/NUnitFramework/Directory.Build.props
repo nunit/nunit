@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">7</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">8</LangVersion>
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
@@ -21,13 +21,19 @@
 
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'
                             and '$(TargetFramework)' != 'netcoreapp2.1'
-                            and '$(TargetFramework)' != 'netcoreapp2.2'
-                            and '$(TargetFramework)' != 'netcoreapp3.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
+                            and '$(TargetFramework)' != 'netcoreapp3.1'">$(DefineConstants);THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-    <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-    <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
+  <!-- We always want a good debugging experience in tests -->
+  <PropertyGroup>
+    <Optimize>false</Optimize>
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <EmbedAllSources>true</EmbedAllSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="1.0.0-beta.59" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

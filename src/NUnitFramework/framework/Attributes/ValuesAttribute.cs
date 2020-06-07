@@ -21,13 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Reflection;
-
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
@@ -47,7 +48,7 @@ namespace NUnit.Framework
 #pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        protected object[] data;
+        protected object?[] data;
 #pragma warning restore IDE1006
 
         /// <summary>
@@ -56,16 +57,16 @@ namespace NUnit.Framework
         /// </summary>
         public ValuesAttribute()
         {
-            data = new object[]{};
+            data = Internal.TestParameters.NoArguments;
         }
 
         /// <summary>
         /// Construct with one argument
         /// </summary>
         /// <param name="arg1"></param>
-        public ValuesAttribute(object arg1)
+        public ValuesAttribute(object? arg1)
         {
-            data = new object[] { arg1 };
+            data = new object?[] { arg1 };
         }
 
         /// <summary>
@@ -73,9 +74,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
-        public ValuesAttribute(object arg1, object arg2)
+        public ValuesAttribute(object? arg1, object? arg2)
         {
-            data = new object[] { arg1, arg2 };
+            data = new object?[] { arg1, arg2 };
         }
 
         /// <summary>
@@ -84,18 +85,18 @@ namespace NUnit.Framework
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         /// <param name="arg3"></param>
-        public ValuesAttribute(object arg1, object arg2, object arg3)
+        public ValuesAttribute(object? arg1, object? arg2, object? arg3)
         {
-            data = new object[] { arg1, arg2, arg3 };
+            data = new object?[] { arg1, arg2, arg3 };
         }
 
         /// <summary>
         /// Construct with an array of arguments
         /// </summary>
         /// <param name="args"></param>
-        public ValuesAttribute(params object[] args)
+        public ValuesAttribute(params object?[]? args)
         {
-            data = args ?? new object[] { null };
+            data = args ?? new object?[] { null };
         }
 
         /// <summary>
@@ -128,14 +129,14 @@ namespace NUnit.Framework
             }
             if (targetType == typeof(bool?))
             {
-                return new object[] { null, true, false };
+                return new object?[] { null, true, false };
             }
             if (targetType == typeof(bool))
             {
                 return new object[] { true, false };
             }
 
-            return new object[] { };
+            return Internal.TestParameters.NoArguments;
         }
 
         /// <summary>

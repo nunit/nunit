@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -45,7 +47,7 @@ namespace NUnit.Framework
         /// Constructor taking one or more platforms
         /// </summary>
         /// <param name="platforms">Comma-delimited list of platforms</param>
-        public PlatformAttribute(string platforms) : base(platforms) { }
+        public PlatformAttribute(string? platforms) : base(platforms) { }
 
         #region IApplyToTest members
 
