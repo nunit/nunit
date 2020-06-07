@@ -387,19 +387,20 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
+#if NETSTANDARD2_0
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool IsNetCore_Internal()
         {
-#if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
             // so we wrap it in a try/catch block in IsNetCore to catch it in case it ever gets this far
             if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
-#endif
+
             return false;
         }
+#endif
 
         private static bool IsRuntimeTypeName(string name)
         {
