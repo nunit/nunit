@@ -38,7 +38,7 @@ namespace NUnit.Framework
                 {
                     try
                     {
-                        ex = Assert.ThrowsAsync<Exception>(asyncUserCode);
+                        ex = Assert.ThrowsAsync<Exception>(asyncUserCode).GetAwaiter().GetResult();
                     }
                     catch { }
                 }
@@ -68,7 +68,7 @@ namespace NUnit.Framework
                 {
                     try
                     {
-                        ex = Assert.CatchAsync(asyncUserCode);
+                        ex = Assert.CatchAsync(asyncUserCode).GetAwaiter().GetResult();
                     }
                     catch { }
                 }
