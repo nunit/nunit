@@ -376,7 +376,9 @@ namespace NUnit.Framework.Internal
             "netcore-1.1",
             "netcore-2.0",
             "netcore-2.1",
-            "netcore-2.2"
+            "netcore-2.2",
+            "netcore-3.0",
+            "netcore-3.1",
         };
     }
 }
