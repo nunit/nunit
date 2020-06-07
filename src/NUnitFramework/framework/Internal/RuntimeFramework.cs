@@ -298,7 +298,7 @@ namespace NUnit.Framework.Internal
                         runtime = RuntimeType.NetCore;
                 }
             }
-            else if (char.ToLower(s[0]) == 'v')
+            else if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase))
             {
                 version = new Version(s.Substring(1));
             }
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Internal
         {
             if (AllowAnyVersion)
             {
-                return GetShortName(Runtime, FrameworkVersion).ToLower();
+                return GetShortName(Runtime, FrameworkVersion).ToLowerInvariant();
             }
             else
             {
@@ -330,7 +330,7 @@ namespace NUnit.Framework.Internal
                 if (Runtime == RuntimeType.Any)
                     return "v" + vstring;
                 else
-                    return GetShortName(Runtime, FrameworkVersion).ToLower() + "-" + vstring;
+                    return GetShortName(Runtime, FrameworkVersion).ToLowerInvariant() + "-" + vstring;
             }
         }
 
@@ -403,7 +403,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsRuntimeTypeName(string name)
         {
-            return Enum.GetNames( typeof(RuntimeType)).Any( item => item.ToLower() == name.ToLower() );
+            return Enum.GetNames(typeof(RuntimeType)).Contains(name, StringComparer.OrdinalIgnoreCase);
         }
 
         private static string GetShortName(RuntimeType runtime, Version version)
