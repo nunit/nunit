@@ -262,6 +262,22 @@ namespace NUnit.Framework.Internal
                 new RuntimeFramework(RuntimeType.NetCore, new Version(2,1)))
             .Returns(true),
             new TestCaseData(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(5,0)),
+                new RuntimeFramework(RuntimeType.NetCore, new Version(3,1)))
+            .Returns(true),
+            new TestCaseData(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(3,1)),
+                new RuntimeFramework(RuntimeType.NetCore, new Version(5,0)))
+            .Returns(false),
+            new TestCaseData(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(5,0)),
+                new RuntimeFramework(RuntimeType.NetCore, new Version(3,1)))
+            .Returns(true),
+            new TestCaseData(
+                new RuntimeFramework(RuntimeType.NetCore, new Version(5,0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4,8)))
+            .Returns(false),
+            new TestCaseData(
                 new RuntimeFramework(RuntimeType.Mono, new Version(1,1)), // non-existent version but it works
                 new RuntimeFramework(RuntimeType.Mono, new Version(1,0)))
             .Returns(true),
@@ -339,6 +355,7 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.NetFramework, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
             new FrameworkData(RuntimeType.NetCore, new Version(2, 0), new Version(4,0,30319), "netcore-2.0", "NetCore 2.0"),
             new FrameworkData(RuntimeType.NetCore, new Version(2, 1), new Version(4,0,30319), "netcore-2.1", "NetCore 2.1"),
+            new FrameworkData(RuntimeType.NetCore, new Version(5, 0), new Version(4,0,30319), "net-5.0", "Net 5.0"),
             new FrameworkData(RuntimeType.NetCore, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "netcore", "NetCore"),
             new FrameworkData(RuntimeType.Mono, new Version(1,0), new Version(1,1,4322), "mono-1.0", "Mono 1.0"),
             new FrameworkData(RuntimeType.Mono, new Version(2,0), new Version(2,0,50727), "mono-2.0", "Mono 2.0"),
