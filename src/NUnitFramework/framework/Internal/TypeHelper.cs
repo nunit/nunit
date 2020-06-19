@@ -365,7 +365,7 @@ namespace NUnit.Framework.Internal
         {
             string typeName = type.FullName;
 
-            if (typeName.EndsWith("[]"))
+            if (typeName.EndsWith("[]", StringComparison.Ordinal))
                 return false;
 
             string typeNameWithoutGenerics = GetTypeNameWithoutGenerics(typeName);
