@@ -3,7 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>net35;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>NUnit.Tests</RootNamespace>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
