@@ -16,12 +16,7 @@ jobs:
     displayName: 'Install .NET Core SDK'
     inputs:
       version: 5.0.100-preview.6.20318.15
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core runtime 3.1'
-    inputs:
-      packageType: runtime
-      version: 3.1.x
+      performMultiLevelLookup: true
 
   - powershell: .\build.ps1 --target=Test --test-run-name=Windows
     displayName: Build, test, and publish results
