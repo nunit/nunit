@@ -550,11 +550,11 @@ void PublishTestResults(string framework)
         if (!string.IsNullOrEmpty(ciRunName))
             fullTestRunTitle += '/' + ciRunName;
 
-        TFBuild.Commands.PublishTestResults(new TFBuildPublishTestResultsData
+        AzurePipelines.Commands.PublishTestResults(new AzurePipelinesPublishTestResultsData
         {
             TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
             TestRunTitle = fullTestRunTitle,
-            TestRunner = TFTestRunnerType.NUnit,
+            TestRunner = AzurePipelinesTestRunnerType.NUnit,
             MergeTestResults = true,
             PublishRunAttachments = true,
             Configuration = configuration
