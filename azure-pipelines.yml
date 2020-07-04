@@ -97,11 +97,6 @@ jobs:
       version: 3.1.x
 
   - bash: |
-     curl -o mono.pkg -sSL https://download.mono-project.com/archive/6.4.0/macos-10-universal/MonoFramework-MDK-6.4.0.198.macos10.xamarin.universal.pkg
-     sudo installer -pkg mono.pkg -target /
-    displayName: Install Mono 6.4.0
-
-  - bash: |
      dotnet tool install --global Cake.Tool
      dotnet cake --target=Test --test-run-name=macOS --configuration=Release
     displayName: Build, test, and publish results
