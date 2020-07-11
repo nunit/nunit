@@ -35,6 +35,15 @@ using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
+    public enum TestFixtureArgumentPlaceholder
+    {
+        Arg0,
+        Arg1,
+        Arg2,
+        Arg3
+    }
+
+
     /// <summary>
     /// Indicates the source to be used to provide test fixture instances for a test class.
     /// </summary>
@@ -135,7 +144,7 @@ namespace NUnit.Framework
         {
             int count = 0;
 
-            foreach (TestCaseParameters parms in GetTestCasesFor(method))
+            foreach (TestCaseParameters parms in GetTestCasesFor(method, suite))
             {
                 count++;
                 yield return _builder.BuildTestMethod(method, suite, parms);
@@ -158,13 +167,13 @@ namespace NUnit.Framework
         #region Helper Methods
 
         [SecuritySafeCritical]
-        private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
+        private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method, Test? suite)
         {
             List<ITestCaseData> data = new List<ITestCaseData>();
 
             try
             {
-                IEnumerable? source = ContextUtils.DoIsolated(() => GetTestCaseSource(method));
+                IEnumerable? source = ContextUtils.DoIsolated(() => GetTestCaseSource(method, suite));
 
                 if (source != null)
                 {
@@ -235,7 +244,7 @@ namespace NUnit.Framework
             return data;
         }
 
-        private IEnumerable? GetTestCaseSource(IMethodInfo method)
+        private IEnumerable? GetTestCaseSource(IMethodInfo method, Test? suite)
         {
             Type sourceType = SourceType ?? method.TypeInfo.Type;
 
@@ -267,13 +276,74 @@ namespace NUnit.Framework
                 var m = member as MethodInfo;
                 if (m != null)
                     return m.IsStatic
-                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length
-                            ? (IEnumerable)m.Invoke(null, MethodParams)
-                            : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
+                        ? InvokeTestCaseSourceMethod(m, suite?.Arguments)
                         : ReturnErrorAsParameter(SourceMustBeStatic);
             }
 
             return null;
+        }
+
+
+        private IEnumerable InvokeTestCaseSourceMethod(MethodInfo method, object?[]? suiteArguments)
+        {
+            try
+            {
+                return MethodParams == null || method.GetParameters().Length == MethodParams.Length
+                    ? (IEnumerable)method.Invoke(null, UpdateTestCaseSourceParameters(MethodParams, suiteArguments))
+                    : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch);
+            }
+            catch (ArgumentException e)
+            {
+                return ReturnErrorAsParameter(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Provides functionality of utilizing test fixture source
+        /// arguments in the test case source initialization method.
+        /// </summary>
+        /// <param name="methodParams">Method parameters specified.</param>
+        /// <param name="suiteArguments">Arguments specified in the test fixture source.</param>
+        /// <exception cref="ArgumentException">Indicates incorrect configuration. </exception>
+        private static object?[]? UpdateTestCaseSourceParameters(object?[]? methodParams, object?[]? suiteArguments)
+        {
+            // Case #1 : No parameters to call with.
+            if (null == methodParams)
+            {
+                return null;
+            }
+
+            var result = new object? [methodParams.Length];
+
+            for (int i = 0; i < methodParams.Length; i++)
+            {
+                result[i] = SubstituteFixtureParameterIfNeeded(methodParams[i], suiteArguments);
+            }
+
+            // Integration point ...
+            return result;
+        }
+
+        private static object? SubstituteFixtureParameterIfNeeded(object? methodParam, object?[]? suiteArguments)
+        {
+            if (!(methodParam is TestFixtureArgumentPlaceholder))
+            {
+                return methodParam;
+            }
+
+            // Not a reference... return original value.
+
+            int index = (int)methodParam;
+
+            // It is a reference to an argument passed to the fixture.
+
+            if (index < 0 || null == suiteArguments || suiteArguments.Length <= index)
+            {
+                throw new ArgumentException($"Unable to get a reference to fixture attribute at index {index}");
+            }
+
+            // Substitute the parameter.
+            return suiteArguments[index];
         }
 
         private static IEnumerable ReturnErrorAsParameter(string errorMessage)
