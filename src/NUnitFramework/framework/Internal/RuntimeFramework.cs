@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
                     ? RuntimeType.Mono
                     : isNetCore
                         ? RuntimeType.NetCore
-                        : RuntimeType.Net;
+                        : RuntimeType.NetFramework;
 
             int major = Environment.Version.Major;
             int minor = Environment.Version.Minor;
@@ -169,7 +169,7 @@ namespace NUnit.Framework.Internal
                         ClrVersion = new Version(4, 0, 30319);
                         break;
 
-                    case RuntimeType.Net:
+                    case RuntimeType.NetFramework:
                     case RuntimeType.Mono:
                     case RuntimeType.Any:
                         switch (version.Major)
@@ -218,7 +218,7 @@ namespace NUnit.Framework.Internal
             ClrVersion = version;
             if (Runtime == RuntimeType.Mono && version.Major == 1)
                 FrameworkVersion = new Version(1, 0);
-            if (Runtime == RuntimeType.Net && version.Major == 4 && version.Minor == 5)
+            if (Runtime == RuntimeType.NetFramework && version.Major == 4 && version.Minor == 5)
                 ClrVersion = new Version(4, 0, 30319);
             if (Runtime == RuntimeType.NetCore)
                 ClrVersion = new Version(4, 0, 30319);
@@ -291,9 +291,14 @@ namespace NUnit.Framework.Internal
                 runtime = (RuntimeType)Enum.Parse(typeof(RuntimeType), parts[0], true);
                 string vstring = parts[1];
                 if (vstring != "")
+                {
                     version = new Version(vstring);
+
+                    if (runtime == RuntimeType.NetFramework && version.Major >= 5)
+                        runtime = RuntimeType.NetCore;
+                }
             }
-            else if (char.ToLower(s[0]) == 'v')
+            else if (s.StartsWith("v", StringComparison.OrdinalIgnoreCase))
             {
                 version = new Version(s.Substring(1));
             }
@@ -317,7 +322,7 @@ namespace NUnit.Framework.Internal
         {
             if (AllowAnyVersion)
             {
-                return Runtime.ToString().ToLower();
+                return GetShortName(Runtime, FrameworkVersion).ToLowerInvariant();
             }
             else
             {
@@ -325,7 +330,7 @@ namespace NUnit.Framework.Internal
                 if (Runtime == RuntimeType.Any)
                     return "v" + vstring;
                 else
-                    return Runtime.ToString().ToLower() + "-" + vstring;
+                    return GetShortName(Runtime, FrameworkVersion).ToLowerInvariant() + "-" + vstring;
             }
         }
 
@@ -363,6 +368,8 @@ namespace NUnit.Framework.Internal
 
         private static bool IsNetCore()
         {
+            if (Environment.Version.Major >= 5) return true;
+
 #if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch
             // block to stop any inlining in release builds and check whether the type exists
@@ -380,33 +387,41 @@ namespace NUnit.Framework.Internal
             return false;
         }
 
+#if NETSTANDARD2_0
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static bool IsNetCore_Internal()
         {
-#if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run any method that uses RuntimeInformation
             // so we wrap it in a try/catch block in IsNetCore to catch it in case it ever gets this far
             if (System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
-#endif
+
             return false;
         }
+#endif
 
         private static bool IsRuntimeTypeName(string name)
         {
-            return Enum.GetNames( typeof(RuntimeType)).Any( item => item.ToLower() == name.ToLower() );
+            return Enum.GetNames(typeof(RuntimeType)).Contains(name, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private static string GetShortName(RuntimeType runtime, Version version)
+        {
+            return runtime == RuntimeType.NetFramework || (runtime == RuntimeType.NetCore && version.Major >= 5)
+                ? "Net"
+                : runtime.ToString();
         }
 
         private static string GetDefaultDisplayName(RuntimeType runtime, Version version)
         {
             if (version == DefaultVersion)
-                return runtime.ToString();
+                return GetShortName(runtime, version);
             else if (runtime == RuntimeType.Any)
                 return "v" + version;
             else
-                return runtime + " " + version;
+                return GetShortName(runtime, version) + " " + version;
         }
 
         private static bool VersionsMatch(Version v1, Version v2)

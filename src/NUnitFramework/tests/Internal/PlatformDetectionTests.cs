@@ -34,11 +34,11 @@ namespace NUnit.Framework.Internal
     {
         private static readonly PlatformHelper win95Helper = new PlatformHelper(
             new OSPlatform( PlatformID.Win32Windows , new Version( 4, 0 ) ),
-            new RuntimeFramework( RuntimeType.Net, new Version( 1, 1, 4322, 0 ) ) );
+            new RuntimeFramework( RuntimeType.NetFramework, new Version( 1, 1, 4322, 0 ) ) );
 
         private static readonly PlatformHelper winXPHelper = new PlatformHelper(
             new OSPlatform( PlatformID.Win32NT , new Version( 5,1 ) ),
-            new RuntimeFramework( RuntimeType.Net, new Version( 1, 1, 4322, 0 ) ) );
+            new RuntimeFramework( RuntimeType.NetFramework, new Version( 1, 1, 4322, 0 ) ) );
 
         private void CheckOSPlatforms( OSPlatform os,
             string expectedPlatforms )
@@ -274,7 +274,7 @@ namespace NUnit.Framework.Internal
         public void DetectNet35()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(3, 5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3, 5)),
                 "Net,Net-2.0,Net-3.0,Net-3.5");
         }
 
@@ -282,7 +282,7 @@ namespace NUnit.Framework.Internal
         public void DetectNet40()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(4, 0, 30319, 0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 0, 30319, 0)),
                 "Net,Net-4.0");
         }
 
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Internal
         public void DetectNet45()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(4, 5, 0, 0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 5, 0, 0)),
                 "Net,Net-4.0,Net-4.5");
         }
 
