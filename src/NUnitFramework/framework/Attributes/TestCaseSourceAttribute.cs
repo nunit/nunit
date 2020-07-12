@@ -35,15 +35,6 @@ using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {
-    public enum TestFixtureArgumentPlaceholder
-    {
-        Arg0,
-        Arg1,
-        Arg2,
-        Arg3
-    }
-
-
     /// <summary>
     /// Indicates the source to be used to provide test fixture instances for a test class.
     /// </summary>
@@ -283,7 +274,10 @@ namespace NUnit.Framework
             return null;
         }
 
-
+        /// <summary>
+        /// Ensures that the test case source generator method is called with correct arguments
+        /// and that exceptions are converted appropriately.
+        /// </summary>
         private IEnumerable InvokeTestCaseSourceMethod(MethodInfo method, object?[]? suiteArguments)
         {
             try
@@ -304,7 +298,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="methodParams">Method parameters specified.</param>
         /// <param name="suiteArguments">Arguments specified in the test fixture source.</param>
-        /// <exception cref="ArgumentException">Indicates incorrect configuration. </exception>
+        /// <exception cref="ArgumentException">Indicates parameters mismatch.</exception>
         private static object?[]? UpdateTestCaseSourceParameters(object?[]? methodParams, object?[]? suiteArguments)
         {
             // Case #1 : No parameters to call with.
@@ -324,25 +318,33 @@ namespace NUnit.Framework
             return result;
         }
 
+        /// <summary>
+        /// Attempts to replace specific parameter with respective fixture
+        /// argument if necessary.
+        /// </summary>
+        /// <param name="methodParam">Parameter to be replaced.</param>
+        /// <param name="suiteArguments">Arguments of the fixture.</param>
+        /// <exception cref="ArgumentException">If reference to fixture argument cannot be resolved.</exception>
+        /// <returns>Actual value to be passed to the test case source.</returns>
         private static object? SubstituteFixtureParameterIfNeeded(object? methodParam, object?[]? suiteArguments)
         {
-            if (!(methodParam is TestFixtureArgumentPlaceholder))
+            if (!(methodParam is TestFixtureArgumentRef))
             {
+                // Not a reference... return original value.
                 return methodParam;
             }
 
-            // Not a reference... return original value.
-
+            // It is a reference to an argument passed to the fixture.
+            // Find its index based on the value.
             int index = (int)methodParam;
 
-            // It is a reference to an argument passed to the fixture.
 
             if (index < 0 || null == suiteArguments || suiteArguments.Length <= index)
             {
                 throw new ArgumentException($"Unable to get a reference to fixture attribute at index {index}");
             }
 
-            // Substitute the parameter.
+            // And return corresponding fixture argument.
             return suiteArguments[index];
         }
 
