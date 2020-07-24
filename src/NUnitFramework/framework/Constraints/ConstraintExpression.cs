@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -899,6 +900,15 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
+        
+        /// <summary>
+        /// Returns a constraint that succeeds if the actual
+        /// value matches the regular expression supplied as an argument.
+        /// </summary>
+        public RegexConstraint Match(Regex regex)
+        {
+            return (RegexConstraint)this.Append(new RegexConstraint(regex));
+        }
 
         /// <summary>
         /// Returns a constraint that succeeds if the actual
@@ -908,6 +918,16 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
+        
+        /// <summary>
+        /// Returns a constraint that succeeds if the actual
+        /// value matches the regular expression supplied as an argument.
+        /// </summary>
+        public RegexConstraint Matches(Regex regex)
+        {
+            return (RegexConstraint)this.Append(new RegexConstraint(regex));
+        }
+
 
         /// <summary>
         /// Returns a constraint that succeeds if the actual
