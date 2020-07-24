@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -138,6 +139,15 @@ namespace NUnit.Framework
         public static RegexConstraint Match(string pattern)
         {
             return new RegexConstraint(pattern);
+        }
+
+        /// <summary>
+        /// Returns a constraint that succeeds if the actual
+        /// value matches the regular expression supplied as an argument.
+        /// </summary>
+        public static RegexConstraint Match(Regex regex)
+        {
+            return new RegexConstraint(regex);
         }
 
         #endregion
