@@ -29,28 +29,67 @@ namespace NUnit.Framework.Constraints
     /// RegexConstraint can test whether a string matches
     /// the pattern provided.
     /// </summary>
-    public class RegexConstraint : StringConstraint
+    public class RegexConstraint : Constraint
     {
+        private Regex _regex;
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                var description = $"String matching pattern \"{_regex}\"";
+                var caseInsensitive = (_regex.Options & RegexOptions.IgnoreCase) == RegexOptions.IgnoreCase;
+                if (caseInsensitive)
+                {
+                    description += ", ignoring case";
+                }
+                return description;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RegexConstraint"/> class.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
-        public RegexConstraint(string pattern) : base(pattern) 
+        public RegexConstraint(string pattern) : base(pattern)
         {
-            descriptionText = "String matching";
+            _regex = new Regex(pattern);
         }
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given value
+        /// Initializes a new instance of the <see cref="RegexConstraint"/> class.
         /// </summary>
-        /// <param name="actual">The value to be tested</param>
-        /// <returns>True for success, false for failure</returns>
-        protected override bool Matches(string actual)
+        /// <param name="regex">The Regex pattern object.</param>
+        public RegexConstraint(Regex regex) : base(regex.ToString())
         {
-            return actual != null && Regex.IsMatch(
-                    actual,
-                    this.expected,
-                    this.caseInsensitive ? RegexOptions.IgnoreCase : RegexOptions.None);
+            _regex = regex;
+        }
+
+        /// <summary>
+        /// Modify the constraint to ignore case in matching.
+        /// </summary>
+        public RegexConstraint IgnoreCase
+        {
+            get
+            {
+                _regex = new Regex(_regex.ToString(), _regex.Options | RegexOptions.IgnoreCase);
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// Applies the regex constraint to an actual value, returning a ConstraintResult.
+        /// </summary>
+        /// <param name="actual">The string to be tested.</param>
+        /// <returns>True for success, false for failure.</returns>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            return new ConstraintResult(this, actual,
+                actual != null && actual is string && _regex.Match(actual.ToString()).Success);
         }
     }
 }
