@@ -46,6 +46,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(testPhrase, Does.Match(testMatcher).IgnoreCase);
             Assert.That(testPhrase, Does.Match(new Regex(testMatcher)).IgnoreCase);
+            Assert.That(testPhrase, Does.Match(new Regex(testMatcher, RegexOptions.IgnoreCase)));
         }
 
         [Test]
