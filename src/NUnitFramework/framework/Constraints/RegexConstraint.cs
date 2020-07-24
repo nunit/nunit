@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                var description = $"String matching pattern \"{_regex}\"";
+                var description = $"String matching \"{_regex}\"";
                 var caseInsensitive = (_regex.Options & RegexOptions.IgnoreCase) == RegexOptions.IgnoreCase;
                 if (caseInsensitive)
                 {
