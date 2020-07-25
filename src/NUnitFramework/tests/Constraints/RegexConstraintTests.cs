@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void RegExCaseMatchFails()
         {
-            const string expectedErrorMessage = "  Expected: String matching pattern \"make.*tests.*fail\"\n  But was:  \"Make your tests fail before passing!\"\n";
+            const string expectedErrorMessage = "  Expected: String matching \"make.*tests.*fail\"\n  But was:  \"Make your tests fail before passing!\"\n";
             const string testMatcher = "make.*tests.*fail";
             const string testPhrase = "Make your tests fail before passing!";
 
