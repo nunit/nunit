@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
@@ -28,6 +29,8 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class RegexConstraintTests
     {
+        private static readonly string NL = Environment.NewLine;
+
         [Test]
         public void RegExMatchSucceeds()
         {
@@ -37,7 +40,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(testPhrase, Does.Match(testMatcher));
             Assert.That(testPhrase, Does.Match(new Regex(testMatcher)));
         }
-        
+
         [Test]
         public void RegExCaseInsensitiveMatchSucceeds()
         {
@@ -58,7 +61,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(testPhrase, Does.Not.Match(testMatcher));
             Assert.That(testPhrase, Does.Not.Match(new Regex(testMatcher)));
         }
-        
+
         [Test]
         public void RegExConstraintExpressionMatchesSucceeds()
         {
@@ -72,17 +75,15 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void RegExCaseMatchFails()
         {
-            const string expectedErrorMessage = "  Expected: String matching \"make.*tests.*fail\"\n  But was:  \"Make your tests fail before passing!\"\n";
+            var expectedErrorMessage = $"  Expected: String matching \"make.*tests.*fail\"{NL}  But was:  \"Make your tests fail before passing!\"{NL}";
             const string testMatcher = "make.*tests.*fail";
             const string testPhrase = "Make your tests fail before passing!";
 
-            Assert.That(
-                () => Assert.That(testPhrase, Does.Match(testMatcher)),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedErrorMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(testPhrase, Does.Match(testMatcher)));
+            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
 
-            Assert.That(
-                () => Assert.That(testPhrase, Does.Match(new Regex(testMatcher))),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedErrorMessage));
+            ex = Assert.Throws<AssertionException>(() => Assert.That(testPhrase, Does.Match(new Regex(testMatcher))));
+            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
     }
 }
