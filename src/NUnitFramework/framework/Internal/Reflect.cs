@@ -463,5 +463,32 @@ namespace NUnit.Framework.Internal
 
             return type == typeof(void) || type.FullName == "Microsoft.FSharp.Core.Unit";
         }
+
+        /// <summary>
+        /// Returns the property information for a given named indexer.
+        /// </summary>
+        /// <param name="type">Type to reflect on for indexer.</param>
+        /// <param name="indexerTypes">List of indexer types that matches the indexer type order.</param>
+        /// <returns>The return value from the invoked method</returns>
+        public static PropertyInfo? GetIndexerByName(Type type, Type[] indexerTypes)
+        {
+            const string defaultFrameworkIndexerName = "Item";
+
+            var props = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).ToArray();
+
+            var indexerInfo = props.FirstOrDefault(p => p.Name == defaultFrameworkIndexerName && ParametersEqual(p.GetIndexParameters(), indexerTypes));
+            return indexerInfo;
+        }
+
+        internal static bool ParametersEqual(IReadOnlyCollection<ParameterInfo> first, IReadOnlyList<Type> second)
+        {
+            if (first.Count != second.Count)
+            {
+                return false;
+            }
+
+            var indexParametersEquals = first.Select((t, i) => t.ParameterType == second[i]).All(p => p);
+            return indexParametersEquals;
+        }
     }
 }
