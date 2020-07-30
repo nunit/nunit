@@ -220,5 +220,19 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Item
+
+        /// <summary>
+        /// Returns a new IndexerConstraintExpression, which will either
+        /// test for the existence of an indexer on the object being tested
+        /// or apply any following constraint to that indexer value.
+        /// </summary>
+        /// <param name="indexArgs">Index accessor values.</param>
+        public static ResolvableConstraintExpression Item(params object[] indexArgs)
+        {
+            return new ConstraintExpression().Item(indexArgs);
+        }
+
+        #endregion
     }
 }
