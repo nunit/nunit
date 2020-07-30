@@ -480,9 +480,9 @@ namespace NUnit.Framework.Internal
             return indexerInfo;
         }
 
-        internal static bool ParametersEqual(IReadOnlyCollection<ParameterInfo> first, IReadOnlyList<Type> second)
+        internal static bool ParametersEqual(ParameterInfo[] first, Type[] second)
         {
-            if (first.Count != second.Count)
+            if (first.Length != second.Length)
             {
                 return false;
             }
