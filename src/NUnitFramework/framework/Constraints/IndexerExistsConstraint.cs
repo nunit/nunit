@@ -63,25 +63,21 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
 
-            var actualType = actual as Type;
-            if (actualType == null)
+            if (!(actual is Type actualType))
             {
                 actualType = actual.GetType();
             }
 
             var indexerPropertyInfo = Reflect.GetIndexerByName(actualType, _argumentTypes);
-            return new ConstraintResult(this, "not found", indexerPropertyInfo != null && indexerPropertyInfo.GetMethod != null);
+            return new ConstraintResult(this, "not found", indexerPropertyInfo?.GetGetMethod() != null);
         }
 
         /// <summary>
         /// Returns the string representation of the constraint.
         /// </summary>
         /// <returns></returns>
-        protected override string GetStringRepresentation()
-        {
-            return $"<indexerexists {StringifyArguments()}>";
-        }
+        protected override string GetStringRepresentation() => $"<indexerexists {StringifyArguments()}>";
 
-        private string StringifyArguments() => $"[{string.Join<Type>("], [", _argumentTypes)}]";
+        private string StringifyArguments() => $"[{string.Join("], [", _argumentTypes.Select(a => a.ToString()).ToArray())}]";
     }
 }
