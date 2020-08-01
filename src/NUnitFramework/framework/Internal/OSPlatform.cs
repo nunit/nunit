@@ -349,6 +349,19 @@ namespace NUnit.Framework.Internal
             get { return _platform == MacOSXPlatformID; }
         }
 
+        static int UnameSafe(IntPtr buf)
+        {
+            try
+            {
+                return uname(buf);
+            }
+            catch (DllNotFoundException)
+            {
+                // https://github.com/nunit/nunit/issues/3608
+                return -1;
+            }
+        }
+
         [DllImport("libc")]
 #pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
         static extern int uname(IntPtr buf);
@@ -364,7 +377,7 @@ namespace NUnit.Framework.Internal
 
             IntPtr buf = Marshal.AllocHGlobal(8192);
             bool isMacOSX = false;
-            if (uname(buf) == 0)
+            if (UnameSafe(buf) == 0)
             {
                 string os = Marshal.PtrToStringAnsi(buf);
                 isMacOSX = os.Equals("Darwin");
