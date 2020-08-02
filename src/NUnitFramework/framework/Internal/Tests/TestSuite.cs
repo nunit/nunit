@@ -108,6 +108,10 @@ namespace NUnit.Framework.Internal
             this.RunState = suite.RunState;
             this.Fixture  = suite.Fixture;
 
+            foreach (string key in suite.Properties.Keys)
+            foreach (object val in suite.Properties[key])
+                this.Properties.Add(key, val);
+
             foreach (var child in suite.tests)
             {
                 if(filter.Pass(child))
