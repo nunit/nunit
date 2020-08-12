@@ -511,6 +511,20 @@ namespace NUnit.Framework.Constraints
             {
                 Assert.Throws<InvalidOperationException>(() => Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps));
             }
+
+            [Test]
+            public void CanMatchNegativeZeroToZeroForDoubles()
+            {
+                Assert.That(0d, Is.EqualTo(-0d).Within(1).Ulps);
+                Assert.That(-0d, Is.EqualTo(0d).Within(1).Ulps);
+            }
+
+            [Test]
+            public void CanMatchNegativeZeroToZeroForFloats()
+            {
+                Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
+                Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+            }
         }
 
         #endregion
