@@ -89,7 +89,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             return new ConstraintResult(this, actual,
-                actual != null && actual is string && _regex.Match(actual.ToString()).Success);
+                actual is string actualString  && _regex.Match(actualString).Success);
         }
     }
 }
