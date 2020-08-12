@@ -31,18 +31,12 @@ namespace NUnit.Framework.Constraints
     internal sealed class ExactCountConstraintResult : ConstraintResult
     {
         /// <summary>
-        /// The maximum count of list elements that are shown on the constraint result
-        /// </summary>
-        internal const int MaxDisplayCount = 10;
-
-        /// <summary>
         /// The count of matched items of the <see cref="ExactCountConstraint"/>
         /// </summary>
         private readonly int _matchCount;
 
         /// <summary>
         /// A list with maximum count (+1) of items of the <see cref="ExactCountConstraint"/>
-        /// (The maximum count is set in <see cref="MaxDisplayCount"/>)
         /// </summary>
         private readonly ICollection<object> _itemList;
 
@@ -74,7 +68,7 @@ namespace NUnit.Framework.Constraints
             }
 
             writer.Write(_matchCount != 1 ? "{0} items " : "{0} item ", _matchCount);
-            writer.Write(MsgUtils.FormatCollection(_itemList, 0, MaxDisplayCount));
+            writer.Write(MsgUtils.FormatCollection(_itemList));
         }
     }
 }

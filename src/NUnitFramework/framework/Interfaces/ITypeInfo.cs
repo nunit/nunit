@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -42,7 +44,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the base type of this type as an ITypeInfo
         /// </summary>
-        ITypeInfo BaseType { get; }
+        ITypeInfo? BaseType { get; }
 
         /// <summary>
         /// Returns true if the Type wrapped is equal to the argument
@@ -111,7 +113,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Get the display name for an object of this type, constructed with specific arguments
         /// </summary>
-        string GetDisplayName(object[] args);
+        string GetDisplayName(object?[]? args);
 
         /// <summary>
         /// Returns a Type representing a generic type definition from which this Type can be constructed.
@@ -137,7 +139,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the public constructor taking the specified argument Types
         /// </summary>
-        ConstructorInfo GetConstructor(Type[] argTypes);
+        ConstructorInfo? GetConstructor(Type[] argTypes);
 
         /// <summary>
         /// Returns a value indicating whether this Type has a public constructor taking the specified argument Types.
@@ -147,7 +149,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Construct an object of this Type, using the specified arguments.
         /// </summary>
-        object Construct(object[] args);
+        object Construct(object?[]? args);
 
         #endregion
     }

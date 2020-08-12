@@ -21,8 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections;
+#nullable enable
 
 namespace NUnit.Framework.Interfaces
 {
@@ -36,7 +35,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the expected result of the test case
         /// </summary>
-        object ExpectedResult { get; }
+        object? ExpectedResult { get; }
 
         /// <summary>
         /// Returns true if an expected result has been set

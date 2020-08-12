@@ -202,7 +202,7 @@ namespace NUnit.Framework.Internal
         {
         }
 
-#if !(NET35 || NETCOREAPP1_1)
+#if !NET35
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
 #endif
         private static Exception RecordPossiblyDangerousException(Action action)

@@ -21,8 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Threading;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
@@ -34,11 +34,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void CreateQueue()
         {
-#if APARTMENT_STATE
             _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
-#else
-            _queue = new WorkItemQueue("TestQ", true);
-#endif
         }
 
         [Test]
@@ -167,8 +163,9 @@ namespace NUnit.Framework.Internal.Execution
         public void OneTimeTearDownGetsPriority()
         {
             var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
-            var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty) as CompositeWorkItem;
-            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem);
+
+            var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem as CompositeWorkItem);
             EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
             EnqueueWorkItem("Test2");
@@ -215,5 +212,3 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
-
-#endif

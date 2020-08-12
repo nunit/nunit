@@ -745,7 +745,6 @@ namespace NUnit.Framework.Syntax
 
         #region BinarySerializable
 
-#if !NETCOREAPP1_1
         [Test]
         public void BinarySerializableConstraint()
         {
@@ -753,13 +752,11 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<BinarySerializableConstraint>());
             Expect(constraint.ToString(), EqualTo("<binaryserializable>"));
         }
-#endif
 
         #endregion
 
         #region XmlSerializable
 
-#if !NETCOREAPP1_1
         [Test]
         public void XmlSerializableConstraint()
         {
@@ -767,7 +764,6 @@ namespace NUnit.Framework.Syntax
             Expect(constraint, TypeOf<XmlSerializableConstraint>());
             Expect(constraint.ToString(), EqualTo("<xmlserializable>"));
         }
-#endif
 
         #endregion
 

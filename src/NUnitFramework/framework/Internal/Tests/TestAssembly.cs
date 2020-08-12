@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -74,7 +76,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Assembly represented by this instance.
         /// </summary>
-        public Assembly Assembly { get; }
+        public Assembly? Assembly { get; }
 
         /// <summary>
         /// Gets the name used for the top-level element in the

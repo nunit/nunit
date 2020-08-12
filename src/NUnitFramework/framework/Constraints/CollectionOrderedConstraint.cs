@@ -26,7 +26,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -336,8 +335,6 @@ namespace NUnit.Framework.Constraints
 
         private sealed class CollectionOrderedConstraintResult : ConstraintResult
         {
-            private const int MaxDisplayedItems = 10;
-
             private readonly int _breakingIndex;
             private readonly object _breakingValue;
 
@@ -367,8 +364,9 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                int startIndex = Math.Max(0, _breakingIndex - MaxDisplayedItems + 2);
-                var actualValueMessage = MsgUtils.FormatCollection((IEnumerable)ActualValue, startIndex, MaxDisplayedItems);
+                // Choose startIndex in such way that '_breakingIndex' is always visible in message.
+                int startIndex = Math.Max(0, _breakingIndex - MsgUtils.DefaultMaxItems  + 2);
+                var actualValueMessage = MsgUtils.FormatCollection((IEnumerable)ActualValue, startIndex);
                 writer.Write(actualValueMessage);
             }
 

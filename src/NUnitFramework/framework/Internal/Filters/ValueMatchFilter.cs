@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Match the input provided by the derived class
         /// </summary>
-        /// <param name="input">The value to be matchedT</param>
+        /// <param name="input">The value to be matched</param>
         /// <returns>True for a match, false otherwise.</returns>
         protected bool Match(string input)
         {

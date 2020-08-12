@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -74,7 +76,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
             List<TestMethod> tests = new List<TestMethod>();
 

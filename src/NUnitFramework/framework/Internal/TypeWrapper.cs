@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -52,7 +54,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the base type of this type as an ITypeInfo
         /// </summary>
-        public ITypeInfo BaseType
+        public ITypeInfo? BaseType
         {
             get
             {
@@ -160,7 +162,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the display name for an object of this type, constructed with the specified args.
         /// </summary>
-        public string GetDisplayName(object[] args)
+        public string GetDisplayName(object?[]? args)
         {
             return TypeHelper.GetDisplayName(Type, args);
         }
@@ -228,7 +230,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the public constructor taking the specified argument Types
         /// </summary>
-        public ConstructorInfo GetConstructor(Type[] argTypes)
+        public ConstructorInfo? GetConstructor(Type[] argTypes)
         {
             return Type.GetConstructor(argTypes);
         }
@@ -244,7 +246,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Construct an object of this Type, using the specified arguments.
         /// </summary>
-        public object Construct(object[] args)
+        public object Construct(object?[]? args)
         {
             return Reflect.Construct(Type, args);
         }

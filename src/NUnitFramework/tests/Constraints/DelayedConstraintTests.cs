@@ -244,6 +244,21 @@ namespace NUnit.Framework.Constraints
             Assert.That(watch.ElapsedMilliseconds, Is.GreaterThanOrEqualTo(AFTER));
         }
 
+        [Test]
+        public void PreservesOriginalResultAdditionalLines()
+        {
+            var exception = Assert.Throws<AssertionException>(
+                () => Assert.That(new[] { 1, 2 }, Is.EquivalentTo(new[] { 2, 3 }).After(1)));
+
+            var expectedMessage =
+                "  Expected: equivalent to < 2, 3 > after 1 millisecond delay" + Environment.NewLine +
+                "  But was:  < 1, 2 >" + Environment.NewLine +
+                "  Missing (1): < 3 >" + Environment.NewLine +
+                "  Extra (1): < 1 >" + Environment.NewLine;
+
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+        }
+
         private static int setValuesDelay;
 
         private static void MethodReturningVoid() { }

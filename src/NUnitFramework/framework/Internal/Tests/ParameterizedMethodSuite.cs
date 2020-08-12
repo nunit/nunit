@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -39,7 +41,7 @@ namespace NUnit.Framework.Internal
         public ParameterizedMethodSuite(IMethodInfo method)
             : base(method.TypeInfo.FullName, method.Name)
         {
-            Method = method;
+            base.Method = method;
             _isTheory = method.IsDefined<TheoryAttribute>(true);
             this.MaintainTestOrder = true;
         }
@@ -53,6 +55,11 @@ namespace NUnit.Framework.Internal
             : base(suite, filter)
         {
         }
+
+        /// <summary>
+        /// Gets a MethodInfo for the method implementing this test.
+        /// </summary>
+        public new IMethodInfo Method => base.Method!;
 
         /// <summary>
         /// Gets a string representing the type of test

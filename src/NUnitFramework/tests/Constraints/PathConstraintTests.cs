@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// Summary description for PathConstraintTests.
     /// </summary>]
-    [TestFixture]
+    [TestFixture, Platform("Win")]
     public class SamePathTest_Windows : StringConstraintTests
     {
         [SetUp]
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    [TestFixture]
+    [TestFixture, Platform("Unix")]
     public class SamePathTest_Linux : StringConstraintTests
     {
         [SetUp]
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    [TestFixture]
+    [TestFixture, Platform("Win")]
     public class SubPathTest_Windows : ConstraintTestBase
     {
         [SetUp]
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    [TestFixture]
+    [TestFixture, Platform("Unix")]
     public class SubPathTest_Linux : ConstraintTestBase
     {
         [SetUp]
@@ -179,7 +179,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    [TestFixture]
+    [TestFixture, Platform("Win")]
     public class SamePathOrUnderTest_Windows : StringConstraintTests
     {
         [SetUp]
@@ -211,7 +211,7 @@ namespace NUnit.Framework.Constraints
             };
     }
 
-    [TestFixture]
+    [TestFixture, Platform("Unix")]
     public class SamePathOrUnderTest_Linux : StringConstraintTests
     {
         [SetUp]

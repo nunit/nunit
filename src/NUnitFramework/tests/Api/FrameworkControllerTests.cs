@@ -57,7 +57,7 @@ namespace NUnit.Framework.Api
         {
             get
             {
-                yield return new TestCaseData(null);
+                yield return new TestCaseData((object[])null);
                 yield return new TestCaseData("");
                 yield return new TestCaseData(EMPTY_FILTER);
             }
@@ -97,12 +97,8 @@ namespace NUnit.Framework.Api
             };
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
-#if PARALLEL
             // in parallel, an additional node is added with number of test workers
             Assert.That(inserted.ChildNodes.Count, Is.EqualTo(3));
-#else
-            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(2));
-#endif
             Assert.That(inserted.ChildNodes[0].Attributes["name"], Is.EqualTo("key1"));
             Assert.That(inserted.ChildNodes[0].Attributes["value"], Is.EqualTo("value1"));
 
@@ -123,12 +119,8 @@ namespace NUnit.Framework.Api
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
 
-#if PARALLEL
             // in parallel, an additional node is added with number of test workers
             Assert.That(inserted.ChildNodes.Count, Is.EqualTo(3));
-#else
-            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(2));
-#endif
         }
 
         [TestCaseSource(nameof(SettingsData))]
@@ -286,11 +278,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-#if NETCOREAPP1_1
-            Assert.That(GetSkipReason(result), Contains.Substring("The system cannot find the file specified."));
-#else
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
-#endif
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
@@ -380,11 +368,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-#if NETCOREAPP1_1
-            Assert.That(GetSkipReason(result), Contains.Substring("The system cannot find the file specified."));
-#else
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
-#endif
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
         }
 
@@ -491,11 +475,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
-#if NETCOREAPP1_1
-            Assert.That(GetSkipReason(result), Contains.Substring("The system cannot find the file specified."));
-#else
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
-#endif
             Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 

@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -50,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the suite.</param>
         public TestSuite(string name) : base(name)
         {
-            Arguments = new object[0];
+            Arguments = TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -63,7 +65,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(string parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
-            Arguments = new object[0];
+            Arguments = TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -73,10 +75,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">Type of the fixture.</param>
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used.</param>
-        public TestSuite(ITypeInfo fixtureType, object[] arguments = null)
+        public TestSuite(ITypeInfo fixtureType, object?[]? arguments = null)
             : base(fixtureType)
         {
-            Arguments = arguments ?? new object[0];
+            Arguments = arguments ?? TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -88,7 +90,7 @@ namespace NUnit.Framework.Internal
         public TestSuite(Type fixtureType)
             : base(new TypeWrapper(fixtureType))
         {
-            Arguments = new object[0];
+            Arguments = TestParameters.NoArguments;
             OneTimeSetUpMethods = new MethodInfo[0];
             OneTimeTearDownMethods = new MethodInfo[0];
         }
@@ -99,14 +101,14 @@ namespace NUnit.Framework.Internal
         /// <param name="suite">The <see cref="TestSuite"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
         public TestSuite(TestSuite suite, ITestFilter filter)
-            : base(suite.Name)
+            : this(suite.Name)
         {
             this.FullName = suite.FullName;
             this.Method   = suite.Method;
             this.RunState = suite.RunState;
             this.Fixture  = suite.Fixture;
 
-            foreach(var child in suite.tests)
+            foreach (var child in suite.tests)
             {
                 if(filter.Pass(child))
                 {
@@ -139,7 +141,7 @@ namespace NUnit.Framework.Internal
 
                 foreach (Test test in Tests)
                 {
-                    TestSuite suite = test as TestSuite;
+                    TestSuite? suite = test as TestSuite;
                     if (suite != null)
                         suite.Sort();
                 }
@@ -218,7 +220,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in creating the fixture, or empty array if none are provided.
         /// </summary>
-        public override object[] Arguments { get; }
+        public override object?[] Arguments { get; }
 
         /// <summary>
         /// Set to true to suppress sorting this suite's contents
@@ -300,7 +302,6 @@ namespace NUnit.Framework.Internal
         /// Check that setup and teardown methods marked by certain attributes
         /// meet NUnit's requirements and mark the tests not runnable otherwise.
         /// </summary>
-        /// <param name="methods">A list of methodinfos to check</param>
         protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
         {
             foreach (MethodInfo method in methods)
@@ -311,7 +312,7 @@ namespace NUnit.Framework.Internal
                 }
                 else if (!(method.IsPublic || method.IsFamily))
                 {
-                    MakeInvalid("SetUp and TearDown methods must be public or internal: " + method.Name);
+                    MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
                 else if (method.GetParameters().Length != 0)
                 {
@@ -321,12 +322,12 @@ namespace NUnit.Framework.Internal
                 {
                     if (method.ReturnType == typeof(void))
                         MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
-                    else if (AwaitAdapter.GetResultType(method.ReturnType) != typeof(void))
+                    else if (!Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(method.ReturnType)))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
                 else
                 {
-                    if (method.ReturnType != typeof(void))
+                    if (!Reflect.IsVoidOrUnit(method.ReturnType))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
             }

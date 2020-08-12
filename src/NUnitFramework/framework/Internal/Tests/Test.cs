@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -45,12 +47,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Used to cache the declaring type for this MethodInfo
         /// </summary>
-        private ITypeInfo _declaringTypeInfo;
+        private ITypeInfo? _declaringTypeInfo;
 
         /// <summary>
         /// Method property backing field
         /// </summary>
-        private IMethodInfo _method;
+        private IMethodInfo? _method;
 
         #endregion
 
@@ -60,11 +62,9 @@ namespace NUnit.Framework.Internal
         /// Constructs a test given its name
         /// </summary>
         /// <param name="name">The name of the test</param>
-        protected Test( string name )
+        protected Test(string name)
+            : this(pathName: null, name, typeInfo: null, method: null)
         {
-            Guard.ArgumentNotNullOrEmpty(name, nameof(name));
-
-            Initialize(name);
         }
 
         /// <summary>
@@ -73,43 +73,39 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="pathName">The parent tests full name</param>
         /// <param name="name">The name of the test</param>
-        protected Test( string pathName, string name )
+        protected Test(string? pathName, string name)
+            : this(pathName, name, typeInfo: null, method: null)
         {
-            Initialize(name);
-
-            if (!string.IsNullOrEmpty(pathName))
-                FullName = pathName + "." + name;
         }
 
         /// <summary>
         /// Constructs a test for a specific type.
         /// </summary>
         protected Test(ITypeInfo typeInfo)
+            : this(pathName: typeInfo.Namespace, name: typeInfo.GetDisplayName(), typeInfo: typeInfo, method: null)
         {
-            Initialize(typeInfo.GetDisplayName());
-
-            string nspace = typeInfo.Namespace;
-            if (nspace != null && nspace != "")
-                FullName = nspace + "." + Name;
-            TypeInfo = typeInfo;
         }
 
         /// <summary>
         /// Constructs a test for a specific method.
         /// </summary>
         protected Test(IMethodInfo method)
+            : this(pathName: method.TypeInfo.FullName, name: method.Name, typeInfo: method.TypeInfo, method: method)
         {
-            Initialize(method.Name);
-
-            Method = method;
-            TypeInfo = method.TypeInfo;
-            FullName = method.TypeInfo.FullName + "." + Name;
         }
 
-        private void Initialize(string name)
+        private Test(string? pathName, string name, ITypeInfo? typeInfo, IMethodInfo? method)
         {
-            FullName = Name = name;
+            Guard.ArgumentNotNullOrEmpty(name, nameof(name));
+
             Id = GetNextId();
+            Name = name;
+            FullName = !string.IsNullOrEmpty(pathName)
+                ? pathName + '.' + name
+                : name;
+
+            TypeInfo = typeInfo;
+            Method = method;
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
             SetUpMethods = new MethodInfo[0];
@@ -146,11 +142,11 @@ namespace NUnit.Framework.Internal
         /// Gets the name of the class where this test was declared.
         /// Returns null if the test is not associated with a class.
         /// </summary>
-        public string ClassName
+        public string? ClassName
         {
             get
             {
-                ITypeInfo typeInfo = TypeInfo;
+                ITypeInfo? typeInfo = TypeInfo;
 
                 if (Method != null)
                 {
@@ -173,7 +169,7 @@ namespace NUnit.Framework.Internal
         /// Gets the name of the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public virtual string MethodName
+        public virtual string? MethodName
         {
             get { return null; }
         }
@@ -181,19 +177,19 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in creating the test or empty array if none required.
         /// </summary>
-        public abstract object[] Arguments { get; }
+        public abstract object?[] Arguments { get; }
 
         /// <summary>
         /// Gets the TypeInfo of the fixture used in running this test
         /// or null if no fixture type is associated with it.
         /// </summary>
-        public ITypeInfo TypeInfo { get; private set; }
+        public ITypeInfo? TypeInfo { get; }
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public IMethodInfo Method
+        public IMethodInfo? Method
         {
             get { return _method; }
             set
@@ -236,7 +232,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the properties for this test
         /// </summary>
-        public IPropertyBag Properties { get; private set; }
+        public IPropertyBag Properties { get; }
 
         /// <summary>
         /// Returns true if this is a TestSuite
@@ -256,7 +252,7 @@ namespace NUnit.Framework.Internal
         /// Gets the parent as a Test object.
         /// Used by the core to set the parent.
         /// </summary>
-        public ITest Parent { get; set; }
+        public ITest? Parent { get; set; }
 
         /// <summary>
         /// Gets this test's child tests
@@ -267,7 +263,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets a fixture object for running this test.
         /// </summary>
-        public virtual object Fixture { get; set; }
+        public virtual object? Fixture { get; set; }
 
         #endregion
 
@@ -277,7 +273,7 @@ namespace NUnit.Framework.Internal
         /// Static prefix used for ids in this AppDomain.
         /// Set by FrameworkController.
         /// </summary>
-        public static string IdPrefix { get; set; }
+        public static string? IdPrefix { get; set; }
 
         /// <summary>
         /// Gets or Sets the Int value representing the seed for the RandomGenerator
@@ -301,7 +297,7 @@ namespace NUnit.Framework.Internal
 
         internal bool RequiresThread { get; set; }
 
-        private ITestAction[] _actions;
+        private ITestAction[]? _actions;
 
         internal ITestAction[] Actions
         {
@@ -330,43 +326,6 @@ namespace NUnit.Framework.Internal
         /// <returns>A TestResult suitable for this type of test.</returns>
         public abstract TestResult MakeTestResult();
 
-#if NETSTANDARD1_4
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="MemberInfo"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(MemberInfo provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="TypeInfo"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(TypeInfo provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
-        }
-
-        /// <summary>
-        /// Modify a newly constructed test by applying any of NUnit's common
-        /// attributes, based on a supplied <see cref="Assembly"/>, which is
-        /// usually the reflection element from which the test was constructed,
-        /// but may not be in some instances. The attributes retrieved are
-        /// saved for use in subsequent operations.
-        /// </summary>
-        public void ApplyAttributesToTest(Assembly provider)
-        {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>());
-        }
-#else
         /// <summary>
         /// Modify a newly constructed test by applying any of NUnit's common
         /// attributes, based on a supplied <see cref="ICustomAttributeProvider"/>, which is
@@ -378,7 +337,6 @@ namespace NUnit.Framework.Internal
         {
             ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
         }
-#endif
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
         {
@@ -486,14 +444,14 @@ namespace NUnit.Framework.Internal
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
         /// <param name="obj">An object to compare with this instance. </param>
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             return CompareTo(obj as Test);
         }
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object. </summary>
         /// <param name="other">An object to compare with this instance.</param>
-        public int CompareTo(Test other)
+        public int CompareTo(Test? other)
         {
             return other == null ? -1 : this.FullName.CompareTo(other.FullName);
         }

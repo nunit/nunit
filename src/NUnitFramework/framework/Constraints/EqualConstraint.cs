@@ -86,7 +86,7 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether to compare case insensitive.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if comparing case insensitive; otherwise, <c>false</c>.
+        ///   <see langword="true"/> if comparing case insensitive; otherwise, <see langword="false"/>.
         /// </value>
         public bool CaseInsensitive
         {
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Constraints
         /// Gets a value indicating whether or not to clip strings.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if set to clip strings otherwise, <c>false</c>.
+        ///   <see langword="true"/> if set to clip strings otherwise, <see langword="false"/>.
         /// </value>
         public bool ClipStrings { get; private set; }
 

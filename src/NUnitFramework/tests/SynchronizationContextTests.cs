@@ -72,8 +72,7 @@ namespace NUnit.Framework
 
         public static IEnumerable<AsyncExecutionApiAdapter> ApiAdapters => AsyncExecutionApiAdapter.All;
 
-#if APARTMENT_STATE
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -89,7 +88,7 @@ namespace NUnit.Framework
             });
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -104,9 +103,8 @@ namespace NUnit.Framework
                 return TaskEx.FromResult<object>(null);
             });
         }
-#endif
 
-#if NET40 || NET45
+#if UseWindowsFormsAndWPF
         // TODO: test a custom awaitable type whose awaiter executes continuations on a brand new thread
         // to ensure that the message pump is shut down on the correct thread.
 
@@ -160,7 +158,7 @@ namespace NUnit.Framework
             {
                 apiAdapter.Execute(() =>
                 {
-                    Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
+                    Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
                     return TaskEx.FromResult<object>(null);
                 });
             }
@@ -177,7 +175,7 @@ namespace NUnit.Framework
             {
                 apiAdapter.Execute(async () => await TaskEx.Yield());
 
-                Assert.That(SynchronizationContext.Current, Is.SameAs(createdOnThisThread));
+                Assert.That(SynchronizationContext.Current, Is.TypeOf(knownSynchronizationContextType));
             }
         }
 #endif

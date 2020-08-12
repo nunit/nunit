@@ -21,8 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -44,12 +48,12 @@ namespace NUnit.Framework
         /// This constructor is not CLS-Compliant
         /// </summary>
         /// <param name="arguments"></param>
-        public TestCaseAttribute(params object[] arguments)
+        public TestCaseAttribute(params object?[]? arguments)
         {
             RunState = RunState.Runnable;
 
             if (arguments == null)
-                Arguments = new object[] { null };
+                Arguments = new object?[] { null };
             else
                 Arguments = arguments;
 
@@ -60,10 +64,10 @@ namespace NUnit.Framework
         /// Construct a TestCaseAttribute with a single argument
         /// </summary>
         /// <param name="arg"></param>
-        public TestCaseAttribute(object arg)
+        public TestCaseAttribute(object? arg)
         {
             RunState = RunState.Runnable;
-            Arguments = new object[] { arg };
+            Arguments = new object?[] { arg };
             Properties = new PropertyBag();
         }
 
@@ -72,10 +76,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
-        public TestCaseAttribute(object arg1, object arg2)
+        public TestCaseAttribute(object? arg1, object? arg2)
         {
             RunState = RunState.Runnable;
-            Arguments = new object[] { arg1, arg2 };
+            Arguments = new object?[] { arg1, arg2 };
             Properties = new PropertyBag();
         }
 
@@ -85,10 +89,10 @@ namespace NUnit.Framework
         /// <param name="arg1"></param>
         /// <param name="arg2"></param>
         /// <param name="arg3"></param>
-        public TestCaseAttribute(object arg1, object arg2, object arg3)
+        public TestCaseAttribute(object? arg1, object? arg2, object? arg3)
         {
             RunState = RunState.Runnable;
-            Arguments = new object[] { arg1, arg2, arg3 };
+            Arguments = new object?[] { arg1, arg2, arg3 };
             Properties = new PropertyBag();
         }
 
@@ -100,7 +104,7 @@ namespace NUnit.Framework
         /// Gets or sets the name of the test.
         /// </summary>
         /// <value>The name of the test.</value>
-        public string TestName { get; set; }
+        public string? TestName { get; set; }
 
         /// <summary>
         /// Gets or sets the RunState of this test case.
@@ -110,7 +114,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the list of arguments to a test case
         /// </summary>
-        public object[] Arguments { get; }
+        public object?[] Arguments { get; }
 
         /// <summary>
         /// Gets the properties of the test case
@@ -125,7 +129,7 @@ namespace NUnit.Framework
         /// Gets or sets the expected result.
         /// </summary>
         /// <value>The result.</value>
-        public object ExpectedResult
+        public object? ExpectedResult
         {
             get { return _expectedResult; }
             set
@@ -134,12 +138,19 @@ namespace NUnit.Framework
                 HasExpectedResult = true;
             }
         }
-        private object _expectedResult;
+        private object? _expectedResult;
 
         /// <summary>
         /// Returns true if the expected result has been set
         /// </summary>
         public bool HasExpectedResult { get; private set; }
+
+        #endregion
+
+        #region Instance Fields
+
+        private RunState _originalRunState;
+        private DateTimeOffset? _untilDate;
 
         #endregion
 
@@ -149,49 +160,66 @@ namespace NUnit.Framework
         /// Gets or sets the description.
         /// </summary>
         /// <value>The description.</value>
-        public string Description
+        [DisallowNull]
+        public string? Description
         {
             get { return Properties.Get(PropertyNames.Description) as string; }
-            set { Properties.Set(PropertyNames.Description, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.Description, value);
+            }
         }
 
         /// <summary>
         /// The author of this test
         /// </summary>
-        public string Author
+        [DisallowNull]
+        public string? Author
         {
             get { return Properties.Get(PropertyNames.Author) as string; }
-            set { Properties.Set(PropertyNames.Author, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.Author, value);
+            }
         }
 
         /// <summary>
         /// The type that this test is testing
         /// </summary>
-        public Type TestOf
+        [DisallowNull]
+        public Type? TestOf
         {
             get { return _testOf; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
                 Properties.Set(PropertyNames.TestOf, value.FullName);
             }
         }
-        private Type _testOf;
+        private Type? _testOf;
 
         /// <summary>
         /// Gets or sets the reason for ignoring the test
         /// </summary>
-        public string Ignore
+        [DisallowNull]
+        public string? Ignore
         {
             get { return IgnoreReason; }
-            set { IgnoreReason = value; }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                IgnoreReason = value;
+            }
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="NUnit.Framework.TestCaseAttribute"/> is explicit.
         /// </summary>
         /// <value>
-        /// <c>true</c> if explicit; otherwise, <c>false</c>.
+        /// <see langword="true"/> if explicit; otherwise, <see langword="false"/>.
         /// </value>
         public bool Explicit
         {
@@ -203,10 +231,15 @@ namespace NUnit.Framework
         /// Gets or sets the reason for not running the test.
         /// </summary>
         /// <value>The reason.</value>
-        public string Reason
+        [DisallowNull]
+        public string? Reason
         {
             get { return Properties.Get(PropertyNames.SkipReason) as string; }
-            set { Properties.Set(PropertyNames.SkipReason, value); }
+            set
+            {
+                Guard.ArgumentNotNull(value, nameof(value));
+                Properties.Set(PropertyNames.SkipReason, value);
+            }
         }
 
         /// <summary>
@@ -214,39 +247,61 @@ namespace NUnit.Framework
         /// non-empty value, the test is marked as ignored.
         /// </summary>
         /// <value>The ignore reason.</value>
-        public string IgnoreReason
+        [DisallowNull]
+        public string? IgnoreReason
         {
             get { return Reason; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
+                _originalRunState = RunState;
                 RunState = RunState.Ignored;
                 Reason = value;
             }
         }
 
-#if PLATFORM_DETECTION
         /// <summary>
         /// Comma-delimited list of platforms to run the test for
         /// </summary>
-        public string IncludePlatform { get; set; }
+        public string? IncludePlatform { get; set; }
 
         /// <summary>
         /// Comma-delimited list of platforms to not run the test for
         /// </summary>
-        public string ExcludePlatform { get; set; }
-#endif
+        public string? ExcludePlatform { get; set; }
 
         /// <summary>
         /// Gets and sets the category for this test case.
         /// May be a comma-separated list of categories.
         /// </summary>
-        public string Category
+        [DisallowNull]
+        public string? Category
         {
             get { return Properties.Get(PropertyNames.Category) as string; }
             set
             {
+                Guard.ArgumentNotNull(value, nameof(value));
+
                 foreach (string cat in value.Split(new char[] { ',' }) )
                     Properties.Add(PropertyNames.Category, cat);
+            }
+        }
+
+        /// <summary>
+        /// Gets and sets the ignore until date for this test case.
+        /// </summary>
+        public string? Until
+        {
+            get { return Properties.Get(PropertyNames.IgnoreUntilDate) as string; }
+            set
+            {
+                if (!string.IsNullOrEmpty(IgnoreReason))
+                {
+                    _untilDate = DateTimeOffset.Parse(value, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+                    Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
+                }
+                else
+                    this.RunState = RunState.NotRunnable;
             }
         }
 
@@ -293,7 +348,7 @@ namespace NUnit.Framework
                         }
                         else
                         {
-                            object[] newArglist = new object[argsNeeded];
+                            object?[] newArglist = new object?[argsNeeded];
                             for (int i = 0; i < argsNeeded && i < argsProvided; i++)
                                 newArglist[i] = parms.Arguments[i];
 
@@ -312,7 +367,7 @@ namespace NUnit.Framework
                 //Special handling for optional parameters
                 if (parms.Arguments.Length < argsNeeded)
                 {
-                    object[] newArgList = new object[parameters.Length];
+                    object?[] newArgList = new object?[parameters.Length];
                     Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
 
                     //Fill with Type.Missing for remaining required parameters where optional
@@ -338,7 +393,7 @@ namespace NUnit.Framework
                 if (argsNeeded == 1 && method.GetParameters()[0].ParameterType == typeof(object[]))
                 {
                     if (argsProvided > 1 ||
-                        argsProvided == 1 && parms.Arguments[0].GetType() != typeof(object[]))
+                        argsProvided == 1 && parms.Arguments[0]?.GetType() != typeof(object[]))
                     {
                         parms.Arguments = new object[] { parms.Arguments };
                     }
@@ -362,11 +417,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arglist">The arguments to be converted</param>
         /// <param name="parameters">The ParameterInfo array for the method</param>
-        private static void PerformSpecialConversions(object[] arglist, IParameterInfo[] parameters)
+        private static void PerformSpecialConversions(object?[] arglist, IParameterInfo[] parameters)
         {
             for (int i = 0; i < arglist.Length; i++)
             {
-                object arg = arglist[i];
+                object? arg = arglist[i];
                 Type targetType = parameters[i].ParameterType;
                 if (ParamAttributeTypeConversions.TryConvert(arg, targetType, out var argAsTargetType))
                 {
@@ -383,11 +438,24 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="method">The MethodInfo for which tests are to be constructed.</param>
         /// <param name="suite">The suite to which the tests will be added.</param>
-        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test suite)
+        public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
+            
+            if (_untilDate.HasValue)
+            {
+                if (_untilDate > DateTimeOffset.UtcNow)
+                {
+                    test.RunState = RunState.Ignored;
+                    string reason = string.Format("Ignoring until {0}. {1}", _untilDate.Value.ToString("u"), IgnoreReason);
+                    test.Properties.Set(PropertyNames.SkipReason, reason);
+                }
+                else
+                {
+                    test.RunState = _originalRunState;
+                }
+            }
 
-#if PLATFORM_DETECTION
             if (IncludePlatform != null || ExcludePlatform != null)
             {
                 if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
@@ -404,7 +472,6 @@ namespace NUnit.Framework
                     test.Properties.Add(PropertyNames.SkipReason, platformHelper.Reason);
                 }
             }
-#endif
 
             yield return test;
         }

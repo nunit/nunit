@@ -166,16 +166,12 @@ namespace NUnitLite
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD1_4 || NETSTANDARD2_0
+#if NETSTANDARD2_0
             Writer.WriteLabelLine("   OS Version: ", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
 #else
             Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
 #endif
-#if NETSTANDARD1_4
-            Writer.WriteLabelLine("  CLR Version: ", System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription);
-#else
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
-#endif
             Writer.WriteLine();
         }
 
@@ -229,13 +225,11 @@ namespace NUnitLite
             if (_options.DefaultTimeout >= 0)
                 Writer.WriteLabelLine("    Default timeout: ", _options.DefaultTimeout);
 
-#if PARALLEL
             Writer.WriteLabelLine(
                 "    Number of Test Workers: ",
                 _options.NumberOfTestWorkers >= 0
                     ? _options.NumberOfTestWorkers
                     : Math.Max(Environment.ProcessorCount, 2));
-#endif
 
             Writer.WriteLabelLine("    Work Directory: ", _options.WorkDirectory ?? Directory.GetCurrentDirectory());
             Writer.WriteLabelLine("    Internal Trace: ", _options.InternalTraceLevel ?? "Off");

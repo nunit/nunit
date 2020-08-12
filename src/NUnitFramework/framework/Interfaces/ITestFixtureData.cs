@@ -21,8 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
-using System.Collections;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -36,6 +37,6 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Get the TypeArgs if separately set
         /// </summary>
-        Type[] TypeArgs { get;  }
+        Type[]? TypeArgs { get;  }
     }
 }

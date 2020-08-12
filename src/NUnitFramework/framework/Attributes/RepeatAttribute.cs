@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 // TODO: Rework this
 // RepeatAttribute should either
 //  1) Apply at load time to create the exact number of tests, or

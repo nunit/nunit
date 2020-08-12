@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -20,7 +20,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
-#if PLATFORM_DETECTION
+
 using System;
 using System.Collections;
 
@@ -32,18 +32,18 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class PlatformDetectionTests
     {
-        private static readonly PlatformHelper win95Helper = new PlatformHelper( 
+        private static readonly PlatformHelper win95Helper = new PlatformHelper(
             new OSPlatform( PlatformID.Win32Windows , new Version( 4, 0 ) ),
-            new RuntimeFramework( RuntimeType.Net, new Version( 1, 1, 4322, 0 ) ) );
+            new RuntimeFramework( RuntimeType.NetFramework, new Version( 1, 1, 4322, 0 ) ) );
 
-        private static readonly PlatformHelper winXPHelper = new PlatformHelper( 
+        private static readonly PlatformHelper winXPHelper = new PlatformHelper(
             new OSPlatform( PlatformID.Win32NT , new Version( 5,1 ) ),
-            new RuntimeFramework( RuntimeType.Net, new Version( 1, 1, 4322, 0 ) ) );
+            new RuntimeFramework( RuntimeType.NetFramework, new Version( 1, 1, 4322, 0 ) ) );
 
-        private void CheckOSPlatforms( OSPlatform os, 
+        private void CheckOSPlatforms( OSPlatform os,
             string expectedPlatforms )
         {
-            Assert.That(expectedPlatforms, Is.SubsetOf(PlatformHelper.OSPlatforms).IgnoreCase, 
+            Assert.That(expectedPlatforms, Is.SubsetOf(PlatformHelper.OSPlatforms).IgnoreCase,
                 "Error in test: one or more expected platforms is not a valid OSPlatform.");
 
             CheckPlatforms(
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
                 PlatformHelper.OSPlatforms );
         }
 
-        private void CheckRuntimePlatforms( RuntimeFramework runtimeFramework, 
+        private void CheckRuntimePlatforms( RuntimeFramework runtimeFramework,
             string expectedPlatforms )
         {
             CheckPlatforms(
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
                 PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH");
         }
 
-        private void CheckPlatforms( PlatformHelper helper, 
+        private void CheckPlatforms( PlatformHelper helper,
             string expectedPlatforms, string checkPlatforms )
         {
             string[] expected = expectedPlatforms.Split( new char[] { ',' } );
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
                         break;
 
                 bool didPass = helper.IsPlatformSupported( testPlatform );
-                
+
                 if ( shouldPass && !didPass )
                     Assert.Fail( "Failed to detect {0}", testPlatform );
                 else if ( didPass && !shouldPass )
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectWin95()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32Windows, new Version( 4, 0 ) ),
                 "Win95,Win32Windows,Win32,Win" );
         }
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectWin98()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32Windows, new Version( 4, 10 ) ),
                 "Win98,Win32Windows,Win32,Win" );
         }
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectWinMe()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32Windows, new Version( 4, 90 ) ),
                 "WinMe,Win32Windows,Win32,Win" );
         }
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectNT3()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32NT, new Version( 3, 51 ) ),
                 "NT3,Win32NT,Win32,Win" );
         }
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectNT4()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32NT, new Version( 4, 0 ) ),
                 "NT4,Win32NT,Win32,Win" );
         }
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectWin2K()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32NT, new Version( 5, 0 ) ),
                 "Win2K,NT5,Win32NT,Win32,Win" );
         }
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectWinXP()
         {
-            CheckOSPlatforms( 
+            CheckOSPlatforms(
                 new OSPlatform( PlatformID.Win32NT, new Version( 5, 1 ) ),
                 "WinXP,NT5,Win32NT,Win32,Win" );
         }
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectWinXPProfessionalX64()
         {
-                CheckOSPlatforms( 
+                CheckOSPlatforms(
                         new OSPlatform( PlatformID.Win32NT, new Version( 5, 2 ), OSPlatform.ProductType.WorkStation ),
                         "WinXP,NT5,Win32NT,Win32,Win" );
         }
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Internal
                 new OSPlatform(OSPlatform.UnixPlatformID_Microsoft, new Version(0,0)),
                 "UNIX,Linux");
         }
-        
+
         [Test]
         public void DetectUnixUnderMono()
         {
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Internal
                 new OSPlatform(OSPlatform.UnixPlatformID_Mono, new Version(0,0)),
                 "UNIX,Linux");
         }
-        
+
         [Test]
         public void DetectXbox()
         {
@@ -274,7 +274,7 @@ namespace NUnit.Framework.Internal
         public void DetectNet35()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(3, 5)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(3, 5)),
                 "Net,Net-2.0,Net-3.0,Net-3.5");
         }
 
@@ -282,7 +282,7 @@ namespace NUnit.Framework.Internal
         public void DetectNet40()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(4, 0, 30319, 0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 0, 30319, 0)),
                 "Net,Net-4.0");
         }
 
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Internal
         public void DetectNet45()
         {
             CheckRuntimePlatforms(
-                new RuntimeFramework(RuntimeType.Net, new Version(4, 5, 0, 0)),
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 5, 0, 0)),
                 "Net,Net-4.0,Net-4.5");
         }
 
@@ -325,7 +325,7 @@ namespace NUnit.Framework.Internal
                 new RuntimeFramework(RuntimeType.Mono, new Version(3, 0)),
                 "Mono,Mono-2.0,Mono-3.0");
         }
- 
+
         [Test]
         public void DetectMono35()
         {
@@ -333,7 +333,7 @@ namespace NUnit.Framework.Internal
                 new RuntimeFramework(RuntimeType.Mono, new Version(3, 5)),
                 "Mono,Mono-2.0,Mono-3.0,Mono-3.5");
         }
- 
+
         [Test]
         public void DetectMono40()
         {
@@ -357,7 +357,7 @@ namespace NUnit.Framework.Internal
                 new RuntimeFramework(RuntimeType.NetCore, new Version(0, 0, 0)),
                 "NetCore");
         }
-        
+
         [Test]
         public void DetectExactVersion()
         {
@@ -414,7 +414,7 @@ namespace NUnit.Framework.Internal
         {
             PlatformAttribute attr = new PlatformAttribute( "Net-1.0,Net11,Mono" );
             Assert.Throws<InvalidPlatformException>(
-                () => winXPHelper.IsPlatformSupported(attr), 
+                () => winXPHelper.IsPlatformSupported(attr),
                 "Invalid platform name Net11");
         }
 
@@ -452,4 +452,3 @@ namespace NUnit.Framework.Internal
 #endif
     }
 }
-#endif

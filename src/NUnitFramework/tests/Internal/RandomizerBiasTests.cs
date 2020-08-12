@@ -29,9 +29,9 @@ namespace NUnit.Framework.Internal
         private const double ConfidenceInterval = 0.00965802342765787;
 
         /* Random generators wouldn’t be truly random if it was impossible to hit a highly biased sequence.
-        These tests fail as a false negative whenever an actually-*unbiased* generator provides a sequence at
+        These tests fail as a false positive whenever an actually-*unbiased* generator provides a sequence at
         random that turns out to be biased this time.
-        What we can do is quantify the *chance* of such a false negative and choose that chance to be sufficiently
+        What we can do is quantify the *chance* of such a false positive and choose that chance to be sufficiently
         small to not bother us with spurious failures, while maintaining a precise enough signal to fail loud
         and clear if the generator is biased.
 
@@ -40,15 +40,15 @@ namespace NUnit.Framework.Internal
         (https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval) is run 100×6×5×97 = ‭291,000‬ times
         per month.
 
-        Let’s see what happens if we set the chance of a false negative to one in a million, a 99.9999% chance of
-        success per trial. The chance of all 291,000 trials per month having absolutely no false negative is
-        99.9999% ^ ‭291,000‬, or ~74.75%. The chance of there being at least one false negative per month is then
-        100% - 74.75%, or 25.25‬%, or one false negative on average every four months. This seems too frequent.
+        Let’s see what happens if we set the chance of a false positive to one in a million, a 99.9999% chance of
+        success per trial. The chance of all 291,000 trials per month having absolutely no false positive is
+        99.9999% ^ ‭291,000‬, or ~74.75%. The chance of there being at least one false positive per month is then
+        100% - 74.75%, or 25.25‬%, or one false positive on average every four months. This seems too frequent.
 
-        Rather than expecting at least one false negative every four months, we can drive that chance down by
-        choosing the per-trial confidence to be 99.9999999%, or a one-in-a-billion chance of false negative.
-        This brings the per-month chance of all trials having no false negative to 99.97%. One or more false
-        negatives would then only occur on average only one month out of every 286 years.
+        Rather than expecting at least one false positive every four months, we can drive that chance down by
+        choosing the per-trial confidence to be 99.9999999%, or a one-in-a-billion chance of false positive.
+        This brings the per-month chance of all trials having no false positive to 99.97%. One or more false
+        positives would then only occur on average only one month out of every 286 years.
 
         One in a billion, or 99.9999999% confidence, seems desirable. To obtain this confidence level, we need a
         sufficiently high trial count or a sufficiently high tolerance. I chose a trial count of 100,000 because

@@ -20,8 +20,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
+#nullable enable
+
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -32,6 +37,7 @@ namespace NUnit.Framework.Constraints
     public class CollectionSubsetConstraint : CollectionItemsEqualConstraint
     {
         private readonly IEnumerable _expected;
+        private List<object>? _extraItems;
 
         /// <summary>
         /// Construct a CollectionSubsetConstraint
@@ -70,9 +76,20 @@ namespace NUnit.Framework.Constraints
             CollectionTally tally = Tally(_expected);
             tally.TryRemove(actual);
 
-            return tally.Result.ExtraItems.Count == 0;
+            _extraItems = tally.Result.ExtraItems;
+
+            return _extraItems.Count == 0;
         }
 
+        /// <summary>
+        /// Test whether the constraint is satisfied by a given value.
+        /// </summary>
+        public override ConstraintResult ApplyTo<TActual>(TActual actual)
+        {
+            IEnumerable enumerable = ConstraintUtils.RequireActual<IEnumerable>(actual, nameof(actual));
+            bool matches = Matches(enumerable);
+            return new CollectionSubsetConstraintResult(this, actual, matches, _extraItems);
+        }
 
         /// <summary>
         /// Flag the constraint to use the supplied predicate function
@@ -84,5 +101,31 @@ namespace NUnit.Framework.Constraints
             base.Using(EqualityAdapter.For(comparison));
             return this;
         }
+
+        #region Private CollectionSubsetConstraintResult Class
+
+        private sealed class CollectionSubsetConstraintResult : ConstraintResult
+        {
+            private readonly List<object>? _extraItems;
+
+            public CollectionSubsetConstraintResult(IConstraint constraint, object actualValue, bool isSuccess, List<object>? extraItems)
+                : base(constraint, actualValue, isSuccess)
+            {
+                _extraItems = extraItems;
+            }
+
+            public override void WriteAdditionalLinesTo(MessageWriter writer)
+            {
+                if (_extraItems?.Count > 0)
+                {
+                    string extraItemsMessage = "Extra items: ";
+                    extraItemsMessage += MsgUtils.FormatCollection(_extraItems);
+
+                    writer.WriteMessageLine(extraItemsMessage);
+                }
+            }
+        }
+
+        #endregion
     }
 }

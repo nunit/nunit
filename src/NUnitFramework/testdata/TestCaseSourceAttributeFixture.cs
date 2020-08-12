@@ -50,6 +50,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         #region Test With Ignored TestCaseData
 
         [TestCaseSource(nameof(IgnoredSource))]
+        [TestCaseSource(nameof(IgnoredWithDateSource))]
         public void MethodWithIgnoredTestCases(int num)
         {
         }
@@ -60,7 +61,22 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             {
                 return new object[] {
                     new TestCaseData(1),
-                    new TestCaseData(2).Ignore("Don't Run Me!")
+                    new TestCaseData(2).Ignore("Don't Run Me!"),
+
+                };
+            }
+        }
+
+        private static IEnumerable IgnoredWithDateSource
+        {
+            get
+            {
+                DateTimeOffset utcTime = DateTimeOffset.UtcNow;
+                TimeSpan timeZoneOffset = utcTime - utcTime.ToLocalTime();
+                return new object[] {
+                    new TestCaseData(3).Ignore("Ignore Me Until The Future").Until(new DateTimeOffset(4242, 01, 01, 0, 0, 0, timeZoneOffset)),
+                    new TestCaseData(4).Ignore("I Was Ignored in the Past").Until(new DateTimeOffset(1492, 01, 01, 0, 0, 0, timeZoneOffset)),
+                    new TestCaseData(5).Ignore("Ignore Me Until The Future").Until(new DateTimeOffset(4242, 01, 01, 12, 42, 33, timeZoneOffset)),
                 };
             }
         }

@@ -374,7 +374,6 @@ namespace NUnit.Framework.Attributes
         }
     }
 
-#if !NETCOREAPP1_1
     [TestFixture]
     class ChangesMadeInFixtureSetUp
     {
@@ -406,5 +405,4 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("en-GB", Thread.CurrentThread.CurrentUICulture.Name, "#CurrentUICulture");
         }
     }
-#endif
 }

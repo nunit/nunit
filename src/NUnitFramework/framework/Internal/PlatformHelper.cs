@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PLATFORM_DETECTION
 using System;
 using System.Linq;
 
@@ -292,7 +291,7 @@ namespace NUnit.Framework.Internal
             switch (platformName.ToUpper())
             {
                 case "NET":
-                    return IsRuntimeSupported(RuntimeType.Net, versionSpecification);
+                    return IsRuntimeSupported(RuntimeType.NetFramework, versionSpecification);
 
                 case "NETCORE":
                     return IsNetCoreRuntimeSupported(RuntimeType.NetCore, versionSpecification);
@@ -336,4 +335,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-#endif

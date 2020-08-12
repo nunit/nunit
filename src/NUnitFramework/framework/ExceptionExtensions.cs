@@ -32,7 +32,7 @@ namespace NUnit.Framework
         /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the Exception.StackTrace
         /// property." See also <see cref="Assert.GetEnvironmentStackTraceWithoutThrowing"/>.
         /// </summary>
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
         // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
@@ -56,7 +56,7 @@ namespace NUnit.Framework
         /// If <see cref="Exception.Message"/> throws, returns "SomeException was thrown by the Exception.Message
         /// property."
         /// </summary>
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
         // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
@@ -79,7 +79,7 @@ namespace NUnit.Framework
         /// <summary>
         /// If <see cref="Exception.Data"/> throws, returns "SomeException was thrown by the Exception.Data property."
         /// </summary>
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
         // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.

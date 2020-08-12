@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -38,8 +38,6 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.0)")]
 #elif NET35
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 3.5)")]
-#elif NETSTANDARD1_4
-[assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 1.4)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
 #else

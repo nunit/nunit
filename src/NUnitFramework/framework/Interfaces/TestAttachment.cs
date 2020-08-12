@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
@@ -35,16 +37,16 @@ namespace NUnit.Framework.Interfaces
         public string FilePath { get; }
 
         /// <summary>
-        /// User specifed description of attachment. May be null.
+        /// User specified description of attachment. May be null.
         /// </summary>
-        public string Description { get; }
+        public string? Description { get; }
 
         /// <summary>
         /// Creates a TestAttachment class to represent a file attached to a test result.
         /// </summary>
         /// <param name="filePath">Absolute file path to attachment file</param>
-        /// <param name="description">User specifed description of attachment. May be null.</param>
-        public TestAttachment(string filePath, string description)
+        /// <param name="description">User specified description of attachment. May be null.</param>
+        public TestAttachment(string filePath, string? description)
         {
             FilePath = filePath;
             Description = description;

@@ -33,13 +33,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-#if NETSTANDARD1_4
-        const string UriSchemeFile = "file";
-        const string SchemeDelimiter = "://";
-#else
         static readonly string UriSchemeFile = Uri.UriSchemeFile;
         static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
-#endif
 
         #region GetAssemblyPath
 
@@ -52,16 +47,12 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
-#if NETSTANDARD1_4
-            return assembly.ManifestModule.FullyQualifiedName;
-#else
             string codeBase = assembly.CodeBase;
 
             if (IsFileUri(codeBase))
                 return GetAssemblyPathFromCodeBase(codeBase);
 
             return assembly.Location;
-#endif
         }
 
         #endregion
@@ -96,7 +87,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD1_4 || NETSTANDARD2_0
+#if NETSTANDARD2_0
         private sealed class ReflectionAssemblyLoader
         {
             private static ReflectionAssemblyLoader instance;

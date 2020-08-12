@@ -24,6 +24,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -36,11 +37,11 @@ namespace NUnit.Framework.Internal.Execution
         public void CreateWorkItems()
         {
             IMethodInfo method = new MethodWrapper(typeof(DummyFixture), "DummyTest");
-            ITest test = new TestMethod(method);
-            _workItem = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty);
+            Test test = new TestMethod(method);
 
             _context = new TestExecutionContext();
-            _workItem.InitializeContext(_context);
+
+            _workItem = TestBuilder.CreateWorkItem(test, _context);
         }
 
         [Test]
@@ -97,8 +98,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-
-#if APARTMENT_STATE
 
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)
@@ -204,6 +203,5 @@ namespace NUnit.Framework.Internal.Execution
                 throw new System.NotImplementedException();
             }
         }
-#endif
     }
 }
