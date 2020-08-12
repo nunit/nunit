@@ -79,6 +79,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 parms.ApplyToTest(testMethod);
 
+                //if (parms.TestName != null && !string.IsNullOrEmpty(parms.TestName?.Replace(" ", "")))
                 if (parms.TestName != null)
                 {
                     // The test is simply for efficiency
@@ -92,7 +93,14 @@ namespace NUnit.Framework.Internal.Builders
                 }
                 else
                 {
-                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    if (parms.OriginalArguments.Length > 0)
+                    {
+                        testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    }
+                    else
+                    {
+                        testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
+                    }                  
                 }
             }
             else
@@ -164,7 +172,7 @@ namespace NUnit.Framework.Internal.Builders
             object?[]? arglist = null;
             int argsProvided = 0;
 
-            if (parms != null)
+            if (parms != null && testMethod.RunState > RunState.NotRunnable)
             {
                 testMethod.parms = parms;
                 testMethod.RunState = parms.RunState;
