@@ -38,10 +38,6 @@ namespace NUnit.Framework.Internal
     [SecuritySafeCritical]
     public class OSPlatform
     {
-        readonly PlatformID _platform;
-        readonly Version _version;
-        readonly ProductType _product;
-
         #region Static Members
         private static readonly Lazy<OSPlatform> currentPlatform = new Lazy<OSPlatform> (() =>
         {
@@ -51,12 +47,17 @@ namespace NUnit.Framework.Internal
 
             if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 5)
             {
+                if (os.Version.Major == 6 && os.Version.Minor >= 2)
+                    os = new OperatingSystem(os.Platform, GetWindows81PlusVersion(os.Version));
+#if NETSTANDARD2_0
+                ProductType productType = GetProductType();
+                currentPlatform = new OSPlatform(os.Platform, os.Version, productType);
+#else
                 OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
                 osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
                 GetVersionEx(ref osvi);
-                if (os.Version.Major == 6 && os.Version.Minor >= 2)
-                    os = new OperatingSystem(os.Platform, GetWindows81PlusVersion(os.Version));
                 currentPlatform = new OSPlatform(os.Platform, os.Version, (ProductType)osvi.ProductType);
+#endif
             }
             else if (CheckIfIsMacOSX(os.Platform))
             {
@@ -101,6 +102,9 @@ namespace NUnit.Framework.Internal
                 return currentPlatform.Value;
             }
         }
+        #endregion
+
+        #region Members used for Win32NT platform only
 
         /// <summary>
         /// Gets the actual OS Version, not the incorrect value that might be
@@ -150,9 +154,7 @@ namespace NUnit.Framework.Internal
             }
             return version;
         }
-        #endregion
 
-        #region Members used for Win32NT platform only
         /// <summary>
         /// Product Type Enumeration used for Windows
         /// </summary>
@@ -179,6 +181,35 @@ namespace NUnit.Framework.Internal
             Server,
         }
 
+#if NETSTANDARD2_0
+        private static ProductType GetProductType()
+        {
+            try
+            {
+                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                {
+                    if (key != null)
+                    {
+                        var installationType = key.GetValue("InstallationType") as string;
+                        switch(installationType)
+                        {
+                            case "Client":
+                                return ProductType.WorkStation;
+                            case "Server":
+                            case "Server Core":
+                                return ProductType.Server;
+                            default:
+                                return ProductType.Unknown;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return ProductType.Unknown;
+        }
+#else
         [StructLayout(LayoutKind.Sequential)]
         struct OSVERSIONINFOEX
         {
@@ -200,15 +231,16 @@ namespace NUnit.Framework.Internal
 
         [DllImport("Kernel32.dll")]
         private static extern bool GetVersionEx(ref OSVERSIONINFOEX osvi);
-        #endregion
+#endif
+#endregion
 
         /// <summary>
         /// Construct from a platform ID and version
         /// </summary>
         public OSPlatform(PlatformID platform, Version version)
         {
-            _platform = platform;
-            _version = version;
+            Platform = platform;
+            Version = version;
         }
 
         /// <summary>
@@ -217,16 +249,13 @@ namespace NUnit.Framework.Internal
         public OSPlatform(PlatformID platform, Version version, ProductType product)
             : this( platform, version )
         {
-            _product = product;
+            Product = product;
         }
 
         /// <summary>
         /// Get the platform ID of this instance
         /// </summary>
-        public PlatformID Platform
-        {
-            get { return _platform; }
-        }
+        public PlatformID Platform { get; }
 
         /// <summary>
         /// Implemented to use in place of Environment.OSVersion.ToString()
@@ -262,18 +291,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the Version of this instance
         /// </summary>
-        public Version Version
-        {
-            get { return _version; }
-        }
+        public Version Version { get; }
 
         /// <summary>
         /// Get the Product Type of this instance
         /// </summary>
-        public ProductType Product
-        {
-            get { return _product; }
-        }
+        public ProductType Product { get; }
 
         /// <summary>
         /// Return true if this is a windows platform
@@ -282,10 +305,10 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return _platform == PlatformID.Win32NT
-                    || _platform == PlatformID.Win32Windows
-                    || _platform == PlatformID.Win32S
-                    || _platform == PlatformID.WinCE;
+                return Platform == PlatformID.Win32NT
+                    || Platform == PlatformID.Win32Windows
+                    || Platform == PlatformID.Win32S
+                    || Platform == PlatformID.WinCE;
             }
         }
 
@@ -296,8 +319,8 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return _platform == UnixPlatformID_Microsoft
-                    || _platform == UnixPlatformID_Mono;
+                return Platform == UnixPlatformID_Microsoft
+                    || Platform == UnixPlatformID_Mono;
             }
         }
 
@@ -306,7 +329,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin32S
         {
-            get { return _platform == PlatformID.Win32S; }
+            get { return Platform == PlatformID.Win32S; }
         }
 
         /// <summary>
@@ -314,7 +337,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin32Windows
         {
-            get { return _platform == PlatformID.Win32Windows; }
+            get { return Platform == PlatformID.Win32Windows; }
         }
 
         /// <summary>
@@ -322,7 +345,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin32NT
         {
-            get { return _platform == PlatformID.Win32NT; }
+            get { return Platform == PlatformID.Win32NT; }
         }
 
         /// <summary>
@@ -330,7 +353,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWinCE
         {
-            get { return _platform == PlatformID.WinCE; }
+            get { return Platform == PlatformID.WinCE; }
         }
 
         /// <summary>
@@ -338,7 +361,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsXbox
         {
-            get { return _platform == XBoxPlatformID; }
+            get { return Platform == XBoxPlatformID; }
         }
 
         /// <summary>
@@ -346,7 +369,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsMacOSX
         {
-            get { return _platform == MacOSXPlatformID; }
+            get { return Platform == MacOSXPlatformID; }
         }
 
         static int UnameSafe(IntPtr buf)
@@ -370,7 +393,7 @@ namespace NUnit.Framework.Internal
         static bool CheckIfIsMacOSX(PlatformID platform)
         {
             if (platform == PlatformID.MacOSX)
-            return true;
+                return true;
 
             if (platform != PlatformID.Unix)
                 return false;
@@ -391,7 +414,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin95
         {
-            get { return _platform == PlatformID.Win32Windows && _version.Major == 4 && _version.Minor == 0; }
+            get { return Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 0; }
         }
 
         /// <summary>
@@ -399,7 +422,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin98
         {
-            get { return _platform == PlatformID.Win32Windows && _version.Major == 4 && _version.Minor == 10; }
+            get { return Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 10; }
         }
 
         /// <summary>
@@ -407,7 +430,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWinME
         {
-            get { return _platform == PlatformID.Win32Windows && _version.Major == 4 && _version.Minor == 90; }
+            get { return Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 90; }
         }
 
         /// <summary>
@@ -415,7 +438,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT3
         {
-            get { return _platform == PlatformID.Win32NT && _version.Major == 3; }
+            get { return Platform == PlatformID.Win32NT && Version.Major == 3; }
         }
 
         /// <summary>
@@ -423,7 +446,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT4
         {
-            get { return _platform == PlatformID.Win32NT && _version.Major == 4; }
+            get { return Platform == PlatformID.Win32NT && Version.Major == 4; }
         }
 
         /// <summary>
@@ -431,7 +454,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT5
         {
-            get { return _platform == PlatformID.Win32NT && _version.Major == 5; }
+            get { return Platform == PlatformID.Win32NT && Version.Major == 5; }
         }
 
         /// <summary>
@@ -439,7 +462,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin2K
         {
-            get { return IsNT5 && _version.Minor == 0; }
+            get { return IsNT5 && Version.Minor == 0; }
         }
 
         /// <summary>
@@ -447,7 +470,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWinXP
         {
-            get { return IsNT5 && (_version.Minor == 1  || _version.Minor == 2 && Product == ProductType.WorkStation); }
+            get { return IsNT5 && (Version.Minor == 1  || Version.Minor == 2 && Product == ProductType.WorkStation); }
         }
 
         /// <summary>
@@ -455,7 +478,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWin2003Server
         {
-            get { return IsNT5 && _version.Minor == 2 && Product == ProductType.Server; }
+            get { return IsNT5 && Version.Minor == 2 && Product == ProductType.Server; }
         }
 
         /// <summary>
@@ -463,7 +486,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT6
         {
-            get { return _platform == PlatformID.Win32NT && _version.Major == 6; }
+            get { return Platform == PlatformID.Win32NT && Version.Major == 6; }
         }
 
         /// <summary>
@@ -471,7 +494,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT60
         {
-            get { return IsNT6 && _version.Minor == 0; }
+            get { return IsNT6 && Version.Minor == 0; }
         }
 
         /// <summary>
@@ -479,7 +502,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT61
         {
-            get { return IsNT6 && _version.Minor == 1; }
+            get { return IsNT6 && Version.Minor == 1; }
         }
 
         /// <summary>
@@ -487,7 +510,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT62
         {
-            get { return IsNT6 && _version.Minor == 2; }
+            get { return IsNT6 && Version.Minor == 2; }
         }
 
         /// <summary>
@@ -495,7 +518,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsNT63
         {
-            get { return IsNT6 && _version.Minor == 3; }
+            get { return IsNT6 && Version.Minor == 3; }
         }
 
         /// <summary>
@@ -583,7 +606,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWindows10
         {
-            get { return _platform == PlatformID.Win32NT && _version.Major == 10 && Product == ProductType.WorkStation; }
+            get { return Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.WorkStation; }
         }
 
         /// <summary>
@@ -592,7 +615,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsWindowsServer10
         {
-            get { return _platform == PlatformID.Win32NT && _version.Major == 10 && Product == ProductType.Server; }
+            get { return Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.Server; }
         }
     }
 }
