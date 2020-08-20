@@ -558,6 +558,38 @@ namespace NUnit.Framework.Constraints
             }
 
             [Test]
+            public void UsesProvidedEqualityComparerForExpectedIsString()
+            {
+                var comparer = new ObjectToStringEqualityComparer();
+                Assert.That(4, Is.EqualTo("4").Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedEqualityComparerForActualIsString()
+            {
+                var comparer = new ObjectToStringEqualityComparer();
+                Assert.That("4", Is.EqualTo(4).Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedComparerForExpectedIsString()
+            {
+                var comparer = new ObjectToStringComparer();
+                Assert.That(4, Is.EqualTo("4").Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedComparerForActualIsString()
+            {
+                var comparer = new ObjectToStringComparer();
+                Assert.That("4", Is.EqualTo(4).Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
             public void UsesProvidedGenericEqualityComparer()
             {
                 var comparer = new GenericEqualityComparer<int>();
