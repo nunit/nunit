@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Filters
         public OrFilter() { }
 
         /// <summary>
-        /// Constructs an AndFilter from an array of filters
+        /// Constructs an OrFilter from an array of filters
         /// </summary>
         /// <param name="filters"></param>
         public OrFilter( params TestFilter[] filters ) : base(filters) { }
