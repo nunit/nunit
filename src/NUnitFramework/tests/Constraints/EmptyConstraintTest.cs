@@ -114,11 +114,22 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void NotEmptyDirectory()
+        public void NotEmptyDirectory_ContainsFile()
         {
             using (var testDir = new TestDirectory())
             {
                 File.Create(Path.Combine(testDir.Directory.FullName, "DUMMY.FILE")).Dispose();
+
+                Assert.That(testDir.Directory, Is.Not.Empty);
+            }
+        }
+
+        [Test]
+        public void NotEmptyDirectory_ContainsDirectory()
+        {
+            using (var testDir = new TestDirectory())
+            {
+                Directory.CreateDirectory(Path.Combine(testDir.Directory.FullName, "DUMMY_DIR"));
 
                 Assert.That(testDir.Directory, Is.Not.Empty);
             }
