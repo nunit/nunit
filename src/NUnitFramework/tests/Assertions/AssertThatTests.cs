@@ -266,7 +266,7 @@ namespace NUnit.Framework.Assertions
             ITestResult result = TestBuilder.RunTestFixture(typeof(AssertCountFixture));
 
             int totalCount = 0;
-            foreach (TestResult childResult in result.Children)
+            foreach (var childResult in result.Children)
             {
                 int expectedCount = childResult.Name == "ThreeAsserts" ? 3 : 1;
                 Assert.That(childResult.AssertCount, Is.EqualTo(expectedCount), "Bad count for {0}", childResult.Name);

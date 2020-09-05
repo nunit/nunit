@@ -57,7 +57,7 @@ namespace NUnit.TestUtilities
         {
             if (result.HasChildren)
             {
-                foreach (TestResult childResult in result.Children)
+                foreach (var childResult in result.Children)
                 {
                     if (childResult.Name == name)
                         return childResult;
