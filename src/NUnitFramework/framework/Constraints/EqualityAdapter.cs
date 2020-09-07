@@ -49,13 +49,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public virtual bool CanCompare(object x, object y)
         {
-            if (x is string && y is string)
-                return true;
-
-            if (x is IEnumerable || y is IEnumerable)
-                return false;
-
-            return true;
+            return (x is string || !(x is IEnumerable)) &&
+                   (y is string || !(y is IEnumerable));
         }
 
         #region Nested IComparer Adapter
