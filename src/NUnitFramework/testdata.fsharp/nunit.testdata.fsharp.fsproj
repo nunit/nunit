@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net45;netcoreapp2.1</TargetFrameworks>
     <Deterministic>false</Deterministic>
+    <FSharpCoreImplicitPackageVersion>4.7.2</FSharpCoreImplicitPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
