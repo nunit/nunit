@@ -118,6 +118,11 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var item in setUpTearDownList)
                     command = new SetUpTearDownCommand(command, item);
 
+                // Dispose of fixture if necessary
+                var isInstancePerTestCase = parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase;
+                if (isInstancePerTestCase && parentFixture is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(parentFixture.TypeInfo.Type))
+                    command = new DisposeFixtureCommand(command);
+
                 // In the current implementation, upstream actions only apply to tests. If that should change in the future,
                 // then actions would have to be tested for here. For now we simply assert it in Debug. We allow
                 // ActionTargets.Default, because it is passed down by ParameterizedMethodSuite.
@@ -141,7 +146,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // Add a construct command and optionally a dispose command in case of instance per test case.
-                if (parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase)
+                if (isInstancePerTestCase)
                 {
                     command = new FixturePerTestCaseCommand(command);
                 }

@@ -41,7 +41,9 @@ namespace NUnit.Framework.Internal.Commands
         public DisposeFixtureCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.OperationValid(Test is IDisposableFixture, "DisposeFixtureCommand does not apply to a " + Test.GetType().Name);
+            Guard.OperationValid(
+                Test is IDisposableFixture || Test?.Parent is IDisposableFixture, 
+                $"DisposeFixtureCommand does not apply neither to {Test.GetType().Name}, nor to {Test.Parent?.GetType().Name ?? "it's parent (null)"}");
 
             AfterTest = (context) =>
             {

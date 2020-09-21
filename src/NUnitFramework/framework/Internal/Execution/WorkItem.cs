@@ -366,8 +366,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
         /// <param name="tearDownMethods">Unsorted array of teardown MethodInfos.</param>
+        /// <param name="methodValidator">Method validator used before each method execution.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
-        protected List<SetUpTearDownItem> BuildSetUpTearDownList(MethodInfo[] setUpMethods, MethodInfo[] tearDownMethods)
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(
+            MethodInfo[] setUpMethods, 
+            MethodInfo[] tearDownMethods,
+            IMethodValidator methodValidator = null)
         {
             Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
             Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
@@ -380,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
 
             while (fixtureType != null && fixtureType != typeof(object))
             {
-                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
+                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods, methodValidator);
                 if (node.HasMethods)
                     list.Add(node);
 
@@ -402,7 +406,11 @@ namespace NUnit.Framework.Internal.Execution
         // teardown methods, found using a single reflection call,
         // and then descend through the inheritance hierarchy,
         // adding each method to the appropriate level as we go.
-        private static SetUpTearDownItem BuildNode(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        private static SetUpTearDownItem BuildNode(
+            Type fixtureType, 
+            IList<MethodInfo> setUpMethods, 
+            IList<MethodInfo> tearDownMethods,
+            IMethodValidator methodValidator)
         {
             // Create lists of methods for this level only.
             // Note that FindAll can't be used because it's not
@@ -410,7 +418,7 @@ namespace NUnit.Framework.Internal.Execution
             var mySetUpMethods = SelectMethodsByDeclaringType(fixtureType, setUpMethods);
             var myTearDownMethods = SelectMethodsByDeclaringType(fixtureType, tearDownMethods);
 
-            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods);
+            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods, methodValidator);
         }
 
         private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
