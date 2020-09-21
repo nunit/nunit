@@ -21,10 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.LifeCycleTests;
@@ -35,20 +32,6 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class LifeCycleAttributeTests
     {
-        [Test]
-        public void OneTimeSetupTearDownIsCalledOnFirstInstance()
-        {
-            OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeSetupGuid = Guid.Empty;
-            OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeTearDownGuid = Guid.Empty;
-
-            var fixture = new OneTimeSetupAndTearDownFixtureInstancePerTestCase();
-            TestBuilder.RunTestFixture(fixture);
-
-            Assert.AreNotEqual(fixture.Guid, Guid.Empty);
-            Assert.AreEqual(fixture.Guid, OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeSetupGuid);
-            Assert.AreEqual(fixture.Guid, OneTimeSetupAndTearDownFixtureInstancePerTestCase.OneTimeTearDownGuid);
-        }
-
         [Test]
         public void SetupTearDownIsCalledOnce()
         {
@@ -62,16 +45,26 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void OneTimeSetupTearDownIsCalledOnce()
         {
-            OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount = 0;
-            OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount = 0;
+            StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount = 0;
+            StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount = 0;
 
-            var fixture = TestBuilder.MakeFixture(typeof(OneTimeSetupAndTearDownFixtureInstancePerTestCase));
+            var fixture = TestBuilder.MakeFixture(typeof(StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase));
 
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
-            Assert.AreEqual(1, OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount);
-            Assert.AreEqual(1, OneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount);
+            Assert.AreEqual(1, StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount);
+            Assert.AreEqual(1, StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount);
+        }
+
+        [Test]
+        public void InstanceOneTimeSetupTearDownThrows()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(InstanceOneTimeSetupAndTearDownFixtureInstancePerTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Label, Is.EqualTo("Error"));
         }
 
         [Test]
@@ -107,7 +100,7 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
-            Assert.AreEqual(2, DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls);
+            Assert.AreEqual(3, DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls);
         }
 
         [Test]

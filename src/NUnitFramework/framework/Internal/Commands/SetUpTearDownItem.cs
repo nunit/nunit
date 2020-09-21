@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -33,6 +34,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownItem
     {
+        private readonly IMethodValidator _methodValidator;
         private readonly IList<MethodInfo> _setUpMethods;
         private readonly IList<MethodInfo> _tearDownMethods;
         private bool _setUpWasRun;
@@ -42,10 +44,15 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="setUpMethods">A list of setup methods for this level</param>
         /// <param name="tearDownMethods">A list teardown methods for this level</param>
-        public SetUpTearDownItem(IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        /// <param name="methodValidator">A method validator to validate each method before calling.</param>
+        public SetUpTearDownItem(
+            IList<MethodInfo> setUpMethods, 
+            IList<MethodInfo> tearDownMethods, 
+            IMethodValidator methodValidator = null)
         {
             _setUpMethods = setUpMethods;
             _tearDownMethods = tearDownMethods;
+            _methodValidator = methodValidator;
         }
 
         /// <summary>
@@ -100,9 +107,10 @@ namespace NUnit.Framework.Internal.Commands
                 }
         }
 
-        private static void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
+        private void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
         {
             Guard.ArgumentNotAsyncVoid(method, nameof(method));
+            _methodValidator?.Validate(method);
 
             if (AsyncToSyncAdapter.IsAsyncOperation(method))
                 AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));

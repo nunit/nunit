@@ -31,7 +31,6 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class FixturePerTestCaseCommand : BeforeAndAfterTestCommand
     {
-        private bool instanceCreated = false;
         /// <summary>
         /// Handles the construction and disposement of a fixture per test case
         /// </summary>
@@ -59,28 +58,11 @@ namespace NUnit.Framework.Internal.Commands
                     context.TestObject = typeInfo.Construct(testSuite.Arguments);
                     Test.Fixture = context.TestObject;
                     testSuite.Fixture = context.TestObject;
-                    instanceCreated = true;
                 }
             };
 
             AfterTest = (context) =>
             {
-                if (instanceCreated && typeInfo != null && !typeInfo.IsStaticClass && typeof(IDisposable).IsAssignableFrom(typeInfo.Type))
-                {
-                    try
-                    {
-                        var disposable = context.TestObject as IDisposable;
-                        if (disposable != null)
-                        {
-                            disposable.Dispose();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        context.CurrentResult.RecordTearDownException(ex);
-                    }
-                }
-
                 testSuite.Fixture = null;
             };
         }

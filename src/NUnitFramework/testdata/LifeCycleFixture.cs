@@ -76,27 +76,21 @@ namespace NUnit.TestData.LifeCycleTests
 
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class OneTimeSetupAndTearDownFixtureInstancePerTestCase
+    public class StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase
     {
         public static int TotalOneTimeSetupCount = 0;
         public static int TotalOneTimeTearDownCount = 0;
 
-        public Guid Guid = Guid.NewGuid();
-        public static Guid OneTimeSetupGuid = Guid.Empty;
-        public static Guid OneTimeTearDownGuid = Guid.Empty;
-
         [OneTimeSetUp]
-        public void OneTimeSetup()
+        public static void OneTimeSetup()
         {
             TotalOneTimeSetupCount++;
-            OneTimeSetupGuid = Guid;
         }
 
         [OneTimeTearDown]
-        public void OneTimeTearDown()
+        public static void OneTimeTearDown()
         {
             TotalOneTimeTearDownCount++;
-            OneTimeTearDownGuid = Guid;
         }
 
         [Test]
@@ -104,6 +98,29 @@ namespace NUnit.TestData.LifeCycleTests
 
         [Test]
         public void DummyTest2() {}
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class InstanceOneTimeSetupAndTearDownFixtureInstancePerTestCase
+    {
+        public int TotalOneTimeSetupCount = 0;
+        public int TotalOneTimeTearDownCount = 0;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup()
+        {
+            TotalOneTimeSetupCount++;
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            TotalOneTimeTearDownCount++;
+        }
+
+        [Test]
+        public void DummyTest1() {}
     }
 
     [TestFixture]
@@ -133,15 +150,24 @@ namespace NUnit.TestData.LifeCycleTests
         public static int DisposeCalls { get; set; }
 
         [Test]
+        [Order(1)]
         public void TestCase1()
         {
-
+            Assert.That(DisposeCalls, Is.EqualTo(0));
         }
 
         [Test]
+        [Order(2)]
         public void TestCase2()
         {
+            Assert.That(DisposeCalls, Is.EqualTo(1));
+        }
 
+        [Test]
+        [Order(3)]
+        public void TestCase3()
+        {
+            Assert.That(DisposeCalls, Is.EqualTo(2));
         }
 
         public void Dispose()
