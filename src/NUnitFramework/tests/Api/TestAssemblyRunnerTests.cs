@@ -245,6 +245,24 @@ namespace NUnit.Framework.Api
             var explorer = _runner.ExploreTests(filter);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(_runner.CountTestCases(filter)));
         }
+
+        [Test]
+        public void ExploreTests_AfterLoad_WithFilter_TestSuitesRetainProperties()
+        {
+            LoadMockAssembly();
+            ITestFilter filter = new CategoryFilter("FixtureCategory");
+
+            var explorer = _runner.ExploreTests(filter);
+
+            var runnerFixture = _runner.LoadedTest.Tests[0].Tests[0].Tests[0].Tests[0];
+            var explorerFixture = explorer.Tests[0].Tests[0].Tests[0].Tests[0];
+
+            Assert.That(explorerFixture.Properties.Keys.Count, Is.EqualTo(runnerFixture.Properties.Keys.Count));
+            Assert.That(explorerFixture.Properties.Get(PropertyNames.Category),
+                Is.EqualTo(explorerFixture.Properties.Get(PropertyNames.Category)));
+            Assert.That(explorerFixture.Properties.Get(PropertyNames.Description),
+                Is.EqualTo(explorerFixture.Properties.Get(PropertyNames.Description)));
+        }
         #endregion
 
         #region Run
