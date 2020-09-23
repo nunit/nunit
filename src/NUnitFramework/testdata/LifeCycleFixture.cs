@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2019 Charlie Poole, Rob Prouse
+// Copyright (c) 2020 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,9 +23,6 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NUnit.TestData.LifeCycleTests
@@ -52,26 +49,41 @@ namespace NUnit.TestData.LifeCycleTests
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class SetupAndTearDownFixtureInstancePerTestCase
     {
-        public int TotalSetupCount = 0;
-        public int TotalTearDownCount = 0;
+        int _totalSetupCount = 0;
+        int _totalTearDownCount = 0;
 
         [SetUp]
         public void Setup()
         {
-            TotalSetupCount++;
+            _totalSetupCount++;
         }
 
         [TearDown]
         public void TearDown()
         {
-            TotalTearDownCount++;
+            _totalTearDownCount++;
         }
 
         [Test]
-        public void DummyTest1() { }
+        public void DummyTest1() 
+        {
+            Assert.That(_totalSetupCount, Is.EqualTo(1)); 
+            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+        }
 
         [Test]
-        public void DummyTest2() { }
+        public void DummyTest2()
+        {
+            Assert.That(_totalSetupCount, Is.EqualTo(1));
+            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DummyTest3()
+        {
+            Assert.That(_totalSetupCount, Is.EqualTo(1));
+            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+        }
     }
 
     [TestFixture]
@@ -191,5 +203,25 @@ namespace NUnit.TestData.LifeCycleTests
             RepeatCounter++;
             Assert.That(Counter, Is.EqualTo(1));
         }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    [Parallelizable(ParallelScope.All)]
+    public class ParallelLifeCycleFixtureInstancePerTestCase
+    {
+        public static int ConstructorCount = 0;
+
+        public ParallelLifeCycleFixtureInstancePerTestCase()
+        {
+            ConstructorCount++;
+        }
+
+        [Test]
+        public void DummyTest1() { }
+        [Test]
+        public void DummyTest2() { }
+        [Test]
+        public void DummyTest3() { }
     }
 }
