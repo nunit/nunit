@@ -35,11 +35,11 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SetupTearDownIsCalledOnce()
         {
-            var fixture = new SetupAndTearDownFixtureInstancePerTestCase();
-            TestBuilder.RunTestFixture(fixture);
+            var fixture = TestBuilder.MakeFixture(typeof(SetupAndTearDownFixtureInstancePerTestCase));
 
-            Assert.AreEqual(1, fixture.TotalSetupCount);
-            Assert.AreEqual(1, fixture.TotalTearDownCount);
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
         }
 
         [Test]
@@ -112,6 +112,15 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
             Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
+        }
+
+        [Test]
+        public void ConstructorIsCalledOnceForEachTestInParallelTests()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(ParallelLifeCycleFixtureInstancePerTestCase)); 
+            
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
     }
 }

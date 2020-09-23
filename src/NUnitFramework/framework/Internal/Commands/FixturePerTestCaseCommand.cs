@@ -53,17 +53,15 @@ namespace NUnit.Framework.Internal.Commands
 
             BeforeTest = (context) =>
             {
-                if (typeInfo != null && !typeInfo.IsStaticClass && testSuite.Fixture == null)
+                if (typeInfo != null && !typeInfo.IsStaticClass)
                 {
                     context.TestObject = typeInfo.Construct(testSuite.Arguments);
                     Test.Fixture = context.TestObject;
-                    testSuite.Fixture = context.TestObject;
                 }
             };
 
             AfterTest = (context) =>
             {
-                testSuite.Fixture = null;
             };
         }
     }
