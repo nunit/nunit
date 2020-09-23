@@ -117,7 +117,6 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ConstructorIsCalledOnceForEachTestInParallelTests()
         {
-            ParallelLifeCycleFixtureInstancePerTestCase.ConstructorCount = 0;
             var fixture = TestBuilder.MakeFixture(typeof(ParallelLifeCycleFixtureInstancePerTestCase)); 
             
             ITestResult result = TestBuilder.RunTest(fixture);

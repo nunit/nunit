@@ -210,18 +210,30 @@ namespace NUnit.TestData.LifeCycleTests
     [Parallelizable(ParallelScope.All)]
     public class ParallelLifeCycleFixtureInstancePerTestCase
     {
-        public static int ConstructorCount = 0;
+        int _setupCount = 0;
 
-        public ParallelLifeCycleFixtureInstancePerTestCase()
+        [SetUp]
+        public void SetUp()
         {
-            ConstructorCount++;
+            _setupCount++;
         }
 
         [Test]
-        public void DummyTest1() { }
+        public void DummyTest1() 
+        {
+            Assert.That(_setupCount, Is.EqualTo(1));
+        }
+
         [Test]
-        public void DummyTest2() { }
+        public void DummyTest2()
+        {
+            Assert.That(_setupCount, Is.EqualTo(1));
+        }
+
         [Test]
-        public void DummyTest3() { }
+        public void DummyTest3()
+        {
+            Assert.That(_setupCount, Is.EqualTo(1));
+        }
     }
 }
