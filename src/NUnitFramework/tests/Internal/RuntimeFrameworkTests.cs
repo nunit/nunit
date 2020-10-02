@@ -29,10 +29,10 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class RuntimeFrameworkTests
     {
-        static readonly RuntimeType currentRuntime =
 #if NETCOREAPP
-            RuntimeType.NetCore;
+        static readonly RuntimeType currentRuntime = RuntimeType.NetCore;
 #else
+        static readonly RuntimeType currentRuntime =
             Type.GetType("Mono.Runtime", false) != null
                 ? RuntimeType.Mono
                 : RuntimeType.NetFramework;
