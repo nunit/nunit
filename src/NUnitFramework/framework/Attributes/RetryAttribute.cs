@@ -24,6 +24,7 @@
 #nullable enable
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -87,7 +88,7 @@ namespace NUnit.Framework
             /// </summary>
             /// <param name="context">The context in which the test should run.</param>
             /// <returns>A TestResult</returns>
-            public override TestResult Execute(TestExecutionContext context)
+            public override async Task<TestResult> Execute(TestExecutionContext context)
             {
                 int count = _tryCount;
 
@@ -95,7 +96,7 @@ namespace NUnit.Framework
                 {
                     try
                     {
-                        context.CurrentResult = innerCommand.Execute(context);
+                        context.CurrentResult = await innerCommand.Execute(context);
                     }
                     // Commands are supposed to catch exceptions, but some don't
                     // and we want to look at restructuring the API in the future.

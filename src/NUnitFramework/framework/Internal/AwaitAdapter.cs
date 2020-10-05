@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Internal
     {
         public abstract bool IsCompleted { get; }
         public abstract void OnCompleted(Action action);
-        public abstract void BlockUntilCompleted();
+        public abstract Task BlockUntilCompleted();
         public abstract object GetResult();
 
         public static bool IsAwaitable(Type awaitableType)

@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -54,14 +54,14 @@ namespace NUnit.Framework.Internal.Commands
         /// is usually played by the SetUpTearDown command.
         /// </summary>
         /// <param name="context">The execution context</param>
-        public override TestResult Execute(TestExecutionContext context)
+        public override async Task<TestResult> Execute(TestExecutionContext context)
         {
             // NOTE: Things would be cleaner if we could handle
             // exceptions in this command. However, that would
             // make it impossible to write a wrapper command to
             // implement ExpectedException, among other things.
 
-            object result = RunTestMethod(context);
+            object result = await RunTestMethod(context);
 
             if (testMethod.HasExpectedResult)
                 NUnit.Framework.Assert.AreEqual(testMethod.ExpectedResult, result);
@@ -74,11 +74,11 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private object RunTestMethod(TestExecutionContext context)
+        private async Task<object> RunTestMethod(TestExecutionContext context)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
-                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
+                return await AsyncToSyncAdapter.AwaitAsync(() => InvokeTestMethod(context));
             }
 
             return InvokeTestMethod(context);

@@ -26,7 +26,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -54,7 +54,25 @@ namespace NUnit.Framework.Internal
                 if (!awaiter.IsCompleted)
                 {
                     var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
-                    waitStrategy.WaitForCompletion(awaiter);
+                    waitStrategy.WaitForCompletion(awaiter).Wait();
+                }
+
+                return awaiter.GetResult();
+            }
+        }
+
+        public static async Task<object> AwaitAsync(Func<object> invoke)
+        {
+            Guard.ArgumentNotNull(invoke, nameof(invoke));
+
+            using (InitializeExecutionEnvironment())
+            {
+                var awaiter = AwaitAdapter.FromAwaitable(invoke.Invoke());
+
+                if (!awaiter.IsCompleted)
+                {
+                    var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
+                    await waitStrategy.WaitForCompletion(awaiter);
                 }
 
                 return awaiter.GetResult();

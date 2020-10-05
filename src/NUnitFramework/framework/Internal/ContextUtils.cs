@@ -24,6 +24,7 @@
 using System;
 using System.Security;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -53,6 +54,42 @@ namespace NUnit.Framework.Internal
                 using ((object)executionContext as IDisposable)
                 {
                     ExecutionContext.Run(executionContext, callback, state);
+                }
+            }
+            finally
+            {
+                previousState.Restore();
+            }
+        }
+
+        public static async Task DoIsolatedAsync(Func<Task> callback)
+        {
+            var previousState = SandboxedThreadState.Capture();
+            try
+            {
+                var executionContext = ExecutionContext.Capture()
+                    ?? throw new InvalidOperationException("Execution context flow must not be suppressed.");
+
+                using ((object)executionContext as IDisposable)
+                {
+                    TaskScheduler ts = null;
+                    var sc = new SynchronizationContext();
+
+                    ExecutionContext.Run(executionContext, _ =>
+                    {
+                        var old = SynchronizationContext.Current;
+                        SynchronizationContext.SetSynchronizationContext(sc);
+                        try
+                        {
+                            ts = TaskScheduler.FromCurrentSynchronizationContext();
+                        }
+                        finally
+                        {
+                            SynchronizationContext.SetSynchronizationContext(old);
+                        }
+                    }, null);
+
+                    await Task.Factory.StartNew(callback, default, TaskCreationOptions.None, ts).Unwrap();
                 }
             }
             finally

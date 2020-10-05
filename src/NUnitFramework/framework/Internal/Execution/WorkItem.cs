@@ -32,6 +32,7 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
+    using System.Threading.Tasks;
     using Commands;
 
     /// <summary>
@@ -325,7 +326,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Method that performs actually performs the work. It should
         /// set the State to WorkItemState.Complete when done.
         /// </summary>
-        protected abstract void PerformWork();
+        protected abstract Task PerformWork();
 
         /// <summary>
         /// Method called by the derived class when all work is complete

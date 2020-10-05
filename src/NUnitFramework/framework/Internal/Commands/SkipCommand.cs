@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="context">The execution context for the test</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
+        public override Task<TestResult> Execute(TestExecutionContext context)
         {
             TestResult testResult = context.CurrentResult;
 
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
                     break;
             }
 
-            return testResult;
+            return Task.FromResult(testResult);
         }
 
         private string GetSkipReason()

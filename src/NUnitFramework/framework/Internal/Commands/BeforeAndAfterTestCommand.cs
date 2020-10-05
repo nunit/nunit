@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -44,7 +45,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="context">The context in which the test should run.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
+        public override async Task<TestResult> Execute(TestExecutionContext context)
         {
             Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
             Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
@@ -52,25 +53,25 @@ namespace NUnit.Framework.Internal.Commands
             if (Test.Fixture == null)
                 Test.Fixture = context.TestObject;
 
-            RunTestMethodInThreadAbortSafeZone(context, () =>
+            await RunTestMethodInThreadAbortSafeZone(context, async () =>
             {
                 BeforeTest(context);
-                context.CurrentResult = innerCommand.Execute(context);
+                context.CurrentResult = await innerCommand.Execute(context);
             });
 
             if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
             {
-                RunTestMethodInThreadAbortSafeZone(context, () => { AfterTest(context); });
+                await RunTestMethodInThreadAbortSafeZone(context, async () => { AfterTest(context); });
             }
 
             return context.CurrentResult;
         }
 
-        private static void RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+        private static async Task RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Func<Task> action)
         {
             try
             {
-                action();
+                await action();
             }
             catch (Exception ex)
             {

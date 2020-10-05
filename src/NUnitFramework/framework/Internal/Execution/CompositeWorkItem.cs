@@ -23,12 +23,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Reflection;
-using NUnit.Compatibility;
-using NUnit.Framework.Internal.Commands;
+using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
-using System.Diagnostics;
+using NUnit.Framework.Internal.Commands;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -79,7 +78,7 @@ namespace NUnit.Framework.Internal.Execution
         /// in CompositeWorkItem to do one-time setup, run all child
         /// items and then dispatch the one-time teardown work item.
         /// </summary>
-        protected override void PerformWork()
+        protected override async Task PerformWork()
         {
             if (!CheckForCancellation())
                 if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
@@ -474,7 +473,7 @@ namespace NUnit.Framework.Internal.Execution
             /// <summary>
             /// PerformWork is not used in CompositeWorkItem
             /// </summary>
-            protected override void PerformWork() { }
+            protected override async Task PerformWork() { }
 
             /// <summary>
             /// WorkItemCancelled is called directly by the parallel dispatcher
@@ -492,4 +491,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-

@@ -116,7 +116,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="context">The context in which the test should run.</param>
         /// <returns>A TestResult</returns>
-        public override TestResult Execute(TestExecutionContext context)
+        public override Task<TestResult> Execute(TestExecutionContext context)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal.Commands
                 context.CurrentResult.RecordException(exception, FailureSite.Test);
             }
 
-            return context.CurrentResult;
+            return Task.FromResult(context.CurrentResult);
         }
 
         private Task<TestResult> RunTestOnSeparateThread(TestExecutionContext context)

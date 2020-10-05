@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
@@ -66,7 +67,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Method that performs actually performs the work.
         /// </summary>
-        protected override void PerformWork()
+        protected override async Task PerformWork()
         {
             try
             {
@@ -74,7 +75,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Isolate the Execute call because the WorkItemComplete below will run one-time teardowns. Execution
                 // context values should not flow from a particular test case into the shared one-time teardown.
-                Result = ContextUtils.DoIsolated(() => testCommand.Execute(Context));
+                await ContextUtils.DoIsolatedAsync(async () => Result = await testCommand.Execute(Context));
             }
             catch (Exception ex)
             {
@@ -119,7 +120,7 @@ namespace NUnit.Framework.Internal.Execution
                 // Create TestActionCommands using attributes of the method
                 foreach (ITestAction action in Test.Actions)
                     if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
-                        command = new TestActionCommand(command, action); ;
+                        command = new TestActionCommand(command, action);
 
                 // Try to locate the parent fixture. In current implementations, the test method
                 // is either one or two levels below the TestFixture - if this changes,
