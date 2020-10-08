@@ -449,7 +449,7 @@ namespace NUnit.Framework.Internal.Execution
             /// <summary>
             ///
             /// </summary>
-            public override void Execute()
+            public override async Task Execute()
             {
                 lock (_teardownLock)
                 {

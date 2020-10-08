@@ -198,7 +198,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Execute the current work item, including any
         /// child work items.
         /// </summary>
-        public virtual void Execute()
+        public virtual async Task Execute()
         {
             // A supplementary thread is required in two conditions...
             //
@@ -237,7 +237,7 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnSeparateThread(targetApartment);
             }
             else
-                RunOnCurrentThread();
+                await RunOnCurrentThread();
         }
 
         private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
@@ -453,7 +453,7 @@ namespace NUnit.Framework.Internal.Execution
                 lock (threadLock)
                     nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
 #endif
-                RunOnCurrentThread();
+                RunOnCurrentThread().Wait();
             });
 
             try
@@ -474,7 +474,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         [SecuritySafeCritical]
-        private void RunOnCurrentThread()
+        private Task RunOnCurrentThread()
         {
             Context.CurrentTest = this.Test;
             Context.CurrentResult = this.Result;
@@ -487,7 +487,7 @@ namespace NUnit.Framework.Internal.Execution
 
             State = WorkItemState.Running;
 
-            PerformWork();
+            return PerformWork();
         }
 
         private ParallelExecutionStrategy GetExecutionStrategy()
