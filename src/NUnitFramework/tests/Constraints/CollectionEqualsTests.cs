@@ -24,7 +24,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+#if !(NET35 || NET40)
+using System.Collections.Immutable;
+#endif
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
@@ -104,5 +109,46 @@ namespace NUnit.Framework.Constraints
             new object[] {new List<char> {'A', 'B', 'C'}, new List<char> {'a', 'b', 'c'}},
             new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
         };
+
+#if !(NET35 || NET40)
+        [TestCaseSource(nameof(GetImmutableCollectionsData))]
+        public void ImmutableCollectionsEquals(object x, object y)
+        {
+            Assert.That(x, Is.EqualTo(y));
+        }
+
+        private static IEnumerable<object> GetImmutableCollectionsData()
+        {
+            var data = new[] { 1, 2, 3 };
+            var immutableDataGenerators = new Func<IEnumerable<int>>[]
+            {
+                () => ImmutableArray.Create(data),
+                () => ImmutableList.Create(data),
+                () => ImmutableQueue.Create(data),
+                () => ImmutableStack.Create(data.Reverse().ToArray())
+            };
+
+            for (var i = 0; i < immutableDataGenerators.Length; i++)
+            {
+                for (var j = i; j < immutableDataGenerators.Length; j++)
+                {
+                    var x = immutableDataGenerators[i]();
+                    var y = immutableDataGenerators[j]();
+
+                    yield return new object[] { x, y };
+                }
+            }
+        }
+
+        [Test]
+        public void ImmutableArrayEquals_UsingStructuralEquality()
+        {
+            var x = ImmutableArray.Create(1, 2, 3);
+            var y = ImmutableArray.Create(1, 2, 3);
+
+            Assert.That(x, Is.EqualTo(y).Using(StructuralComparisons.StructuralComparer));
+            Assert.That(x, Is.EqualTo(y).Using(StructuralComparisons.StructuralEqualityComparer));
+        }
+#endif
     }
 }
