@@ -24,12 +24,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 #if !(NET35 || NET40)
 using System.Collections.Immutable;
 #endif
 using System.Linq;
-using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
@@ -138,16 +136,6 @@ namespace NUnit.Framework.Constraints
                     yield return new object[] { x, y };
                 }
             }
-        }
-
-        [Test]
-        public void ImmutableArrayEquals_UsingStructuralEquality()
-        {
-            var x = ImmutableArray.Create(1, 2, 3);
-            var y = ImmutableArray.Create(1, 2, 3);
-
-            Assert.That(x, Is.EqualTo(y).Using(StructuralComparisons.StructuralComparer));
-            Assert.That(x, Is.EqualTo(y).Using(StructuralComparisons.StructuralEqualityComparer));
         }
 #endif
     }
