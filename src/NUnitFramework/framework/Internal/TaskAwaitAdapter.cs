@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
 
             public override object GetResult()
             {
-                return _task.Result; // Throws exceptions, if any
+                return _task.GetAwaiter().GetResult(); // Throws exceptions, if any
             }
         }
     }
