@@ -123,7 +123,9 @@ namespace NUnit.Framework.Constraints
                 () => ImmutableArray.Create(data),
                 () => ImmutableList.Create(data),
                 () => ImmutableQueue.Create(data),
-                () => ImmutableStack.Create(data.Reverse().ToArray())
+                () => ImmutableStack.Create(data.Reverse().ToArray()),
+                () => new List<int>(data),
+                () => data
             };
 
             for (var i = 0; i < immutableDataGenerators.Length; i++)
