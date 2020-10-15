@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints.Comparers
             return pair.Value;
         }
 
-        private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
+        private static List<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
         {
             var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
 
