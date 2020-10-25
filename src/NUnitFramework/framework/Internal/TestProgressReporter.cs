@@ -64,14 +64,9 @@ namespace NUnit.Framework.Internal
             var parent = GetParent(test);
             try
             {
-                string report = string.Format(
-                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\" type=\"{5}\"/>",
-                    startElement,
-                    test.Id,
-                    parent != null ? parent.Id : string.Empty,
-                    FormatAttributeValue(test.Name),
-                    FormatAttributeValue(test.FullName),
-                    test.TestType);
+                string report = test is TestSuite 
+                    ? $"<{startElement} id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\"/>" 
+                    : $"<{startElement} id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
 
                 handler.RaiseCallbackEvent(report);
             }
