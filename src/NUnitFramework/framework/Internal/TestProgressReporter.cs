@@ -65,8 +65,8 @@ namespace NUnit.Framework.Internal
             try
             {
                 string report = test is TestSuite 
-                    ? $"<{startElement} id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\"/>" 
-                    : $"<{startElement} id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
+                    ? $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\"/>"
+                    : $"<start-test id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
 
                 handler.RaiseCallbackEvent(report);
             }
