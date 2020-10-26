@@ -67,33 +67,30 @@ namespace NUnit.Framework.Constraints.Comparers
             {
                 if (implementation.Argument.IsAssignableFrom(second))
                 {
-                    if (mostDerived.Argument == null)
+                    if (mostDerived.Argument == null || mostDerived.Argument.IsAssignableFrom(implementation.Argument))
                         mostDerived = implementation;
-                    else if (mostDerived.Argument.IsAssignableFrom(implementation.Argument))
-                    {
-                        // Look for method with most-derived of type arg which can be assigned to 'second'
-                        // If there end up being multiple of same type, look for most derived declaring type
-                        if (mostDerived.Argument != implementation.Argument
-                            || mostDerived.Argument.IsAssignableFrom(implementation.Argument))
-                        mostDerived = implementation;
-                    }
                 }
             }
 
             return mostDerived.Method;
         }
 
-        private static IEnumerable<EquatableMethodImpl> GetEquatableImplementations(Type type)
+        private static EquatableMethodImpl[] GetEquatableImplementations(Type type)
         {
-            foreach (Type @interface in type.GetInterfaces())
+            static bool IsIEquatableOfT(Type t, object filter) => t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(IEquatable<>));
+            
+            var interfaces = type.FindInterfaces((t,f) => IsIEquatableOfT(t,f), string.Empty);
+            var implementations = new EquatableMethodImpl[interfaces.Length];
+
+            for(var i = 0; i < interfaces.Length; i++)
             {
-                if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
-                {
-                    var iMap = type.GetInterfaceMap(@interface);
-                    foreach (var method in iMap.TargetMethods)
-                        yield return new EquatableMethodImpl(method, method.GetParameters()[0].ParameterType, iMap.TargetType);
-                }
+                var iMap = type.GetInterfaceMap(interfaces[i]);
+                var method = iMap.TargetMethods[0];
+
+                implementations[i] = new EquatableMethodImpl(method, method.GetParameters()[0].ParameterType);
             }
+
+            return implementations;
         }
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
@@ -105,11 +102,9 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             public readonly MethodInfo Method { get; }
             public readonly Type Argument { get; }
-            public readonly Type ImplementingType { get; }
 
-            public EquatableMethodImpl(MethodInfo method, Type arg, Type implType)
+            public EquatableMethodImpl(MethodInfo method, Type arg)
             {
-                ImplementingType = implType;
                 Method = method;
                 Argument = arg;
             }
