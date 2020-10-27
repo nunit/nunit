@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -23,41 +23,42 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Commands
+namespace NUnit.Framework
 {
     /// <summary>
-    /// OneTimeTearDownCommand performs any teardown actions
-    /// specified for a suite and calls Dispose on the user
-    /// test object, if any.
+    /// Specify the life cycle of a Fixture
     /// </summary>
-    public class DisposeFixtureCommand : AfterTestCommand
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    public sealed class FixtureLifeCycleAttribute : NUnitAttribute, IApplyToTest
     {
         /// <summary>
-        /// Construct a OneTimeTearDownCommand
+        /// Construct a FixtureLifeCycleAttribute with a specified <see cref="LifeCycle"/>.
         /// </summary>
-        /// <param name="innerCommand">The command wrapped by this command</param>
-        public DisposeFixtureCommand(TestCommand innerCommand)
-            : base(innerCommand)
+        public FixtureLifeCycleAttribute(LifeCycle lifeCycle)
         {
-            Guard.OperationValid(
-                Test is IDisposableFixture || Test?.Parent is IDisposableFixture, 
-                $"DisposeFixtureCommand does not apply neither to {Test.GetType().Name}, nor to {Test.Parent?.GetType().Name ?? "it's parent (null)"}");
+            LifeCycle = lifeCycle;
+        }
 
-            AfterTest = (context) =>
+        /// <summary>
+        /// Defines the life cycle for this test fixture or assembly.
+        /// </summary>
+        public LifeCycle LifeCycle { get; }
+
+        /// <summary>
+        /// Overridden to set a TestFixture's <see cref="LifeCycle"/>.
+        /// </summary>
+        public void ApplyToTest(Test test)
+        {
+            var testFixture = test as TestFixture;
+            if (testFixture != null)
             {
-                try
-                {
-                    IDisposable disposable = context.TestObject as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    context.CurrentResult.RecordTearDownException(ex);
-                }
-            };
+                testFixture.LifeCycle = LifeCycle;
+            }
         }
     }
 }

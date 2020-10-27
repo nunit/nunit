@@ -162,8 +162,13 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeSetUpAndTearDownCommands()
         {
+            var methodValidator = CheckInstancePerTestCase()
+                ? new StaticMethodValidator(
+                    $"Only static OneTimeSetUp and OneTimeTearDown are allowed for {nameof(LifeCycle.InstancePerTestCase)} mode.")
+                : null;
+
             List<SetUpTearDownItem> setUpTearDownItems =
-                BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods);
+                BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods, methodValidator);
 
             var actionItems = new List<TestActionItem>();
             foreach (ITestAction action in Test.Actions)
@@ -196,6 +201,19 @@ namespace NUnit.Framework.Internal.Execution
             _setupCommand = MakeOneTimeSetUpCommand(setUpTearDownItems, actionItems);
 
             _teardownCommand = MakeOneTimeTearDownCommand(setUpTearDownItems, actionItems);
+        }
+
+        private bool CheckInstancePerTestCase()
+        {
+            ITest test = Test;
+            while (test != null)
+            {
+                if (test is TestFixture fixture && fixture.LifeCycle == LifeCycle.InstancePerTestCase)
+                    return true;
+                
+                test = test.Parent;
+            }
+            return false;
         }
 
         private TestCommand MakeOneTimeSetUpCommand(List<SetUpTearDownItem> setUpTearDown, List<TestActionItem> actions)
@@ -243,7 +261,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !CheckInstancePerTestCase())
                 command = new DisposeFixtureCommand(command);
 
             return command;

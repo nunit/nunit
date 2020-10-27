@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,42 +22,48 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// OneTimeTearDownCommand performs any teardown actions
-    /// specified for a suite and calls Dispose on the user
-    /// test object, if any.
+    /// ConstructFixtureCommand constructs the user test object if necessary.
     /// </summary>
-    public class DisposeFixtureCommand : AfterTestCommand
+    public class FixturePerTestCaseCommand : BeforeAndAfterTestCommand
     {
         /// <summary>
-        /// Construct a OneTimeTearDownCommand
+        /// Handles the construction and disposement of a fixture per test case
         /// </summary>
-        /// <param name="innerCommand">The command wrapped by this command</param>
-        public DisposeFixtureCommand(TestCommand innerCommand)
+        /// <param name="innerCommand">The inner command to which the command applies</param>
+        public FixturePerTestCaseCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            Guard.OperationValid(
-                Test is IDisposableFixture || Test?.Parent is IDisposableFixture, 
-                $"DisposeFixtureCommand does not apply neither to {Test.GetType().Name}, nor to {Test.Parent?.GetType().Name ?? "it's parent (null)"}");
+            TestSuite testSuite = null;
+
+            ITest currentTest = Test;
+            while (currentTest != null && testSuite == null)
+            {
+                testSuite = testSuite ?? currentTest as TestSuite;
+                currentTest = currentTest.Parent;
+            }
+
+            Guard.ArgumentValid(testSuite != null, "FixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
+
+            ITypeInfo typeInfo = testSuite.TypeInfo;
+
+            BeforeTest = (context) =>
+            {
+                if (typeInfo != null && !typeInfo.IsStaticClass)
+                {
+                    context.TestObject = typeInfo.Construct(testSuite.Arguments);
+                    Test.Fixture = context.TestObject;
+                }
+            };
 
             AfterTest = (context) =>
             {
-                try
-                {
-                    IDisposable disposable = context.TestObject as IDisposable;
-                    if (disposable != null)
-                        disposable.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    context.CurrentResult.RecordTearDownException(ex);
-                }
             };
         }
     }
 }
+
