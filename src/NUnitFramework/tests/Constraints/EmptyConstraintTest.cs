@@ -45,13 +45,15 @@ namespace NUnit.Framework.Constraints
             string.Empty,
             new object[0],
             new ArrayList(),
-            new System.Collections.Generic.List<int>()
+            new System.Collections.Generic.List<int>(),
+            Guid.Empty,
         };
 
         static object[] FailureData = new object[]
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
-            new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" )
+            new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" ),
+            new TestCaseData(new Guid("12345678-1234-1234-1234-123456789012"), "12345678-1234-1234-1234-123456789012"),
         };
 
         [TestCase(null)]
@@ -65,6 +67,14 @@ namespace NUnit.Framework.Constraints
         public void NullStringGivesFailureResult()
         {
             string actual = null;
+            var result = TheConstraint.ApplyTo(actual);
+            Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
+        }
+
+        [Test]
+        public void NullNullableGuidGivesFailureResult()
+        {
+            Guid? actual = null;
             var result = TheConstraint.ApplyTo(actual);
             Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
         }
@@ -133,6 +143,44 @@ namespace NUnit.Framework.Constraints
 
                 Assert.That(testDir.Directory, Is.Not.Empty);
             }
+        }
+    }
+
+    [TestFixture]
+    public class EmptyGuidConstraintTest
+    {
+        [Test]
+        public void EmptyGuid()
+        {
+            Assert.That(Guid.Empty, Is.Empty);
+        }
+
+        [Test]
+        public void EmptyNullableGuid()
+        {
+            Guid? empty = Guid.Empty;
+            Assert.That(empty, Is.Empty);
+        }
+
+        [Test]
+        public void NonEmptyGuid()
+        {
+            Guid nonEmpty = new Guid("10000000-0000-0000-0000-000000000000");
+            Assert.That(nonEmpty, Is.Not.Empty);
+        }
+
+        [Test]
+        public void NonEmptyNullableGuid()
+        {
+            Guid? nonEmpty = new Guid("10000000-0000-0000-0000-000000000000");
+            Assert.That(nonEmpty, Is.Not.Empty);
+        }
+
+        [Test]
+        public void NullNullableGuid()
+        {
+            Guid? nonEmpty = null;
+            Assert.That(nonEmpty, Is.Not.Empty);
         }
     }
 }

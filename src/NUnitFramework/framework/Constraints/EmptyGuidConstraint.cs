@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2020 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,21 +26,17 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// EmptyConstraint tests a whether a string or collection is empty,
-    /// postponing the decision about which test is applied until the
-    /// type of the actual argument is known.
+    /// EmptyGuidConstraint tests whether a Guid is empty.
     /// </summary>
-    public class EmptyConstraint : Constraint
+    public class EmptyGuidConstraint : Constraint
     {
-        private Constraint realConstraint;
-
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
         public override string Description
         {
-            get { return realConstraint == null ? "<empty>" : realConstraint.Description; }
+            get { return "<empty>"; }
         }
 
         /// <summary>
@@ -50,21 +46,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // NOTE: actual is string will fail for a null typed as string
-            Type actualType = typeof(TActual);
-            
-            if (actualType == typeof(string))
-                realConstraint = new EmptyStringConstraint();
-            else if (actual is Guid || actualType == typeof(Guid?))
-                realConstraint = new EmptyGuidConstraint();
-            else if (actual == null)
-                throw new System.ArgumentException($"The actual value must be a string, Guid, non-null IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
-            else if (actual is System.IO.DirectoryInfo)
-                realConstraint = new EmptyDirectoryConstraint();
-            else
-                realConstraint = new EmptyCollectionConstraint();
-
-            return realConstraint.ApplyTo(actual);
+            return new ConstraintResult(this, actual, actual as Guid? == Guid.Empty);
         }
     }
 }
