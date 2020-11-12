@@ -8,8 +8,15 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0-windows</TargetFrameworks>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
     <TargetFrameworks>net35;net40;net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite</RootNamespace>
   </PropertyGroup>
