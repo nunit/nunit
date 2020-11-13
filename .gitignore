@@ -186,3 +186,5 @@ project.lock.json
 *.project.lock.json
 .dotnet
 .config/dotnet-tools.json
+*.err
+*.out

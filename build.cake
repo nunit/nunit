@@ -225,7 +225,7 @@ Task("Test35")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0" })
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net5.0-windows" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
@@ -523,6 +523,9 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string frame
 
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
 {
+    if (!FileExists(exePath))
+        return;
+
     int rc = StartProcess(
         "dotnet",
         new ProcessSettings
