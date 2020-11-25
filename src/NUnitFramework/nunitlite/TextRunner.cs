@@ -331,7 +331,7 @@ namespace NUnitLite
                 {
                     int end = testName.IndexOfAny(new char[] { '(', '<' });
                     if (end > 0)
-                        prefilters.Add(testName.Substring(0, end));
+                        prefilters.Add(testName.Substring(0, end).Trim());
                     else
                         prefilters.Add(testName);
                 }

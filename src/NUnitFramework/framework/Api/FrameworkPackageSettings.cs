@@ -64,6 +64,20 @@ namespace NUnit
         public const string DefaultTimeout = "DefaultTimeout";
 
         /// <summary>
+        /// A string representing the default thread culture to be used for
+        /// running tests. String should be a valid BCP-47 culture name. If
+        /// culture is unset, tests run on the machine's default culture.
+        /// </summary>
+        public const string DefaultCulture = "DefaultCulture";
+
+        /// <summary>
+        /// A string representing the default thread UI culture to be used for
+        /// running tests. String should be a valid BCP-47 culture name. If
+        /// culture is unset, tests run on the machine's default culture.
+        /// </summary>
+        public const string DefaultUICulture = "DefaultUICulture";
+
+        /// <summary>
         /// A TextWriter to which the internal trace will be sent.
         /// </summary>
         public const string InternalTraceWriter = "InternalTraceWriter";

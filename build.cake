@@ -143,10 +143,21 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        MSBuild(SOLUTION_FILE, CreateSettings());
+        if(IsRunningOnWindows())
+            MSBuild(SOLUTION_FILE, CreateMsBuildSettings());
+        else
+            DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
     });
 
-MSBuildSettings CreateSettings()
+DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
+    new DotNetCoreBuildSettings
+    {
+        Configuration = configuration,
+        NoRestore = true,
+        Verbosity = DotNetCoreVerbosity.Minimal
+    };
+
+MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
@@ -198,6 +209,7 @@ Task("Test45")
 
 Task("Test40")
     .Description("Tests the .NET 4.0 version of the framework")
+    .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -229,6 +241,7 @@ foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
+        .WithCriteria(IsRunningOnWindows() || runtime != "net5.0-windows")
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>

@@ -30,6 +30,7 @@ using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 
@@ -332,6 +333,10 @@ namespace NUnit.Framework.Api
             // Apply package settings to the context
             if (Settings.ContainsKey(FrameworkPackageSettings.DefaultTimeout))
                 Context.TestCaseTimeout = (int)Settings[FrameworkPackageSettings.DefaultTimeout];
+            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultCulture))
+                Context.CurrentCulture = new CultureInfo((string)Settings[FrameworkPackageSettings.DefaultCulture], false);
+            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultUICulture))
+                Context.CurrentUICulture = new CultureInfo((string)Settings[FrameworkPackageSettings.DefaultUICulture], false);
             if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
                 Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
 

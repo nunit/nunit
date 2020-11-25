@@ -38,6 +38,7 @@ namespace NUnitLite.Tests
             new TestCaseData("--prefilter=A.B.C", "LOAD", new string[] { "A.B.C" }),
             new TestCaseData("--test=A.B.C", "LOAD", new string[] { "A.B.C" }),
             new TestCaseData("--test=A.B.C(arg)", "LOAD", new string[] { "A.B.C" }),
+            new TestCaseData("--test=A.B.C (arg)", "LOAD", new string[] { "A.B.C" }),
             new TestCaseData("--test=A.B<type>.C(arg)", "LOAD", new string[] { "A.B" })
        };
 
