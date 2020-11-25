@@ -138,49 +138,53 @@ Task("NuGetRestore")
 // BUILD FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var buildSettings = new DotNetCoreBuildSettings
-{
-    Configuration = configuration,
-    NoRestore = false,
-    Verbosity = DotNetCoreVerbosity.Minimal,
-};
-
 Task("Build")
     .Description("Builds the Solution")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetCoreBuild(SOLUTION_FILE, buildSettings);
+        if(IsRunningOnWindows())
+            MSBuild(SOLUTION_FILE, CreateMsBuildSettings());
+        else
+            DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
     });
 
-// MSBuildSettings CreateSettings()
-// {
-//     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
+    new DotNetCoreBuildSettings
+    {
+        Configuration = configuration,
+        NoRestore = true,
+        Verbosity = DotNetCoreVerbosity.Minimal
+    };
 
-//     if (IsRunningOnWindows())
-//     {
-//         // Find MSBuild for Visual Studio 2019 and newer
-//         DirectoryPath vsLatest = VSWhereLatest();
-//         FilePath msBuildPath = vsLatest?.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
+MSBuildSettings CreateMsBuildSettings()
+{
+    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
-//         // Find MSBuild for Visual Studio 2017
-//         if (msBuildPath != null && !FileExists(msBuildPath))
-//             msBuildPath = vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
+    if (IsRunningOnWindows())
+    {
+        // Find MSBuild for Visual Studio 2019 and newer
+        DirectoryPath vsLatest = VSWhereLatest();
+        FilePath msBuildPath = vsLatest?.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
 
-//         // Have we found MSBuild yet?
-//         if (!FileExists(msBuildPath))
-//         {
-//             throw new Exception($"Failed to find MSBuild: {msBuildPath}");
-//         }
+        // Find MSBuild for Visual Studio 2017
+        if (msBuildPath != null && !FileExists(msBuildPath))
+            msBuildPath = vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
 
-//         Information("Building using MSBuild at " + msBuildPath);
-//         settings.ToolPath = msBuildPath;
-//     }
-//     else
-//         settings.ToolPath = Context.Tools.Resolve("msbuild");
+        // Have we found MSBuild yet?
+        if (!FileExists(msBuildPath))
+        {
+            throw new Exception($"Failed to find MSBuild: {msBuildPath}");
+        }
 
-//     return settings;
-// }
+        Information("Building using MSBuild at " + msBuildPath);
+        settings.ToolPath = msBuildPath;
+    }
+    else
+        settings.ToolPath = Context.Tools.Resolve("msbuild");
+
+    return settings;
+}
 
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -205,6 +209,7 @@ Task("Test45")
 
 Task("Test40")
     .Description("Tests the .NET 4.0 version of the framework")
+    .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
