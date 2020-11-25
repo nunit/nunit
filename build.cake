@@ -241,6 +241,7 @@ foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
+        .WithCriteria(IsRunningOnWindows() || runtime != "net5.0-windows")
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>
