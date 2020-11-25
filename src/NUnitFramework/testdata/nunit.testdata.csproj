@@ -8,6 +8,11 @@
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Include="jnm2.ReferenceAssemblies.net35" Version="1.0.1" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
     <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
