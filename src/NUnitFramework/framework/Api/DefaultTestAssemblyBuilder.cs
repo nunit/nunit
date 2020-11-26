@@ -258,7 +258,12 @@ namespace NUnit.Framework.Api
 
             testAssembly.ApplyAttributesToTest(assembly);
 
-            testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+            try
+            {
+                testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+            }
+            catch (PlatformNotSupportedException)
+            { }
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
 
             // TODO: Make this an option? Add Option to sort assemblies as well?
