@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
                 string report;
                 if (test is TestSuite)
                 {
-                    // Only add framework-version for the Assemlby start-suite
+                    // Only add framework-version for the Assembly start-suite
                     string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\" " : "";
                     report = $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" {version}/>";
                 }
