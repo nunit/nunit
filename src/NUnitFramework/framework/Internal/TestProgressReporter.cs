@@ -24,7 +24,9 @@
 #nullable enable
 
 using System;
+using System.Reflection;
 using System.Web.UI;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -57,16 +59,20 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            string startElement = test is TestSuite
-                ? "start-suite"
-                : "start-test";
-
             var parent = GetParent(test);
             try
             {
-                string report = test is TestSuite 
-                    ? $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\"/>"
-                    : $"<start-test id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
+                string report;
+                if (test is TestSuite)
+                {
+                    // Only add framework-version for the Assembly start-suite
+                    string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\" " : "";
+                    report = $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" {version}/>";
+                }
+                else
+                {
+                    report = $"<start-test id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
+                }
 
                 handler.RaiseCallbackEvent(report);
             }

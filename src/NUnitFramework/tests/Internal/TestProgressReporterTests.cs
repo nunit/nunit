@@ -22,10 +22,12 @@
 // ***********************************************************************
 
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -61,6 +63,20 @@ namespace NUnit.Framework.Internal
             Assert.That(startReport, Contains.Substring("type=\"Assembly\""));
 
             Assert.That(_listener.Reports.Count(x => x.StartsWith("<start-suite") && x.Contains("type=\"Assembly\"")), Is.EqualTo(1), "More than one Assembly event");
+        }
+
+        [Test]
+        public void TestStarted_AssemblyIncludesFrameworkVersion()
+        {
+            var work = TestBuilder.CreateWorkItem(new TestAssembly("mytest.dll"));
+            work.Context.Listener = _reporter;
+
+            TestBuilder.ExecuteWorkItem(work);
+
+            var startReport = _listener.Reports.FirstOrDefault();
+            Assert.NotNull(startReport);
+            Assert.That(startReport, Does.StartWith("<start-suite"));
+            Assert.That(startReport, Contains.Substring($"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\""));
         }
 
         [Test]
