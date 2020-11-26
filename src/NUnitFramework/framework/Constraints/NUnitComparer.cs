@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 
@@ -58,22 +59,28 @@ namespace NUnit.Framework.Constraints
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.Compare(x, y);
 
+            Type xType = x.GetType();
+            Type yType = y.GetType();
+
+            // If we use BindingFlags.ExactBinding it will prevent us finding CompareTo(object)
+            // It however also prevents finding CompareTo(TBase) when called with TDerived
+            // Nor will it find CompareTo(int) when called with a short.
+            // We fallback to explicitly exclude CompareTo(object)
+            bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
+
+            MethodInfo method = xType.GetMethod("CompareTo", new Type[] { yType });
+            if (method != null && !IsIComparable(method))
+                return (int)method.Invoke(x, new object[] { y });
+
+            method = yType.GetMethod("CompareTo", new Type[] { xType });
+            if (method != null && !IsIComparable(method))
+                return -(int)method.Invoke(y, new object[] { x });
+
             if (x is IComparable)
                 return ((IComparable)x).CompareTo(y);
 
             if (y is IComparable)
                 return -((IComparable)y).CompareTo(x);
-
-            Type xType = x.GetType();
-            Type yType = y.GetType();
-
-            MethodInfo method = xType.GetMethod("CompareTo", new Type[] { yType });
-            if (method != null)
-                return (int)method.Invoke(x, new object[] { y });
-
-            method = yType.GetMethod("CompareTo", new Type[] { xType });
-            if (method != null)
-                return -(int)method.Invoke(y, new object[] { x });
 
             throw new ArgumentException("Neither value implements IComparable or IComparable<T>");
         }
