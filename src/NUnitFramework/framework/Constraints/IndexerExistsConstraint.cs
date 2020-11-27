@@ -63,10 +63,7 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
 
-            if (!(actual is Type actualType))
-            {
-                actualType = actual.GetType();
-            }
+            var actualType = actual as Type ?? actual.GetType();
 
             var indexerPropertyInfo = Reflect.GetIndexerByName(actualType, _argumentTypes);
             return new ConstraintResult(this, "not found", indexerPropertyInfo?.GetGetMethod() != null);

@@ -59,18 +59,11 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
 
-            if (!(actual is Type actualType))
-            {
-                actualType = actual.GetType();
-            }
+            var actualType = actual as Type ?? actual.GetType();
 
-            var indexerInfo = Reflect.GetIndexerByName(actualType, _argumentTypes);
-            if (indexerInfo?.GetGetMethod() == null)
-            {
-                throw new ArgumentException($"Indexer with {StringifyArguments()} was not found on {actualType}.");
-            }
+            var getMethod = Reflect.GetIndexerByName(actualType, _argumentTypes)?.GetGetMethod() ?? throw new ArgumentException($"Indexer with {StringifyArguments()} was not found on {actualType}."); ;
 
-            var indexReturnedValue = Reflect.InvokeMethod(indexerInfo.GetGetMethod(), actual, _arguments);
+            var indexReturnedValue = Reflect.InvokeMethod(getMethod, actual, _arguments);
             return BaseConstraint.ApplyTo(indexReturnedValue);
         }
 
