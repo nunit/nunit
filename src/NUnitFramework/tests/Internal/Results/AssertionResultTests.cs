@@ -120,6 +120,13 @@ namespace NUnit.Framework.Internal.Results
         }
 
         [TestCase("")]
+        public void ValidatedNotNullUsingThat(string? possiblyNull)
+        {
+            Assert.That(possiblyNull, Is.Not.Null);
+            Assert.That(possiblyNull.Length, Is.GreaterThanOrEqualTo(0));
+        }
+
+        [TestCase("")]
         public void ValidatedNotNullExtension(string? possiblyNull)
         {
             string notNull = possiblyNull.AssertNotNull(nameof(possiblyNull));

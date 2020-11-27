@@ -24,6 +24,7 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
@@ -198,6 +199,8 @@ namespace NUnit.Framework
 
         #region Assert.That<TActual>
 
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
+
         /// <summary>
         /// Apply a constraint to an actual value. Returns without throwing an exception when inside a multiple assert
         /// block.
@@ -205,7 +208,7 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression)
+        public static void That<TActual>([NotNull] TActual actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
         }
@@ -219,7 +222,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
+        public static void That<TActual>([NotNull] TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
         {
             var constraint = expression.Resolve();
 
@@ -238,7 +241,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That<TActual>(
-            TActual actual,
+            [NotNull] TActual actual,
             IResolveConstraint expression,
             Func<string?> getExceptionMessage)
         {
@@ -249,6 +252,8 @@ namespace NUnit.Framework
             if (!result.IsSuccess)
                 ReportFailure(result, getExceptionMessage());
         }
+
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 
         #endregion
 
@@ -261,7 +266,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
-        public static void ByVal(object? actual, IResolveConstraint expression)
+        public static void ByVal([NotNull] object? actual, IResolveConstraint expression)
         {
             Assert.That(actual, expression, null, null);
         }
@@ -279,7 +284,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void ByVal(object? actual, IResolveConstraint expression, string? message, params object?[]? args)
+        public static void ByVal([NotNull] object? actual, IResolveConstraint expression, string? message, params object?[]? args)
         {
             Assert.That(actual, expression, message, args);
         }
