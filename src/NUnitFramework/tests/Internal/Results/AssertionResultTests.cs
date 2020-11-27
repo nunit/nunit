@@ -109,5 +109,25 @@ namespace NUnit.Framework.Internal.Results
             TNode suiteNode = _suiteResult.ToXml(true);
             Assert.Null(suiteNode.SelectSingleNode("assertions"));
         }
+
+#nullable enable
+
+        [TestCase("")]
+        public void ValidatedNotNull(string? possiblyNull)
+        {
+            Assert.NotNull(possiblyNull);
+            Assert.That(possiblyNull.Length, Is.GreaterThanOrEqualTo(0));
+        }
+
+        [TestCase("")]
+        public void ValidatedNotNullExtension(string? possiblyNull)
+        {
+            string notNull = possiblyNull.AssertNotNull(nameof(possiblyNull));
+            Assert.That(notNull.Length, Is.GreaterThanOrEqualTo(0));
+            string reallyNotNull = possiblyNull.AssertNotNull();
+            Assert.That(reallyNotNull.Length, Is.GreaterThanOrEqualTo(0));
+        }
+
+#nullable restore
     }
 }

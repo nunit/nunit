@@ -26,6 +26,7 @@
 using System.Collections;
 using NUnit.Framework.Constraints;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework
 {
@@ -41,7 +42,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void True(bool? condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.True ,message, args);
+            Assert.That(condition, Is.True, message, args);
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool? condition)
         {
-            Assert.That(condition, Is.True ,null, null);
+            Assert.That(condition, Is.True, null, null);
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool condition)
         {
-            Assert.That(condition, Is.True ,null, null);
+            Assert.That(condition, Is.True, null, null);
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsTrue(bool? condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.True ,message, args);
+            Assert.That(condition, Is.True, message, args);
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsTrue(bool condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.True ,message, args);
+            Assert.That(condition, Is.True, message, args);
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool? condition)
         {
-            Assert.That(condition, Is.True ,null, null);
+            Assert.That(condition, Is.True, null, null);
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool condition)
         {
-            Assert.That(condition, Is.True ,null, null);
+            Assert.That(condition, Is.True, null, null);
         }
 
         #endregion
@@ -126,7 +127,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void False(bool? condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.False ,message, args);
+            Assert.That(condition, Is.False, message, args);
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void False(bool condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.False ,message, args);
+            Assert.That(condition, Is.False, message, args);
         }
 
         /// <summary>
@@ -147,7 +148,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool? condition)
         {
-            Assert.That(condition, Is.False ,null, null);
+            Assert.That(condition, Is.False, null, null);
         }
 
         /// <summary>
@@ -157,7 +158,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool condition)
         {
-            Assert.That(condition, Is.False ,null, null);
+            Assert.That(condition, Is.False, null, null);
         }
 
         /// <summary>
@@ -169,7 +170,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsFalse(bool? condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.False ,message, args);
+            Assert.That(condition, Is.False, message, args);
         }
 
         /// <summary>
@@ -181,7 +182,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsFalse(bool condition, string? message, params object?[]? args)
         {
-            Assert.That(condition, Is.False ,message, args);
+            Assert.That(condition, Is.False, message, args);
         }
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool? condition)
         {
-            Assert.That(condition, Is.False ,null, null);
+            Assert.That(condition, Is.False, null, null);
         }
 
         /// <summary>
@@ -201,34 +202,14 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool condition)
         {
-            Assert.That(condition, Is.False ,null, null);
+            Assert.That(condition, Is.False, null, null);
         }
 
         #endregion
 
         #region NotNull
 
-        /// <summary>
-        /// Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
-        /// exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotNull(object? anObject, string? message, params object?[]? args)
-        {
-            Assert.That(anObject, Is.Not.Null ,message, args);
-        }
-
-        /// <summary>
-        /// Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
-        /// exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="anObject">The object that is to be tested</param>
-        public static void NotNull(object? anObject)
-        {
-            Assert.That(anObject, Is.Not.Null ,null, null);
-        }
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
 
         /// <summary>
         /// Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
@@ -237,9 +218,9 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotNull(object? anObject, string? message, params object?[]? args)
+        public static void NotNull([NotNull] object? anObject, string? message, params object?[]? args)
         {
-            Assert.That(anObject, Is.Not.Null ,message, args);
+            Assert.That(anObject, Is.Not.Null, message, args);
         }
 
         /// <summary>
@@ -247,10 +228,34 @@ namespace NUnit.Framework
         /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void IsNotNull(object? anObject)
+        public static void NotNull([NotNull] object? anObject)
         {
-            Assert.That(anObject, Is.Not.Null ,null, null);
+            Assert.That(anObject, Is.Not.Null, null, null);
         }
+
+        /// <summary>
+        /// Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
+        /// exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="anObject">The object that is to be tested</param>
+        /// <param name="message">The message to display in case of failure</param>
+        /// <param name="args">Array of objects to be used in formatting the message</param>
+        public static void IsNotNull([NotNull] object? anObject, string? message, params object?[]? args)
+        {
+            Assert.That(anObject, Is.Not.Null, message, args);
+        }
+
+        /// <summary>
+        /// Verifies that the object that is passed in is not equal to <see langword="null"/>. Returns without throwing an
+        /// exception when inside a multiple assert block.
+        /// </summary>
+        /// <param name="anObject">The object that is to be tested</param>
+        public static void IsNotNull([NotNull] object? anObject)
+        {
+            Assert.That(anObject, Is.Not.Null, null, null);
+        }
+
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
 
         #endregion
 
@@ -265,7 +270,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Null(object? anObject, string? message, params object?[]? args)
         {
-            Assert.That(anObject, Is.Null ,message, args);
+            Assert.That(anObject, Is.Null, message, args);
         }
 
         /// <summary>
@@ -275,7 +280,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         public static void Null(object? anObject)
         {
-            Assert.That(anObject, Is.Null ,null, null);
+            Assert.That(anObject, Is.Null, null, null);
         }
 
         /// <summary>
@@ -287,7 +292,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNull(object? anObject, string? message, params object?[]? args)
         {
-            Assert.That(anObject, Is.Null ,message, args);
+            Assert.That(anObject, Is.Null, message, args);
         }
 
         /// <summary>
@@ -297,7 +302,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         public static void IsNull(object? anObject)
         {
-            Assert.That(anObject, Is.Null ,null, null);
+            Assert.That(anObject, Is.Null, null, null);
         }
 
         #endregion
@@ -313,7 +318,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNaN(double aDouble, string? message, params object?[]? args)
         {
-            Assert.That(aDouble, Is.NaN ,message, args);
+            Assert.That(aDouble, Is.NaN, message, args);
         }
 
         /// <summary>
@@ -323,7 +328,7 @@ namespace NUnit.Framework
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double aDouble)
         {
-            Assert.That(aDouble, Is.NaN ,null, null);
+            Assert.That(aDouble, Is.NaN, null, null);
         }
 
         /// <summary>
@@ -335,7 +340,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNaN(double? aDouble, string? message, params object?[]? args)
         {
-            Assert.That(aDouble, Is.NaN ,message, args);
+            Assert.That(aDouble, Is.NaN, message, args);
         }
 
         /// <summary>
@@ -345,7 +350,7 @@ namespace NUnit.Framework
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double? aDouble)
         {
-            Assert.That(aDouble, Is.NaN ,null, null);
+            Assert.That(aDouble, Is.NaN, null, null);
         }
 
         #endregion
@@ -362,7 +367,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsEmpty(string? aString, string? message, params object?[]? args)
         {
-            Assert.That(aString, new EmptyStringConstraint() ,message, args);
+            Assert.That(aString, new EmptyStringConstraint(), message, args);
         }
 
         /// <summary>
@@ -371,7 +376,7 @@ namespace NUnit.Framework
         /// <param name="aString">The string to be tested</param>
         public static void IsEmpty(string? aString)
         {
-            Assert.That(aString, new EmptyStringConstraint() ,null, null);
+            Assert.That(aString, new EmptyStringConstraint(), null, null);
         }
 
         #endregion
@@ -387,7 +392,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsEmpty(IEnumerable collection, string? message, params object?[]? args)
         {
-            Assert.That(collection, new EmptyCollectionConstraint() ,message, args);
+            Assert.That(collection, new EmptyCollectionConstraint(), message, args);
         }
 
         /// <summary>
@@ -397,7 +402,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsEmpty(IEnumerable collection)
         {
-            Assert.That(collection, new EmptyCollectionConstraint() ,null, null);
+            Assert.That(collection, new EmptyCollectionConstraint(), null, null);
         }
 
         #endregion
@@ -417,7 +422,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotEmpty(string? aString, string? message, params object?[]? args)
         {
-            Assert.That(aString, Is.Not.Empty ,message, args);
+            Assert.That(aString, Is.Not.Empty, message, args);
         }
 
         /// <summary>
@@ -427,7 +432,7 @@ namespace NUnit.Framework
         /// <param name="aString">The string to be tested</param>
         public static void IsNotEmpty(string? aString)
         {
-            Assert.That(aString, Is.Not.Empty ,null, null);
+            Assert.That(aString, Is.Not.Empty, null, null);
         }
 
         #endregion
@@ -443,7 +448,7 @@ namespace NUnit.Framework
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotEmpty(IEnumerable collection, string? message, params object?[]? args)
         {
-            Assert.That(collection, Is.Not.Empty ,message, args);
+            Assert.That(collection, Is.Not.Empty, message, args);
         }
 
         /// <summary>
@@ -453,7 +458,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsNotEmpty(IEnumerable collection)
         {
-            Assert.That(collection, Is.Not.Empty ,null, null);
+            Assert.That(collection, Is.Not.Empty, null, null);
         }
 
         #endregion
