@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
@@ -74,8 +75,6 @@ namespace NUnit.Framework.Internal
                 if (filterText.StartsWith(filter.Text + "."))
                     return;
             }
-
-            var newFilter = new FilterElement(filterText);
 
             // Check to see if it makes any of the existing
             // filter elements redundant.
@@ -169,6 +168,12 @@ namespace NUnit.Framework.Internal
 
             public bool Match(Type type)
             {
+                return MatchElementType(type) || 
+                       MatchSetUpFixture(type);
+            }
+
+            private bool MatchElementType(Type type)
+            {
                 switch(ElementType)
                 {
                     default:
@@ -219,6 +224,12 @@ namespace NUnit.Framework.Internal
             private bool MatchMethodElement(Type type)
             {
                 return type.FullName == ClassName;
+            }
+
+            private bool MatchSetUpFixture(Type type)
+            {
+                return ClassName.StartsWith(type.Namespace ?? string.Empty) &&
+                       type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Any();
             }
         }
 
