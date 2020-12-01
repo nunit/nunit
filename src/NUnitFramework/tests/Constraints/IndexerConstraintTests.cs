@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Constraints
 {
@@ -84,8 +85,20 @@ namespace NUnit.Framework.Constraints
             Assert.That(tester, Has.Item(42).EqualTo(100));
         }
 
+        [Test]
+        public void CanMatchNamedIndexer()
+        {
+            var tester = new NamedIndexTester();
+
+            Assert.That(tester, Has.Item(42));
+            Assert.That(tester, Has.Item(42).EqualTo("A Named Int Indexer"));
+            Assert.That(tester, Has.Item(42, 43).EqualTo("A Named Int Int Indexer"));
+        }
+
         private class IndexerTester
         {
+            public int DummyParam { get; set; }
+
             public string this[int x] => x == 42 ? "Answer to the Ultimate Question of Life, the Universe, and Everything" : "Still calculating";
 
             public string this[string x] => "Second indexer";
@@ -97,12 +110,25 @@ namespace NUnit.Framework.Constraints
         {
             private readonly T _item;
 
+            public int DummyParam { get; set; }
+
             public GenericIndexerTester(T item)
             {
                 _item = item;
             }
 
             public T this[int x] => _item;
+        }
+
+        private class NamedIndexTester
+        {
+            public int DummyParam { get; set; }
+
+            [IndexerName("ANamedIndexer")]
+            public string this[int x] => "A Named Int Indexer";
+
+            [IndexerName("ANamedIndexer")]
+            public string this[int x, int y] => "A Named Int Int Indexer";
         }
     }
 }

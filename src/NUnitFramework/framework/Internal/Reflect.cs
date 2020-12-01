@@ -472,12 +472,22 @@ namespace NUnit.Framework.Internal
         /// <returns>The return value from the invoked method</returns>
         public static PropertyInfo? GetIndexerByName(Type type, Type[] indexerTypes)
         {
+            const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+            
+            var indexer = GetDefaultIndexer(type, indexerTypes, bindingFlags) ?? GetNamedIndexer(type, indexerTypes, bindingFlags);
+            return indexer;
+        }
+
+        private static PropertyInfo? GetDefaultIndexer(Type type, Type[] indexerTypes, BindingFlags bindingFlags)
+        {
             const string defaultFrameworkIndexerName = "Item";
+            return type.GetProperty(defaultFrameworkIndexerName, bindingFlags, null, null, indexerTypes, null);
+        }
 
-            var props = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).ToArray();
-
-            var indexerInfo = props.FirstOrDefault(p => p.Name == defaultFrameworkIndexerName && ParametersEqual(p.GetIndexParameters(), indexerTypes));
-            return indexerInfo;
+        private static PropertyInfo? GetNamedIndexer(Type type, Type[] indexerTypes, BindingFlags bindingFlags)
+        {
+            var props = type.GetProperties(bindingFlags).ToArray();
+            return props.FirstOrDefault(p => ParametersEqual(p.GetIndexParameters(), indexerTypes));
         }
 
         internal static bool ParametersEqual(ParameterInfo[] first, Type[] second)
