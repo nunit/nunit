@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
 
             public string this[string x] => "Second indexer";
 
-            public string this[int x, int y] => "Third indexer";
+            protected string this[int x, int y] => "Third indexer";
         }
 
         private class GenericIndexerTester<T>

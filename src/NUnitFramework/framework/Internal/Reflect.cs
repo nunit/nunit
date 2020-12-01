@@ -469,13 +469,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="type">Type to reflect on for indexer.</param>
         /// <param name="indexerTypes">List of indexer types that matches the indexer type order.</param>
-        /// <returns>The return value from the invoked method</returns>
-        public static PropertyInfo? GetIndexerByName(Type type, Type[] indexerTypes)
+        /// <returns>Invokable indexer method</returns>
+        public static MethodInfo? GetIndexer(Type type, Type[] indexerTypes)
         {
             const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
             
             var indexer = GetDefaultIndexer(type, indexerTypes, bindingFlags) ?? GetNamedIndexer(type, indexerTypes, bindingFlags);
-            return indexer;
+            
+            return indexer?.GetGetMethod(true);
         }
 
         private static PropertyInfo? GetDefaultIndexer(Type type, Type[] indexerTypes, BindingFlags bindingFlags)
