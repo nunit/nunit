@@ -228,8 +228,16 @@ namespace NUnit.Framework.Internal
 
             private bool MatchSetUpFixture(Type type)
             {
-                return ClassName.StartsWith(type.Namespace ?? string.Empty) &&
+                return IsSubNamespace(type.Namespace) &&
                        type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Any();
+            }
+
+            private bool IsSubNamespace(string typeNamespace)
+            {
+                if (string.IsNullOrEmpty(typeNamespace))
+                    return true;
+
+                return (ClassName + '.').StartsWith(typeNamespace + '.');
             }
         }
 
