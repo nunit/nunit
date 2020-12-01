@@ -50,7 +50,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(tester, Has.Item(41).EqualTo("Still calculating").And.Item(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
 
             Assert.That(tester, Has.Item(string.Empty).EqualTo("Second indexer"));
-            
             Assert.That(tester, Has.Item(1, 2).EqualTo("Third indexer"));
         }
 
@@ -95,6 +94,25 @@ namespace NUnit.Framework.Constraints
             Assert.That(tester, Has.Item(42, 43).EqualTo("A Named Int Int Indexer"));
         }
 
+        [Test]
+        public void CanMatchShadowIndexer()
+        {
+            var tester = new DerivedClassWithoutIndexer();
+
+            Assert.That(tester, Has.Item(string.Empty).EqualTo("Second indexer from shadow"));
+            Assert.That(tester, Has.Item(1, 2).EqualTo("Third indexer from shadow"));
+            Assert.That(tester, Has.Item(41).EqualTo("Still calculating"));
+        }
+
+        [Test]
+        public void CanMatchShadowNamedIndexer()
+        {
+            var tester = new DerivedClassWithoutNamedIndexer();
+
+            Assert.That(tester, Has.Item(42).EqualTo("A Named Int Indexer from shadow"));
+            Assert.That(tester, Has.Item(42, 43).EqualTo("A Named Int Int Indexer"));
+        }
+
         private class IndexerTester
         {
             public int DummyParam { get; set; }
@@ -104,6 +122,19 @@ namespace NUnit.Framework.Constraints
             public string this[string x] => "Second indexer";
 
             protected string this[int x, int y] => "Third indexer";
+        }
+
+        private class ClassWithShadowIndexer : IndexerTester
+        {
+            public new string this[string x] => "Second indexer from shadow";
+
+            protected new string this[int x, int y] => "Third indexer from shadow";
+
+            private new string this[int x] => "Should not use this as private members can't be shadowed";
+        }
+
+        private class DerivedClassWithoutIndexer : ClassWithShadowIndexer
+        {
         }
 
         private class GenericIndexerTester<T>
@@ -129,6 +160,16 @@ namespace NUnit.Framework.Constraints
 
             [IndexerName("ANamedIndexer")]
             public string this[int x, int y] => "A Named Int Int Indexer";
+        }
+
+        private class ClassWithShadowNamedIndexer : NamedIndexTester
+        {
+            [IndexerName("ANamedIndexer")]
+            public new string this[int x] => "A Named Int Indexer from shadow";
+        }
+
+        private class DerivedClassWithoutNamedIndexer : ClassWithShadowNamedIndexer
+        {
         }
     }
 }
