@@ -99,6 +99,7 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new DerivedClassWithoutIndexer();
 
+            Assert.That(tester, Has.Item(42));
             Assert.That(tester, Has.Item(string.Empty).EqualTo("Second indexer from shadow"));
             Assert.That(tester, Has.Item(1, 2).EqualTo("Third indexer from shadow"));
             Assert.That(tester, Has.Item(41).EqualTo("Still calculating"));
@@ -109,6 +110,7 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new DerivedClassWithoutNamedIndexer();
 
+            Assert.That(tester, Has.Item(42));
             Assert.That(tester, Has.Item(42).EqualTo("A Named Int Indexer from shadow"));
             Assert.That(tester, Has.Item(42, 43).EqualTo("A Named Int Int Indexer"));
         }
