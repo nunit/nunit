@@ -1,3 +1,4 @@
+
 // ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
@@ -23,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -79,7 +81,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[0], "hello", typeof(Array) };
 
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( 42, "<System.Int32>" ),
             new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
@@ -103,7 +105,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[5], "hello" };
 
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( new int[3], "3" ),
             new TestCaseData( "goodbye", "7" ) };
 
@@ -184,7 +186,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(r.Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(r.Description, Is.EqualTo("property Foo and property Bar property Length equal to 5"));
             Assert.That(r.ActualValue, Is.EqualTo(inputObject));
-        }   
+        }
 
         [Test]
         public void FailureMessageContainsChainedConstraintMessage()
@@ -193,7 +195,7 @@ namespace NUnit.Framework.Constraints
 
             //Property Constraint Message with chained Equivalent Constraint.
             var constraint = ((IResolveConstraint)Has.Property("Foo").EquivalentTo(new List<int> { 2, 3, 5, 8 })).Resolve();
-            
+
             //Apply the constraint and write message.
             var result = constraint.ApplyTo(inputObject);
             var textMessageWriter = new TextMessageWriter();
@@ -204,6 +206,70 @@ namespace NUnit.Framework.Constraints
             Assert.That(result.GetType().Name, Is.EqualTo("PropertyConstraintResult"));
             Assert.IsTrue(textMessageWriter.ToString().Contains("Missing"));
             Assert.IsTrue(textMessageWriter.ToString().Contains("Extra"));
+        }
+    }
+
+    [TestFixture(TestOf = typeof(PropertyConstraint))]
+    public class PropertyHierarchyTests
+    {
+        [Test]
+        public void PropertyExists_PropertyDefinedInDerivedClass_ShouldExist()
+        {
+            var sut = new PropertyConstraint(nameof(Derived.SomeProperty), new EqualConstraint(42));
+
+            var instance = (Base)new Derived();
+            var actual = sut.ApplyTo(instance);
+
+            Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
+        }
+
+        class Base { }
+        class Derived : Base
+        {
+            public int SomeProperty { get; set; } = 42;
+        }
+
+
+        private int[] _array;
+        private PropertyConstraint _countPropertyConstraint;
+
+        [SetUp]
+        public void BeforeEveryTest()
+        {
+            _array = new[] { 1, 2, 3 };
+            _countPropertyConstraint = new PropertyConstraint(nameof(IList<object>.Count), new EqualConstraint(_array.Length));
+        }
+
+        [Test]
+        public void PropertyExists_PropertyDefinedInInterface_ShouldNotExist_WhenNotExplicitlyDefined()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _countPropertyConstraint.ApplyTo(_array));
+
+            Assert.That(ex, Has.Message.StartWith("Property Count was not found on System.Int32[]"));
+        }
+
+        [Test]
+        public void PropertyExists_PropertyDefinedInInterface_ShouldNotExist_WhenCastToObject()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => _countPropertyConstraint.ApplyTo((object)_array));
+
+            Assert.That(ex, Has.Message.StartWith("Property Count was not found on System.Int32[]"));
+        }
+
+        [Test]
+        public void PropertyExists_PropertyDefinedInInterface_ShouldExist_WhenCastToICollection()
+        {
+            var actual = _countPropertyConstraint.ApplyTo((ICollection<int>)_array);
+
+            Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void PropertyExists_PropertyDefinedInInterface_ShouldExist_WhenCastToIList()
+        {
+            var actual = _countPropertyConstraint.ApplyTo((IList<int>)_array);
+
+            Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
         }
     }
 }

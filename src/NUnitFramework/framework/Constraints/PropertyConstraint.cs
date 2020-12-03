@@ -23,6 +23,7 @@
 
 using System;
 using System.Reflection;
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -56,21 +57,33 @@ namespace NUnit.Framework.Constraints
         {
             // TODO: Use an error result for null
             Guard.ArgumentNotNull(actual, nameof(actual));
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            Type actualType = actual as Type;
-            if (actualType == null)
-                actualType = actual.GetType();
+            PropertyInfo property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
 
-            PropertyInfo property = Reflect.GetUltimateShadowingProperty(actualType, name,
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (property == null && typeof(TActual).IsInterface && typeof(TActual).GetInterfaces() is { } interfaces && interfaces.Length > 0)
+            {
+                foreach (var @interface in interfaces)
+                {
+                    property = Reflect.GetUltimateShadowingProperty(@interface, name, bindingFlags);
+                    if (property != null) break;
+                }
+            }
 
-            // TODO: Use an error result here
             if (property == null)
-                throw new ArgumentException($"Property {name} was not found on {actualType}.", "name");
+            {
+                Type actualType = actual as Type ?? actual.GetType();
+
+                property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+
+                // TODO: Use an error result here
+                if (property == null)
+                    throw new ArgumentException($"Property {name} was not found on {actualType}.", nameof(name));
+            }
 
             propValue = property.GetValue(actual, null);
             var baseResult = BaseConstraint.ApplyTo(propValue);
-            return new PropertyConstraintResult(this, baseResult);              
+            return new PropertyConstraintResult(this, baseResult);
         }
 
         /// <summary>
