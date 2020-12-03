@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
             _arguments = indexerArguments.ToArray();
             _argumentTypes = _arguments.Select(a => a.GetType()).ToArray();
 
-            DescriptionPrefix = $"indexer {StringifyArguments()}";
+            DescriptionPrefix = $"indexer {MsgUtils.FormatCollection(_arguments)}";
         }
 
         /// <summary>
@@ -70,8 +70,6 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the string representation of the constraint.
         /// </summary>
-        protected override string GetStringRepresentation() => $"<indexer {StringifyArguments()} {BaseConstraint}>";
-
-        private string StringifyArguments() => $"[{string.Join("], [", _arguments.Select(a => a.ToString()).ToArray())}";
+        protected override string GetStringRepresentation() => $"<indexer {MsgUtils.FormatCollection(_arguments)} {BaseConstraint}>";
     }
 }

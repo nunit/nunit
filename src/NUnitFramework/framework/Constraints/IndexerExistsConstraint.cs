@@ -73,8 +73,6 @@ namespace NUnit.Framework.Constraints
         /// Returns the string representation of the constraint.
         /// </summary>
         /// <returns></returns>
-        protected override string GetStringRepresentation() => $"<indexerexists {StringifyArguments()}>";
-
-        private string StringifyArguments() => $"[{string.Join("], [", _argumentTypes.Select(a => a.ToString()).ToArray())}]";
+        protected override string GetStringRepresentation() => $"<indexerexists {MsgUtils.FormatCollection(_argumentTypes)}>";
     }
 }
