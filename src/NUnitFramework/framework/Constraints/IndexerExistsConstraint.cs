@@ -36,6 +36,7 @@ namespace NUnit.Framework.Constraints
     public class IndexerExistsConstraint : Constraint
     {
         private readonly Type[] _argumentTypes;
+        private readonly object[] _arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexerExistsConstraint"/> class.
@@ -44,14 +45,15 @@ namespace NUnit.Framework.Constraints
         public IndexerExistsConstraint(IEnumerable<object> indexerArguments)
             : base(indexerArguments)
         {
-            _argumentTypes = indexerArguments.Select(a => a.GetType()).ToArray();
+            _arguments = indexerArguments.ToArray();
+            _argumentTypes = _arguments.Select(a => a.GetType()).ToArray();
         }
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description => $"Default indexer accepting arguments {MsgUtils.FormatCollection(_argumentTypes)}";
+        public override string Description => $"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)}";
 
         /// <summary>
         /// Test whether the indexer exists on a given object matching
@@ -73,6 +75,6 @@ namespace NUnit.Framework.Constraints
         /// Returns the string representation of the constraint.
         /// </summary>
         /// <returns></returns>
-        protected override string GetStringRepresentation() => $"<indexerexists {MsgUtils.FormatCollection(_argumentTypes)}>";
+        protected override string GetStringRepresentation() => $"<indexerexists {MsgUtils.FormatCollection(_arguments)}>";
     }
 }

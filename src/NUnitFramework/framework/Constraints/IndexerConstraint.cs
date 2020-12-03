@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
     {
         private readonly Type[] _argumentTypes;
         private readonly object[] _arguments;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexerConstraint"/> class.
         /// </summary>
