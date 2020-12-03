@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description => $"indexer {StringifyArguments()}";
+        public override string Description => $"Default indexer accepting arguments {MsgUtils.FormatCollection(_argumentTypes)}";
 
         /// <summary>
         /// Test whether the indexer exists on a given object matching
