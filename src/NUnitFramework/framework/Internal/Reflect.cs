@@ -473,33 +473,19 @@ namespace NUnit.Framework.Internal
         public static MethodInfo? GetDefaultIndexer(Type type, Type[] indexerTypes)
         {
             const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
-            
-            var indexer = GetDefaultIndexer(type, indexerTypes, bindingFlags) ?? GetNamedIndexer(type, indexerTypes, bindingFlags);
-            
+
+            var indexerName = GetIndexerName(type);
+            var indexer = type.GetProperty(indexerName, bindingFlags, null, null, indexerTypes, null);
+
             return indexer?.GetGetMethod(true);
         }
 
-        private static PropertyInfo? GetDefaultIndexer(Type type, Type[] indexerTypes, BindingFlags bindingFlags)
+        private static string GetIndexerName(Type type)
         {
             const string defaultFrameworkIndexerName = "Item";
-            return type.GetProperty(defaultFrameworkIndexerName, bindingFlags, null, null, indexerTypes, null);
-        }
+            var defaultMemberAttribute = type.GetAttributes<DefaultMemberAttribute>(true).FirstOrDefault();
 
-        private static PropertyInfo? GetNamedIndexer(Type type, Type[] indexerTypes, BindingFlags bindingFlags)
-        {
-            var props = type.GetProperties(bindingFlags).ToArray();
-            return props.FirstOrDefault(p => ParametersEqual(p.GetIndexParameters(), indexerTypes));
-        }
-
-        internal static bool ParametersEqual(ParameterInfo[] first, Type[] second)
-        {
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            var indexParametersEquals = first.Select((t, i) => t.ParameterType == second[i]).All(p => p);
-            return indexParametersEquals;
+            return defaultMemberAttribute?.MemberName ?? defaultFrameworkIndexerName;
         }
     }
 }
