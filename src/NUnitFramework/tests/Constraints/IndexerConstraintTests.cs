@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void DoesNotMatchMissingIndexer()
         {
-            var expectedErrorMessage = $"  Expected: Default indexer accepting arguments < <System.Double> >{NL}  But was:  \"not found\"{NL}";
+            var expectedErrorMessage = $"  Expected: Default indexer accepting arguments < 42.0d >{NL}  But was:  <NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester>{NL}";
             
             var tester = new IndexerTester();
             

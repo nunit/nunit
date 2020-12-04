@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
             var actualType = actual as Type ?? actual.GetType();
 
             var indexer = Reflect.GetDefaultIndexer(actualType, _argumentTypes);
-            return new ConstraintResult(this, "not found", indexer != null);
+            return new ConstraintResult(this, actualType, indexer != null);
         }
 
         /// <summary>
