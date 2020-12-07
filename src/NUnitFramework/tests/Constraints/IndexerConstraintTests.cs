@@ -126,7 +126,7 @@ namespace NUnit.Framework.Constraints
             protected string this[int x, int y] => "Third indexer";
         }
 
-        private class ClassWithShadowIndexer : IndexerTester
+        private class ClassHidingBaseIndexer : IndexerTester
         {
             public new string this[string x] => "Second indexer from shadow";
 
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Constraints
             private new string this[int x] => "Should not use this as private members can't be shadowed";
         }
 
-        private class DerivedClassWithoutIndexer : ClassWithShadowIndexer
+        private class DerivedClassWithoutIndexer : ClassHidingBaseIndexer
         {
         }
 
@@ -164,13 +164,13 @@ namespace NUnit.Framework.Constraints
             public string this[int x, int y] => "A Named Int Int Indexer";
         }
 
-        private class ClassWithShadowNamedIndexer : NamedIndexTester
+        private class ClassHidingBaseNamedIndexer : NamedIndexTester
         {
             [IndexerName("ANamedIndexer")]
             public new string this[int x] => "A Named Int Indexer from shadow";
         }
 
-        private class DerivedClassWithoutNamedIndexer : ClassWithShadowNamedIndexer
+        private class DerivedClassWithoutNamedIndexer : ClassHidingBaseNamedIndexer
         {
         }
     }
