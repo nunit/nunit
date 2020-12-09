@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal
                 if (!awaiter.IsCompleted)
                 {
                     var waitStrategy = MessagePumpStrategy.FromCurrentSynchronizationContext();
-                    waitStrategy.WaitForCompletion(awaiter).Wait();
+                    waitStrategy.WaitForCompletion(awaiter).GetAwaiter().GetResult();
                 }
 
                 return awaiter.GetResult();

@@ -30,11 +30,6 @@ namespace NUnit.Framework.Internal
 {
     internal static class ContextUtils
     {
-        public static void DoIsolated(Action action)
-        {
-            DoIsolated(state => ((Action)state).Invoke(), state: action);
-        }
-
         public static T DoIsolated<T>(Func<T> func)
         {
             var returnValue = default(T);
@@ -72,24 +67,15 @@ namespace NUnit.Framework.Internal
 
                 using ((object)executionContext as IDisposable)
                 {
-                    TaskScheduler ts = null;
-                    var sc = new SynchronizationContext();
+                    var context = SynchronizationContext.Current;
 
-                    ExecutionContext.Run(executionContext, _ =>
+                    if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA && (context == null || context.GetType() == typeof(SynchronizationContext)))
                     {
-                        var old = SynchronizationContext.Current;
-                        SynchronizationContext.SetSynchronizationContext(sc);
-                        try
-                        {
-                            ts = TaskScheduler.FromCurrentSynchronizationContext();
-                        }
-                        finally
-                        {
-                            SynchronizationContext.SetSynchronizationContext(old);
-                        }
-                    }, null);
-
-                    await Task.Factory.StartNew(callback, default, TaskCreationOptions.None, ts).Unwrap();
+                        ExecutionContext.Run(executionContext, _ => callback().GetAwaiter().GetResult(), null);
+                    }
+                    else
+                        using (var sc = new FlowingSynchronizationContext(executionContext))
+                            await sc.Run(callback);
                 }
             }
             finally
@@ -97,5 +83,51 @@ namespace NUnit.Framework.Internal
                 previousState.Restore();
             }
         }
+    }
+
+    internal sealed class FlowingSynchronizationContext : SynchronizationContext, IDisposable
+    {
+        public FlowingSynchronizationContext(ExecutionContext sourceEc)
+        {
+            TaskScheduler ts = null;
+            ExecutionContext ec = null;
+
+            ExecutionContext.Run(sourceEc, _ =>
+            {
+                var sc = SynchronizationContext.Current;
+                SynchronizationContext.SetSynchronizationContext(this);
+
+                try
+                {
+                    ts = TaskScheduler.FromCurrentSynchronizationContext();
+                    ec = ExecutionContext.Capture();
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(sc);
+                }
+            }, null);
+
+            _ec = ec;
+            _ts = ts;
+        }
+
+        public Task Run(Func<Task> action, CancellationToken token = default) => Task.Factory.StartNew(action, token, TaskCreationOptions.None, _ts).Unwrap();
+
+        public void Dispose() => _ec.Dispose();
+        public override SynchronizationContext CreateCopy() => this;
+        public override void Send(SendOrPostCallback d, object state) => Execute(d, state);
+        public override void Post(SendOrPostCallback d, object state) => ThreadPool.UnsafeQueueUserWorkItem(s => Execute(d, s), state);
+
+        private void Execute(SendOrPostCallback d, object state)
+        {
+            using (var ec = _ec.CreateCopy())
+            {
+                ExecutionContext.Run(ec, new ContextCallback(d), state);
+            }
+        }
+
+        private readonly TaskScheduler _ts;
+        private readonly ExecutionContext _ec;
     }
 }

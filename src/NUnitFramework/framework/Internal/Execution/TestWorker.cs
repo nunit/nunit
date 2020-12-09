@@ -23,7 +23,7 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private WorkItem _currentWorkItem;
 
-        private void TestWorkerThreadProc()
+        private async Task TestWorkerThreadProc()
         {
             _running = true;
 
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Internal.Execution
 
                     // Because we execute the current item AFTER the queue state
                     // is saved, its children end up in the new queue set.
-                    _currentWorkItem.Execute();
+                    await _currentWorkItem.Execute();
 
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
+            _workerThread = new Thread(new ThreadStart(() => TestWorkerThreadProc().Wait()));
             _workerThread.Name = Name;
 
             try

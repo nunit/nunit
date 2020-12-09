@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal.Execution
                                     {
                                         case TestStatus.Passed:
                                         case TestStatus.Warning:
-                                            RunChildren();
+                                            await RunChildren();
                                             return;
                                         // Just return: completion event will take care
                                         // of OneTimeTearDown when all tests are done.
@@ -179,7 +179,7 @@ namespace NUnit.Framework.Internal.Execution
                 // ParameterizedMethodSuites and individual test cases both use the same
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite =  action.Targets.HasFlag(ActionTargets.Suite)
+                bool applyToSuite = action.Targets.HasFlag(ActionTargets.Suite)
                     || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
 
                 bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private void RunChildren()
+        private async Task RunChildren()
         {
             if (Test.TestType == "Theory")
                 Result.SetResult(ResultState.Inconclusive);
@@ -288,14 +288,14 @@ namespace NUnit.Framework.Internal.Execution
                 // In case we run directly, on same thread
                 child.TestWorker = TestWorker;
 
-                Context.Dispatcher.Dispatch(child);
+                await Context.Dispatcher.Dispatch(child);
                 childCount--;
             }
 
             // If run was cancelled, reduce countdown by number of
             // child items not yet staged and check if we are done.
             if (childCount > 0)
-                lock(_childCompletionLock)
+                lock (_childCompletionLock)
                 {
                     _childTestCountdown.Signal(childCount);
                     if (_childTestCountdown.CurrentCount == 0)

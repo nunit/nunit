@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
@@ -111,9 +112,9 @@ namespace NUnit.Framework.Internal.Execution
                 IsolateQueues(work);
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Number of parallel worker threads
@@ -159,9 +160,9 @@ namespace NUnit.Framework.Internal.Execution
         private WorkItemQueue NonParallelQueue { get; } = new WorkItemQueue("NonParallelQueue", false, ApartmentState.MTA);
         private WorkItemQueue NonParallelSTAQueue { get; } = new WorkItemQueue("NonParallelSTAQueue", false, ApartmentState.STA);
 
-#endregion
+        #endregion
 
-#region IWorkItemDispatcher Members
+        #region IWorkItemDispatcher Members
 
         /// <summary>
         /// Start execution, setting the top level work,
@@ -195,13 +196,13 @@ namespace NUnit.Framework.Internal.Execution
         /// work item and used when stopping the run.
         /// </summary>
         /// <param name="work">The item to dispatch</param>
-        public void Dispatch(WorkItem work)
+        public Task Dispatch(WorkItem work)
         {
-            Dispatch(work, work.ExecutionStrategy);
+            return Dispatch(work, work.ExecutionStrategy);
         }
 
         // Separate method so it can be used by Start
-        private void Dispatch(WorkItem work, ParallelExecutionStrategy strategy)
+        private async Task Dispatch(WorkItem work, ParallelExecutionStrategy strategy)
         {
             log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
@@ -218,7 +219,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 default:
                 case ParallelExecutionStrategy.Direct:
-                    work.Execute();
+                    await work.Execute();
                     break;
                 case ParallelExecutionStrategy.Parallel:
                     if (work.TargetApartment == ApartmentState.STA)
@@ -367,10 +368,10 @@ namespace NUnit.Framework.Internal.Execution
             return null;
         }
 
-#endregion
+        #endregion
     }
 
-#region ParallelScopeHelper Class
+    #region ParallelScopeHelper Class
 
 #if NET35
     static class ParallelScopeHelper
@@ -382,5 +383,5 @@ namespace NUnit.Framework.Internal.Execution
     }
 #endif
 
-#endregion
+    #endregion
 }

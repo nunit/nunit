@@ -22,9 +22,8 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -56,7 +55,7 @@ namespace NUnit.Framework.Internal.Execution
         public void Start(WorkItem topLevelWorkItem)
         {
             _topLevelWorkItem = topLevelWorkItem;
-            _runnerThread = new Thread(RunnerThreadProc);
+            _runnerThread = new Thread(() => RunnerThreadProc().Wait());
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
@@ -78,16 +77,17 @@ namespace NUnit.Framework.Internal.Execution
         /// executing it directly.
         /// </summary>
         /// <param name="work">The item to dispatch</param>
-        public void Dispatch(WorkItem work)
+        public Task Dispatch(WorkItem work)
         {
             if (work != null)
-                work.Execute();
+                return work.Execute();
+            return Task.Delay(0);
         }
 
 
-        private void RunnerThreadProc()
+        private Task RunnerThreadProc()
         {
-            _topLevelWorkItem.Execute();
+            return _topLevelWorkItem.Execute();
         }
 
 

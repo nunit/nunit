@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -55,10 +56,11 @@ namespace NUnit.Framework.Internal.Execution
         /// executing it directly.
         /// </summary>
         /// <param name="work">The item to dispatch</param>
-        public void Dispatch(WorkItem work)
+        public Task Dispatch(WorkItem work)
         {
             if (work != null)
-                work.Execute();
+                return work.Execute();
+            return Task.Delay(0);
         }
 
         /// <summary>
