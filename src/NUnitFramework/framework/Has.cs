@@ -220,7 +220,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region Item
+        #region ItemAt
 
         /// <summary>
         /// Returns a new IndexerConstraintExpression, which will either

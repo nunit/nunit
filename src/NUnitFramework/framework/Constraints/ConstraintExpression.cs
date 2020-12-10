@@ -1005,7 +1005,7 @@ namespace NUnit.Framework.Constraints
 
         #endregion
         
-        #region Item
+        #region ItemAt
 
         /// <summary>
         /// Returns a new IndexerConstraintExpression, which will either
