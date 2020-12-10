@@ -1013,7 +1013,7 @@ namespace NUnit.Framework.Constraints
         /// or apply any following constraint to that indexer value.
         /// </summary>
         /// <param name="indexArgs">Index accessor values.</param>
-        public ResolvableConstraintExpression Item(params object[] indexArgs)
+        public ResolvableConstraintExpression ItemAt(params object[] indexArgs)
         {
             return this.Append(new IndexerOperator(indexArgs));
         }

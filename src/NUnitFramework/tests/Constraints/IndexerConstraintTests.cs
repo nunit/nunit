@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
             var tester = new IndexerTester();
             
             Assert.That(tester, Has.Item(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
-            Assert.That(tester, Has.Item(41).EqualTo("Still calculating").And.Item(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
+            Assert.That(tester, Has.Item(41).EqualTo("Still calculating").And.ItemAt(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
 
             Assert.That(tester, Has.Item(string.Empty).EqualTo("Second indexer"));
             Assert.That(tester, Has.Item(1, 2).EqualTo("Third indexer"));
@@ -80,8 +80,8 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new IndexerTester();
 
-            Assert.That(tester, Has.No.Item(42d));
-            Assert.That(new[] { 1, 2, 2 }, Has.No.Item(3));
+            Assert.That(tester, Has.No.ItemAt(42d));
+            Assert.That(new[] { 1, 2, 2 }, Has.No.ItemAt(3));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Constraints
 
             var tester = new IndexerTester();
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.Item("Should Throw as this indexer type exists")));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.ItemAt("Should Throw as this indexer type exists")));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
 

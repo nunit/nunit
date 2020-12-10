@@ -230,7 +230,7 @@ namespace NUnit.Framework
         /// <param name="indexArgs">Index accessor values.</param>
         public static ResolvableConstraintExpression Item(params object[] indexArgs)
         {
-            return new ConstraintExpression().Item(indexArgs);
+            return new ConstraintExpression().ItemAt(indexArgs);
         }
 
         #endregion
