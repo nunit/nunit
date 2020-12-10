@@ -36,9 +36,9 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new IndexerTester();
             
-            Assert.That(tester, Has.Item(42));
-            Assert.That(tester, Has.Item(string.Empty));
-            Assert.That(tester, Has.Item(1, 2));
+            Assert.That(tester, Has.ItemAt(42));
+            Assert.That(tester, Has.ItemAt(string.Empty));
+            Assert.That(tester, Has.ItemAt(1, 2));
         }
         
         [Test]
@@ -46,11 +46,11 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new IndexerTester();
             
-            Assert.That(tester, Has.Item(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
-            Assert.That(tester, Has.Item(41).EqualTo("Still calculating").And.ItemAt(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
+            Assert.That(tester, Has.ItemAt(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
+            Assert.That(tester, Has.ItemAt(41).EqualTo("Still calculating").And.ItemAt(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
 
-            Assert.That(tester, Has.Item(string.Empty).EqualTo("Second indexer"));
-            Assert.That(tester, Has.Item(1, 2).EqualTo("Third indexer"));
+            Assert.That(tester, Has.ItemAt(string.Empty).EqualTo("Second indexer"));
+            Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer"));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
             
             var tester = new IndexerTester();
             
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.Item(42d)));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.ItemAt(42d)));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
 
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Constraints
             
             var tester = new IndexerTester();
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.Item(4, 2).EqualTo("Second indexer")));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.ItemAt(4, 2).EqualTo("Second indexer")));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
 
@@ -100,8 +100,8 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new GenericIndexerTester<int>(100);
 
-            Assert.That(tester, Has.Item(42));
-            Assert.That(tester, Has.Item(42).EqualTo(100));
+            Assert.That(tester, Has.ItemAt(42));
+            Assert.That(tester, Has.ItemAt(42).EqualTo(100));
         }
 
         [Test]
@@ -109,9 +109,9 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new NamedIndexTester();
 
-            Assert.That(tester, Has.Item(42));
-            Assert.That(tester, Has.Item(42).EqualTo("A Named Int Indexer"));
-            Assert.That(tester, Has.Item(42, 43).EqualTo("A Named Int Int Indexer"));
+            Assert.That(tester, Has.ItemAt(42));
+            Assert.That(tester, Has.ItemAt(42).EqualTo("A Named Int Indexer"));
+            Assert.That(tester, Has.ItemAt(42, 43).EqualTo("A Named Int Int Indexer"));
         }
 
         [Test]
@@ -119,10 +119,10 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new DerivedClassWithoutIndexer();
 
-            Assert.That(tester, Has.Item(42));
-            Assert.That(tester, Has.Item(string.Empty).EqualTo("Second indexer from shadow"));
-            Assert.That(tester, Has.Item(1, 2).EqualTo("Third indexer from shadow"));
-            Assert.That(tester, Has.Item(41).EqualTo("Still calculating"));
+            Assert.That(tester, Has.ItemAt(42));
+            Assert.That(tester, Has.ItemAt(string.Empty).EqualTo("Second indexer from shadow"));
+            Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer from shadow"));
+            Assert.That(tester, Has.ItemAt(41).EqualTo("Still calculating"));
         }
 
         [Test]
@@ -130,9 +130,9 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new DerivedClassWithoutNamedIndexer();
 
-            Assert.That(tester, Has.Item(42));
-            Assert.That(tester, Has.Item(42).EqualTo("A Named Int Indexer from shadow"));
-            Assert.That(tester, Has.Item(42, 43).EqualTo("A Named Int Int Indexer"));
+            Assert.That(tester, Has.ItemAt(42));
+            Assert.That(tester, Has.ItemAt(42).EqualTo("A Named Int Indexer from shadow"));
+            Assert.That(tester, Has.ItemAt(42, 43).EqualTo("A Named Int Int Indexer"));
         }
 
         private class IndexerTester

@@ -228,7 +228,7 @@ namespace NUnit.Framework
         /// or apply any following constraint to that indexer value.
         /// </summary>
         /// <param name="indexArgs">Index accessor values.</param>
-        public static ResolvableConstraintExpression Item(params object[] indexArgs)
+        public static ResolvableConstraintExpression ItemAt(params object[] indexArgs)
         {
             return new ConstraintExpression().ItemAt(indexArgs);
         }
