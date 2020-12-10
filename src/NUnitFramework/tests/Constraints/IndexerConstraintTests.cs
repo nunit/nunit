@@ -76,6 +76,26 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void CanMatchWhenIndexerIsNotExpectedToBePresent()
+        {
+            var tester = new IndexerTester();
+
+            Assert.That(tester, Has.No.Item(42d));
+            Assert.That(new[] { 1, 2, 2 }, Has.No.Item(3));
+        }
+
+        [Test]
+        public void DoesNotMatchWhenIndexerIsNotExpectedToBePresent()
+        {
+            var expectedErrorMessage = $"  Expected: not Default indexer accepting arguments < \"Should Throw as this indexer type exists\" >{NL}  But was:  <NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester>{NL}";
+
+            var tester = new IndexerTester();
+
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.Item("Should Throw as this indexer type exists")));
+            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+        }
+
+        [Test]
         public void CanMatchGenericIndexer()
         {
             var tester = new GenericIndexerTester<int>(100);
@@ -95,7 +115,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanMatchShadowIndexer()
+        public void CanMatchHiddenIndexer()
         {
             var tester = new DerivedClassWithoutIndexer();
 
@@ -106,7 +126,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanMatchShadowNamedIndexer()
+        public void CanMatchHiddenNamedIndexer()
         {
             var tester = new DerivedClassWithoutNamedIndexer();
 
