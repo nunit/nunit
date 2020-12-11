@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
             _arguments = indexerArguments.ToArray();
             _argumentTypes = _arguments.Select(a => a.GetType()).ToArray();
 
-            DescriptionPrefix = $"indexer {MsgUtils.FormatCollection(_arguments)}";
+            DescriptionPrefix = $"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)}";
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
 
             var actualType = actual as Type ?? actual.GetType();
 
-            var getMethod = Reflect.GetDefaultIndexer(actualType, _argumentTypes) ?? throw new ArgumentException($"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)} was not found on {actualType}."); ;
+            var getMethod = Reflect.GetDefaultIndexer(actualType, _argumentTypes) ?? throw new ArgumentException($"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)} was not found on {actualType}.");
 
             var indexReturnedValue = Reflect.InvokeMethod(getMethod, actual, _arguments);
             return BaseConstraint.ApplyTo(indexReturnedValue);
