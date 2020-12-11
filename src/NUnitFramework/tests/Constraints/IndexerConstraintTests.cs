@@ -115,7 +115,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanMatchHiddenIndexer()
+        public void CanMatchHidingIndexer()
         {
             var tester = new DerivedClassWithoutIndexer();
 
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanMatchHiddenNamedIndexer()
+        public void CanMatchHidingNamedIndexer()
         {
             var tester = new DerivedClassWithoutNamedIndexer();
 
