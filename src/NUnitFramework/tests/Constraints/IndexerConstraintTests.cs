@@ -32,36 +32,16 @@ namespace NUnit.Framework.Constraints
         private static readonly string NL = Environment.NewLine;
 
         [Test]
-        public void CanMatchIndexer()
-        {
-            var tester = new IndexerTester();
-            
-            Assert.That(tester, Has.ItemAt(42));
-            Assert.That(tester, Has.ItemAt(string.Empty));
-            Assert.That(tester, Has.ItemAt(1, 2));
-        }
-        
-        [Test]
         public void CanMatchIndexerEquality()
         {
             var tester = new IndexerTester();
-            
+
             Assert.That(tester, Has.ItemAt(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
             Assert.That(tester, Has.ItemAt(41).EqualTo("Still calculating").And.ItemAt(42).EqualTo("Answer to the Ultimate Question of Life, the Universe, and Everything"));
 
             Assert.That(tester, Has.ItemAt(string.Empty).EqualTo("Second indexer"));
             Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer"));
-        }
-
-        [Test]
-        public void DoesNotMatchMissingIndexer()
-        {
-            var expectedErrorMessage = $"  Expected: Default indexer accepting arguments < 42.0d >{NL}  But was:  <NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester>{NL}";
-            
-            var tester = new IndexerTester();
-            
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.ItemAt(42d)));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Third indexer"));
         }
 
         [Test]
@@ -76,22 +56,24 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void CanMatchWhenIndexerIsNotExpectedToBePresent()
+        public void DoesNotMatchWhenIndexerValueIsNotExpectedToBeEqual()
         {
+            var expectedErrorMessage = $"  Expected: not Default indexer accepting arguments < <string.Empty> > equal to \"Second indexer\"{NL}  But was:  \"Second indexer\"{NL}";
+
             var tester = new IndexerTester();
 
-            Assert.That(tester, Has.No.ItemAt(42d));
-            Assert.That(new[] { 1, 2, 2 }, Has.No.ItemAt(3));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Second indexer")));
+            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]
-        public void DoesNotMatchWhenIndexerIsNotExpectedToBePresent()
+        public void DoesNotMatchWhenIndexerIsNotExpectedToBeEqual()
         {
-            var expectedErrorMessage = $"  Expected: not Default indexer accepting arguments < \"Should Throw as this indexer type exists\" >{NL}  But was:  <NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester>{NL}";
+            var expectedErrorMessage = "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester.";
 
             var tester = new IndexerTester();
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.ItemAt("Should Throw as this indexer type exists")));
+            var ex = Assert.Throws<ArgumentException>(() => Assert.That(tester, Has.No.ItemAt(21d).EqualTo("Should Throw")));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
 
@@ -100,7 +82,6 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new GenericIndexerTester<int>(100);
 
-            Assert.That(tester, Has.ItemAt(42));
             Assert.That(tester, Has.ItemAt(42).EqualTo(100));
         }
 
@@ -109,7 +90,6 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new NamedIndexTester();
 
-            Assert.That(tester, Has.ItemAt(42));
             Assert.That(tester, Has.ItemAt(42).EqualTo("A Named Int Indexer"));
             Assert.That(tester, Has.ItemAt(42, 43).EqualTo("A Named Int Int Indexer"));
         }
@@ -119,9 +99,8 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new DerivedClassWithoutIndexer();
 
-            Assert.That(tester, Has.ItemAt(42));
-            Assert.That(tester, Has.ItemAt(string.Empty).EqualTo("Second indexer from shadow"));
-            Assert.That(tester, Has.ItemAt(1, 2).EqualTo("Third indexer from shadow"));
+            Assert.That(tester, Has.ItemAt(string.Empty).EqualTo("New value for Second indexer"));
+            Assert.That(tester, Has.ItemAt(1, 2).EqualTo("New value for Third indexer"));
             Assert.That(tester, Has.ItemAt(41).EqualTo("Still calculating"));
         }
 
@@ -130,15 +109,12 @@ namespace NUnit.Framework.Constraints
         {
             var tester = new DerivedClassWithoutNamedIndexer();
 
-            Assert.That(tester, Has.ItemAt(42));
-            Assert.That(tester, Has.ItemAt(42).EqualTo("A Named Int Indexer from shadow"));
+            Assert.That(tester, Has.ItemAt(42).EqualTo("New value for Named Int Indexer"));
             Assert.That(tester, Has.ItemAt(42, 43).EqualTo("A Named Int Int Indexer"));
         }
 
         private class IndexerTester
         {
-            public int DummyParam { get; set; }
-
             public string this[int x] => x == 42 ? "Answer to the Ultimate Question of Life, the Universe, and Everything" : "Still calculating";
 
             public string this[string x] => "Second indexer";
@@ -148,9 +124,9 @@ namespace NUnit.Framework.Constraints
 
         private class ClassHidingBaseIndexer : IndexerTester
         {
-            public new string this[string x] => "Second indexer from shadow";
+            public new string this[string x] => "New value for Second indexer";
 
-            protected new string this[int x, int y] => "Third indexer from shadow";
+            protected new string this[int x, int y] => "New value for Third indexer";
 
             private new string this[int x] => "Should not use this as private members can't be shadowed";
         }
@@ -175,8 +151,6 @@ namespace NUnit.Framework.Constraints
 
         private class NamedIndexTester
         {
-            public int DummyParam { get; set; }
-
             [IndexerName("ANamedIndexer")]
             public string this[int x] => "A Named Int Indexer";
 
@@ -187,7 +161,7 @@ namespace NUnit.Framework.Constraints
         private class ClassHidingBaseNamedIndexer : NamedIndexTester
         {
             [IndexerName("ANamedIndexer")]
-            public new string this[int x] => "A Named Int Indexer from shadow";
+            public new string this[int x] => "New value for Named Int Indexer";
         }
 
         private class DerivedClassWithoutNamedIndexer : ClassHidingBaseNamedIndexer

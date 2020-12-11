@@ -223,12 +223,11 @@ namespace NUnit.Framework
         #region ItemAt
 
         /// <summary>
-        /// Returns a new IndexerConstraintExpression, which will either
-        /// test for the existence of an indexer on the object being tested
-        /// or apply any following constraint to that indexer value.
+        /// Returns a new IndexerConstraintExpression, which will
+        /// apply any following constraint to that indexer value.
         /// </summary>
         /// <param name="indexArgs">Index accessor values.</param>
-        public static ResolvableConstraintExpression ItemAt(params object[] indexArgs)
+        public static ConstraintExpression ItemAt(params object[] indexArgs)
         {
             return new ConstraintExpression().ItemAt(indexArgs);
         }

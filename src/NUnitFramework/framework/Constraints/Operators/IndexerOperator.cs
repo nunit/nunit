@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
     /// on an object and optionally apply further tests to the
     /// value of that indexer.
     /// </summary>
-    public class IndexerOperator : SelfResolvingOperator
+    public class IndexerOperator : PrefixOperator
     {
         private readonly object[] _indexArguments;
         
@@ -46,21 +46,11 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and
-        /// any arguments. It takes the arguments from the constraint
-        /// stack and pushes the resulting constraint on it.
+        /// Returns a IndexerConstraint applied to its argument.
         /// </summary>
-        /// <param name="stack"></param>
-        public override void Reduce(ConstraintBuilder.ConstraintStack stack)
+        public override IConstraint ApplyPrefix(IConstraint constraint)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
-            {
-                stack.Push(new IndexerExistsConstraint(_indexArguments));
-            }
-            else
-            {
-                stack.Push(new IndexerConstraint(_indexArguments, stack.Pop()));
-            }
+            return new IndexerConstraint(_indexArguments, constraint);
         }
     }
 }
