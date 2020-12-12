@@ -23,7 +23,6 @@
 
 using System;
 using System.Reflection;
-
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -61,9 +60,9 @@ namespace NUnit.Framework.Constraints
 
             PropertyInfo property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
 
-            if (property == null && typeof(TActual).IsInterface && typeof(TActual).GetInterfaces() is { } interfaces && interfaces.Length > 0)
+            if (property == null && typeof(TActual).IsInterface)
             {
-                foreach (var @interface in interfaces)
+                foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
                     property = Reflect.GetUltimateShadowingProperty(@interface, name, bindingFlags);
                     if (property != null) break;

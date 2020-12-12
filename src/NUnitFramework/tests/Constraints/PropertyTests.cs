@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -213,7 +212,7 @@ namespace NUnit.Framework.Constraints
     public class PropertyHierarchyTests
     {
         [Test]
-        public void PropertyExists_PropertyDefinedInDerivedClass_ShouldExist()
+        public void PropertyDefinedInDerivedClass_ShouldExist()
         {
             var sut = new PropertyConstraint(nameof(Derived.SomeProperty), new EqualConstraint(42));
 
@@ -241,7 +240,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void PropertyExists_PropertyDefinedInInterface_ShouldNotExist_WhenNotExplicitlyDefined()
+        public void ExplicitlyImplementedProperty_ShouldNotExist_ViaImplementingType()
         {
             var ex = Assert.Throws<ArgumentException>(() => _countPropertyConstraint.ApplyTo(_array));
 
@@ -249,7 +248,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void PropertyExists_PropertyDefinedInInterface_ShouldNotExist_WhenCastToObject()
+        public void PropertyDefinedInInterface_ShouldNotExist_WhenCastToObject()
         {
             var ex = Assert.Throws<ArgumentException>(() => _countPropertyConstraint.ApplyTo((object)_array));
 
@@ -257,7 +256,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void PropertyExists_PropertyDefinedInInterface_ShouldExist_WhenCastToICollection()
+        public void PropertyDefinedInInterface_ShouldExist_WhenCastToICollection()
         {
             var actual = _countPropertyConstraint.ApplyTo((ICollection<int>)_array);
 
@@ -265,7 +264,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void PropertyExists_PropertyDefinedInInterface_ShouldExist_WhenCastToIList()
+        public void PropertyDefinedInInterface_ShouldExist_WhenCastToIList()
         {
             var actual = _countPropertyConstraint.ApplyTo((IList<int>)_array);
 
