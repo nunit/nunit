@@ -38,6 +38,11 @@ namespace NUnit.Framework.Constraints
             var actual = sut.ApplyTo(instance);
 
             Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
+
+            
+            var existSut = new PropertyExistsConstraint(nameof(Derived.SomeProperty));
+            var actualExist = existSut.ApplyTo(instance);
+            Assert.That(actualExist.IsSuccess, Is.True);
         }
 
         class Base { }
@@ -49,12 +54,14 @@ namespace NUnit.Framework.Constraints
 
         private int[] _array;
         private PropertyConstraint _countPropertyConstraint;
+        private PropertyExistsConstraint _countPropertyExistsConstraint;
 
         [SetUp]
         public void BeforeEveryTest()
         {
             _array = new[] { 1, 2, 3 };
             _countPropertyConstraint = new PropertyConstraint(nameof(IList<object>.Count), new EqualConstraint(_array.Length));
+            _countPropertyExistsConstraint = new PropertyExistsConstraint(nameof(IList<object>.Count));
         }
 
         [Test]
@@ -63,6 +70,9 @@ namespace NUnit.Framework.Constraints
             var ex = Assert.Throws<ArgumentException>(() => _countPropertyConstraint.ApplyTo(_array));
 
             Assert.That(ex, Has.Message.StartWith("Property Count was not found on System.Int32[]"));
+
+            var actualExist = _countPropertyExistsConstraint.ApplyTo(_array);
+            Assert.That(actualExist.IsSuccess, Is.False);
         }
 
         [Test]
@@ -71,6 +81,9 @@ namespace NUnit.Framework.Constraints
             var ex = Assert.Throws<ArgumentException>(() => _countPropertyConstraint.ApplyTo((object)_array));
 
             Assert.That(ex, Has.Message.StartWith("Property Count was not found on System.Int32[]"));
+
+            var actualExist = _countPropertyExistsConstraint.ApplyTo((object)_array);
+            Assert.That(actualExist.IsSuccess, Is.False);
         }
 
         [Test]
@@ -79,6 +92,9 @@ namespace NUnit.Framework.Constraints
             var actual = _countPropertyConstraint.ApplyTo((ICollection<int>)_array);
 
             Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
+
+            var actualExist = _countPropertyExistsConstraint.ApplyTo((ICollection<int>)_array);
+            Assert.That(actualExist.IsSuccess, Is.True);
         }
 
         [Test]
@@ -87,6 +103,9 @@ namespace NUnit.Framework.Constraints
             var actual = _countPropertyConstraint.ApplyTo((IList<int>)_array);
 
             Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
+
+            var actualExist = _countPropertyExistsConstraint.ApplyTo((IList<int>)_array);
+            Assert.That(actualExist.IsSuccess, Is.True);
         }
     }
 }
