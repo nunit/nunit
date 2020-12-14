@@ -32,6 +32,7 @@ namespace NUnitLite
     /// output to Debug. We don't use Trace because
     /// writing to it is not supported in CF.
     /// </summary>
+    [Obsolete("No longer used", true)]
     public class DebugWriter : TextWriter
     {
         private static TextWriter writer;
