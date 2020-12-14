@@ -45,6 +45,15 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void CanMatchArrayEquality()
+        {
+            var tester = new[] { 1, 2, 3 };
+
+            Assert.That(tester, Has.ItemAt(0).EqualTo(1));
+            Assert.That(tester, Has.ItemAt(2).EqualTo(3));
+        }
+
+        [Test]
         public void DoesNotMatchMissingIndexerEquality()
         {
             var expectedErrorMessage = $"  Expected string length 14 but was 13. Strings differ at index 0.{NL}  Expected: \"Second indexer\"{NL}  But was:  \"Third indexer\"{NL}  -----------^{NL}";

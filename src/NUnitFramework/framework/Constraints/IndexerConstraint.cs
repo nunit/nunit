@@ -59,12 +59,22 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
 
+            object indexedValue;
             var actualType = actual as Type ?? actual.GetType();
 
-            var getMethod = Reflect.GetDefaultIndexer(actualType, _argumentTypes) ?? throw new ArgumentException($"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)} was not found on {actualType}.");
+            if (actualType.IsArray || typeof(Array).IsAssignableFrom(actualType))
+            {
+                var array = actual as Array;
+                indexedValue = array?.GetValue((int)_arguments[0]);
+            }
+            else
+            {
+                var getMethod = Reflect.GetDefaultIndexer(actualType, _argumentTypes) ?? throw new ArgumentException($"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)} was not found on {actualType}.");
 
-            var indexReturnedValue = Reflect.InvokeMethod(getMethod, actual, _arguments);
-            return BaseConstraint.ApplyTo(indexReturnedValue);
+                indexedValue = Reflect.InvokeMethod(getMethod, actual, _arguments);
+            }
+
+            return BaseConstraint.ApplyTo(indexedValue);
         }
 
         /// <summary>
