@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
             if (actualType.IsArray)
             {
                 var array = actual as Array;
-                indexedValue = array?.GetValue((int)_arguments[0]);
+                indexedValue = array?.GetValue(_arguments.Cast<int>().ToArray());
             }
             else
             {

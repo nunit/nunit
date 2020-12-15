@@ -54,6 +54,18 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void CanMatchArrayWithMultiDimensionsEquality()
+        {
+            var tester = new[, , ,] {
+                { { {1}, {2}, {3} }, { {4}, {5}, {6} } },
+                { { {7}, {8}, {9} }, { {10}, {11}, {12} } }
+            };
+
+            Assert.That(tester, Has.ItemAt(0,0,0,0).EqualTo(1));
+            Assert.That(tester, Has.ItemAt(1,1,2,0).EqualTo(12));
+        }
+
+        [Test]
         public void DoesNotMatchMissingIndexerEquality()
         {
             var expectedErrorMessage = $"  Expected string length 14 but was 13. Strings differ at index 0.{NL}  Expected: \"Second indexer\"{NL}  But was:  \"Third indexer\"{NL}  -----------^{NL}";
