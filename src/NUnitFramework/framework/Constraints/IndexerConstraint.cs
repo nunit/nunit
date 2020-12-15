@@ -62,7 +62,7 @@ namespace NUnit.Framework.Constraints
             object indexedValue;
             var actualType = actual as Type ?? actual.GetType();
 
-            if (actualType.IsArray || typeof(Array).IsAssignableFrom(actualType))
+            if (actualType.IsArray)
             {
                 var array = actual as Array;
                 indexedValue = array?.GetValue((int)_arguments[0]);
