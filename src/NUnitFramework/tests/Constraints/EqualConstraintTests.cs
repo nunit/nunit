@@ -52,6 +52,14 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
             };
 
+#if !NET35
+        [Test]
+        public void Complex_PassesEquality()
+        {
+            Assert.AreEqual(new System.Numerics.Complex(1, 100), new System.Numerics.Complex(1, 100));
+        }
+#endif
+
         #region DateTimeEquality
 
         public class DateTimeEquality
@@ -741,12 +749,12 @@ namespace NUnit.Framework.Constraints
             get
             {
                 var ptr = new System.IntPtr(0);
-                var ExampleTestA = new ExampleTest.ClassA(0);
-                var ExampleTestB = new ExampleTest.ClassB(0);
+                var exampleTestA = new ExampleTest.ClassA(0);
+                var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 yield return new object[] { 0, ptr };
-                yield return new object[] { ExampleTestA, ExampleTestB };
+                yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
         }
