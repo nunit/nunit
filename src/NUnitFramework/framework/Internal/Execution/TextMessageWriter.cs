@@ -51,6 +51,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static readonly string Pfx_Actual = "  But was:  ";
         /// <summary>
+        /// Prefix used for the actual difference between actual and expected values if compared with a tolerance
+        /// </summary>
+        public static readonly string Pfx_Difference = "  Off by:   ";
+        /// <summary>
         /// Length of a message prefix
         /// </summary>
         public static readonly int PrefixLength = Pfx_Expected.Length;
@@ -172,6 +176,10 @@ namespace NUnit.Framework.Internal
             }
             WriteExpectedLine(expected, tolerance);
             WriteActualLine(actual);
+            if (tolerance != null)
+            {
+                WriteDifferenceLine(expected, actual, tolerance);
+            }
         }
 
         /// <summary>
@@ -310,6 +318,19 @@ namespace NUnit.Framework.Internal
             {
                 Write(_actualType);
             }
+            WriteLine();
+        }
+
+        private void WriteDifferenceLine(object expected, object actual, Tolerance tolerance)
+        {
+            // It only makes sense to display absolute/percent difference
+            if (tolerance.Mode != ToleranceMode.Linear && tolerance.Mode != ToleranceMode.Percent)
+                return;
+
+            Write(Pfx_Difference);
+            Write(MsgUtils.FormatValue(Numerics.Difference(expected, actual, tolerance)));
+            if (tolerance.Mode != ToleranceMode.Linear)
+                Write(" {0}", tolerance.Mode);
             WriteLine();
         }
 

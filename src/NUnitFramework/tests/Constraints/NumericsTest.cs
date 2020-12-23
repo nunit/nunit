@@ -29,11 +29,12 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class NumericsTests
     {
-        private Tolerance tenPercent, zeroTolerance;
+        private Tolerance tenPercent, zeroTolerance, absoluteTolerance;
 
         [SetUp]
         public void SetUp()
         {
+            absoluteTolerance = new Tolerance(0.1);
             tenPercent = new Tolerance(10.0).Percent;
             zeroTolerance = Tolerance.Exact;
         }
@@ -81,6 +82,21 @@ namespace NUnit.Framework.Constraints
             Assert.IsTrue(Numerics.AreEqual(10000m, 9500m, ref tenPercent));
             Assert.IsTrue(Numerics.AreEqual(10000m, 10000m, ref tenPercent));
             Assert.IsTrue(Numerics.AreEqual(10000m, 10500m, ref tenPercent));
+        }
+
+        [Test]
+        public void CanCalculateAbsoluteDifference()
+        {
+            Assert.AreEqual(Numerics.Difference(10000m, 9500m, absoluteTolerance), 500m);
+            Assert.AreEqual(Convert.ToDouble(Numerics.Difference(0.1, 0.05, absoluteTolerance)), 0.05, 0.00001);
+            Assert.AreEqual(Convert.ToDouble(Numerics.Difference(0.1, 0.15, absoluteTolerance)), -0.05, 0.00001);
+        }
+
+        [Test]
+        public void CanCalculatePercentDifference()
+        {
+            Assert.AreEqual(Numerics.Difference(10000m, 8500m, tenPercent), 15);
+            Assert.AreEqual(Numerics.Difference(10000m, 11500m, tenPercent), -15);
         }
 
         [TestCase((int)8500)]
