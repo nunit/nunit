@@ -104,6 +104,8 @@ namespace NUnit.Framework
                     // TODO: We may want to change this so that all iterations are run
                     if (context.CurrentResult.ResultState != ResultState.Success)
                         break;
+
+                    context.CurrentRepeatCount++;
                 }
 
                 return context.CurrentResult;
