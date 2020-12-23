@@ -465,7 +465,7 @@ namespace NUnit.Framework.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
                 Assert.That(ex.Message, Does.Contain("+/- 10.0f Percent"));
-                var expectedPercentDiff = (10000 - (double)value) / 100;
+                double expectedPercentDiff = (10000 - (float)value) / 100;
                 Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 

@@ -327,11 +327,15 @@ namespace NUnit.Framework.Internal
             if (tolerance.Mode != ToleranceMode.Linear && tolerance.Mode != ToleranceMode.Percent)
                 return;
 
-            Write(Pfx_Difference);
-            Write(MsgUtils.FormatValue(Numerics.Difference(expected, actual, tolerance)));
-            if (tolerance.Mode != ToleranceMode.Linear)
-                Write(" {0}", tolerance.Mode);
-            WriteLine();
+            var differenceString = MsgUtils.FormatValue(Numerics.Difference(expected, actual, tolerance));
+            if (differenceString != double.NaN.ToString())
+            {
+                Write(Pfx_Difference);
+                Write(differenceString);
+                if (tolerance.Mode != ToleranceMode.Linear)
+                    Write(" {0}", tolerance.Mode);
+                WriteLine();
+            }
         }
 
         private void WriteCaretLine(int mismatch)
