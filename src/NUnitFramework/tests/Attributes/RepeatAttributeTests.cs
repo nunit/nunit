@@ -128,7 +128,7 @@ namespace NUnit.Framework.Attributes
             var fixtureInstance = new FixtureWithMultipleRepeatAttributesOnSameMethod();
             fixtureSuite.Fixture = fixtureInstance;
             TestBuilder.RunTest(fixtureSuite, fixtureInstance);
-            
+
             Assert.That(fixtureInstance.MethodRepeatCount, Is.EqualTo(2));
         }
 
