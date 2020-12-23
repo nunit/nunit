@@ -176,11 +176,11 @@ namespace NUnit.TestData.RepeatingTests
         public void PassesTwoTimes()
         {
             Assert.That(Count, Is.EqualTo(TestContext.CurrentContext.CurrentRepeatCount), "expected CurrentRepeatCount to be incremented only after first two attempts");
-            Count++;
-            if (Count > 2)
+            if (Count > 1)
             {
                 Assert.Fail("forced failure on 3rd repetition");
             }
+            Count++;
         }
     }
 }
