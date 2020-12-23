@@ -163,4 +163,24 @@ namespace NUnit.TestData.RepeatingTests
             Assert.IsTrue(true);
         }
     }
+
+    public class RepeatedTestVerifyAttempt : RepeatingTestsFixtureBase
+    {
+        [Test, Repeat(3)]
+        public void AlwaysPasses()
+        {
+            Count = TestContext.CurrentContext.CurrentRepeatCount;
+        }
+
+        [Test, Repeat(3)]
+        public void PassesTwoTimes()
+        {
+            Assert.That(Count, Is.EqualTo(TestContext.CurrentContext.CurrentRepeatCount), "expected CurrentRepeatCount to be incremented only after first two attempts");
+            Count++;
+            if (Count > 2)
+            {
+                Assert.Fail("forced failure on 3rd repetition");
+            }
+        }
+    }
 }

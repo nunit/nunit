@@ -68,6 +68,26 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void RepeatUpdatesCurrentRepeatCountPropertyOnEachAttempt()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "PassesTwoTimes");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 1, "expected that the test failed the last repetition");
+        }
+
+        [Test]
+        public void RepeatUpdatesCurrentRepeatCountPropertyOnGreenTest()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, "AlwaysPasses");
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 0, "expected that the test passes all repetitions without a failure");
+        }
+
+        [Test]
         public void CategoryWorksWithRepeatedTest()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
@@ -108,7 +128,7 @@ namespace NUnit.Framework.Attributes
             var fixtureInstance = new FixtureWithMultipleRepeatAttributesOnSameMethod();
             fixtureSuite.Fixture = fixtureInstance;
             TestBuilder.RunTest(fixtureSuite, fixtureInstance);
-
+            
             Assert.That(fixtureInstance.MethodRepeatCount, Is.EqualTo(2));
         }
 
