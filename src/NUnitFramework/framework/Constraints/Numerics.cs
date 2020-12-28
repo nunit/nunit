@@ -422,69 +422,62 @@ namespace NUnit.Framework.Constraints
         #region Numeric Difference
 
         /// <summary>
-        /// Calculates the difference between 2 values.
+        /// Calculates the difference between 2 values in absolute/percent mode.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-        /// <param name="tolerance">A reference to the tolerance in effect</param>
+        /// <param name="toleranceMode">Tolerance mode to specify difference representation</param>
         /// <returns>The difference between the values</returns>
-        public static object Difference(object expected, object actual, Tolerance tolerance)
+        internal static object Difference(object expected, object actual, ToleranceMode toleranceMode)
         {
-            switch (tolerance.Mode)
+            switch (toleranceMode)
             {
                 case ToleranceMode.Linear:
-                    return DifferenceAbsolute(expected, actual);
+                    return Difference(expected, actual, true);
                 case ToleranceMode.Percent:
-                    return DifferencePercent(expected, actual);
+                    return Difference(expected, actual, false);
                 default:
                     throw new InvalidOperationException("Cannot calculate a difference for specified tolerance mode");
             }
         }
 
-        private static object DifferencePercent(object expected, object actual)
+        private static object Difference(object expected, object actual, bool isAbsolute)
         {
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-                return (Convert.ToDouble(expected) - Convert.ToDouble(actual)) / Convert.ToDouble(expected) * 100;
+            {
+                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
+                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
+            }
 
             if (expected is decimal || actual is decimal)
-                return (Convert.ToDecimal(expected) - Convert.ToDecimal(actual)) / Convert.ToDecimal(expected) * 100;
+            {
+                var difference = Convert.ToDecimal(expected) - Convert.ToDecimal(actual);
+                return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
+            }
 
             if (expected is ulong || actual is ulong)
-                return (Convert.ToUInt64(expected) - Convert.ToUInt64(actual)) / (double)Convert.ToUInt64(expected) * 100;
+            {
+                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+            }
 
             if (expected is long || actual is long)
-                return (Convert.ToInt64(expected) - Convert.ToInt64(actual)) / (double)Convert.ToInt64(expected) * 100;
+            {
+                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
+            }
 
             if (expected is uint || actual is uint)
-                return (Convert.ToUInt32(expected) - Convert.ToUInt32(actual)) / (double)Convert.ToUInt32(expected) * 100;
+            {
+                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+            }
 
-            return (Convert.ToInt32(expected) - Convert.ToInt32(actual)) / (double)Convert.ToInt32(expected) * 100;
-        }
-
-        private static object DifferenceAbsolute(object expected, object actual)
-        {
-            if (!IsNumericType(expected) || !IsNumericType(actual))
-                throw new ArgumentException("Both arguments must be numeric");
-
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-                return Convert.ToDouble(expected) - Convert.ToDouble(actual);
-
-            if (expected is decimal || actual is decimal)
-                return Convert.ToDecimal(expected) - Convert.ToDecimal(actual);
-
-            if (expected is ulong || actual is ulong)
-                return Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
-
-            if (expected is long || actual is long)
-                return Convert.ToInt64(expected) - Convert.ToInt64(actual);
-
-            if (expected is uint || actual is uint)
-                return Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
-
-            return Convert.ToInt32(expected) - Convert.ToInt32(actual);
+            var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
+            return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
         }
 
         #endregion

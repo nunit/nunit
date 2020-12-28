@@ -87,16 +87,16 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanCalculateAbsoluteDifference()
         {
-            Assert.AreEqual(Numerics.Difference(10000m, 9500m, absoluteTolerance), 500m);
-            Assert.AreEqual(Convert.ToDouble(Numerics.Difference(0.1, 0.05, absoluteTolerance)), 0.05, 0.00001);
-            Assert.AreEqual(Convert.ToDouble(Numerics.Difference(0.1, 0.15, absoluteTolerance)), -0.05, 0.00001);
+            Assert.That(Numerics.Difference(10000m, 9500m, absoluteTolerance.Mode), Is.EqualTo(500m));
+            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.05, absoluteTolerance.Mode)), Is.EqualTo(0.05).Within(0.00001));
+            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.15, absoluteTolerance.Mode)), Is.EqualTo(-0.05).Within(0.00001));
         }
 
         [Test]
         public void CanCalculatePercentDifference()
         {
-            Assert.AreEqual(Numerics.Difference(10000m, 8500m, tenPercent), 15);
-            Assert.AreEqual(Numerics.Difference(10000m, 11500m, tenPercent), -15);
+            Assert.That(Numerics.Difference(10000m, 8500m, tenPercent.Mode), Is.EqualTo(15));
+            Assert.That(Numerics.Difference(10000m, 11500m, tenPercent.Mode), Is.EqualTo(-15));
         }
 
         [TestCase((int)8500)]
