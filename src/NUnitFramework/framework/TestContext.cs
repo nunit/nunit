@@ -171,9 +171,8 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Get the number of times the current Test has been repeated. This is currently only
-        /// set when using the <see cref="RetryAttribute"/>.
-        /// TODO: add this to the RepeatAttribute as well
+        /// Get the number of times the current Test has been repeated 
+        /// when using the <see cref="RetryAttribute"/> or <see cref="RepeatAttribute"/>.
         /// </summary>
         public int CurrentRepeatCount
         {

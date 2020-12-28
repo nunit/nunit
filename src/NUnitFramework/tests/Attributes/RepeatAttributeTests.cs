@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
         public void RepeatUpdatesCurrentRepeatCountPropertyOnEachAttempt()
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
-            ITestResult result = TestBuilder.RunTestCase(fixture, "PassesTwoTimes");
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatedTestVerifyAttempt.PassesTwoTimes));
 
             Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
             Assert.AreEqual(result.FailCount, 1, "expected that the test failed the last repetition");
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Attributes
         public void RepeatUpdatesCurrentRepeatCountPropertyOnGreenTest()
         {
             RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
-            ITestResult result = TestBuilder.RunTestCase(fixture, "AlwaysPasses");
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatedTestVerifyAttempt.AlwaysPasses));
 
             Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
             Assert.AreEqual(result.FailCount, 0, "expected that the test passes all repetitions without a failure");
