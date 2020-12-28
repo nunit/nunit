@@ -68,13 +68,25 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
+            const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            actualType = actual as Type;
-            if (actualType == null)
-                actualType = actual.GetType();
+            PropertyInfo property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
 
-            PropertyInfo property = Reflect.GetUltimateShadowingProperty(actualType, name,
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (property == null && typeof(TActual).IsInterface)
+            {
+                foreach (var @interface in typeof(TActual).GetInterfaces())
+                {
+                    property = Reflect.GetUltimateShadowingProperty(@interface, name, bindingFlags);
+                    if (property != null) break;
+                }
+            }
+
+            if (property == null)
+            {
+                actualType = actual as Type ?? actual.GetType();
+                property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+            }
+
             return new ConstraintResult(this, actualType, property != null);
         }
 

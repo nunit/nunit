@@ -1,3 +1,4 @@
+
 // ***********************************************************************
 // Copyright (c) 2009 Charlie Poole, Rob Prouse
 //
@@ -79,7 +80,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[0], "hello", typeof(Array) };
 
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( 42, "<System.Int32>" ),
             new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
@@ -103,7 +104,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[5], "hello" };
 
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( new int[3], "3" ),
             new TestCaseData( "goodbye", "7" ) };
 
@@ -184,7 +185,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(r.Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(r.Description, Is.EqualTo("property Foo and property Bar property Length equal to 5"));
             Assert.That(r.ActualValue, Is.EqualTo(inputObject));
-        }   
+        }
 
         [Test]
         public void FailureMessageContainsChainedConstraintMessage()
@@ -193,7 +194,7 @@ namespace NUnit.Framework.Constraints
 
             //Property Constraint Message with chained Equivalent Constraint.
             var constraint = ((IResolveConstraint)Has.Property("Foo").EquivalentTo(new List<int> { 2, 3, 5, 8 })).Resolve();
-            
+
             //Apply the constraint and write message.
             var result = constraint.ApplyTo(inputObject);
             var textMessageWriter = new TextMessageWriter();
