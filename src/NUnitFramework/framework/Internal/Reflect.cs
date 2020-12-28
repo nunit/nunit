@@ -67,22 +67,22 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">The type to examine.</param>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public static MethodInfo[] GetMethodsWithAttribute<T>(Type fixtureType, bool inherit) where T : class
+        public static MethodInfo[] GetMethodsWithAttribute<T>(ITypeInfo fixtureType, bool inherit) where T : class
         {
             if (!inherit)
             {
-                return fixtureType
+                return fixtureType.Type
                    .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
                    .Where(method => method.IsDefined(typeof(T), inherit: false))
                    .ToArray();
             }
 
-            var methodsByDeclaringType = fixtureType
+            var methodsByDeclaringType = fixtureType.Type
                 .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
                 .Where(method => method.IsDefined(typeof(T), inherit: true))
                 .ToLookup(method => method.DeclaringType);
 
-            return fixtureType.TypeAndBaseTypes()
+            return fixtureType.Type.TypeAndBaseTypes()
                 .Reverse()
                 .SelectMany(declaringType => methodsByDeclaringType[declaringType])
                 .ToArray();
