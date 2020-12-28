@@ -58,6 +58,8 @@ namespace NUnit.Framework.Attributes
 
             public bool IsPublic => _baseInfo.IsPublic;
 
+            public bool IsStatic => _baseInfo.IsStatic;
+
             public bool ContainsGenericParameters => _baseInfo.ContainsGenericParameters;
 
             public bool IsGenericMethod => _baseInfo.IsGenericMethod;

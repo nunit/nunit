@@ -60,6 +60,11 @@ namespace NUnit.Framework.Interfaces
         /// Gets a value indicating whether the method is public.
         /// </summary>
         bool IsPublic { get; }
+        
+        /// <summary>
+        /// Gets a value indicating whether the method is static.
+        /// </summary>
+        bool IsStatic { get; }
 
         /// <summary>
         /// Gets a value indicating whether the method contains unassigned generic type parameters.

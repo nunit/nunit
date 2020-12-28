@@ -24,6 +24,7 @@
 #nullable enable
 
 using System;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -257,6 +258,34 @@ namespace NUnit.Framework.Internal
         public override string ToString()
         {
             return Type.ToString();
+        }
+
+        /// <summary>
+        /// Returns all methods declared by this type that have the specified attribute, optionally
+        /// including base classes. Methods from a base class are always returned before methods from a class that
+        /// inherits from it.
+        /// </summary>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
+        public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
+        {
+            if (!inherit)
+            {
+                return Type
+                                  .GetMethods(Reflect.AllMembers | BindingFlags.DeclaredOnly)
+                                  .Where(method => method.IsDefined(typeof(T), inherit: false))
+                                  .Select(method => new MethodWrapper(Type, method))
+                                  .ToArray();
+            }
+
+            var methodsByDeclaringType = Type
+                                                    .GetMethods(Reflect.AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
+                                                    .Where(method => method.IsDefined(typeof(T), inherit: true))
+                                                    .ToLookup(method => method.DeclaringType);
+
+            return Type.TypeAndBaseTypes()
+                              .Reverse()
+                              .SelectMany(declaringType => methodsByDeclaringType[declaringType].Select(method => new MethodWrapper(declaringType, method)))
+                              .ToArray();
         }
     }
 }

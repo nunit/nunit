@@ -53,41 +53,12 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class Reflect
     {
-        private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
         private static readonly Type[] EmptyTypes = new Type[0];
 
         #region Get Methods of a type
-
-        /// <summary>
-        /// Returns all methods declared by the specified fixture type that have the specified attribute, optionally
-        /// including base classes. Methods from a base class are always returned before methods from a class that
-        /// inherits from it.
-        /// </summary>
-        /// <param name="fixtureType">The type to examine.</param>
-        /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
-        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
-        {
-            if (!inherit)
-            {
-                return fixtureType
-                   .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
-                   .Where(method => method.IsDefined(attributeType, inherit: false))
-                   .ToArray();
-            }
-
-            var methodsByDeclaringType = fixtureType
-                .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
-                .Where(method => method.IsDefined(attributeType, inherit: true))
-                .ToLookup(method => method.DeclaringType);
-
-            return fixtureType.TypeAndBaseTypes()
-                .Reverse()
-                .SelectMany(declaringType => methodsByDeclaringType[declaringType])
-                .ToArray();
-        }
 
         /// <summary>
         /// Examine a fixture type and return true if it has a method with
