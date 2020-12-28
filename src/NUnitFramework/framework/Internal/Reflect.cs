@@ -66,21 +66,20 @@ namespace NUnit.Framework.Internal
         /// inherits from it.
         /// </summary>
         /// <param name="fixtureType">The type to examine.</param>
-        /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
+        public static MethodInfo[] GetMethodsWithAttribute<T>(Type fixtureType, bool inherit) where T : class
         {
             if (!inherit)
             {
                 return fixtureType
                    .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
-                   .Where(method => method.IsDefined(attributeType, inherit: false))
+                   .Where(method => method.IsDefined(typeof(T), inherit: false))
                    .ToArray();
             }
 
             var methodsByDeclaringType = fixtureType
                 .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
-                .Where(method => method.IsDefined(attributeType, inherit: true))
+                .Where(method => method.IsDefined(typeof(T), inherit: true))
                 .ToLookup(method => method.DeclaringType);
 
             return fixtureType.TypeAndBaseTypes()
