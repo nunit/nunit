@@ -159,6 +159,6 @@ namespace NUnit.Framework.Interfaces
         /// inherits from it.
         /// </summary>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        MethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class;
+        IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class;
     }
 }

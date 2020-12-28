@@ -127,7 +127,7 @@ namespace NUnit.Framework.Attributes
                 return _baseInfo.MakeGenericType(typeArgs);
             }
 
-            public MethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
+            public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
             {
                 return _baseInfo.GetMethodsWithAttribute<T>(inherit);
             }

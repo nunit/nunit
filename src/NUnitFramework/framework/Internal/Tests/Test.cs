@@ -108,8 +108,8 @@ namespace NUnit.Framework.Internal
             Method = method;
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
-            SetUpMethods = new MethodInfo[0];
-            TearDownMethods = new MethodInfo[0];
+            SetUpMethods = new IMethodInfo[0];
+            TearDownMethods = new IMethodInfo[0];
         }
 
         private static string GetNextId()
@@ -284,12 +284,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The SetUp methods.
         /// </summary>
-        public MethodInfo[] SetUpMethods { get; protected set; }
+        public IMethodInfo[] SetUpMethods { get; protected set; }
 
         /// <summary>
         /// The teardown methods
         /// </summary>
-        public MethodInfo[] TearDownMethods { get; protected set; }
+        public IMethodInfo[] TearDownMethods { get; protected set; }
 
         #endregion
 

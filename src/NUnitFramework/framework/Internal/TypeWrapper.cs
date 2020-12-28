@@ -266,13 +266,14 @@ namespace NUnit.Framework.Internal
         /// inherits from it.
         /// </summary>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public MethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
+        public IMethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class
         {
             if (!inherit)
             {
                 return Type
                                   .GetMethods(Reflect.AllMembers | BindingFlags.DeclaredOnly)
                                   .Where(method => method.IsDefined(typeof(T), inherit: false))
+                                  .Select(method => new MethodWrapper(Type, method))
                                   .ToArray();
             }
 
@@ -283,7 +284,7 @@ namespace NUnit.Framework.Internal
 
             return Type.TypeAndBaseTypes()
                               .Reverse()
-                              .SelectMany(declaringType => methodsByDeclaringType[declaringType])
+                              .SelectMany(declaringType => methodsByDeclaringType[declaringType].Select(method => new MethodWrapper(declaringType, method)))
                               .ToArray();
         }
     }
