@@ -476,8 +476,8 @@ namespace NUnit.Framework.Constraints
                 const double tolerance = 0.001;
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
                 Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
-                var expectedPercentDiff = 1.2 - (double)value;
-                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)}"));
+                var expectedAbsoluteDiff = 1.2 - (double)value;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
