@@ -421,13 +421,13 @@ namespace NUnit.Framework.Internal.Execution
             return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods, methodValidator);
         }
 
-        private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<IMethodInfo> methods)
+        private static List<IMethodInfo> SelectMethodsByDeclaringType(Type type, IList<IMethodInfo> methods)
         {
-            var list = new List<MethodInfo>();
+            var list = new List<IMethodInfo>();
 
             foreach (var method in methods)
                 if (method.TypeInfo.Type == type)
-                    list.Add(method.MethodInfo);
+                    list.Add(method);
 
             return list;
         }

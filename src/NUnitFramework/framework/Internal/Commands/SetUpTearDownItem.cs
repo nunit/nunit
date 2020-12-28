@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal.Commands
@@ -35,8 +36,8 @@ namespace NUnit.Framework.Internal.Commands
     public class SetUpTearDownItem
     {
         private readonly IMethodValidator _methodValidator;
-        private readonly IList<MethodInfo> _setUpMethods;
-        private readonly IList<MethodInfo> _tearDownMethods;
+        private readonly IList<IMethodInfo> _setUpMethods;
+        private readonly IList<IMethodInfo> _tearDownMethods;
         private bool _setUpWasRun;
 
         /// <summary>
@@ -46,8 +47,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="tearDownMethods">A list teardown methods for this level</param>
         /// <param name="methodValidator">A method validator to validate each method before calling.</param>
         public SetUpTearDownItem(
-            IList<MethodInfo> setUpMethods, 
-            IList<MethodInfo> tearDownMethods, 
+            IList<IMethodInfo> setUpMethods, 
+            IList<IMethodInfo> tearDownMethods, 
             IMethodValidator methodValidator = null)
         {
             _setUpMethods = setUpMethods;
@@ -72,7 +73,7 @@ namespace NUnit.Framework.Internal.Commands
         {
             _setUpWasRun = true;
 
-            foreach (MethodInfo setUpMethod in _setUpMethods)
+            foreach (IMethodInfo setUpMethod in _setUpMethods)
                 RunSetUpOrTearDownMethod(context, setUpMethod);
         }
 
@@ -107,15 +108,15 @@ namespace NUnit.Framework.Internal.Commands
                 }
         }
 
-        private void RunSetUpOrTearDownMethod(TestExecutionContext context, MethodInfo method)
+        private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)
         {
-            Guard.ArgumentNotAsyncVoid(method, nameof(method));
-            _methodValidator?.Validate(method);
+            Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
+            _methodValidator?.Validate(method.MethodInfo);
 
-            if (AsyncToSyncAdapter.IsAsyncOperation(method))
-                AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
+            if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
+                AsyncToSyncAdapter.Await(() => InvokeMethod(method.MethodInfo, context));
             else
-                InvokeMethod(method, context);
+                InvokeMethod(method.MethodInfo, context);
         }
 
         private static object InvokeMethod(MethodInfo method, TestExecutionContext context)
