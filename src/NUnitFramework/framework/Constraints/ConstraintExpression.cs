@@ -1024,5 +1024,19 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
+        
+        #region ItemAt
+
+        /// <summary>
+        /// Returns a new IndexerConstraintExpression, which will
+        /// apply any following constraint to that indexer value.
+        /// </summary>
+        /// <param name="indexArgs">Index accessor values.</param>
+        public ConstraintExpression ItemAt(params object[] indexArgs)
+        {
+            return this.Append(new IndexerOperator(indexArgs));
+        }
+
+        #endregion
     }
 }

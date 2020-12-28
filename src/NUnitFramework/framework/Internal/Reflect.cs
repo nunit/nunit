@@ -463,5 +463,29 @@ namespace NUnit.Framework.Internal
 
             return type == typeof(void) || type.FullName == "Microsoft.FSharp.Core.Unit";
         }
+
+        /// <summary>
+        /// Returns the get accessor for the indexer.
+        /// </summary>
+        /// <param name="type">Type to reflect on for the indexer.</param>
+        /// <param name="indexerTypes">List of indexer types that matches the indexer type order.</param>
+        /// <returns>The Get accessor</returns>
+        public static MethodInfo? GetDefaultIndexer(Type type, Type[] indexerTypes)
+        {
+            const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+
+            var indexerName = GetIndexerName(type);
+            var indexer = type.GetProperty(indexerName, bindingFlags, null, null, indexerTypes, null);
+
+            return indexer?.GetGetMethod(true);
+        }
+
+        private static string GetIndexerName(Type type)
+        {
+            const string defaultFrameworkIndexerName = "Item";
+            var defaultMemberAttribute = type.GetAttributes<DefaultMemberAttribute>(true).FirstOrDefault();
+
+            return defaultMemberAttribute?.MemberName ?? defaultFrameworkIndexerName;
+        }
     }
 }
