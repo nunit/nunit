@@ -152,5 +152,13 @@ namespace NUnit.Framework.Interfaces
         object Construct(object?[]? args);
 
         #endregion
+
+        /// <summary>
+        /// Returns all methods declared by this type that have the specified attribute, optionally
+        /// including base classes. Methods from a base class are always returned before methods from a class that
+        /// inherits from it.
+        /// </summary>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
+        MethodInfo[] GetMethodsWithAttribute<T>(bool inherit) where T : class;
     }
 }
