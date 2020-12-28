@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixtureType">The type to examine.</param>
         /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public static MethodInfo[] GetMethodsWithAttribute<T>(ITypeInfo fixtureType, bool inherit) where T : class
+        public static MethodInfo[] GetMethodsWithAttribute<T>(this ITypeInfo fixtureType, bool inherit) where T : class
         {
             if (!inherit)
             {

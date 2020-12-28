@@ -129,8 +129,8 @@ namespace NUnit.Framework.Internal.Execution
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute<SetUpAttribute>(Test.TypeInfo, true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute<TearDownAttribute>(Test.TypeInfo, true);
+                var setUpMethods = parentFixture?.SetUpMethods ?? Test.TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? Test.TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);

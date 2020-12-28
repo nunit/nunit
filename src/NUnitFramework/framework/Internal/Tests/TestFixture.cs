@@ -47,10 +47,10 @@ namespace NUnit.Framework.Internal
         /// <param name="arguments">Arguments used to instantiate the test fixture, or null if none used</param>
         public TestFixture(ITypeInfo fixtureType, object?[]? arguments = null) : base(fixtureType, arguments)
         {
-            SetUpMethods = Reflect.GetMethodsWithAttribute<SetUpAttribute>(TypeInfo, true);
-            TearDownMethods = Reflect.GetMethodsWithAttribute<TearDownAttribute>(TypeInfo, true); 
-            OneTimeSetUpMethods = Reflect.GetMethodsWithAttribute<OneTimeSetUpAttribute>(TypeInfo, true);
-            OneTimeTearDownMethods = Reflect.GetMethodsWithAttribute<OneTimeTearDownAttribute>(TypeInfo, true);
+            SetUpMethods = TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
+            TearDownMethods = TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true); 
+            OneTimeSetUpMethods = TypeInfo.GetMethodsWithAttribute<OneTimeSetUpAttribute>(true);
+            OneTimeTearDownMethods = TypeInfo.GetMethodsWithAttribute<OneTimeTearDownAttribute>(true);
             
             CheckSetUpTearDownMethods(OneTimeSetUpMethods);
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
