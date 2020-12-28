@@ -114,14 +114,14 @@ namespace NUnit.Framework.Internal.Commands
             _methodValidator?.Validate(method.MethodInfo);
 
             if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
-                AsyncToSyncAdapter.Await(() => InvokeMethod(method.MethodInfo, context));
+                AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
             else
-                InvokeMethod(method.MethodInfo, context);
+                InvokeMethod(method, context);
         }
 
-        private static object InvokeMethod(MethodInfo method, TestExecutionContext context)
+        private static object InvokeMethod(IMethodInfo method, TestExecutionContext context)
         {
-            return Reflect.InvokeMethod(method, method.IsStatic ? null : context.TestObject);
+            return method.Invoke(method.IsStatic ? null : context.TestObject, null);
         }
     }
 }
