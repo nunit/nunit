@@ -220,5 +220,18 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region ItemAt
+
+        /// <summary>
+        /// Returns a new IndexerConstraintExpression, which will
+        /// apply any following constraint to that indexer value.
+        /// </summary>
+        /// <param name="indexArgs">Index accessor values.</param>
+        public static ConstraintExpression ItemAt(params object[] indexArgs)
+        {
+            return new ConstraintExpression().ItemAt(indexArgs);
+        }
+
+        #endregion
     }
 }

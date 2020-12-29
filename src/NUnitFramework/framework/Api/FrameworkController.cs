@@ -209,7 +209,8 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of exploring the tests</returns>
         public string ExploreTests(string filter)
         {
-            return Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true).OuterXml;
+            TNode result = Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true);
+            return InsertChildElements(result).OuterXml;
         }
 
         /// <summary>
@@ -220,13 +221,7 @@ namespace NUnit.Framework.Api
         public string RunTests(string filter)
         {
             TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
-
-            // Insert elements as first child in reverse order
-            if (Settings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, Settings);
-            InsertEnvironmentElement(result);
-
-            return result.OuterXml;
+            return InsertChildElements(result).OuterXml;
         }
 
         class ActionCallback : ICallbackEventHandler
@@ -260,15 +255,8 @@ namespace NUnit.Framework.Api
         public string RunTests(Action<string> callback, string filter)
         {
             var handler = new ActionCallback(callback);
-
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
-
-            // Insert elements as first child in reverse order
-            if (Settings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, Settings);
-            InsertEnvironmentElement(result);
-
-            return result.OuterXml;
+            return InsertChildElements(result).OuterXml;
         }
 
         /// <summary>
@@ -341,6 +329,21 @@ namespace NUnit.Framework.Api
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
+        }
+
+        /// <summary>
+        /// Inserts the environment and settings elements
+        /// </summary>
+        /// <param name="targetNode">Target node</param>
+        /// <returns>The updated target node</returns>
+        private TNode InsertChildElements(TNode targetNode)
+        {
+            // Insert elements as first child in reverse order
+            if (Settings != null) // Some platforms don't have settings
+                InsertSettingsElement(targetNode, Settings);
+            InsertEnvironmentElement(targetNode);
+
+            return targetNode;
         }
 
         /// <summary>

@@ -198,7 +198,7 @@ namespace NUnit.Framework.Internal
             if (type1.IsAssignableFrom(type2)) { bestCommonType = type1; return true; }
             if (type2.IsAssignableFrom(type1)) { bestCommonType = type2; return true; }
 
-            bestCommonType = null;
+            bestCommonType = typeof(object);
             return false;
         }
 

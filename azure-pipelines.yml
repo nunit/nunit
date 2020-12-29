@@ -15,7 +15,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.100-preview.6.20318.15
+      version: 5.0.101
       performMultiLevelLookup: true
 
   - powershell: .\build.ps1 --target=Test --test-run-name=Windows
@@ -45,7 +45,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.100-preview.6.20318.15
+      version: 5.0.101
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
@@ -82,7 +82,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.100-preview.6.20318.15
+      version: 5.0.101
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'

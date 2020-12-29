@@ -58,6 +58,14 @@ namespace NUnit.Framework.Constraints
             Assert.That(actual, Is.GreaterThan(expected));
         }
 
+        [Test]
+        public void CanCompareIComparablesOfInt()
+        {
+            int expected = 0;
+            ClassWithIComparableOfT actual = new ClassWithIComparableOfT(42);
+            Assert.That(actual, Is.GreaterThan(expected));
+        }
+
         [TestCase(6.0, 5.0, 0.05)]
         [TestCase(5.05, 5.0, 0.05)] // upper range bound
         [TestCase(5.0001, 5.0, 0.05)]

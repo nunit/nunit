@@ -22,7 +22,8 @@
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'
                             and '$(TargetFramework)' != 'netcoreapp2.1'
                             and '$(TargetFramework)' != 'netcoreapp3.1'
-                            and '$(TargetFramework)' != 'net5.0'">$(DefineConstants);THREAD_ABORT</DefineConstants>
+                            and '$(TargetFramework)' != 'net5.0'
+                            and '$(TargetFramework)' != 'net5.0-windows'">$(DefineConstants);THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
   <!-- We always want a good debugging experience in tests -->
