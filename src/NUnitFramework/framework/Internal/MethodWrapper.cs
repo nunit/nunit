@@ -93,10 +93,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether the method is static.
         /// </summary>
-        public bool IsStatic
-        {
-            get { return MethodInfo.IsStatic; }
-        }
+        public bool IsStatic => MethodInfo.IsStatic;
 
         /// <summary>
         /// Gets a value indicating whether the method contains unassigned generic type parameters.
