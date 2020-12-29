@@ -271,21 +271,21 @@ namespace NUnit.Framework.Internal
             if (!inherit)
             {
                 return Type
-                                  .GetMethods(Reflect.AllMembers | BindingFlags.DeclaredOnly)
-                                  .Where(method => method.IsDefined(typeof(T), inherit: false))
-                                  .Select(method => new MethodWrapper(Type, method))
-                                  .ToArray();
+                    .GetMethods(Reflect.AllMembers | BindingFlags.DeclaredOnly)
+                    .Where(method => method.IsDefined(typeof(T), inherit: false))
+                    .Select(method => new MethodWrapper(Type, method))
+                    .ToArray();
             }
 
             var methodsByDeclaringType = Type
-                                                    .GetMethods(Reflect.AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
-                                                    .Where(method => method.IsDefined(typeof(T), inherit: true))
-                                                    .ToLookup(method => method.DeclaringType);
+                .GetMethods(Reflect.AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
+                .Where(method => method.IsDefined(typeof(T), inherit: true))
+                .ToLookup(method => method.DeclaringType);
 
             return Type.TypeAndBaseTypes()
-                              .Reverse()
-                              .SelectMany(declaringType => methodsByDeclaringType[declaringType].Select(method => new MethodWrapper(declaringType, method)))
-                              .ToArray();
+                .Reverse()
+                .SelectMany(declaringType => methodsByDeclaringType[declaringType].Select(method => new MethodWrapper(declaringType, method)))
+                .ToArray();
         }
     }
 }
