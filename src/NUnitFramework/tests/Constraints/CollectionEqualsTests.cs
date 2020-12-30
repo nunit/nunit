@@ -109,6 +109,42 @@ namespace NUnit.Framework.Constraints
         };
 
 #if !(NET35 || NET40)
+        [Test]
+        [DefaultFloatingPointTolerance(0.5)]
+        public void StructuralComparerOnSameCollection_RespectsAndSetsToleranceByRef()
+        {
+            var integerTypes = ImmutableArray.Create<int>(1);
+            var floatingTypes = ImmutableArray.Create<double>(1.1);
+
+            var equalsConstraint = Is.EqualTo(floatingTypes);
+            var originalTolerance = equalsConstraint.Tolerance;
+
+            Assert.That(integerTypes, equalsConstraint);
+
+            Assert.That(equalsConstraint.Tolerance, Is.Not.EqualTo(originalTolerance));
+            Assert.That(equalsConstraint.Tolerance.Mode, Is.Not.EqualTo(originalTolerance.Mode));
+        }
+
+        [Test]
+        public void StructuralComparerOnSameCollection_OfDifferentUnderlyingType_UsesNUnitComparer()
+        {
+            var integerTypes = ImmutableArray.Create<int>(1);
+            var floatingTypes = ImmutableArray.Create<double>(1.1);
+
+            Assert.That(integerTypes, Is.Not.EqualTo(floatingTypes));
+            Assert.That(integerTypes, Is.EqualTo(floatingTypes).Within(0.5));
+        }
+
+        [Test]
+        public void StructuralComparerOnDifferentCollection_OfDifferentUnderlyingType_UsesNUnitComparer()
+        {
+            var integerTypes = ImmutableArray.Create<int>(1);
+            var floatingTypes = new double[] { 1.1 };
+
+            Assert.That(integerTypes, Is.Not.EqualTo(floatingTypes));
+            Assert.That(integerTypes, Is.EqualTo(floatingTypes).Within(0.5));
+        }
+
         [TestCaseSource(nameof(GetImmutableCollectionsData))]
         public void ImmutableCollectionsEquals(object x, object y)
         {

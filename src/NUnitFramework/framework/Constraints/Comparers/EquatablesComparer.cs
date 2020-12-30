@@ -22,10 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -49,10 +46,6 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            if (x is IEnumerable && DoesUseStructuralEquality(xType)
-                && y is IEnumerable && DoesUseStructuralEquality(yType))
-                return null;
-
             MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
             if (equals != null)
                 return InvokeFirstIEquatableEqualsSecond(x, y, equals);
@@ -62,18 +55,6 @@ namespace NUnit.Framework.Constraints.Comparers
                 return InvokeFirstIEquatableEqualsSecond(y, x, equals);
 
             return null;
-        }
-
-        private static bool DoesUseStructuralEquality(Type type)
-        {
-            if (!type.IsValueType)
-                return false;
-
-            foreach(var @interface in type.GetInterfaces())
-                if (@interface.FullName == "System.Collections.IStructuralComparable" || @interface.FullName == "System.Collections.IStructuralEquatable")
-                    return true;
-
-            return false;
         }
 
         private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)

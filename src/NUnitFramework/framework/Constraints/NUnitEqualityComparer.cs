@@ -83,6 +83,9 @@ namespace NUnit.Framework.Constraints
                 new TimeSpanToleranceComparer(),
                 new TupleComparer(this),
                 new ValueTupleComparer(this),
+#if !NET35
+                new StructuralComparer(this),
+#endif
                 new EquatablesComparer(this),
                 enumerablesComparer
             };
