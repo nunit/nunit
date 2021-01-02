@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
