@@ -208,6 +208,26 @@ namespace NUnitLite.Tests
             Assert.That(success, "{0} is an invalid value for end time", endTimeString);
         }
 
+        [Test]
+        public void IgnoredTestCase_HasValidEndTimeAttribute()
+        {
+            DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
+            DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
+
+            string startTimeString = RequiredAttribute(topNode, "start-time");
+            var testCaseNodes = suiteNode.SelectNodes("test-suite[@name='SkippedTest']/test-case");
+            Assert.That(testCaseNodes, Is.Not.Null);
+
+            foreach (XmlNode testCase in testCaseNodes)
+            {
+                DateTime.TryParse(RequiredAttribute(testCase, "start-time"), out var startTime);
+                DateTime.TryParse(RequiredAttribute(testCase, "end-time"), out var endTime);
+
+                Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
+                Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
+            }
+        }
+
         #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
