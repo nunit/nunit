@@ -332,7 +332,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (WorkItem child in workItem.Children)
             {
-                child.Result.SetResult(resultState, message);
+                SetChildWorkItemSkippedResult(child.Result, resultState, message);
                 _suiteResult.AddResult(child.Result);
 
                 // Some runners may depend on getting the TestFinished event
@@ -342,6 +342,14 @@ namespace NUnit.Framework.Internal.Execution
                 if (child is CompositeWorkItem)
                     SkipChildren((CompositeWorkItem)child, resultState, message);
             }
+        }
+
+        private void SetChildWorkItemSkippedResult(TestResult result, ResultState resultState, string message)
+        {
+            result.SetResult(resultState, message);
+            result.StartTime = Context.StartTime;
+            result.EndTime = DateTime.UtcNow;
+            result.Duration = Context.Duration;
         }
 
         private void PerformOneTimeTearDown()
