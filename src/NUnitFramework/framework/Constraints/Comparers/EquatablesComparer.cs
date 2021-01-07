@@ -22,9 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -40,9 +38,9 @@ namespace NUnit.Framework.Constraints.Comparers
             _equalityComparer = equalityComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (_equalityComparer.CompareAsCollection && topLevelComparison)
+            if (_equalityComparer.CompareAsCollection && state.TopLevelComparison)
                 return null;
 
             Type xType = x.GetType();
@@ -61,35 +59,53 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
-            var pair = new KeyValuePair<Type, MethodInfo>();
+            var mostDerived = default(EquatableMethodImpl);
 
-            foreach (var xEquatableArgument in GetEquatableGenericArguments(first))
-                if (xEquatableArgument.Key.IsAssignableFrom(second))
-                    if (pair.Key == null || pair.Key.IsAssignableFrom(xEquatableArgument.Key))
-                        pair = xEquatableArgument;
-
-            return pair.Value;
-        }
-
-        private static IList<KeyValuePair<Type, MethodInfo>> GetEquatableGenericArguments(Type type)
-        {
-            var genericArgs = new List<KeyValuePair<Type, MethodInfo>>();
-
-            foreach (Type @interface in type.GetInterfaces())
+            foreach (var implementation in GetEquatableImplementations(first))
             {
-                if (@interface.GetTypeInfo().IsGenericType && @interface.GetGenericTypeDefinition().Equals(typeof(IEquatable<>)))
+                if (implementation.Argument.IsAssignableFrom(second))
                 {
-                    genericArgs.Add(new KeyValuePair<Type, MethodInfo>(
-                        @interface.GetGenericArguments()[0], @interface.GetMethod("Equals")));
+                    if (mostDerived.Argument == null || mostDerived.Argument.IsAssignableFrom(implementation.Argument))
+                        mostDerived = implementation;
                 }
             }
 
-            return genericArgs;
+            return mostDerived.Method;
+        }
+
+        private static EquatableMethodImpl[] GetEquatableImplementations(Type type)
+        {
+            static bool IsIEquatableOfT(Type t, object filter) => t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(IEquatable<>));
+            
+            var interfaces = type.FindInterfaces((t,f) => IsIEquatableOfT(t,f), string.Empty);
+            var implementations = new EquatableMethodImpl[interfaces.Length];
+
+            for(var i = 0; i < interfaces.Length; i++)
+            {
+                var iMap = type.GetInterfaceMap(interfaces[i]);
+                var method = iMap.TargetMethods[0];
+
+                implementations[i] = new EquatableMethodImpl(method, method.GetParameters()[0].ParameterType);
+            }
+
+            return implementations;
         }
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
         {
             return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
+        }
+
+        private readonly struct EquatableMethodImpl
+        {
+            public readonly MethodInfo Method { get; }
+            public readonly Type Argument { get; }
+
+            public EquatableMethodImpl(MethodInfo method, Type arg)
+            {
+                Method = method;
+                Argument = arg;
+            }
         }
     }
 }

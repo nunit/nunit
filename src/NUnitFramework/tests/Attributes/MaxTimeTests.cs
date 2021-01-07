@@ -72,7 +72,7 @@ namespace NUnit.Framework.Attributes
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(MaxTimeFixtureWithFailure));
             Assert.AreEqual(ResultState.ChildFailure, result.ResultState);
-            result = (TestResult)result.Children.ToArray()[0];
+            result = result.Children.ToArray()[0];
             Assert.AreEqual(ResultState.Failure, result.ResultState);
             Assert.That(result.Message, Is.EqualTo("Intentional Failure"));
         }

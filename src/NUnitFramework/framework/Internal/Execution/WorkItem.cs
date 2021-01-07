@@ -67,9 +67,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
                 : ParallelScope.Default;
 
-#if APARTMENT_STATE
             TargetApartment = GetTargetApartment(Test);
-#endif
 
             State = WorkItemState.Ready;
         }
@@ -89,12 +87,8 @@ namespace NUnit.Framework.Internal.Execution
             Result = wrappedItem.Result;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
-#if PARALLEL
             TestWorker = wrappedItem.TestWorker;
-#endif
-#if APARTMENT_STATE
             TargetApartment = wrappedItem.TargetApartment;
-#endif
 
             // State is independent of the wrapped item
             State = WorkItemState.Ready;
@@ -130,7 +124,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the current state of the WorkItem
         /// </summary>
-        public WorkItemState State { get; private set; }
+        public WorkItemState State { get; protected set; }
 
         /// <summary>
         /// The test being executed by the work item
@@ -155,7 +149,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public TestExecutionContext Context { get; private set; }
 
-#if PARALLEL
         /// <summary>
         /// The worker executing this item.
         /// </summary>
@@ -181,7 +174,6 @@ namespace NUnit.Framework.Internal.Execution
         /// Indicates whether this work item should use a separate dispatcher.
         /// </summary>
         public virtual bool IsolateChildTests { get; } = false;
-#endif
 
         /// <summary>
         /// The test result
@@ -194,10 +186,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public ParallelScope ParallelScope { get; }
 
-#if APARTMENT_STATE
         internal ApartmentState TargetApartment { get; set; }
         private ApartmentState CurrentApartment { get; set; }
-#endif
 
         #endregion
 
@@ -209,7 +199,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-#if PARALLEL
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -222,15 +211,11 @@ namespace NUnit.Framework.Internal.Execution
             // (--workers=0 option) it occurs routinely whenever a
             // different apartment is requested.
 
-#if APARTMENT_STATE
             CurrentApartment = Thread.CurrentThread.GetApartmentState();
             var targetApartment = TargetApartment == ApartmentState.Unknown ? CurrentApartment : TargetApartment;
             var needsNewThreadToSetApartmentState = targetApartment != CurrentApartment;
 
             if (Test.RequiresThread || needsNewThreadToSetApartmentState)
-#else
-            if (Test.RequiresThread)
-#endif
             {
                 // Handle error conditions in a single threaded fixture
                 if (Context.IsSingleThreaded)
@@ -248,17 +233,10 @@ namespace NUnit.Framework.Internal.Execution
                 log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
-#if APARTMENT_STATE
                 RunOnSeparateThread(targetApartment);
-#else
-                RunOnSeparateThread();
-#endif
             }
             else
                 RunOnCurrentThread();
-#else
-            RunOnCurrentThread();
-#endif
         }
 
         private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
@@ -303,6 +281,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 lock (threadLock)
                 {
+                    // Exit if not running on a separate thread
                     if (thread == null)
                         return;
 
@@ -387,8 +366,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
         /// <param name="tearDownMethods">Unsorted array of teardown MethodInfos.</param>
+        /// <param name="methodValidator">Method validator used before each method execution.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
-        protected List<SetUpTearDownItem> BuildSetUpTearDownList(MethodInfo[] setUpMethods, MethodInfo[] tearDownMethods)
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(
+            MethodInfo[] setUpMethods, 
+            MethodInfo[] tearDownMethods,
+            IMethodValidator methodValidator = null)
         {
             Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
             Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
@@ -401,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
 
             while (fixtureType != null && fixtureType != typeof(object))
             {
-                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
+                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods, methodValidator);
                 if (node.HasMethods)
                     list.Add(node);
 
@@ -423,7 +406,11 @@ namespace NUnit.Framework.Internal.Execution
         // teardown methods, found using a single reflection call,
         // and then descend through the inheritance hierarchy,
         // adding each method to the appropriate level as we go.
-        private static SetUpTearDownItem BuildNode(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        private static SetUpTearDownItem BuildNode(
+            Type fixtureType, 
+            IList<MethodInfo> setUpMethods, 
+            IList<MethodInfo> tearDownMethods,
+            IMethodValidator methodValidator)
         {
             // Create lists of methods for this level only.
             // Note that FindAll can't be used because it's not
@@ -431,7 +418,7 @@ namespace NUnit.Framework.Internal.Execution
             var mySetUpMethods = SelectMethodsByDeclaringType(fixtureType, setUpMethods);
             var myTearDownMethods = SelectMethodsByDeclaringType(fixtureType, tearDownMethods);
 
-            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods);
+            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods, methodValidator);
         }
 
         private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
@@ -461,14 +448,9 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-#if PARALLEL
         private Thread thread;
 
-#if APARTMENT_STATE
         private void RunOnSeparateThread(ApartmentState apartment)
-#else
-        private void RunOnSeparateThread()
-#endif
         {
             thread = new Thread(() =>
             {
@@ -480,7 +462,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
                 RunOnCurrentThread();
             });
-#if APARTMENT_STATE
+
             try
             {
                 thread.SetApartmentState(apartment);
@@ -493,40 +475,28 @@ namespace NUnit.Framework.Internal.Execution
                 WorkItemComplete();
                 return;
             }
-#endif
+
             thread.Start();
             thread.Join();
         }
-#endif
 
         [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            var previousState = SandboxedThreadState.Capture();
-            try
-            {
-                Context.CurrentTest = this.Test;
-                Context.CurrentResult = this.Result;
-                Context.Listener.TestStarted(this.Test);
-                Context.StartTime = DateTime.UtcNow;
-                Context.StartTicks = Stopwatch.GetTimestamp();
-#if PARALLEL
-                Context.TestWorker = this.TestWorker;
-#endif
+            Context.CurrentTest = this.Test;
+            Context.CurrentResult = this.Result;
+            Context.Listener.TestStarted(this.Test);
+            Context.StartTime = DateTime.UtcNow;
+            Context.StartTicks = Stopwatch.GetTimestamp();
+            Context.TestWorker = this.TestWorker;
 
-                Context.EstablishExecutionEnvironment();
+            Context.EstablishExecutionEnvironment();
 
-                State = WorkItemState.Running;
+            State = WorkItemState.Running;
 
-                PerformWork();
-            }
-            finally
-            {
-                previousState.Restore();
-            }
+            PerformWork();
         }
 
-#if PARALLEL
         private ParallelExecutionStrategy GetExecutionStrategy()
         {
             // If there is no fixture and so nothing to do but dispatch
@@ -560,9 +530,7 @@ namespace NUnit.Framework.Internal.Execution
                 ? ParallelExecutionStrategy.Direct
                 : ParallelExecutionStrategy.NonParallel;
         }
-#endif
 
-#if APARTMENT_STATE
         /// <summary>
         /// Recursively walks up the test hierarchy to see if the
         /// <see cref="ApartmentState"/> has been set on any of the parent tests.
@@ -578,7 +546,6 @@ namespace NUnit.Framework.Internal.Execution
 
             return apartment;
         }
-#endif
 
 #endregion
     }

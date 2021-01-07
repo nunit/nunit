@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -51,8 +52,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(value, "value");
 
-            IList list;
-            if (!inner.TryGetValue(key, out list))
+            if (!inner.TryGetValue(key, out var list))
             {
                 list = new List<object>();
                 inner.Add(key, list);
@@ -84,10 +84,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public object Get(string key)
+        public object? Get(string key)
         {
-            IList list;
-            return inner.TryGetValue(key, out list) && list.Count > 0
+            return inner.TryGetValue(key, out var list) && list.Count > 0
                 ? list[0]
                 : null;
         }
@@ -121,8 +120,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                IList list;
-                if (!inner.TryGetValue(key, out list))
+                if (!inner.TryGetValue(key, out var list))
                 {
                     list = new List<object>();
                     inner.Add(key, list);

@@ -24,6 +24,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !(NET35 || NET40)
+using System.Collections.Immutable;
+#endif
 using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
@@ -104,5 +107,74 @@ namespace NUnit.Framework.Constraints
             new object[] {new List<char> {'A', 'B', 'C'}, new List<char> {'a', 'b', 'c'}},
             new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
         };
+
+#if !(NET35 || NET40)
+        [Test]
+        [DefaultFloatingPointTolerance(0.5)]
+        public void StructuralComparerOnSameCollection_RespectsAndSetsToleranceByRef()
+        {
+            var integerTypes = ImmutableArray.Create<int>(1);
+            var floatingTypes = ImmutableArray.Create<double>(1.1);
+
+            var equalsConstraint = Is.EqualTo(floatingTypes);
+            var originalTolerance = equalsConstraint.Tolerance;
+
+            Assert.That(integerTypes, equalsConstraint);
+
+            Assert.That(equalsConstraint.Tolerance, Is.Not.EqualTo(originalTolerance));
+            Assert.That(equalsConstraint.Tolerance.Mode, Is.Not.EqualTo(originalTolerance.Mode));
+        }
+
+        [Test]
+        public void StructuralComparerOnSameCollection_OfDifferentUnderlyingType_UsesNUnitComparer()
+        {
+            var integerTypes = ImmutableArray.Create<int>(1);
+            var floatingTypes = ImmutableArray.Create<double>(1.1);
+
+            Assert.That(integerTypes, Is.Not.EqualTo(floatingTypes));
+            Assert.That(integerTypes, Is.EqualTo(floatingTypes).Within(0.5));
+        }
+
+        [Test]
+        public void StructuralComparerOnDifferentCollection_OfDifferentUnderlyingType_UsesNUnitComparer()
+        {
+            var integerTypes = ImmutableArray.Create<int>(1);
+            var floatingTypes = new double[] { 1.1 };
+
+            Assert.That(integerTypes, Is.Not.EqualTo(floatingTypes));
+            Assert.That(integerTypes, Is.EqualTo(floatingTypes).Within(0.5));
+        }
+
+        [TestCaseSource(nameof(GetImmutableCollectionsData))]
+        public void ImmutableCollectionsEquals(object x, object y)
+        {
+            Assert.That(x, Is.EqualTo(y));
+        }
+
+        private static IEnumerable<object> GetImmutableCollectionsData()
+        {
+            var data = new[] { 1, 2, 3 };
+            var immutableDataGenerators = new Func<IEnumerable<int>>[]
+            {
+                () => ImmutableArray.Create(data),
+                () => ImmutableList.Create(data),
+                () => ImmutableQueue.Create(data),
+                () => ImmutableStack.Create(data.Reverse().ToArray()),
+                () => new List<int>(data),
+                () => data
+            };
+
+            for (var i = 0; i < immutableDataGenerators.Length; i++)
+            {
+                for (var j = i; j < immutableDataGenerators.Length; j++)
+                {
+                    var x = immutableDataGenerators[i]();
+                    var y = immutableDataGenerators[j]();
+
+                    yield return new object[] { x, y };
+                }
+            }
+        }
+#endif
     }
 }

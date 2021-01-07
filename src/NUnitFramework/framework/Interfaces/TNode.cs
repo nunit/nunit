@@ -21,14 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
+#nullable enable
 
-#if NETSTANDARD1_4
-using System.Xml.Linq;
-#endif
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Xml;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -60,7 +58,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="name">The name of the node</param>
         /// <param name="value">The text content of the node</param>
-        public TNode(string name, string value) : this(name, value, false) { }
+        public TNode(string name, string? value) : this(name, value, false) { }
 
         /// <summary>
         /// Constructs a new instance of TNode with a value
@@ -68,7 +66,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="name">The name of the node</param>
         /// <param name="value">The text content of the node</param>
         /// <param name="valueIsCDATA">Flag indicating whether to use CDATA when writing the text</param>
-        public TNode(string name, string value, bool valueIsCDATA)
+        public TNode(string name, string? value, bool valueIsCDATA)
             : this(name)
         {
             Value = value;
@@ -87,7 +85,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the value of the node
         /// </summary>
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         /// <summary>
         /// Gets a flag indicating whether the value should be output using CDATA.
@@ -107,7 +105,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the first ChildNode
         /// </summary>
-        public TNode FirstChild
+        public TNode? FirstChild
         {
             get { return ChildNodes.Count == 0 ? null : ChildNodes[0]; }
         }
@@ -143,13 +141,9 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-#if NETSTANDARD1_4
-            return FromXml(XElement.Parse(xmlText));
-#else
             var doc = new XmlDocument();
             doc.LoadXml(xmlText);
             return FromXml(doc.FirstChild);
-#endif
         }
 
         #endregion
@@ -212,7 +206,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="xpath"></param>
         /// <returns></returns>
-        public TNode SelectSingleNode(string xpath)
+        public TNode? SelectSingleNode(string xpath)
         {
             NodeList nodes = SelectNodes(xpath);
 
@@ -261,20 +255,6 @@ namespace NUnit.Framework.Interfaces
 
         #region Helper Methods
 
-#if NETSTANDARD1_4
-        private static TNode FromXml(XElement xElement)
-        {
-            TNode tNode = new TNode(xElement.Name.ToString(), xElement.Value);
-
-            foreach (var attr in xElement.Attributes())
-                tNode.AddAttribute(attr.Name.ToString(), attr.Value);
-
-            foreach (var child in xElement.Elements())
-                tNode.ChildNodes.Add(FromXml(child));
-
-            return tNode;
-        }
-#else
         private static TNode FromXml(XmlNode xmlNode)
         {
             TNode tNode = new TNode(xmlNode.Name, xmlNode.InnerText);
@@ -288,7 +268,6 @@ namespace NUnit.Framework.Interfaces
 
             return tNode;
         }
-#endif
 
         private static NodeList ApplySelection(NodeList nodeList, string xpath)
         {
@@ -299,7 +278,7 @@ namespace NUnit.Framework.Interfaces
                 throw new ArgumentException("XPath expressions with '//' are not supported", nameof(xpath));
 
             string head = xpath;
-            string tail = null;
+            string? tail = null;
 
             int slash = xpath.IndexOf('/');
             if (slash >= 0)
@@ -321,11 +300,12 @@ namespace NUnit.Framework.Interfaces
                 : resultNodes;
         }
 
-        private static string EscapeInvalidXmlCharacters(string str)
+        [return: NotNullIfNotNull("str")]
+        private static string? EscapeInvalidXmlCharacters(string? str)
         {
             if (str == null) return null;
 
-            StringBuilder builder = null;
+            StringBuilder? builder = null;
             for (int i = 0; i < str.Length; i++)
             {
                 char c = str[i];
@@ -351,7 +331,7 @@ namespace NUnit.Framework.Interfaces
                     if (builder != null)
                         builder.Append(c);
                 }
-                // Also check if the char is actually a high/low surogate pair of two characters.
+                // Also check if the char is actually a high/low surrogate pair of two characters.
                 // If it is, then it is a valid XML character (from above based on the surrogate blocks).
                 else if (char.IsHighSurrogate(c) &&
                     i + 1 != str.Length &&
@@ -394,7 +374,7 @@ namespace NUnit.Framework.Interfaces
         private void WriteCDataTo(XmlWriter writer)
         {
             int start = 0;
-            string text = Value;
+            string text = Value ?? throw new InvalidOperationException();
 
             while (true)
             {
@@ -420,8 +400,8 @@ namespace NUnit.Framework.Interfaces
         class NodeFilter
         {
             private readonly string _nodeName;
-            private readonly string _propName;
-            private readonly string _propValue;
+            private readonly string? _propName;
+            private readonly string? _propValue;
 
             public NodeFilter(string xpath)
             {
@@ -478,16 +458,11 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>Value of the attribute or null</returns>
-        public new string this[string key]
+        public new string? this[string key]
         {
             get
             {
-                string value;
-
-                if (TryGetValue(key, out value))
-                    return value;
-
-                return null;
+                return TryGetValue(key, out var value) ? value : null;
             }
         }
     }

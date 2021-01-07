@@ -65,12 +65,10 @@ namespace NUnitLite
             _testAssembly = testAssembly;
         }
 
-#if !NETSTANDARD1_4
         /// <summary>
         /// Default Constructor, only used where GetCallingAssembly is available
         /// </summary>
         public AutoRun() : this(Assembly.GetCallingAssembly()) { }
-#endif
 
         /// <summary>
         /// Execute the tests in the assembly, passing in

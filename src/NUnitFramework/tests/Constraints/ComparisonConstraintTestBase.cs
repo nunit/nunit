@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>
+    class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
     {
         private readonly int val;
 
@@ -108,6 +108,11 @@ namespace NUnit.Framework.Constraints
         public int CompareTo(ClassWithIComparableOfT other)
         {
             return val.CompareTo(other.val);
+        }
+
+        public int CompareTo(int other)
+        {
+            return val.CompareTo(other);
         }
     }
 

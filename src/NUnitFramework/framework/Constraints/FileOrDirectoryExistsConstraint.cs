@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
         /// will only check files if ignoreDirectories is true.
         /// </summary>
-        /// <param name="ignoreDirectories">if set to <c>true</c> [ignore directories].</param>
+        /// <param name="ignoreDirectories">if set to <see langword="true"/> [ignore directories].</param>
         public FileOrDirectoryExistsConstraint(bool ignoreDirectories)
         {
             _ignoreDirectories = ignoreDirectories;
@@ -103,12 +103,13 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if(actual == null)
+            if (actual == null)
                 throw new ArgumentNullException(nameof(actual), "The actual value must be a non-null string" + ErrorSubstring);
 
-            if(actual is string)
+            var stringValue = actual as string;
+            if (stringValue != null)
             {
-                return CheckString(actual);
+                return CheckString(stringValue);
             }
 
             var fileInfo = actual as FileInfo;
@@ -125,18 +126,17 @@ namespace NUnit.Framework.Constraints
             throw new ArgumentException("The actual value must be a string" + ErrorSubstring, nameof(actual));
         }
 
-        private ConstraintResult CheckString<TActual>(TActual actual)
+        private ConstraintResult CheckString(string actual)
         {
-            var str = actual as string;
-            if (String.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(actual))
                 throw new ArgumentException("The actual value cannot be an empty string", nameof(actual));
 
-            var fileInfo = new FileInfo(str);
+            var fileInfo = new FileInfo(actual);
             if (_ignoreDirectories && !_ignoreFiles)
             {
                 return new ConstraintResult(this, actual, fileInfo.Exists);
             }
-            var directoryInfo = new DirectoryInfo(str);
+            var directoryInfo = new DirectoryInfo(actual);
             if (_ignoreFiles && !_ignoreDirectories)
             {
                 return new ConstraintResult(this, actual, directoryInfo.Exists);

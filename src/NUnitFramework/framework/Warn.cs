@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
@@ -91,7 +93,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
+        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
         {
             var constraint = expr.Resolve();
 
@@ -102,7 +104,7 @@ namespace NUnit.Framework
                 IssueWarning(result, message, args);
         }
 
-        private static void IssueWarning(ConstraintResult result, string message, object[] args)
+        private static void IssueWarning(ConstraintResult result, string? message, object?[]? args)
         {
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
@@ -120,7 +122,7 @@ namespace NUnit.Framework
         public static void Unless<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            Func<string> getExceptionMessage)
+            Func<string?> getExceptionMessage)
         {
             var constraint = expr.Resolve();
 
@@ -136,18 +138,18 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless(bool condition, string message, params object[] args)
+        public static void Unless(bool condition, string? message, params object?[]? args)
         {
             Warn.Unless(condition, Is.True, message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void Unless(bool condition)
@@ -156,11 +158,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Unless(bool condition, Func<string> getExceptionMessage)
+        public static void Unless(bool condition, Func<string?> getExceptionMessage)
         {
             Warn.Unless(condition, Is.True, getExceptionMessage);
         }
@@ -170,20 +172,18 @@ namespace NUnit.Framework
         #region Lambda returning Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless(Func<bool> condition, string message, params object[] args)
+        public static void Unless(Func<bool> condition, string? message, params object?[]? args)
         {
             Warn.Unless(condition.Invoke(), Is.True, message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         public static void Unless(Func<bool> condition)
@@ -192,12 +192,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
-        /// an <see cref="InconclusiveException"/>.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void Unless(Func<bool> condition, Func<string> getExceptionMessage)
+        public static void Unless(Func<bool> condition, Func<string?> getExceptionMessage)
         {
             Warn.Unless(condition.Invoke(), Is.True, getExceptionMessage);
         }
@@ -242,7 +241,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
+        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
         {
             var constraint = expression.Resolve();
 
@@ -264,7 +263,7 @@ namespace NUnit.Framework
         public static void Unless<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            Func<string> getExceptionMessage)
+            Func<string?> getExceptionMessage)
         {
             var constraint = expression.Resolve();
 
@@ -304,7 +303,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
+        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
         {
             var constraint = new NotConstraint(expr.Resolve());
 
@@ -315,7 +314,7 @@ namespace NUnit.Framework
                 IssueWarning(result, message, args);
         }
 
-        //private static void IssueWarning(ConstraintResult result, string message, object[] args)
+        //private static void IssueWarning(ConstraintResult result, string? message, object?[]? args)
         //{
         //    MessageWriter writer = new TextMessageWriter(message, args);
         //    result.WriteMessageTo(writer);
@@ -333,7 +332,7 @@ namespace NUnit.Framework
         public static void If<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            Func<string> getExceptionMessage)
+            Func<string?> getExceptionMessage)
         {
             var constraint = new NotConstraint(expr.Resolve());
 
@@ -349,18 +348,18 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If(bool condition, string message, params object[] args)
+        public static void If(bool condition, string? message, params object?[]? args)
         {
             Warn.If(condition, Is.True, message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void If(bool condition)
@@ -369,11 +368,11 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false a warning is issued.
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void If(bool condition, Func<string> getExceptionMessage)
+        public static void If(bool condition, Func<string?> getExceptionMessage)
         {
             Warn.If(condition, Is.True, getExceptionMessage);
         }
@@ -388,7 +387,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is true</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If(Func<bool> condition, string message, params object[] args)
+        public static void If(Func<bool> condition, string? message, params object?[]? args)
         {
             Warn.If(condition.Invoke(), Is.True, message, args);
         }
@@ -407,7 +406,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void If(Func<bool> condition, Func<string> getExceptionMessage)
+        public static void If(Func<bool> condition, Func<string?> getExceptionMessage)
         {
             Warn.If(condition.Invoke(), Is.True, getExceptionMessage);
         }
@@ -437,7 +436,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
+        public static void If<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
         {
             var constraint = new NotConstraint(expression.Resolve());
 
@@ -459,7 +458,7 @@ namespace NUnit.Framework
         public static void If<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            Func<string> getExceptionMessage)
+            Func<string?> getExceptionMessage)
         {
             var constraint = new NotConstraint(expression.Resolve());
 

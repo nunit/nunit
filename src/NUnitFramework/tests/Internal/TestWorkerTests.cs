@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System.Text;
 using System.Threading;
 using NUnit.TestUtilities;
@@ -36,11 +35,7 @@ namespace NUnit.Framework.Internal.Execution
         [SetUp]
         public void SetUp()
         {
-#if APARTMENT_STATE
             _queue = new WorkItemQueue("TestQ", true, ApartmentState.MTA);
-#else
-            _queue = new WorkItemQueue("TestQ", true);
-#endif
             _worker = new TestWorker(_queue, "TestQ_Worker");
         }
 
@@ -58,14 +53,14 @@ namespace NUnit.Framework.Internal.Execution
 
             _worker.Busy += (s, ea) => { sb.Append("Busy"); };
             work.Executed += (s, ea) => { sb.Append("Exec"); };
-			_worker.Idle += (s, ea) => { sb.Append ("Idle"); };
+            _worker.Idle += (s, ea) => { sb.Append ("Idle"); };
 
             _queue.Enqueue(work);
             _worker.Start();
             _queue.Start();
 
             Assert.That(() => sb.ToString(), Is.EqualTo("BusyExecIdle").After(
-                delayInMilliseconds: 10000, pollingInterval: 200));
+                delayInMilliseconds: 10_000, pollingInterval: 200));
         }
 
         private void FakeMethod()
@@ -73,5 +68,3 @@ namespace NUnit.Framework.Internal.Execution
         }
     }
 }
-
-#endif

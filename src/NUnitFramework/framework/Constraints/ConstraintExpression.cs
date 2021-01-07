@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -459,8 +460,6 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
-#if SERIALIZATION
-
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
@@ -476,8 +475,6 @@ namespace NUnit.Framework.Constraints
         {
             get { return (XmlSerializableConstraint)this.Append(new XmlSerializableConstraint()); }
         }
-
-#endif
 
         #region EqualTo
 
@@ -903,6 +900,15 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
+        
+        /// <summary>
+        /// Returns a constraint that succeeds if the actual
+        /// value matches the regular expression supplied as an argument.
+        /// </summary>
+        public RegexConstraint Match(Regex regex)
+        {
+            return (RegexConstraint)this.Append(new RegexConstraint(regex));
+        }
 
         /// <summary>
         /// Returns a constraint that succeeds if the actual
@@ -912,6 +918,16 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
+        
+        /// <summary>
+        /// Returns a constraint that succeeds if the actual
+        /// value matches the regular expression supplied as an argument.
+        /// </summary>
+        public RegexConstraint Matches(Regex regex)
+        {
+            return (RegexConstraint)this.Append(new RegexConstraint(regex));
+        }
+
 
         /// <summary>
         /// Returns a constraint that succeeds if the actual
@@ -1005,6 +1021,20 @@ namespace NUnit.Framework.Constraints
             }
 
             return (AnyOfConstraint)this.Append(new AnyOfConstraint(expected));
+        }
+
+        #endregion
+        
+        #region ItemAt
+
+        /// <summary>
+        /// Returns a new IndexerConstraintExpression, which will
+        /// apply any following constraint to that indexer value.
+        /// </summary>
+        /// <param name="indexArgs">Index accessor values.</param>
+        public ConstraintExpression ItemAt(params object[] indexArgs)
+        {
+            return this.Append(new IndexerOperator(indexArgs));
         }
 
         #endregion

@@ -52,6 +52,14 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
             };
 
+#if !NET35
+        [Test]
+        public void Complex_PassesEquality()
+        {
+            Assert.AreEqual(new System.Numerics.Complex(1, 100), new System.Numerics.Complex(1, 100));
+        }
+#endif
+
         #region DateTimeEquality
 
         public class DateTimeEquality
@@ -128,7 +136,7 @@ namespace NUnit.Framework.Constraints
             {
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
-                Assert.That(actual, new EqualConstraint(expected).Within(300000).Milliseconds);
+                Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -308,7 +316,7 @@ namespace NUnit.Framework.Constraints
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
                 var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
-                Assert.That(actual, new EqualConstraint(expected).Within(300000).Milliseconds);
+                Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
             [Test]
@@ -356,7 +364,6 @@ namespace NUnit.Framework.Constraints
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
 
-#if !NETCOREAPP1_1
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
@@ -385,7 +392,6 @@ namespace NUnit.Framework.Constraints
                 Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
                                 new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
             }
-#endif
         }
 
         #endregion
@@ -449,6 +455,8 @@ namespace NUnit.Framework.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
                 Assert.That(ex.Message, Does.Contain("+/- 10.0d Percent"));
+                var expectedPercentDiff = (10000 - (double)value) / 100;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
             [TestCase(9500.0f)]
@@ -465,6 +473,19 @@ namespace NUnit.Framework.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
                 Assert.That(ex.Message, Does.Contain("+/- 10.0f Percent"));
+                double expectedPercentDiff = (10000 - (float)value) / 100;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
+            }
+
+            [TestCase(1.21)]
+            [TestCase(1.19)]
+            public void FailsOnDoublesOutsideOfAbsoluteTolerance(object value)
+            {
+                const double tolerance = 0.001;
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
+                Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
+                var expectedAbsoluteDiff = 1.2 - (double)value;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
@@ -513,6 +534,20 @@ namespace NUnit.Framework.Constraints
             {
                 Assert.Throws<InvalidOperationException>(() => Assert.That(100m, Is.EqualTo(100m).Within(2).Ulps));
             }
+
+            [Test]
+            public void CanMatchNegativeZeroToZeroForDoubles()
+            {
+                Assert.That(0d, Is.EqualTo(-0d).Within(1).Ulps);
+                Assert.That(-0d, Is.EqualTo(0d).Within(1).Ulps);
+            }
+
+            [Test]
+            public void CanMatchNegativeZeroToZeroForFloats()
+            {
+                Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
+                Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+            }
         }
 
         #endregion
@@ -543,6 +578,38 @@ namespace NUnit.Framework.Constraints
                 var comparer = new ObjectEqualityComparer();
                 Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
                 Assert.That(comparer.Called, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedEqualityComparerForExpectedIsString()
+            {
+                var comparer = new ObjectToStringEqualityComparer();
+                Assert.That(4, Is.EqualTo("4").Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedEqualityComparerForActualIsString()
+            {
+                var comparer = new ObjectToStringEqualityComparer();
+                Assert.That("4", Is.EqualTo(4).Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedComparerForExpectedIsString()
+            {
+                var comparer = new ObjectToStringComparer();
+                Assert.That(4, Is.EqualTo("4").Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
+            }
+
+            [Test]
+            public void UsesProvidedComparerForActualIsString()
+            {
+                var comparer = new ObjectToStringComparer();
+                Assert.That("4", Is.EqualTo(4).Using(comparer));
+                Assert.That(comparer.WasCalled, "Comparer was not called");
             }
 
             [Test]
@@ -589,7 +656,7 @@ namespace NUnit.Framework.Constraints
                 Assert.That(2 + 2, Is.EqualTo(4).Using<int>((x, y) => x.CompareTo(y)));
             }
 
-            [Test]
+            [Test, SetCulture("en-US")]
             public void UsesProvidedLambda_StringArgs()
             {
                 Assert.That("hello", Is.EqualTo("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
@@ -653,6 +720,24 @@ namespace NUnit.Framework.Constraints
                 ICollection strings = new List<string> { "1", "2", "3" };
                 Assert.That(strings, Has.Member(2).Using<string, int>((s, i) => i.ToString() == s));
             }
+
+            [Test, SetCulture("en-US")]
+            public void UsesProvidedPredicateForItemComparison()
+            {
+                var expected = new[] { "yeti", "łysy", "rysiu" };
+                var actual = new[] { "YETI", "Łysy", "RySiU" };
+
+                Assert.That(actual, Is.EqualTo(expected).Using<string>((x, y) => StringUtil.StringsEqual(x, y, true)));
+            }
+
+            [Test]
+            public void UsesProvidedPredicateForItemComparisonDifferentTypes()
+            {
+                var expected = new[] { 1, 2, 3 };
+                var actual = new[] { "1", "2", "3" };
+
+                Assert.That(actual, Is.EqualTo(expected).Using<string, int>((s, i) => i.ToString() == s));
+            }
         }
 
         #endregion
@@ -664,12 +749,12 @@ namespace NUnit.Framework.Constraints
             get
             {
                 var ptr = new System.IntPtr(0);
-                var ExampleTestA = new ExampleTest.ClassA(0);
-                var ExampleTestB = new ExampleTest.ClassB(0);
+                var exampleTestA = new ExampleTest.ClassA(0);
+                var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 yield return new object[] { 0, ptr };
-                yield return new object[] { ExampleTestA, ExampleTestB };
+                yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
         }

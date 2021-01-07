@@ -21,8 +21,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
+using System.Reflection;
 using System.Web.UI;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -55,21 +59,20 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            string startElement = test is TestSuite
-                ? "start-suite"
-                : "start-test";
-
             var parent = GetParent(test);
             try
             {
-                string report = string.Format(
-                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\" type=\"{5}\"/>",
-                    startElement,
-                    test.Id,
-                    parent != null ? parent.Id : string.Empty,
-                    FormatAttributeValue(test.Name),
-                    FormatAttributeValue(test.FullName),
-                    test.TestType);
+                string report;
+                if (test is TestSuite)
+                {
+                    // Only add framework-version for the Assembly start-suite
+                    string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\" " : "";
+                    report = $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" {version}/>";
+                }
+                else
+                {
+                    report = $"<start-test id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
+                }
 
                 handler.RaiseCallbackEvent(report);
             }
@@ -140,7 +143,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="test"></param>
         /// <returns>parent test item</returns>
-        private static ITest GetParent(ITest test)
+        private static ITest? GetParent(ITest test)
         {
             if (test == null || test.Parent == null)
             {

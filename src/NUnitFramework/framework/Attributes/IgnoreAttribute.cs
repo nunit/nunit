@@ -21,10 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -36,7 +39,7 @@ namespace NUnit.Framework
     {
         private readonly string _reason;
         private DateTime? _untilDate;
-        private string _until;
+        private string? _until;
 
         /// <summary>
         /// Constructs the attribute giving a reason for ignoring the test
@@ -58,7 +61,7 @@ namespace NUnit.Framework
         /// property set which will appear in the test results.
         /// </remarks>
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception> 
-        public string Until
+        public string? Until
         {
             get { return _until; }
             set
@@ -83,8 +86,7 @@ namespace NUnit.Framework
                     if (_untilDate.Value > DateTime.Now)
                     {
                         test.RunState = RunState.Ignored;
-                        string reason = string.Format("Ignoring until {0}. {1}", _untilDate.Value.ToString("u"), _reason);
-                        test.Properties.Set(PropertyNames.SkipReason, reason);
+                        test.Properties.AddIgnoreUntilReason(_untilDate.Value, _reason);
                     }
                     test.Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u") );
 

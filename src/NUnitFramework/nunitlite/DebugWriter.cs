@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -28,16 +28,17 @@ using System.IO;
 namespace NUnitLite
 {
     /// <summary>
-    /// DebugWriter is a TextWriter that sends its 
+    /// DebugWriter is a TextWriter that sends its
     /// output to Debug. We don't use Trace because
     /// writing to it is not supported in CF.
     /// </summary>
+    [Obsolete("No longer used")]
     public class DebugWriter : TextWriter
     {
         private static TextWriter writer;
 
         /// <summary>
-        /// Singleon instance of a DebugWriter.
+        /// Singleton instance of a DebugWriter.
         /// </summary>
         /// <value>The DebugWriter singleton.</value>
         public static TextWriter Out

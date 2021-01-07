@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Collections;
+#nullable enable
+
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.Builders
@@ -121,7 +122,7 @@ namespace NUnit.Framework.Internal.Builders
             if (_namespaceIndex.ContainsKey(ns))
                 return _namespaceIndex[ns];
 
-            TestSuite suite = null;
+            TestSuite suite;
             int index = ns.LastIndexOf(".");
 
             if( index == -1 )
@@ -167,7 +168,7 @@ namespace NUnit.Framework.Internal.Builders
                 // Make the parent of the containing suite point to this
                 // fixture instead
                 // TODO: Get rid of this somehow?
-                TestSuite parent = (TestSuite)containingSuite.Parent;
+                TestSuite? parent = (TestSuite?)containingSuite.Parent;
                 if (parent == null)
                 {
                     newSetupFixture.Name = RootSuite.Name;

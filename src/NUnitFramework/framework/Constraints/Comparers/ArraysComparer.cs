@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints.Comparers
             _enumerablesComparer = enumerablesComparer;
         }
 
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             if (!x.GetType().IsArray || !y.GetType().IsArray || _equalityComparer.CompareAsCollection)
                 return null;
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 if (xArray.GetLength(r) != yArray.GetLength(r))
                     return false;
 
-            return _enumerablesComparer.Equal(xArray, yArray, ref tolerance);
+            return _enumerablesComparer.Equal(xArray, yArray, ref tolerance, state);
         }
     }
 }

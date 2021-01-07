@@ -52,9 +52,7 @@ namespace NUnit.Framework
 
             public override ConstraintResult ApplyTo<TActual>(TActual actual)
             {
-                var @delegate = actual as Delegate;
-                if (@delegate == null)
-                    throw new ArgumentException("Actual value must be a delegate.", nameof(actual));
+                var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
                 var invokeMethod = @delegate.GetType().GetTypeInfo().GetMethod("Invoke");
                 if (invokeMethod.GetParameters().Length != 0)

@@ -21,8 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using NUnit.Framework.Internal;
+#nullable enable
 
 namespace NUnit.Framework
 {
@@ -33,67 +32,59 @@ namespace NUnit.Framework
         #region Doubles
 
         /// <summary>
-        /// Verifies that two doubles are equal considering a delta. If the
-        /// expected value is infinity then the delta value is ignored. If 
-        /// they are not equal then an <see cref="AssertionException"/> is
-        /// thrown.
+        /// Verifies that two doubles are equal considering a delta. If the expected value is infinity then the delta
+        /// value is ignored. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the
-        /// the expected and the actual</param>
+        /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreEqual(double expected, double actual, double delta, string message, params object[] args)
+        public static void AreEqual(double expected, double actual, double delta, string? message, params object?[]? args)
         {
             AssertDoublesAreEqual(expected, actual, delta, message, args);
         }
 
         /// <summary>
-        /// Verifies that two doubles are equal considering a delta. If the
-        /// expected value is infinity then the delta value is ignored. If 
-        /// they are not equal then an <see cref="AssertionException"/> is
-        /// thrown.
+        /// Verifies that two doubles are equal considering a delta. If the expected value is infinity then the delta
+        /// value is ignored. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the
-        /// the expected and the actual</param>
+        /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
         public static void AreEqual(double expected, double actual, double delta)
         {
             AssertDoublesAreEqual(expected, actual, delta, null, null);
         }
 
         /// <summary>
-        /// Verifies that two doubles are equal considering a delta. If the
-        /// expected value is infinity then the delta value is ignored. If 
-        /// they are not equal then an <see cref="AssertionException"/> is
-        /// thrown.
+        /// Verifies that two doubles are equal considering a delta. If the expected value is infinity then the delta
+        /// value is ignored. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the
-        /// the expected and the actual</param>
+        /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreEqual(double expected, double? actual, double delta, string message, params object[] args)
+        public static void AreEqual(double expected, double? actual, double delta, string? message, params object?[]? args)
         {
-            AssertDoublesAreEqual(expected, (double)actual, delta, message, args);
+            // TODO: https://github.com/nunit/nunit/issues/3449
+            //                                    ↓↓↓↓↓↓↓
+            AssertDoublesAreEqual(expected, actual!.Value, delta, message, args);
         }
 
         /// <summary>
-        /// Verifies that two doubles are equal considering a delta. If the
-        /// expected value is infinity then the delta value is ignored. If 
-        /// they are not equal then an <see cref="AssertionException"/> is
-        /// thrown.
+        /// Verifies that two doubles are equal considering a delta. If the expected value is infinity then the delta
+        /// value is ignored. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the
-        /// the expected and the actual</param>
+        /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
         public static void AreEqual(double expected, double? actual, double delta)
         {
-            AssertDoublesAreEqual(expected, (double)actual, delta, null, null);
+            // TODO: https://github.com/nunit/nunit/issues/3449
+            //                                    ↓↓↓↓↓↓↓
+            AssertDoublesAreEqual(expected, actual!.Value, delta, null, null);
         }
 
         #endregion
@@ -101,29 +92,27 @@ namespace NUnit.Framework
         #region Objects
 
         /// <summary>
-        /// Verifies that two objects are equal.  Two objects are considered
-        /// equal if both are null, or if both have the same value. NUnit
-        /// has special semantics for some object types.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
+        /// Verifies that two objects are equal. Two objects are considered equal if both are null, or if both have the
+        /// same value. NUnit has special semantics for some object types. Returns without throwing an exception when
+        /// inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreEqual(object expected, object actual, string message, params object[] args)
+        public static void AreEqual(object? expected, object? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.EqualTo(expected), message, args);
         }
 
         /// <summary>
-        /// Verifies that two objects are equal.  Two objects are considered
-        /// equal if both are null, or if both have the same value. NUnit
-        /// has special semantics for some object types.
-        /// If they are not equal an <see cref="AssertionException"/> is thrown.
+        /// Verifies that two objects are equal. Two objects are considered equal if both are null, or if both have the
+        /// same value. NUnit has special semantics for some object types. Returns without throwing an exception when
+        /// inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
-        public static void AreEqual(object expected, object actual)
+        public static void AreEqual(object? expected, object? actual)
         {
             Assert.That(actual, Is.EqualTo(expected), null, null);
         }
@@ -137,29 +126,27 @@ namespace NUnit.Framework
         #region Objects
 
         /// <summary>
-        /// Verifies that two objects are not equal.  Two objects are considered
-        /// equal if both are null, or if both have the same value. NUnit
-        /// has special semantics for some object types.
-        /// If they are equal an <see cref="AssertionException"/> is thrown.
+        /// Verifies that two objects are not equal. Two objects are considered equal if both are null, or if both have
+        /// the same value. NUnit has special semantics for some object types. Returns without throwing an exception
+        /// when inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreNotEqual(object expected, object actual, string message, params object[] args)
+        public static void AreNotEqual(object? expected, object? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected), message, args);
         }
 
         /// <summary>
-        /// Verifies that two objects are not equal.  Two objects are considered
-        /// equal if both are null, or if both have the same value. NUnit
-        /// has special semantics for some object types.
-        /// If they are equal an <see cref="AssertionException"/> is thrown.
+        /// Verifies that two objects are not equal. Two objects are considered equal if both are null, or if both have
+        /// the same value. NUnit has special semantics for some object types. Returns without throwing an exception
+        /// when inside a multiple assert block.
         /// </summary>
         /// <param name="expected">The value that is expected</param>
         /// <param name="actual">The actual value</param>
-        public static void AreNotEqual(object expected, object actual)
+        public static void AreNotEqual(object? expected, object? actual)
         {
             Assert.That(actual, Is.Not.EqualTo(expected), null, null);
         }
@@ -171,25 +158,25 @@ namespace NUnit.Framework
         #region AreSame
 
         /// <summary>
-        /// Asserts that two objects refer to the same object. If they
-        /// are not the same an <see cref="AssertionException"/> is thrown.
+        /// Asserts that two objects refer to the same object. Returns without throwing an exception when inside a
+        /// multiple assert block.
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreSame(object expected, object actual, string message, params object[] args)
+        public static void AreSame(object? expected, object? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.SameAs(expected), message, args);
         }
 
         /// <summary>
-        /// Asserts that two objects refer to the same object. If they
-        /// are not the same an <see cref="AssertionException"/> is thrown.
+        /// Asserts that two objects refer to the same object. Returns without throwing an exception when inside a
+        /// multiple assert block.
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
-        public static void AreSame(object expected, object actual)
+        public static void AreSame(object? expected, object? actual)
         {
             Assert.That(actual, Is.SameAs(expected), null, null);
         }
@@ -199,25 +186,25 @@ namespace NUnit.Framework
         #region AreNotSame
 
         /// <summary>
-        /// Asserts that two objects do not refer to the same object. If they
-        /// are the same an <see cref="AssertionException"/> is thrown.
+        /// Asserts that two objects do not refer to the same object. Returns without throwing an exception when inside
+        /// a multiple assert block.
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreNotSame(object expected, object actual, string message, params object[] args)
+        public static void AreNotSame(object? expected, object? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.SameAs(expected), message, args);
         }
 
         /// <summary>
-        /// Asserts that two objects do not refer to the same object. If they
-        /// are the same an <see cref="AssertionException"/> is thrown.
+        /// Asserts that two objects do not refer to the same object. Returns without throwing an exception when inside
+        /// a multiple assert block.
         /// </summary>
         /// <param name="expected">The expected object</param>
         /// <param name="actual">The actual object</param>
-        public static void AreNotSame(object expected, object actual)
+        public static void AreNotSame(object? expected, object? actual)
         {
             Assert.That(actual, Is.Not.SameAs(expected), null, null);
         }
@@ -236,7 +223,7 @@ namespace NUnit.Framework
         /// the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        protected static void AssertDoublesAreEqual(double expected, double actual, double delta, string message, object[] args)
+        protected static void AssertDoublesAreEqual(double expected, double actual, double delta, string? message, object?[]? args)
         {
             if (double.IsNaN(expected) || double.IsInfinity(expected))
                 Assert.That(actual, Is.EqualTo(expected), message, args);

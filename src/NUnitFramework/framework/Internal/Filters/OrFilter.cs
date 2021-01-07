@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -39,23 +40,23 @@ namespace NUnit.Framework.Internal.Filters
         public OrFilter() { }
 
         /// <summary>
-        /// Constructs an AndFilter from an array of filters
+        /// Constructs an OrFilter from an array of filters
         /// </summary>
         /// <param name="filters"></param>
-        public OrFilter( params ITestFilter[] filters ) : base(filters) { }
+        public OrFilter( params TestFilter[] filters ) : base(filters) { }
 
         /// <summary>
         /// Checks whether the OrFilter is matched by a test
         /// </summary>
         /// <param name="test">The test to be matched</param>
+        /// <param name="negated">If set to <see langword="true"/> we are carrying a negation through</param>
         /// <returns>True if any of the component filters pass, otherwise false</returns>
-        public override bool Pass( ITest test )
+        public override bool Pass( ITest test, bool negated )
         {
-            foreach( ITestFilter filter in Filters )
-                if ( filter.Pass( test ) )
-                    return true;
+            if (negated)
+                return Filters.All(f => f.Pass(test, negated));
 
-            return false;
+            return Filters.Any(f => f.Pass(test, negated));
         }
 
         /// <summary>

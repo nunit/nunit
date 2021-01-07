@@ -1,59 +1,25 @@
+pr: [ '*' ]
+
 trigger:
   branches:
-    include: [ '*' ]
+    include: [ 'master', 'release' ]
     exclude: [ 'refs/tags/*' ]
 
 jobs:
 
 - job: Windows
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-latest
   steps:
 
-  - powershell: .\build.ps1 --target=Test
-    displayName: Build and test
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 5.0.101
+      performMultiLevelLookup: true
 
-  # Workaround for https://github.com/nunit/nunit/issues/3012#issuecomment-441517922
-  - task: PublishTestResults@2
-    displayName: Publish net45 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results\net45\*.xml
-      mergeTestResults: true
-      testRunTitle: net45/Windows
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish net40 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results\net40\*.xml
-      mergeTestResults: true
-      testRunTitle: net40/Windows
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish net35 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results\net35\*.xml
-      mergeTestResults: true
-      testRunTitle: net35/Windows
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish netcoreapp1.1 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results\netcoreapp1.1\*.xml
-      mergeTestResults: true
-      testRunTitle: netcoreapp1.1/Windows
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish netcoreapp2.0 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results\netcoreapp2.0\*.xml
-      mergeTestResults: true
-      testRunTitle: netcoreapp2.0/Windows
-    condition: succeededOrFailed()
+  - powershell: .\build.ps1 --target=Test --test-run-name=Windows
+    displayName: Build, test, and publish results
 
   - powershell: .\build.ps1 --target=Package --artifact-dir='$(Build.ArtifactStagingDirectory)'
     displayName: Package
@@ -64,102 +30,80 @@ jobs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)
       ArtifactName: Package
 
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    condition: always()
+    inputs:
+      PathtoPublish: test-results
+      ArtifactName: Test results (Windows)
+
 - job: Linux
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   steps:
 
-  - bash: ./build.sh --target=Test --configuration=Release
-    displayName: Build and test
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 5.0.101
 
-  # Workaround for https://github.com/nunit/nunit/issues/3012#issuecomment-441517922
-  - task: PublishTestResults@2
-    displayName: Publish net45 test results
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 2.1'
     inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/net45/*.xml
-      mergeTestResults: true
-      testRunTitle: net45/Linux
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish net40 test results
+      packageType: runtime
+      version: 2.1.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 3.1'
     inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/net40/*.xml
-      mergeTestResults: true
-      testRunTitle: net40/Linux
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish net35 test results
+      packageType: runtime
+      version: 3.1.x
+
+  - bash: sudo apt-get install fsharp
+    displayName: Install F# for Mono
+
+  - bash: |
+     dotnet tool install --global Cake.Tool
+     dotnet cake --target=Test --test-run-name=Linux --configuration=Release
+    displayName: Build, test, and publish results
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    condition: always()
     inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/net35/*.xml
-      mergeTestResults: true
-      testRunTitle: net35/Linux
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish netcoreapp1.1 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/netcoreapp1.1/*.xml
-      mergeTestResults: true
-      testRunTitle: netcoreapp1.1/Linux
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish netcoreapp2.0 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/netcoreapp2.0/*.xml
-      mergeTestResults: true
-      testRunTitle: netcoreapp2.0/Linux
-    condition: succeededOrFailed()
+      PathtoPublish: test-results
+      ArtifactName: Test results (Linux)
 
 - job: macOS
   pool:
-    vmImage: macOS-10.13
+    vmImage: macOS-latest
   steps:
 
-  - bash: ./build.sh --target=Test --configuration=Release
-    displayName: Build and test
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 5.0.101
 
-  # Workaround for https://github.com/nunit/nunit/issues/3012#issuecomment-441517922
-  - task: PublishTestResults@2
-    displayName: Publish net45 test results
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 2.1'
     inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/net45/*.xml
-      mergeTestResults: true
-      testRunTitle: net45/macOS
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish net40 test results
+      packageType: runtime
+      version: 2.1.x
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core runtime 3.1'
     inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/net40/*.xml
-      mergeTestResults: true
-      testRunTitle: net40/macOS
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish net35 test results
+      packageType: runtime
+      version: 3.1.x
+
+  - bash: |
+     dotnet tool install --global Cake.Tool
+     dotnet cake --target=Test --test-run-name=macOS --configuration=Release
+    displayName: Build, test, and publish results
+
+  - task: PublishBuildArtifacts@1
+    displayName: Save test results artifacts
+    condition: always()
     inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/net35/*.xml
-      mergeTestResults: true
-      testRunTitle: net35/macOS
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish netcoreapp1.1 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/netcoreapp1.1/*.xml
-      mergeTestResults: true
-      testRunTitle: netcoreapp1.1/macOS
-    condition: succeededOrFailed()
-  - task: PublishTestResults@2
-    displayName: Publish netcoreapp2.0 test results
-    inputs:
-      testResultsFormat: NUnit
-      testResultsFiles: test-results/netcoreapp2.0/*.xml
-      mergeTestResults: true
-      testRunTitle: netcoreapp2.0/macOS
-    condition: succeededOrFailed()
+      PathtoPublish: test-results
+      ArtifactName: Test results (macOS)

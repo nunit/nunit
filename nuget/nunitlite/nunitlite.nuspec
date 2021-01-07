@@ -10,14 +10,15 @@
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
     <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
+    <icon>icon.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>NUnitlite is a lightweight runner for tests that use the NUnit testing framework.</summary>
     <description>NUnitLite provides a simple way to run NUnit tests, without the overhead of a full NUnit installation. It is suitable for projects that want to have a quick way to run tests using a console runner and don't need all the features of the NUnit engine and console runner.
 
 Supported platforms:
-- .NET Framework 2.0+
-- .NET Standard 1.4+
-- .NET Core
+- .NET Framework 3.5+
+- .NET Standard 2.0+
+- .NET Core 2.1+
 
 How to use this package:
 
@@ -26,7 +27,7 @@ How to use this package:
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) 2019 Charlie Poole, Rob Prouse</copyright>
+    <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
     <dependencies>
       <group targetFramework="net35">
         <dependency id="NUnit" version="[$version$]" />
@@ -36,11 +37,6 @@ How to use this package:
       </group>
       <group targetFramework="net45">
         <dependency id="NUnit" version="[$version$]" />
-      </group>
-      <group targetFramework="netstandard1.4">
-        <dependency id="NUnit" version="[$version$]" />
-        <dependency id="NETStandard.Library" version="1.6.1" />
-        <dependency id="System.Reflection.TypeExtensions" version="4.4.0" exclude="compile" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="NUnit" version="[$version$]" />
@@ -52,26 +48,16 @@ How to use this package:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
+    <file src="..\..\nuget\icon.png" />
     <file src="bin/net35/nunitlite.dll" target="lib\net35" />
-    <file src="bin/net35/nunitlite.pdb" target="lib\net35" />
     <file src="bin/net40/nunitlite.dll" target="lib\net40" />
-    <file src="bin/net40/nunitlite.pdb" target="lib\net40" />
     <file src="bin/net45/nunitlite.dll" target="lib\net45" />
-    <file src="bin/net45/nunitlite.pdb" target="lib\net45" />
-    <file src="bin/netstandard1.4/nunitlite.dll" target="lib\netstandard1.4" />
-    <file src="bin/netstandard1.4/nunitlite.pdb" target="lib\netstandard1.4" />
     <file src="bin/netstandard2.0/nunitlite.dll" target="lib\netstandard2.0" />
-    <file src="bin/netstandard2.0/nunitlite.pdb" target="lib\netstandard2.0" />
     <file src="bin/net35/nunitlite-runner.exe" target="tools\net35" />
-    <file src="bin/net35/nunitlite-runner.pdb" target="tools\net35" />
     <file src="bin/net40/nunitlite-runner.exe" target="tools\net40" />
-    <file src="bin/net40/nunitlite-runner.pdb" target="tools\net40" />
     <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />
-    <file src="bin/net45/nunitlite-runner.pdb" target="tools\net45" />
-    <file src="bin/netcoreapp1.1/nunitlite-runner.dll" target="tools\netcoreapp1.1" />
-    <file src="bin/netcoreapp1.1/nunitlite-runner.pdb" target="tools\netcoreapp1.1" />
-    <file src="bin/netcoreapp2.0/nunitlite-runner.dll" target="tools\netcoreapp2.0" />
-    <file src="bin/netcoreapp2.0/nunitlite-runner.pdb" target="tools\netcoreapp2.0" />
+    <file src="bin/netcoreapp2.1/nunitlite-runner.dll" target="tools\netcoreapp2.1" />
+    <file src="bin/netcoreapp3.1/nunitlite-runner.dll" target="tools\netcoreapp3.1" />
     <file src="../../nuget/nunitlite/Program.cs" target="content" />
     <file src="../../nuget/nunitlite/Program.vb" target="content" />
     <file src="../../nuget/nunitlite/install.ps1" target="tools" />

@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
             var result = new StringBuilder();
 
             foreach (var fragment in _fragments)
-                result.Append(fragment.GetText(testMethod, args));
+                fragment.AppendTextTo(result, testMethod, args);
 
             return result.ToString();
         }
@@ -143,6 +143,9 @@ namespace NUnit.Framework.Internal
                     case "{a}":
                         fragments.Add(new ArgListFragment(0));
                         break;
+                    case "{p}":
+                        fragments.Add(new ParamArgListFragment(0));
+                        break;
                     case "{0}":
                     case "{1}":
                     case "{2}":
@@ -158,13 +161,14 @@ namespace NUnit.Framework.Internal
                         break;
                     default:
                         char c = token[1];
-                        if (token.Length >= 5 && token[2] == ':' && (c == 'a' || char.IsDigit(c)))
+                        if (token.Length >= 5 && token[2] == ':' && (c == 'a' || c == 'p' || char.IsDigit(c)))
                         {
-                            int length;
-                            if (int.TryParse(token.Substring(3, token.Length - 4), out length) && length > 0)
+                            if (int.TryParse(token.Substring(3, token.Length - 4), out var length) && length > 0)
                             {
                                 if (c == 'a')
                                     fragments.Add(new ArgListFragment(length));
+                                else if (c == 'p')
+                                    fragments.Add(new ParamArgListFragment(length));
                                 else // It's a digit
                                     fragments.Add(new ArgumentFragment(c - '0', length));
                                 break;
@@ -195,12 +199,12 @@ namespace NUnit.Framework.Internal
         {
             private const string THREE_DOTS = "...";
 
-            public virtual string GetText(TestMethod testMethod, object[] args)
+            public virtual void AppendTextTo(StringBuilder sb, TestMethod testMethod, object[] args)
             {
-                return GetText(testMethod.Method.MethodInfo, args);
+                AppendTextTo(sb, testMethod.Method.MethodInfo, args);
             }
 
-            public abstract string GetText(MethodInfo method, object[] args);
+            public abstract void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args);
 
             protected static void AppendGenericTypeNames(StringBuilder sb, MethodInfo method)
             {
@@ -260,19 +264,17 @@ namespace NUnit.Framework.Internal
                         display = builder.ToString();
                     }
                 }
-                else if (arg is double)
+                else if (arg is double dbl)
                 {
-                    double d = (double)arg;
-
-                    if (double.IsNaN(d))
+                    if (double.IsNaN(dbl))
                         display = "double.NaN";
-                    else if (double.IsPositiveInfinity(d))
+                    else if (double.IsPositiveInfinity(dbl))
                         display = "double.PositiveInfinity";
-                    else if (double.IsNegativeInfinity(d))
+                    else if (double.IsNegativeInfinity(dbl))
                         display = "double.NegativeInfinity";
-                    else if (d == double.MaxValue)
+                    else if (dbl == double.MaxValue)
                         display = "double.MaxValue";
-                    else if (d == double.MinValue)
+                    else if (dbl == double.MinValue)
                         display = "double.MinValue";
                     else
                     {
@@ -281,10 +283,8 @@ namespace NUnit.Framework.Internal
                         display += "d";
                     }
                 }
-                else if (arg is float)
+                else if (arg is float f)
                 {
-                    float f = (float)arg;
-
                     if (float.IsNaN(f))
                         display = "float.NaN";
                     else if (float.IsPositiveInfinity(f))
@@ -302,28 +302,26 @@ namespace NUnit.Framework.Internal
                         display += "f";
                     }
                 }
-                else if (arg is decimal)
+                else if (arg is decimal dec)
                 {
-                    decimal d = (decimal)arg;
-                    if (d == decimal.MinValue)
+                    if (dec == decimal.MinValue)
                         display = "decimal.MinValue";
-                    else if (d == decimal.MaxValue)
+                    else if (dec == decimal.MaxValue)
                         display = "decimal.MaxValue";
                     else
                         display += "m";
                 }
-                else if (arg is long)
+                else if (arg is long l)
                 {
-                    if (arg.Equals(long.MinValue))
+                    if (l.Equals(long.MinValue))
                         display = "long.MinValue";
-                    else if (arg.Equals(long.MaxValue))
+                    else if (l.Equals(long.MaxValue))
                         display = "long.MaxValue";
                     else
                         display += "L";
                 }
-                else if (arg is ulong)
+                else if (arg is ulong ul)
                 {
-                    ulong ul = (ulong)arg;
                     if (ul == ulong.MinValue)
                         display = "ulong.MinValue";
                     else if (ul == ulong.MaxValue)
@@ -331,9 +329,8 @@ namespace NUnit.Framework.Internal
                     else
                         display += "UL";
                 }
-                else if (arg is string)
+                else if (arg is string str)
                 {
-                    var str = (string)arg;
                     bool tooLong = stringMax > 0 && str.Length > stringMax;
                     int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
 
@@ -351,50 +348,50 @@ namespace NUnit.Framework.Internal
                     sb.Append("\"");
                     display = sb.ToString();
                 }
-                else if (arg is char)
+                else if (arg is char c)
                 {
-                    display = "\'" + EscapeSingleChar((char)arg) + "\'";
+                    display = "\'" + EscapeSingleChar(c) + "\'";
                 }
-                else if (arg is int)
+                else if (arg is int i)
                 {
-                    if (arg.Equals(int.MaxValue))
+                    if (i.Equals(int.MaxValue))
                         display = "int.MaxValue";
-                    else if (arg.Equals(int.MinValue))
+                    else if (i.Equals(int.MinValue))
                         display = "int.MinValue";
                 }
-                else if (arg is uint)
+                else if (arg is uint ui)
                 {
-                    if (arg.Equals(uint.MaxValue))
+                    if (ui.Equals(uint.MaxValue))
                         display = "uint.MaxValue";
-                    else if (arg.Equals(uint.MinValue))
+                    else if (ui.Equals(uint.MinValue))
                         display = "uint.MinValue";
                 }
-                else if (arg is short)
+                else if (arg is short s)
                 {
-                    if (arg.Equals(short.MaxValue))
+                    if (s.Equals(short.MaxValue))
                         display = "short.MaxValue";
-                    else if (arg.Equals(short.MinValue))
+                    else if (s.Equals(short.MinValue))
                         display = "short.MinValue";
                 }
-                else if (arg is ushort)
+                else if (arg is ushort us)
                 {
-                    if (arg.Equals(ushort.MaxValue))
+                    if (us.Equals(ushort.MaxValue))
                         display = "ushort.MaxValue";
-                    else if (arg.Equals(ushort.MinValue))
+                    else if (us.Equals(ushort.MinValue))
                         display = "ushort.MinValue";
                 }
-                else if (arg is byte)
+                else if (arg is byte b)
                 {
-                    if (arg.Equals(byte.MaxValue))
+                    if (b.Equals(byte.MaxValue))
                         display = "byte.MaxValue";
-                    else if (arg.Equals(byte.MinValue))
+                    else if (b.Equals(byte.MinValue))
                         display = "byte.MinValue";
                 }
-                else if (arg is sbyte)
+                else if (arg is sbyte sb)
                 {
-                    if (arg.Equals(sbyte.MaxValue))
+                    if (sb.Equals(sbyte.MaxValue))
                         display = "sbyte.MaxValue";
-                    else if (arg.Equals(sbyte.MinValue))
+                    else if (sb.Equals(sbyte.MinValue))
                         display = "sbyte.MinValue";
                 }
 
@@ -451,20 +448,20 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private class TestIDFragment : NameFragment
+        private sealed class TestIDFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                return "{i}"; // No id available using MethodInfo
+                sb.Append("{i}"); // No id available using MethodInfo
             }
 
-            public override string GetText(TestMethod testMethod, object[] args)
+            public override void AppendTextTo(StringBuilder sb, TestMethod testMethod, object[] args)
             {
-                return testMethod.Id;
+                sb.Append(testMethod.Id);
             }
         }
 
-        private class FixedTextFragment : NameFragment
+        private sealed class FixedTextFragment : NameFragment
         {
             private readonly string _text;
 
@@ -473,69 +470,61 @@ namespace NUnit.Framework.Internal
                 _text = text;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                return _text;
+                sb.Append(_text);
             }
         }
 
-        private class MethodNameFragment : NameFragment
+        private sealed class MethodNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                var sb = new StringBuilder();
-
                 sb.Append(method.Name);
 
                 if (method.IsGenericMethod)
                     AppendGenericTypeNames(sb, method);
-
-                return sb.ToString();
             }
         }
 
-        private class NamespaceFragment : NameFragment
+        private sealed class NamespaceFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                return method.DeclaringType.Namespace;
+                sb.Append(method.DeclaringType.Namespace);
             }
         }
 
-        private class MethodFullNameFragment : NameFragment
+        private sealed class MethodFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                var sb = new StringBuilder();
-
                 sb.Append(method.DeclaringType.FullName);
                 sb.Append('.');
                 sb.Append(method.Name);
 
                 if (method.IsGenericMethod)
                     AppendGenericTypeNames(sb, method);
-
-                return sb.ToString();
             }
         }
 
-        private class ClassNameFragment : NameFragment
+        private sealed class ClassNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                return method.DeclaringType.Name;
+                sb.Append(method.DeclaringType.Name);
             }
         }
 
-        private class ClassFullNameFragment : NameFragment
+        private sealed class ClassFullNameFragment : NameFragment
         {
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                return method.DeclaringType.FullName;
+                sb.Append(method.DeclaringType.FullName);
             }
         }
 
-        private class ArgListFragment : NameFragment
+        private sealed class ArgListFragment : NameFragment
         {
             private readonly int _maxStringLength;
 
@@ -544,10 +533,8 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] arglist)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] arglist)
             {
-                var sb = new StringBuilder();
-
                 if (arglist != null)
                 {
                     sb.Append('(');
@@ -560,12 +547,10 @@ namespace NUnit.Framework.Internal
 
                     sb.Append(')');
                 }
-
-                return sb.ToString();
             }
         }
 
-        private class ArgumentFragment : NameFragment
+        private sealed class ArgumentFragment : NameFragment
         {
             private readonly int _index;
             private readonly int _maxStringLength;
@@ -576,11 +561,45 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override string GetText(MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
             {
-                return _index < args.Length
-                    ? GetDisplayString(args[_index], _maxStringLength)
-                    : string.Empty;
+                if (_index < args.Length)
+                    sb.Append(GetDisplayString(args[_index], _maxStringLength));
+            }
+        }
+
+        private sealed class ParamArgListFragment : NameFragment
+        {
+            private readonly int _maxStringLength;
+
+            public ParamArgListFragment(int maxStringLength)
+            {
+                _maxStringLength = maxStringLength;
+            }
+
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            {
+                if (args != null)
+                {
+                    sb.Append('(');
+
+                    var parameters = method.GetParameters();
+                    
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        if (i > 0) sb.Append(", ");
+
+                        if (i < parameters.Length)
+                        {
+                            sb.Append(parameters[i].Name);
+                            sb.Append(": ");
+                        }
+
+                        sb.Append(GetDisplayString(args[i], _maxStringLength));
+                    }
+
+                    sb.Append(')');
+                }
             }
         }
 

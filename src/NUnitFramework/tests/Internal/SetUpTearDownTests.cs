@@ -123,11 +123,15 @@ namespace NUnit.Framework.Internal
             fixture.SetupException = e;
             ITestResult suiteResult = TestBuilder.RunTestFixture(fixture);
             Assert.IsTrue(suiteResult.HasChildren, "Fixture test should have child result.");
-            TestResult result = (TestResult)suiteResult.Children.ToArray()[0];
+            ITestResult result = suiteResult.Children.ToArray()[0];
             Assert.AreEqual(ResultState.Error, result.ResultState, "Test should be in error state");
             string expected = string.Format("{0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
-            Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+            });
         }
 
         [Test]
@@ -143,7 +147,11 @@ namespace NUnit.Framework.Internal
             string expected = string.Format("TearDown : {0} : {1}", e.GetType().FullName, e.Message);
             Assert.AreEqual(expected, result.Message);
             Assert.That(result.StackTrace, Does.StartWith("--TearDown"));
-            Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+            });
         }
 
         [Test]
@@ -162,7 +170,11 @@ namespace NUnit.Framework.Internal
                 + string.Format("TearDown : {0} : {1}", e2.GetType().FullName, e2.Message);
             Assert.AreEqual(expected, result.Message);
             Assert.That(result.StackTrace, Does.Contain("--TearDown"));
-            Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+            });
         }
 
         public class SetupCallBase

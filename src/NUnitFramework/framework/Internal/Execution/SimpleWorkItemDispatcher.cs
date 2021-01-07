@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if PARALLEL
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -59,7 +58,6 @@ namespace NUnit.Framework.Internal.Execution
             _topLevelWorkItem = topLevelWorkItem;
             _runnerThread = new Thread(RunnerThreadProc);
 
-#if APARTMENT_STATE
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
                 try
@@ -71,7 +69,6 @@ namespace NUnit.Framework.Internal.Execution
                     topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
                 }
             }
-#endif
 
             _runnerThread.Start();
         }
@@ -79,8 +76,8 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Dispatch a single work item for execution by
         /// executing it directly.
-        /// <param name="work">The item to dispatch</param>
         /// </summary>
+        /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
             if (work != null)
@@ -118,4 +115,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-#endif

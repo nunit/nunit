@@ -319,7 +319,11 @@ namespace NUnit.Framework
             TestBuilder.RunTestFixture(fixture);
             Assert.That(fixture.FailCount, Is.EqualTo(1));
             Assert.That(fixture.Message, Is.EqualTo("Deliberate failure"));
-            Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+
+            PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
+            {
+                Assert.That(fixture.StackTrace, Does.Contain("NUnit.TestData.TestContextData.TestTestContextInTearDown.FailingTest"));
+            });
         }
 
         [Test]
@@ -395,9 +399,7 @@ namespace NUnit.Framework
         }
 
         [TestCase(null)]
-#if PLATFORM_DETECTION
         [TestCase("bad|path.png", IncludePlatform = "Win")]
-#endif
         public void InvalidFilePathsThrowsArgumentException(string filePath)
         {
             Assert.That(() => TestContext.AddTestAttachment(filePath), Throws.InstanceOf<ArgumentException>());

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-#if NET35 || NET40 || NET45
+#if NET35 || NET40 || NET45 || NET46 // NET46 should be removed when the framework project adds a net46 target
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Assertions
                 throw testException;
         }
 
-#if !(NET35 || NET40 || NET45)
+#if !(NET35 || NET40 || NET45 || NET46) // NET46 should be removed when the framework project adds a net46 target
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Assertions
 
             static public void TestFailingWarning()
             {
-                // Warnings don't throw at all. They are of no use in adhoc execution.
+                // Warnings don't throw at all. They are of no use in ad-hoc execution.
                 Assert.That(() => Warn.Unless(true, Is.False), Throws.Nothing);
             }
 

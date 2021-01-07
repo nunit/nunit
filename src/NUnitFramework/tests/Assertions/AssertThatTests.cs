@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Assertions
             ITestResult result = TestBuilder.RunTestFixture(typeof(AssertCountFixture));
 
             int totalCount = 0;
-            foreach (TestResult childResult in result.Children)
+            foreach (var childResult in result.Children)
             {
                 int expectedCount = childResult.Name == "ThreeAsserts" ? 3 : 1;
                 Assert.That(childResult.AssertCount, Is.EqualTo(expectedCount), "Bad count for {0}", childResult.Name);
@@ -307,7 +307,7 @@ namespace NUnit.Framework.Assertions
 
             // Act
             var ex = Assert.Throws<AssertionException>(() => Assert.That(1 + 1 == 1, getExceptionMessage));
-            
+
             // Assert
             Assert.That(ex.Message, Does.Contain("Func was called"));
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
@@ -332,12 +332,11 @@ namespace NUnit.Framework.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
-#if PLATFORM_DETECTION
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
 #if NET45
-            var exception = 
+            var exception =
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
@@ -346,13 +345,12 @@ namespace NUnit.Framework.Assertions
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
 #endif
         }
-#endif
 
         [Test]
         public void AssertThatErrorGenericTask()
         {
 #if NET45
-            var exception = 
+            var exception =
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
@@ -366,7 +364,7 @@ namespace NUnit.Framework.Assertions
         public void AssertThatErrorVoid()
         {
 #if NET45
-            var exception = 
+            var exception =
 #endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));

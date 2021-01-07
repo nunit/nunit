@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
@@ -30,7 +31,7 @@ namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Implements a simplified filter for use in deciding which
-    /// Types and Methods should be used to generate tests. It is consructed with a 
+    /// Types and Methods should be used to generate tests. It is constructed with a
     /// list of strings, each of which may end up being interpreted in various ways.
     /// </summary>
     internal class PreFilter : IPreFilter
@@ -74,8 +75,6 @@ namespace NUnit.Framework.Internal
                 if (filterText.StartsWith(filter.Text + "."))
                     return;
             }
-
-            var newFilter = new FilterElement(filterText);
 
             // Check to see if it makes any of the existing
             // filter elements redundant.
@@ -169,6 +168,12 @@ namespace NUnit.Framework.Internal
 
             public bool Match(Type type)
             {
+                return MatchElementType(type) || 
+                       MatchSetUpFixture(type);
+            }
+
+            private bool MatchElementType(Type type)
+            {
                 switch(ElementType)
                 {
                     default:
@@ -219,6 +224,20 @@ namespace NUnit.Framework.Internal
             private bool MatchMethodElement(Type type)
             {
                 return type.FullName == ClassName;
+            }
+
+            private bool MatchSetUpFixture(Type type)
+            {
+                return IsSubNamespace(type.Namespace) &&
+                       type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Any();
+            }
+
+            private bool IsSubNamespace(string typeNamespace)
+            {
+                if (string.IsNullOrEmpty(typeNamespace))
+                    return true;
+
+                return (ClassName + '.').StartsWith(typeNamespace + '.');
             }
         }
 

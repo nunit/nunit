@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,30 +23,47 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace NUnit.TestUtilities.Comparers
 {
     /// <summary>
-    /// ObjectToStringComparer is used in testing the <see cref="NUnit.Framework.Constraints.RangeConstraint"/> when the object does not implement the <see cref="IComparer"/>  interface.
+    /// ObjectToStringComparer is used in testing the <see cref="Framework.Constraints.RangeConstraint"/> when the object does not implement the <see cref="IComparer"/>  interface.
     /// Compares them as numbers when both arguments are <see cref="int"/>, else it uses <seealso cref="string.CompareTo(string)"/>.
     /// </summary>
-    public class ObjectToStringComparer : System.Collections.IComparer
+    public class ObjectToStringComparer : IComparer
     {
-        public bool WasCalled = false;
-        int System.Collections.IComparer.Compare(object x, object y)
+        public bool WasCalled { get; private set; }
+
+        int IComparer.Compare(object x, object y)
         {
             WasCalled = true;
-            int intX = 0;
-            int intY = 0;
 
-            if(int.TryParse(x.ToString(), out intX) && int.TryParse(y.ToString(), out intY))
+            string xAsString = x.ToString();
+            string yAsString = y.ToString();
+            if (int.TryParse(xAsString, out int intX) && int.TryParse(yAsString, out int intY))
             {
                 return intX.CompareTo(intY);
             }
 
-            return x.ToString().CompareTo(y.ToString());
+            return xAsString.CompareTo(yAsString);
+        }
+    }
 
+    public class ObjectToStringEqualityComparer : IEqualityComparer
+    {
+        private readonly IComparer _comparer = new ObjectToStringComparer();
+
+        public bool WasCalled { get; private set; }
+
+        public new bool Equals(object x, object y)
+        {
+            WasCalled = true;
+            return _comparer.Compare(x, y) == 0;
+        }
+
+        public int GetHashCode(object obj)
+        {
+            return obj.ToString().GetHashCode();
         }
     }
 
@@ -56,7 +73,7 @@ namespace NUnit.TestUtilities.Comparers
     /// </summary>
     public class NoComparer
     {
-        public readonly object _value;
+        private readonly object _value;
         public NoComparer(object value)
         {
             _value = value;

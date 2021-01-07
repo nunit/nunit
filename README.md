@@ -2,7 +2,7 @@
 
 [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/3xfkxtnkrts1x06q/branch/master?svg=true)](https://ci.appveyor.com/project/CharliePoole/nunit/branch/master) [![Travis Build Status](https://travis-ci.org/nunit/nunit.svg?branch=master)](https://travis-ci.org/nunit/nunit) [![Azure Pipelines Build Status](https://nunit.visualstudio.com/NUnit/_apis/build/status/NUnit%20Framework/NUnit%20Framework%20CI?branchName=master)](https://nunit.visualstudio.com/NUnit/_build/latest?definitionId=11?branchName=master) [![NuGet Version and Downloads count](https://buildstats.info/nuget/NUnit)](https://www.nuget.org/packages/NUnit)
 
-[![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nunit/nunit) [![nunit-discuss Google Groups](https://img.shields.io/badge/mailing%20list-nunit--discuss-blue.svg)](https://groups.google.com/forum/#!forum/nunit-discuss)
+[![Follow NUnit](https://img.shields.io/twitter/follow/nunit.svg?style=social)](https://twitter.com/nunit) [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/nunit/nunit) [![nunit-discuss Google Groups](https://img.shields.io/badge/mailing%20list-nunit--discuss-blue.svg)](https://groups.google.com/forum/#!forum/nunit-discuss) [![NUnit issues marked with "help wanted" label](https://img.shields.io/github/issues/nunit/nunit/help%20wanted.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![NUnit issues marked with "good first issue" label](https://img.shields.io/github/issues/nunit/nunit/good%20first%20issue.svg)](https://github.com/nunit/nunit/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
 NUnit is a unit-testing framework for all .NET languages. Initially ported from JUnit, the current production release, version 3, has been completely rewritten with many new features and support for a wide range of .NET platforms.
 
@@ -11,7 +11,6 @@ NUnit is a unit-testing framework for all .NET languages. Initially ported from 
 - [Downloads](#downloads)
 - [Documentation](#documentation)
 - [Contributing](#contributing)
-- [Debugger source-stepping](#debugger-source-stepping)
 - [License](#license)
 - [NUnit Projects](#nunit-projects)
 
@@ -35,12 +34,6 @@ For more information on contributing to the NUnit project, please see [CONTRIBUT
 NUnit 3.0 was created by [Charlie Poole](https://github.com/CharliePoole), [Rob Prouse](https://github.com/rprouse), [Simone Busoli](https://github.com/simoneb), [Neil Colvin](https://github.com/oznetmaster) and numerous community contributors. A complete list of contributors since NUnit migrated to GitHub can be [found on GitHub](https://github.com/nunit/nunit/graphs/contributors).
 
 Earlier versions of NUnit were developed by Charlie Poole, James W. Newkirk, Alexei A. Vorontsov, Michael C. Two and Philip A. Craig.
-
-## Debugger source-stepping ##
-
-The NUnit and NUnitLite NuGet packages contain a source-indexed PDB for each binary from this repository.
-If you’re in the middle of a debugging session and realize you’d like to be able to step into NUnit code,
-set breakpoints and watch variables, [follow these steps](https://github.com/nunit/docs/wiki/Debugger-Source-Stepping).
 
 ## License ##
 

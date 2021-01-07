@@ -6,9 +6,9 @@ There are two ways to build NUnit: using the solution file in an IDE or through 
 
 ## Solution Build
 
-The framework is built using a single Visual Studio solution, `nunit.sln`, which may be built with [Visual Studio 2017](https://www.visualstudio.com/vs/) on Windows and [Visual Studio for Mac](https://www.visualstudio.com/vs/) on macOS. Currently, MonoDevelop does not support the new multi-targeted `csproj` project format. Once MonoDevelop is updated, it should start working again. Until then, we recommend [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build scripts on non-Windows platforms.
+The framework is built using a single Visual Studio solution, `nunit.sln`, which may be built with [Visual Studio 2019 16.8](https://www.visualstudio.com/vs/) or newer on Windows and [Visual Studio for Mac](https://www.visualstudio.com/vs/) on macOS. Currently, MonoDevelop does not support the new multi-targeted `csproj` project format. Once MonoDevelop is updated, it should start working again. Until then, we recommend [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build scripts on non-Windows platforms.
 
-On all platforms, you will need to install [.NET Core 2.0.3 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
+On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
 
 The solutions all place their output in a common bin directory under the solution root.
 
@@ -53,16 +53,6 @@ For a full list of tasks, run `build.cmd -ShowDescription`.
  1. By design, the Package target does not depend on Build. This is to allow re-packaging when necessary without changing the binaries themselves. Of course, this means that you have to be very careful that the build is up to date before packaging.
  2. For additional targets, refer to the build.cake script itself.
 
-### Building and testing for Linux on a Windows machine
-
-Most of the time, it's not necessary to build or run tests on platforms other than your primary platform. The continuous integration which runs on every PR is enough to catch any problems.
-
-Once in a while you may find it desirable to be primarily developing the repository on a Windows machine but to run Linux tests on the same set of files while you edit them in Windows. One convenient way to do this is to pass the same arguments to [build-mono-docker.ps1](.\build-mono-docker.ps1) that you would pass to build.ps1. It requires [Docker](https://docs.docker.com/docker-for-windows/install/) to be installed.
-
-For example, to build and test everything: `.\build-mono-docker.ps1 -t test`
-
-This will run a temporary container using the latest [Mono image](https://hub.docker.com/r/library/mono/), mounting the repo inside the container and executing the [build.sh](build.sh) Cake bootstrapper with the arguments you specify.
-
 ### Defined constants
 
 NUnit often uses conditional preprocessor to light up APIs and behaviors per platform.
@@ -73,20 +63,17 @@ This brings clarity to the code and makes it easy to change the mapping between 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
  - `TASK_PARALLEL_LIBRARY_API` exposes NUnit APIs which depend on the TPL framework types
- - `PARALLEL` enables running tests in parallel
- - `PLATFORM_DETECTION` enables platform detection
  - `THREAD_ABORT` enables timeouts and forcible cancellation
- - `APARTMENT_STATE` enables control of the thread apartment state
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
-For example, `NET45`, `NETSTANDARD1_6`, `NETCOREAPP2_0`, and so on.
+For example, `NET45`, `NETSTANDARD2_0`, `NETCOREAPP2_1`, and so on.
 It is most helpful to call out which platforms are the exception in rather than the rule
 in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
 
 For example, rather than this code:
 
 ```cs
-#if NET45 || NETSTANDARD1_6 || NETSTANDARD2_0
+#if NET45 || NETSTANDARD2_0 || NETSTANDARD2_1
 // Something that .NET Framework 4.0 can't do
 #endif
 ```

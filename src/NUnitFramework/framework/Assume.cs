@@ -21,8 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -91,7 +94,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string message, params object[] args)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
         {
             CheckMultipleAssertLevel();
 
@@ -102,7 +105,7 @@ namespace NUnit.Framework
                 ReportFailure(result, message, args);
         }
 
-        private static void ReportFailure(ConstraintResult result, string message, object[] args)
+        private static void ReportFailure(ConstraintResult result, string? message, object?[]? args)
         {
             MessageWriter writer = new TextMessageWriter(message, args);
             result.WriteMessageTo(writer);
@@ -120,7 +123,7 @@ namespace NUnit.Framework
         public static void That<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            Func<string> getExceptionMessage)
+            Func<string?> getExceptionMessage)
         {
             CheckMultipleAssertLevel();
 
@@ -138,34 +141,34 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That(bool condition, string message, params object[] args)
+        public static void That([DoesNotReturnIf(false)] bool condition, string? message, params object?[]? args)
         {
             Assume.That(condition, Is.True, message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the
+        /// Asserts that a condition is true. If the condition is false, the
         /// method throws an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
-        public static void That(bool condition)
+        public static void That([DoesNotReturnIf(false)] bool condition)
         {
             Assume.That(condition, Is.True, null, null);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(bool condition, Func<string> getExceptionMessage)
+        public static void That([DoesNotReturnIf(false)] bool condition, Func<string?> getExceptionMessage)
         {
             Assume.That(condition, Is.True, getExceptionMessage);
         }
@@ -175,19 +178,19 @@ namespace NUnit.Framework
         #region Lambda returning Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That(Func<bool> condition, string message, params object[] args)
+        public static void That(Func<bool> condition, string? message, params object?[]? args)
         {
             Assume.That(condition.Invoke(), Is.True, message, args);
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
@@ -197,12 +200,12 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false the method throws
+        /// Asserts that a condition is true. If the condition is false, the method throws
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(Func<bool> condition, Func<string> getExceptionMessage)
+        public static void That(Func<bool> condition, Func<string?> getExceptionMessage)
         {
             Assume.That(condition.Invoke(), Is.True, getExceptionMessage);
         }
@@ -249,7 +252,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, string message, params object[] args)
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
         {
             CheckMultipleAssertLevel();
 
@@ -275,7 +278,7 @@ namespace NUnit.Framework
         public static void That<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            Func<string> getExceptionMessage)
+            Func<string?> getExceptionMessage)
         {
             CheckMultipleAssertLevel();
 

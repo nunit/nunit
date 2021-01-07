@@ -90,7 +90,7 @@ namespace NUnit.Framework.Assertions
             // TODO: Decide whether to pass Ignored state to containing fixture
             //Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
-            foreach (TestResult testResult in fixtureResult.Children)
+            foreach (var testResult in fixtureResult.Children)
                 Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
         }
 

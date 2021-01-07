@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal sealed class DirectoriesComparer : IChainComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             if (!(x is DirectoryInfo) || !(y is DirectoryInfo))
                 return null;

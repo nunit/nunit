@@ -65,6 +65,24 @@ namespace NUnit.Framework.Internal
         /// <returns>True if the test passes the filter, otherwise false</returns>
         public virtual bool Pass(ITest test)
         {
+            return Pass(test, false);
+        }
+
+        /// <summary>
+        /// Determine if a particular test passes the filter criteria. The default
+        /// implementation checks the test itself, its parents and any descendants.
+        ///
+        /// Derived classes may override this method or any of the Match methods
+        /// to change the behavior of the filter.
+        /// </summary>
+        /// <param name="test">The test to which the filter is applied</param>
+        /// <param name="negated">If set to <see langword="true"/> we are carrying a negation through</param>
+        /// <returns>True if the test passes the filter, otherwise false</returns>
+        public virtual bool Pass(ITest test, bool negated)
+        {
+            if (negated)
+                return !Match(test) && !MatchParent(test);
+
             return Match(test) || MatchParent(test) || MatchDescendant(test);
         }
 
@@ -211,7 +229,7 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
-            public override bool Pass( ITest test )
+            public override bool Pass( ITest test, bool negated )
             {
                 return true;
             }

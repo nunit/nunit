@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -35,7 +37,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
     public class ExplicitAttribute : NUnitAttribute, IApplyToTest
     {
-        private readonly string _reason;
+        private readonly string? _reason;
 
         /// <summary>
         /// Default constructor
@@ -48,7 +50,7 @@ namespace NUnit.Framework
         /// Constructor with a reason
         /// </summary>
         /// <param name="reason">The reason test is marked explicit</param>
-        public ExplicitAttribute(string reason)
+        public ExplicitAttribute(string? reason)
         {
             _reason = reason;
         }

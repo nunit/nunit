@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,6 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
+using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace NUnit.Framework.Interfaces
@@ -32,7 +36,7 @@ namespace NUnit.Framework.Interfaces
     /// skipped or was inconclusive. The Label provides a more
     /// detailed breakdown for use by client runners.
     /// </summary>
-    public class ResultState
+    public class ResultState : IEquatable<ResultState>
     {
         #region Constructors
 
@@ -49,7 +53,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="status">The TestStatus.</param>
         /// <param name="label">The label.</param>
-        public ResultState(TestStatus status, string label) : this (status, label, FailureSite.Test)
+        public ResultState(TestStatus status, string? label) : this (status, label, FailureSite.Test)
         {
         }
 
@@ -68,7 +72,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="status">The TestStatus.</param>
         /// <param name="label">The label.</param>
         /// <param name="site">The stage at which the result was produced</param>
-        public ResultState(TestStatus status, string label, FailureSite site)
+        public ResultState(TestStatus status, string? label, FailureSite site)
         {
             Status = status;
             Label = label == null ? string.Empty : label;
@@ -83,9 +87,9 @@ namespace NUnit.Framework.Interfaces
         /// The result is inconclusive
         /// </summary>
         public readonly static ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
-        
+
         /// <summary>
-        /// The test has been skipped. 
+        /// The test has been skipped.
         /// </summary>
         public readonly static ResultState Skipped = new ResultState(TestStatus.Skipped);
 
@@ -143,7 +147,7 @@ namespace NUnit.Framework.Interfaces
         /// A suite is marked ignored because one or more child tests were ignored
         /// </summary>
         public readonly static ResultState ChildIgnored = ResultState.Ignored.WithSite(FailureSite.Child);
-        
+
         /// <summary>
         /// A suite failed in its OneTimeSetUp
         /// </summary>
@@ -171,7 +175,7 @@ namespace NUnit.Framework.Interfaces
 
         /// <summary>
         /// Gets the label under which this test result is
-        /// categorized, if any.
+        /// categorized, or <see cref="string.Empty"/> if none.
         /// </summary>
         public string Label { get; }
 
@@ -206,32 +210,33 @@ namespace NUnit.Framework.Interfaces
 
         #endregion
 
-        #region Equals Override
+        #region Equality
 
-        /// <summary>
-        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
-        /// </summary>
-        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
-        /// </returns>
-        public override bool Equals(object obj)
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        public override bool Equals(object? obj)
         {
-            var other = obj as ResultState;
-            if (object.ReferenceEquals(other, null)) return false;
-
-            return Status.Equals(other.Status) && Label.Equals(other.Label) && Site.Equals(other.Site);
+            return Equals(obj as ResultState);
         }
 
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
+        /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
+        /// <param name="other">An object to compare with this object.</param>
+        public bool Equals(ResultState? other)
+        {
+            return other != null &&
+                   Status == other.Status &&
+                   Label == other.Label &&
+                   Site == other.Site;
+        }
+
+        /// <summary>Serves as the default hash function.</summary>
         public override int GetHashCode()
         {
-            return (int)Status << 8 + (int)Site ^ Label.GetHashCode(); ;
+            var hashCode = -665355758;
+            hashCode = hashCode * -1521134295 + Status.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Label);
+            hashCode = hashCode * -1521134295 + Site.GetHashCode();
+            return hashCode;
         }
 
         #endregion
@@ -241,7 +246,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Overload == operator for ResultStates
         /// </summary>
-        public static bool operator ==(ResultState left, ResultState right)
+        public static bool operator ==(ResultState? left, ResultState? right)
         {
             if (object.ReferenceEquals(left, null))
                 return object.ReferenceEquals(right, null);
@@ -252,7 +257,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Overload != operator for ResultStates
         /// </summary>
-        public static bool operator !=(ResultState left, ResultState right)
+        public static bool operator !=(ResultState? left, ResultState? right)
         {
             return !(left == right);
         }

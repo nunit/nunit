@@ -21,9 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -41,11 +43,25 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <returns></returns>
+        [Obsolete("This member will be removed in a future major release.")]
         static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        {
+            return CreateWorkItem(test, filter, new DebuggerProxy(), recursive);
+        }
+
+        /// <summary>
+        /// Creates a work item.
+        /// </summary>
+        /// <param name="test">The test for which this WorkItem is being created.</param>
+        /// <param name="filter">The filter to be used in selecting any child Tests.</param>
+        /// <param name="debugger">An <see cref="IDebugger" /> instance.</param>
+        /// <param name="recursive">True if child work items should be created and added.</param>
+        /// <returns></returns>
+        internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false)
         {
             TestSuite suite = test as TestSuite;
             if (suite == null)
-                return new SimpleWorkItem((TestMethod)test, filter);
+                return new SimpleWorkItem((TestMethod)test, filter, debugger);
 
             var work = new CompositeWorkItem(suite, filter);
 
@@ -57,12 +73,10 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     if (filter.Pass(childTest))
                     {
-                        var childItem = CreateWorkItem(childTest, filter, recursive);
+                        var childItem = CreateWorkItem(childTest, filter, debugger, recursive);
 
-#if APARTMENT_STATE
                         if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
                             childItem.TargetApartment = work.TargetApartment;
-#endif
 
                         if (childTest.Properties.ContainsKey(PropertyNames.Order))
                         {

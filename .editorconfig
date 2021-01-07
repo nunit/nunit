@@ -12,6 +12,9 @@ indent_style = space
 insert_final_newline = true
 charset = utf-8
 
+[*.{sln,*proj}]
+charset = utf-8-bom
+
 [*.{cs,cake}]
 indent_size = 4
 
@@ -113,3 +116,6 @@ dotnet_sort_system_directives_first = true
 # https://github.com/nunit/docs/wiki/Coding-Standards#use-of-the-var-keyword
 # Would be true:warning, except that that so much existing code is not consistent with the coding standard.
 csharp_style_var_when_type_is_apparent = true:suggestion
+
+# DOC100: Place text in paragraphs
+dotnet_diagnostic.DOC100.severity = silent

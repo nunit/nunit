@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
@@ -63,7 +65,7 @@ namespace NUnit.Framework.Internal.Builders
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)
-                foreach (object data in provider.GetDataFor(parameter))
+                foreach (object? data in provider.GetDataFor(parameter))
                     yield return data;
         }
     }

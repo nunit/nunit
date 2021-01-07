@@ -37,8 +37,7 @@ namespace NUnit.Framework.Internal
         [TestCase(typeof(int[]), typeof(IEnumerable<int>), ExpectedResult=typeof(IEnumerable<int>))]
         public Type BestCommonTypeTest(Type type1, Type type2)
         {
-            Type result;
-            return TypeHelper.TryGetBestCommonType(type1, type2, out result) ? result : null;
+            return TypeHelper.TryGetBestCommonType(type1, type2, out var result) ? result : null;
         }
 
         public class A

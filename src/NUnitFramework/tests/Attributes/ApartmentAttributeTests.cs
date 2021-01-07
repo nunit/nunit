@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if APARTMENT_STATE
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -31,22 +30,18 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {
-#if PLATFORM_DETECTION
     [Platform(Include = "Win, Mono")]
-#endif
     [TestFixture]
     public class ApartmentAttributeTests : ThreadingTests
     {
-#if APARTMENT_STATE
         [Test]
         public void ApartmentStateUnknownIsNotRunnable()
         {
             var testSuite = TestBuilder.MakeFixture(typeof(ApartmentDataApartmentAttribute));
             Assert.That(testSuite, Has.Property(nameof(TestSuite.RunState)).EqualTo(RunState.NotRunnable));
         }
-#endif
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Test, Apartment(ApartmentState.STA)]
@@ -59,9 +54,9 @@ namespace NUnit.Framework.Attributes
 
         [Test]
 #if THREAD_ABORT
-        [Timeout(10000)]
+        [Timeout(10_000)]
 #endif
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -72,9 +67,9 @@ namespace NUnit.Framework.Attributes
 
         [TestFixture]
 #if THREAD_ABORT
-        [Timeout(10000)]
+        [Timeout(10_000)]
 #endif
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [Apartment(ApartmentState.STA)]
@@ -87,7 +82,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture, Apartment(ApartmentState.STA)]
@@ -147,7 +142,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -169,7 +164,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -193,7 +188,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -215,7 +210,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP
         [Platform(Include = "Win, Mono")]
 #endif
         [TestFixture]
@@ -240,4 +235,3 @@ namespace NUnit.Framework.Attributes
         }
     }
 }
-#endif

@@ -132,6 +132,13 @@ namespace NUnit.Framework.Constraints
 
             if (leftSignMask != rightSignMask) // Overflow possible, check each against zero
             {
+                // This check is specifically used to trap the case of 0 == -0
+                // In IEEE floating point maths, -0 is converted to Float.MinValue, which cannot be used with
+                // Math.Abs(...) below due to overflow issues. This should only match the 0 == -0 condition.
+                if (left == right)
+                {
+                    return true;
+                }
                 if (Math.Abs(leftUnion.Int) > maxUlps || Math.Abs(rightUnion.Int) > maxUlps)
                     return false;
             }
@@ -184,6 +191,13 @@ namespace NUnit.Framework.Constraints
 
             if (leftSignMask != rightSignMask) // Overflow possible, check each against zero
             {
+                // This check is specifically used to trap the case of 0 == -0
+                // In IEEE floating point maths, -0 is converted to Double.MinValue, which cannot be used with
+                // Math.Abs(...) below due to overflow issues. This should only match the 0 == -0 condition.
+                if (left == right)
+                {
+                    return true;
+                }
                 if (Math.Abs(leftUnion.Long) > maxUlps || Math.Abs(rightUnion.Long) > maxUlps)
                     return false;
             }

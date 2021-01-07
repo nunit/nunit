@@ -21,11 +21,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
 using System.Runtime.ExceptionServices;
 #endif
 using NUnit.Compatibility;
@@ -58,43 +61,32 @@ namespace NUnit.Framework.Internal
         #region Get Methods of a type
 
         /// <summary>
-        /// Examine a fixture type and return an array of methods having a
-        /// particular attribute. The array is order with base methods first.
+        /// Returns all methods declared by the specified fixture type that have the specified attribute, optionally
+        /// including base classes. Methods from a base class are always returned before methods from a class that
+        /// inherits from it.
         /// </summary>
-        /// <param name="fixtureType">The type to examine</param>
-        /// <param name="attributeType">The attribute Type to look for</param>
-        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain</param>
-        /// <returns>The array of methods found</returns>
+        /// <param name="fixtureType">The type to examine.</param>
+        /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
+        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
         public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
         {
-            List<MethodInfo> list = new List<MethodInfo>();
-
-            var flags = AllMembers | (inherit ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
-            foreach (MethodInfo method in fixtureType.GetMethods(flags))
+            if (!inherit)
             {
-                if (method.IsDefined(attributeType, inherit))
-                    list.Add(method);
+                return fixtureType
+                   .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
+                   .Where(method => method.IsDefined(attributeType, inherit: false))
+                   .ToArray();
             }
 
-            list.Sort(new BaseTypesFirstComparer());
+            var methodsByDeclaringType = fixtureType
+                .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
+                .Where(method => method.IsDefined(attributeType, inherit: true))
+                .ToLookup(method => method.DeclaringType);
 
-            return list.ToArray();
-        }
-
-        private class BaseTypesFirstComparer : IComparer<MethodInfo>
-        {
-            public int Compare(MethodInfo m1, MethodInfo m2)
-            {
-                if (m1 == null || m2 == null) return 0;
-
-                Type m1Type = m1.DeclaringType;
-                Type m2Type = m2.DeclaringType;
-
-                if (m1Type == m2Type) return 0;
-                if (m1Type.IsAssignableFrom(m2Type)) return -1;
-
-                return 1;
-            }
+            return fixtureType.TypeAndBaseTypes()
+                .Reverse()
+                .SelectMany(declaringType => methodsByDeclaringType[declaringType])
+                .ToArray();
         }
 
         /// <summary>
@@ -108,20 +100,8 @@ namespace NUnit.Framework.Internal
         {
             foreach (MethodInfo method in fixtureType.GetMethods(AllMembers | BindingFlags.FlattenHierarchy))
             {
-#if NETSTANDARD1_4
-                // For .NET Standard 1.x, MethodInfo.IsDefined resolves to an extension method,
-                // CustomAttributeExtensions.IsDefined, which delegates to Attribute.IsDefined.
-                // On .NET Core and .NET Framework, Attribute.IsDefined throws ArgumentException
-                // for types which aren’t assignable to System.Attribute (such as interface types).
-                foreach (var attributeData in method.CustomAttributes)
-                {
-                    if (attributeType.IsAssignableFrom(attributeData.AttributeType))
-                        return true;
-                }
-#else
                 if (method.IsDefined(attributeType, false))
                     return true;
-#endif
             }
             return false;
         }
@@ -150,11 +130,11 @@ namespace NUnit.Framework.Internal
         /// <param name="type">The Type to be constructed</param>
         /// <param name="arguments">Arguments to the constructor</param>
         /// <returns>An instance of the Type</returns>
-        public static object Construct(Type type, object[] arguments)
+        public static object Construct(Type type, object?[]? arguments)
         {
             if (arguments == null) return Construct(type);
 
-            Type[] argTypes = GetTypeArray(arguments);
+            Type?[] argTypes = GetTypeArray(arguments);
             ConstructorInfo ctor = GetConstructors(type, argTypes).FirstOrDefault();
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
@@ -167,11 +147,11 @@ namespace NUnit.Framework.Internal
         /// Differs from <see cref="M:System.Type.GetTypeArray(System.Object[])"/> by returning <see langword="null"/>
         /// for null elements rather than throwing <see cref="ArgumentNullException"/>.
         /// </summary>
-        internal static Type[] GetTypeArray(object[] objects)
+        internal static Type?[] GetTypeArray(object?[] objects)
         {
-            Type[] types = new Type[objects.Length];
+            Type?[] types = new Type?[objects.Length];
             int index = 0;
-            foreach (object o in objects)
+            foreach (object? o in objects)
             {
                 types[index++] = o?.GetType();
             }
@@ -181,7 +161,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the constructors to which the specified argument types can be coerced.
         /// </summary>
-        internal static IEnumerable<ConstructorInfo> GetConstructors(Type type, Type[] matchingTypes)
+        internal static IEnumerable<ConstructorInfo> GetConstructors(Type type, Type?[] matchingTypes)
         {
             return type
                 .GetConstructors()
@@ -191,7 +171,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Determines if the given types can be coerced to match the given parameters.
         /// </summary>
-        internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type[] ptypes)
+        internal static bool ParametersMatch(this ParameterInfo[] pinfos, Type?[] ptypes)
         {
             if (pinfos.Length != ptypes.Length)
                 return false;
@@ -220,14 +200,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Determines whether the current type can be implicitly converted to the specified type.
         /// </summary>
-        internal static bool CanImplicitlyConvertTo(this Type from, Type to)
+        internal static bool CanImplicitlyConvertTo(this Type? from, Type to)
         {
             if (to.IsAssignableFrom(from))
                 return true;
 
             // Look for the marker that indicates from was null
-            if (from == null && (to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable")))
-                return true;
+            if (from == null)
+            {
+                // Look for the marker that indicates from was null
+                return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable");
+            }
 
             if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
                 return true;
@@ -246,7 +229,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="method">A MethodInfo for the method to be invoked</param>
         /// <param name="fixture">The object on which to invoke the method</param>
-        public static object InvokeMethod(MethodInfo method, object fixture)
+        public static object? InvokeMethod(MethodInfo method, object? fixture)
         {
             return InvokeMethod(method, fixture, null);
         }
@@ -258,10 +241,10 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !(NET35 || NETSTANDARD1_4)
+#if !NET35
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
 #endif
-        public static object InvokeMethod(MethodInfo method, object fixture, params object[] args)
+        public static object? InvokeMethod(MethodInfo method, object? fixture, params object?[]? args)
         {
             if (method != null)
             {
@@ -295,27 +278,9 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-#if NETSTANDARD1_4
         /// <summary>
         /// <para>
-        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
-        /// rather than throwing <see cref="AmbiguousMatchException"/>
-        /// for properties that shadow properties of a different property type
-        /// which is what <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/> does.
-        /// </para>
-        /// <para>
-        /// If you request both public and nonpublic properties, every public property is preferred
-        /// over every nonpublic property. It would violate the principle of least surprise for a
-        /// derived class’s implementation detail to be chosen over the public API for a type.
-        /// </para>
-        /// </summary>
-        /// <param name="type">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-        /// <param name="name">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-        /// <param name="bindingFlags">See <see cref="TypeExtensions.GetProperty(Type, string, BindingFlags)"/>.</param>
-#else
-        /// <summary>
-        /// <para>
-        /// Selects the ultimate shadowing property just like <see langword="dynamic"/> would,
+        /// Selects the ultimate shadowing property just like <c>dynamic</c> would,
         /// rather than throwing <see cref="AmbiguousMatchException"/>
         /// for properties that shadow properties of a different property type
         /// which is what <see cref="Type.GetProperty(string, BindingFlags)"/> does.
@@ -329,8 +294,7 @@ namespace NUnit.Framework.Internal
         /// <param name="type">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         /// <param name="name">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
         /// <param name="bindingFlags">See <see cref="Type.GetProperty(string, BindingFlags)"/>.</param>
-#endif
-        public static PropertyInfo GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
+        public static PropertyInfo? GetUltimateShadowingProperty(Type type, string name, BindingFlags bindingFlags)
         {
             Guard.ArgumentNotNull(type, nameof(type));
             Guard.ArgumentNotNull(name, nameof(name));
@@ -388,21 +352,13 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#if NETSTANDARD1_4
-        internal static Type GetInterface(this Type type, string name)
-        {
-            return type.GetTypeInfo().ImplementedInterfaces
-                .SingleOrDefault(implementedInterface => implementedInterface.FullName == name);
-        }
-#endif
-
         /// <summary>
         /// Same as <c>GetMethod(<paramref name="name"/>, <see cref="BindingFlags.Public"/> |
         /// <see cref="BindingFlags.Instance"/>, <see langword="null"/>, <paramref name="parameterTypes"/>,
         /// <see langword="null"/>)</c> except that it also chooses only non-generic methods.
         /// Useful for avoiding the <see cref="AmbiguousMatchException"/> you can have with <c>GetMethod</c>.
         /// </summary>
-        internal static MethodInfo GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
+        internal static MethodInfo? GetNonGenericPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
         {
             foreach (var currentType in type.TypeAndBaseTypes())
             {
@@ -428,7 +384,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        internal static PropertyInfo GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
+        internal static PropertyInfo? GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
         {
             for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
             {
@@ -453,7 +409,7 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        internal static object InvokeWithTransparentExceptions(this MethodBase methodBase, object instance)
+        internal static object? InvokeWithTransparentExceptions(this MethodBase methodBase, object? instance)
         {
             // If we ever target .NET Core 2.1, we can keep from mucking with the exception stack trace
             // using BindingFlags.DoNotWrapExceptions rather than try…catch.
@@ -471,7 +427,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        internal static object DynamicInvokeWithTransparentExceptions(this Delegate @delegate)
+        internal static object? DynamicInvokeWithTransparentExceptions(this Delegate @delegate)
         {
             try
             {
@@ -484,6 +440,52 @@ namespace NUnit.Framework.Internal
                 // If this line is reached, ExceptionHelper.Rethrow is very broken.
                 throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
             }
+        }
+
+        internal static bool IsFSharpOption(this Type type, [NotNullWhen(true)] out Type? someType)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+
+            if (type.GetTypeInfo().IsGenericType
+                && type.GetGenericTypeDefinition().FullName == "Microsoft.FSharp.Core.FSharpOption`1")
+            {
+                someType = type.GetGenericArguments()[0];
+                return true;
+            }
+
+            someType = null;
+            return false;
+        }
+
+        internal static bool IsVoidOrUnit(Type type)
+        {
+            Guard.ArgumentNotNull(type, nameof(type));
+
+            return type == typeof(void) || type.FullName == "Microsoft.FSharp.Core.Unit";
+        }
+
+        /// <summary>
+        /// Returns the get accessor for the indexer.
+        /// </summary>
+        /// <param name="type">Type to reflect on for the indexer.</param>
+        /// <param name="indexerTypes">List of indexer types that matches the indexer type order.</param>
+        /// <returns>The Get accessor</returns>
+        public static MethodInfo? GetDefaultIndexer(Type type, Type[] indexerTypes)
+        {
+            const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+
+            var indexerName = GetIndexerName(type);
+            var indexer = type.GetProperty(indexerName, bindingFlags, null, null, indexerTypes, null);
+
+            return indexer?.GetGetMethod(true);
+        }
+
+        private static string GetIndexerName(Type type)
+        {
+            const string defaultFrameworkIndexerName = "Item";
+            var defaultMemberAttribute = type.GetAttributes<DefaultMemberAttribute>(true).FirstOrDefault();
+
+            return defaultMemberAttribute?.MemberName ?? defaultFrameworkIndexerName;
         }
     }
 }

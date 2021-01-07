@@ -29,6 +29,8 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
+using System;
+using System.Globalization;
 
 namespace NUnit.Framework.Attributes
 {
@@ -253,13 +255,42 @@ namespace NUnit.Framework.Attributes
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithIgnoredTestCases));
+            Assert.Multiple(() =>
+            {
+                Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
+                Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
 
-            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
-            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+                testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
+                Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+                Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
+            });
+        }
 
-            testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
+        [Test]
+        public void CanIgnoreIndividualTestCasesWithUntilDate()
+        {
+            TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
+                typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithIgnoredTestCases));
+
+            DateTimeOffset untilDate = DateTimeOffset.Parse("4242-01-01 00:00:00", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(string.Format("Ignoring until {0}. Ignore Me Until The Future", untilDate.ToString("u"))));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
+
+            untilDate = DateTimeOffset.Parse("1492-01-01", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(4)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
+
+            untilDate = DateTimeOffset.Parse("4242-01-01 12:42:33Z", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(5)", suite, false);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo(string.Format("Ignoring until {0}. Ignore Me Until The Future", untilDate.ToString("u"))));
+            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
         }
 
         [Test]

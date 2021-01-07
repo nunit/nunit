@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
+
+using System;
+using System.Collections;
 
 namespace NUnit.Framework.Internal.Filters
 {
@@ -106,7 +109,7 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void TestLotsOfNestedOrFilters()
+        public void TestLotsOfNestedNotFilters()
         {
             var filter = new NotFilter(
                 new NotFilter(
@@ -124,6 +127,56 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.False(filter.Match(_explicitFixture));
             Assert.False(filter.IsExplicitMatch(_explicitFixture));
+        }
+
+        [Test]
+        public void NotOrNotFilterTests()
+        {
+            var filter = new NotFilter(
+                new OrFilter(
+                    new NotFilter(
+                        new CategoryFilter("Dummy")),
+                    new MethodNameFilter("Test1")));
+
+            Assert.That(filter.Pass(_topLevelSuite));
+            Assert.False(filter.Match(_topLevelSuite));
+
+            Assert.That(filter.Pass(_fixtureWithMultipleTests));
+            Assert.False(filter.Match(_fixtureWithMultipleTests));
+
+            var test1 = _fixtureWithMultipleTests.Tests[0];
+            Assert.False(filter.Pass(test1));
+            Assert.False(filter.Match(test1));
+
+            var test2 = _fixtureWithMultipleTests.Tests[1];
+            Assert.That(filter.Pass(test2));
+            Assert.False(filter.IsExplicitMatch(test2));
+            Assert.That(filter.Match(test2));
+        }
+
+        [Test]
+        public void NotAndNotFilterTests()
+        {
+            var filter = new NotFilter(
+                new AndFilter(
+                    new NotFilter(
+                        new CategoryFilter("Dummy")),
+                    new MethodNameFilter("Test1")));
+
+            Assert.That(filter.Pass(_topLevelSuite));
+            Assert.That(filter.Match(_topLevelSuite));
+
+            Assert.That(filter.Pass(_fixtureWithMultipleTests));
+            Assert.That(filter.Match(_fixtureWithMultipleTests));
+
+            var test1 = _fixtureWithMultipleTests.Tests[0];
+            Assert.False(filter.Pass(test1));
+            Assert.False(filter.Match(test1));
+
+            var test2 = _fixtureWithMultipleTests.Tests[1];
+            Assert.That(filter.Pass(test2));
+            Assert.False(filter.IsExplicitMatch(test2));
+            Assert.That(filter.Match(test2));
         }
     }
 }

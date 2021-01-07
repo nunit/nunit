@@ -21,8 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.IO;
+using System.Linq;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
@@ -31,9 +32,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyDirectoryConstraint : Constraint
     {
-        private int files = 0;
-        private int subdirs = 0;
-
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
@@ -50,12 +48,14 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            DirectoryInfo dirInfo = actual as DirectoryInfo;
-            if (dirInfo == null)
-                throw new ArgumentException("The actual value must be a DirectoryInfo", nameof(actual));
-            files = dirInfo.GetFiles().Length;
-            subdirs = dirInfo.GetDirectories().Length;
-            bool hasSucceeded = files == 0 && subdirs == 0;
+            var dirInfo = ConstraintUtils.RequireActual<DirectoryInfo>(actual, nameof(actual));
+            bool hasSucceeded;
+
+#if !NET35
+            hasSucceeded = !dirInfo.EnumerateFileSystemInfos().Any();
+#else
+            hasSucceeded = !dirInfo.GetFileSystemInfos().Any();
+#endif
 
             return new ConstraintResult(this, actual, hasSucceeded);
         }

@@ -1,5 +1,4 @@
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
-#tool GitLink
+#tool NUnit.ConsoleRunner&version=3.10.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -33,14 +32,13 @@ var AllFrameworks = new string[]
     "net45",
     "net40",
     "net35",
-    "netstandard1.4",
     "netstandard2.0"
 };
 
 var NetCoreTests = new String[]
 {
-    "netcoreapp1.1",
-    "netcoreapp2.0"
+    "netcoreapp2.1",
+    "netcoreapp3.1"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -145,24 +143,23 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        MSBuild(SOLUTION_FILE, CreateSettings());
-
-        Information("Publishing netcoreapp1.1 tests so that dependencies are present...");
-
-        MSBuild("src/NUnitFramework/tests/nunit.framework.tests.csproj", CreateSettings()
-            .WithTarget("Publish")
-            .WithProperty("TargetFramework", "netcoreapp1.1")
-            .WithProperty("NoBuild", "true") // https://github.com/dotnet/cli/issues/5331#issuecomment-338392972
-            .WithProperty("PublishDir", BIN_DIR + "netcoreapp1.1/")
-            .WithRawArgument("/nologo"));
+        if(IsRunningOnWindows())
+            MSBuild(SOLUTION_FILE, CreateMsBuildSettings());
+        else
+            DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
     });
 
-MSBuildSettings CreateSettings()
+DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
+    new DotNetCoreBuildSettings
+    {
+        Configuration = configuration,
+        NoRestore = true,
+        Verbosity = DotNetCoreVerbosity.Minimal
+    };
+
+MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
-
-    // Only needed when packaging
-    settings.WithProperty("DebugType", "pdbonly");
 
     if (IsRunningOnWindows())
     {
@@ -207,10 +204,12 @@ Task("Test45")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test40")
     .Description("Tests the .NET 4.0 version of the framework")
+    .WithCriteria(IsRunningOnWindows())
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
@@ -219,6 +218,7 @@ Task("Test40")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
 Task("Test35")
@@ -231,31 +231,29 @@ Task("Test35")
         var dir = BIN_DIR + runtime + "/";
         RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        PublishTestResults(runtime);
     });
 
-Task("TestNetStandard14")
-    .Description("Tests the .NET Standard 1.4 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netcoreapp1.1";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-    });
+var testNetStandard20 = Task("TestNetStandard20")
+    .Description("Tests the .NET Standard 2.0 version of the framework");
 
-Task("TestNetStandard20")
-    .Description("Tests the .NET Standard 2.0 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "netcoreapp2.0";
-        var dir = BIN_DIR + runtime + "/";
-        RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-        RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
-    });
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net5.0-windows" })
+{
+    var task = Task("TestNetStandard20 on " + runtime)
+        .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
+        .WithCriteria(IsRunningOnWindows() || runtime != "net5.0-windows")
+        .IsDependentOn("Build")
+        .OnError(exception => { ErrorDetail.Add(exception.Message); })
+        .Does(() =>
+        {
+            var dir = BIN_DIR + runtime + "/";
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+            PublishTestResults(runtime);
+        });
+
+    testNetStandard20.IsDependentOn(task);
+}
 
 //////////////////////////////////////////////////////////////////////
 // PACKAGE
@@ -276,18 +274,15 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
-    "nunit.framework.pdb",
     "nunit.framework.xml",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
-    "nunitlite.pdb",
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
     "nunitlite-runner.dll",
-    "nunitlite-runner.pdb",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
     "Microsoft.Threading.Tasks.Extensions.dll",
@@ -335,17 +330,9 @@ Task("CreateImage")
         }
     });
 
-Task("GitLink")
-    .IsDependentOn("CreateImage")
-    .Description("Source-indexes PDBs in the images directory to the current commit")
-    .Does(() =>
-    {
-        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"));
-    });
-
 Task("PackageFramework")
     .Description("Creates NuGet packages of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -363,7 +350,7 @@ Task("PackageFramework")
 
 Task("PackageZip")
     .Description("Creates a ZIP file of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -378,6 +365,70 @@ Task("PackageZip")
             GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
             GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
+    });
+
+Task("CreateToolManifest")
+    .Does(() =>
+    {
+        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "new tool-manifest --force" });
+    });
+
+Task("InstallSigningTool")
+    .Description("Installs the signing tool")
+    .IsDependentOn("CreateToolManifest")
+    .Does(() =>
+    {
+        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "tool install SignClient" });
+    });
+
+Task("SignPackages")
+    .Description("Signs the NuGet packages")
+    .IsDependentOn("InstallSigningTool")
+    .IsDependentOn("PackageFramework")
+    .Does(() =>
+    {
+        // Get the secret.
+        var secret = EnvironmentVariable("SIGNING_SECRET");
+        if(string.IsNullOrWhiteSpace(secret)) {
+            throw new InvalidOperationException("Could not resolve signing secret.");
+        }
+
+        // Get the user.
+        var user = EnvironmentVariable("SIGNING_USER");
+        if(string.IsNullOrWhiteSpace(user)) {
+            throw new InvalidOperationException("Could not resolve signing user.");
+        }
+
+        var signClientPath = Context.Tools.Resolve("SignClient.exe") ?? Context.Tools.Resolve("SignClient") ?? throw new Exception("Failed to locate sign tool");
+
+        var settings = File("./signclient.json");
+
+        // Get the files to sign.
+        var files = GetFiles(string.Concat(PACKAGE_DIR, "*.nupkg"));
+
+        foreach(var file in files)
+        {
+            Information("Signing {0}...", file.FullPath);
+
+            // Build the argument list.
+            var arguments = new ProcessArgumentBuilder()
+                .Append("sign")
+                .AppendSwitchQuoted("-c", MakeAbsolute(settings.Path).FullPath)
+                .AppendSwitchQuoted("-i", MakeAbsolute(file).FullPath)
+                .AppendSwitchQuotedSecret("-s", secret)
+                .AppendSwitchQuotedSecret("-r", user)
+                .AppendSwitchQuoted("-n", "NUnit.org")
+                .AppendSwitchQuoted("-d", "NUnit is a unit-testing framework for all .NET languages.")
+                .AppendSwitchQuoted("-u", "https://nunit.org/");
+
+            // Sign the binary.
+            var result = StartProcess(signClientPath.FullPath, new ProcessSettings {  Arguments = arguments });
+            if(result != 0)
+            {
+                // We should not recover from this.
+                throw new InvalidOperationException("Signing failed!");
+            }
+        }
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -485,6 +536,9 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string frame
 
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
 {
+    if (!FileExists(exePath))
+        return;
+
     int rc = StartProcess(
         "dotnet",
         new ProcessSettings
@@ -501,6 +555,27 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string argum
         errorDetail.Add(string.Format("{0}: {1} tests failed", framework, rc));
     else if (rc < 0)
         errorDetail.Add(string.Format("{0} returned rc = {1}", exePath, rc));
+}
+
+void PublishTestResults(string framework)
+{
+    if (EnvironmentVariable("TF_BUILD", false))
+    {
+        var fullTestRunTitle = framework;
+        var ciRunName = Argument<string>("test-run-name");
+        if (!string.IsNullOrEmpty(ciRunName))
+            fullTestRunTitle += '/' + ciRunName;
+
+        AzurePipelines.Commands.PublishTestResults(new AzurePipelinesPublishTestResultsData
+        {
+            TestResultsFiles = GetFiles($@"test-results\{framework}\*.xml").ToList(),
+            TestRunTitle = fullTestRunTitle,
+            TestRunner = AzurePipelinesTestRunnerType.NUnit,
+            MergeTestResults = true,
+            PublishRunAttachments = true,
+            Configuration = configuration
+        });
+    }
 }
 
 public static T WithRawArgument<T>(this T settings, string rawArgument) where T : Cake.Core.Tooling.ToolSettings
@@ -534,7 +609,6 @@ Task("Test")
     .IsDependentOn("Test45")
     .IsDependentOn("Test40")
     .IsDependentOn("Test35")
-    .IsDependentOn("TestNetStandard14")
     .IsDependentOn("TestNetStandard20");
 
 Task("Package")

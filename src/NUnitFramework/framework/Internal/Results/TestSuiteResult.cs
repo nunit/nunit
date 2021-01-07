@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,11 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-#if PARALLEL
 using System.Collections.Concurrent;
-#endif
 using NUnit.Framework.Interfaces;
 using System.Threading;
 
@@ -41,11 +41,8 @@ namespace NUnit.Framework.Internal
         private int _warningCount = 0;
         private int _skipCount = 0;
         private int _inconclusiveCount = 0;
-#if PARALLEL
+        private int _totalCount = 0;
         private readonly ConcurrentQueue<ITestResult> _children = new ConcurrentQueue<ITestResult>();
-#else
-        private readonly List<ITestResult> _children = new List<ITestResult>();
-#endif
 
         /// <summary>
         /// Construct a TestSuiteResult base on a TestSuite
@@ -55,7 +52,29 @@ namespace NUnit.Framework.Internal
         {
         }
 
-#region Overrides
+        #region Overrides
+
+
+        /// <summary>
+        /// Gets the number of test cases that executed
+        /// when running the test and all its children.
+        /// </summary>
+        public override int TotalCount
+        {
+            get
+            {
+                RwLock.EnterReadLock();
+                try
+                {
+                    return _totalCount;
+                }
+                finally
+                {
+                    RwLock.ExitReadLock();
+                }
+            }
+        }
+
 
         /// <summary>
         /// Gets the number of test cases that failed
@@ -65,18 +84,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _failCount;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
         }
@@ -89,18 +104,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _passCount;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
         }
@@ -113,18 +124,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _warningCount;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
         }
@@ -137,20 +144,16 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _skipCount;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
-           }
+            }
         }
 
         /// <summary>
@@ -161,18 +164,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 RwLock.EnterReadLock();
-#endif
                 try
                 {
                     return _inconclusiveCount;
                 }
                 finally
                 {
-#if PARALLEL
                     RwLock.ExitReadLock();
-#endif
                 }
             }
         }
@@ -184,11 +183,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-#if PARALLEL
                 return !_children.IsEmpty;
-#else
-                return _children.Count != 0;
-#endif
             }
         }
 
@@ -211,7 +206,6 @@ namespace NUnit.Framework.Internal
         /// <param name="result">The result to be added</param>
         public virtual void AddResult(ITestResult result)
         {
-#if PARALLEL
             _children.Enqueue(result);
             RwLock.EnterWriteLock();
             try
@@ -222,10 +216,6 @@ namespace NUnit.Framework.Internal
             {
                 RwLock.ExitWriteLock();
             }
-#else
-            _children.Add(result);
-            MergeChildResult(result);
-#endif
         }
 
         private void MergeChildResult(ITestResult childResult)
@@ -240,6 +230,7 @@ namespace NUnit.Framework.Internal
             _warningCount += childResult.WarningCount;
             _skipCount += childResult.SkipCount;
             _inconclusiveCount += childResult.InconclusiveCount;
+            _totalCount += childResult.PassCount + childResult.FailCount + childResult.SkipCount + childResult.InconclusiveCount + childResult.WarningCount;
         }
 
         private void UpdateResultState(ResultState childResultState)
@@ -257,7 +248,9 @@ namespace NUnit.Framework.Internal
                     break;
 
                 case TestStatus.Failed:
-                    if (ResultState.Status != TestStatus.Failed)
+                    if (childResultState.Label == "Cancelled")
+                        SetResult(ResultState.Cancelled, USER_CANCELLED_MESSAGE);
+                    else if (ResultState.Status != TestStatus.Failed)
                         SetResult(ResultState.ChildFailure, CHILD_ERRORS_MESSAGE);
                     break;
 

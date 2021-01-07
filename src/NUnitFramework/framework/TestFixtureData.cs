@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -42,8 +43,8 @@ namespace NUnit.Framework
         /// Initializes a new instance of the <see cref="TestFixtureData"/> class.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        public TestFixtureData(params object[] args)
-            : base(args == null ? new object[] { null } : args)
+        public TestFixtureData(params object?[]? args)
+            : base(args == null ? new object?[] { null } : args)
         {
         }
 
@@ -51,8 +52,8 @@ namespace NUnit.Framework
         /// Initializes a new instance of the <see cref="TestFixtureData"/> class.
         /// </summary>
         /// <param name="arg">The argument.</param>
-        public TestFixtureData(object arg)
-            : base(new object[] { arg })
+        public TestFixtureData(object? arg)
+            : base(new object?[] { arg })
         {
         }
 
@@ -61,8 +62,8 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
-        public TestFixtureData(object arg1, object arg2)
-            : base(new object[] { arg1, arg2 })
+        public TestFixtureData(object? arg1, object? arg2)
+            : base(new object?[] { arg1, arg2 })
         {
         }
 
@@ -72,8 +73,8 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
-        public TestFixtureData(object arg1, object arg2, object arg3)
-            : base( new object[] { arg1, arg2, arg3 })
+        public TestFixtureData(object? arg1, object? arg2, object? arg3)
+            : base(new object?[] { arg1, arg2, arg3 })
         {
         }
 
@@ -85,7 +86,7 @@ namespace NUnit.Framework
         /// Sets the name of the test fixture
         /// </summary>
         /// <returns>The modified TestFixtureData instance</returns>
-        internal TestFixtureData SetName(string name)
+        internal TestFixtureData SetName(string? name)
         {
             TestName = name;
             return this;
@@ -94,7 +95,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Sets the list of display names to use as the parameters in the test name.
         /// </summary>
-        public TestFixtureData SetArgDisplayNames(params string[] displayNames)
+        public TestFixtureData SetArgDisplayNames(params string[]? displayNames)
         {
             ArgDisplayNames = displayNames;
             return this;

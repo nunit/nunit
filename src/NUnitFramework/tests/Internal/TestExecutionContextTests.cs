@@ -50,11 +50,9 @@ namespace NUnit.Framework.Internal
 
         string originalDirectory;
 
-#if !NETCOREAPP1_1
         CultureInfo originalCulture;
         CultureInfo originalUICulture;
         IPrincipal originalPrincipal;
-#endif
 
         readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
         readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
@@ -87,11 +85,9 @@ namespace NUnit.Framework.Internal
 
             originalDirectory = Directory.GetCurrentDirectory();
 
-#if !NETCOREAPP1_1
             originalCulture = CultureInfo.CurrentCulture;
             originalUICulture = CultureInfo.CurrentUICulture;
             originalPrincipal = Thread.CurrentPrincipal;
-#endif
         }
 
         [TearDown]
@@ -99,11 +95,9 @@ namespace NUnit.Framework.Internal
         {
             Directory.SetCurrentDirectory(originalDirectory);
 
-#if !NETCOREAPP1_1
             Thread.CurrentThread.CurrentCulture = originalCulture;
             Thread.CurrentThread.CurrentUICulture = originalUICulture;
             Thread.CurrentPrincipal = originalPrincipal;
-#endif
 
             Assert.That(
                 TestExecutionContext.CurrentContext.CurrentTest.FullName,
@@ -317,7 +311,6 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#if PARALLEL
         [Test]
         public void TestHasWorkerWhenParallel()
         {
@@ -325,7 +318,6 @@ namespace NUnit.Framework.Internal
             var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
             Assert.That(worker != null || !isRunningUnderTestWorker);
         }
-#endif
 
 #endregion
 
@@ -591,7 +583,6 @@ namespace NUnit.Framework.Internal
 
 #region TestWorker
 
-#if PARALLEL
         [Test]
         public void CanAccessTestWorker()
         {
@@ -612,7 +603,6 @@ namespace NUnit.Framework.Internal
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(worker));
         }
-#endif
 #endif
 
 #endregion
@@ -744,7 +734,6 @@ namespace NUnit.Framework.Internal
 
 #region CurrentCulture and CurrentUICulture
 
-#if !NETCOREAPP1_1
         [Test]
         public void CanAccessCurrentCulture()
         {
@@ -824,13 +813,11 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(CultureInfo.CurrentUICulture, originalUICulture, "UICulture was not restored");
             Assert.AreEqual(_setupContext.CurrentUICulture, originalUICulture, "UICulture not in final context");
         }
-#endif
 
 #endregion
 
 #region CurrentPrincipal
 
-#if !NETCOREAPP1_1
         [Test]
         public void CanAccessCurrentPrincipal()
         {
@@ -872,7 +859,6 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(Thread.CurrentPrincipal, originalPrincipal, "Principal was not restored");
             Assert.AreEqual(_setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
         }
-#endif
 
 #endregion
 

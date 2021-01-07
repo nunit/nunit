@@ -1,5 +1,5 @@
-﻿// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
+// ***********************************************************************
+// Copyright (c) 2008–2019 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,69 +21,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 namespace NUnit.Framework.Internal.Builders
 {
-    class ProviderCache
+    internal sealed class ProviderCache
     {
-        private static readonly Dictionary<CacheEntry, object> instances = new Dictionary<CacheEntry, object>();
+        private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
 
-        public static object GetInstanceOf(Type providerType)
+        public object GetInstanceOf(Type providerType)
         {
             return GetInstanceOf(providerType, null);
         }
 
-        public static object GetInstanceOf(Type providerType, object[] providerArgs)
+        public object GetInstanceOf(Type providerType, object[]? providerArgs)
         {
-            CacheEntry entry = new CacheEntry(providerType, providerArgs);
-
-            object instance = instances.ContainsKey(entry)
-                ?instances[entry]
-                : null;
-
-            if (instance == null)
-                instances[entry] = instance = Reflect.Construct(providerType, providerArgs);
+            if (!_instances.TryGetValue(providerType, out var instance))
+                _instances.Add(providerType, instance = Reflect.Construct(providerType, providerArgs));
 
             return instance;
-        }
-
-        public static void Clear()
-        {
-            foreach (CacheEntry key in instances.Keys)
-            {
-                IDisposable provider = instances[key] as IDisposable;
-                if (provider != null)
-                    provider.Dispose();
-            }
-
-            instances.Clear();
-        }
-
-        class CacheEntry
-        {
-            private readonly Type providerType;
-
-            public CacheEntry(Type providerType, object[] providerArgs)
-            {
-                this.providerType = providerType;
-            }
-
-            public override bool Equals(object obj)
-            {
-                CacheEntry other = obj as CacheEntry;
-                if (other == null) return false;
-
-                return this.providerType == other.providerType;
-            }
-
-            public override int GetHashCode()
-            {
-                return providerType.GetHashCode();
-            }
         }
     }
 }

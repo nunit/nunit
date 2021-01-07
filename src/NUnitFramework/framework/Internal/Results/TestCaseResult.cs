@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
@@ -46,6 +48,15 @@ namespace NUnit.Framework.Internal
         public override int FailCount
         {
             get { return ResultState.Status == TestStatus.Failed ? 1 : 0; }
+        }
+
+        /// <summary>
+        /// Gets the number of test cases that executed
+        /// when running the test and all its children.
+        /// </summary>
+        public override int TotalCount
+        {
+            get { return 1; }
         }
 
         /// <summary>

@@ -21,10 +21,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -301,11 +302,11 @@ namespace NUnit.Framework.Internal.Builders
         /// </remarks>
         internal class PairwiseTestCaseGenerator
         {
-            private FleaRand _prng;
+            private FleaRand? _prng;
 
-            private int[] _dimensions;
+            private int[]? _dimensions;
 
-            private List<FeatureTuple>[][] _uncoveredTuples;
+            private List<FeatureTuple>[][]? _uncoveredTuples;
 
             /// <summary>
             /// Creates a set of test cases for specified dimensions.
@@ -328,7 +329,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 while ( true )
                 {
-                    FeatureTuple tuple = GetNextTuple();
+                    FeatureTuple? tuple = GetNextTuple();
 
                     if ( tuple == null )
                     {
@@ -351,12 +352,12 @@ namespace NUnit.Framework.Internal.Builders
 
             private int GetNextRandomNumber()
             {
-                return (int)( _prng.Next() >> 1 );
+                return (int)( _prng!.Next() >> 1 );
             }
 
             private void CreateAllTuples()
             {
-                _uncoveredTuples = new List<FeatureTuple>[_dimensions.Length][];
+                _uncoveredTuples = new List<FeatureTuple>[_dimensions!.Length][];
 
                 for ( int d = 0; d < _dimensions.Length; d++ )
                 {
@@ -375,7 +376,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 result.Add( new FeatureTuple( new FeatureInfo( dimension, feature ) ) );
 
-                for ( int d = 0; d < _dimensions.Length; d++ )
+                for ( int d = 0; d < _dimensions!.Length; d++ )
                 {
                     if ( d != dimension )
                     {
@@ -389,9 +390,9 @@ namespace NUnit.Framework.Internal.Builders
                 return result;
             }
 
-            private FeatureTuple GetNextTuple()
+            private FeatureTuple? GetNextTuple()
             {
-                for ( int d = 0; d < _uncoveredTuples.Length; d++ )
+                for ( int d = 0; d < _uncoveredTuples!.Length; d++ )
                 {
                     for ( int f = 0; f < _uncoveredTuples[d].Length; f++ )
                     {
@@ -411,7 +412,7 @@ namespace NUnit.Framework.Internal.Builders
 
             private TestCaseInfo CreateTestCase( FeatureTuple tuple )
             {
-                TestCaseInfo bestTestCase = null;
+                TestCaseInfo? bestTestCase = null;
                 int bestCoverage = -1;
 
                 for ( int i = 0; i < 7; i++ )
@@ -427,12 +428,12 @@ namespace NUnit.Framework.Internal.Builders
                     }
                 }
 
-                return bestTestCase;
+                return bestTestCase!;
             }
 
             private TestCaseInfo CreateRandomTestCase( FeatureTuple tuple )
             {
-                TestCaseInfo result = new TestCaseInfo( _dimensions.Length );
+                TestCaseInfo result = new TestCaseInfo( _dimensions!.Length );
 
                 for ( int d = 0; d < _dimensions.Length; d++ )
                 {
@@ -486,7 +487,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 List<int> result = new List<int>();
 
-                bool[] immutableDimensions = new bool[_dimensions.Length];
+                bool[] immutableDimensions = new bool[_dimensions!.Length];
 
                 for ( int i = 0; i < tuple.Length; i++ )
                 {
@@ -517,7 +518,7 @@ namespace NUnit.Framework.Internal.Builders
 
             private int MaximizeCoverageForDimension( TestCaseInfo testCase, int dimension, int bestCoverage )
             {
-                List<int> bestFeatures = new List<int>( _dimensions[dimension] );
+                List<int> bestFeatures = new List<int>( _dimensions![dimension] );
 
                 for ( int f = 0; f < _dimensions[dimension]; f++ )
                 {
@@ -546,7 +547,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 int result = 0;
 
-                List<FeatureTuple> tuples = _uncoveredTuples[dimension][feature];
+                List<FeatureTuple> tuples = _uncoveredTuples![dimension][feature];
 
                 for ( int i = 0; i < tuples.Count; i++ )
                 {
@@ -561,7 +562,7 @@ namespace NUnit.Framework.Internal.Builders
 
             private void RemoveTuplesCoveredByTest( TestCaseInfo testCase )
             {
-                for ( int d = 0; d < _uncoveredTuples.Length; d++ )
+                for ( int d = 0; d < _uncoveredTuples!.Length; d++ )
                 {
                     for ( int f = 0; f < _uncoveredTuples[d].Length; f++ )
                     {
@@ -581,7 +582,7 @@ namespace NUnit.Framework.Internal.Builders
 #if DEBUG
             private void SelfTest( List<TestCaseInfo> testCases )
             {
-                for ( int d1 = 0; d1 < _dimensions.Length - 1; d1++ )
+                for ( int d1 = 0; d1 < _dimensions!.Length - 1; d1++ )
                 {
                     for ( int d2 = d1 + 1; d2 < _dimensions.Length; d2++ )
                     {
@@ -625,14 +626,14 @@ namespace NUnit.Framework.Internal.Builders
         public IEnumerable<ITestCaseData> GetTestCases(IEnumerable[] sources)
         {
             List<ITestCaseData> testCases = new List<ITestCaseData>();
-            List<object>[] valueSet = CreateValueSet(sources);
+            List<object?>[] valueSet = CreateValueSet(sources);
             int[] dimensions = CreateDimensions(valueSet);
 
             IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator().GetTestCases( dimensions );
 
             foreach (TestCaseInfo pairwiseTestCase in pairwiseTestCases)
             {
-                object[] testData = new object[pairwiseTestCase.Features.Length];
+                object?[] testData = new object?[pairwiseTestCase.Features.Length];
 
                 for (int i = 0; i < pairwiseTestCase.Features.Length; i++)
                 {
@@ -646,15 +647,15 @@ namespace NUnit.Framework.Internal.Builders
             return testCases;
         }
 
-        private List<object>[] CreateValueSet(IEnumerable[] sources)
+        private List<object?>[] CreateValueSet(IEnumerable[] sources)
         {
-            var valueSet = new List<object>[sources.Length];
+            var valueSet = new List<object?>[sources.Length];
 
             for (int i = 0; i < valueSet.Length; i++)
             {
-                var values = new List<object>();
+                var values = new List<object?>();
 
-                foreach (object value in sources[i])
+                foreach (object? value in sources[i])
                 {
                     values.Add(value);
                 }
@@ -665,7 +666,7 @@ namespace NUnit.Framework.Internal.Builders
             return valueSet;
         }
 
-        private int[] CreateDimensions(List<object>[] valueSet)
+        private int[] CreateDimensions(List<object?>[] valueSet)
         {
             int[] dimensions = new int[valueSet.Length];
 

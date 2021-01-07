@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.ComponentModel;
@@ -55,19 +57,18 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Converts an array of objects to the <paramref name="targetType"/>, if it is supported.
         /// </summary>
-        public static IEnumerable ConvertData(object[] data, Type targetType)
+        public static IEnumerable ConvertData(object?[] data, Type targetType)
         {
             Guard.ArgumentNotNull(data, nameof(data));
             Guard.ArgumentNotNull(targetType, nameof(targetType));           
             return GetData(data, targetType);
         }
 
-        private static IEnumerable GetData(object[] data, Type targetType)
+        private static IEnumerable GetData(object?[] data, Type targetType)
         {
             for (int i = 0; i < data.Length; i++)
             {
-                object convertedValue;
-                if (TryConvert(data[i], targetType, out convertedValue))
+                if (TryConvert(data[i], targetType, out var convertedValue))
                     data[i] = convertedValue;
             }
 
@@ -77,10 +78,9 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Converts a single value to the <paramref name="targetType"/>, if it is supported.
         /// </summary>
-        public static object Convert(object value, Type targetType)
+        public static object? Convert(object? value, Type targetType)
         {
-            object convertedValue;
-            if (TryConvert(value, targetType, out convertedValue))
+            if (TryConvert(value, targetType, out var convertedValue))
                 return convertedValue;
 
             throw new InvalidOperationException(
@@ -97,10 +97,10 @@ namespace NUnit.Framework.Internal
         /// <param name="targetType">The target <see cref="Type"/> in which the <paramref name="value"/> should be converted</param>
         /// <param name="convertedValue">If conversion was successfully applied, the <paramref name="value"/> converted into <paramref name="targetType"/></param>
         /// <returns>
-        /// <c>true</c> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
-        /// <c>false</c> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
+        /// <see langword="true"/> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
+        /// <see langword="false"/> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
         /// </returns>
-        public static bool TryConvert(object value, Type targetType, out object convertedValue)
+        public static bool TryConvert(object? value, Type targetType, out object? convertedValue)
         {
             if (targetType.IsInstanceOfType(value))
             {

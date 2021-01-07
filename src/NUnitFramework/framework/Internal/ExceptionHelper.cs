@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Globalization;
@@ -73,7 +75,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Builds up a message, using the Message field of the specified exception
-        /// as well as any InnerExceptions. Optionally excludes exception names, 
+        /// as well as any InnerExceptions. Optionally excludes exception names,
         /// creating a more readable message.
         /// </summary>
         /// <param name="exception">The exception.</param>
@@ -110,7 +112,7 @@ namespace NUnit.Framework.Internal
         /// <returns>A combined stack trace.</returns>
         public static string BuildStackTrace(Exception exception)
         {
-            StringBuilder sb = new StringBuilder(GetSafeStackTrace(exception));
+            StringBuilder sb = new StringBuilder(exception.GetStackTraceWithoutThrowing());
 
             foreach (Exception inner in FlattenExceptionHierarchy(exception))
             {
@@ -118,33 +120,17 @@ namespace NUnit.Framework.Internal
                 sb.Append("--");
                 sb.Append(inner.GetType().Name);
                 sb.Append(Environment.NewLine);
-                sb.Append(GetSafeStackTrace(inner));
+                sb.Append(inner.GetStackTraceWithoutThrowing());
             }
 
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Gets the stack trace of the exception. If no stack trace
-        /// is provided, returns "No stack trace available".
-        /// </summary>
-        /// <param name="exception">The exception.</param>
-        /// <returns>A string representation of the stack trace.</returns>
-        private static string GetSafeStackTrace(Exception exception)
-        {
-            try
-            {
-                return exception.StackTrace;
-            }
-            catch (Exception)
-            {
-                return "No stack trace available";
-            }
-        }
-
         private static string GetExceptionMessage(Exception ex)
         {
-            if (string.IsNullOrEmpty(ex.Message))
+            var message = ex.GetMessageWithoutThrowing();
+
+            if (string.IsNullOrEmpty(message))
             {
                 // Special handling for Mono 5.0, which returns an empty message
                 var fnfEx = ex as System.IO.FileNotFoundException;
@@ -153,22 +139,27 @@ namespace NUnit.Framework.Internal
                     : "No message provided";
             }
 
-            return ex.Message;
+            return message;
         }
 
         private static void AppendExceptionDataContents(Exception ex, StringBuilder sb)
         {
-            if (ex.Data.Count == 0)
-            {
-                return;
-            }
+            var data = ex.GetDataWithoutThrowing();
 
-            sb.AppendLine();
-            sb.AppendLine("Data:");
-            foreach (DictionaryEntry kvp in ex.Data)
+            if (data.IsError(out var message))
             {
-                sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
                 sb.AppendLine();
+                sb.Append(message);
+            }
+            else if (data.Value.Count != 0)
+            {
+                sb.AppendLine();
+                sb.Append("Data:");
+                foreach (DictionaryEntry kvp in data.Value)
+                {
+                    sb.AppendLine();
+                    sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                }
             }
         }
 
@@ -176,18 +167,16 @@ namespace NUnit.Framework.Internal
         {
             var result = new List<Exception>();
 
-            if (exception is ReflectionTypeLoadException)
+            if (exception is ReflectionTypeLoadException reflectionException)
             {
-                var reflectionException = exception as ReflectionTypeLoadException;
                 result.AddRange(reflectionException.LoaderExceptions);
 
                 foreach (var innerException in reflectionException.LoaderExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
 #if TASK_PARALLEL_LIBRARY_API
-            if (exception is AggregateException)
+            if (exception is AggregateException aggregateException)
             {
-                var aggregateException = (exception as AggregateException);
                 result.AddRange(aggregateException.InnerExceptions);
 
                 foreach (var innerException in aggregateException.InnerExceptions)
@@ -207,14 +196,14 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Executes a parameterless synchronous or async delegate and returns the exception it throws, if any.
         /// </summary>
-        internal static Exception RecordException(Delegate parameterlessDelegate, string parameterName)
+        internal static Exception? RecordException(Delegate parameterlessDelegate, string parameterName)
         {
             Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
 
             Guard.ArgumentValid(
-                parameterlessDelegate.GetMethodInfo().GetParameters().Length == 0,
+                parameterlessDelegate.GetType().GetMethod("Invoke").GetParameters().Length == 0,
                 $"The actual value must be a parameterless delegate but was {parameterlessDelegate.GetType().Name}.",
-                nameof(parameterName));
+                parameterName);
 
             Guard.ArgumentNotAsyncVoid(parameterlessDelegate, parameterName);
 

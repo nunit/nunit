@@ -28,7 +28,7 @@ using System.Reflection;
 //
 [assembly: AssemblyCompany("NUnit Software")]
 [assembly: AssemblyProduct("NUnit 3")]
-[assembly: AssemblyCopyright("Copyright (c) 2019 Charlie Poole, Rob Prouse")]
+[assembly: AssemblyCopyright("Copyright (c) 2021 Charlie Poole, Rob Prouse")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
 #if DEBUG
@@ -38,14 +38,14 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 4.0 Debug")]
 #elif NET35
 [assembly: AssemblyConfiguration(".NET Framework 3.5 Debug")]
-#elif NETSTANDARD1_4
-[assembly: AssemblyConfiguration(".NET Standard 1.4 Debug")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
-#elif NETCOREAPP1_1
-[assembly: AssemblyConfiguration(".NET Core 1.1 Debug")]
-#elif NETCOREAPP2_0
-[assembly: AssemblyConfiguration(".NET Core 2.0 Debug")]
+#elif NETCOREAPP2_1
+[assembly: AssemblyConfiguration(".NET Core 2.1 Debug")]
+#elif NETCOREAPP3_1
+[assembly: AssemblyConfiguration(".NET Core 3.1 Debug")]
+#elif NET5_0
+[assembly: AssemblyConfiguration(".NET 5.0 Debug")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
@@ -56,14 +56,14 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 4.0")]
 #elif NET35
 [assembly: AssemblyConfiguration(".NET Framework 3.5")]
-#elif NETSTANDARD1_4
-[assembly: AssemblyConfiguration(".NET Standard 1.4")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0")]
-#elif NETCOREAPP1_1
-[assembly: AssemblyConfiguration(".NET Core 1.1")]
-#elif NETCOREAPP2_0
-[assembly: AssemblyConfiguration(".NET Core 2.0")]
+#elif NETCOREAPP2_1
+[assembly: AssemblyConfiguration(".NET Core 2.1")]
+#elif NETCOREAPP3_1
+[assembly: AssemblyConfiguration(".NET Core 3.1")]
+#elif NET5_0
+[assembly: AssemblyConfiguration(".NET 5.0")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif

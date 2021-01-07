@@ -76,11 +76,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
-#if NETSTANDARD1_4
-            log.Debug("Loading {0}", assembly.FullName);
-#else
             log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
-#endif
 
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
             string suiteName = assemblyPath.Equals("<Unknown>")
@@ -100,11 +96,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyNameOrPath, IDictionary<string, object> options)
         {
-#if NETSTANDARD1_4
-            log.Debug("Loading {0}", assemblyNameOrPath);
-#else
             log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
-#endif
 
             TestSuite testAssembly = null;
 
@@ -266,10 +258,13 @@ namespace NUnit.Framework.Api
 
             testAssembly.ApplyAttributesToTest(assembly);
 
-#if !NETSTANDARD1_4
-            testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+            try
+            {
+                testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+            }
+            catch (PlatformNotSupportedException)
+            { }
             testAssembly.Properties.Set(PropertyNames.AppDomain, AppDomain.CurrentDomain.FriendlyName);
-#endif
 
             // TODO: Make this an option? Add Option to sort assemblies as well?
             testAssembly.Sort();

@@ -21,7 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if APARTMENT_STATE
+#nullable enable
+
 using System;
 using System.Threading;
 using NUnit.Framework.Internal;
@@ -46,4 +47,3 @@ namespace NUnit.Framework
         }
     }
 }
-#endif

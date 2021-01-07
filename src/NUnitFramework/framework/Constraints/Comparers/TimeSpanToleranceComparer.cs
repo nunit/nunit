@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal sealed class TimeSpanToleranceComparer : IChainComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, bool topLevelComparison = true)
+        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             if (tolerance == null || !(tolerance.Amount is TimeSpan))
                 return null;
