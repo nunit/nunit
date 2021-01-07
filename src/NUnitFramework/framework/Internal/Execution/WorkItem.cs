@@ -369,8 +369,8 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="methodValidator">Method validator used before each method execution.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
         protected List<SetUpTearDownItem> BuildSetUpTearDownList(
-            MethodInfo[] setUpMethods, 
-            MethodInfo[] tearDownMethods,
+            IMethodInfo[] setUpMethods, 
+            IMethodInfo[] tearDownMethods,
             IMethodValidator methodValidator = null)
         {
             Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
@@ -408,8 +408,8 @@ namespace NUnit.Framework.Internal.Execution
         // adding each method to the appropriate level as we go.
         private static SetUpTearDownItem BuildNode(
             Type fixtureType, 
-            IList<MethodInfo> setUpMethods, 
-            IList<MethodInfo> tearDownMethods,
+            IList<IMethodInfo> setUpMethods, 
+            IList<IMethodInfo> tearDownMethods,
             IMethodValidator methodValidator)
         {
             // Create lists of methods for this level only.
@@ -421,12 +421,12 @@ namespace NUnit.Framework.Internal.Execution
             return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods, methodValidator);
         }
 
-        private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
+        private static List<IMethodInfo> SelectMethodsByDeclaringType(Type type, IList<IMethodInfo> methods)
         {
-            var list = new List<MethodInfo>();
+            var list = new List<IMethodInfo>();
 
             foreach (var method in methods)
-                if (method.DeclaringType == type)
+                if (method.TypeInfo.Type == type)
                     list.Add(method);
 
             return list;

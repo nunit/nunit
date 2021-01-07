@@ -36,13 +36,13 @@ namespace NUnit.Framework.Internal
     {
         private AsyncSetupTearDownFixture _testObject;
         private TestExecutionContext _context;
-        private static readonly IList<MethodInfo> Empty = new MethodInfo[0];
+        private static readonly IList<IMethodInfo> Empty = new IMethodInfo[0];
 
         [SetUp]
         public void Setup()
         {
             _testObject = new AsyncSetupTearDownFixture();
-            var method = new MethodWrapper(typeof(AsyncSetupTearDownFixture), Success.ElementAt(0));
+            var method = Success.ElementAt(0);
             _context = new TestExecutionContext { TestObject = _testObject, CurrentResult = new TestCaseResult(new TestMethod(method)) };
         }
 
@@ -94,18 +94,18 @@ namespace NUnit.Framework.Internal
             Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Error));
         }
 
-        private IEnumerable<MethodInfo> Success
+        private IEnumerable<IMethodInfo> Success
         {
             get { yield return Method("SuccessfulAsyncMethod"); }
         }
-        private IEnumerable<MethodInfo> Failure
+        private IEnumerable<IMethodInfo> Failure
         {
             get { yield return Method("FailingAsyncMethod"); }
         }
 
-        private MethodInfo Method(string methodName)
+        private IMethodInfo Method(string methodName)
         {
-            return _testObject.GetType().GetMethod(methodName);
+            return new MethodWrapper(_testObject.GetType(), _testObject.GetType().GetMethod(methodName));
         }
     }
 }
