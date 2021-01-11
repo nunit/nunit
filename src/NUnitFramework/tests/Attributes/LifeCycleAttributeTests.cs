@@ -104,6 +104,52 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
+        public void InstancePerTestCaseShouldApplyToTestFixtureSourceTests()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithTestFixtureSourceFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+
+#if NETFRAMEWORK
+        [Test]
+        public void AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
+        {
+            var code = @"
+                using NUnit.Framework;
+
+                [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+
+                [TestFixture]
+                public class AssemblyLevelFixtureLifeCycleTest
+                {
+                    private int _value;
+
+                    [Test]
+                    public void Test1()
+                    {
+                        Assert.AreEqual(0, _value++);
+                    }
+
+                    [Test]
+                    public void Test2()
+                    {
+                        Assert.AreEqual(0, _value++);
+                    }
+                }
+                ";
+
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(code, new[] { typeof(Test).Assembly.Location });
+            var testType = asm.GetType("AssemblyLevelFixtureLifeCycleTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+#endif
+
+        [Test]
         public void InstancePerTestCaseWithRepeatShouldWorkAsExpected()
         {
             RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter = 0;

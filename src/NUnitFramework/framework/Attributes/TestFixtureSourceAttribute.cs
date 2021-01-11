@@ -126,10 +126,14 @@ namespace NUnit.Framework
 
             var fixtureSuite = new ParameterizedFixtureSuite(typeInfo);
             fixtureSuite.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+            var assemblyLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly);
+            var typeLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo());
 
             foreach (ITestFixtureData parms in GetParametersFor(sourceType))
             {
                 TestSuite fixture = _builder.BuildFrom(typeInfo, filter, parms);
+                fixture.ApplyAttributesToTest(assemblyLifeCycleAttributeProvider);
+                fixture.ApplyAttributesToTest(typeLifeCycleAttributeProvider);
                 fixtureSuite.Add(fixture);
             }
 
