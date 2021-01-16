@@ -1,9 +1,5 @@
 image: Visual Studio 2019
 
-branches:
-  except:
-    - /travis-.*/
-
 install:
   - ps: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
   - ps: .\dotnet-install.ps1 -Version 5.0.101
