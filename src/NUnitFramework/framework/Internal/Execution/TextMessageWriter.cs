@@ -327,7 +327,17 @@ namespace NUnit.Framework.Internal
             if (tolerance.Mode != ToleranceMode.Linear && tolerance.Mode != ToleranceMode.Percent)
                 return;
 
-            var differenceString = MsgUtils.FormatValue(Numerics.Difference(expected, actual, tolerance.Mode));
+            string differenceString = double.NaN.ToString();
+            if (tolerance.Amount is TimeSpan timeSpanTolerance)
+            {
+                // TimeSpan tolerance applied in linear mode only
+                differenceString = MsgUtils.FormatValue(DateTimes.Difference(expected, actual));
+            }
+            else
+            {
+                differenceString = MsgUtils.FormatValue(Numerics.Difference(expected, actual, tolerance.Mode));
+            }
+
             if (differenceString != double.NaN.ToString())
             {
                 Write(Pfx_Difference);
