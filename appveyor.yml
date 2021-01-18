@@ -1,9 +1,5 @@
 image: Visual Studio 2019
 
-branches:
-  except:
-    - /travis-.*/
-
 build_script:
   - ps: .\build.ps1 -Target "Appveyor" -Configuration "Release"
 

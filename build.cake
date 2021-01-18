@@ -624,11 +624,6 @@ Task("Appveyor")
     .IsDependentOn("Package")
     .IsDependentOn("UploadArtifacts");
 
-Task("Travis")
-    .Description("Builds and tests on Travis")
-    .IsDependentOn("Build")
-    .IsDependentOn("Test");
-
 Task("Default")
     .Description("Builds all versions of the framework")
     .IsDependentOn("Build");
