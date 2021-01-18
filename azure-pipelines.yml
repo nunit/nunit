@@ -12,12 +12,6 @@ jobs:
     vmImage: windows-latest
   steps:
 
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 5.0.101
-      performMultiLevelLookup: true
-
   - powershell: .\build.ps1 --target=Test --test-run-name=Windows
     displayName: Build, test, and publish results
 
@@ -41,11 +35,6 @@ jobs:
   pool:
     vmImage: ubuntu-latest
   steps:
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 5.0.101
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
@@ -78,11 +67,6 @@ jobs:
   pool:
     vmImage: macOS-latest
   steps:
-
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 5.0.101
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
