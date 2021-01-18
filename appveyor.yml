@@ -1,9 +1,5 @@
 image: Visual Studio 2019
 
-install:
-  - ps: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
-  - ps: .\dotnet-install.ps1 -Version 5.0.101
-
 build_script:
   - ps: .\build.ps1 -Target "Appveyor" -Configuration "Release"
 
@@ -18,6 +14,6 @@ deploy:
     skip_symbols: true
     on:
       branch: master
-      
+
 # For PRs, skip the branch run and only run against the virtual PR merge.
 skip_branch_with_pr: true
