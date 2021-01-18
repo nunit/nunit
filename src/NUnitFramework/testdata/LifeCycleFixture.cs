@@ -28,7 +28,6 @@ using NUnit.Framework;
 namespace NUnit.TestData.LifeCycleTests
 {
     [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class DisposableFixture : IDisposable
     {
         public static int DisposeCount = 0;
@@ -42,6 +41,34 @@ namespace NUnit.TestData.LifeCycleTests
         public void Dispose()
         {
             DisposeCount++;
+        }
+    }
+
+    [TestFixtureSource(nameof(FixtureArgs))]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleWithTestFixtureSourceFixture
+    {
+        private readonly int _initialValue;
+        private int _value;
+
+        public LifeCycleWithTestFixtureSourceFixture(int num)
+        {
+            _initialValue = num;
+            _value = num;
+        }
+
+        public static int[] FixtureArgs() => new[] { 1, 42 };
+
+        [Test]
+        public void Test1()
+        {
+            Assert.AreEqual(_initialValue, _value++);
+        }
+
+        [Test]
+        public void Test2()
+        {
+            Assert.AreEqual(_initialValue, _value++);
         }
     }
 
