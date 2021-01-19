@@ -564,12 +564,12 @@ namespace NUnit.Framework.Constraints
 
         #region ObjectEquality
 
-        public class ObjectPointEquality
+        public class ObjectEquality
         {
             [Test]
             public void CompareObjectsWithToleranceAsserts()
             {
-                var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
             }
         }
 
