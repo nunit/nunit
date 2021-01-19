@@ -577,7 +577,7 @@ namespace NUnit.Framework.Constraints
 
         #region UsingModifier
 
-            public class UsingModifier
+        public class UsingModifier
         {
             [Test]
             public void UsesProvidedIComparer()
