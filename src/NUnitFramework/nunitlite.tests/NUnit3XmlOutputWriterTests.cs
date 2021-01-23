@@ -214,7 +214,6 @@ namespace NUnitLite.Tests
             DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
             DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
 
-            string startTimeString = RequiredAttribute(topNode, "start-time");
             var testCaseNodes = suiteNode.SelectNodes("test-suite[@name='SkippedTest']/test-case");
             Assert.That(testCaseNodes, Is.Not.Null);
 

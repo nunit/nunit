@@ -114,7 +114,7 @@ namespace NUnit.Tests
         public class MockTestFixture
         {
             public const int Tests = 13;
-            public const int Suites = 1;
+            public const int Suites = 2;
 
             public const int Passed = 2;
 
@@ -155,10 +155,9 @@ namespace NUnit.Tests
             [Test, Ignore("Ignore Message")]
             public void IgnoreTest() { }
 
-            [Test, Ignore("Ignore testcase")]
-            [TestCase(1)]
-            [TestCase(2)]
-            [TestCase(3)]
+            [TestCase(1, Ignore = "Ignore testcase")]
+            [TestCase(2, Ignore = "Ignore testcase")]
+            [TestCase(3, Ignore = "Ignore testcase")]
             public void SkippedTest(int a)
             {
                 Assert.Pass();
