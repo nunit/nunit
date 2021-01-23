@@ -113,12 +113,12 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public const int Tests = 10;
+            public const int Tests = 13;
             public const int Suites = 1;
 
             public const int Passed = 2;
 
-            public const int Skipped_Ignored = 1;
+            public const int Skipped_Ignored = 4;
             public const int Skipped_Explicit = 1;
             public const int Skipped = Skipped_Ignored + Skipped_Explicit;
 
@@ -154,6 +154,15 @@ namespace NUnit.Tests
 
             [Test, Ignore("Ignore Message")]
             public void IgnoreTest() { }
+
+            [Test, Ignore("Ignore testcase")]
+            [TestCase(1)]
+            [TestCase(2)]
+            [TestCase(3)]
+            public void SkippedTest(int a)
+            {
+                Assert.Pass();
+            }
 
             [Test, Explicit]
             public void ExplicitTest() { }

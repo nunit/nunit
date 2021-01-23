@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -212,6 +213,18 @@ namespace NUnit.Framework.Internal
         /// The time the current test started in Ticks
         /// </summary>
         public long StartTicks { get; set; }
+
+        /// <summary>
+        /// The current duration of the test taken
+        /// </summary>
+        public double Duration
+        {
+            get
+            {
+                var tickCount = Stopwatch.GetTimestamp() - StartTicks;
+                return (double)tickCount / Stopwatch.Frequency;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current test result
