@@ -209,7 +209,7 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        public void IgnoredTestCase_HasValidEndTimeAttribute()
+        public void IgnoredTestCases_HaveValidEndTimeAttribute()
         {
             DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
             DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
@@ -219,12 +219,42 @@ namespace NUnitLite.Tests
 
             foreach (XmlNode testCase in testCaseNodes)
             {
-                DateTime.TryParse(RequiredAttribute(testCase, "start-time"), out var startTime);
-                DateTime.TryParse(RequiredAttribute(testCase, "end-time"), out var endTime);
+                string startTimeStr = RequiredAttribute(testCase, "start-time");
+                string endTimeStr = RequiredAttribute(testCase, "end-time");
+
+                Assert.That(startTimeStr, Does.EndWith("Z"), "Ignored start-time is not UTC");
+                Assert.That(endTimeStr, Does.EndWith("Z"), "Ignored end-time is not UTC");
+
+                Assert.IsTrue(DateTime.TryParse(startTimeStr, out var startTime));
+                Assert.IsTrue(DateTime.TryParse(endTimeStr, out var endTime));
 
                 Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
                 Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
             }
+        }
+
+        [Test]
+        public void ExplicitTest_HasValidEndTimeAttribute()
+        {
+            DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
+            DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
+
+            var testCaseNodes = suiteNode.SelectNodes("test-case[@name='ExplicitTest']");
+            Assert.That(testCaseNodes, Is.Not.Null.And.Count.EqualTo(1));
+
+            XmlNode testCase = testCaseNodes[0];
+
+            string startTimeStr = RequiredAttribute(testCase, "start-time");
+            string endTimeStr = RequiredAttribute(testCase, "end-time");
+
+            Assert.That(startTimeStr, Does.EndWith("Z"), "Explicit start-time is not UTC");
+            Assert.That(endTimeStr, Does.EndWith("Z"), "Explicit end-time is not UTC");
+
+            Assert.IsTrue(DateTime.TryParse(startTimeStr, out var startTime));
+            Assert.IsTrue(DateTime.TryParse(endTimeStr, out var endTime));
+
+            Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the start time of test suite");
+            Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the start time of test suite");
         }
 
         #region Helper Methods
