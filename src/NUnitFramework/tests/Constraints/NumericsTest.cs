@@ -99,6 +99,12 @@ namespace NUnit.Framework.Constraints
             Assert.That(Numerics.Difference(10000m, 11500m, tenPercent.Mode), Is.EqualTo(-15));
         }
 
+        [Test]
+        public void DifferenceForNonNumericTypesReturnsNaN()
+        {
+            Assert.That(Numerics.Difference(new object(), new object(), tenPercent.Mode), Is.EqualTo(double.NaN));
+        }
+
         [TestCase((int)8500)]
         [TestCase((int)11500)]
         [TestCase((uint)8500)]

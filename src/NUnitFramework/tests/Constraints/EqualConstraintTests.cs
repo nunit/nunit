@@ -562,6 +562,19 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region ObjectEquality
+
+        public class ObjectEquality
+        {
+            [Test]
+            public void CompareObjectsWithToleranceAsserts()
+            {
+                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
+            }
+        }
+
+        #endregion
+
         #region UsingModifier
 
         public class UsingModifier
