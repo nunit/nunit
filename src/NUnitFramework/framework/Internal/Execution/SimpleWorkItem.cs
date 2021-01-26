@@ -26,6 +26,7 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -138,7 +139,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new SetUpTearDownCommand(command, item);
 
                 // Dispose of fixture if necessary
-                var isInstancePerTestCase = parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase;
+                var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
                 if (isInstancePerTestCase && parentFixture is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 

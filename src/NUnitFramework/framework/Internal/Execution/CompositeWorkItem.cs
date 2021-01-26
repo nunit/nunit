@@ -29,6 +29,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
 using System.Diagnostics;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -162,7 +163,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeSetUpAndTearDownCommands()
         {
-            var methodValidator = CheckInstancePerTestCase()
+            var methodValidator = Test.HasLifeCycle(LifeCycle.InstancePerTestCase)
                 ? new StaticMethodValidator(
                     $"Only static OneTimeSetUp and OneTimeTearDown are allowed for {nameof(LifeCycle.InstancePerTestCase)} mode.")
                 : null;
@@ -201,19 +202,6 @@ namespace NUnit.Framework.Internal.Execution
             _setupCommand = MakeOneTimeSetUpCommand(setUpTearDownItems, actionItems);
 
             _teardownCommand = MakeOneTimeTearDownCommand(setUpTearDownItems, actionItems);
-        }
-
-        private bool CheckInstancePerTestCase()
-        {
-            ITest test = Test;
-            while (test != null)
-            {
-                if (test is TestFixture fixture && fixture.LifeCycle == LifeCycle.InstancePerTestCase)
-                    return true;
-                
-                test = test.Parent;
-            }
-            return false;
         }
 
         private TestCommand MakeOneTimeSetUpCommand(List<SetUpTearDownItem> setUpTearDown, List<TestActionItem> actions)
@@ -261,7 +249,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !CheckInstancePerTestCase())
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;
