@@ -164,7 +164,7 @@ namespace NUnit.TestData.LifeCycleTests
         private int _counter;
 
         [Theory]
-        public void Test([Values] bool? _)
+        public void Test(bool? _)
         {
             Assert.AreEqual(0, _counter++);
         }
