@@ -443,8 +443,9 @@ namespace NUnit.Framework.Constraints
 
         private static object Difference(object expected, object actual, bool isAbsolute)
         {
+            // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
             if (!IsNumericType(expected) || !IsNumericType(actual))
-                throw new ArgumentException("Both arguments must be numeric");
+                return double.NaN;
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
             {
