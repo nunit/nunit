@@ -215,7 +215,7 @@ namespace NUnitLite.Tests
             DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
 
             var testCaseNodes = suiteNode.SelectNodes("test-suite[@name='SkippedTest']/test-case");
-            Assert.That(testCaseNodes, Is.Not.Null);
+            Assert.That(testCaseNodes, Is.Not.Null.And.Count.EqualTo(3));
 
             foreach (XmlNode testCase in testCaseNodes)
             {
@@ -229,7 +229,7 @@ namespace NUnitLite.Tests
                 Assert.IsTrue(DateTime.TryParse(endTimeStr, out var endTime));
 
                 Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
-                Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
+                Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the end time of test suite");
             }
         }
 

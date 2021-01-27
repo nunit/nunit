@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -155,13 +156,18 @@ namespace NUnit.Tests
             [Test, Ignore("Ignore Message")]
             public void IgnoreTest() { }
 
-            [TestCase(1, Ignore = "Ignore testcase")]
-            [TestCase(2, Ignore = "Ignore testcase")]
-            [TestCase(3, Ignore = "Ignore testcase")]
-            public void SkippedTest(int a)
+            [TestCaseSource(nameof(SkippedTestCaseData))]
+            public void SkippedTest(int _)
             {
                 Assert.Pass();
             }
+
+            public static IEnumerable<TestCaseData> SkippedTestCaseData => new[]
+            {
+                new TestCaseData(1).Ignore("Ignore testcase"),
+                new TestCaseData(2).Ignore("Ignore testcase"),
+                new TestCaseData(3).Ignore("Ignore testcase")
+            };
 
             [Test, Explicit]
             public void ExplicitTest() { }

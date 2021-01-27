@@ -215,7 +215,7 @@ namespace NUnit.Framework.Internal
         public long StartTicks { get; set; }
 
         /// <summary>
-        /// The current duration of the test taken
+        /// Gets the elapsed time for running the test in seconds
         /// </summary>
         public double Duration
         {
