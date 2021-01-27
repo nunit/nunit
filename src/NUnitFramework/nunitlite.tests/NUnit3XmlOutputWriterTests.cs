@@ -209,7 +209,7 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        public void IgnoredTestCases_HaveValidEndTimeAttribute()
+        public void IgnoredTestCases_HaveValidStartAndEndTimeAttributes()
         {
             DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
             DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
@@ -234,7 +234,7 @@ namespace NUnitLite.Tests
         }
 
         [Test]
-        public void ExplicitTest_HasValidEndTimeAttribute()
+        public void ExplicitTest_HasValidStartAndEndTimeAttributes()
         {
             DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
             DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
@@ -254,7 +254,7 @@ namespace NUnitLite.Tests
             Assert.IsTrue(DateTime.TryParse(endTimeStr, out var endTime));
 
             Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the start time of test suite");
-            Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the start time of test suite");
+            Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the end time of test suite");
         }
 
         #region Helper Methods
