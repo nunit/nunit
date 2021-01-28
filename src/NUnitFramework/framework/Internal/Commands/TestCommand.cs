@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Threading.Tasks;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -59,8 +61,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="context">The TestExecutionContext to be used for running the test.</param>
         /// <returns>A TestResult</returns>
-        public abstract TestResult Execute(TestExecutionContext context);
-
+        public abstract Task<TestResult> Execute(TestExecutionContext context);
         #endregion
     }
 }

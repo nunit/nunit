@@ -21,6 +21,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System.Threading.Tasks;
+
 namespace NUnit.Framework.Internal.Execution
 {
     /// <summary>
@@ -45,7 +47,7 @@ namespace NUnit.Framework.Internal.Execution
         /// work item and used when stopping the run.
         /// </summary>
         /// <param name="work">The item to dispatch</param>
-        void Dispatch(WorkItem work);
+        Task Dispatch(WorkItem work);
 
         /// <summary>
         /// Cancel the ongoing run completely.

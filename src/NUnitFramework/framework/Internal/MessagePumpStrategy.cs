@@ -27,6 +27,7 @@ using System.Runtime.CompilerServices;
 using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
+using System.Threading.Tasks;
 
 #if NET40 || NET45
 using System.Windows.Forms;
@@ -37,7 +38,7 @@ namespace NUnit.Framework.Internal
 {
     internal abstract class MessagePumpStrategy
     {
-        public abstract void WaitForCompletion(AwaitAdapter awaiter);
+        public abstract Task WaitForCompletion(AwaitAdapter awaiter);
 
         public static MessagePumpStrategy FromCurrentSynchronizationContext()
         {
@@ -56,9 +57,9 @@ namespace NUnit.Framework.Internal
             public static readonly NoMessagePumpStrategy Instance = new NoMessagePumpStrategy();
             private NoMessagePumpStrategy() { }
 
-            public override void WaitForCompletion(AwaitAdapter awaiter)
+            public override Task WaitForCompletion(AwaitAdapter awaiter)
             {
-                awaiter.BlockUntilCompleted();
+                return awaiter.BlockUntilCompleted();
             }
         }
 
@@ -102,8 +103,7 @@ namespace NUnit.Framework.Internal
                 return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
             }
 
-            [SecuritySafeCritical]
-            public override void WaitForCompletion(AwaitAdapter awaiter)
+            public override async Task WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
 
@@ -171,7 +171,7 @@ namespace NUnit.Framework.Internal
                 return context?.GetType().FullName == "System.Windows.Threading.DispatcherSynchronizationContext";
             }
 
-            public override void WaitForCompletion(AwaitAdapter awaiter)
+            public override async Task WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;
 
@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal
             public static readonly SingleThreadedTestMessagePumpStrategy Instance = new SingleThreadedTestMessagePumpStrategy();
             private SingleThreadedTestMessagePumpStrategy() { }
 
-            public override void WaitForCompletion(AwaitAdapter awaiter)
+            public override async Task WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current as SingleThreadedTestSynchronizationContext;
 

@@ -22,8 +22,7 @@
 // ***********************************************************************
 
 using System;
-using System.Threading;
-using NUnit.Framework.Interfaces;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -41,11 +40,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Execute the command
         /// </summary>
-        public override TestResult Execute(TestExecutionContext context)
+        public override async Task<TestResult> Execute(TestExecutionContext context)
         {
             Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
 
-            innerCommand.Execute(context);
+            await innerCommand.Execute(context);
 
             AfterTest(context);
 

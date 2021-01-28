@@ -21,9 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
-using System.Globalization;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Internal
@@ -139,7 +137,8 @@ namespace NUnit.Framework.Internal
         /// <param name="actual">The actual value causing the failure</param>
         /// <param name="expectedType">Output of the unique type name for expected</param>
         /// <param name="actualType">Output of the unique type name for actual</param>
-        private void ResolveTypeNameDifference(object expected, object actual, out string expectedType, out string actualType) {
+        private void ResolveTypeNameDifference(object expected, object actual, out string expectedType, out string actualType)
+        {
             TypeNameDifferenceResolver resolver = new TypeNameDifferenceResolver();
             resolver.ResolveTypeNameDifference(expected, actual, out expectedType, out actualType);
 
@@ -275,7 +274,8 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-            if (_sameValDiffTypes) {
+            if (_sameValDiffTypes)
+            {
                 Write(_expectedType);
             }
             if (tolerance != null && !tolerance.IsUnsetOrDefault)

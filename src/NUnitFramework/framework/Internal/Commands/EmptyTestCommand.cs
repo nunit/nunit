@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -41,9 +41,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Execute the command
         /// </summary>
-        public override TestResult Execute(TestExecutionContext context)
+        public override Task<TestResult> Execute(TestExecutionContext context)
         {
-            return context.CurrentResult;
+            return Task.FromResult(context.CurrentResult);
         }
     }
 }

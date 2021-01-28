@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
 {
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Internal
     {
         private volatile ManualResetEventSlim _completedEvent;
 
-        public sealed override void BlockUntilCompleted()
+        public sealed override async Task BlockUntilCompleted()
         {
             if (IsCompleted) return;
 

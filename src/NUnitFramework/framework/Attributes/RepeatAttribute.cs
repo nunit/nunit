@@ -31,6 +31,7 @@
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -93,13 +94,13 @@ namespace NUnit.Framework
             /// </summary>
             /// <param name="context">The context in which the test should run.</param>
             /// <returns>A TestResult</returns>
-            public override TestResult Execute(TestExecutionContext context)
+            public override async Task<TestResult> Execute(TestExecutionContext context)
             {
                 int count = repeatCount;
 
                 while (count-- > 0)
                 {
-                    context.CurrentResult = innerCommand.Execute(context);
+                    context.CurrentResult = await innerCommand.Execute(context);
 
                     // TODO: We may want to change this so that all iterations are run
                     if (context.CurrentResult.ResultState != ResultState.Success)
