@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Commands
     /// <summary>
     /// ConstructFixtureCommand constructs the user test object if necessary.
     /// </summary>
-    public class FixturePerTestCaseCommand : BeforeAndAfterTestCommand
+    public class FixturePerTestCaseCommand : BeforeTestCommand
     {
         /// <summary>
         /// Handles the construction and disposement of a fixture per test case
@@ -38,30 +38,26 @@ namespace NUnit.Framework.Internal.Commands
         public FixturePerTestCaseCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            TestSuite testSuite = null;
+            TestFixture testFixture = null;
 
             ITest currentTest = Test;
-            while (currentTest != null && testSuite == null)
+            while (currentTest != null && testFixture == null)
             {
-                testSuite = testSuite ?? currentTest as TestSuite;
+                testFixture = currentTest as TestFixture;
                 currentTest = currentTest.Parent;
             }
 
-            Guard.ArgumentValid(testSuite != null, "FixturePerTestCaseCommand must reference a TestSuite", nameof(innerCommand));
+            Guard.ArgumentValid(testFixture != null, "FixturePerTestCaseCommand must reference a TestFixture", nameof(innerCommand));
 
-            ITypeInfo typeInfo = testSuite.TypeInfo;
+            ITypeInfo typeInfo = testFixture.TypeInfo;
 
             BeforeTest = (context) =>
             {
                 if (typeInfo != null && !typeInfo.IsStaticClass)
                 {
-                    context.TestObject = typeInfo.Construct(testSuite.Arguments);
+                    context.TestObject = typeInfo.Construct(testFixture.Arguments);
                     Test.Fixture = context.TestObject;
                 }
-            };
-
-            AfterTest = (context) =>
-            {
             };
         }
     }
