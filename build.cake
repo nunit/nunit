@@ -1,5 +1,4 @@
 #tool NUnit.ConsoleRunner&version=3.10.0
-#tool GitLink&version=3.1.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -336,22 +335,10 @@ Task("CreateImage")
             CopyDirectory(sourceDir, targetDir);
         }
     });
-    
-Task("GitLink")	
-    .IsDependentOn("CreateImage")	
-    .Description("Source-indexes PDBs in the images directory to the current commit")	
-    .Does(() =>	
-    {	
-        var settings = new GitLink3Settings	
-        {	
-            BaseDir = PROJECT_DIR	
-        };	
-        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"), settings);	
-    });
 
 Task("PackageFramework")
     .Description("Creates NuGet packages of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -370,7 +357,7 @@ Task("PackageFramework")
 
 Task("PackageFrameworkSnupkg")
     .Description("Creates NuGet snupkg source packages of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -391,7 +378,7 @@ Task("PackageFrameworkSnupkg")
 
 Task("PackageZip")
     .Description("Creates a ZIP file of the framework")
-    .IsDependentOn("GitLink")
+    .IsDependentOn("CreateImage")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
