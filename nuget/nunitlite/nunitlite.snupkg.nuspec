@@ -9,17 +9,15 @@
     </packageTypes>
     <authors>Charlie Poole, Rob Prouse</authors>
     <owners>Charlie Poole, Rob Prouse</owners>
-    <license type="file">LICENSE.txt</license>
+    <license type="expression">MIT</license>
     <projectUrl>https://nunit.org</projectUrl>
     <repository type="git" url="https://github.com/nunit/nunit"/>
-    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
-    <icon>icon.png</icon>
+    <language>en-US</language>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Symbols for debugging into the NUnitLite assemblies.</description>
     <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
   </metadata>
   <files>
-    <file src="..\..\nuget\icon.png" />
     <file src="bin/net35/nunitlite.pdb" target="lib\net35" />
     <file src="bin/net40/nunitlite.pdb" target="lib\net40" />
     <file src="bin/net45/nunitlite.pdb" target="lib\net45" />
