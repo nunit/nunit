@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="3.5">
+    <id>NUnit</id>
+    <title>NUnit</title>
+    <version>$version$</version>
+    <packageTypes>
+      <packageType name="SymbolsPackage" />
+    </packageTypes>
+    <authors>Charlie Poole, Rob Prouse</authors>
+    <owners>Charlie Poole, Rob Prouse</owners>
+    <license type="file">LICENSE.txt</license>
+    <projectUrl>https://nunit.org</projectUrl>
+    <repository type="git" url="https://github.com/nunit/nunit"/>
+    <iconUrl>https://cdn.rawgit.com/nunit/resources/master/images/icon/nunit_256.png</iconUrl>
+    <icon>icon.png</icon>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Symbols for debugging into the NUnit Framework assemblies.</description>
+    <language>en-US</language>
+    <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
+  </metadata>
+  <files>
+    <file src="..\..\nuget\icon.png" />
+    <file src="bin/net35/nunit.framework.pdb" target="lib\net35" />
+    <file src="bin/net40/nunit.framework.pdb" target="lib\net40" />
+    <file src="bin/net45/nunit.framework.pdb" target="lib\net45" />
+    <file src="bin/netstandard2.0/nunit.framework.pdb" target="lib\netstandard2.0" />
+  </files>
+</package>

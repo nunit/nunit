@@ -1,4 +1,5 @@
 #tool NUnit.ConsoleRunner&version=3.10.0
+#tool GitLink&version=3.1.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -160,6 +161,9 @@ DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
 MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+    
+    // Only needed when packaging	
+    settings.WithProperty("DebugType", "pdbonly");
 
     if (IsRunningOnWindows())
     {
@@ -274,14 +278,17 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
+    "nunit.framework.pdb",
     "nunit.framework.xml",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
+    "nunitlite.pdb",
     "nunitlite.tests.exe",
     "nunitlite.tests.dll",
     "slow-nunit-tests.dll",
     "nunitlite-runner.exe",
+    "nunitlite-runner.pdb",
     "nunitlite-runner.dll",
     "Microsoft.Threading.Tasks.dll",
     "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
@@ -329,10 +336,22 @@ Task("CreateImage")
             CopyDirectory(sourceDir, targetDir);
         }
     });
+    
+Task("GitLink")	
+    .IsDependentOn("CreateImage")	
+    .Description("Source-indexes PDBs in the images directory to the current commit")	
+    .Does(() =>	
+    {	
+        var settings = new GitLink3Settings	
+        {	
+            BaseDir = PROJECT_DIR	
+        };	
+        GitLink3(GetFiles($"{CurrentImageDir}**/*.pdb"), settings);	
+    });
 
 Task("PackageFramework")
     .Description("Creates NuGet packages of the framework")
-    .IsDependentOn("CreateImage")
+    .IsDependentOn("GitLink")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -341,16 +360,38 @@ Task("PackageFramework")
         {
             Version = packageVersion,
             BasePath = CurrentImageDir,
-            OutputDirectory = PACKAGE_DIR
+            OutputDirectory = PACKAGE_DIR,
+            Symbols = true
         };
 
         NuGetPack("nuget/framework/nunit.nuspec", settings);
         NuGetPack("nuget/nunitlite/nunitlite.nuspec", settings);
     });
 
+Task("PackageFrameworkSnupkg")
+    .Description("Creates NuGet snupkg source packages of the framework")
+    .IsDependentOn("GitLink")
+    .Does(() =>
+    {
+        CreateDirectory(PACKAGE_DIR);
+
+        var settings = new NuGetPackSettings
+        {
+            Version = packageVersion,
+            BasePath = CurrentImageDir,
+            OutputDirectory = PACKAGE_DIR,
+            Symbols = true,
+            // snupkg is not yet supported by Cake, https://github.com/cake-build/cake/issues/2362
+            ArgumentCustomization = args => args.Append("-SymbolPackageFormat snupkg")
+        };
+
+        NuGetPack("nuget/framework/nunit.snupkg.nuspec", settings);
+        NuGetPack("nuget/nunitlite/nunitlite.snupkg.nuspec", settings);
+    });
+
 Task("PackageZip")
     .Description("Creates a ZIP file of the framework")
-    .IsDependentOn("CreateImage")
+    .IsDependentOn("GitLink")
     .Does(() =>
     {
         CreateDirectory(PACKAGE_DIR);
@@ -385,6 +426,7 @@ Task("SignPackages")
     .Description("Signs the NuGet packages")
     .IsDependentOn("InstallSigningTool")
     .IsDependentOn("PackageFramework")
+    .IsDependentOn("PackageFrameworkSnupkg")
     .Does(() =>
     {
         // Get the secret.
@@ -404,7 +446,7 @@ Task("SignPackages")
         var settings = File("./signclient.json");
 
         // Get the files to sign.
-        var files = GetFiles(string.Concat(PACKAGE_DIR, "*.nupkg"));
+        var files = GetFiles(string.Concat(PACKAGE_DIR, "*.*nupkg"));
 
         foreach(var file in files)
         {
@@ -615,6 +657,7 @@ Task("Package")
     .Description("Packages all versions of the framework")
     .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
+    .IsDependentOn("PackageFrameworkSnupkg")
     .IsDependentOn("PackageZip");
 
 Task("Appveyor")

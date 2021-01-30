@@ -44,12 +44,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{CE68713C-2E19-43E8-9333-6ED817110D52}"
 	ProjectSection(SolutionItems) = preProject
 		nuget\framework\nunit.nuspec = nuget\framework\nunit.nuspec
+		nuget\framework\nunit.snupkg.nuspec = nuget\framework\nunit.snupkg.nuspec
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nunitlite", "nunitlite", "{8D43A220-7FE8-4214-BBB4-08568B88C7AA}"
 	ProjectSection(SolutionItems) = preProject
 		nuget\nunitlite\install.ps1 = nuget\nunitlite\install.ps1
 		nuget\nunitlite\nunitlite.nuspec = nuget\nunitlite\nunitlite.nuspec
+		nuget\nunitlite\nunitlite.snupkg.nuspec = nuget\nunitlite\nunitlite.snupkg.nuspec
 		nuget\nunitlite\Program.cs = nuget\nunitlite\Program.cs
 		nuget\nunitlite\Program.vb = nuget\nunitlite\Program.vb
 	EndProjectSection
