@@ -483,6 +483,7 @@ Task("UploadArtifacts")
     .Does(() =>
     {
         UploadArtifacts(PACKAGE_DIR, "*.nupkg");
+        UploadArtifacts(PACKAGE_DIR, "*.snupkg");
         UploadArtifacts(PACKAGE_DIR, "*.zip");
     });
 
