@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="3.5">
+    <id>NUnit</id>
+    <title>NUnit</title>
+    <version>$version$</version>
+    <packageTypes>
+      <packageType name="SymbolsPackage" />
+    </packageTypes>
+    <authors>Charlie Poole, Rob Prouse</authors>
+    <owners>Charlie Poole, Rob Prouse</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>https://nunit.org</projectUrl>
+    <repository type="git" url="https://github.com/nunit/nunit"/>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Symbols for debugging into the NUnit Framework assemblies.</description>
+    <language>en-US</language>
+    <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
+    <dependencies>
+      <group targetFramework="net35" />
+      <group targetFramework="net40" />
+      <group targetFramework="net45" />
+      <group targetFramework="netstandard2.0">
+        <dependency id="NETStandard.Library" version="2.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin/net35/nunit.framework.dll" target="lib\net35" />
+    <file src="bin/net35/nunit.framework.pdb" target="lib\net35" />
+    <file src="bin/net40/nunit.framework.dll" target="lib\net40" />
+    <file src="bin/net40/nunit.framework.pdb" target="lib\net40" />
+    <file src="bin/net45/nunit.framework.dll" target="lib\net45" />
+    <file src="bin/net45/nunit.framework.pdb" target="lib\net45" />
+    <file src="bin/netstandard2.0/nunit.framework.dll" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunit.framework.pdb" target="lib\netstandard2.0" />
+  </files>
+</package>

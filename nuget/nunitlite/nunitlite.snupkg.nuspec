@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="3.5">
+    <id>NUnitLite</id>
+    <title>NUnitLite</title>
+    <version>$version$</version>
+    <packageTypes>
+      <packageType name="SymbolsPackage" />
+    </packageTypes>
+    <authors>Charlie Poole, Rob Prouse</authors>
+    <owners>Charlie Poole, Rob Prouse</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>https://nunit.org</projectUrl>
+    <repository type="git" url="https://github.com/nunit/nunit"/>
+    <language>en-US</language>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Symbols for debugging into the NUnitLite assemblies.</description>
+    <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
+    <dependencies>
+      <group targetFramework="net35">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
+      <group targetFramework="net40">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
+      <group targetFramework="net45">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
+      <group targetFramework="netstandard2.0">
+        <dependency id="NUnit" version="[$version$]" />
+        <dependency id="NETStandard.Library" version="2.0.0" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin/net35/nunitlite.pdb" target="lib\net35" />
+    <file src="bin/net35/nunitlite.dll" target="lib\net35" />
+    <file src="bin/net40/nunitlite.pdb" target="lib\net40" />
+    <file src="bin/net40/nunitlite.dll" target="lib\net40" />
+    <file src="bin/net45/nunitlite.pdb" target="lib\net45" />
+    <file src="bin/net45/nunitlite.dll" target="lib\net45" />
+    <file src="bin/netstandard2.0/nunitlite.pdb" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunitlite.dll" target="lib\netstandard2.0" />
+    <file src="bin/net35/nunitlite-runner.pdb" target="tools\net35" />
+    <file src="bin/net35/nunitlite-runner.exe" target="tools\net35" />
+    <file src="bin/net40/nunitlite-runner.pdb" target="tools\net40" />
+    <file src="bin/net40/nunitlite-runner.exe" target="tools\net40" />
+    <file src="bin/net45/nunitlite-runner.pdb" target="tools\net45" />
+    <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />
+    <file src="bin/netcoreapp2.1/nunitlite-runner.pdb" target="tools\netcoreapp2.1" />
+    <file src="bin/netcoreapp2.1/nunitlite-runner.dll" target="tools\netcoreapp2.1" />
+    <file src="bin/netcoreapp3.1/nunitlite-runner.pdb" target="tools\netcoreapp3.1" />
+    <file src="bin/netcoreapp3.1/nunitlite-runner.dll" target="tools\netcoreapp3.1" />
+  </files>
+</package>
