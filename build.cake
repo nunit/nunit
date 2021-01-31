@@ -160,9 +160,6 @@ DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
 MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
-    
-    // Only needed when packaging	
-    settings.WithProperty("DebugType", "pdbonly");
 
     if (IsRunningOnWindows())
     {
