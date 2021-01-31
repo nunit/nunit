@@ -26,6 +26,7 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -129,8 +130,8 @@ namespace NUnit.Framework.Internal.Execution
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(SetUpAttribute), true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(TearDownAttribute), true);
+                var setUpMethods = parentFixture?.SetUpMethods ?? Test.TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? Test.TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
@@ -138,7 +139,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new SetUpTearDownCommand(command, item);
 
                 // Dispose of fixture if necessary
-                var isInstancePerTestCase = parentFixture?.LifeCycle == LifeCycle.InstancePerTestCase;
+                var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
                 if (isInstancePerTestCase && parentFixture is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(parentFixture.TypeInfo.Type))
                     command = new DisposeFixtureCommand(command);
 

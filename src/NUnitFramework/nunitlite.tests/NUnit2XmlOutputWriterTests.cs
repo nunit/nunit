@@ -113,7 +113,7 @@ namespace NUnitLite.Tests
         [TestCase("errors", MockTestFixture.Failed_Error)]
         [TestCase("failures", MockTestFixture.Failed_Other)]
         [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.Skipped+MockTestFixture.Failed_NotRunnable-MockTestFixture.Skipped_Explicit)]
+        [TestCase("not-run", MockTestFixture.Skipped+MockTestFixture.Failed_NotRunnable)]
         [TestCase("ignored", MockTestFixture.Skipped_Ignored)]
         [TestCase("skipped", MockTestFixture.Skipped-MockTestFixture.Skipped_Ignored-MockTestFixture.Skipped_Explicit)]
         [TestCase("invalid", MockTestFixture.Failed_NotRunnable)]

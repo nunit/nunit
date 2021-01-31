@@ -334,6 +334,16 @@ namespace NUnit.Framework.Constraints
                 var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
                 Assert.That(a, Is.EqualTo(b).Within(TimeSpan.FromMinutes(2)));
             }
+
+            [Test]
+            public void FailsOnDateTimeOffsetOutsideOfTimeSpanTolerance()
+            {
+                var a = DateTimeOffset.Parse("2012-01-01T12:00Z");
+                var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(a, new EqualConstraint(b).Within(10).Seconds));
+                Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(TimeSpan.FromSeconds(10))}"));
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(TimeSpan.FromMinutes(1))}"));
+            }
         }
 
         #endregion
@@ -547,6 +557,19 @@ namespace NUnit.Framework.Constraints
             {
                 Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
                 Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+            }
+        }
+
+        #endregion
+
+        #region ObjectEquality
+
+        public class ObjectEquality
+        {
+            [Test]
+            public void CompareObjectsWithToleranceAsserts()
+            {
+                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
             }
         }
 

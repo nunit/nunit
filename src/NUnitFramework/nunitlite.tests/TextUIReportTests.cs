@@ -101,7 +101,13 @@ namespace NUnitLite.Tests
                 "Tests Not Run\n\n" +
                 "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest\n" +
                 "Ignore Message\n\n" +
-                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest\n\n"));
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(1)\n"+
+                "Ignore testcase\n\n"+
+                "3) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(2)\n"+
+                "Ignore testcase\n\n"+
+                "4) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(3)\n"+
+                "Ignore testcase\n\n"+
+                "5) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest\n\n"));
         }
 
         [Test]
@@ -112,9 +118,9 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(
                 "Test Run Summary\n" +
                 "  Overall result: Failed\n" +
-                "  Test Count: 10, Passed: 2, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 2\n" +
+                "  Test Count: 13, Passed: 2, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 5\n" +
                 "    Failed Tests - Failures: 1, Errors: 1, Invalid: 2\n" +
-                "    Skipped Tests - Ignored: 1, Explicit: 1, Other: 0\n" +
+                "    Skipped Tests - Ignored: 4, Explicit: 1, Other: 0\n" +
                 "  Start time: 2014-12-02 12:34:56Z\n" +
                 "    End time: 2014-12-02 12:34:56Z\n" +
                 "    Duration: 0.123 seconds\n\n"));

@@ -76,6 +76,7 @@ namespace NUnit.Framework.Internal.Builders
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);
 
+            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly));
             fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
 
             AddTestCasesToFixture(fixture, filter);

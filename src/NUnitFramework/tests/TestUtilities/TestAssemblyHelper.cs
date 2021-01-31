@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2021 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,10 +21,34 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if NETFRAMEWORK
+
+using System;
+using System.CodeDom.Compiler;
+using System.Linq;
 using System.Reflection;
 
-//
-// Current version for the NUnit Framework
-//
-[assembly: AssemblyVersion("3.13.1.0")]
-[assembly: AssemblyFileVersion("3.13.1.0")]
+namespace NUnit.TestUtilities
+{
+    public static class TestAssemblyHelper
+    {
+        public static Assembly GenerateInMemoryAssembly(string code, string[] referencedAssemblies)
+        {
+            var options = new CompilerParameters() { GenerateInMemory = true };
+            options.ReferencedAssemblies.AddRange(referencedAssemblies);
+
+            var codeProvider = CodeDomProvider.CreateProvider("CSharp");
+            var result = codeProvider.CompileAssemblyFromSource(options, code);
+
+            if (!result.Errors.HasErrors)
+                return result.CompiledAssembly;
+
+            var errors = string.Join(", ", result.Errors
+                                                 .Cast<CompilerError>()
+                                                 .Select(err => err.ToString()).ToArray());
+
+            throw new InvalidOperationException($"Failed to create assembly: {errors}");
+        }
+    }
+}
+#endif

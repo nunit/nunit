@@ -89,8 +89,7 @@ namespace NUnitLite
             xmlWriter.WriteAttributeString("total", summary.TestCount.ToString());
             xmlWriter.WriteAttributeString("errors", summary.ErrorCount.ToString());
             xmlWriter.WriteAttributeString("failures", summary.FailureCount.ToString());
-            var notRunTotal = summary.SkipCount + summary.FailureCount + summary.InvalidCount;
-            xmlWriter.WriteAttributeString("not-run", notRunTotal.ToString());
+            xmlWriter.WriteAttributeString("not-run", summary.NotRunCount.ToString());
             xmlWriter.WriteAttributeString("inconclusive", summary.InconclusiveCount.ToString());
             xmlWriter.WriteAttributeString("ignored", summary.IgnoreCount.ToString());
             xmlWriter.WriteAttributeString("skipped", summary.SkipCount.ToString());

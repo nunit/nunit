@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2008-2021 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,10 +21,45 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
-//
-// Current version for the NUnit Framework
-//
-[assembly: AssemblyVersion("3.13.1.0")]
-[assembly: AssemblyFileVersion("3.13.1.0")]
+namespace NUnit.Framework.Internal
+{
+    internal class AttributeProviderWrapper<T> : ICustomAttributeProvider
+        where T : Attribute
+    {
+        private readonly ICustomAttributeProvider _innerProvider;
+
+        public AttributeProviderWrapper(ICustomAttributeProvider innerProvider)
+        {
+            _innerProvider = innerProvider;
+        }
+
+        public object[] GetCustomAttributes(Type attributeType, bool inherit)
+        {
+            var attributes = _innerProvider.GetCustomAttributes(attributeType, inherit);
+            return GetFiltered(attributes);
+        }
+
+        public object[] GetCustomAttributes(bool inherit)
+        {
+            var attributes = _innerProvider.GetCustomAttributes(inherit);
+            return GetFiltered(attributes);
+        }
+
+        public bool IsDefined(Type attributeType, bool inherit)
+        {
+            return GetCustomAttributes(attributeType, inherit).Any();
+        }
+
+        private static T[] GetFiltered(IEnumerable<object> attributes)
+        {
+            return attributes
+                   .OfType<T>()
+                   .ToArray();
+        }
+    }
+}

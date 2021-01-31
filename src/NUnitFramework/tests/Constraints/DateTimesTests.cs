@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2007 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -21,10 +21,37 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
+using System;
 
-//
-// Current version for the NUnit Framework
-//
-[assembly: AssemblyVersion("3.13.1.0")]
-[assembly: AssemblyFileVersion("3.13.1.0")]
+namespace NUnit.Framework.Constraints
+{
+    [TestFixture]
+    public class DateTimesTests
+    {
+        [Test]
+        public void CanCalculateTimeSpanDifference()
+        {
+            Assert.That(DateTimes.Difference(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(100)), Is.EqualTo(TimeSpan.FromSeconds(90)));
+        }
+
+        [Test]
+        public void CanCalculateDateTimeDifference()
+        {
+            var date = DateTime.Now;
+            Assert.That(DateTimes.Difference(date, date.AddSeconds(90)), Is.EqualTo(TimeSpan.FromSeconds(90)));
+        }
+
+        [Test]
+        public void CanCalculateDateTimeOffsetDifference()
+        {
+            var dateOffset = DateTimeOffset.Now;
+            Assert.That(DateTimes.Difference(dateOffset, dateOffset.AddSeconds(90)), Is.EqualTo(TimeSpan.FromSeconds(90)));
+        }
+
+        [Test]
+        public void FailsOnNonDateTimeTypes()
+        {
+            Assert.Throws<ArgumentException>(() => DateTimes.Difference(10, 100));
+        }
+    }
+}

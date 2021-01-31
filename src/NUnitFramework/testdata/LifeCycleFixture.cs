@@ -28,7 +28,6 @@ using NUnit.Framework;
 namespace NUnit.TestData.LifeCycleTests
 {
     [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class DisposableFixture : IDisposable
     {
         public static int DisposeCount = 0;
@@ -42,6 +41,132 @@ namespace NUnit.TestData.LifeCycleTests
         public void Dispose()
         {
             DisposeCount++;
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleWithNestedFixture
+    {
+        public class NestedFixture
+        {
+            private int _value;
+
+            [Test]
+            public void Test1()
+            {
+                Assert.AreEqual(0, _value++);
+            }
+
+            [Test]
+            public void Test2()
+            {
+                Assert.AreEqual(0, _value++);
+            }
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleWithNestedOverridingFixture
+    {
+        [FixtureLifeCycle(LifeCycle.SingleInstance)]
+        public class NestedFixture
+        {
+            private int _value;
+
+            [Test]
+            [Order(0)]
+            public void Test1()
+            {
+                Assert.AreEqual(0, _value++);
+            }
+
+            [Test]
+            [Order(1)]
+            public void Test2()
+            {
+                Assert.AreEqual(1, _value++);
+            }
+        }
+    }
+
+    [TestFixtureSource(nameof(FixtureArgs))]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleWithTestFixtureSourceFixture
+    {
+        private readonly int _initialValue;
+        private int _value;
+
+        public LifeCycleWithTestFixtureSourceFixture(int num)
+        {
+            _initialValue = num;
+            _value = num;
+        }
+
+        public static int[] FixtureArgs() => new[] { 1, 42 };
+
+        [Test]
+        public void Test1()
+        {
+            Assert.AreEqual(_initialValue, _value++);
+        }
+
+        [Test]
+        public void Test2()
+        {
+            Assert.AreEqual(_initialValue, _value++);
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class FixtureWithTestCases
+    {
+        private int _counter;
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        public void Test(int _)
+        {
+            Assert.AreEqual(0, _counter++);
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class FixtureWithTestCaseSource
+    {
+        private int _counter;
+
+        public static int[] Args() => new[] { 1, 42 };
+
+        [TestCaseSource(nameof(Args))]
+        public void Test(int _)
+        {
+            Assert.AreEqual(0, _counter++);
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class FixtureWithValuesAttributeTest
+    {
+        private int _counter;
+
+        [Test]
+        public void Test([Values] bool? _)
+        {
+            Assert.AreEqual(0, _counter++);
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class FixtureWithTheoryTest
+    {
+        private int _counter;
+
+        [Theory]
+        public void Test(bool? _)
+        {
+            Assert.AreEqual(0, _counter++);
         }
     }
 

@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
+// Copyright (c) 2021 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -21,10 +21,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System.Reflection;
+using NUnit.Framework.Interfaces;
 
-//
-// Current version for the NUnit Framework
-//
-[assembly: AssemblyVersion("3.13.1.0")]
-[assembly: AssemblyFileVersion("3.13.1.0")]
+namespace NUnit.Framework.Internal.Extensions
+{
+    internal static class TestExtensions
+    {
+        public static bool HasLifeCycle(this ITest test, LifeCycle lifeCycle)
+        {
+            while (test != null)
+            {
+                if (test is TestFixture fixture && fixture.LifeCycle == LifeCycle.InstancePerTestCase)
+                    return lifeCycle == LifeCycle.InstancePerTestCase;
+
+                test = test.Parent;
+            }
+            return lifeCycle != LifeCycle.InstancePerTestCase;
+        }
+    }
+}
