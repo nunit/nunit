@@ -345,32 +345,13 @@ Task("PackageFramework")
             Version = packageVersion,
             BasePath = CurrentImageDir,
             OutputDirectory = PACKAGE_DIR,
-            Symbols = true
-        };
-
-        NuGetPack("nuget/framework/nunit.nuspec", settings);
-        NuGetPack("nuget/nunitlite/nunitlite.nuspec", settings);
-    });
-
-Task("PackageFrameworkSnupkg")
-    .Description("Creates NuGet snupkg source packages of the framework")
-    .IsDependentOn("CreateImage")
-    .Does(() =>
-    {
-        CreateDirectory(PACKAGE_DIR);
-
-        var settings = new NuGetPackSettings
-        {
-            Version = packageVersion,
-            BasePath = CurrentImageDir,
-            OutputDirectory = PACKAGE_DIR,
             Symbols = true,
             // snupkg is not yet supported by Cake, https://github.com/cake-build/cake/issues/2362
             ArgumentCustomization = args => args.Append("-SymbolPackageFormat snupkg")
         };
 
-        NuGetPack("nuget/framework/nunit.snupkg.nuspec", settings);
-        NuGetPack("nuget/nunitlite/nunitlite.snupkg.nuspec", settings);
+        NuGetPack("nuget/framework/nunit.nuspec", settings);
+        NuGetPack("nuget/nunitlite/nunitlite.nuspec", settings);
     });
 
 Task("PackageZip")
@@ -410,7 +391,6 @@ Task("SignPackages")
     .Description("Signs the NuGet packages")
     .IsDependentOn("InstallSigningTool")
     .IsDependentOn("PackageFramework")
-    .IsDependentOn("PackageFrameworkSnupkg")
     .Does(() =>
     {
         // Get the secret.
@@ -642,7 +622,6 @@ Task("Package")
     .Description("Packages all versions of the framework")
     .IsDependentOn("CheckForError")
     .IsDependentOn("PackageFramework")
-    .IsDependentOn("PackageFrameworkSnupkg")
     .IsDependentOn("PackageZip");
 
 Task("Appveyor")
