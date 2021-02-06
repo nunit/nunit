@@ -24,7 +24,7 @@
 using System;
 using NUnit.Framework;
 
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
 using System.Runtime.Remoting.Messaging;
 #else
 using System.Threading;
@@ -37,7 +37,7 @@ namespace NUnit.TestData
         // Constructor/Dispose and one-time setup/teardown may need to start flowing differently when we implement
         // instance-per-test-case.
 
-#if !(NET35 || NET40)
+#if !(NET35 || NET40 || NET45)
         private static readonly AsyncLocal<bool> FromConstructor = new AsyncLocal<bool>();
         private static readonly AsyncLocal<bool> FromOneTimeSetUp1 = new AsyncLocal<bool>();
         private static readonly AsyncLocal<bool> FromOneTimeSetUp2 = new AsyncLocal<bool>();
@@ -52,7 +52,7 @@ namespace NUnit.TestData
 
         public ExecutionContextFlowFixture()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             CallContext.LogicalSetData("Constructor", true);
 #else
             FromConstructor.Value = true;
@@ -62,7 +62,7 @@ namespace NUnit.TestData
         [OneTimeSetUp]
         public void OneTimeSetUp1()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
 
             CallContext.LogicalSetData("OneTimeSetUp1", true);
@@ -76,7 +76,7 @@ namespace NUnit.TestData
         [OneTimeSetUp]
         public void OneTimeSetUp2()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
 
@@ -92,7 +92,7 @@ namespace NUnit.TestData
         [SetUp]
         public void SetUp1()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -122,7 +122,7 @@ namespace NUnit.TestData
         [SetUp]
         public void SetUp2()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -152,7 +152,7 @@ namespace NUnit.TestData
         [Test]
         public void TestMethod([Range(1, 2)] int testCase)
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -182,7 +182,7 @@ namespace NUnit.TestData
         [TearDown]
         public void TearDown2()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -212,7 +212,7 @@ namespace NUnit.TestData
         [TearDown]
         public void TearDown1()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -242,7 +242,7 @@ namespace NUnit.TestData
         [OneTimeTearDown]
         public void OneTimeTearDown2()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -276,7 +276,7 @@ namespace NUnit.TestData
         [OneTimeTearDown]
         public void OneTimeTearDown1()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);
@@ -305,7 +305,7 @@ namespace NUnit.TestData
 
         public void Dispose()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.That(CallContext.LogicalGetData("Constructor"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp1"), Is.True);
             Assert.That(CallContext.LogicalGetData("OneTimeSetUp2"), Is.True);

@@ -17,8 +17,8 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.13.2";
-var modifier = "";
+var version = "4.0.0";
+var modifier = "-alpha-1";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
@@ -57,6 +57,7 @@ var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
+var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = "nunitlite-runner.exe";
 var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
 var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
@@ -202,7 +203,8 @@ Task("Test45")
     {
         var runtime = "net45";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
+        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
         PublishTestResults(runtime);
     });
@@ -216,7 +218,8 @@ Task("Test40")
     {
         var runtime = "net40";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
+        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
         PublishTestResults(runtime);
     });
@@ -229,7 +232,8 @@ Task("Test35")
     {
         var runtime = "net35";
         var dir = BIN_DIR + runtime + "/";
-        RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
+        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
         PublishTestResults(runtime);
     });
@@ -237,7 +241,7 @@ Task("Test35")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0", "net5.0-windows" })
+foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
@@ -514,10 +518,10 @@ void RunNUnitTests(DirectoryPath workingDir, string testAssembly, string framewo
 
 void RunTest(FilePath exePath, DirectoryPath workingDir, string framework, ref List<string> errorDetail)
 {
-    RunTest(exePath, workingDir, null, framework, ref errorDetail);
+    RunTest(exePath, workingDir, null, GetResultXmlPath(exePath.FullPath, framework), framework, ref errorDetail);
 }
 
-void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, ref List<string> errorDetail)
+void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, FilePath resultFile, string framework, ref List<string> errorDetail)
 {
     int rc = StartProcess(
         MakeAbsolute(exePath),
@@ -525,7 +529,7 @@ void RunTest(FilePath exePath, DirectoryPath workingDir, string arguments, strin
         {
             Arguments = new ProcessArgumentBuilder()
                 .Append(arguments)
-                .AppendSwitchQuoted("--result", ":", GetResultXmlPath(exePath.FullPath, framework).FullPath)
+                .AppendSwitchQuoted("--result", ":", resultFile.FullPath)
                 .Render(),
             WorkingDirectory = workingDir
         });
