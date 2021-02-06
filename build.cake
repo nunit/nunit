@@ -30,8 +30,6 @@ var packageVersion = version + modifier + dbgSuffix;
 var AllFrameworks = new string[]
 {
     "net45",
-    "net40",
-    "net35",
     "netstandard2.0"
 };
 
@@ -209,35 +207,6 @@ Task("Test45")
         PublishTestResults(runtime);
     });
 
-Task("Test40")
-    .Description("Tests the .NET 4.0 version of the framework")
-    .WithCriteria(IsRunningOnWindows())
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "net40";
-        var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
-        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
-    });
-
-Task("Test35")
-    .Description("Tests the .NET 3.5 version of the framework")
-    .IsDependentOn("Build")
-    .OnError(exception => { ErrorDetail.Add(exception.Message); })
-    .Does(() =>
-    {
-        var runtime = "net35";
-        var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
-        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
-        PublishTestResults(runtime);
-    });
-
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
@@ -367,12 +336,8 @@ Task("PackageZip")
 
         var zipFiles =
             GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net35/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/net40/**/*.*") +
             GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard1.4/**/*.*") +
             GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netcoreapp1.1/**/*.*") +
             GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
@@ -618,8 +583,6 @@ Task("Test")
     .Description("Builds and tests all versions of the framework")
     .IsDependentOn("Build")
     .IsDependentOn("Test45")
-    .IsDependentOn("Test40")
-    .IsDependentOn("Test35")
     .IsDependentOn("TestNetStandard20");
 
 Task("Package")
