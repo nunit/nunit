@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
     public abstract class TestParameters : ITestData, IApplyToTest
     {
         internal static readonly object[] NoArguments =
-#if NET35 || NET40 || NET45 // New in net46
+#if NET45 // New in net46
             new object[0];
 #else
             Array.Empty<object>();

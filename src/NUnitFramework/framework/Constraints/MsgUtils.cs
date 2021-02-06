@@ -30,7 +30,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -117,9 +116,7 @@ namespace NUnit.Framework.Constraints
             AddFormatter(next => val => TryFormatTuple(val, TypeHelper.IsValueTuple, GetValueFromValueTuple) ?? next(val));
         }
 
-#if !NET35
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
-#endif
         private static string FormatValueWithoutThrowing(object? val)
         {
             string? asString;

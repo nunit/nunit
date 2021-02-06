@@ -115,7 +115,7 @@ namespace NUnit.Framework.Constraints
             // Partly optimization, partly makes any subsequent all()/any() calls reliable
             if (allTypes.Count == 0)
                 return new object[0];
-            
+
             var distinctTypes = allTypes.Distinct().ToList();
             if (distinctTypes.Count == 1)
             {
@@ -257,11 +257,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1"))
                 {
-#if NET35 || NET40
-                    return type.GetGenericArguments()[0];
-#else
                     return type.GenericTypeArguments[0];
-#endif
                 }
             }
 

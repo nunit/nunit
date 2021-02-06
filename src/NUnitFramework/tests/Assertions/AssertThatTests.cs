@@ -28,12 +28,7 @@ using NUnit.TestData;
 using NUnit.TestUtilities;
 
 #if TASK_PARALLEL_LIBRARY_API
-using System;
 using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
 #endif
 
 namespace NUnit.Framework.Assertions

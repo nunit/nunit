@@ -34,10 +34,6 @@ using NUnit.TestUtilities;
 using System.Threading.Tasks;
 #endif
 
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
-
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]

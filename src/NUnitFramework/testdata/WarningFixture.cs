@@ -30,10 +30,6 @@ using NUnit.Framework.Constraints;
 using System.Threading.Tasks;
 #endif
 
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
-
 namespace NUnit.TestData
 {
     [TestFixture]

@@ -25,12 +25,9 @@
 
 using System;
 using System.Collections;
-using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -39,25 +36,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if NET35 || NET40
-        private static readonly Action<Exception> PreserveStackTrace;
-
-        static ExceptionHelper()
-        {
-            var method = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (method != null)
-            {
-                try
-                {
-                    PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), method);
-                    return;
-                }
-                catch (InvalidOperationException) { }
-            }
-            PreserveStackTrace = _ => { };
-        }
-#endif
 
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
@@ -65,12 +43,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET35 || NET40
-            PreserveStackTrace(exception);
-            throw exception;
-#else
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
-#endif
         }
 
         /// <summary>

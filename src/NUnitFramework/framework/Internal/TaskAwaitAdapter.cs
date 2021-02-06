@@ -21,14 +21,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API && !NET40
+#if TASK_PARALLEL_LIBRARY_API
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Threading.Tasks;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {

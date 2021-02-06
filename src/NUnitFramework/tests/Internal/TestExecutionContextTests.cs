@@ -948,7 +948,7 @@ namespace NUnit.Framework.Internal
 
 #region Cross-domain Tests
 
-#if NET35 || NET40 || NET45
+#if NET45
         [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
@@ -987,20 +987,12 @@ namespace NUnit.Framework.Internal
 #if TASK_PARALLEL_LIBRARY_API
         private async Task YieldAsync()
         {
-#if NET40
-            await TaskEx.Yield();
-#else
             await Task.Yield();
-#endif
         }
 
         private Task<T[]> WhenAllAsync<T>(params Task<T>[] tasks)
         {
-#if NET40
-            return TaskEx.WhenAll(tasks);
-#else
             return Task.WhenAll(tasks);
-#endif
         }
 
         private async Task<TestExecutionContext> YieldAndReturnContext()
@@ -1013,7 +1005,7 @@ namespace NUnit.Framework.Internal
 #endregion
     }
 
-#if NET35 || NET40 || NET45
+#if NET45
     [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {

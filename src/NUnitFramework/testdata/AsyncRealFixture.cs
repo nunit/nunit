@@ -26,10 +26,6 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
-
 // Don’t warn when async is used without await
 #pragma warning disable CS1998
 

@@ -170,7 +170,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if !NET35
         [Test]
         public static void UsesProvidedGenericEqualityComparison()
         {
@@ -273,6 +272,5 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(writer.ToString(), Is.EqualTo(expectedMessage));
         }
-#endif
     }
 }

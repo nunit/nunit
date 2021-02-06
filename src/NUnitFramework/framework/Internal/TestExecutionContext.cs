@@ -35,7 +35,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if NET35 || NET40 || NET45
+#if NET45
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
     /// or which might be changed by the user tests.
     /// </summary>
     public class TestExecutionContext : LongLivedMarshalByRefObject
-#if NET35 || NET40 || NET45
+#if NET45
         , ILogicalThreadAffinative
 #endif
     {
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal
 
         // NOTE: We use different implementations for various platforms.
 
-#if !(NET35 || NET40 || NET45)
+#if !NET45
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
         /// Gets and sets the current context.

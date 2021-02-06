@@ -374,11 +374,7 @@ namespace NUnit.Framework
 
         private async Task YieldAsync()
         {
-#if NET40
-            await TaskEx.Yield();
-#else
             await Task.Yield();
-#endif
         }
 #endif
 

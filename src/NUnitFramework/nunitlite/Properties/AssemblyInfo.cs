@@ -34,10 +34,6 @@ using System.Runtime.CompilerServices;
 
 #if NET45
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.5)")]
-#elif NET40
-[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.0)")]
-#elif NET35
-[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 3.5)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
 #else

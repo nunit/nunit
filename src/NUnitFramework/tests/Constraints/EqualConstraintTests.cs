@@ -52,13 +52,11 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
             };
 
-#if !NET35
         [Test]
         public void Complex_PassesEquality()
         {
             Assert.AreEqual(new System.Numerics.Complex(1, 100), new System.Numerics.Complex(1, 100));
         }
-#endif
 
         #region DateTimeEquality
 

@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
@@ -31,10 +30,6 @@ using NUnit.TestUtilities;
 
 #if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
 #endif
 
 namespace NUnit.Framework.Assertions
@@ -223,29 +218,21 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void WarnUnless_Async_Error()
         {
-#if !NET40
             var exception =
-#endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
-#endif
         }
 
         [Test]
         public void WarnIf_Async_Error()
         {
-#if !NET40
             var exception =
-#endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
 
-#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
-#endif
         }
 
         private static Task<int> One()

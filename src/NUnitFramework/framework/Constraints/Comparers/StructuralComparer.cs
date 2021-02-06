@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NET35
 using System.Collections;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -90,4 +89,3 @@ namespace NUnit.Framework.Constraints.Comparers
         }
     }
 }
-#endif

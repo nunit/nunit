@@ -27,17 +27,13 @@ using System.Reflection;
 // Common Information for the NUnit assemblies
 //
 [assembly: AssemblyCompany("NUnit Software")]
-[assembly: AssemblyProduct("NUnit 3")]
+[assembly: AssemblyProduct("NUnit 4")]
 [assembly: AssemblyCopyright("Copyright (c) 2021 Charlie Poole, Rob Prouse")]
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
 #if DEBUG
 #if NET45
 [assembly: AssemblyConfiguration(".NET Framework 4.5 Debug")]
-#elif NET40
-[assembly: AssemblyConfiguration(".NET Framework 4.0 Debug")]
-#elif NET35
-[assembly: AssemblyConfiguration(".NET Framework 3.5 Debug")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
 #elif NETCOREAPP2_1
@@ -52,10 +48,6 @@ using System.Reflection;
 #else
 #if NET45
 [assembly: AssemblyConfiguration(".NET Framework 4.5")]
-#elif NET40
-[assembly: AssemblyConfiguration(".NET Framework 4.0")]
-#elif NET35
-[assembly: AssemblyConfiguration(".NET Framework 3.5")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0")]
 #elif NETCOREAPP2_1

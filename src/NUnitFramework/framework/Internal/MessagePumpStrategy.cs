@@ -23,12 +23,10 @@
 
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
 
-#if NET40 || NET45
+#if NET45
 using System.Windows.Forms;
 using System.Windows.Threading;
 #endif

@@ -152,7 +152,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(s, Is.EqualTo(expectedResult));
         }
 
-#if !NET35
         [Test]
         public static void FormatValue_EmptyValueTupleTest()
         {
@@ -255,7 +254,6 @@ namespace NUnit.Framework.Constraints
             string s = MsgUtils.FormatValue(tuple);
             Assert.That(s, Is.EqualTo("(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, \"12\", 13, 14, \"15\")"));
         }
-#endif
 
         #endregion
 

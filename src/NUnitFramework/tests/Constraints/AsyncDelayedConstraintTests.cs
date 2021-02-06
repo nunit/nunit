@@ -96,11 +96,7 @@ namespace NUnit.Framework.Constraints
 
 		private static async Task<int> One()
 		{
-#if NET40
-            return await TaskEx.Run(() => 1);
-#else
 			return await Task.Run(() => 1);
-#endif
 		}
 
 		private static async Task Throw()

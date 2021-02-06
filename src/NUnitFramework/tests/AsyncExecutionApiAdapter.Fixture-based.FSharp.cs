@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API && !NET40
+#if TASK_PARALLEL_LIBRARY_API
 namespace NUnit.Framework
 {
     partial class AsyncExecutionApiAdapter

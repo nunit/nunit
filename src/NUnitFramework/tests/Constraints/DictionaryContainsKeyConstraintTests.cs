@@ -26,7 +26,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -535,7 +534,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if !(NET35 || NET40)
         public class TestReadOnlyDictionary : IReadOnlyDictionary<string, string>
         {
             private readonly string _key;
@@ -670,8 +668,6 @@ namespace NUnit.Framework.Constraints
             public int Count { get; }
             public bool IsReadOnly { get; }
         }
-#endif
-
         #endregion
     }
 }

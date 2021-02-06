@@ -36,11 +36,7 @@ namespace NUnit.Framework
 
             adapter.Execute(async () =>
             {
-#if NET40
-                await TaskEx.Yield();
-#else
                 await Task.Yield();
-#endif
                 didExecute = true;
             });
 

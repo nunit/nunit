@@ -24,7 +24,6 @@
 using System;
 using System.Reflection;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
@@ -58,14 +57,8 @@ namespace NUnit.TestUtilities
                         }
                         catch (Exception ex)
                         {
-#if NET35 || NET40
-                            exception = ex;
-                            times = 0;
-                            Thread.MemoryBarrier();
-#else
                             Volatile.Write(ref exception, ex);
                             Volatile.Write(ref times, 0);
-#endif
                         }
                         finally
                         {
@@ -91,12 +84,7 @@ namespace NUnit.TestUtilities
 
                 noMoreThreadsEvent.Wait();
 
-#if NET35 || NET40
-                Thread.MemoryBarrier();
-                if (exception != null)
-#else
                 if (Volatile.Read(ref exception) != null)
-#endif
                 {
                     ExceptionHelper.Rethrow(exception);
                 }

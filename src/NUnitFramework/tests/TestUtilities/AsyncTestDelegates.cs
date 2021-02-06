@@ -19,13 +19,7 @@ namespace NUnit.TestUtilities
 
         public static Task ThrowsNothing()
         {
-#if NET40
-            var tcs = new TaskCompletionSource<int>();
-            tcs.SetResult(0);
-            return tcs.Task;
-#else
             return Task.FromResult(0);
-#endif
         }
 
         public static Task ThrowsNullReferenceException()
@@ -50,13 +44,7 @@ namespace NUnit.TestUtilities
 
         public static Task Delay(int milliseconds)
         {
-#if NET40
-            var tcs = new TaskCompletionSource<int>();
-            var timer = new System.Threading.Timer(_ => tcs.SetResult(0), null, milliseconds, System.Threading.Timeout.Infinite);
-            return tcs.Task.ContinueWith(t => timer.Dispose(), TaskScheduler.Default);
-#else
             return Task.Delay(milliseconds);
-#endif
         }
     }
 }

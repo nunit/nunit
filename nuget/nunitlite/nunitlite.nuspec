@@ -29,12 +29,6 @@ How to use this package:
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
     <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
     <dependencies>
-      <group targetFramework="net35">
-        <dependency id="NUnit" version="[$version$]" />
-      </group>
-      <group targetFramework="net40">
-        <dependency id="NUnit" version="[$version$]" />
-      </group>
       <group targetFramework="net45">
         <dependency id="NUnit" version="[$version$]" />
       </group>

@@ -24,9 +24,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !(NET35 || NET40)
 using System.Collections.Immutable;
-#endif
 using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
@@ -108,7 +106,6 @@ namespace NUnit.Framework.Constraints
             new object[] {new List<string> {"a", "b", "c"}, new List<string> {"A", "B", "C"}},
         };
 
-#if !(NET35 || NET40)
         [Test]
         [DefaultFloatingPointTolerance(0.5)]
         public void StructuralComparerOnSameCollection_RespectsAndSetsToleranceByRef()
@@ -175,6 +172,5 @@ namespace NUnit.Framework.Constraints
                 }
             }
         }
-#endif
     }
 }

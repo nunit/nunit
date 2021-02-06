@@ -3,9 +3,6 @@ using NUnit.Framework;
 
 #if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
 #endif
 
 namespace NUnit.TestData.AssertMultipleData

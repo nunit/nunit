@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if NET35 || NET40 || NET45
+#if NET45
 using System;
 using System.Threading;
 using System.Runtime.Remoting.Messaging;
