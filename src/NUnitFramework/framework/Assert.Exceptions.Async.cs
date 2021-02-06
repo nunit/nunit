@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
-
 #nullable enable
 
 using System;
@@ -225,4 +223,3 @@ namespace NUnit.Framework
         #endregion
     }
 }
-#endif

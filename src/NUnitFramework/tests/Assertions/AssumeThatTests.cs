@@ -23,10 +23,7 @@
 
 using System;
 using NUnit.Framework.Constraints;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -347,7 +344,6 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void AssumeThatSuccess()
         {
@@ -385,6 +381,5 @@ namespace NUnit.Framework.Assertions
             await One();
             throw new InvalidOperationException();
         }
-#endif
     }
 }

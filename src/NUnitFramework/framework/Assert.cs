@@ -38,13 +38,11 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
-#if TASK_PARALLEL_LIBRARY_API
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
     /// </summary>
     public delegate System.Threading.Tasks.Task AsyncTestDelegate();
-#endif
 
     /// <summary>
     /// The Assert class contains a collection of static methods that
@@ -335,7 +333,6 @@ namespace NUnit.Framework
             }
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         /// <summary>
         /// Wraps code containing a series of assertions, which should all
         /// be executed, even if they fail. Failed results are saved and
@@ -364,7 +361,6 @@ namespace NUnit.Framework
                 throw new MultipleAssertException(context.CurrentResult);
             }
         }
-#endif
 
         #endregion
 

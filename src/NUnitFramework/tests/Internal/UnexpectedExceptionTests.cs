@@ -62,7 +62,6 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(expectedMessage, result.Message);
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void FailRecordsInnerExceptionsAsPartOfAggregateException()
         {
@@ -92,7 +91,6 @@ namespace NUnit.Framework.Internal
             Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
             Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
         }
-#endif
 
         [Test]
         public void BadStackTraceIsHandled()

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System.Collections.Generic;
 
 namespace NUnit.Framework
@@ -57,4 +56,3 @@ namespace NUnit.Framework
         public abstract override string ToString();
     }
 }
-#endif

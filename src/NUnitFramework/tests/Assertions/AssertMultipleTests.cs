@@ -42,11 +42,9 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(AM.NestedBlocksInMethodCalls), 3)]
         [TestCase(nameof(AM.ThreeWarnIf_AllPass), 3)]
         [TestCase(nameof(AM.ThreeWarnUnless_AllPass), 3)]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(AM.ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.NestedBlock_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async), 3)]
-#endif
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             CheckResult(methodName, ResultState.Success, asserts);
@@ -63,10 +61,8 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(AM.MethodCallsFailAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
         [TestCase(nameof(AM.TwoAssertsFailAfterWarning), 2, "WARNING", "Expected: 5", "ImaginaryPart")]
         [TestCase(nameof(AM.WarningAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "WARNING")]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(AM.TwoAsserts_BothAssertsFail_Async), 2, "RealPart", "ImaginaryPart")]
         [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async), 3, "Expected: 5", "ImaginaryPart")]
-#endif
         public void AssertMultipleFails(string methodName, int asserts, params string[] assertionMessages)
         {
             CheckResult(methodName, ResultState.Failure, asserts, assertionMessages);

@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -177,4 +176,3 @@ namespace NUnit.Framework
 #endif
     }
 }
-#endif

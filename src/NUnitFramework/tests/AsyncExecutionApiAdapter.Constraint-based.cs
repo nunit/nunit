@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using NUnit.Framework.Constraints;
 using NUnit.TestUtilities;
 
@@ -76,4 +75,3 @@ namespace NUnit.Framework
         }
     }
 }
-#endif

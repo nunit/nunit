@@ -26,10 +26,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -313,7 +310,6 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void AssertThatSuccess()
         {
@@ -385,7 +381,6 @@ namespace NUnit.Framework.Assertions
             await AsyncReturnOne();
             throw new InvalidOperationException();
         }
-#endif
 
         [Test]
         public void AssertThatWithLambda()

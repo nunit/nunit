@@ -147,7 +147,6 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in reflectionException.LoaderExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-#if TASK_PARALLEL_LIBRARY_API
             if (exception is AggregateException aggregateException)
             {
                 result.AddRange(aggregateException.InnerExceptions);
@@ -155,9 +154,7 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in aggregateException.InnerExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-            else
-#endif
-            if (exception.InnerException != null)
+            else if (exception.InnerException != null)
             {
                 result.Add(exception.InnerException);
                 result.AddRange(FlattenExceptionHierarchy(exception.InnerException));
