@@ -326,43 +326,31 @@ namespace NUnit.Framework.Assertions
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
-#if NET45
             var exception =
-#endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
 
-#if NET45
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
-#endif
         }
 
         [Test]
         public void AssertThatErrorGenericTask()
         {
-#if NET45
             var exception =
-#endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
 
-#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
-#endif
         }
 
         [Test]
         public void AssertThatErrorVoid()
         {
-#if NET45
             var exception =
-#endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
-#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
-#endif
         }
 
         private static Task<int> AsyncReturnOne()

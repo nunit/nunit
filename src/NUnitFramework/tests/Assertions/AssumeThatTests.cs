@@ -360,15 +360,11 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumeThatError()
         {
-#if NET45
             var exception = 
-#endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
-#endif
         }
 
         private static Task<int> One()

@@ -217,8 +217,6 @@ namespace NUnit.Framework.Constraints
             Assert.DoesNotThrow(() => Assert.That(poco, Does.ContainKey("Peter")));
         }
 
-#if NET45
-
         [Test]
         public void ShouldCallContainsKeysMethodOnReadOnlyInterface()
         {
@@ -235,8 +233,6 @@ namespace NUnit.Framework.Constraints
 
             Assert.Catch<ArgumentException>(() => Assert.That(set, Does.ContainKey("NotHappening")));
         }
-
-#endif
 
         [Test]
         public void ShouldCallContainsKeysMethodOnLookupInterface()

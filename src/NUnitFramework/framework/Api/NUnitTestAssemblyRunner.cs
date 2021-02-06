@@ -426,11 +426,11 @@ namespace NUnit.Framework.Api
 #endif
         protected void WrapInNUnitCallContext(Action action)
         {
-#if !NET45
-            action();
-#else
+#if NET45
             using (new NUnitCallContext())
                 action();
+#else
+            action();
 #endif
         }
     }

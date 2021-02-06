@@ -26,11 +26,6 @@ using System.Reflection;
 using System.Security;
 using System.Threading;
 
-#if NET45
-using System.Windows.Forms;
-using System.Windows.Threading;
-#endif
-
 namespace NUnit.Framework.Internal
 {
     internal abstract class MessagePumpStrategy
