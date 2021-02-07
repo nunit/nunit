@@ -429,8 +429,6 @@ namespace NUnit.Framework.Internal
             bool is32BitProcess = helper.IsPlatformSupported(attr32);
             bool is64BitProcess = helper.IsPlatformSupported(attr64);
             Assert.False(is32BitProcess & is64BitProcess, "Process cannot be both 32 and 64 bit");
-
-            // For .NET 4.0 and 4.5, we can check further
             Assert.That(is64BitProcess, Is.EqualTo(Environment.Is64BitProcess));
         }
 
