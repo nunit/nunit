@@ -84,3 +84,11 @@ Consider this:
 // Something that .NET Framework 4.5 can't do
 #endif
 ```
+
+Or this for the opposite:
+
+```cs
+#if NETFRAMEWORK
+// Something that only .NET Framework can do
+#endif
+```

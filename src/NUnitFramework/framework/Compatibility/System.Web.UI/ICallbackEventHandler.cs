@@ -21,7 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if !NET45
+#if !NETFRAMEWORK
 namespace System.Web.UI
 {
     /// <summary>

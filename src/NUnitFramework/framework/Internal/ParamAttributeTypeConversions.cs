@@ -28,7 +28,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
 
-#if !NET45
+#if !NETFRAMEWORK
 using System.Reflection;
 #endif
 

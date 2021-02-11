@@ -34,7 +34,7 @@ using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 
-#if NET45
+#if NETFRAMEWORK
 using System.Windows.Forms;
 #endif
 
@@ -313,7 +313,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if NET45
+#if NETFRAMEWORK
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -392,7 +392,7 @@ namespace NUnit.Framework.Api
                    : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 
-#if NET45
+#if NETFRAMEWORK
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -412,7 +412,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if NET45
+#if NETFRAMEWORK
         /// <summary>
         /// Executes the action within an <see cref="NUnitCallContext" />
         /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
@@ -426,7 +426,7 @@ namespace NUnit.Framework.Api
 #endif
         protected void WrapInNUnitCallContext(Action action)
         {
-#if NET45
+#if NETFRAMEWORK
             using (new NUnitCallContext())
                 action();
 #else
