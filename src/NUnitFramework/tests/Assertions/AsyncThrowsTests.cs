@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2012 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -21,14 +21,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -136,4 +131,3 @@ namespace NUnit.Framework.Assertions
         }
     }
 }
-#endif

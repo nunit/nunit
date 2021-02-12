@@ -27,7 +27,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
@@ -546,14 +545,4 @@ namespace NUnit.Framework.Internal.Execution
 
 #endregion
     }
-
-#if NET35
-    static class ActionTargetsExtensions
-    {
-        public static bool HasFlag(this ActionTargets targets, ActionTargets value)
-        {
-            return (targets & value) != 0;
-        }
-    }
-#endif
 }

@@ -49,14 +49,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var dirInfo = ConstraintUtils.RequireActual<DirectoryInfo>(actual, nameof(actual));
-            bool hasSucceeded;
-
-#if !NET35
-            hasSucceeded = !dirInfo.EnumerateFileSystemInfos().Any();
-#else
-            hasSucceeded = !dirInfo.GetFileSystemInfos().Any();
-#endif
-
+            bool hasSucceeded = !dirInfo.EnumerateFileSystemInfos().Any();
             return new ConstraintResult(this, actual, hasSucceeded);
         }
 

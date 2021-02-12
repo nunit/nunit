@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -30,9 +28,6 @@ using System.Threading.Tasks;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
-#if !NET40
-using TaskEx = System.Threading.Tasks.Task;
-#endif
 
 namespace NUnit.Framework
 {
@@ -83,7 +78,7 @@ namespace NUnit.Framework
 
             apiAdapter.Execute(async () =>
             {
-                await TaskEx.Yield();
+                await Task.Yield();
                 Assert.That(Thread.CurrentThread, Is.SameAs(thread));
             });
         }
@@ -100,7 +95,7 @@ namespace NUnit.Framework
             apiAdapter.Execute(() =>
             {
                 Assert.That(Thread.CurrentThread, Is.SameAs(thread));
-                return TaskEx.FromResult<object>(null);
+                return Task.FromResult<object>(null);
             });
         }
 
@@ -181,4 +176,3 @@ namespace NUnit.Framework
 #endif
     }
 }
-#endif

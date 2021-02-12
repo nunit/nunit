@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2008 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -23,14 +23,7 @@
 
 using System;
 using NUnit.Framework.Constraints;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -351,7 +344,6 @@ namespace NUnit.Framework.Assertions
             return 5;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void AssumeThatSuccess()
         {
@@ -368,15 +360,11 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumeThatError()
         {
-#if NET45
             var exception = 
-#endif
             Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if NET45
         Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
-#endif
         }
 
         private static Task<int> One()
@@ -389,6 +377,5 @@ namespace NUnit.Framework.Assertions
             await One();
             throw new InvalidOperationException();
         }
-#endif
     }
 }

@@ -38,13 +38,11 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
-#if TASK_PARALLEL_LIBRARY_API
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
     /// </summary>
     public delegate System.Threading.Tasks.Task AsyncTestDelegate();
-#endif
 
     /// <summary>
     /// The Assert class contains a collection of static methods that
@@ -335,7 +333,6 @@ namespace NUnit.Framework
             }
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         /// <summary>
         /// Wraps code containing a series of assertions, which should all
         /// be executed, even if they fail. Failed results are saved and
@@ -364,7 +361,6 @@ namespace NUnit.Framework
                 throw new MultipleAssertException(context.CurrentResult);
             }
         }
-#endif
 
         #endregion
 
@@ -411,12 +407,10 @@ namespace NUnit.Framework
         /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the
         /// Environment.StackTrace property." See also <see cref="ExceptionExtensions.GetStackTraceWithoutThrowing"/>.
         /// </summary>
-#if !NET35
         // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
-#endif
         private static string GetEnvironmentStackTraceWithoutThrowing()
         {
             try

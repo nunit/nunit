@@ -25,14 +25,7 @@ using System;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
 
 namespace NUnit.TestData
 {
@@ -291,7 +284,6 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), getExceptionMessage);
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Passes_Async()
         {
@@ -303,7 +295,6 @@ namespace NUnit.TestData
         {
             Warn.If(async () => await One(), Is.Not.EqualTo(1));
         }
-#endif
 
         #endregion
 
@@ -571,7 +562,6 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), getExceptionMessage);
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Fails_Async()
         {
@@ -583,7 +573,6 @@ namespace NUnit.TestData
         {
             Warn.If(async () => await One(), Is.Not.EqualTo(2));
         }
-#endif
 
         #endregion
 
@@ -627,12 +616,10 @@ namespace NUnit.TestData
             return 5;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         private static Task<int> One()
         {
             return Task.Run(() => 1);
         }
-#endif
 
         #endregion
 
@@ -709,7 +696,6 @@ namespace NUnit.TestData
             }
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public static void WarningInTaskRun()
         {
@@ -723,7 +709,6 @@ namespace NUnit.TestData
             await Task.Delay(1);
             Assert.Warn("(Warning message)");
         }
-#endif
 
 #endregion
     }

@@ -23,19 +23,11 @@
 
 using System;
 using System.Linq;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
 
 namespace NUnit.Framework.Assertions
 {
@@ -82,10 +74,8 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageAndArgs))]
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_DelegateAndConstraintWithMessageStringFunc))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_DelegateAndConstraintWithMessageStringFunc))]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(WarningFixture.WarnUnless_Passes_Async))]
         [TestCase(nameof(WarningFixture.WarnIf_Passes_Async))]
-#endif
         public void WarningPasses(string methodName)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
@@ -135,10 +125,8 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageAndArgs), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_DelegateAndConstraintWithMessageStringFunc), "Should be 4")]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_Async), null)]
         [TestCase(nameof(WarningFixture.WarnIf_Fails_Async), null)]
-#endif
         public void WarningFails(string methodName, string expectedMessage)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
@@ -219,33 +207,24 @@ namespace NUnit.Framework.Assertions
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Async_Error()
         {
-#if !NET40
             var exception =
-#endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.Unless(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
-#endif
         }
 
         [Test]
         public void WarnIf_Async_Error()
         {
-#if !NET40
             var exception =
-#endif
                 Assert.Throws<InvalidOperationException>(() =>
                     Warn.If(async () => await ThrowExceptionGenericTask(), Is.Not.EqualTo(1)));
 
-#if !NET40
             Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
-#endif
         }
 
         private static Task<int> One()
@@ -258,7 +237,6 @@ namespace NUnit.Framework.Assertions
             await One();
             throw new InvalidOperationException();
         }
-#endif
 
         // We decided to trim ExecutionContext and below because ten lines per warning adds up
         // and makes it hard to read build logs.
@@ -267,10 +245,8 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(WarningFixture.WarningInTaskRun), 4)]
         [TestCase(nameof(WarningFixture.WarningAfterAwaitTaskDelay), 5)]
-#endif
         public static void StackTracesAreFiltered(string methodName, int maxLineCount)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);

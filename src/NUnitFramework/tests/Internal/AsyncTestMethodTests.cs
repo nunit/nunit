@@ -21,9 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System.Collections;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData;
@@ -123,4 +121,3 @@ namespace NUnit.Framework.Internal
         }
     }
 }
-#endif

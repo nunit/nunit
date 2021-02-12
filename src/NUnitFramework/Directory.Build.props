@@ -17,8 +17,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)' != 'net35'">$(DefineConstants);TASK_PARALLEL_LIBRARY_API</DefineConstants>
-
     <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'
                             and '$(TargetFramework)' != 'netcoreapp2.1'
                             and '$(TargetFramework)' != 'netcoreapp3.1'

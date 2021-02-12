@@ -52,10 +52,6 @@ using System.Security;
 
 #if NET45
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.5)")]
-#elif NET40
-[assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.0)")]
-#elif NET35
-[assembly: AssemblyTitle("NUnit Framework (.NET Framework 3.5)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnit Framework (.NET Standard 2.0)")]
 #else

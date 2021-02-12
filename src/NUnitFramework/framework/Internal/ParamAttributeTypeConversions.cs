@@ -28,7 +28,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Globalization;
 
-#if !(NET35 || NET40 || NET45)
+#if !NETFRAMEWORK
 using System.Reflection;
 #endif
 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         public static IEnumerable ConvertData(object?[] data, Type targetType)
         {
             Guard.ArgumentNotNull(data, nameof(data));
-            Guard.ArgumentNotNull(targetType, nameof(targetType));           
+            Guard.ArgumentNotNull(targetType, nameof(targetType));
             return GetData(data, targetType);
         }
 

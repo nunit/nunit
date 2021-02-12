@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System.Collections.Generic;
 
 namespace NUnit.Framework
@@ -39,13 +38,11 @@ namespace NUnit.Framework
             new TaskReturningTearDownAdapter(),
             new TaskReturningOneTimeSetUpAdapter(),
             new TaskReturningOneTimeTearDownAdapter(),
-#if !NET40
             new FSharpTaskReturningTestMethodAdapter(),
             new FSharpTaskReturningSetUpAdapter(),
             new FSharpTaskReturningTearDownAdapter(),
             new FSharpTaskReturningOneTimeSetUpAdapter(),
             new FSharpTaskReturningOneTimeTearDownAdapter(),
-#endif
             new AssertThrowsAsyncAdapter(),
             new AssertDoesNotThrowAsyncAdapter(),
             new AssertCatchAsyncAdapter(),
@@ -59,4 +56,3 @@ namespace NUnit.Framework
         public abstract override string ToString();
     }
 }
-#endif

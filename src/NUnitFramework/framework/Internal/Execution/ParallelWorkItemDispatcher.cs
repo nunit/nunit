@@ -23,9 +23,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -113,7 +111,7 @@ namespace NUnit.Framework.Internal.Execution
 
 #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Number of parallel worker threads
@@ -159,9 +157,9 @@ namespace NUnit.Framework.Internal.Execution
         private WorkItemQueue NonParallelQueue { get; } = new WorkItemQueue("NonParallelQueue", false, ApartmentState.MTA);
         private WorkItemQueue NonParallelSTAQueue { get; } = new WorkItemQueue("NonParallelSTAQueue", false, ApartmentState.STA);
 
-#endregion
+        #endregion
 
-#region IWorkItemDispatcher Members
+        #region IWorkItemDispatcher Members
 
         /// <summary>
         /// Start execution, setting the top level work,
@@ -369,18 +367,4 @@ namespace NUnit.Framework.Internal.Execution
 
 #endregion
     }
-
-#region ParallelScopeHelper Class
-
-#if NET35
-    static class ParallelScopeHelper
-    {
-        public static bool HasFlag(this ParallelScope scope, ParallelScope value)
-        {
-            return (scope & value) != 0;
-        }
-    }
-#endif
-
-#endregion
 }

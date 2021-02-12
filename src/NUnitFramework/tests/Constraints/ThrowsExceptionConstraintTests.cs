@@ -23,12 +23,8 @@
 
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Constraints
 {
@@ -65,7 +61,6 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
         };
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public static void CatchesAsyncException()
         {
@@ -96,6 +91,5 @@ namespace NUnit.Framework.Constraints
                 throw new Exception();
             }, Throws.Exception);
         }
-#endif
     }
 }

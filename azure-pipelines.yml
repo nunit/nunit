@@ -37,6 +37,12 @@ jobs:
   steps:
 
   - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 5.0.103
+      performMultiLevelLookup: true
+
+  - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
     inputs:
       packageType: runtime
@@ -67,6 +73,12 @@ jobs:
   pool:
     vmImage: macOS-latest
   steps:
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: 5.0.103
+      performMultiLevelLookup: true
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'

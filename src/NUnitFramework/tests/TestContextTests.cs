@@ -25,14 +25,11 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
-using static NUnit.Framework.TestContext;
 
 namespace NUnit.Framework
 {
@@ -344,7 +341,6 @@ namespace NUnit.Framework
 
         #region Out
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public async Task TestContextOut_ShouldFlowWithAsyncExecution()
         {
@@ -374,13 +370,8 @@ namespace NUnit.Framework
 
         private async Task YieldAsync()
         {
-#if NET40
-            await TaskEx.Yield();
-#else
             await Task.Yield();
-#endif
         }
-#endif
 
         #endregion
 

@@ -4,10 +4,8 @@ using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
 namespace NUnit.Framework
 {
-#if TASK_PARALLEL_LIBRARY_API
     [TestFixture(nameof(F.ReturnsNonVoidResultTask))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomTask))]
-#endif
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomAwaitable))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomAwaitableWithImplicitOnCompleted))]
     [TestFixture(nameof(F.ReturnsNonVoidResultCustomAwaitableWithImplicitUnsafeOnCompleted))]

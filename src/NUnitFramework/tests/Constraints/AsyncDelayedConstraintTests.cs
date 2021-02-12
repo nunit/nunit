@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System;
 using System.Threading.Tasks;
 
@@ -96,11 +95,7 @@ namespace NUnit.Framework.Constraints
 
 		private static async Task<int> One()
 		{
-#if NET40
-            return await TaskEx.Run(() => 1);
-#else
 			return await Task.Run(() => 1);
-#endif
 		}
 
 		private static async Task Throw()
@@ -110,4 +105,3 @@ namespace NUnit.Framework.Constraints
 		}
 	}
 }
-#endif

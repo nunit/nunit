@@ -62,7 +62,6 @@ This brings clarity to the code and makes it easy to change the mapping between 
 
 Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Directory.Build.props):
 
- - `TASK_PARALLEL_LIBRARY_API` exposes NUnit APIs which depend on the TPL framework types
  - `THREAD_ABORT` enables timeouts and forcible cancellation
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
@@ -73,15 +72,23 @@ in a given scenario. Keep in mind the effect the preprocessor would have on a ne
 For example, rather than this code:
 
 ```cs
-#if NET45 || NETSTANDARD2_0 || NETSTANDARD2_1
-// Something that .NET Framework 4.0 can't do
+#if NETSTANDARD2_0 || NETSTANDARD2_1
+// Something that .NET Framework 4.5 can't do
 #endif
 ```
 
 Consider this:
 
 ```cs
-#if !(NET35 || NET40)
-// Something that .NET Framework 4.0 can't do
+#if !NET45
+// Something that .NET Framework 4.5 can't do
+#endif
+```
+
+Or this for the opposite:
+
+```cs
+#if NETFRAMEWORK
+// Something that only .NET Framework can do
 #endif
 ```

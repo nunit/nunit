@@ -24,9 +24,7 @@
 using System;
 using System.Reflection;
 using NUnit.Compatibility;
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
 
 namespace NUnit.Framework.Internal
 {
@@ -99,7 +97,6 @@ namespace NUnit.Framework.Internal
                 throw foo.ExceptionToThrow;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public static void RecordExceptionReturnsExceptionThrownBeforeReturningAwaitableObject()
         {
@@ -127,6 +124,5 @@ namespace NUnit.Framework.Internal
             source.SetException(exception);
             return source.Task;
         }
-#endif
     }
 }

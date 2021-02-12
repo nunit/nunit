@@ -768,7 +768,6 @@ namespace NUnit.Framework.Assertions
         }
 #endregion
 
-#if NET45
 #region ValueTuple
         [Test]
         public void ValueTupleAreEqual()
@@ -814,6 +813,5 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.AreEquivalent(a, b);
         }
 #endregion
-#endif
     }
 }

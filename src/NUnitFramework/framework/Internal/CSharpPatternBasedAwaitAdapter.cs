@@ -23,17 +23,12 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal
 {
     internal static partial class CSharpPatternBasedAwaitAdapter
     {
-#if NET35
-        private static readonly Dictionary<Type, AwaitShapeInfo> ShapeInfoByType = new Dictionary<Type, AwaitShapeInfo>();
-#else
         private static readonly ConcurrentDictionary<Type, AwaitShapeInfo> ShapeInfoByType = new ConcurrentDictionary<Type, AwaitShapeInfo>();
-#endif
 
         public static AwaitAdapter TryCreate(object awaitable)
         {
@@ -54,18 +49,7 @@ namespace NUnit.Framework.Internal
 
         private static AwaitShapeInfo GetShapeInfo(Type type)
         {
-#if NET35
-            lock (ShapeInfoByType)
-            {
-                if (!ShapeInfoByType.TryGetValue(type, out var info))
-                    ShapeInfoByType.Add(type, info = AwaitShapeInfo.TryCreate(type));
-
-                return info;
-            }
-
-#else
             return ShapeInfoByType.GetOrAdd(type, AwaitShapeInfo.TryCreate);
-#endif
         }
     }
 }

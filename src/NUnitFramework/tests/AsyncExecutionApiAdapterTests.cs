@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
 
 namespace NUnit.Framework
@@ -36,11 +35,7 @@ namespace NUnit.Framework
 
             adapter.Execute(async () =>
             {
-#if NET40
-                await TaskEx.Yield();
-#else
                 await Task.Yield();
-#endif
                 didExecute = true;
             });
 
@@ -48,4 +43,3 @@ namespace NUnit.Framework
         }
     }
 }
-#endif

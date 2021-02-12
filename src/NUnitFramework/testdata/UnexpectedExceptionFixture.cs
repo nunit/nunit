@@ -43,7 +43,6 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
                     new Exception("Inner Inner Exception")));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void ThrowsWithAggregateException()
         {
@@ -59,7 +58,6 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
                 new Exception("Inner Exception",
                     new Exception("Inner Inner Exception")));
         }
-#endif
 
         [Test]
         public void ThrowsWithBadStackTrace()
