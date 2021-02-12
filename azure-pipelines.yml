@@ -36,6 +36,13 @@ jobs:
     vmImage: ubuntu-latest
   steps:
 
+    - task: UseDotNet@2
+      displayName: 'Install .NET Core SDK'
+      continueOnError: true   # Newer versions already installed can cause an error
+      inputs:
+        version: 5.0.103
+        performMultiLevelLookup: true
+
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
     inputs:
@@ -67,6 +74,13 @@ jobs:
   pool:
     vmImage: macOS-latest
   steps:
+
+    - task: UseDotNet@2
+      displayName: 'Install .NET Core SDK'
+      continueOnError: true   # Newer versions already installed can cause an error
+      inputs:
+        version: 5.0.103
+        performMultiLevelLookup: true
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
