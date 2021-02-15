@@ -367,7 +367,7 @@ namespace NUnit.Common
                     // This can be changed without breaking backwards compatibility with frameworks.
                     foreach (string param in parameters.Split(new[] { ';' }))
                     {
-                        int eq = param.IndexOf("=");
+                        int eq = param.IndexOf('=');
                         if (eq == -1 || eq == param.Length - 1)
                         {
                             ErrorMessages.Add("Invalid format for test parameter. Use NAME=VALUE.");
@@ -459,7 +459,8 @@ namespace NUnit.Common
 
         private bool LooksLikeAnOption(string v)
         {
-            return v.StartsWith("-") || v.StartsWith("/") && Path.DirectorySeparatorChar != '/';
+            return v.StartsWith("-", StringComparison.Ordinal)
+                || (v.StartsWith("/", StringComparison.Ordinal) && Path.DirectorySeparatorChar != '/');
         }
 
         private void ResolveOutputSpecification(string value, IList<OutputSpecification> outputSpecifications)

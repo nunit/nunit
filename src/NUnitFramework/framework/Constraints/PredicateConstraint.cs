@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 var name = predicate.GetMethodInfo().Name;
-                return name.StartsWith("<")
+                return name.StartsWith("<", StringComparison.Ordinal)
                     ? "value matching lambda expression"
                     : "value matching " + name;
             }

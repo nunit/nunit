@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal.Builders
                     if (parms.TestName != null)
                     {
                         // The test is simply for efficiency
-                        testMethod.Name = parms.TestName.Contains("{")
+                        testMethod.Name = parms.TestName.Contains('{')
                             ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                             : parms.TestName;
                     }

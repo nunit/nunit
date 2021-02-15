@@ -67,7 +67,7 @@ namespace NUnit.Framework
         protected CategoryAttribute()
         {
             this.categoryName = this.GetType().Name;
-            if ( categoryName.EndsWith( "Attribute" ) )
+            if ( categoryName.EndsWith( "Attribute", StringComparison.Ordinal ) )
                 categoryName = categoryName.Substring( 0, categoryName.Length - 9 );
         }
 

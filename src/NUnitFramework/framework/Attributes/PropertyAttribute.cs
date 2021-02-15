@@ -84,7 +84,7 @@ namespace NUnit.Framework
         protected PropertyAttribute( object propertyValue )
         {
             string propertyName = this.GetType().Name;
-            if ( propertyName.EndsWith( "Attribute" ) )
+            if ( propertyName.EndsWith( "Attribute", StringComparison.Ordinal ) )
                 propertyName = propertyName.Substring( 0, propertyName.Length - 9 );
             this.properties.Add(propertyName, propertyValue);
         }
