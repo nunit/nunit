@@ -266,7 +266,7 @@ namespace NUnitLite
 
                 WriteOutput(result.Output);
 
-                if (!result.Output.EndsWith("\n"))
+                if (!result.Output.EndsWith("\n", StringComparison.Ordinal))
                     Writer.WriteLine();
             }
 
@@ -689,7 +689,7 @@ namespace NUnitLite
             Writer.Write(color, text);
 
             _testCreatedOutput = true;
-            _needsNewLine = !text.EndsWith("\n");
+            _needsNewLine = !text.EndsWith("\n", StringComparison.Ordinal);
         }
 
          private static ColorStyle GetColorForResultStatus(string status)

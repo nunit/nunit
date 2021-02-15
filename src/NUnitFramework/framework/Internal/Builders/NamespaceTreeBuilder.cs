@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal.Builders
                 return _namespaceIndex[ns];
 
             TestSuite suite;
-            int index = ns.LastIndexOf(".");
+            int index = ns.LastIndexOf('.');
 
             if( index == -1 )
             {

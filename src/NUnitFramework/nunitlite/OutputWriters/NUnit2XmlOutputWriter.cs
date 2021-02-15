@@ -366,7 +366,7 @@ namespace NUnitLite
             int start = 0;
             while (true)
             {
-                int illegal = text.IndexOf("]]>", start);
+                int illegal = text.IndexOf("]]>", start, StringComparison.Ordinal);
                 if (illegal < 0)
                     break;
                 xmlWriter.WriteCData(text.Substring(start, illegal - start + 2));
