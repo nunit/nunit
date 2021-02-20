@@ -459,8 +459,7 @@ namespace NUnit.Common
 
         private bool LooksLikeAnOption(string v)
         {
-            return v.StartsWith("-", StringComparison.Ordinal)
-                || (v.StartsWith("/", StringComparison.Ordinal) && Path.DirectorySeparatorChar != '/');
+            return v.StartsWith('-') || (v.StartsWith('/') && Path.DirectorySeparatorChar != '/');
         }
 
         private void ResolveOutputSpecification(string value, IList<OutputSpecification> outputSpecifications)
