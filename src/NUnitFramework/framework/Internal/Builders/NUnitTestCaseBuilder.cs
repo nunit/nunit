@@ -23,6 +23,7 @@
 
 #nullable enable
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -82,7 +83,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (parms.TestName != null)
                 {
                     // The test is simply for efficiency
-                    testMethod.Name = parms.TestName.Contains("{")
+                    testMethod.Name = parms.TestName.IndexOf('{') >= 0
                         ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                         : parms.TestName;
                 }

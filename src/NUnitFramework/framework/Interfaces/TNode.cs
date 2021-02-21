@@ -274,7 +274,7 @@ namespace NUnit.Framework.Interfaces
             Guard.ArgumentNotNullOrEmpty(xpath, nameof(xpath));
             if (xpath[0] == '/')
                 throw new ArgumentException("XPath expressions starting with '/' are not supported", nameof(xpath));
-            if (xpath.IndexOf("//") >= 0)
+            if (xpath.IndexOf("//", StringComparison.Ordinal) >= 0)
                 throw new ArgumentException("XPath expressions with '//' are not supported", nameof(xpath));
 
             string head = xpath;
@@ -378,7 +378,7 @@ namespace NUnit.Framework.Interfaces
 
             while (true)
             {
-                int illegal = text.IndexOf("]]>", start);
+                int illegal = text.IndexOf("]]>", start, StringComparison.Ordinal);
                 if (illegal < 0)
                     break;
                 writer.WriteCData(text.Substring(start, illegal - start + 2));
@@ -410,7 +410,7 @@ namespace NUnit.Framework.Interfaces
                 int lbrack = xpath.IndexOf('[');
                 if (lbrack >= 0)
                 {
-                    if (!xpath.EndsWith("]"))
+                    if (!xpath.EndsWith("]", StringComparison.Ordinal))
                         throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _nodeName = xpath.Substring(0, lbrack);

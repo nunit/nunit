@@ -119,7 +119,7 @@ namespace NUnit.Framework
         public void ApplyToTest(Test test)
         {
             var joinType = _strategy.GetType().Name;
-            if (joinType.EndsWith("Strategy"))
+            if (joinType.EndsWith("Strategy", StringComparison.Ordinal))
                 joinType = joinType.Substring(0, joinType.Length - 8);
 
             test.Properties.Set(PropertyNames.JoinType, joinType);

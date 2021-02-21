@@ -149,7 +149,7 @@ namespace NUnit.Framework.Constraints
         private static bool IsSpecialComparisonType(Type type)
         {
             if (type.IsGenericType)
-                return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2");
+                return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal);
             else if (Numerics.IsNumericType(type))
                 return true;
             else
@@ -255,7 +255,7 @@ namespace NUnit.Framework.Constraints
         {
             foreach (var type in actual.GetType().GetInterfaces())
             {
-                if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1"))
+                if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1", StringComparison.Ordinal))
                 {
                     return type.GenericTypeArguments[0];
                 }
