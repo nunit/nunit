@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2014 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -67,6 +67,24 @@ namespace NUnit.Framework.Internal.Results
         }
 
         [Test]
+        public void ClearOutput()
+        {
+            _result.OutWriter.WriteLine(SOME_TEXT);
+            _result.ClearOutput();
+
+            Assert.That(_result.Output, Does.Not.Contain(SOME_TEXT));
+        }
+        [Test]
+        public void CanWriteOutputToResult_AfterClearOutput()
+        {
+            _result.OutWriter.WriteLine("Deleted text ");
+            _result.ClearOutput();
+            _result.OutWriter.WriteLine(SOME_TEXT);
+
+            Assert.That(_result.Output, Is.EqualTo(SOME_TEXT + NL));
+        }
+
+        [Test]
         public void IfNothingIsWritten_XmlOutputIsEmpty()
         {
             Assert.That(_result.ToXml(false).SelectSingleNode("output"), Is.Null);
@@ -96,6 +114,26 @@ namespace NUnit.Framework.Internal.Results
             Assert.NotNull(outputNode, "No output node found in XML");
             Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL +
                 "More text written in segments." + NL + "Last line!" + NL));
+        }
+
+        [Test]
+        public void ClearOutput_XmlOutput()
+        {
+            _result.OutWriter.WriteLine(SOME_TEXT);
+            _result.ClearOutput();
+
+            Assert.That(_result.ToXml(false).SelectSingleNode("output"), Is.Null);
+        }
+        [Test]
+        public void CanWriteOutputToResult_AfterClearOutput_XmlOutput()
+        {
+            _result.OutWriter.WriteLine("Deleted text ");
+            _result.ClearOutput();
+            _result.OutWriter.WriteLine(SOME_TEXT);
+
+            var outputNode = _result.ToXml(false).SelectSingleNode("output");
+            Assert.NotNull(outputNode, "No output node found in XML");
+            Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL));
         }
 
         [Test]

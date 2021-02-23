@@ -656,6 +656,18 @@ namespace NUnit.Framework.Internal
             return writer.ToString();
         }
 
+
+        /// <summary>
+        /// Clears any text output written to this result.
+        /// </summary>
+        public void ClearOutput()
+        {
+            lock (OutWriter)
+            {
+                _output.Clear();
+            }
+        }
+
         #endregion
 
         #region Helper Methods
