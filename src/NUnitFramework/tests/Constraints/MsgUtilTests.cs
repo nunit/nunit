@@ -22,6 +22,7 @@
 // ***********************************************************************
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
@@ -149,6 +150,17 @@ namespace NUnit.Framework.Constraints
         public static void FormatValue_KeyValuePairTest(object key, object value, string expectedResult)
         {
             string s = MsgUtils.FormatValue(new KeyValuePair<object, object>(key, value));
+            Assert.That(s, Is.EqualTo(expectedResult));
+        }
+
+        [TestCase(null, null, "[null, null]")]
+        [TestCase(null, "Second", "[null, \"Second\"]")]
+        [TestCase("First", null, "[\"First\", null]")]
+        [TestCase("First", "Second", "[\"First\", \"Second\"]")]
+        [TestCase(123, 'h', "[123, 'h']")]
+        public static void FormatValue_DirectoryEntryTest(object key, object value, string expectedResult)
+        {
+            string s = MsgUtils.FormatValue(new DictionaryEntry(key, value));
             Assert.That(s, Is.EqualTo(expectedResult));
         }
 
