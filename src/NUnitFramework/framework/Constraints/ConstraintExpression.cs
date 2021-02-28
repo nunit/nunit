@@ -363,6 +363,18 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region Null
+
+        /// <summary>
+        /// Returns a constraint that tests for default value
+        /// </summary>
+        public DefaultConstraint Default
+        {
+            get { return (DefaultConstraint)this.Append(new DefaultConstraint()); }
+        }
+
+        #endregion
+
         #region True
 
         /// <summary>
@@ -900,7 +912,7 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
@@ -918,7 +930,7 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
@@ -1024,7 +1036,7 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-        
+
         #region ItemAt
 
         /// <summary>
