@@ -123,20 +123,6 @@ namespace NUnit.Framework.Assertions
             //Assert.That(5m, Is.LessThanOrEqualTo(five));
         }
 
-        [Test]
-        public void CanCompareWithTolerance()
-        {
-            double? five = 5.0;
-
-            Assert.AreEqual(5.0000001, five, .0001); 
-            Assert.That( five, Is.EqualTo(5.0000001).Within(.0001));
-
-            float? three = 3.0f;
-
-            Assert.AreEqual(3.00001f, three, .001);
-            Assert.That( three, Is.EqualTo(3.00001f).Within(.001));
-        }
-
         private enum Colors
         {
             Red,
