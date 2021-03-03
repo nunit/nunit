@@ -2,7 +2,7 @@ pr: [ '*' ]
 
 trigger:
   branches:
-    include: [ 'master', 'release' ]
+    include: [ 'master', 'release', 'v3.13-dev' ]
     exclude: [ 'refs/tags/*' ]
 
 jobs:
