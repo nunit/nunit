@@ -23,6 +23,7 @@
 
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
@@ -35,14 +36,20 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
+#if NETSTANDARD2_0
+        private static IList<ITest> _emptyArray = Array.Empty<ITest>();
+#else
+        private static IList<ITest> _emptyArray = new ITest[0];
+#endif
+
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
         internal TestCaseParameters? parms;
 
-        #endregion
+#endregion
 
-        #region Constructor
+#region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
@@ -63,9 +70,9 @@ namespace NUnit.Framework.Internal
                 FullName = parentSuite.FullName + "." + Name;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         internal bool HasExpectedResult
         {
@@ -76,9 +83,9 @@ namespace NUnit.Framework.Internal
         {
             get { return parms != null ? parms.ExpectedResult : null; }
         }
-        #endregion
+#endregion
 
-        #region Test Overrides
+#region Test Overrides
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.
@@ -135,7 +142,7 @@ namespace NUnit.Framework.Internal
         /// <value>A list of child tests</value>
         public override IList<ITest> Tests
         {
-            get { return new ITest[0]; }
+            get { return _emptyArray; }
         }
 
         /// <summary>
@@ -155,6 +162,6 @@ namespace NUnit.Framework.Internal
             get { return Method.Name; }
         }
 
-        #endregion
+#endregion
     }
 }
