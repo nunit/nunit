@@ -8,7 +8,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// Combines multiple filters so that a test must pass one 
+    /// Combines multiple filters so that a test must pass one
     /// of them in order to pass this filter.
     /// </summary>
     internal class OrFilter : CompositeFilter
@@ -73,6 +73,30 @@ namespace NUnit.Framework.Internal.Filters
         protected override string ElementName
         {
             get { return "or"; }
+        }
+
+        public TestFilter Reduce()
+        {
+            HashSet<string> values = null;
+            foreach (TestFilter filter in Filters)
+            {
+                if (filter is FullNameFilter { IsRegex: false } fullNameFilter)
+                {
+                    values ??= new HashSet<string>();
+                    values.Add(fullNameFilter.ExpectedValue);
+                }
+                else
+                {
+                    return this;
+                }
+            }
+
+            if (values != null)
+            {
+                return new OrFullNameFilter(values);
+            }
+
+            return this;
         }
     }
 }

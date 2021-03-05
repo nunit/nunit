@@ -160,7 +160,7 @@ namespace NUnit.Framework.Internal
                     var orFilter = new OrFilter();
                     foreach (var childNode in node.ChildNodes)
                         orFilter.Add(FromXml(childNode));
-                    return orFilter;
+                    return orFilter.Reduce();
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));
