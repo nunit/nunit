@@ -73,6 +73,18 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Default
+
+        /// <summary>
+        /// Returns a constraint that tests for default value
+        /// </summary>
+        public static DefaultConstraint Default
+        {
+            get { return new DefaultConstraint(); }
+        }
+
+        #endregion
+
         #region True
 
         /// <summary>
