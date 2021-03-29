@@ -85,41 +85,51 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InstancePerTestCaseShouldApplyToTestFixtureSourceTests()
         {
+            LifeCycleWithTestFixtureSourceFixture.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithTestFixtureSourceFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(LifeCycleWithTestFixtureSourceFixture.DisposeCalls, Is.EqualTo(4));
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestCaseTests()
         {
+            FixtureWithTestCases.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCases));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(FixtureWithTestCases.DisposeCalls, Is.EqualTo(4));
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestCaseSourceTests()
         {
+            FixtureWithTestCaseSource.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCaseSource));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(FixtureWithTestCaseSource.DisposeCalls, Is.EqualTo(2));
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestsWithValuesParameters()
         {
+            FixtureWithValuesAttributeTest.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithValuesAttributeTest));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(FixtureWithValuesAttributeTest.DisposeCalls, Is.EqualTo(3));
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTheories()
         {
+            FixtureWithTheoryTest.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTheoryTest));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(FixtureWithTheoryTest.DisposeCalls, Is.EqualTo(3));
         }
 
 #if NETFRAMEWORK

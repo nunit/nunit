@@ -1,7 +1,6 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -21,7 +20,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.OperationValid(
-                Test is IDisposableFixture || Test?.Parent is IDisposableFixture, 
+                HasDisposableFixture(Test), 
                 $"DisposeFixtureCommand does not apply neither to {Test.GetType().Name}, nor to {Test.Parent?.GetType().Name ?? "it's parent (null)"}");
 
             AfterTest = (context) =>
@@ -37,6 +36,19 @@ namespace NUnit.Framework.Internal.Commands
                     context.CurrentResult.RecordTearDownException(ex);
                 }
             };
+        }
+
+        private static bool HasDisposableFixture(ITest test)
+        {
+            while (test != null)
+            {
+                if (test is IDisposableFixture)
+                    return true;
+
+                test = test.Parent;
+            }
+
+            return false;
         }
     }
 }
