@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -42,7 +41,7 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand)
         {
             Guard.OperationValid(
-                Test is IDisposableFixture || Test?.Parent is IDisposableFixture, 
+                HasDisposableFixture(Test),
                 $"DisposeFixtureCommand does not apply neither to {Test.GetType().Name}, nor to {Test.Parent?.GetType().Name ?? "it's parent (null)"}");
 
             AfterTest = (context) =>
@@ -58,6 +57,19 @@ namespace NUnit.Framework.Internal.Commands
                     context.CurrentResult.RecordTearDownException(ex);
                 }
             };
+        }
+
+        private static bool HasDisposableFixture(ITest test)
+        {
+            while (test != null)
+            {
+                if (test is IDisposableFixture)
+                    return true;
+
+                test = test.Parent;
+            }
+
+            return false;
         }
     }
 }
