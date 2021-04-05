@@ -159,7 +159,12 @@ DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
 
 MSBuildSettings CreateMsBuildSettings()
 {
-    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+    var settings = new MSBuildSettings { 
+        // EmbedUntrackedSources and ContinuousIntegrationBuild for deterministic build
+        ArgumentCustomization = args => args.Append("-p:EmbedUntrackedSources=true -p:ContinuousIntegrationBuild=true"),
+        Verbosity = Verbosity.Minimal, 
+        Configuration = configuration
+    };
 
     if (IsRunningOnWindows())
     {
