@@ -161,9 +161,9 @@ MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
-    if (BuildSystem.IsRunningOnAppVeyor)
+    if (!BuildSystem.IsLocalBuild)
     {
-        // Extra arguments for NuGet package creation on AppVeyor: EmbedUntrackedSources and ContinuousIntegrationBuild for deterministic build
+        // Extra arguments for NuGet package creation: EmbedUntrackedSources and ContinuousIntegrationBuild for deterministic build
         settings.ArgumentCustomization = args => args.Append("-p:EmbedUntrackedSources=true -p:ContinuousIntegrationBuild=true");
     }
 
