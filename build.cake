@@ -160,6 +160,12 @@ MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
 
+    if (!BuildSystem.IsLocalBuild)
+    {
+        // Extra arguments for NuGet package creation: EmbedUntrackedSources and ContinuousIntegrationBuild for deterministic build
+        settings.ArgumentCustomization = args => args.Append("-p:EmbedUntrackedSources=true -p:ContinuousIntegrationBuild=true");
+    }
+
     if (IsRunningOnWindows())
     {
         // Find MSBuild for Visual Studio 2019 and newer
