@@ -17,6 +17,14 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
+        public void IsNotEmptyFullName()
+        {
+            var filter = new OrFilter(new FullNameFilter("Dummy"), new FullNameFilter("Another"));
+
+            Assert.False(filter.IsEmpty);
+        }
+
+        [Test]
         public void MatchTest()
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new CategoryFilter("Another"));
@@ -28,9 +36,80 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
+        public void MatchTestMixed()
+        {
+            var filter = new OrFilter(new CategoryFilter("Dummy"), new FullNameFilter(ANOTHER_CLASS));
+
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.That(filter.Match(_anotherFixture));
+
+            Assert.False(filter.Match(_yetAnotherFixture));
+        }
+
+        [Test]
+        public void MatchTestEmpty()
+        {
+            var filter = new OrFilter(new TestFilter[] {});
+
+            Assert.False(filter.Match(_dummyFixture));
+            Assert.False(filter.Match(_anotherFixture));
+            Assert.False(filter.Match(_yetAnotherFixture));
+        }
+
+        [Test]
+        public void MatchTestFullName()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS), new FullNameFilter(ANOTHER_CLASS));
+
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.That(filter.Match(_anotherFixture));
+
+            Assert.False(filter.Match(_yetAnotherFixture));
+        }
+
+        [Test]
+        public void MatchTestFullNameRegex()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX) { IsRegex = true }, new FullNameFilter(ANOTHER_CLASS_REGEX) { IsRegex = true });
+
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.That(filter.Match(_anotherFixture));
+
+            Assert.False(filter.Match(_yetAnotherFixture));
+        }
+
+        [Test]
         public void PassTest()
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new CategoryFilter("Another"));
+
+            Assert.That(filter.Pass(_topLevelSuite));
+            Assert.That(filter.Pass(_dummyFixture));
+            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
+            Assert.That(filter.Pass(_anotherFixture));
+            Assert.That(filter.Pass(_anotherFixture.Tests[0]));
+
+            Assert.False(filter.Pass(_yetAnotherFixture));
+        }
+
+        [Test]
+        public void PassTestFullName()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS), new FullNameFilter(ANOTHER_CLASS));
+
+            Assert.That(filter.Pass(_topLevelSuite));
+            Assert.That(filter.Pass(_dummyFixture));
+            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
+            Assert.That(filter.Pass(_anotherFixture));
+            Assert.That(filter.Pass(_anotherFixture.Tests[0]));
+
+            Assert.False(filter.Pass(_yetAnotherFixture));
+        }
+
+        [Test]
+        public void PassTestFullNameRegex()
+        {
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX) { IsRegex = true }, new FullNameFilter(ANOTHER_CLASS_REGEX) { IsRegex = true });
 
             Assert.That(filter.Pass(_topLevelSuite));
             Assert.That(filter.Pass(_dummyFixture));
@@ -129,6 +208,28 @@ namespace NUnit.Framework.Internal.Filters
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><or><cat>Dummy</cat><cat>Another</cat></or></filter>");
+
+            Assert.That(filter, Is.TypeOf<OrFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.That(filter.Match(_anotherFixture));
+        }
+
+        [Test]
+        public void BuildFromXmlFullName()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                $"<filter><or><test>{DUMMY_CLASS}</test><test>{ANOTHER_CLASS}</test></or></filter>");
+
+            Assert.That(filter, Is.TypeOf<OrFilter>());
+            Assert.That(filter.Match(_dummyFixture));
+            Assert.That(filter.Match(_anotherFixture));
+        }
+
+        [Test]
+        public void BuildFromXmlFullNameRegex()
+        {
+            TestFilter filter = TestFilter.FromXml(
+                $"<filter><or><test re=\"1\">{DUMMY_CLASS_REGEX}</test><test re=\"1\">{ANOTHER_CLASS_REGEX}</test></or></filter>");
 
             Assert.That(filter, Is.TypeOf<OrFilter>());
             Assert.That(filter.Match(_dummyFixture));

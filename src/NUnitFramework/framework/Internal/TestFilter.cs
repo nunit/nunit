@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
@@ -151,16 +152,20 @@ namespace NUnit.Framework.Internal
             {
                 case "filter":
                 case "and":
-                    var andFilter = new AndFilter();
+                    List<TestFilter> childFilters = new List<TestFilter>();
+
                     foreach (var childNode in node.ChildNodes)
-                        andFilter.Add(FromXml(childNode));
-                    return andFilter;
+                        childFilters.Add(FromXml(childNode));
+
+                    return new AndFilter(childFilters.ToArray());
 
                 case "or":
-                    var orFilter = new OrFilter();
+                    List<TestFilter> orChildFilters = new List<TestFilter>();
+
                     foreach (var childNode in node.ChildNodes)
-                        orFilter.Add(FromXml(childNode));
-                    return orFilter.Reduce();
+                        orChildFilters.Add(FromXml(childNode));
+
+                    return new OrFilter(orChildFilters.ToArray());
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));

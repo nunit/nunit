@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -25,16 +26,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="filters"></param>
         public CompositeFilter( params TestFilter[] filters )
         {
-            Filters = new List<TestFilter>(filters);
-        }
-
-        /// <summary>
-        /// Adds a filter to the list of filters
-        /// </summary>
-        /// <param name="filter">The filter to be added</param>
-        public void Add(TestFilter filter)
-        {
-            Filters.Add(filter);
+            Filters = new ReadOnlyCollection<TestFilter>(filters);
         }
 
         /// <summary>
