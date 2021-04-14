@@ -54,10 +54,37 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test, bool negated )
         {
-            if (negated)
-                return Filters.All(f => f.Pass(test, negated));
+            // If we are in optimized matching mode don't delegate to child filters
+            if (_matchFullName)
+            {
+                if (negated)
+                    return !Match(test) && !MatchParent(test);
 
-            return Filters.Any(f => f.Pass(test, negated));
+                return Match(test) || MatchParent(test) || MatchDescendant(test);
+            }
+
+            if (negated)
+            {
+                foreach (var filter in Filters)
+                {
+                    if (!filter.Pass(test, negated: true))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            foreach (var f in Filters)
+            {
+                if (f.Pass(test, negated))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
