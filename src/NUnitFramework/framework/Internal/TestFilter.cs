@@ -124,11 +124,15 @@ namespace NUnit.Framework.Internal
         /// <returns>True if at least one descendant matches the filter criteria</returns>
         protected virtual bool MatchDescendant(ITest test)
         {
-            if (test.Tests == null)
+            var tests = test.Tests;
+            if (tests == null)
                 return false;
 
-            foreach (ITest child in test.Tests)
+            // Use for-loop to avoid allocating the enumerator
+            int count = tests.Count;
+            for (var index = 0; index < count; index++)
             {
+                ITest child = tests[index];
                 if (Match(child) || MatchDescendant(child))
                     return true;
             }
