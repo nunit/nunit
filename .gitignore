@@ -188,3 +188,4 @@ project.lock.json
 .config/dotnet-tools.json
 *.err
 *.out
+.ionide
