@@ -1,6 +1,16 @@
 name: Continuous Integration
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - release
+      - 'v3.13-dev'
+  pull_request:
+    branches:
+      - master
+      - release
+      - 'v3.13-dev'
 
 jobs:
   build-windows:
