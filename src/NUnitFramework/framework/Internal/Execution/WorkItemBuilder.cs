@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 foreach (var childTest in suite.Tests)
                 {
-                    var childItem = CreateWorkItem(childTest, filter, debugger, recursive: true, root: false);
+                    var childItem = CreateWorkItem(childTest, filter, debugger, recursive, root: false);
                     if (childItem == null) continue;
 
                     work ??= new CompositeWorkItem(suite, filter);
