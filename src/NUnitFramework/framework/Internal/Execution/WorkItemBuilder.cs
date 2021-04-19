@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="debugger">An <see cref="IDebugger" /> instance.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
-        /// <param name="root">True iа work item needs to be created unconditionally, if false  null would be returned for tests that don't match the filter</param>
+        /// <param name="root"><see langword="true"/> if work item needs to be created unconditionally, if <see langword="false"/> <see langword="null"/> will be returned for tests that don't match the filter.</param>
         /// <returns></returns>
         internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false, bool root = true)
         {
