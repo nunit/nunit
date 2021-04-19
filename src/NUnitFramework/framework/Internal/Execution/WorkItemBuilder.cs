@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal.Execution
         internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false, bool root = true)
         {
             // Run filter on leaf nodes only
-            // use the presense of leaf nodes as an indicator that parent need to be created
+            // use the presence of leaf nodes as an indicator that parent need to be created
             // Always create a workitem for the root node
             TestSuite suite = test as TestSuite;
             if (suite == null)
