@@ -21,9 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -88,7 +86,7 @@ namespace NUnit.Framework.Internal.Filters
             {
                 foreach (var filter in Filters)
                 {
-                    if (!filter.Pass(test, negated: true))
+                    if (!filter.Pass(test, negated))
                     {
                         return false;
                     }

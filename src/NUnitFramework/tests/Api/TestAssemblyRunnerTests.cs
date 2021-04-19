@@ -143,6 +143,43 @@ namespace NUnit.Framework.Api
         }
 
         [Test]
+        public void CountTestCases_FullNameRegexFilterForFixture_AfterLoad_ReturnsCorrectCount()
+        {
+            LoadMockAssembly();
+            Assert.That(_runner.CountTestCases(new FullNameFilter(".*BadFixture.*")
+            {
+                IsRegex = true
+            }), Is.EqualTo(BadFixture.Tests));
+        }
+
+        [Test]
+        public void CountTestCases_FullNameRegexFilterForAssembly_AfterLoad_ReturnsCorrectCount()
+        {
+            LoadMockAssembly();
+            Assert.That(_runner.CountTestCases(new FullNameFilter(".*nunit.framework.tests.dll.*")
+            {
+                IsRegex = true
+            }), Is.EqualTo(MockAssembly.Tests));
+        }
+
+        [Test]
+        public void CountTestCases_FullNameRegexFilterForTest_AfterLoad_ReturnsCorrectCount()
+        {
+            LoadMockAssembly();
+            Assert.That(_runner.CountTestCases(new OrFilter(
+                new FullNameFilter("NUnit.Tests.ExplicitFixture.Test1"),
+                new FullNameFilter("NUnit.Tests.ExplicitFixture.Test2"))),
+                Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CountTestCases_CategoryFilter_AfterLoad_ReturnsCorrectCount()
+        {
+            LoadMockAssembly();
+            Assert.That(_runner.CountTestCases(new CategoryFilter("FixtureCategory")), Is.EqualTo(MockTestFixture.Tests));
+        }
+
+        [Test]
         public void CountTestCases_WithoutLoad_ThrowsInvalidOperation()
         {
             var ex = Assert.Throws<InvalidOperationException>(
