@@ -156,7 +156,7 @@ namespace NUnit.Framework.Api
         public void CountTestCases_FullNameRegexFilterForAssembly_AfterLoad_ReturnsCorrectCount()
         {
             LoadMockAssembly();
-            Assert.That(_runner.CountTestCases(new FullNameFilter(".*nunit.framework.tests.dll.*")
+            Assert.That(_runner.CountTestCases(new FullNameFilter(".*mock-assembly.dll")
             {
                 IsRegex = true
             }), Is.EqualTo(MockAssembly.Tests));
