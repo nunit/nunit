@@ -42,6 +42,9 @@ namespace NUnit.Framework.Internal.Filters
     public abstract class TestFilterTests
     {
         public const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
+        public const string ANOTHER_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+AnotherFixture";
+        public const string DUMMY_CLASS_REGEX = "NUnit.*\\+DummyFixture";
+        public const string ANOTHER_CLASS_REGEX = "NUnit.*\\+AnotherFixture";
 
         protected readonly TestSuite _dummyFixture = TestBuilder.MakeFixture(typeof(DummyFixture));
         protected readonly TestSuite _anotherFixture = TestBuilder.MakeFixture(typeof(AnotherFixture));

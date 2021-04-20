@@ -35,14 +35,24 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="debugger">An <see cref="IDebugger" /> instance.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
+        /// <param name="root"><see langword="true"/> if work item needs to be created unconditionally, if <see langword="false"/> <see langword="null"/> will be returned for tests that don't match the filter.</param>
         /// <returns></returns>
-        internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false)
+        internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false, bool root = true)
         {
+            // Run filter on leaf nodes only
+            // use the presence of leaf nodes as an indicator that parent need to be created
+            // Always create a workitem for the root node
             TestSuite suite = test as TestSuite;
             if (suite == null)
-                return new SimpleWorkItem((TestMethod)test, filter, debugger);
+            {
+                if (root || filter.Pass(test))
+                {
+                    return new SimpleWorkItem((TestMethod)test, filter, debugger);
+                }
+                return null;
+            }
 
-            var work = new CompositeWorkItem(suite, filter);
+            CompositeWorkItem work = root ? new CompositeWorkItem(suite, filter): null;
 
             if (recursive)
             {
@@ -50,27 +60,27 @@ namespace NUnit.Framework.Internal.Execution
 
                 foreach (var childTest in suite.Tests)
                 {
-                    if (filter.Pass(childTest))
+                    var childItem = CreateWorkItem(childTest, filter, debugger, recursive, root: false);
+                    if (childItem == null) continue;
+
+                    work ??= new CompositeWorkItem(suite, filter);
+
+                    if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
+                        childItem.TargetApartment = work.TargetApartment;
+
+                    if (childTest.Properties.ContainsKey(PropertyNames.Order))
                     {
-                        var childItem = CreateWorkItem(childTest, filter, debugger, recursive);
-
-                        if (childItem.TargetApartment == ApartmentState.Unknown && work.TargetApartment != ApartmentState.Unknown)
-                            childItem.TargetApartment = work.TargetApartment;
-
-                        if (childTest.Properties.ContainsKey(PropertyNames.Order))
-                        {
-                            work.Children.Insert(0, childItem);
-                            countOrderedItems++;
-                        }
-                        else
-                            work.Children.Add(childItem);
+                        work.Children.Insert(0, childItem);
+                        countOrderedItems++;
                     }
+                    else
+                        work.Children.Add(childItem);
                 }
 
                 if (countOrderedItems > 0)
                     work.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
-            }
 
+            }
             return work;
         }
 
