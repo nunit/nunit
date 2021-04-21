@@ -83,7 +83,7 @@ Setup(context =>
             var branch = AppVeyor.Environment.Repository.Branch;
             var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-            if (branch == "master" && !isPullRequest)
+            if ((branch == "master" || branch == "v3.13-dev") && !isPullRequest)
             {
                 packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
             }
