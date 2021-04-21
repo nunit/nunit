@@ -32,6 +32,7 @@ namespace NUnit.Framework.Internal.Extensions
             new TestCaseData(new List<string> { "1" }).SetArgDisplayNames("List<string>"),
             new TestCaseData(new HashSet<int> { 1 }).SetArgDisplayNames("HashSet<int>"),
             new TestCaseData(new HashSet<string> { "1" }).SetArgDisplayNames("HashSet<string>"),
+            new TestCaseData(new StringCollection { "1" }).SetArgDisplayNames("StringCollection"),
         };
 
         public static IEnumerable<TestCaseData> UnsortableCollections => new[]
@@ -41,7 +42,6 @@ namespace NUnit.Framework.Internal.Extensions
             new TestCaseData(new Hashtable()).SetArgDisplayNames("Hashtable"),
             new TestCaseData(new Queue()).SetArgDisplayNames("Queue"),
             new TestCaseData(new ListDictionary()).SetArgDisplayNames("ListDictionary"),
-            new TestCaseData(new StringCollection()).SetArgDisplayNames("StringCollection"),
             new TestCaseData(new SimpleObjectCollection()).SetArgDisplayNames("SimpleObjectCollection (ICollection)"),
         };
     }

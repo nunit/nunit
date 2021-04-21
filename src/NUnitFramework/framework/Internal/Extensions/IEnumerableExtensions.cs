@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace NUnit.Framework.Internal.Extensions
@@ -12,13 +13,16 @@ namespace NUnit.Framework.Internal.Extensions
             if (collection is null)
                 return false;
 
+            if (collection is StringCollection)
+                return true;
+
             var collectionType = collection.GetType();
 
             var @interface = collectionType
                 .GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && (
-                    (i.Namespace == "System.Collections.Generic" && i.Name == "IEnumerable`1") ||
-                    (i.Namespace == "System.Linq" && i.Name == "IIListProvider`1")));
+                .FirstOrDefault(i => i.IsGenericType && 
+                    i.Namespace == "System.Collections.Generic" && 
+                    i.Name == "IEnumerable`1");
 
             if (@interface is null)
                 return false;

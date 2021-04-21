@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework.Internal;
@@ -321,6 +322,29 @@ namespace NUnit.Framework.Constraints
         {
             var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
             var expected = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(actual);
+            var constraintResult = constraint.ApplyTo(expected);
+            Assert.That(constraintResult.IsSuccess, Is.True);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeStringCollection()
+        {
+            var actual = new StringCollection();
+            var expected = new StringCollection();
+            foreach(var i in Enumerable.Range(0, SIZE))
+            {
+                actual.Add(i.ToString());
+                expected.Add(i.ToString());
+            }
 
             var watch = Stopwatch.StartNew();
 
