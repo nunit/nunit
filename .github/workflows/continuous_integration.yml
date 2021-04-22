@@ -101,8 +101,8 @@ jobs:
       with:
         dotnet-version: '5.0.x'
 
-    - name: Install Cake.Tool
-      run: dotnet tool install --global Cake.Tool
+    - name: Install dotnet tools
+      run: dotnet tool restore
 
     - name: Build and Test
       run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
