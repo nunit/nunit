@@ -19,11 +19,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install dotnet tools
+      run: dotnet tool restore
+
     - name: Build and Test
-      run: .\build.ps1 --target=Test --test-run-name=Windows
+      run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release
 
     - name: Package
-      run: .\build.ps1 --target=Package
+      run: dotnet cake --target=Package
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
@@ -63,8 +66,8 @@ jobs:
     - name: Install F#
       run: sudo apt-get install fsharp
 
-    - name: Install Cake.Tool
-      run: dotnet tool install --global Cake.Tool
+    - name: Install dotnet tools
+      run: dotnet tool restore
 
     - name: Build and Test
       run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
