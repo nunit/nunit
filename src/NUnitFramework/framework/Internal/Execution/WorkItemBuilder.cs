@@ -22,7 +22,6 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <returns></returns>
-        [Obsolete("This member will be removed in a future major release.")]
         static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
         {
             return CreateWorkItem(test, filter, new DebuggerProxy(), recursive);

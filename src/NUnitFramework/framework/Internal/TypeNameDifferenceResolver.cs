@@ -181,10 +181,10 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Reconstruct a generic type name using the provided generic type name, and a
-        /// <see cref="List"/> of the template parameters.
+        /// <see cref="List{T}"/> of the template parameters.
         /// </summary>
         /// <param name="genericTypeName">The name of the generic type, including the number of template parameters expected.</param>
-        /// <param name="templateParamNames">A <see cref="List"/> of names of the template parameters of the provided generic type.</param>
+        /// <param name="templateParamNames">A <see cref="List{T}"/> of names of the template parameters of the provided generic type.</param>
         public string ReconstructGenericTypeName(string genericTypeName, List<string> templateParamNames)
         {
             return genericTypeName + "[" + string.Join(",", templateParamNames.ToArray()) + "]";

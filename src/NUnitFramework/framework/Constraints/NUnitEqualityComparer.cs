@@ -71,14 +71,6 @@ namespace NUnit.Framework.Constraints
         #region Properties
 
         /// <summary>
-        /// Returns the default NUnitEqualityComparer
-        /// </summary>
-        [Obsolete("This property has been deprecated and will be removed in a future release. Please use 'new NUnitEqualityComparer()' instead.")]
-        public static NUnitEqualityComparer Default
-        {
-            get { return new NUnitEqualityComparer(); }
-        }
-        /// <summary>
         /// Gets and sets a flag indicating whether case should
         /// be ignored in determining equality.
         /// </summary>

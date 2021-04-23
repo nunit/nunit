@@ -793,30 +793,6 @@ namespace NUnit.Framework.Constraints
         }
         #endregion
 
-        #region StringContaining
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
-        public SubstringConstraint StringContaining(string expected)
-        {
-            return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
-        public SubstringConstraint ContainsSubstring(string expected)
-        {
-            return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
-        }
-
-        #endregion
-
         #region StartsWith
 
         /// <summary>
@@ -833,16 +809,6 @@ namespace NUnit.Framework.Constraints
         /// value starts with the substring supplied as an argument.
         /// </summary>
         public StartsWithConstraint StartsWith(string expected)
-        {
-            return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value starts with the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.StartWith or StartsWith instead.")]
-        public StartsWithConstraint StringStarting(string expected)
         {
             return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
         }
@@ -865,16 +831,6 @@ namespace NUnit.Framework.Constraints
         /// value ends with the substring supplied as an argument.
         /// </summary>
         public EndsWithConstraint EndsWith(string expected)
-        {
-            return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value ends with the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.EndWith or EndsWith instead.")]
-        public EndsWithConstraint StringEnding(string expected)
         {
             return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
         }
@@ -917,17 +873,6 @@ namespace NUnit.Framework.Constraints
         public RegexConstraint Matches(Regex regex)
         {
             return (RegexConstraint)this.Append(new RegexConstraint(regex));
-        }
-
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value matches the regular expression supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Match or Matches instead.")]
-        public RegexConstraint StringMatching(string pattern)
-        {
-            return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
 
         #endregion

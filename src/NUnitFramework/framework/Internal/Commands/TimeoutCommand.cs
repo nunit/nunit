@@ -29,16 +29,6 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         /// <param name="innerCommand">The inner command</param>
         /// <param name="timeout">Timeout value</param>
-        [Obsolete("This member will be removed in a future major release.")]
-        public TimeoutCommand(TestCommand innerCommand, int timeout) : this(innerCommand, timeout, new DebuggerProxy())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
-        /// </summary>
-        /// <param name="innerCommand">The inner command</param>
-        /// <param name="timeout">Timeout value</param>
         /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
         internal TimeoutCommand(TestCommand innerCommand, int timeout, IDebugger debugger) : base(innerCommand)
         {
