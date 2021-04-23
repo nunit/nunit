@@ -1,7 +1,7 @@
 image: Visual Studio 2019
 
 build_script:
-  - ps: .\build.ps1 -Target "Appveyor" -Configuration "Release"
+  - ps: .\build.ps1 --target=Appveyor --configuration=Release
 
 # disable built-in tests.
 test: off
