@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 
 namespace NUnit.Framework.Internal.Extensions
 {
@@ -41,8 +40,6 @@ namespace NUnit.Framework.Internal.Extensions
             typeof(DateTimeOffset),
             typeof(TimeSpan),
             typeof(Guid),
-            typeof(BigInteger),
-            typeof(ValueTuple),
             typeof(Version),
         };
 
