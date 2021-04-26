@@ -2,6 +2,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
@@ -28,18 +29,33 @@ namespace NUnit.Framework.Constraints
 
         private readonly NUnitEqualityComparer comparer;
 
+        private bool _sorted = false;
+
         /// <summary>The result of the comparison between the two collections.</summary>
         public CollectionTallyResult Result
         {
             get
             {
-                return new CollectionTallyResult(
-                    new List<object>(_missingItems),
-                    new List<object>(_extraItems));
+                var missingItems = new List<object>(_missingItems.Count);
+                foreach (var o in _missingItems)
+                    missingItems.Add(o);
+
+                List<object> extraItems = new List<object>(_extraItems.Count);
+                if (_sorted)
+                {
+                    for (int index = _extraItems.Count - 1; index >= 0; index--)
+                        extraItems.Add(_extraItems[index]);
+                }
+                else
+                {
+                    extraItems.AddRange(_extraItems);
+                }
+
+                return new CollectionTallyResult(missingItems, extraItems);
             }
         }
 
-        private readonly List<object> _missingItems = new List<object>();
+        private readonly ArrayList _missingItems = new ArrayList();
 
         private readonly List<object> _extraItems = new List<object>();
 
@@ -52,6 +68,9 @@ namespace NUnit.Framework.Constraints
 
             foreach (object o in c)
                 _missingItems.Add(o);
+
+            if (c.IsSortable())
+                _missingItems.Sort();
         }
 
         private bool ItemsEqual(object expected, object actual)
@@ -80,8 +99,25 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The objects to remove.</param>
         public void TryRemove(IEnumerable c)
         {
-            foreach (object o in c)
-                TryRemove(o);
+            if (c.IsSortable())
+            {
+                var remove = new ArrayList();
+                foreach (object o in c)
+                    remove.Add(o);
+
+                remove.Sort();
+                _sorted = true;
+
+                // Reverse so that we match removing from the end,
+                // see issue #2598 - Is.Not.EquivalentTo is extremely slow
+                for (int index = remove.Count - 1; index >= 0; index--)
+                    TryRemove(remove[index]);
+            }
+            else
+            {
+                foreach (object o in c)
+                    TryRemove(o);
+            }
         }
     }
 }

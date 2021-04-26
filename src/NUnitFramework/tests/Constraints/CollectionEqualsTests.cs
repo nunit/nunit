@@ -42,6 +42,15 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void CollectionsInDifferentOrderArNotEqual()
+        {
+            IList expected = new List<int> { 1, 2, 3 };
+            IList actual = new List<int> { 3, 2, 1 };
+
+            Assert.That(actual, Is.Not.EqualTo(expected));
+        }
+
+        [Test]
         public void FailureForEnumerablesWithDifferentSizes()
         {
             IEnumerable<int> expected = new int[] { 1, 2, 3 }.Select(i => i);
