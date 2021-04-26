@@ -321,7 +321,7 @@ namespace NUnit.Framework.Constraints
         public void LargeStringCollectionsInReversedOrder()
         {
             var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
-            var expected = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
+            var expected = Enumerable.Range(0, SIZE).Select(i => (SIZE - i - 1).ToString()).ToList();
 
             var watch = Stopwatch.StartNew();
 
