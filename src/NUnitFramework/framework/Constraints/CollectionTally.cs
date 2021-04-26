@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
                 foreach (var o in _missingItems)
                     missingItems.Add(o);
 
-                List<object> extraItems = new List<object>();
+                List<object> extraItems = new List<object>(_extraItems.Count);
                 if (_sorted)
                 {
                     for (int index = _extraItems.Count - 1; index >= 0; index--)
