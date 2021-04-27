@@ -126,8 +126,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void CanCompareWithTolerance()
         {
+#pragma warning disable 0618
             double? five = 5.0;
-
             Assert.AreEqual(5.0000001, five, .0001); 
             Assert.That( five, Is.EqualTo(5.0000001).Within(.0001));
 
@@ -135,6 +135,7 @@ namespace NUnit.Framework.Assertions
 
             Assert.AreEqual(3.00001f, three, .001);
             Assert.That( three, Is.EqualTo(3.00001f).Within(.001));
+#pragma warning restore 0618
         }
 
         private enum Colors

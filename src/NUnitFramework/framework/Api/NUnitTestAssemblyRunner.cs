@@ -373,12 +373,13 @@ namespace NUnit.Framework.Api
         private int CountTestCases(ITest test, ITestFilter filter)
         {
             if (!test.IsSuite)
-                return 1;
+                return filter.Pass(test) ? 1: 0;
 
             int count = 0;
             foreach (ITest child in test.Tests)
-                if (filter.Pass(child))
-                    count += CountTestCases(child, filter);
+            {
+                count += CountTestCases(child, filter);
+            }
 
             return count;
         }

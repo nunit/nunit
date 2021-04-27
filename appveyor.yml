@@ -13,7 +13,7 @@ deploy:
       secure: wtAvJDVl2tfwiVcyLExFHLvZVfUWiQRHsfdHBFCNEATeCHo1Nd8JP642PfY8xhji
     skip_symbols: true
     on:
-      branch: master
+      branch: v3.13-dev
 
 # For PRs, skip the branch run and only run against the virtual PR merge.
 skip_branch_with_pr: true

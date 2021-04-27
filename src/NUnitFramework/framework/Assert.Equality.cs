@@ -66,10 +66,9 @@ namespace NUnit.Framework
         /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
+        [System.Obsolete("This method will be removed in NUnit 4.0.")]
         public static void AreEqual(double expected, double? actual, double delta, string? message, params object?[]? args)
         {
-            // TODO: https://github.com/nunit/nunit/issues/3449
-            //                                    ↓↓↓↓↓↓↓
             AssertDoublesAreEqual(expected, actual!.Value, delta, message, args);
         }
 
@@ -80,10 +79,9 @@ namespace NUnit.Framework
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value</param>
         /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
+        [System.Obsolete("This method will be removed in NUnit 4.0.")]
         public static void AreEqual(double expected, double? actual, double delta)
         {
-            // TODO: https://github.com/nunit/nunit/issues/3449
-            //                                    ↓↓↓↓↓↓↓
             AssertDoublesAreEqual(expected, actual!.Value, delta, null, null);
         }
 

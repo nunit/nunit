@@ -17,7 +17,7 @@ var ErrorDetail = new List<string>();
 // SET PACKAGE VERSION
 //////////////////////////////////////////////////////////////////////
 
-var version = "3.13.1";
+var version = "3.13.2";
 var modifier = "";
 
 var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
@@ -83,7 +83,7 @@ Setup(context =>
             var branch = AppVeyor.Environment.Repository.Branch;
             var isPullRequest = AppVeyor.Environment.PullRequest.IsPullRequest;
 
-            if (branch == "master" && !isPullRequest)
+            if ((branch == "master" || branch == "v3.13-dev") && !isPullRequest)
             {
                 packageVersion = version + "-dev-" + buildNumber + dbgSuffix;
             }
@@ -160,6 +160,12 @@ DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
 MSBuildSettings CreateMsBuildSettings()
 {
     var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
+
+    if (!BuildSystem.IsLocalBuild)
+    {
+        // Extra arguments for NuGet package creation: EmbedUntrackedSources and ContinuousIntegrationBuild for deterministic build
+        settings.ArgumentCustomization = args => args.Append("-p:EmbedUntrackedSources=true -p:ContinuousIntegrationBuild=true");
+    }
 
     if (IsRunningOnWindows())
     {

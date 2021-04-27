@@ -60,6 +60,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (obj is System.Double) return true;
                 if (obj is System.Single) return true;
+                if (obj is System.Decimal) return true;
             }
             return false;
         }
@@ -70,6 +71,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (type == typeof(double)) return true;
                 if (type == typeof(float)) return true;
+                if (type == typeof(decimal)) return true;
             }
             return false;
         }
