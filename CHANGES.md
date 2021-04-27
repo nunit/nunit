@@ -1,3 +1,22 @@
+## NUnit 3.13.2 - April 27, 2021
+
+This release fixes a new issue with the `FixtureLifeCycle` attribute where `IDisposable` test fixtures were not being disposed properly. As always, [@gleb-osokin](https://github.com/gleb-osokin) has been a great help with this new feature.
+
+It also fixes a long-standing performance issue with `CollectionAssert.AreEquivalent` and the `CollectionEquivalentConstraint` when comparing large collections. The deep comparison that NUnit performs on the two collections will always have a worst case bound of O(n^2) but we have optimized it so that the majority of use cases will be closer to O(n).
+
+We've also made significant optimizations to the OR filters for selecting tests using their full name. This dramatically improves test performance for large code bases that use `dotnet test`. Thanks to [@pakrym](https://github.com/pakrym) for his help with this.
+
+### Issues Resolved
+
+* 2799 CollectionAssert.AreEquivalent is extremely slow
+* 3589 File headers, copyrights, and licenses
+* 3773 IDisposable not working with InstancePerTestCase
+* 3779 Obsolete AreEqual methods with nullable numeric arguments for 3.13
+* 3784 Build the v3.13-dev branch
+* 3786 NUnit with dotnet test results in O(n^2) filtering complexity
+* 3810 Enable deterministic build
+* 3818 AppVeyor failing to build v3.13-dev branch PRs
+* 3832 Deploy v3.13-dev branch builds to MyGet
 ## NUnit 3.13.1 - January 31, 2021
 
 This release addresses several misses with the new `FixtureLifeCycle` attribute, switches to using [SourceLink](https://github.com/dotnet/sourcelink) and NuGet [snupkg](https://docs.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg) packages for debugging into NUnit from your unit tests. It also addresses issues with the time format of ignored and explicit tests in the test results file.
