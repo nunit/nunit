@@ -72,14 +72,17 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void InstancePerTestCaseShouldDisposeForEachTestCase()
+        public void InstancePerTestCaseShouldDisposeForEachConstructorCall()
         {
             DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls = 0;
+            DisposableLifeCycleFixtureInstancePerTestCase.ConstructCalls = 0;
+            
             var fixture = TestBuilder.MakeFixture(typeof(DisposableLifeCycleFixtureInstancePerTestCase));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
             Assert.AreEqual(3, DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls);
+            Assert.AreEqual(3, DisposableLifeCycleFixtureInstancePerTestCase.ConstructCalls);
         }
 
         [Test]
