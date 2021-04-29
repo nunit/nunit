@@ -304,7 +304,13 @@ namespace NUnit.TestData.LifeCycleTests
     public class DisposableLifeCycleFixtureInstancePerTestCase : IDisposable
     {
         public static int DisposeCalls { get; set; }
-
+        public static int ConstructCalls { get; set; }
+        
+        public DisposableLifeCycleFixtureInstancePerTestCase()
+        {
+            ConstructCalls++;
+        }
+        
         [Test]
         [Order(1)]
         public void TestCase1()
