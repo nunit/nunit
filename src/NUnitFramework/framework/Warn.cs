@@ -327,7 +327,7 @@ namespace NUnit.Framework
         #region Boolean
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false, a warning is issued.
+        /// Asserts that a condition is false. If the condition is true, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
@@ -338,7 +338,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false, a warning is issued.
+        /// Asserts that a condition is false. If the condition is true, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void If(bool condition)
@@ -347,7 +347,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Asserts that a condition is true. If the condition is false, a warning is issued.
+        /// Asserts that a condition is false. If the condition is true, a warning is issued.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
