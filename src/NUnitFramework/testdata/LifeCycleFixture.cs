@@ -2,6 +2,7 @@
 
 
 using System;
+using System.Threading;
 using NUnit.Framework;
 
 namespace NUnit.TestData.LifeCycleTests
@@ -55,38 +56,38 @@ namespace NUnit.TestData.LifeCycleTests
 
         public BaseLifeCycle()
         {
-            ConstructCount++;
+            Interlocked.Increment(ref ConstructCount);
         }
 
         public void Dispose()
         {
-            DisposeCount++;
+            Interlocked.Increment(ref DisposeCount);
         }
 
         [OneTimeSetUp]
-        public static void OneTimeSetup()
+        public static void BaseOneTimeSetup()
         {
-            OneTimeSetUpCount++;
+            Interlocked.Increment(ref OneTimeSetUpCount);
         }
 
         [OneTimeTearDown]
-        public static void OneTimeTearDown()
+        public static void BaseOneTimeTearDown()
         {
-            OneTimeTearDownCount++;
+            Interlocked.Increment(ref OneTimeTearDownCount);
         }
 
         [SetUp]
-        public void SetUp()
+        public void BaseSetUp()
         {
-            SetUpCountTotal++;
-            InstanceSetUpCount++;
+            Interlocked.Increment(ref SetUpCountTotal);
+            Interlocked.Increment(ref InstanceSetUpCount);
         }
 
         [TearDown]
-        public void TearDown()
+        public void BaseTearDown()
         {
-            TearDownCountTotal++;
-            InstanceTearDownCount++;
+            Interlocked.Increment(ref TearDownCountTotal);
+            Interlocked.Increment(ref InstanceTearDownCount);
         }
     }
 
@@ -282,7 +283,7 @@ namespace NUnit.TestData.LifeCycleTests
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     [Parallelizable(ParallelScope.All)]
-    public class ParallelLifeCycleFixtureInstancePerTestCase
+    public class ParallelLifeCycleFixtureInstancePerTestCase : BaseLifeCycle
     {
         int _setupCount = 0;
 
