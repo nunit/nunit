@@ -30,6 +30,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
+    [NonParallelizable]
     public class LifeCycleAttributeTests
     {
         [SetUp]
@@ -177,7 +178,9 @@ namespace NUnit.Framework.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(ParallelLifeCycleFixtureInstancePerTestCase));
 
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
         #endregion
 
