@@ -59,44 +59,44 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void SetupTearDownIsCalledOnce()
+        public void InstancePerTestCaseFullLifeCycleTest()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(SetupAndTearDownFixtureInstancePerTestCase));
+            FullLifecycleTestCase.Reset();
+            var fixture = TestBuilder.MakeFixture(typeof(FullLifecycleTestCase));
+            var attr = new FixtureLifeCycleAttribute(LifeCycle.InstancePerTestCase);
+            attr.ApplyToTest(fixture);
 
             ITestResult result = TestBuilder.RunTest(fixture);
-
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
+
+            Assert.That(FullLifecycleTestCase.ConstructCount, Is.EqualTo(3));
+            Assert.That(FullLifecycleTestCase.DisposeCount, Is.EqualTo(3));
+            Assert.That(FullLifecycleTestCase.OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(FullLifecycleTestCase.OneTimeTearDownCount, Is.EqualTo(1));
+            Assert.That(FullLifecycleTestCase.SetUpCountTotal, Is.EqualTo(3));
+            Assert.That(FullLifecycleTestCase.TearDownCountTotal, Is.EqualTo(3));
         }
 
         [Test]
-        public void OneTimeSetupTearDownIsCalledOnce()
+        public void SingleInstanceFullLifeCycleTest()
         {
-            StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount = 0;
-            StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount = 0;
-
-            var fixture = TestBuilder.MakeFixture(typeof(StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase));
+            FullLifecycleTestCase.Reset();
+            var fixture = TestBuilder.MakeFixture(typeof(FullLifecycleTestCase));
+            var attr = new FixtureLifeCycleAttribute(LifeCycle.SingleInstance);
+            attr.ApplyToTest(fixture);
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.That(
+                result.Children.Select(t => t.ResultState),
+                Is.EquivalentTo(new[] { ResultState.Success, ResultState.Failure, ResultState.Failure }));
 
-            Assert.AreEqual(1, StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount);
-            Assert.AreEqual(1, StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount);
+            Assert.That(FullLifecycleTestCase.ConstructCount, Is.EqualTo(1));
+            Assert.That(FullLifecycleTestCase.DisposeCount, Is.EqualTo(1));
+            Assert.That(FullLifecycleTestCase.OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(FullLifecycleTestCase.OneTimeTearDownCount, Is.EqualTo(1));
+            Assert.That(FullLifecycleTestCase.SetUpCountTotal, Is.EqualTo(3));
+            Assert.That(FullLifecycleTestCase.TearDownCountTotal, Is.EqualTo(3));
         }
-
-        [Test]
-        public void InstancePerTestCaseShouldDisposeForEachConstructorCall()
-        {
-            DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls = 0;
-            DisposableLifeCycleFixtureInstancePerTestCase.ConstructCalls = 0;
-
-            var fixture = TestBuilder.MakeFixture(typeof(DisposableLifeCycleFixtureInstancePerTestCase));
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-
-            Assert.AreEqual(3, DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls);
-            Assert.AreEqual(3, DisposableLifeCycleFixtureInstancePerTestCase.ConstructCalls);
-        }
-
         #endregion
 
         #region Validation
