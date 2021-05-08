@@ -152,11 +152,11 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InstancePerTestCaseShouldApplyToTheories()
         {
-            FixtureWithTheoryTest.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTheoryTest));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithTheoryTest.DisposeCalls, Is.EqualTo(3));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
         [Test]
