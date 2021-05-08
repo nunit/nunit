@@ -239,13 +239,9 @@ namespace NUnit.TestData.LifeCycleTests
     }
 
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class FixtureWithValuesAttributeTest : IDisposable
+    public class FixtureWithValuesAttributeTest : BaseLifeCycle
     {
         private int _counter;
-
-        public static int DisposeCalls { get; set; }
-
-        public void Dispose() => DisposeCalls++;
 
         [Test]
         public void Test([Values] bool? _)

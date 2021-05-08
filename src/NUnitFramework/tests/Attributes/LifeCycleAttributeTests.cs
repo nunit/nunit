@@ -121,11 +121,11 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InstancePerTestCaseShouldApplyToTestsWithValuesParameters()
         {
-            FixtureWithValuesAttributeTest.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithValuesAttributeTest));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithValuesAttributeTest.DisposeCalls, Is.EqualTo(3));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
         [Test]
