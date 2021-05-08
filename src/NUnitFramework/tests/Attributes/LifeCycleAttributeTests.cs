@@ -101,11 +101,11 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InstancePerTestCaseShouldApplyToTestCaseTests()
         {
-            FixtureWithTestCases.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCases));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithTestCases.DisposeCalls, Is.EqualTo(4));
+
+            BaseLifeCycle.VerifyInstancePerTestCase(4);
         }
 
         [Test]
