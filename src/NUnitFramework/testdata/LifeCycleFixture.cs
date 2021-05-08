@@ -264,7 +264,7 @@ namespace NUnit.TestData.LifeCycleTests
 
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class RepeatingLifeCycleFixtureInstancePerTestCase
+    public class RepeatingLifeCycleFixtureInstancePerTestCase : BaseLifeCycle
     {
         public int Counter { get; set; }
         public static int RepeatCounter { get; set; }
