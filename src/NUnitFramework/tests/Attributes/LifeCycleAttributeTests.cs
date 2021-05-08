@@ -188,17 +188,19 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void NestedFeatureWithoutLifeCycleShouldInheritLifeCycle()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedFixture));
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedFixture.NestedFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
         }
 
         [Test]
         public void NestedFeatureWithLifeCycleShouldOverrideLifeCycle()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedOverridingFixture));
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedOverridingFixture.NestedFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
         }
 
         public void ChildClassWithoutLifeCycleShouldInheritLifeCycle()
@@ -301,5 +303,31 @@ namespace NUnit.Framework.Attributes
         #endregion
 
 
+    }
+
+    /// <summary>
+    /// To prove that <see cref="NestedFeatureWithoutLifeCycleShouldInheritLifeCycle"/> is indeed broken.
+    /// </summary>
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class Nested
+    {
+        [TestFixture]
+        public class NestedAgain
+        {
+            int x;
+
+            [Test, Order(1)]
+            public void Test1()
+            {
+                Assert.That(x++, Is.EqualTo(0));
+            }
+
+            [Test, Order(2)]
+            public void Test2()
+            {
+                Assert.That(x++, Is.EqualTo(0));
+            }
+        }
     }
 }

@@ -338,7 +338,7 @@ namespace NUnit.TestData.LifeCycleTests
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class LifeCycleWithNestedFixture
     {
-        public class NestedFixture
+        public class NestedFixture : BaseLifeCycle
         {
             private int _value;
 
@@ -360,7 +360,7 @@ namespace NUnit.TestData.LifeCycleTests
     public class LifeCycleWithNestedOverridingFixture
     {
         [FixtureLifeCycle(LifeCycle.SingleInstance)]
-        public class NestedFixture
+        public class NestedFixture : BaseLifeCycle
         {
             private int _value;
 
