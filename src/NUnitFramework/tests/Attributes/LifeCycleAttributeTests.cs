@@ -11,6 +11,12 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class LifeCycleAttributeTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            BaseLifeCycle.Reset();
+        }
+
         #region Basic Lifecycle
         [Test]
         public void InstancePerTestCaseCreatesAnInstanceForEachTestCase()
@@ -40,7 +46,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InstancePerTestCaseFullLifeCycleTest()
         {
-            FullLifecycleTestCase.Reset();
+            BaseLifeCycle.Reset();
             var fixture = TestBuilder.MakeFixture(typeof(FullLifecycleTestCase));
             var attr = new FixtureLifeCycleAttribute(LifeCycle.InstancePerTestCase);
             attr.ApplyToTest(fixture);
@@ -48,18 +54,13 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
 
-            Assert.That(FullLifecycleTestCase.ConstructCount, Is.EqualTo(3));
-            Assert.That(FullLifecycleTestCase.DisposeCount, Is.EqualTo(3));
-            Assert.That(FullLifecycleTestCase.OneTimeSetUpCount, Is.EqualTo(1));
-            Assert.That(FullLifecycleTestCase.OneTimeTearDownCount, Is.EqualTo(1));
-            Assert.That(FullLifecycleTestCase.SetUpCountTotal, Is.EqualTo(3));
-            Assert.That(FullLifecycleTestCase.TearDownCountTotal, Is.EqualTo(3));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
         [Test]
         public void SingleInstanceFullLifeCycleTest()
         {
-            FullLifecycleTestCase.Reset();
+            BaseLifeCycle.Reset();
             var fixture = TestBuilder.MakeFixture(typeof(FullLifecycleTestCase));
             var attr = new FixtureLifeCycleAttribute(LifeCycle.SingleInstance);
             attr.ApplyToTest(fixture);
@@ -69,12 +70,7 @@ namespace NUnit.Framework.Attributes
                 result.Children.Select(t => t.ResultState),
                 Is.EquivalentTo(new[] { ResultState.Success, ResultState.Failure, ResultState.Failure }));
 
-            Assert.That(FullLifecycleTestCase.ConstructCount, Is.EqualTo(1));
-            Assert.That(FullLifecycleTestCase.DisposeCount, Is.EqualTo(1));
-            Assert.That(FullLifecycleTestCase.OneTimeSetUpCount, Is.EqualTo(1));
-            Assert.That(FullLifecycleTestCase.OneTimeTearDownCount, Is.EqualTo(1));
-            Assert.That(FullLifecycleTestCase.SetUpCountTotal, Is.EqualTo(3));
-            Assert.That(FullLifecycleTestCase.TearDownCountTotal, Is.EqualTo(3));
+            BaseLifeCycle.VerifySingleInstance(3);
         }
         #endregion
 
