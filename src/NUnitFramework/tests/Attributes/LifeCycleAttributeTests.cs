@@ -208,6 +208,7 @@ namespace NUnit.Framework.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritedFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
         }
 
         [Test]
@@ -216,6 +217,7 @@ namespace NUnit.Framework.Attributes
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritanceOverriddenFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
         }
         #endregion
 
