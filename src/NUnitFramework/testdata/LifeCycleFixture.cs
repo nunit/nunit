@@ -369,6 +369,50 @@ namespace NUnit.TestData.LifeCycleTests
             }
         }
     }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleInheritanceBase
+    {
+    }
+
+    [TestFixture]
+    public class LifeCycleInheritedFixture : LifeCycleInheritanceBase
+    {
+        private int _value;
+
+        [Test]
+        public void Test1()
+        {
+            Assert.AreEqual(0, _value++);
+        }
+
+        [Test]
+        public void Test2()
+        {
+            Assert.AreEqual(0, _value++);
+        }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.SingleInstance)]
+    public class LifeCycleInheritanceOverriddenFixture : LifeCycleInheritanceBase
+    {
+        private int _value;
+
+        [Test]
+        [Order(0)]
+        public void Test1()
+        {
+            Assert.AreEqual(0, _value++);
+        }
+
+        [Test]
+        [Order(1)]
+        public void Test2()
+        {
+            Assert.AreEqual(1, _value++);
+        }
+    }
     #endregion
 
 
@@ -377,6 +421,6 @@ namespace NUnit.TestData.LifeCycleTests
 
 
 
-    
+
 
 }

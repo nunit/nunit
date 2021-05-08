@@ -199,6 +199,21 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTest(fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
+
+        public void ChildClassWithoutLifeCycleShouldInheritLifeCycle()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritedFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+
+        [Test]
+        public void ChildClassWithLifeCycleShouldOverrideLifeCycle()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritanceOverriddenFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
         #endregion
 
         #region Assembly level InstancePerTestCase
