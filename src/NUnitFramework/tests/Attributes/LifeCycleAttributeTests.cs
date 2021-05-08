@@ -205,13 +205,89 @@ namespace NUnit.Framework.Attributes
         public void AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelFixtureLifeCycleTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelFixtureLifeCycleTest.Code, new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
             var testType = asm.GetType("FixtureUnderTest");
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
+        }
+
+        [Test]
+        public void FixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycle()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                OverrideAssemblyLevelFixtureLifeCycleTest.Code,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void OuterFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                NestedOverrideAssemblyLevelFixtureLifeCycleTest.OuterClass,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest+NestedFixture");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void InnerFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                NestedOverrideAssemblyLevelFixtureLifeCycleTest.InnerClass,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest+NestedFixture");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void BaseLifecycleShouldOverrideAssemblyLevelLifeCycle()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                InheritedOverrideTest.InheritClassWithOtherLifecycle,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void BaseLifecycleFromOtherAssemblyShouldOverrideAssemblyLevelLifeCycle()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                InheritedOverrideTest.InheritClassWithOtherLifecycleFromOtherAssembly,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
         }
 
         [Test]
