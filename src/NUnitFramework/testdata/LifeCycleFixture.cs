@@ -27,68 +27,161 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.LifeCycleTests
 {
+    #region Basic Lifecycle
     [TestFixture]
-    public class DisposableFixture : IDisposable
+    public class CountingLifeCycleTestFixture
     {
-        public static int DisposeCount = 0;
+        public int Count { get; set; }
+
+        [Test]
+        public void CountIsAlwaysOne()
+        {
+            Count++;
+            Assert.AreEqual(1, Count);
+        }
+
+        [Test]
+        public void CountIsAlwaysOne_2()
+        {
+            Count++;
+            Assert.AreEqual(1, Count);
+        }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class SetupAndTearDownFixtureInstancePerTestCase
+    {
+        int _totalSetupCount = 0;
+        int _totalTearDownCount = 0;
+
+        [SetUp]
+        public void Setup()
+        {
+            _totalSetupCount++;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _totalTearDownCount++;
+        }
+
+        [Test]
+        public void DummyTest1()
+        {
+            Assert.That(_totalSetupCount, Is.EqualTo(1));
+            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DummyTest2()
+        {
+            Assert.That(_totalSetupCount, Is.EqualTo(1));
+            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DummyTest3()
+        {
+            Assert.That(_totalSetupCount, Is.EqualTo(1));
+            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+        }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase
+    {
+        public static int TotalOneTimeSetupCount = 0;
+        public static int TotalOneTimeTearDownCount = 0;
+
+        [OneTimeSetUp]
+        public static void OneTimeSetup()
+        {
+            TotalOneTimeSetupCount++;
+        }
+
+        [OneTimeTearDown]
+        public static void OneTimeTearDown()
+        {
+            TotalOneTimeTearDownCount++;
+        }
 
         [Test]
         public void DummyTest1() { }
 
         [Test]
         public void DummyTest2() { }
+    }
+
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class DisposableLifeCycleFixtureInstancePerTestCase : IDisposable
+    {
+        public static int DisposeCalls { get; set; }
+        public static int ConstructCalls { get; set; }
+
+        public DisposableLifeCycleFixtureInstancePerTestCase()
+        {
+            ConstructCalls++;
+        }
+
+        [Test]
+        [Order(1)]
+        public void TestCase1()
+        {
+            Assert.That(DisposeCalls, Is.EqualTo(0));
+        }
+
+        [Test]
+        [Order(2)]
+        public void TestCase2()
+        {
+            Assert.That(DisposeCalls, Is.EqualTo(1));
+        }
+
+        [Test]
+        [Order(3)]
+        public void TestCase3()
+        {
+            Assert.That(DisposeCalls, Is.EqualTo(2));
+        }
 
         public void Dispose()
         {
-            DisposeCount++;
+            DisposeCalls++;
         }
     }
+    #endregion
 
+    #region Validation
+
+    [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class LifeCycleWithNestedFixture
+    public class InstanceOneTimeSetupAndTearDownFixtureInstancePerTestCase
     {
-        public class NestedFixture
+        public int TotalOneTimeSetupCount = 0;
+        public int TotalOneTimeTearDownCount = 0;
+
+        [OneTimeSetUp]
+        public void OneTimeSetup()
         {
-            private int _value;
-
-            [Test]
-            public void Test1()
-            {
-                Assert.AreEqual(0, _value++);
-            }
-
-            [Test]
-            public void Test2()
-            {
-                Assert.AreEqual(0, _value++);
-            }
+            TotalOneTimeSetupCount++;
         }
-    }
 
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class LifeCycleWithNestedOverridingFixture
-    {
-        [FixtureLifeCycle(LifeCycle.SingleInstance)]
-        public class NestedFixture
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
         {
-            private int _value;
-
-            [Test]
-            [Order(0)]
-            public void Test1()
-            {
-                Assert.AreEqual(0, _value++);
-            }
-
-            [Test]
-            [Order(1)]
-            public void Test2()
-            {
-                Assert.AreEqual(1, _value++);
-            }
+            TotalOneTimeTearDownCount++;
         }
-    }
 
+        [Test]
+        public void DummyTest1() { }
+    }
+    #endregion
+
+    #region Test Annotations
     [TestFixtureSource(nameof(FixtureArgs))]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class LifeCycleWithTestFixtureSourceFixture : IDisposable
@@ -149,7 +242,7 @@ namespace NUnit.TestData.LifeCycleTests
         public static int[] Args() => new[] { 1, 42 };
 
         public void Dispose() => DisposeCalls++;
-        
+
         [TestCaseSource(nameof(Args))]
         public void Test(int _)
         {
@@ -191,155 +284,6 @@ namespace NUnit.TestData.LifeCycleTests
 
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class SetupAndTearDownFixtureInstancePerTestCase
-    {
-        int _totalSetupCount = 0;
-        int _totalTearDownCount = 0;
-
-        [SetUp]
-        public void Setup()
-        {
-            _totalSetupCount++;
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _totalTearDownCount++;
-        }
-
-        [Test]
-        public void DummyTest1() 
-        {
-            Assert.That(_totalSetupCount, Is.EqualTo(1)); 
-            Assert.That(_totalTearDownCount, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void DummyTest2()
-        {
-            Assert.That(_totalSetupCount, Is.EqualTo(1));
-            Assert.That(_totalTearDownCount, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void DummyTest3()
-        {
-            Assert.That(_totalSetupCount, Is.EqualTo(1));
-            Assert.That(_totalTearDownCount, Is.EqualTo(0));
-        }
-    }
-
-    [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase
-    {
-        public static int TotalOneTimeSetupCount = 0;
-        public static int TotalOneTimeTearDownCount = 0;
-
-        [OneTimeSetUp]
-        public static void OneTimeSetup()
-        {
-            TotalOneTimeSetupCount++;
-        }
-
-        [OneTimeTearDown]
-        public static void OneTimeTearDown()
-        {
-            TotalOneTimeTearDownCount++;
-        }
-
-        [Test]
-        public void DummyTest1() {}
-
-        [Test]
-        public void DummyTest2() {}
-    }
-
-    [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class InstanceOneTimeSetupAndTearDownFixtureInstancePerTestCase
-    {
-        public int TotalOneTimeSetupCount = 0;
-        public int TotalOneTimeTearDownCount = 0;
-
-        [OneTimeSetUp]
-        public void OneTimeSetup()
-        {
-            TotalOneTimeSetupCount++;
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            TotalOneTimeTearDownCount++;
-        }
-
-        [Test]
-        public void DummyTest1() {}
-    }
-
-    [TestFixture]
-    public class CountingLifeCycleTestFixture
-    {
-        public int Count { get; set; }
-
-        [Test]
-        public void CountIsAlwaysOne()
-        {
-            Count++;
-            Assert.AreEqual(1, Count);
-        }
-
-        [Test]
-        public void CountIsAlwaysOne_2()
-        {
-            Count++;
-            Assert.AreEqual(1, Count);
-        }
-    }
-
-    [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class DisposableLifeCycleFixtureInstancePerTestCase : IDisposable
-    {
-        public static int DisposeCalls { get; set; }
-        public static int ConstructCalls { get; set; }
-        
-        public DisposableLifeCycleFixtureInstancePerTestCase()
-        {
-            ConstructCalls++;
-        }
-        
-        [Test]
-        [Order(1)]
-        public void TestCase1()
-        {
-            Assert.That(DisposeCalls, Is.EqualTo(0));
-        }
-
-        [Test]
-        [Order(2)]
-        public void TestCase2()
-        {
-            Assert.That(DisposeCalls, Is.EqualTo(1));
-        }
-
-        [Test]
-        [Order(3)]
-        public void TestCase3()
-        {
-            Assert.That(DisposeCalls, Is.EqualTo(2));
-        }
-
-        public void Dispose()
-        {
-            DisposeCalls++;
-        }
-    }
-    
-    [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
     public class RepeatingLifeCycleFixtureInstancePerTestCase
     {
         public int Counter { get; set; }
@@ -369,7 +313,7 @@ namespace NUnit.TestData.LifeCycleTests
         }
 
         [Test]
-        public void DummyTest1() 
+        public void DummyTest1()
         {
             Assert.That(_setupCount, Is.EqualTo(1));
         }
@@ -386,4 +330,61 @@ namespace NUnit.TestData.LifeCycleTests
             Assert.That(_setupCount, Is.EqualTo(1));
         }
     }
+    #endregion
+
+    #region Nesting and inheritance
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleWithNestedFixture
+    {
+        public class NestedFixture
+        {
+            private int _value;
+
+            [Test]
+            public void Test1()
+            {
+                Assert.AreEqual(0, _value++);
+            }
+
+            [Test]
+            public void Test2()
+            {
+                Assert.AreEqual(0, _value++);
+            }
+        }
+    }
+
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class LifeCycleWithNestedOverridingFixture
+    {
+        [FixtureLifeCycle(LifeCycle.SingleInstance)]
+        public class NestedFixture
+        {
+            private int _value;
+
+            [Test]
+            [Order(0)]
+            public void Test1()
+            {
+                Assert.AreEqual(0, _value++);
+            }
+
+            [Test]
+            [Order(1)]
+            public void Test2()
+            {
+                Assert.AreEqual(1, _value++);
+            }
+        }
+    }
+    #endregion
+
+
+
+
+
+
+
+    
+
 }
