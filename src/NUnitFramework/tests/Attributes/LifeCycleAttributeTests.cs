@@ -113,8 +113,8 @@ namespace NUnit.Framework.Attributes
         {
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithTestFixtureSourceFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             // TODO: OneTimeSetUpCount is called twice. Expected? Does seem consistent w/ reusing the class; then there are also two calls.
             BaseLifeCycle.VerifyInstancePerTestCase(4, 2);
         }
@@ -124,19 +124,19 @@ namespace NUnit.Framework.Attributes
         {
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCases));
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             BaseLifeCycle.VerifyInstancePerTestCase(4);
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestCaseSourceTests()
         {
-            FixtureWithTestCaseSource.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCaseSource));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithTestCaseSource.DisposeCalls, Is.EqualTo(2));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
         }
 
         [Test]
