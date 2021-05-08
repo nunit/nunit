@@ -165,9 +165,10 @@ namespace NUnit.Framework.Attributes
             RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter = 0;
             var fixture = TestBuilder.MakeFixture(typeof(RepeatingLifeCycleFixtureInstancePerTestCase));
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
         [Test]
