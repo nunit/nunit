@@ -28,110 +28,102 @@ namespace NUnit.TestData.LifeCycleTests
     }
 
     [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class SetupAndTearDownFixtureInstancePerTestCase
+    public class FullLifecycleTestCase : IDisposable
     {
-        int _totalSetupCount = 0;
-        int _totalTearDownCount = 0;
+        public static int ConstructCount;
+        public static int DisposeCount;
+        public static int OneTimeSetUpCount;
+        public static int OneTimeTearDownCount;
 
-        [SetUp]
-        public void Setup()
+        public static int SetUpCountTotal;
+        public static int TearDownCountTotal;
+
+        public int InstanceSetUpCount;
+        public int InstanceTearDownCount;
+
+        public static void Reset()
         {
-            _totalSetupCount++;
+            ConstructCount = 0;
+            DisposeCount = 0;
+            OneTimeSetUpCount = 0;
+            OneTimeTearDownCount = 0;
+            SetUpCountTotal = 0;
+            TearDownCountTotal = 0;
         }
 
-        [TearDown]
-        public void TearDown()
+        public FullLifecycleTestCase()
         {
-            _totalTearDownCount++;
+            ConstructCount++;
         }
 
-        [Test]
-        public void DummyTest1()
+        public void Dispose()
         {
-            Assert.That(_totalSetupCount, Is.EqualTo(1));
-            Assert.That(_totalTearDownCount, Is.EqualTo(0));
+            DisposeCount++;
         }
-
-        [Test]
-        public void DummyTest2()
-        {
-            Assert.That(_totalSetupCount, Is.EqualTo(1));
-            Assert.That(_totalTearDownCount, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void DummyTest3()
-        {
-            Assert.That(_totalSetupCount, Is.EqualTo(1));
-            Assert.That(_totalTearDownCount, Is.EqualTo(0));
-        }
-    }
-
-    [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase
-    {
-        public static int TotalOneTimeSetupCount = 0;
-        public static int TotalOneTimeTearDownCount = 0;
 
         [OneTimeSetUp]
         public static void OneTimeSetup()
         {
-            TotalOneTimeSetupCount++;
+            OneTimeSetUpCount++;
         }
 
         [OneTimeTearDown]
         public static void OneTimeTearDown()
         {
-            TotalOneTimeTearDownCount++;
+            OneTimeTearDownCount++;
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            SetUpCountTotal++;
+            InstanceSetUpCount++;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            TearDownCountTotal++;
+            InstanceTearDownCount++;
         }
 
         [Test]
-        public void DummyTest1() { }
+        public void DummyTest1()
+        {
+            Assert.That(ConstructCount - DisposeCount, Is.EqualTo(1));
+
+            Assert.That(OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(OneTimeTearDownCount, Is.EqualTo(0));
+
+            Assert.That(InstanceSetUpCount, Is.EqualTo(1));
+            Assert.That(InstanceTearDownCount, Is.EqualTo(0));
+        }
 
         [Test]
-        public void DummyTest2() { }
+        public void DummyTest2()
+        {
+            Assert.That(ConstructCount - DisposeCount, Is.EqualTo(1));
+
+            Assert.That(OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(OneTimeTearDownCount, Is.EqualTo(0));
+
+            Assert.That(InstanceSetUpCount, Is.EqualTo(1));
+            Assert.That(InstanceTearDownCount, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void DummyTest3()
+        {
+            Assert.That(ConstructCount - DisposeCount, Is.EqualTo(1));
+
+            Assert.That(OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(OneTimeTearDownCount, Is.EqualTo(0));
+
+            Assert.That(InstanceSetUpCount, Is.EqualTo(1));
+            Assert.That(InstanceTearDownCount, Is.EqualTo(0));
+        }
     }
 
-    [TestFixture]
-    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class DisposableLifeCycleFixtureInstancePerTestCase : IDisposable
-    {
-        public static int DisposeCalls { get; set; }
-        public static int ConstructCalls { get; set; }
-
-        public DisposableLifeCycleFixtureInstancePerTestCase()
-        {
-            ConstructCalls++;
-        }
-
-        [Test]
-        [Order(1)]
-        public void TestCase1()
-        {
-            Assert.That(DisposeCalls, Is.EqualTo(0));
-        }
-
-        [Test]
-        [Order(2)]
-        public void TestCase2()
-        {
-            Assert.That(DisposeCalls, Is.EqualTo(1));
-        }
-
-        [Test]
-        [Order(3)]
-        public void TestCase3()
-        {
-            Assert.That(DisposeCalls, Is.EqualTo(2));
-        }
-
-        public void Dispose()
-        {
-            DisposeCalls++;
-        }
-    }
     #endregion
 
     #region Validation
