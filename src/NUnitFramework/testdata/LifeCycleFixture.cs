@@ -27,40 +27,22 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.LifeCycleTests
 {
-    #region Basic Lifecycle
-    [TestFixture]
-    public class CountingLifeCycleTestFixture
+    /// <summary>
+    /// Base class for all LifeCycle tests: provides default implementation for counting 
+    /// the total number of calls to constructor and setup methods.
+    /// </summary>
+    public class BaseLifeCycle : IDisposable
     {
-        public int Count { get; set; }
+        protected static int ConstructCount;
+        protected static int DisposeCount;
+        protected static int OneTimeSetUpCount;
+        protected static int OneTimeTearDownCount;
 
-        [Test]
-        public void CountIsAlwaysOne()
-        {
-            Count++;
-            Assert.AreEqual(1, Count);
-        }
+        protected static int SetUpCountTotal;
+        protected static int TearDownCountTotal;
 
-        [Test]
-        public void CountIsAlwaysOne_2()
-        {
-            Count++;
-            Assert.AreEqual(1, Count);
-        }
-    }
-
-    [TestFixture]
-    public class FullLifecycleTestCase : IDisposable
-    {
-        public static int ConstructCount;
-        public static int DisposeCount;
-        public static int OneTimeSetUpCount;
-        public static int OneTimeTearDownCount;
-
-        public static int SetUpCountTotal;
-        public static int TearDownCountTotal;
-
-        public int InstanceSetUpCount;
-        public int InstanceTearDownCount;
+        protected int InstanceSetUpCount;
+        protected int InstanceTearDownCount;
 
         public static void Reset()
         {
@@ -72,7 +54,27 @@ namespace NUnit.TestData.LifeCycleTests
             TearDownCountTotal = 0;
         }
 
-        public FullLifecycleTestCase()
+        public static void VerifySingleInstance(int numberOfTests)
+        {
+            Assert.That(ConstructCount, Is.EqualTo(1));
+            Assert.That(DisposeCount, Is.EqualTo(1));
+            Assert.That(OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(OneTimeTearDownCount, Is.EqualTo(1));
+            Assert.That(SetUpCountTotal, Is.EqualTo(numberOfTests));
+            Assert.That(TearDownCountTotal, Is.EqualTo(numberOfTests));
+        }
+
+        public static void VerifyInstancePerTestCase(int numberOfTests)
+        {
+            Assert.That(ConstructCount, Is.EqualTo(numberOfTests));
+            Assert.That(DisposeCount, Is.EqualTo(numberOfTests));
+            Assert.That(OneTimeSetUpCount, Is.EqualTo(1));
+            Assert.That(OneTimeTearDownCount, Is.EqualTo(1));
+            Assert.That(SetUpCountTotal, Is.EqualTo(numberOfTests));
+            Assert.That(TearDownCountTotal, Is.EqualTo(numberOfTests));
+        }
+
+        public BaseLifeCycle()
         {
             ConstructCount++;
         }
@@ -107,7 +109,32 @@ namespace NUnit.TestData.LifeCycleTests
             TearDownCountTotal++;
             InstanceTearDownCount++;
         }
+    }
 
+    #region Basic Lifecycle
+    [TestFixture]
+    public class CountingLifeCycleTestFixture
+    {
+        public int Count { get; set; }
+
+        [Test]
+        public void CountIsAlwaysOne()
+        {
+            Count++;
+            Assert.AreEqual(1, Count);
+        }
+
+        [Test]
+        public void CountIsAlwaysOne_2()
+        {
+            Count++;
+            Assert.AreEqual(1, Count);
+        }
+    }
+
+    [TestFixture]
+    public class FullLifecycleTestCase : BaseLifeCycle
+    {
         [Test]
         public void DummyTest1()
         {
