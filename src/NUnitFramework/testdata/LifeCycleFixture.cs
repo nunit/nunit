@@ -381,12 +381,18 @@ namespace NUnit.TestData.LifeCycleTests
     }
 
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class LifeCycleInheritanceBase
+    public class LifeCycleInheritanceBaseInstancePerTestCase : BaseLifeCycle
+    {
+    }
+
+    /// <remarks>Used implicitly in <see cref="AssemblyLevelFixtureLifeCycleTest"/></remarks>
+    [FixtureLifeCycle(LifeCycle.SingleInstance)]
+    public class LifeCycleInheritanceBaseSingleInstance : BaseLifeCycle
     {
     }
 
     [TestFixture]
-    public class LifeCycleInheritedFixture : LifeCycleInheritanceBase
+    public class LifeCycleInheritedFixture : LifeCycleInheritanceBaseInstancePerTestCase
     {
         private int _value;
 
@@ -405,7 +411,7 @@ namespace NUnit.TestData.LifeCycleTests
 
     [TestFixture]
     [FixtureLifeCycle(LifeCycle.SingleInstance)]
-    public class LifeCycleInheritanceOverriddenFixture : LifeCycleInheritanceBase
+    public class LifeCycleInheritanceOverriddenFixture : LifeCycleInheritanceBaseInstancePerTestCase
     {
         private int _value;
 
