@@ -224,14 +224,12 @@ namespace NUnit.TestData.LifeCycleTests
     }
 
     [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-    public class FixtureWithTestCaseSource : IDisposable
+    public class FixtureWithTestCaseSource : BaseLifeCycle
     {
         private int _counter;
 
-        public static int DisposeCalls { get; set; }
         public static int[] Args() => new[] { 1, 42 };
 
-        public void Dispose() => DisposeCalls++;
 
         [TestCaseSource(nameof(Args))]
         public void Test(int _)
