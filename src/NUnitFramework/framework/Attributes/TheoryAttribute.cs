@@ -36,9 +36,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Construct the attribute, specifying a combining strategy and source of parameter data.
         /// </summary>
-        public TheoryAttribute() : base(
+        public TheoryAttribute(bool searchInDeclaringTypes = false) : base(
             new CombinatorialStrategy(),
-            new ParameterDataProvider(new DatapointProvider(), new ParameterDataSourceProvider()))
+            new ParameterDataProvider(new DatapointProvider(searchInDeclaringTypes), new ParameterDataSourceProvider()))
         {
         }
     }

@@ -17,6 +17,17 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DatapointProvider : IParameterDataProvider
     {
+        private readonly bool _searchInDeclaringTypes;
+        
+        /// <summary>
+        /// Creates new DatapointProvider
+        /// </summary>
+        /// <param name="searchInDeclaringTypes">Determines whether when searching for theory data members of declaring types will also be searched</param>
+        public DatapointProvider(bool searchInDeclaringTypes)
+        {
+            _searchInDeclaringTypes = searchInDeclaringTypes;
+        }
+
         private static readonly ProviderCache ProviderCache = new ProviderCache();
 
         #region IDataPointProvider Members
@@ -137,7 +148,25 @@ namespace NUnit.Framework.Internal.Builders
 
         private IEnumerable<MemberInfo> GetMembersFromType(Type type)
         {
+            if (_searchInDeclaringTypes)
+            {
+                return GetNestedMembersFromType(type);
+            }
+
             return type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+        }
+
+        private static IEnumerable<MemberInfo> GetNestedMembersFromType(Type? type)
+        {
+            while (type != null)
+            {
+                foreach (var member in type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
+                {
+                    yield return member;
+                }
+
+                type = type.DeclaringType;
+            }
         }
 
         private Type? GetTypeFromMemberInfo(MemberInfo member)
