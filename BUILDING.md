@@ -27,15 +27,15 @@ We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primar
 
 Key arguments to `build.ps1` / `build.sh`:
 
-|   |   |
+| Argument | Description |
 |---|---|
 | --target={task}                 | The task to run - see below.                        |
-| --configuration=[Release|Debug] | The configuration to use (default is Release)       |
+| --configuration=[Release\|Debug] | The configuration to use (default is Release)       |
 | --showdescription               | Shows all of the build tasks and their descriptions |
 
 The build.cake script contains a large number of interdependent tasks. The most important top-level tasks to use are listed here:
 
-|   |   |
+| Task | Description |
 |---|---|
 | Build    | Builds everything. This is the default if no target is given. |
 | Rebuild  | Cleans the output directory and builds everything |
