@@ -267,7 +267,7 @@ namespace NUnit.Framework.Internal
             string[] parts = s.Split('-');
             if (parts.Length == 2)
             {
-                runtime = (RuntimeType)Enum.Parse(typeof(RuntimeType), parts[0], true);
+                runtime = ParseRuntimeType(parts[0]);
                 string vstring = parts[1];
                 if (vstring != "")
                 {
@@ -283,7 +283,7 @@ namespace NUnit.Framework.Internal
             }
             else if (IsRuntimeTypeName(s))
             {
-                runtime = (RuntimeType)Enum.Parse(typeof(RuntimeType), s, true);
+                runtime = ParseRuntimeType(s);
             }
             else
             {
@@ -381,10 +381,17 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-        private static bool IsRuntimeTypeName(string name)
+        private static RuntimeType ParseRuntimeType(string s)
         {
-            return Enum.GetNames(typeof(RuntimeType)).Contains(name, StringComparer.OrdinalIgnoreCase);
+            if (s.ToLowerInvariant() == "net")
+                s = "NetFramework";
+
+            return (RuntimeType)Enum.Parse(typeof(RuntimeType), s, true);
         }
+
+        private static bool IsRuntimeTypeName(string name) =>
+            name.ToLowerInvariant() == "net" || 
+            Enum.GetNames(typeof(RuntimeType)).Contains(name, StringComparer.OrdinalIgnoreCase);
 
         private static string GetShortName(RuntimeType runtime, Version version)
         {

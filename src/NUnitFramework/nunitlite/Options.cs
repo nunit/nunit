@@ -523,19 +523,6 @@ namespace NUnit.Options
             throw new InvalidOperationException ("Option has no names!");
         }
 
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use the default indexer instead.")]
-        protected Option GetOptionForName (string option)
-        {
-            if (option == null)
-                throw new ArgumentNullException (nameof(option));
-            try {
-                return base [option];
-            }
-            catch (KeyNotFoundException) {
-                return null;
-            }
-        }
-
         protected override void InsertItem (int index, Option item)
         {
             base.InsertItem (index, item);

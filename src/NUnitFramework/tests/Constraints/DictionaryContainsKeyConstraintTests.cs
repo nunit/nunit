@@ -62,23 +62,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("Hello"));
         }
 
-#pragma warning disable CS0618 // DictionaryContainsKeyConstraint.IgnoreCase and .Using are deprecated
-        [Test, SetCulture("en-US")]
-        public void IgnoreCaseIsHonored()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").IgnoreCase);
-        }
-
-        [Test, SetCulture("en-US")]
-        public void UsingIsHonored()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
-        }
-
         [Test]
         public void SucceedsWhenKeyIsPresentWhenDictionaryUsingCustomComparer()
         {
@@ -86,8 +69,6 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello"));
         }
-
-#pragma warning restore CS0618
 
         [Test]
         public void SucceedsWhenKeyIsPresentUsingContainsKeyWhenDictionaryUsingCustomComparer()
@@ -221,58 +202,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, Does.ContainKey(20));
             Assert.That(dictionary, !Does.ContainKey(43));
         }
-
-#pragma warning disable CS0618 // DictionaryContainsKeyConstraint.Using is obsolete
-
-        [Test]
-        public void UsingDictionaryContainsKeyConstraintComparisonFunc()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("HELLO").Using<string, string>((x, y) => x.ToUpper().Equals(y.ToUpper())));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintNonGenericComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hola").Using((IComparer)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintGenericComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hola").Using((IComparer<string>)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintNonGenericEqualityComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using((IEqualityComparer)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintGenericEqualityComparer()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using((IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void UsingBaseCollectionItemsEqualConstraintComparerFunc()
-        {
-            var dictionary = new Dictionary<string, string> { { "Hello", "World" }, { "Hola", "Mundo" } };
-
-            Assert.That(dictionary, new DictionaryContainsKeyConstraint("hello").Using<string>((x, y) => x.ToLower().Equals(y.ToLower())));
-        }
-
-#pragma warning restore CS0618
 
         #region Test Assets
 

@@ -5,8 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -17,9 +15,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
-        private const string ComparerMemberObsoletionMessage = "This member has been deprecated and will be removed in a future release. "
-            + "To test using a comparer which the dictionary is not based on, use a collection constraint on the set of keys.";
-
         private const string ContainsMethodName = "Contains";
         private bool _isDeprecatedMode = false;
 
@@ -73,19 +68,6 @@ namespace NUnit.Framework.Constraints
             return constraint;
         }
 
-        /// <summary>
-        /// Flag the constraint to ignore case and return self.
-        /// </summary>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint IgnoreCase
-        {
-            get
-            {
-                _isDeprecatedMode = true;
-                return base.IgnoreCase;
-            }
-        }
-
         private bool Matches(object actual)
         {
             if (_isDeprecatedMode)
@@ -121,92 +103,6 @@ namespace NUnit.Framework.Constraints
         {
             return Matches(collection);
         }
-
-        #region Shadowing CollectionItemsEqualConstraint Methods
-
-        /// <summary>
-        /// Flag the constraint to use the supplied predicate function
-        /// </summary>
-        /// <param name="comparison">The comparison function to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public DictionaryContainsKeyConstraint Using<TCollectionType, TMemberType>(Func<TCollectionType, TMemberType, bool> comparison)
-        {
-            // reverse the order of the arguments to match expectations of PredicateEqualityComparer
-            Func<TMemberType, TCollectionType, bool> invertedComparison = (actual, expected) => comparison.Invoke(expected, actual);
-
-            _isDeprecatedMode = true;
-            base.Using(EqualityAdapter.For(invertedComparison));
-            return this;
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied Comparison object.
-        /// </summary>
-        /// <param name="comparison">The Comparison object to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparison);
-        }
-
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint Using(IComparer comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint Using<T>(IComparer<T> comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IEqualityComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint Using(IEqualityComparer comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied IEqualityComparer object.
-        /// </summary>
-        /// <param name="comparer">The IComparer object to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint Using<T>(IEqualityComparer<T> comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        /// <summary>
-        /// Flag the constraint to use the supplied boolean-returning delegate.
-        /// </summary>
-        /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
-        [Obsolete(ComparerMemberObsoletionMessage)]
-        public new CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
-        {
-            _isDeprecatedMode = true;
-            return base.Using(comparer);
-        }
-
-        #endregion
 
         private static MethodInfo GetContainsKeyMethod(object keyedItemContainer)
         {
