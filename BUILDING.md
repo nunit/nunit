@@ -10,13 +10,13 @@ There is a single Visual Studio solution, `nunit.sln`, which resides in the NUni
 
 NUnit framework can be built from this solution using [Visual Studio 2019 16.8](https://www.visualstudio.com/vs/) or newer (Windows) and [Visual Studio for Mac](https://www.visualstudio.com/vs/) (macOS).
 
-Currently, MonoDevelop does not support the new multi-targeted `csproj` project format. Once MonoDevelop is updated, it should start working again. Until then, we recommend using [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build script instead (see the [Build Script](#build-script) section below for details).
+Currently, MonoDevelop does not support the new multi-targeted `csproj` project format <sup>[1]</sup>. Once MonoDevelop is updated, it should start working again. Until then, we recommend using [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build script instead (see the [Build Script](#build-script) section below for details).
 
 On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
 
 A solution build places all of it's output in a common `bin` directory under the solution directory.
 
-As the NUnit solution targets multiple frameworks, a single build will generate files for each targeted framework. For example, a debug build <sup>[1]</sup> produces the following directory structure:
+As the NUnit solution targets multiple frameworks, a single build will generate files for each targeted framework. For example, a debug build <sup>[2]</sup> produces the following directory structure:
 
 ```
  (directory with nunit.sln)
@@ -30,7 +30,9 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
           netstandard2.0
 ```
 
-[1] GitHub repository cloned and built on 9 June 2021
+### Notes
+1. MonoDevelop 2.0 introduced support for multiple target frameworks up to and including .Net 3.0 and 3.5 ([MonoDevelop 2.0 release notes](https://www.monodevelop.com/documentation/release-notes/monodevelop-2.0-released/)). Unfortunately, subsequent releases have not extended that support to .Net Core or .Net 5 and beyond. There is a kanban board maintained for [MonoDevelop Multi-targeting Support](https://github.com/mono/monodevelop/projects/1) however it's showing the most recent update being 9 Aug 2019. MonoDevelop Version 7.8.4 (build 2) was verified as unable to build `nunit.sln` due to lack of multi-targeting support. This footnote was correct as of 9 June 2021.
+2. GitHub repository cloned and built on 9 June 2021
 
 ## Running Tests
 
@@ -66,12 +68,12 @@ For example, executing the following command `.\build.ps --target=Test --configu
 
 For a full list of tasks, run `.\build.ps1 --showdescription` (PowerShell on Windows) or `./build.sh --showdescription` (bash on Linux).
 
-### Notes:
+### Notes
 
 1. By design, the Package target does not depend on Build. This is to allow re-packaging when necessary without changing the binaries themselves. Of course, this means that you have to be very careful that the build is up to date before packaging.
 2. For additional targets, refer to the `build.cake` script itself.
 
-### Defined constants
+## Defined constants
 
 NUnit often uses conditional preprocessor to light up APIs and behaviors per platform.
 
