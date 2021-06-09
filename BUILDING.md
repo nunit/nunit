@@ -43,7 +43,7 @@ Other test projects contain tests designed to fail purposely for integration tes
 
 ## Build Script
 
-We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is `build.cake`. We modify `build.cake` when we need to add new targets or change the way the build is done. Normally `build.cake` is not invoked directly but through `build.ps1` (on Windows) or `build.sh` (on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script.
+We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is `build.cake`. We modify `build.cake` when we need to add new targets or change the way the build is done. Normally `build.cake` is not invoked directly but through `build.ps1` (PowerShell on Windows) or `build.sh` (bash on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script.
 
 Key arguments to `build.ps1` / `build.sh`:
 
@@ -53,6 +53,8 @@ Key arguments to `build.ps1` / `build.sh`:
 | --configuration=[Release\|Debug] | The configuration to use (default is Release)       |
 | --showdescription               | Shows all of the build tasks and their descriptions |
 
+For example, executing the command `.\build.ps --target=Test --configuration=Release` in a Windows PowerShell Terminal will perform a full release build for all target frameworks and then execute the unit tests against each target.
+
 The build.cake script contains a large number of interdependent tasks. The most important top-level tasks to use are listed here:
 
 | Task | Description |
@@ -61,8 +63,9 @@ The build.cake script contains a large number of interdependent tasks. The most 
 | Rebuild  | Cleans the output directory and builds everything |
 | Test     | Runs all tests. Dependent on Build. |
 | Package  | Creates all packages without building first. See Note below. |
+ 
 
-For a full list of tasks, run `.\build.ps1 --showdescription`.
+For a full list of tasks, run `.\build.ps1 --showdescription` (PowerShell on Windows) or `build.sh --showdescription` (bash on Linux).
 
 ### Notes:
 
