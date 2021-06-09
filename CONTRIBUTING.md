@@ -38,7 +38,7 @@ If you’re getting ready to report a bug in NUnit, figuring out how to create a
 
 ## Documentation
 
-Great documentation is essential for any open source project and NUnit is no exception. [Our documentation](https://github.com/nunit/docs/wiki/NUnit-Documentation) often lags behind the features that have been implemented or would benefit from better examples.
+Great documentation is essential for any open source project and NUnit is no exception. [Our documentation](https://docs.nunit.org/articles/nunit/intro.html) often lags behind the features that have been implemented or would benefit from better examples.
 
 A great place to start is by going through the [NUnit release notes](https://github.com/nunit/docs/wiki/Release-Notes) and ensuring that the documentation for new features is up to date.
 
@@ -50,7 +50,7 @@ To help new contributors get their feet wet, we have marked a number of issues w
 
 It is also a good idea to add a comment to an issue that you are working on to let everyone know. If you stop working on it, also please let us know.
 
-Please read through the [developer docs](https://github.com/nunit/docs/wiki/Team-Practices#technical-practices) before contributing to understand our coding standards and contribution guidelines.
+Please read through the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html) before contributing to understand our coding standards and contribution guidelines.
 
 Note: Instructions on how to build and run tests can be found under [building](https://github.com/nunit/nunit/blob/master/BUILDING.md)
 
