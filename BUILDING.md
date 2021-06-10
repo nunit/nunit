@@ -63,8 +63,19 @@ For example, excuting the following command `./nunitlite-runner nunit.framework.
 
 NUnit Lite Runner accepts a number of [command line arguments](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Options.html). 
 
-For example, executing the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll
+For example, the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll
 
+#### 2. NUnit Lite Runner (run by the IDE after a build)
+
+You can run NUnit Lite in a similar way to above, but from the development IDE after a successful build. 
+
+This is probably the easiest way (whilst issue [#3008](https://github.com/nunit/nunit/issues/3008) remains open) for developers to step through code and debug any new contributions made to the codebase.
+
+In your development IDE of choice, ensure there is a Run/Debug configuration which specifies `nunitlite-runner` as the startup project. 
+
+Then specify the program arguments in exactly the same way as above. For example the following argument `nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll (assuming a successful build)
+
+You could now set a breakpoint anywhere in the AssertEqualsTests class and have the debugger pause on it when performing a debug run of the solution (ie. ALT+F5 in JetBrains Rider).
 
 ## Build Script
 
@@ -87,7 +98,7 @@ The build.cake script contains a large number of interdependent tasks. The most 
 | Test     | Runs all tests. Dependent on Build. |
 | Package  | Creates all packages without building first. See Note below. |
 
-For example, executing the following command `.\build.ps --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target. 
+For example, the following command `.\build.ps --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target. 
 
 For a full list of tasks, run `.\build.ps1 --showdescription` (PowerShell on Windows) or `./build.sh --showdescription` (bash on Linux).
 
