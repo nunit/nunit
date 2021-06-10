@@ -9,8 +9,8 @@ You will need to work on a local fork as you will not have permission to create 
 1. Create a fork of the repo
 2. Clone your fork to your computer
 3. Create the changes on a new branch
-4. Ensure all NUnit tests pass locally (ie. run them on as many platforms that you have ie. Windows, Linux, Mac)
-5. Push the branch to your GitHub  fork
+4. Ensure all NUnit tests pass locally (ie. run them on all targeted frameworks and on as many platforms that you have ie. Windows, Linux, Mac). The [Script Build](#script-build) section below gives exact instructions on how to do this from the Command Prompt / Terminal.
+5. Push the branch to your GitHub fork
 6. Create the PR (this is described in more detail [here](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/))
 
 ## Solution Build
