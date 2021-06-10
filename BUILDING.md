@@ -43,6 +43,14 @@ The tests that should be run in the solution are grouped by project name:
 
 Other test projects contain tests designed to fail purposely for integration tests.
 
+Normally you should be able to run the unit tests directly from within your development IDE of choice (as you would when using NUnit in any other development project). For example, this is what it looks like in JetBrains Rider (2021.1.2) when right clicking on the `AssertEqualsTests` TextFixture:
+
+![image](https://user-images.githubusercontent.com/52075808/121511286-61775580-c9e0-11eb-8e1e-ff44d0d8873d.png)
+
+Because NUnit solution targets multiple frameworks, JetBrains Rider knows this and offers the option to run the tests against a specific framework and/or all target frameworks.
+
+Unfortunately there is currently a known issue ([#3008](https://github.com/nunit/nunit/issues/3008)) preventing the tests from being run in Visual Studio and JetBrains Rider IDEs. Equally there is also a known issue ([#3867](https://github.com/nunit/nunit/issues/3867)) preventing the tests from being run from the command line using `dotnet test`
+
 ## Build Script
 
 We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is `build.cake`. We modify `build.cake` when we need to add new targets or change the way the build is done. Normally `build.cake` is not invoked directly but through `build.ps1` (PowerShell on Windows) or `build.sh` (bash on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script.
