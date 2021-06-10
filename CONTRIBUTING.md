@@ -52,12 +52,11 @@ It is also a good idea to add a comment to an issue that you are working on to l
 
 Please read through the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html) before contributing to understand our coding standards and contribution guidelines.
 
-Note: Instructions on how to build and run tests can be found under [building](https://github.com/nunit/nunit/blob/master/BUILDING.md)
+When you are ready to contribute, instructions on how to build and run tests can be found in [BUILDING.md](https://github.com/nunit/nunit/blob/master/BUILDING.md)
 
 ## License
 
 NUnit is under the [MIT license](https://github.com/nunit/nunit/blob/master/LICENSE.txt). By contributing to NUnit, you assert that:
 
 * The contribution is your own original work.
-* You have the right to assign the copyright for the work (it is not owned by your employer, or
-  you have been given copyright assignment in writing).
+* You have the right to assign the copyright for the work (it is not owned by your employer, or you have been given copyright assignment in writing).
