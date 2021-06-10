@@ -2,7 +2,16 @@
 
 NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories at https://github.com/nunit/nunit and https://github.com/nunit/nunit-console.
 
-There are two ways to build NUnit: using the solution file in an IDE or through the build script.
+## Source code
+
+You will need to work on a local fork as you will not have permission to create branches directly in either of the above repositories. 
+
+1. Create a fork of the repo
+2. Clone your fork to your computer
+3. Create the changes on a new branch
+4. Ensure all NUnit tests pass locally (ie. run them on as many platforms that you have ie. Windows, Linux, Mac)
+5. Push the branch to your GitHub  fork
+6. Create the PR (this is described in more detail [here](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/))
 
 ## Solution Build
 
@@ -77,7 +86,7 @@ Then specify the program arguments in exactly the same way as above. For example
 
 You could now set a breakpoint anywhere in the AssertEqualsTests class and have the debugger pause on it when performing a debug run of the solution (ie. ALT+F5 in JetBrains Rider).
 
-## Build Script
+## Script Build
 
 We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is `build.cake`. We modify `build.cake` when we need to add new targets or change the way the build is done. Normally `build.cake` is not invoked directly but through `build.ps1` (PowerShell on Windows) or `build.sh` (bash on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script.
 
