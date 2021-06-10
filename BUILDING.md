@@ -53,13 +53,17 @@ Unfortunately there is currently a known issue ([#3008](https://github.com/nunit
 
 ### Workarounds
 
-1. NUnit Lite Runner (command prompt)
+#### 1. NUnit Lite Runner (run from command prompt / terminal)
 
 The NUnit solution contains [NUnite Lite Runner](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Runner.html), a lightweight test runner. It is similar to NUnit console but with fewer features and without the overhead of a full NUnit installation. 
 
 If you navigate to one of the build outputs under the `bin` directory, you will see that it contains `nunitlite-runner.exe`
 
-Excuting the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the `nunit.framework.tests.dll` library.
+For example, excuting the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the nunit.framework.tests.dll
+
+NUnit Lite Runner accepts a number of [command line arguments](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Options.html). 
+
+For example, executing the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll
 
 
 ## Build Script
@@ -83,7 +87,7 @@ The build.cake script contains a large number of interdependent tasks. The most 
 | Test     | Runs all tests. Dependent on Build. |
 | Package  | Creates all packages without building first. See Note below. |
 
-For example, executing the following command `.\build.ps --target=Test --configuration=Release` in a Windows PowerShell Terminal will perform a full release build for all target frameworks and then execute the unit tests against each target. 
+For example, executing the following command `.\build.ps --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target. 
 
 For a full list of tasks, run `.\build.ps1 --showdescription` (PowerShell on Windows) or `./build.sh --showdescription` (bash on Linux).
 
