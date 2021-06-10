@@ -51,6 +51,17 @@ Because NUnit solution targets multiple frameworks, JetBrains Rider knows this a
 
 Unfortunately there is currently a known issue ([#3008](https://github.com/nunit/nunit/issues/3008)) preventing the tests from being run in Visual Studio and JetBrains Rider IDEs. Equally there is also a known issue ([#3867](https://github.com/nunit/nunit/issues/3867)) preventing the tests from being run from the command line using `dotnet test`
 
+### Workarounds
+
+1. NUnit Lite Runner (command prompt)
+
+The NUnit solution contains [NUnite Lite Runner](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Runner.html), a lightweight test runner. It is similar to NUnit console but with fewer features and without the overhead of a full NUnit installation. 
+
+If you navigate to one of the build outputs under the `bin` directory, you will see that it contains `nunitlite-runner.exe`
+
+Excuting the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the `nunit.framework.tests.dll` library.
+
+
 ## Build Script
 
 We use [Cake](https://cakebuild.net) to build NUnit for distribution. The primary script that controls building, running tests and packaging is `build.cake`. We modify `build.cake` when we need to add new targets or change the way the build is done. Normally `build.cake` is not invoked directly but through `build.ps1` (PowerShell on Windows) or `build.sh` (bash on Linux). These two scripts are provided by the Cake project and ensure that Cake is properly installed before trying to run the cake script.
