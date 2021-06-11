@@ -21,7 +21,7 @@ There is a single Visual Studio solution, `nunit.sln`, which resides in the NUni
 
 NUnit framework can be built from this solution using [Visual Studio 2019 16.8](https://www.visualstudio.com/vs/) or newer (Windows) and [Visual Studio for Mac](https://www.visualstudio.com/vs/) (macOS).
 
-Currently, MonoDevelop does not support the new multi-targeted `csproj` project format <sup>[1]</sup>. Once MonoDevelop is updated, it should start working again. Until then, we recommend using [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build script instead (see the [Build Script](#build-script) section below for details).
+Currently, MonoDevelop does not support the new multi-targeted `csproj` project format <sup>[1]</sup>. Once MonoDevelop is updated, it should start working again. Until then, we recommend using [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build script instead (see the [Script Build](#script-build) section below for details).
 
 On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
 
@@ -84,7 +84,7 @@ This is probably the easiest way (whilst issue [#3008](https://github.com/nunit/
 
 In your development IDE of choice, ensure there is a Run/Debug configuration which specifies `nunitlite-runner` as the startup project. 
 
-Then specify the program arguments in exactly the same way as above. For example the following argument `nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll (assuming a successful build)
+Then specify the program arguments in exactly the same way as above. For example the following argument `nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll (proceeding a successful build)
 
 You could now set a breakpoint anywhere in the AssertEqualsTests class and have the debugger pause on it when performing a debug run of the solution (ie. ALT+F5 in JetBrains Rider).
 
