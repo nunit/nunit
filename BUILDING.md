@@ -1,16 +1,18 @@
 # Building NUnit
 
-NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories at https://github.com/nunit/nunit and https://github.com/nunit/nunit-console.
+NUnit 3 consists of three separate layers: the Framework, the Engine and the Console Runner. The source code is kept in two GitHub repositories, https://github.com/nunit/nunit and https://github.com/nunit/nunit-console.
 
-## Source code
+## Source Code
 
-You will need to work on a local fork as you will not have permission to create branches directly in either of the above repositories. 
+You will not have permission to create branches directly in either of the above repositories so you will need to work on a local fork. 
 
-1. Create a fork of the repo
-2. Clone your fork to your computer
+The development process for making code changes and submitting Pull Requests (PR) is as follows:
+
+1. Create a fork of the NUnit repository
+2. Clone the fork to your computer
 3. Create the changes on a new branch
 4. Ensure all NUnit tests pass locally (ie. run them on all targeted frameworks and on as many platforms that you have ie. Windows, Linux, Mac). The [Script Build](#script-build) section below gives exact instructions on how to do this from the Command Prompt / Terminal.
-5. Push the branch to your GitHub fork
+5. Push the branch to your fork
 6. Create the PR (this is described in more detail [here](https://thenewstack.io/getting-legit-with-git-and-github-your-first-pull-request/))
 
 ## Solution Build
