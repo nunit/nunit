@@ -23,7 +23,9 @@ NUnit framework can be built from this solution using [Visual Studio 2019 16.8](
 
 Currently, MonoDevelop does not support the new multi-targeted `csproj` project format <sup>[1]</sup>. Once MonoDevelop is updated, it should start working again. Until then, we recommend using [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build script instead (see the [Script Build](#script-build) section below for details).
 
-On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
+On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. 
+
+On Mac or Linux, you will need to install [Mono](https://www.mono-project.com/download/), an open source implementation of Microsoft's .NET Framework. Mono version 6.12.0 Stable (6.12.0.122) has been validated to build the NUnit solution on GNU/Linux Debian 10 'buster'.
 
 A solution build places all of its output in a common `bin` directory under the solution directory.
 
