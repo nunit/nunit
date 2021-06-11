@@ -23,7 +23,7 @@ Currently, MonoDevelop does not support the new multi-targeted `csproj` project 
 
 On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. On Mac or Linux, you will need to install [Mono 5.2.0](https://www.mono-project.com/download/). Currently (as of 5.4.1), newer versions of Mono are broken and crash during the compile.
 
-A solution build places all of it's output in a common `bin` directory under the solution directory.
+A solution build places all of its output in a common `bin` directory under the solution directory.
 
 As the NUnit solution targets multiple frameworks, a single build will generate files for each targeted framework. For example, a debug build <sup>[2]</sup> produces the following directory structure:
 
@@ -40,7 +40,7 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
 ```
 
 ### Notes
-1. MonoDevelop 2.0 introduced support for multiple target frameworks up to and including .Net 3.0 and 3.5 ([MonoDevelop 2.0 release notes](https://www.monodevelop.com/documentation/release-notes/monodevelop-2.0-released/)). Unfortunately, subsequent releases have not extended that support to .Net Core or .Net 5 and beyond. There is a kanban board maintained for [MonoDevelop Multi-targeting Support](https://github.com/mono/monodevelop/projects/1) however it's showing the most recent update being 9 Aug 2019. MonoDevelop Version 7.8.4 (build 2) was verified as unable to build `nunit.sln` due to lack of multi-targeting support. This footnote was correct as of 9 June 2021.
+1. MonoDevelop 2.0 introduced support for multiple target frameworks up to and including .Net 3.0 and 3.5 ([MonoDevelop 2.0 release notes](https://www.monodevelop.com/documentation/release-notes/monodevelop-2.0-released/)). Unfortunately, subsequent releases have not extended that support to .Net Core or .Net 5 and beyond. There is a Kanban board maintained for [MonoDevelop Multi-targeting Support](https://github.com/mono/monodevelop/projects/1) however it's showing the most recent update being 9 Aug 2019. MonoDevelop Version 7.8.4 (build 2) was verified as unable to build `nunit.sln` due to lack of multi-targeting support. This footnote was correct as of 9 June 2021.
 2. GitHub repository cloned and built on 9 June 2021
 
 ## Running Tests
@@ -58,17 +58,17 @@ Normally you should be able to run the unit tests directly from within your deve
 
 Because NUnit solution targets multiple frameworks, JetBrains Rider knows this and offers the option to run the tests against a specific framework and/or all target frameworks.
 
-Unfortunately there is currently a known issue ([#3008](https://github.com/nunit/nunit/issues/3008)) preventing the tests from being run in Visual Studio and JetBrains Rider IDEs. Equally there is also a known issue ([#3867](https://github.com/nunit/nunit/issues/3867)) preventing the tests from being run from the command line using `dotnet test`
+Unfortunately, there is currently a known issue ([#3008](https://github.com/nunit/nunit/issues/3008)) preventing the tests from being run in Visual Studio and JetBrains Rider IDEs. Equally there is also a known issue ([#3867](https://github.com/nunit/nunit/issues/3867)) preventing the tests from being run from the command line using `dotnet test`
 
 ### Workarounds
 
 #### 1. NUnit Lite Runner (run from command prompt / terminal)
 
-The NUnit solution contains [NUnite Lite Runner](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Runner.html), a lightweight test runner. It is similar to NUnit console but with fewer features and without the overhead of a full NUnit installation. 
+The NUnit solution contains [NUnit Lite Runner](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Runner.html), a lightweight test runner. It is similar to NUnit console but with fewer features and without the overhead of a full NUnit installation. 
 
 If you navigate to one of the build outputs under the `bin` directory, you will see that it contains `nunitlite-runner.exe`
 
-For example, excuting the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the nunit.framework.tests.dll
+For example, the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the nunit.framework.tests.dll
 
 NUnit Lite Runner accepts a number of [command line arguments](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Options.html). 
 
