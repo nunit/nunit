@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">The parameter of a parameterized test</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         public bool HasDataFor(IParameterInfo parameter)
         {
             var method = parameter.Method;
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="parameter">The parameter of a parameterized test</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var datapoints = new List<object?>();
