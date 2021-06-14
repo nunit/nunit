@@ -20,9 +20,9 @@ namespace NUnit.Framework.Internal.Builders
         private readonly bool _searchInDeclaringTypes;
         
         /// <summary>
-        /// Creates new DatapointProvider
+        /// Creates a new DatapointProvider.
         /// </summary>
-        /// <param name="searchInDeclaringTypes">Determines whether when searching for theory data members of declaring types will also be searched</param>
+        /// <param name="searchInDeclaringTypes">Determines whether when searching for theory data members of declaring types will also be searched.</param>
         public DatapointProvider(bool searchInDeclaringTypes)
         {
             _searchInDeclaringTypes = searchInDeclaringTypes;
