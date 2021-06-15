@@ -83,5 +83,70 @@ namespace NUnit.TestData.TheoryFixture
             Assume.That(d > 0);
             Assert.Pass();
         }
+
+        public class NestedWhileSearchingInDeclaringType
+        {
+            [Theory(true)]
+            public void WithNoArguments()
+            {
+            }
+
+            [Theory(true)]
+            public void WithArgumentsButNoDatapoints(decimal x, decimal y)
+            {
+            }
+
+            [Theory(true)]
+            public void WithUnsupportedNullableTypeArgumentWithNoDataPoints(decimal? x)
+            {
+            }
+
+            [Theory(true)]
+            public void WithArgumentsAndDatapoints(int x, int y)
+            {
+            }
+
+            [Theory(true)]
+            public void WithBooleanArguments(bool a, bool b)
+            {
+            }
+
+            [Theory(true)]
+            public void WithNullableBooleanArguments(bool? a, bool? b)
+            {
+            }
+
+            [Theory(true)]
+            public void WithEnumAsArgument(System.AttributeTargets targets)
+            {
+            }
+
+            [Theory(true)]
+            public void WithNullableEnumAsArgument(System.AttributeTargets? targets)
+            {
+            }
+
+            [Theory(true)]
+            public void WithBothDatapointAndAttributeData(
+                int i,
+                [Values(0, 5)] decimal d)
+            {
+            }
+
+            [Theory(true)]
+            public void WithAllDataSuppliedByAttributes(
+                [Values(1.0, 2.0)] double d1,
+                [Values(3.0, 4.0)] double d2)
+            {
+            }
+
+            [Theory(true)]
+            public void WithAllBadValues(
+                [Values(-12.0, -4.0, -9.0)] double d)
+            {
+                Assume.That(d > 0);
+                Assert.Pass();
+            }
+        }
     }
 }
