@@ -6,7 +6,7 @@ NUnit 3 consists of three separate layers: the Framework, the Engine and the Con
 
 You will not have permission to create branches directly in either of the above repositories so you will need to work on a local fork. 
 
-The development process for making code changes and submitting Pull Requests (PR) is as follows:
+The development process for making code changes and submitting Pull Requests (PRs) is as follows:
 
 1. Create a fork of the NUnit repository
 2. Clone the fork to your computer
@@ -45,7 +45,7 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
 
 ### Notes
 1. MonoDevelop 2.0 introduced support for multiple target frameworks up to and including .Net 3.0 and 3.5 ([MonoDevelop 2.0 release notes](https://www.monodevelop.com/documentation/release-notes/monodevelop-2.0-released/)). Unfortunately, subsequent releases have not extended that support to .Net Core or .Net 5 and beyond. There is a Kanban board maintained for [MonoDevelop Multi-targeting Support](https://github.com/mono/monodevelop/projects/1) however it's showing the most recent update being 9 Aug 2019. MonoDevelop Version 7.8.4 (build 2) was verified as unable to build `nunit.sln` due to lack of multi-targeting support. This footnote was correct as of 9 June 2021.
-2. GitHub repository cloned and built on 9 June 2021
+2. GitHub repository cloned and built on 9 June 2021.
 
 ## Running Tests
 
@@ -72,11 +72,11 @@ The NUnit solution contains [NUnit Lite Runner](https://docs.nunit.org/articles/
 
 If you navigate to one of the build outputs under the `bin` directory, you will see that it contains `nunitlite-runner.exe`
 
-For example, the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the nunit.framework.tests.dll
+For example, the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the nunit.framework.tests.dll.
 
 NUnit Lite Runner accepts a number of [command line arguments](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Options.html). 
 
-For example, the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll
+For example, the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll.
 
 #### 2. NUnit Lite Runner (run by the IDE after a build)
 
@@ -86,7 +86,7 @@ This is probably the easiest way (whilst issue [#3008](https://github.com/nunit/
 
 In your development IDE of choice, ensure there is a Run/Debug configuration which specifies `nunitlite-runner` as the startup project. 
 
-Then specify the program arguments in exactly the same way as above. For example the following argument `nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll
+Then specify the program arguments in exactly the same way as above. For example the following argument `nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll.
 
 You could now set a breakpoint anywhere in the AssertEqualsTests class and have the debugger pause on it when performing a debug run of the solution (ie. ALT+F5 in JetBrains Rider).
 
