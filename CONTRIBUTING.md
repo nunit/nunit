@@ -50,7 +50,7 @@ To help new contributors get their feet wet, we have marked a number of issues w
 
 It is also a good idea to add a comment to an issue that you are working on to let everyone know. If you stop working on it, also please let us know.
 
-Please read through the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html) before contributing to understand our coding standards and contribution guidelines.
+Please read through the [Developer Docs](https://docs.nunit.org/articles/developer-info/Team-Practices.html#technical-practices) before contributing to understand our coding standards and contribution guidelines.
 
 When you are ready to contribute, instructions on how to build and run tests can be found in [BUILDING.md](https://github.com/nunit/nunit/blob/master/BUILDING.md)
 
