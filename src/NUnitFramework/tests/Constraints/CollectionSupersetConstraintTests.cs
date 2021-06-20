@@ -69,6 +69,42 @@ namespace NUnit.Framework.Constraints
             }
         }
 
+#if !NET35
+        [Test]
+        public void WorksOnValueTuples()
+        {
+            var actual = new[] { ('a', 1), ('b', 2), ('c', 3), ('d', 4) };
+            var expected = new[] { ('b', 2), ('c', 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void WorksOnValueTuples_OneTypeIsntIComparer()
+        {
+            var a = new S { C = 'a' };
+            var b = new S { C = 'b' };
+            var c = new S { C = 'c' };
+            var d = new S { C = 'd' };
+
+            var actual = new[] { (a, 1), (b, 2), (c, 3), (d, 4) };
+            var expected = new[] { (b, 2), (c, 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+        
+        private class S
+        {
+            public char C;
+        }
+#endif
+
         public class IgnoreCaseDataProvider
         {
             public static IEnumerable TestCases
