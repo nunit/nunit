@@ -71,6 +71,35 @@ namespace NUnit.Framework.Constraints
 
 #if !NET35
         [Test]
+        public void WorksOnTuples()
+        {
+            var actual = new[] { Tuple.Create('a', 1), Tuple.Create('b', 2), Tuple.Create('c', 3), Tuple.Create('d', 4) };
+            var expected = new[] { Tuple.Create('b', 2), Tuple.Create('c', 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void WorksOnTuples_OneTypeIsntIComparer()
+        {
+            var a = new S { C = 'a' };
+            var b = new S { C = 'b' };
+            var c = new S { C = 'c' };
+            var d = new S { C = 'd' };
+
+            var actual = new[] { Tuple.Create(a, 1), Tuple.Create(b, 2), Tuple.Create(c, 3), Tuple.Create(d, 4) };
+            var expected = new[] { Tuple.Create(b, 2), Tuple.Create(c, 3) };
+
+            var constraint = new CollectionSupersetConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
+
+        [Test]
         public void WorksOnValueTuples()
         {
             var actual = new[] { ('a', 1), ('b', 2), ('c', 3), ('d', 4) };
