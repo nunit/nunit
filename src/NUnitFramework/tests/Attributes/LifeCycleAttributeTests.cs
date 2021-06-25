@@ -165,7 +165,6 @@ namespace NUnit.Framework.Attributes
 
         #region Nesting and inheritance
         [Test]
-        [Ignore("Bug #3888")]
         public void NestedFeatureWithoutLifeCycleShouldInheritLifeCycle()
         {
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedFixture.NestedFixture));
@@ -235,7 +234,6 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        [Ignore("Bug #3888")]
         public void OuterFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(

@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Builders
                 CheckTestFixtureIsValid(fixture);
 
             fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly));
-            fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+            fixture.ApplyAttributesToTest(typeInfo.Type);
 
             AddTestCasesToFixture(fixture, filter);
 
