@@ -96,7 +96,7 @@ namespace NUnit.Framework.Attributes
         }
         #endregion
 
-        #region Validation
+        #region Fixture Validation
         [Test]
         public void InstanceOneTimeSetupTearDownThrows()
         {
@@ -203,6 +203,7 @@ namespace NUnit.Framework.Attributes
             BaseLifeCycle.VerifySingleInstance(2);
         }
 
+        [Test]
         public void ChildClassWithoutLifeCycleShouldInheritLifeCycle()
         {
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritedFixture));
