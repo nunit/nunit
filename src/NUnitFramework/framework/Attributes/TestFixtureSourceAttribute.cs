@@ -104,7 +104,7 @@ namespace NUnit.Framework
             Type sourceType = SourceType ?? typeInfo.Type;
 
             var fixtureSuite = new ParameterizedFixtureSuite(typeInfo);
-            fixtureSuite.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+            fixtureSuite.ApplyAttributesToTest(typeInfo.Type);
             var assemblyLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly);
             var typeLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo());
 
