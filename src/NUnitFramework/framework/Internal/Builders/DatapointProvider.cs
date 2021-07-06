@@ -47,8 +47,10 @@ namespace NUnit.Framework.Internal.Builders
                 return true;
 
             Type containingType = method.TypeInfo.Type;
-            foreach (MemberInfo member in GetMembersFromType(containingType))
+            foreach (var memberAndOwningType in GetMembersFromType(containingType))
             {
+                var member = memberAndOwningType.Item1;
+
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)
                     return true;
@@ -71,8 +73,11 @@ namespace NUnit.Framework.Internal.Builders
             Type parameterType = parameter.ParameterType;
             Type fixtureType = parameter.Method.TypeInfo.Type;
 
-            foreach (MemberInfo member in GetMembersFromType(fixtureType))
+            foreach (var memberAndOwningType in GetMembersFromType(fixtureType))
             {
+                var member = memberAndOwningType.Item1;
+                var owningType = memberAndOwningType.Item2;
+
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {
                     var field = member as FieldInfo;
@@ -81,7 +86,7 @@ namespace NUnit.Framework.Internal.Builders
                         if (field.IsStatic)
                             datapoints.Add(field.GetValue(null));
                         else
-                            datapoints.Add(field.GetValue(ProviderCache.GetInstanceOf(fixtureType)));
+                            datapoints.Add(field.GetValue(ProviderCache.GetInstanceOf(owningType)));
                     }
                 }
                 else if (member.IsDefined(typeof(DatapointSourceAttribute), true))
@@ -95,20 +100,20 @@ namespace NUnit.Framework.Internal.Builders
                         MethodInfo? method = member as MethodInfo;
                         if (field != null)
                         {
-                            instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)field.GetValue(instance))
                                 datapoints.Add(data);
                         }
                         else if (property != null)
                         {
                             MethodInfo getMethod = property.GetGetMethod(true);
-                            instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)property.GetValue(instance, null))
                                 datapoints.Add(data);
                         }
                         else if (method != null)
                         {
-                            instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
                                 datapoints.Add(data);
                         }
@@ -146,26 +151,30 @@ namespace NUnit.Framework.Internal.Builders
             return datapoints;
         }
 
-        private IEnumerable<MemberInfo> GetMembersFromType(Type type)
+        private IEnumerable<Tuple<MemberInfo, Type>> GetMembersFromType(Type type)
         {
             if (_searchInDeclaringTypes)
             {
                 return GetNestedMembersFromType(type);
             }
 
-            return type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            return GetDirectMembersOfType(type);
         }
 
-        private static IEnumerable<MemberInfo> GetNestedMembersFromType(Type? type)
+        private static IEnumerable<Tuple<MemberInfo, Type>> GetNestedMembersFromType(Type? type)
         {
             while (type != null)
             {
-                foreach (var member in type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
-                {
-                    yield return member;
-                }
-
+                foreach (var tuple in GetDirectMembersOfType(type)) yield return tuple;
                 type = type.DeclaringType;
+            }
+        }
+
+        private static IEnumerable<Tuple<MemberInfo, Type>> GetDirectMembersOfType(Type type)
+        {
+            foreach (var member in type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
+            {
+                yield return new Tuple<MemberInfo, Type>(member, type);
             }
         }
 
