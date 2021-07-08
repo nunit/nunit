@@ -91,5 +91,32 @@ namespace NUnit.Framework.Constraints
             base.Using(EqualityAdapter.For(comparison));
             return this;
         }
+
+
+        /// <summary>
+        /// Flag the constraint to use the supplied Comparison object.
+        /// </summary>
+        /// <param name="comparison">The Comparison object to use.</param>
+        //#pragma warning disable CS0612
+        [Obsolete]
+        public new CollectionItemsEqualConstraint Using<T>(Comparison<T> comparison)
+        {
+            base.Using(comparison);
+            return this;
+        }
+        //#pragma warning restore CS0612
+
+        /// <summary>
+        /// Flag the constraint to use the supplied boolean-returning delegate.
+        /// </summary>
+        /// <param name="comparer">The supplied boolean-returning delegate to use.</param>
+        //#pragma warning disable CS0612
+        [Obsolete]
+        public new CollectionItemsEqualConstraint Using<T>(Func<T, T, bool> comparer)
+        {
+            base.Using(comparer);
+            return this;
+        }
+        //#pragma warning restore CS0612
     }
 }
