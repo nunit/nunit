@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.IO;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Extensions
@@ -10,11 +12,12 @@ namespace NUnit.Framework.Internal.Extensions
         {
             while (test != null)
             {
-                if (test is TestFixture fixture && fixture.LifeCycle == LifeCycle.InstancePerTestCase)
-                    return lifeCycle == LifeCycle.InstancePerTestCase;
+                if (test is TestFixture fixture)
+                    return fixture.LifeCycle == lifeCycle;
 
                 test = test.Parent;
             }
+
             return lifeCycle != LifeCycle.InstancePerTestCase;
         }
     }
