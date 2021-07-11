@@ -21,6 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Internal.Extensions;
@@ -50,6 +51,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly NUnitEqualityComparer comparer;
 
+        private readonly bool _isSortable;
         private bool _sorted = false;
 
         /// <summary>The result of the comparison between the two collections.</summary>
@@ -91,13 +93,28 @@ namespace NUnit.Framework.Constraints
                 _missingItems.Add(o);
 
             if (c.IsSortable())
-                _missingItems.Sort();
+            {
+                _isSortable = TrySort(_missingItems);
+            }
         }
 
         private bool ItemsEqual(object expected, object actual)
         {
             Tolerance tolerance = Tolerance.Default;
             return comparer.AreEqual(expected, actual, ref tolerance);
+        }
+
+        private static bool TrySort(ArrayList items)
+        {
+            try
+            {
+                items.Sort();
+                return true;
+            }
+            catch (InvalidOperationException e) when (e.InnerException is ArgumentException ae && ae.Message.Contains(nameof(IComparable)))
+            {
+                return false;
+            }
         }
 
         /// <summary>Try to remove an object from the tally.</summary>
@@ -120,21 +137,32 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The objects to remove.</param>
         public void TryRemove(IEnumerable c)
         {
-            if (c.IsSortable())
+            if (_isSortable && c.IsSortable())
             {
                 var remove = new ArrayList();
                 foreach (object o in c)
                     remove.Add(o);
 
-                remove.Sort();
-                _sorted = true;
+                if (TrySort(remove))
+                {
+                    _sorted = true;
 
-                // Reverse so that we match removing from the end,
-                // see issue #2598 - Is.Not.EquivalentTo is extremely slow
-                for (int index = remove.Count - 1; index >= 0; index--)
-                    TryRemove(remove[index]);
+                    // Reverse so that we match removing from the end,
+                    // see issue #2598 - Is.Not.EquivalentTo is extremely slow
+                    for (int index = remove.Count - 1; index >= 0; index--)
+                        TryRemove(remove[index]);
+                }
+                else
+                {
+                    TryRemoveSlow(c);
+                }
             }
             else
+            {
+                TryRemoveSlow(c);
+            }
+
+            void TryRemoveSlow(IEnumerable c)
             {
                 foreach (object o in c)
                     TryRemove(o);
