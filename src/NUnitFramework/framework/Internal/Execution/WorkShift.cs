@@ -132,12 +132,13 @@ namespace NUnit.Framework.Internal.Execution
             IsActive = true;
 
             if (_firstStart)
+            {
+                _firstStart = false;
                 StartWorkers();
+            }
 
             foreach (var q in Queues)
                 q.Start();
-
-            _firstStart = false;
         }
 
         private void StartWorkers()
