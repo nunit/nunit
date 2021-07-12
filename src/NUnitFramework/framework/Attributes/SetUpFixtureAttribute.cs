@@ -38,7 +38,7 @@ namespace NUnit.Framework
                     fixture.MakeInvalid(reason);
             }
 
-            fixture.ApplyAttributesToTest(typeInfo.Type.GetTypeInfo());
+            fixture.ApplyAttributesToTest(typeInfo.Type);
 
             return new TestSuite[] { fixture };
         }
