@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.TestData.LifeCycleTests
-{
+{ 
     public static class AssemblyLevelFixtureLifeCycleTest
     {
         public const string Code = @"
@@ -10,7 +10,7 @@ namespace NUnit.TestData.LifeCycleTests
             [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 
             [TestFixture]
-            public class FixtureUnderTest
+            public class FixtureUnderTest : NUnit.TestData.LifeCycleTests.BaseLifeCycle
             {
                 private int _value;
 
@@ -24,6 +24,159 @@ namespace NUnit.TestData.LifeCycleTests
                 public void Test2()
                 {
                     Assert.AreEqual(0, _value++);
+                }
+            }
+            ";
+    }
+
+    public static class OverrideAssemblyLevelFixtureLifeCycleTest
+    {
+        public const string Code = @"
+            using NUnit.Framework;
+
+            [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+
+            [TestFixture]
+            [FixtureLifeCycle(LifeCycle.SingleInstance)]
+            public class FixtureUnderTest : NUnit.TestData.LifeCycleTests.BaseLifeCycle
+            {
+                private int _value;
+
+                [Test]
+                [Order(0)]
+                public void Test1()
+                {
+                    Assert.AreEqual(0, _value++);
+                }
+
+                [Test]
+                [Order(1)]
+                public void Test2()
+                {
+                    Assert.AreEqual(1, _value++);
+                }
+            }
+            ";
+    }
+
+    public static class NestedOverrideAssemblyLevelFixtureLifeCycleTest
+    {
+        public const string OuterClass = @"
+            using NUnit.Framework;
+
+            [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+
+            [TestFixture]
+            [FixtureLifeCycle(LifeCycle.SingleInstance)]
+            public class FixtureUnderTest
+            {
+                public class NestedFixture : NUnit.TestData.LifeCycleTests.BaseLifeCycle
+                {
+                    private int _value;
+
+                    [Test]
+                    [Order(0)]
+                    public void Test1()
+                    {
+                        Assert.AreEqual(0, _value++);
+                    }
+
+                    [Test]
+                    [Order(1)]
+                    public void Test2()
+                    {
+                        Assert.AreEqual(1, _value++);
+                    }
+                }
+            }
+            ";
+
+        public const string InnerClass = @"
+            using NUnit.Framework;
+
+            [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+
+            [TestFixture]
+            public class FixtureUnderTest
+            {
+                [FixtureLifeCycle(LifeCycle.SingleInstance)]
+                public class NestedFixture : NUnit.TestData.LifeCycleTests.BaseLifeCycle
+                {
+                    private int _value;
+
+                    [Test]
+                    [Order(0)]
+                    public void Test1()
+                    {
+                        Assert.AreEqual(0, _value++);
+                    }
+
+                    [Test]
+                    [Order(1)]
+                    public void Test2()
+                    {
+                        Assert.AreEqual(1, _value++);
+                    }
+                }
+            }
+            ";
+    }
+
+    public static class InheritedOverrideTest
+    {
+        public const string InheritClassWithOtherLifecycle = @"
+            using NUnit.Framework;
+
+            [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+
+            [FixtureLifeCycle(LifeCycle.SingleInstance)]
+            public class Base : NUnit.TestData.LifeCycleTests.BaseLifeCycle
+            {
+            }
+
+            [TestFixture]
+            public class FixtureUnderTest : Base
+            {
+                private int _value;
+
+                [Test]
+                [Order(0)]
+                public void Test1()
+                {
+                    Assert.AreEqual(0, _value++);
+                }
+
+                [Test]
+                [Order(1)]
+                public void Test2()
+                {
+                    Assert.AreEqual(1, _value++);
+                }
+            }
+            ";
+
+        public const string InheritClassWithOtherLifecycleFromOtherAssembly = @"
+            using NUnit.Framework;
+
+            [assembly: FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+
+            [TestFixture]
+            public class FixtureUnderTest : NUnit.TestData.LifeCycleTests.LifeCycleInheritanceBaseSingleInstance
+            {
+                private int _value;
+
+                [Test]
+                [Order(0)]
+                public void Test1()
+                {
+                    Assert.AreEqual(0, _value++);
+                }
+
+                [Test]
+                [Order(1)]
+                public void Test2()
+                {
+                    Assert.AreEqual(1, _value++);
                 }
             }
             ";
