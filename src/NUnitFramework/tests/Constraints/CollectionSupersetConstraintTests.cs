@@ -69,7 +69,6 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-#if !NET35
         [Test]
         public void WorksOnTuples()
         {
@@ -132,7 +131,6 @@ namespace NUnit.Framework.Constraints
         {
             public char C;
         }
-#endif
 
         public class IgnoreCaseDataProvider
         {
