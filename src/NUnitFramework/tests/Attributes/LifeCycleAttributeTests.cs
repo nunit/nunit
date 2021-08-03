@@ -30,43 +30,16 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]
+    [NonParallelizable]
     public class LifeCycleAttributeTests
     {
-        [Test]
-        public void SetupTearDownIsCalledOnce()
+        [SetUp]
+        public void SetUp()
         {
-            var fixture = TestBuilder.MakeFixture(typeof(SetupAndTearDownFixtureInstancePerTestCase));
-
-            ITestResult result = TestBuilder.RunTest(fixture);
-
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
+            BaseLifeCycle.Reset();
         }
 
-        [Test]
-        public void OneTimeSetupTearDownIsCalledOnce()
-        {
-            StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount = 0;
-            StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount = 0;
-
-            var fixture = TestBuilder.MakeFixture(typeof(StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase));
-
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-
-            Assert.AreEqual(1, StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeSetupCount);
-            Assert.AreEqual(1, StaticOneTimeSetupAndTearDownFixtureInstancePerTestCase.TotalOneTimeTearDownCount);
-        }
-
-        [Test]
-        public void InstanceOneTimeSetupTearDownThrows()
-        {
-            var fixture = TestBuilder.MakeFixture(typeof(InstanceOneTimeSetupAndTearDownFixtureInstancePerTestCase));
-
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(result.ResultState.Label, Is.EqualTo("Error"));
-        }
-
+        #region Basic Lifecycle
         [Test]
         public void InstancePerTestCaseCreatesAnInstanceForEachTestCase()
         {
@@ -93,78 +66,254 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test]
-        public void InstancePerTestCaseShouldDisposeForEachTestCase()
+        public void InstancePerTestCaseFullLifeCycleTest()
         {
-            DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls = 0;
-            var fixture = TestBuilder.MakeFixture(typeof(DisposableLifeCycleFixtureInstancePerTestCase));
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.Reset();
+            var fixture = TestBuilder.MakeFixture(typeof(FullLifecycleTestCase));
+            var attr = new FixtureLifeCycleAttribute(LifeCycle.InstancePerTestCase);
+            attr.ApplyToTest(fixture);
 
-            Assert.AreEqual(3, DisposableLifeCycleFixtureInstancePerTestCase.DisposeCalls);
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
+
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
         [Test]
+        public void SingleInstanceFullLifeCycleTest()
+        {
+            BaseLifeCycle.Reset();
+            var fixture = TestBuilder.MakeFixture(typeof(FullLifecycleTestCase));
+            var attr = new FixtureLifeCycleAttribute(LifeCycle.SingleInstance);
+            attr.ApplyToTest(fixture);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(
+                result.Children.Select(t => t.ResultState),
+                Is.EquivalentTo(new[] { ResultState.Success, ResultState.Failure, ResultState.Failure }));
+
+            BaseLifeCycle.VerifySingleInstance(3);
+        }
+        #endregion
+
+        #region Fixture Validation
+        [Test]
+        public void InstanceOneTimeSetupTearDownThrows()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(InstanceOneTimeSetupAndTearDownFixtureInstancePerTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Label, Is.EqualTo("Error"));
+        }
+        #endregion
+
+        #region Test Annotations
+        [Test]
         public void InstancePerTestCaseShouldApplyToTestFixtureSourceTests()
         {
-            LifeCycleWithTestFixtureSourceFixture.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithTestFixtureSourceFixture));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(LifeCycleWithTestFixtureSourceFixture.DisposeCalls, Is.EqualTo(4));
+            // TODO: OneTimeSetUpCount is called twice. Expected? Does seem consistent w/ reusing the class; then there are also two calls.
+            BaseLifeCycle.VerifyInstancePerTestCase(4, 2);
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestCaseTests()
         {
-            FixtureWithTestCases.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCases));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithTestCases.DisposeCalls, Is.EqualTo(4));
+            BaseLifeCycle.VerifyInstancePerTestCase(4);
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestCaseSourceTests()
         {
-            FixtureWithTestCaseSource.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTestCaseSource));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithTestCaseSource.DisposeCalls, Is.EqualTo(2));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTestsWithValuesParameters()
         {
-            FixtureWithValuesAttributeTest.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithValuesAttributeTest));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithValuesAttributeTest.DisposeCalls, Is.EqualTo(3));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 
         [Test]
         public void InstancePerTestCaseShouldApplyToTheories()
         {
-            FixtureWithTheoryTest.DisposeCalls = 0;
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithTheoryTest));
             ITestResult result = TestBuilder.RunTest(fixture);
+
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.That(FixtureWithTheoryTest.DisposeCalls, Is.EqualTo(3));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
+
+        [Test]
+        public void InstancePerTestCaseShouldApplyToRepeat()
+        {
+            RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter = 0;
+            var fixture = TestBuilder.MakeFixture(typeof(RepeatingLifeCycleFixtureInstancePerTestCase));
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
+        }
+
+        [Test]
+        public void InstancePerTestCaseShouldApplyToParralelTests()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(ParallelLifeCycleFixtureInstancePerTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(3);
+        }
+        #endregion
+
+        #region Nesting and inheritance
+        [Test]
+        [Ignore("Bug #3888")]
+        public void NestedFeatureWithoutLifeCycleShouldInheritLifeCycle()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedFixture.NestedFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
+        }
+
+        [Test]
+        public void NestedFeatureWithLifeCycleShouldOverrideLifeCycle()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedOverridingFixture.NestedFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void ChildClassWithoutLifeCycleShouldInheritLifeCycle()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritedFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
+        }
+
+        [Test]
+        public void ChildClassWithLifeCycleShouldOverrideLifeCycle()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleInheritanceOverriddenFixture));
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+        #endregion
+
+        #region Assembly level InstancePerTestCase
 
 #if NETFRAMEWORK
         [Test]
         public void AssemblyLevelInstancePerTestCaseShouldCreateInstanceForEachTestCase()
         {
             var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
-                AssemblyLevelFixtureLifeCycleTest.Code, new[] { typeof(Test).Assembly.Location });
+                AssemblyLevelFixtureLifeCycleTest.Code, new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
             var testType = asm.GetType("FixtureUnderTest");
             var fixture = TestBuilder.MakeFixture(testType);
 
             ITestResult result = TestBuilder.RunTest(fixture);
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifyInstancePerTestCase(2);
+        }
+
+        [Test]
+        public void FixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycle()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                OverrideAssemblyLevelFixtureLifeCycleTest.Code,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        [Ignore("Bug #3888")]
+        public void OuterFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                NestedOverrideAssemblyLevelFixtureLifeCycleTest.OuterClass,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest+NestedFixture");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void InnerFixtureLevelLifeCycleShouldOverrideAssemblyLevelLifeCycleInNestedFixture()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                NestedOverrideAssemblyLevelFixtureLifeCycleTest.InnerClass,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest+NestedFixture");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void BaseLifecycleShouldOverrideAssemblyLevelLifeCycle()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                InheritedOverrideTest.InheritClassWithOtherLifecycle,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
+        }
+
+        [Test]
+        public void BaseLifecycleFromOtherAssemblyShouldOverrideAssemblyLevelLifeCycle()
+        {
+            var asm = TestAssemblyHelper.GenerateInMemoryAssembly(
+                InheritedOverrideTest.InheritClassWithOtherLifecycleFromOtherAssembly,
+                new[] { typeof(Test).Assembly.Location, typeof(BaseLifeCycle).Assembly.Location });
+            var testType = asm.GetType("FixtureUnderTest");
+            var fixture = TestBuilder.MakeFixture(testType);
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            BaseLifeCycle.VerifySingleInstance(2);
         }
 
         [Test]
@@ -232,41 +381,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
         }
 #endif
-
-        [Test]
-        public void InstancePerTestCaseWithRepeatShouldWorkAsExpected()
-        {
-            RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter = 0;
-            var fixture = TestBuilder.MakeFixture(typeof(RepeatingLifeCycleFixtureInstancePerTestCase));
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-
-            Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
-        }
-
-        [Test]
-        public void ConstructorIsCalledOnceForEachTestInParallelTests()
-        {
-            var fixture = TestBuilder.MakeFixture(typeof(ParallelLifeCycleFixtureInstancePerTestCase)); 
-            
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-        }
-
-        [Test]
-        public void NestedFeatureWithoutLifeCycleShouldInheritLifeCycle()
-        {
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedFixture));
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-        }
-
-        [Test]
-        public void NestedFeatureWithLifeCycleShouldOverrideLifeCycle()
-        {
-            var fixture = TestBuilder.MakeFixture(typeof(LifeCycleWithNestedOverridingFixture));
-            ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-        }
+        #endregion
     }
 }
