@@ -105,6 +105,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (type == typeof(byte)) return true;
                 if (type == typeof(sbyte)) return true;
+                if (type == typeof(decimal)) return true;
                 if (type == typeof(int)) return true;
                 if (type == typeof(uint)) return true;
                 if (type == typeof(long)) return true;

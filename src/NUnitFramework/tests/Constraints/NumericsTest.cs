@@ -69,6 +69,47 @@ namespace NUnit.Framework.Constraints
             Assert.That(result, Is.EqualTo(0.00000000000000079M));
         }
 
+        [Test]
+        public void TreatFloatingPointsSameForInstanceOrType()
+        {
+            var values = new object[] {
+                (double)1.1,
+                (float)1.1
+            };
+
+            Assert.Multiple(() =>
+            {
+                foreach (var value in values)
+                {
+                    Assert.That(Numerics.IsFloatingPointNumeric(value), Is.True);
+                    Assert.That(Numerics.IsFloatingPointNumeric(value.GetType()), Is.True);
+                }
+            });
+        }
+
+        [Test]
+        public void TreatFixedPointsSameForInstanceOrType()
+        {
+            var values = new object[] {
+                (byte)1,
+                (sbyte)1,
+                (decimal)1,
+                (int)1,
+                (uint)1,
+                (long)1,
+                (ulong)1,
+                (short)1,
+                (ushort)1,
+                (char)1
+            };
+
+            foreach (var value in values)
+            {
+                Assert.That(Numerics.IsFixedPointNumeric(value), Is.True);
+                Assert.That(Numerics.IsFixedPointNumeric(value.GetType()), Is.True);
+            }
+        }
+
         [TestCase((int)9500)]
         [TestCase((int)10000)]
         [TestCase((int)10500)]
