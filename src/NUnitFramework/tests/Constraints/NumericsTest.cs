@@ -58,6 +58,17 @@ namespace NUnit.Framework.Constraints
             Assert.IsTrue(Numerics.AreEqual(123m, 123m, ref zeroTolerance));
         }
 
+        [Test]
+        public void CanCompareDecimalsWithHighPrecision()
+        {
+            var expected = 95217168582.206969750145956m;
+            var actual   = 95217168582.20696975014595521m;
+
+            var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
+
+            Assert.That(result, Is.EqualTo(0.00000000000000079M));
+        }
+
         [TestCase((int)9500)]
         [TestCase((int)10000)]
         [TestCase((int)10500)]
