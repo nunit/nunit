@@ -403,10 +403,17 @@ namespace NUnit.Framework.Constraints
                 throw new ArgumentException("Both arguments must be numeric");
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-                return Convert.ToDouble(expected).CompareTo(Convert.ToDouble(actual));
+            {
+                var expectedDbl = Convert.ToDouble(expected);
+                var actualDbl = Convert.ToDouble(expected);
 
-            if (expected is decimal || actual is decimal)
+                // Use double only if it is outside of valid decimal range
+                if (Math.Min(expectedDbl, actualDbl) < (double)decimal.MinValue
+                    || Math.Max(expectedDbl, actualDbl) > (double)decimal.MaxValue)
+                    return expectedDbl.CompareTo(actualDbl);
+
                 return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
+            }
 
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
