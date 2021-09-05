@@ -88,6 +88,18 @@ namespace NUnit.Framework.Constraints
         public void CanCompareDecimalsWithHighPrecision()
         {
             var expected = 95217168582.206969750145956m;
+            var actual =   95217168582.20696975014595521m;
+
+            var result = Numerics.Compare(expected, actual);
+
+            Assert.That(expected, Is.GreaterThan(actual));
+        }
+
+
+        [Test]
+        public void CanCalculateDifferenceDecimalsWithHighPrecision()
+        {
+            var expected = 95217168582.206969750145956m;
             var actual = 95217168582.20696975014595521m;
 
             var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
