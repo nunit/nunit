@@ -143,11 +143,11 @@ namespace NUnit.Framework.Constraints
         public void CanCompareMidRangeDecimalAndDouble()
         {
             var expected = 3.14159m;
-            var actual = 2.718281d;
+            var actual =   2.718281d;
 
             var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
 
-            Assert.That(result, Is.TypeOf<double>().And.EqualTo(0.42330899999999971));
+            Assert.That(result, Is.EqualTo(0.423309));
         }
 
         [TestCase((int)8500)]

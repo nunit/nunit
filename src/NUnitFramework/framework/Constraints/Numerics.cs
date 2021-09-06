@@ -402,18 +402,11 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-            {
-                var expectedDbl = Convert.ToDouble(expected);
-                var actualDbl = Convert.ToDouble(expected);
-
-                // Use double only if it is outside of valid decimal range
-                if (Math.Min(expectedDbl, actualDbl) < (double)decimal.MinValue
-                    || Math.Max(expectedDbl, actualDbl) > (double)decimal.MaxValue)
-                    return expectedDbl.CompareTo(actualDbl);
-
+            if (expected is decimal || actual is decimal)
                 return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
-            }
+
+            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
+                return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
 
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
@@ -427,6 +420,11 @@ namespace NUnit.Framework.Constraints
             return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
         }
         #endregion
+
+        private static bool IsWithinDecimalRange(double value)
+        {
+            return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
+        }
 
         #region Numeric Difference
 
@@ -456,16 +454,16 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 return double.NaN;
 
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-            {
-                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
-                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
-            }
-
             if (expected is decimal || actual is decimal)
             {
                 var difference = Convert.ToDecimal(expected) - Convert.ToDecimal(actual);
                 return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
+            }
+
+            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
+            {
+                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
+                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
             }
 
             if (expected is ulong || actual is ulong)
