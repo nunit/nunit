@@ -117,6 +117,11 @@ namespace NUnit.Framework.Constraints
             }
             return false;
         }
+
+        private static bool IsWithinDecimalRange(double value)
+        {
+            return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
+        }
         #endregion
 
         #region Numeric Equality
@@ -402,8 +407,11 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
-            if (expected is decimal || actual is decimal)
-                return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
+            // Treat as decimal if one is decimal and other can be treated as decimal
+            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
+                return eDec.CompareTo(Convert.ToDecimal(actual));
+            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+                return Convert.ToDecimal(expected).CompareTo(aDec);
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
                 return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
@@ -420,11 +428,6 @@ namespace NUnit.Framework.Constraints
             return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
         }
         #endregion
-
-        private static bool IsWithinDecimalRange(double value)
-        {
-            return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
-        }
 
         #region Numeric Difference
 
@@ -454,9 +457,15 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 return double.NaN;
 
-            if (expected is decimal || actual is decimal)
+            // Treat as decimal if one is decimal and other can be treated as decimal
+            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
             {
-                var difference = Convert.ToDecimal(expected) - Convert.ToDecimal(actual);
+                var difference = eDec - Convert.ToDecimal(actual);
+                return isAbsolute ? difference : difference / eDec * 100;
+            }
+            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+            {
+                var difference = Convert.ToDecimal(expected) - aDec;
                 return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
             }
 

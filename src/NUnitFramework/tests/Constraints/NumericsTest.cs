@@ -140,6 +140,17 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void CanCompareDecimalAndHighDouble()
+        {
+            var expected = Convert.ToDouble(decimal.MaxValue) * 1.1;
+            var actual = decimal.MaxValue;
+
+            var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
+
+            Assert.That(result, Is.EqualTo(7.9228162514264408E+27));
+        }
+
+        [Test]
         public void CanCompareMidRangeDecimalAndDouble()
         {
             var expected = 3.14159m;
