@@ -84,6 +84,62 @@ namespace NUnit.Framework.Constraints
             Assert.That(Numerics.Difference(new object(), new object(), tenPercent.Mode), Is.EqualTo(double.NaN));
         }
 
+        [Test]
+        public void CanCompareDecimalsWithHighPrecision()
+        {
+            var expected = 95217168582.206969750145956m;
+            var actual =   95217168582.20696975014595521m;
+
+            var result = Numerics.Compare(expected, actual);
+
+            Assert.That(expected, Is.GreaterThan(actual));
+        }
+
+
+        [Test]
+        public void CanCalculateDifferenceDecimalsWithHighPrecision()
+        {
+            var expected = 95217168582.206969750145956m;
+            var actual = 95217168582.20696975014595521m;
+
+            var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
+
+            Assert.That(result, Is.EqualTo(0.00000000000000079M));
+        }
+
+        [Test]
+        public void CanCompareDoublesWithHighMantissa()
+        {
+            var expected = Convert.ToDouble(decimal.MaxValue) * 1.1;
+            var actual = Convert.ToDouble(decimal.MaxValue);
+
+            var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
+
+            Assert.That(result, Is.EqualTo(7.9228162514264408E+27));
+        }
+
+        [Test]
+        public void CanCompareDecimalAndHighDouble()
+        {
+            var expected = Convert.ToDouble(decimal.MaxValue) * 1.1;
+            var actual = decimal.MaxValue;
+
+            var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
+
+            Assert.That(result, Is.EqualTo(7.9228162514264408E+27));
+        }
+
+        [Test]
+        public void CanCompareMidRangeDecimalAndDouble()
+        {
+            var expected = 3.14159m;
+            var actual =   2.718281d;
+
+            var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
+
+            Assert.That(result, Is.EqualTo(0.423309));
+        }
+
         [TestCase((int)8500)]
         [TestCase((int)11500)]
         [TestCase((uint)8500)]
