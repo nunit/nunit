@@ -316,9 +316,10 @@ namespace NUnit.Framework.Internal
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
             object[] allAttributes = provider.GetCustomAttributes(inherit: true);
-            IEnumerable<IApplyToTest> applyToTestAttribtes =
-                allAttributes.Select(OSPlatformTranslator.Translate).OfType<IApplyToTest>();
-            ApplyAttributesToTest(applyToTestAttribtes);
+            IEnumerable<IApplyToTest> applyToTestAttributes =
+                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTest>();
+
+            ApplyAttributesToTest(applyToTestAttributes);
         }
 
         /// <summary>

@@ -3,102 +3,130 @@
 #nullable enable
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
     /// <summary>
     /// Marks an assembly, test fixture or test method as applying to a specific platform.
     /// </summary>
-    public static class OSPlatformTranslator
+    internal static class OSPlatformTranslator
     {
         /// <summary>
-        /// Converts a .NET 5+ SupportedOSPlatformAttribute into an NUnit PlatformAttribute
+        /// Converts one or more .NET 5+ OSPlatformAttributes into a single NUnit PlatformAttribute
         /// </summary>
-        /// <param name="possibleSupportedOSPlatformAttribute"></param>
-        /// <returns></returns>
-        public static object Translate(object possibleSupportedOSPlatformAttribute)
+        /// <param name="allAttributes">Enumeration of all attributes.</param>
+        /// <returns>All attributes with OSPlatformAttributes translated into PlatformAttributes.</returns>
+        public static IEnumerable<object> Translate(IEnumerable<object> allAttributes)
         {
-            Type type = possibleSupportedOSPlatformAttribute.GetType();
+            var includes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var excludes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            bool include = type.FullName == "System.Runtime.Versioning.SupportedOSPlatformAttribute";
-            bool exclude = type.FullName == "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
-
-            if (!include && !exclude)
+            foreach (var attribute in allAttributes)
             {
-                return possibleSupportedOSPlatformAttribute;
-            }
-
-            PropertyInfo? platformNameProperty = type.GetProperty("PlatformName", typeof(string));
-            if (platformNameProperty is null)
-            {
-                return possibleSupportedOSPlatformAttribute;
-            }
-
-            string platformName = (string)platformNameProperty.GetValue(possibleSupportedOSPlatformAttribute);
-
-            string nunitPlatform = Translate(platformName);
-
-            if (include)
-            {
-                return new PlatformAttribute
+                if (attribute is PlatformAttribute platformAttribute)
                 {
-                    Include = nunitPlatform,
-                };
-            }
-            else
-            {
-                return new PlatformAttribute
+                    Add(includes, platformAttribute.Include);
+                    Add(excludes, platformAttribute.Exclude);
+
+                    void Add(HashSet<string> set, string? platforms)
+                    {
+                        if (platforms != null)
+                        {
+                            foreach (var platform in platforms.Split(','))
+                            {
+                                set.Add(platform);
+                            }
+                        }
+                    }
+
+                    continue;
+                }
+
+                Type type = attribute.GetType();
+
+                bool include = type.FullName == "System.Runtime.Versioning.SupportedOSPlatformAttribute";
+                bool exclude = type.FullName == "System.Runtime.Versioning.UnsupportedOSPlatformAttribute";
+
+                if (!include && !exclude)
                 {
-                    Exclude = nunitPlatform,
+                    // Not a translatable attribute, keep it.
+                    yield return attribute;
+                    continue;
+                }
+
+                PropertyInfo? platformNameProperty = type.GetProperty("PlatformName", typeof(string));
+                string? platformName = (string?)platformNameProperty?.GetValue(attribute);
+                if (platformNameProperty is null || platformName is null)
+                {
+                    yield return attribute;
+                    continue;
+                }
+
+                string nunitPlatform = Translate(platformName);
+
+                if (include)
+                {
+                    includes.Add(nunitPlatform);
+                }
+                else
+                {
+                    excludes.Add(nunitPlatform);
+                }
+            }
+
+            if (includes.Count > 0 || excludes.Count > 0)
+            {
+                yield return new PlatformAttribute
+                {
+                    Include = includes.Count == 0 ? null : string.Join(",", includes),
+                    Exclude = excludes.Count == 0 ? null : string.Join(",", excludes),
                 };
             }
         }
 
-        private static string Translate(string platformName)
+        internal static string Translate(string platformName)
         {
-            ParseOSAndVersion(platformName, out string os, out Version version);
-            string nunit = Translate(os, version);
+            ParseOSAndVersion(platformName, out string os, out int majorVersion);
+            string nunit = Translate(os, majorVersion);
 
             return nunit;
         }
+
         private static readonly char[] Digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
         private static void ParseOSAndVersion(string plaformName,
-            out string os, out Version version)
+            out string os, out int majorVersion)
         {
-            version = new Version(0, 0);
-
             int versionIndex = plaformName.IndexOfAny(Digits);
             if (versionIndex > 0)
             {
                 os = plaformName.Substring(0, versionIndex);
-                if (Version.TryParse(plaformName.Substring(versionIndex), out Version result))
-                {
-                    version = result;
-                }
+                int dotIndex = plaformName.IndexOf('.', versionIndex);
+                int nextCharacter = dotIndex > versionIndex ? dotIndex : plaformName.Length;
+                int length = nextCharacter - versionIndex;
+                majorVersion = Int32.Parse(plaformName.Substring(versionIndex, length));
             }
             else
             {
                 os = plaformName;
+                majorVersion = 0;
             }
         }
 
-        private static string Translate(string osName, Version version)
+        private static string Translate(string osName, int majorVersion)
         {
             switch (osName.ToUpperInvariant())
             {
                 case "WINDOWS":
-                    if (version.Major < 7)
+                    if (majorVersion < 7)
                     {
                         return "Win";
                     }
                     else
                     {
-                        return "Windows" + version.Major;
+                        return "Windows" + majorVersion;
                     }
                 case "OSX":
                 case "MACOS":
