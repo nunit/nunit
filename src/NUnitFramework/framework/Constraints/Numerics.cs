@@ -68,7 +68,6 @@ namespace NUnit.Framework.Constraints
             {
                 if (obj is System.Byte) return true;
                 if (obj is System.SByte) return true;
-                if (obj is System.Decimal) return true;
                 if (obj is System.Int32) return true;
                 if (obj is System.UInt32) return true;
                 if (obj is System.Int64) return true;
