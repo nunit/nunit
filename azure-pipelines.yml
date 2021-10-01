@@ -41,7 +41,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.103
+      version: 5.0.202
       performMultiLevelLookup: true
 
   - task: UseDotNet@2
@@ -79,7 +79,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.103
+      version: 5.0.202
       performMultiLevelLookup: true
 
   - task: UseDotNet@2
