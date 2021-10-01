@@ -184,6 +184,14 @@ namespace NUnit.TestData.TestFixtureTests
         public void Success()
         {
         }
+
+        public class SubFixture
+        {
+            [Test]
+            public void Success()
+            {
+            }
+        }
     }
 
     [TestFixture(Ignore = "testing ignore a fixture")]

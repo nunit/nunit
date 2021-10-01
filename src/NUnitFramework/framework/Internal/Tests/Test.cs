@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -315,6 +316,30 @@ namespace NUnit.Framework.Internal
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
             ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
+        }
+
+        /// <summary>
+        /// Recursively apply the attributes on <paramref name="type"/> to this test,
+        /// including attributes on nesting types.
+        /// </summary>
+        /// <param name="type">The </param>
+        public void ApplyAttributesToTest(Type type)
+        {
+            foreach (var t in GetNestedTypes(type).Reverse()) 
+                ApplyAttributesToTest((ICustomAttributeProvider) t.GetTypeInfo());
+        }
+        
+        /// <summary>
+        /// Returns all nested types, inner first.
+        /// </summary>
+        private IEnumerable<Type> GetNestedTypes(Type inner)
+        {
+            var current = inner;
+            while (current != null)
+            {
+                yield return current;
+                current = current.DeclaringType;
+            }
         }
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
