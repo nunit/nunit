@@ -53,8 +53,5 @@ How to use this package:
     <file src="bin/netcoreapp2.1/nunitlite-runner.pdb" target="tools\netcoreapp2.1" />
     <file src="bin/netcoreapp3.1/nunitlite-runner.dll" target="tools\netcoreapp3.1" />
     <file src="bin/netcoreapp3.1/nunitlite-runner.pdb" target="tools\netcoreapp3.1" />
-    <file src="../../nuget/nunitlite/Program.cs" target="content" />
-    <file src="../../nuget/nunitlite/Program.vb" target="content" />
-    <file src="../../nuget/nunitlite/install.ps1" target="tools" />
   </files>
 </package>
