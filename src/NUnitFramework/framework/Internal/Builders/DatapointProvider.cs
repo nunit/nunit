@@ -17,6 +17,17 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DatapointProvider : IParameterDataProvider
     {
+        private readonly bool _searchInDeclaringTypes;
+        
+        /// <summary>
+        /// Creates a new DatapointProvider.
+        /// </summary>
+        /// <param name="searchInDeclaringTypes">Determines whether when searching for theory data members of declaring types will also be searched.</param>
+        public DatapointProvider(bool searchInDeclaringTypes)
+        {
+            _searchInDeclaringTypes = searchInDeclaringTypes;
+        }
+
         private static readonly ProviderCache ProviderCache = new ProviderCache();
 
         #region IDataPointProvider Members
@@ -24,7 +35,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Determines whether any data is available for a parameter.
         /// </summary>
-        /// <param name="parameter">The parameter of a parameterized test</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         public bool HasDataFor(IParameterInfo parameter)
         {
             var method = parameter.Method;
@@ -36,11 +47,13 @@ namespace NUnit.Framework.Internal.Builders
                 return true;
 
             Type containingType = method.TypeInfo.Type;
-            foreach (MemberInfo member in containingType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
+            foreach (var memberAndOwningType in GetMembersFromType(containingType))
             {
+                var member = memberAndOwningType.Item1;
+
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)
-                        return true;
+                    return true;
                 else if (member.IsDefined(typeof(DatapointSourceAttribute), true) &&
                     GetElementTypeFromMemberInfo(member) == parameterType)
                     return true;
@@ -52,7 +65,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <summary>
         /// Retrieves data for use with the supplied parameter.
         /// </summary>
-        /// <param name="parameter">The parameter of a parameterized test</param>
+        /// <param name="parameter">The parameter of a parameterized test.</param>
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             var datapoints = new List<object?>();
@@ -60,8 +73,11 @@ namespace NUnit.Framework.Internal.Builders
             Type parameterType = parameter.ParameterType;
             Type fixtureType = parameter.Method.TypeInfo.Type;
 
-            foreach (MemberInfo member in fixtureType.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
+            foreach (var memberAndOwningType in GetMembersFromType(fixtureType))
             {
+                var member = memberAndOwningType.Item1;
+                var owningType = memberAndOwningType.Item2;
+
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {
                     var field = member as FieldInfo;
@@ -70,7 +86,7 @@ namespace NUnit.Framework.Internal.Builders
                         if (field.IsStatic)
                             datapoints.Add(field.GetValue(null));
                         else
-                            datapoints.Add(field.GetValue(ProviderCache.GetInstanceOf(fixtureType)));
+                            datapoints.Add(field.GetValue(ProviderCache.GetInstanceOf(owningType)));
                     }
                 }
                 else if (member.IsDefined(typeof(DatapointSourceAttribute), true))
@@ -84,20 +100,20 @@ namespace NUnit.Framework.Internal.Builders
                         MethodInfo? method = member as MethodInfo;
                         if (field != null)
                         {
-                            instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)field.GetValue(instance))
                                 datapoints.Add(data);
                         }
                         else if (property != null)
                         {
                             MethodInfo getMethod = property.GetGetMethod(true);
-                            instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)property.GetValue(instance, null))
                                 datapoints.Add(data);
                         }
                         else if (method != null)
                         {
-                            instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(fixtureType);
+                            instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
                                 datapoints.Add(data);
                         }
@@ -133,6 +149,33 @@ namespace NUnit.Framework.Internal.Builders
             }
 
             return datapoints;
+        }
+
+        private IEnumerable<Tuple<MemberInfo, Type>> GetMembersFromType(Type type)
+        {
+            if (_searchInDeclaringTypes)
+            {
+                return GetNestedMembersFromType(type);
+            }
+
+            return GetDirectMembersOfType(type);
+        }
+
+        private static IEnumerable<Tuple<MemberInfo, Type>> GetNestedMembersFromType(Type? type)
+        {
+            while (type != null)
+            {
+                foreach (var tuple in GetDirectMembersOfType(type)) yield return tuple;
+                type = type.DeclaringType;
+            }
+        }
+
+        private static IEnumerable<Tuple<MemberInfo, Type>> GetDirectMembersOfType(Type type)
+        {
+            foreach (var member in type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy))
+            {
+                yield return new Tuple<MemberInfo, Type>(member, type);
+            }
         }
 
         private Type? GetTypeFromMemberInfo(MemberInfo member)
