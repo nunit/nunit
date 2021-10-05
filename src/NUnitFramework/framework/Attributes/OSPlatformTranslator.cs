@@ -30,14 +30,11 @@ namespace NUnit.Framework
                     Add(includes, platformAttribute.Include);
                     Add(excludes, platformAttribute.Exclude);
 
-                    void Add(HashSet<string> set, string? platforms)
+                    static void Add(HashSet<string> set, string? platforms)
                     {
                         if (platforms != null)
                         {
-                            foreach (var platform in platforms.Split(','))
-                            {
-                                set.Add(platform);
-                            }
+                            set.UnionWith(platforms.Split(','));
                         }
                     }
 
@@ -106,7 +103,7 @@ namespace NUnit.Framework
                 int dotIndex = plaformName.IndexOf('.', versionIndex);
                 int nextCharacter = dotIndex > versionIndex ? dotIndex : plaformName.Length;
                 int length = nextCharacter - versionIndex;
-                majorVersion = Int32.Parse(plaformName.Substring(versionIndex, length));
+                majorVersion = int.Parse(plaformName.Substring(versionIndex, length));
             }
             else
             {
@@ -120,14 +117,7 @@ namespace NUnit.Framework
             switch (osName.ToUpperInvariant())
             {
                 case "WINDOWS":
-                    if (majorVersion < 7)
-                    {
-                        return "Win";
-                    }
-                    else
-                    {
-                        return "Windows" + majorVersion;
-                    }
+                    return majorVersion < 7 ? "Win" : "Windows" + majorVersion;
                 case "OSX":
                 case "MACOS":
                     return "MacOsX";
