@@ -2,7 +2,7 @@
 
 #nullable enable
 
-#if NET5_0
+#if NET5_0_OR_GREATER
 using System.Linq;
 using System.Runtime.Versioning;
 #endif
@@ -25,7 +25,7 @@ namespace NUnit.Framework.Attributes
             return OSPlatformTranslator.Translate(platformName);
         }
 
-#if NET5_0
+#if NET5_0_OR_GREATER
         [Test]
         public void TranslateSupportedOSPlatformAttribute()
         {

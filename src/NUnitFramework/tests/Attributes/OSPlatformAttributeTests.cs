@@ -1,5 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-#if NET5_0
+#if NET5_0_OR_GREATER
 
 using System.IO;
 using System.Runtime.Versioning;
