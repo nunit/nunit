@@ -159,12 +159,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool AreEqual(object x, object y, ref Tolerance tolerance)
         {
-            return AreEqual(x, y, ref tolerance, true);
+            return AreEqual(x, y, ref tolerance, new ComparisonState(true));
         }
 
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
+        [Obsolete("Will be removed in next major release. Use another overload instead.")]
         public bool AreEqual(object x, object y, ref Tolerance tolerance, bool topLevelComparison)
         {
             return AreEqual(x, y, ref tolerance, new ComparisonState(topLevelComparison));
