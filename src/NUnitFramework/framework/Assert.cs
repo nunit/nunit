@@ -234,7 +234,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region InConclusive
+        #region Inconclusive
 
         /// <summary>
         /// Throws an <see cref="InconclusiveException"/> with the message and arguments
