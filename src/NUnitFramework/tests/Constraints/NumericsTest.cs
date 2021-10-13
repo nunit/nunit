@@ -164,5 +164,11 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000m, 11500m, ref tenPercent)));
         }
+
+        [Test]
+        public void FailsOnDecimalIsPartOfIsFixedPointNumericMethod()
+        {
+            Assert.IsFalse(Numerics.IsFixedPointNumeric(1000m));
+        }
     }
 }
