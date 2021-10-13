@@ -168,7 +168,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailsOnDecimalIsPartOfIsFixedPointNumericMethod()
         {
-            Assert.Throws<AssertionException>(() => Assert.IsFalse(Numerics.IsFixedPointNumeric(1000m)));
+            Assert.IsFalse(Numerics.IsFixedPointNumeric(1000m));
         }
     }
 }
