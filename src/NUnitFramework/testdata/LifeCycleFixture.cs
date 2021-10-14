@@ -431,12 +431,27 @@ namespace NUnit.TestData.LifeCycleTests
     }
     #endregion
 
+    #region DisposeOnly
 
+    [TestFixture]
+    [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+    public class InstancePerTestCaseWithDisposeTestCase : IDisposable
+    {
+        public static int DisposeCount;
 
+        public void Dispose()
+        {
+            Interlocked.Increment(ref DisposeCount);
+        }
 
+        [Test]
+        [Order(1)]
+        public void Test() => Assert.Pass();
 
+        [Test]
+        [Order(2)]
+        public void VerifyDisposed() => Assert.That(DisposeCount, Is.EqualTo(1));
+    }
 
-
-
-
+    #endregion
 }
