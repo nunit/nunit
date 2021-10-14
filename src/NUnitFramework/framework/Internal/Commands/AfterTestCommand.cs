@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2017 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -45,7 +45,10 @@ namespace NUnit.Framework.Internal.Commands
         {
             Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
 
-            innerCommand.Execute(context);
+            RunTestMethodInThreadAbortSafeZone(context, () =>
+            {
+                context.CurrentResult = innerCommand.Execute(context);
+            });
 
             AfterTest(context);
 

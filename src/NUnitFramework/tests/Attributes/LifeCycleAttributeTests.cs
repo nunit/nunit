@@ -223,6 +223,18 @@ namespace NUnit.Framework.Attributes
         }
         #endregion
 
+        #region DisposeOnly
+        [Test]
+        public void InstancePerTestCaseWithDispose()
+        {
+            var fixture = TestBuilder.MakeFixture(typeof(InstancePerTestCaseWithDisposeTestCase));
+
+            ITestResult result = TestBuilder.RunTest(fixture);
+            Assert.That(InstancePerTestCaseWithDisposeTestCase.DisposeCount, Is.EqualTo(2));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+        }
+        #endregion
+
         #region Assembly level InstancePerTestCase
 
 #if NETFRAMEWORK
