@@ -24,7 +24,10 @@ namespace NUnit.Framework.Internal.Commands
         {
             Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
 
-            innerCommand.Execute(context);
+            RunTestMethodInThreadAbortSafeZone(context, () =>
+            {
+                context.CurrentResult = innerCommand.Execute(context);
+            });
 
             AfterTest(context);
 

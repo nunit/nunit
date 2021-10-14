@@ -45,22 +45,6 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private static void RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
-        {
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-#if THREAD_ABORT
-                if (ex is ThreadAbortException)
-                    Thread.ResetAbort();
-#endif
-                context.CurrentResult.RecordException(ex);
-            }
-        }
-        
         /// <summary>
         /// Perform the before test action
         /// </summary>

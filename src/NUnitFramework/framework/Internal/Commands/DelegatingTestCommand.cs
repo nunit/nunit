@@ -1,5 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
+using System.Threading;
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -24,6 +27,25 @@ namespace NUnit.Framework.Internal.Commands
             : base(innerCommand.Test)
         {
             this.innerCommand = innerCommand;
+        }
+
+        /// <summary>
+        /// Runs the test with exception handling.
+        /// </summary>
+        protected static void RunTestMethodInThreadAbortSafeZone(TestExecutionContext context, Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+#if THREAD_ABORT
+                if (ex is ThreadAbortException)
+                    Thread.ResetAbort();
+#endif
+                context.CurrentResult.RecordException(ex);
+            }
         }
     }
 }
