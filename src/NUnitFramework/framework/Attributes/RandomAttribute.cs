@@ -166,6 +166,8 @@ namespace NUnit.Framework
                     _source = new SByteDataSource(_count);
                 else if (parmType == typeof(decimal))
                     _source = new DecimalDataSource(_count);
+                else if (parmType == typeof(Guid))
+                    _source = new GuidDataSource(_count);
                 else if (parmType.GetTypeInfo().IsEnum)
                     _source = new EnumDataSource(_count);
                 else // Default
@@ -244,6 +246,7 @@ namespace NUnit.Framework
 
                 var randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
 
+                Guard.OperationValid(CanUseRange() || !_inRange, $"The value type {parameter.ParameterType} does not support range of values.");
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min!, _max!, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
 
 
@@ -271,9 +274,15 @@ namespace NUnit.Framework
                 }
             }
 
+            protected virtual bool CanUseRange()
+            {
+                return true;
+            }
+
             protected abstract T GetNext(Randomizer randomizer);
             protected abstract T GetNext(Randomizer randomizer, T min, T max);
             protected abstract bool CanBeDistinct(T min, T max, int count);
+
         }
 
         #endregion
@@ -647,6 +656,35 @@ namespace NUnit.Framework
             protected override bool CanBeDistinct(decimal min, decimal max, int count)
             {
                 return true;
+            }
+        }
+
+        #endregion
+
+        #region GuidDataSource
+
+        class GuidDataSource : RandomDataSource<Guid>
+        {
+            public GuidDataSource(int count) : base(count) { }
+
+            protected override Guid GetNext(Randomizer randomizer)
+            {
+                return randomizer.NextGuid();
+            }
+
+            protected override Guid GetNext(Randomizer randomizer, Guid min, Guid max)
+            {
+                throw new NotSupportedException($"{typeof(Guid)} does not support range of parameters being specified.");
+            }
+
+            protected override bool CanBeDistinct(Guid min, Guid max, int count)
+            {
+                throw new NotSupportedException($"{typeof(Guid)} does not support range of parameters being specified.");
+            }
+
+            protected override bool CanUseRange()
+            {
+                return false;
             }
         }
 

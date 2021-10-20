@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -335,6 +335,25 @@ namespace NUnit.TestData.RandomAttributeTests
         {
             Assert.That(previousSByteValues, Does.Not.Contain(x));
             previousSByteValues.Add(x);
+        }
+
+        #endregion
+
+        #region Guid
+
+        private readonly List<Guid> previousGuidValues = new List<Guid>();
+
+        [Test]
+        public void RandomGuid([Random(COUNT)] Guid x)
+        {
+            Assert.Pass();
+        }
+
+        [Test]
+        public void RandomGuid_Distinct([Random(COUNT, Distinct = true)] Guid x)
+        {
+            Assert.That(previousGuidValues, Does.Not.Contain(x));
+            previousGuidValues.Add(x);
         }
 
         #endregion
