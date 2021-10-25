@@ -26,6 +26,7 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -92,6 +93,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Pass(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
@@ -111,6 +113,7 @@ namespace NUnit.Framework
         /// of success returned to NUnit.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        [DoesNotReturn]
         static public void Pass(string? message)
         {
             Assert.Pass(message, null);
@@ -121,6 +124,7 @@ namespace NUnit.Framework
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
+        [DoesNotReturn]
         static public void Pass()
         {
             Assert.Pass(string.Empty, null);
@@ -200,6 +204,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Ignore(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
@@ -218,6 +223,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as ignored.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        [DoesNotReturn]
         static public void Ignore(string? message)
         {
             Assert.Ignore(message, null);
@@ -227,6 +233,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="IgnoreException"/>.
         /// This causes the test to be reported as ignored.
         /// </summary>
+        [DoesNotReturn]
         static public void Ignore()
         {
             Assert.Ignore(string.Empty, null);
@@ -234,7 +241,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region InConclusive
+        #region Inconclusive
 
         /// <summary>
         /// Throws an <see cref="InconclusiveException"/> with the message and arguments
@@ -242,6 +249,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Inconclusive(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
@@ -260,6 +268,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as inconclusive.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
+        [DoesNotReturn]
         static public void Inconclusive(string? message)
         {
             Assert.Inconclusive(message, null);
@@ -269,6 +278,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="InconclusiveException"/>.
         /// This causes the test to be reported as Inconclusive.
         /// </summary>
+        [DoesNotReturn]
         static public void Inconclusive()
         {
             Assert.Inconclusive(string.Empty, null);
