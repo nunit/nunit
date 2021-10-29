@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "isRoot": true,
+    "tools": {
+      "cake.tool": {
+        "version": "1.3.0",
+        "commands": [
+          "dotnet-cake"
+        ]
+      },
+      "signclient": {
+        "version": "1.3.155",
+        "commands": [
+          "SignClient"
+        ]
+      }
+    }
+  }

@@ -1,4 +1,4 @@
-#tool NUnit.ConsoleRunner&version=3.10.0
+#tool NUnit.ConsoleRunner&version=3.12.0
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -379,23 +379,8 @@ Task("PackageZip")
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 
-Task("CreateToolManifest")
-    .Does(() =>
-    {
-        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "new tool-manifest --force" });
-    });
-
-Task("InstallSigningTool")
-    .Description("Installs the signing tool")
-    .IsDependentOn("CreateToolManifest")
-    .Does(() =>
-    {
-        var result = StartProcess("dotnet.exe", new ProcessSettings {  Arguments = "tool install SignClient" });
-    });
-
 Task("SignPackages")
     .Description("Signs the NuGet packages")
-    .IsDependentOn("InstallSigningTool")
     .IsDependentOn("PackageFramework")
     .Does(() =>
     {
