@@ -92,6 +92,7 @@ namespace NUnit.Framework
                     {
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentRepeatCount++; // increment Retry count for next iteration. will only happen if we are guaranteed another iteration
+                        context.CurrentTest.SetNextId();
                     }
                 }
 

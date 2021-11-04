@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
             _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
         }
 
-        private int retried;
+        private int _retried;
         [Retry(5)]
         [Test]
         public void Retry()
@@ -45,10 +45,10 @@ namespace NUnit.Framework.Internal
             Assert.That(_idHolder, Does.Not.ContainKey(ID));
             _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
 
-            if (retried < 3)
+            if (_retried < 3)
             {
-                retried++;
-                throw new Exception();
+                _retried++;
+                Assert.Fail();
             }
         }
             
