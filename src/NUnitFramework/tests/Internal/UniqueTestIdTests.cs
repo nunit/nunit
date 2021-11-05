@@ -37,21 +37,6 @@ namespace NUnit.Framework.Internal
             _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
         }
 
-        private int _retried;
-        [Retry(5)]
-        [Test]
-        public void Retry()
-        {
-            Assert.That(_idHolder, Does.Not.ContainKey(ID));
-            _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
-
-            if (_retried < 3)
-            {
-                _retried++;
-                Assert.Fail();
-            }
-        }
-            
         public static IEnumerable<string> SomeStrings => new List<string>
         {
             "1", "2", "3", "4"
