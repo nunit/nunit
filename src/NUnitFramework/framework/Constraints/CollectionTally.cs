@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
 
             if (c.IsSortable())
             {
-                _isSortable = TrySort(_missingItems);
+                _isSortable = TrySort(ref _missingItems);
             }
         }
 
@@ -83,8 +83,9 @@ namespace NUnit.Framework.Constraints
             return comparer.AreEqual(expected, actual, ref tolerance);
         }
 
-        private static bool TrySort(ArrayList items)
+        private static bool TrySort(ref ArrayList items)
         {
+            var original = (ArrayList)items.Clone();
             try
             {
                 items.Sort();
@@ -92,6 +93,7 @@ namespace NUnit.Framework.Constraints
             }
             catch (InvalidOperationException e) when (e.InnerException is ArgumentException ae && ae.Message.Contains(nameof(IComparable)))
             {
+                items = original;
                 return false;
             }
         }
@@ -122,7 +124,7 @@ namespace NUnit.Framework.Constraints
                 foreach (object o in c)
                     remove.Add(o);
 
-                if (TrySort(remove))
+                if (TrySort(ref remove))
                 {
                     _sorted = true;
 
