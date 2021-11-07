@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -499,67 +478,12 @@ namespace NUnit.Framework.Api
 #endregion
 
 #region RunAsyncAction
-        [TestCaseSource(nameof(EmptyFilters))]
-        public void RunAsyncAction_AfterLoad_ReturnsRunnableSuite(string filter)
-        {
-            new FrameworkController.LoadTestsAction(_controller, _handler);
-            new FrameworkController.RunAsyncAction(_controller, filter, _handler);
-            //var result = TNode.FromXml(_handler.GetCallbackResult());
-
-            //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            //Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            //Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
-            //Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
-            //Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
-            //Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            //Assert.That(result.Attributes["result"], Is.EqualTo("Failed"));
-            //Assert.That(result.Attributes["passed"], Is.EqualTo(MockAssembly.Success.ToString()));
-            //Assert.That(result.Attributes["failed"], Is.EqualTo(MockAssembly.ErrorsAndFailures.ToString()));
-            //Assert.That(result.Attributes["skipped"], Is.EqualTo((MockAssembly.NotRunnable + MockAssembly.Ignored).ToString()));
-            //Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
-            //Assert.That(result.FindDescendants("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
-        }
-
         [Test]
         public void RunAsyncAction_WithoutLoad_ReturnsError()
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler));
             Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
-        }
-
-        [Test]
-        public void RunAsyncAction_FileNotFound_ReturnsNonRunnableSuite()
-        {
-            var controller = new FrameworkController(MISSING_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
-            //var result = TNode.FromXml(_handler.GetCallbackResult());
-
-            //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            //Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            //Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
-            //Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
-            // Minimal check here to allow for platform differences
-            //Assert.That(GetSkipReason(result), Contains.Substring(MISSING_FILE));
-            //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
-        }
-
-        [Test]
-        public void RunAsyncAction_BadFile_ReturnsNonRunnableSuite()
-        {
-            var controller = new FrameworkController(BAD_FILE, "ID", _settings);
-            new FrameworkController.LoadTestsAction(controller, _handler);
-            new FrameworkController.RunAsyncAction(controller, EMPTY_FILTER, _handler);
-            //var result = TNode.FromXml(_handler.GetCallbackResult());
-
-            //Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
-            //Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
-            //Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
-            //Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
-            // Minimal check here to allow for platform differences
-            //Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
-            //Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
         }
 
 #endregion

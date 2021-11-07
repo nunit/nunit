@@ -19,6 +19,8 @@ charset = utf-8-bom
 indent_size = 4
 
 [*]
+file_header_template = Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 # https://github.com/nunit/docs/wiki/Coding-Standards#namespace-class-structure-interface-enumeration-and-method-definitions
 csharp_indent_braces = false
 csharp_new_line_before_catch = true

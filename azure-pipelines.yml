@@ -12,16 +12,12 @@ jobs:
     vmImage: windows-latest
   steps:
 
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
-    inputs:
-      version: 5.0.100-preview.6.20318.15
-      performMultiLevelLookup: true
-
-  - powershell: .\build.ps1 --target=Test --test-run-name=Windows
+  - powershell: |
+     dotnet tool restore
+     dotnet cake --target=Test --test-run-name=Windows --configuration=Release
     displayName: Build, test, and publish results
 
-  - powershell: .\build.ps1 --target=Package --artifact-dir='$(Build.ArtifactStagingDirectory)'
+  - powershell: dotnet cake --target=Package
     displayName: Package
 
   - task: PublishBuildArtifacts@1
@@ -45,7 +41,8 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.100-preview.6.20318.15
+      version: 5.0.202
+      performMultiLevelLookup: true
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
@@ -63,7 +60,7 @@ jobs:
     displayName: Install F# for Mono
 
   - bash: |
-     dotnet tool install --global Cake.Tool
+     dotnet tool restore
      dotnet cake --target=Test --test-run-name=Linux --configuration=Release
     displayName: Build, test, and publish results
 
@@ -82,7 +79,8 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 5.0.100-preview.6.20318.15
+      version: 5.0.202
+      performMultiLevelLookup: true
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 2.1'
@@ -97,7 +95,7 @@ jobs:
       version: 3.1.x
 
   - bash: |
-     dotnet tool install --global Cake.Tool
+     dotnet tool restore
      dotnet cake --target=Test --test-run-name=macOS --configuration=Release
     displayName: Build, test, and publish results
 

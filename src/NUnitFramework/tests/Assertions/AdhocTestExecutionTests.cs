@@ -1,9 +1,11 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Internal;
 
-#if NET35 || NET40 || NET45 || NET46 // NET46 should be removed when the framework project adds a net46 target
+#if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -47,7 +49,7 @@ namespace NUnit.Framework.Assertions
                 throw testException;
         }
 
-#if !(NET35 || NET40 || NET45 || NET46) // NET46 should be removed when the framework project adds a net46 target
+#if !NETFRAMEWORK
         private TestExecutionContext ClearExecutionContext()
         {
             var savedContext = TestExecutionContext.CurrentContext;

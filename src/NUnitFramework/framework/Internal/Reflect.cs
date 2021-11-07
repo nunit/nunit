@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007-2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
@@ -28,11 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-#if !NET35
 using System.Runtime.ExceptionServices;
-#endif
-using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {
@@ -53,41 +28,12 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class Reflect
     {
-        private static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+        internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
         // A zero-length Type array - not provided by System.Type for all CLR versions we support.
         private static readonly Type[] EmptyTypes = new Type[0];
 
         #region Get Methods of a type
-
-        /// <summary>
-        /// Returns all methods declared by the specified fixture type that have the specified attribute, optionally
-        /// including base classes. Methods from a base class are always returned before methods from a class that
-        /// inherits from it.
-        /// </summary>
-        /// <param name="fixtureType">The type to examine.</param>
-        /// <param name="attributeType">Only methods to which this attribute is applied will be returned.</param>
-        /// <param name="inherit">Specifies whether to search the fixture type inheritance chain.</param>
-        public static MethodInfo[] GetMethodsWithAttribute(Type fixtureType, Type attributeType, bool inherit)
-        {
-            if (!inherit)
-            {
-                return fixtureType
-                   .GetMethods(AllMembers | BindingFlags.DeclaredOnly)
-                   .Where(method => method.IsDefined(attributeType, inherit: false))
-                   .ToArray();
-            }
-
-            var methodsByDeclaringType = fixtureType
-                .GetMethods(AllMembers | BindingFlags.FlattenHierarchy) // FlattenHierarchy is complex to replicate by looping over base types with DeclaredOnly.
-                .Where(method => method.IsDefined(attributeType, inherit: true))
-                .ToLookup(method => method.DeclaringType);
-
-            return fixtureType.TypeAndBaseTypes()
-                .Reverse()
-                .SelectMany(declaringType => methodsByDeclaringType[declaringType])
-                .ToArray();
-        }
 
         /// <summary>
         /// Examine a fixture type and return true if it has a method with
@@ -209,7 +155,7 @@ namespace NUnit.Framework.Internal
             if (from == null)
             {
                 // Look for the marker that indicates from was null
-                return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable");
+                return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
             if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
@@ -241,9 +187,7 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-#if !NET35
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
-#endif
         public static object? InvokeMethod(MethodInfo method, object? fixture, params object?[]? args)
         {
             if (method != null)
@@ -462,6 +406,30 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentNotNull(type, nameof(type));
 
             return type == typeof(void) || type.FullName == "Microsoft.FSharp.Core.Unit";
+        }
+
+        /// <summary>
+        /// Returns the get accessor for the indexer.
+        /// </summary>
+        /// <param name="type">Type to reflect on for the indexer.</param>
+        /// <param name="indexerTypes">List of indexer types that matches the indexer type order.</param>
+        /// <returns>The Get accessor</returns>
+        public static MethodInfo? GetDefaultIndexer(Type type, Type[] indexerTypes)
+        {
+            const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+
+            var indexerName = GetIndexerName(type);
+            var indexer = type.GetProperty(indexerName, bindingFlags, null, null, indexerTypes, null);
+
+            return indexer?.GetGetMethod(true);
+        }
+
+        private static string GetIndexerName(Type type)
+        {
+            const string defaultFrameworkIndexerName = "Item";
+            var defaultMemberAttribute = type.GetAttributes<DefaultMemberAttribute>(true).FirstOrDefault();
+
+            return defaultMemberAttribute?.MemberName ?? defaultFrameworkIndexerName;
         }
     }
 }

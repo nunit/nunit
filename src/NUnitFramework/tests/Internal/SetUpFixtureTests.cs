@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
 using System.Reflection;
@@ -87,7 +66,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
 
-            string[] nameSpaceBits = nameSpace.Split('.');
+            string[] nameSpaceBits = ("[default namespace]." + nameSpace).Split('.');
             for (int i = 0; i < nameSpaceBits.Length; i++)
             {
                 suite = suite.Tests[0] as TestSuite;
@@ -137,7 +116,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
             Assert.AreEqual(RunState.Runnable, suite.RunState);
 
-            string[] nameSpaceBits = nameSpace.Split('.');
+            string[] nameSpaceBits = ("[default namespace]." + nameSpace).Split('.');
             for (int i = 0; i < nameSpaceBits.Length; i++)
             {
                 suite = suite.Tests[0] as TestSuite;
@@ -160,13 +139,32 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpFixtureWrapsExecutionOfSingleTest()
         {
             Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace1").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("NS1.OneTimeSetup",
+            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                                     "NS1.OneTimeSetup",
                                                      "NS1.Fixture.SetUp",
                                                      "NS1.Test.SetUp",
                                                      "NS1.Test",
                                                      "NS1.Test.TearDown",
                                                      "NS1.Fixture.TearDown",
-                                                     "NS1.OneTimeTearDown");
+                                                     "NS1.OneTimeTearDown",
+                                                     "Assembly.OneTimeTearDown");
+        }
+
+        [NUnit.Framework.Test]
+        public void MethodNameSetUpFixtureWrapsExecutionOfSingleTest()
+        {
+            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace3.SubNamespace.SomeFixture.Test").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                                     "NS3.OneTimeSetUp",
+                                                     "NS3.SubNamespace.OneTimeSetUp",
+                                                     "NS3.SubNamespace.Fixture.SetUp",
+                                                     "NS3.SubNamespace.Test.SetUp",
+                                                     "NS3.SubNamespace.Test",
+                                                     "NS3.SubNamespace.Test.TearDown",
+                                                     "NS3.SubNamespace.Fixture.TearDown",
+                                                     "NS3.SubNamespace.OneTimeTearDown",
+                                                     "NS3.OneTimeTearDown",
+                                                     "Assembly.OneTimeTearDown");
         }
         #endregion Simple
 
@@ -175,26 +173,30 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpMethodsMayBeStatic()
         {
             Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace5").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("NS5.OneTimeSetUp",
+            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                                     "NS5.OneTimeSetUp",
                                                      "NS5.Fixture.SetUp",
                                                      "NS5.Test.SetUp",
                                                      "NS5.Test",
                                                      "NS5.Test.TearDown",
                                                      "NS5.Fixture.TearDown",
-                                                     "NS5.OneTimeTearDown");
+                                                     "NS5.OneTimeTearDown",
+                                                     "Assembly.OneTimeTearDown");
         }
 
         [Test]
         public void NamespaceSetUpFixtureMayBeStatic()
         {
             Assert.That(RunTests("NUnit.TestData.SetupFixture.StaticFixture").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("StaticFixture.OneTimeSetUp",
+            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                                     "StaticFixture.OneTimeSetUp",
                                                      "StaticFixture.Fixture.SetUp",
                                                      "StaticFixture.Test.SetUp",
                                                      "StaticFixture.Test",
                                                      "StaticFixture.Test.TearDown",
                                                      "StaticFixture.Fixture.TearDown",
-                                                     "StaticFixture.OneTimeTearDown");
+                                                     "StaticFixture.OneTimeTearDown",
+                                                     "Assembly.OneTimeTearDown");
         }
         #endregion
 
@@ -205,7 +207,8 @@ namespace NUnit.Framework.Internal
             Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace2").ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
             // There are two fixtures but we can't be sure of the order of execution so they use the same events
-            TestUtilities.SimpleEventRecorder.Verify("NS2.OneTimeSetUp",
+            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                                     "NS2.OneTimeSetUp",
                                                      "NS2.Fixture.SetUp",
                                                      "NS2.Test.SetUp",
                                                      "NS2.Test",
@@ -216,7 +219,8 @@ namespace NUnit.Framework.Internal
                                                      "NS2.Test",
                                                      "NS2.Test.TearDown",
                                                      "NS2.Fixture.TearDown",
-                                                     "NS2.OneTimeTearDown");
+                                                     "NS2.OneTimeTearDown",
+                                                     "Assembly.OneTimeTearDown");
         }
         #endregion TwoTestFixtures
 
@@ -225,7 +229,8 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpFixtureWrapsNestedNamespaceSetUpFixture()
         {
             Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace3").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("NS3.OneTimeSetUp",
+            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                                     "NS3.OneTimeSetUp",
                                                      "NS3.Fixture.SetUp",
                                                      "NS3.Test.SetUp",
                                                      "NS3.Test",
@@ -238,7 +243,8 @@ namespace NUnit.Framework.Internal
                                                      "NS3.SubNamespace.Test.TearDown",
                                                      "NS3.SubNamespace.Fixture.TearDown",
                                                      "NS3.SubNamespace.OneTimeTearDown",
-                                                     "NS3.OneTimeTearDown");
+                                                     "NS3.OneTimeTearDown",
+                                                     "Assembly.OneTimeTearDown");
         }
         #endregion SubNamespace
 
@@ -247,13 +253,15 @@ namespace NUnit.Framework.Internal
         public void WithTwoSetUpFixturesBothAreUsed()
         {
             Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.ExpectEvents("NS4.OneTimeSetUp1", "NS4.OneTimeSetUp2")
+            TestUtilities.SimpleEventRecorder.ExpectEvents("Assembly.OneTimeSetUp")
+                                             .AndThen("NS4.OneTimeSetUp1", "NS4.OneTimeSetUp2")
                                              .AndThen("NS4.Fixture.SetUp")
                                              .AndThen("NS4.Test.SetUp")
                                              .AndThen("NS4.Test")
                                              .AndThen("NS4.Test.TearDown")
                                              .AndThen("NS4.Fixture.TearDown")
                                              .AndThen("NS4.OneTimeTearDown1", "NS4.OneTimeTearDown2")
+                                             .AndThen("Assembly.OneTimeTearDown")
                                              .Verify();
         }
         #endregion TwoSetUpFixtures

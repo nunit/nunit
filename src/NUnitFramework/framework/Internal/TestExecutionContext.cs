@@ -1,28 +1,8 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -34,7 +14,7 @@ using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
-#if NET35 || NET40 || NET45
+#if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
 #endif
 
@@ -46,7 +26,7 @@ namespace NUnit.Framework.Internal
     /// or which might be changed by the user tests.
     /// </summary>
     public class TestExecutionContext : LongLivedMarshalByRefObject
-#if NET35 || NET40 || NET45
+#if NETFRAMEWORK
         , ILogicalThreadAffinative
 #endif
     {
@@ -141,7 +121,7 @@ namespace NUnit.Framework.Internal
 
         // NOTE: We use different implementations for various platforms.
 
-#if !(NET35 || NET40 || NET45)
+#if !NETFRAMEWORK
         private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
         /// <summary>
         /// Gets and sets the current context.
@@ -212,6 +192,18 @@ namespace NUnit.Framework.Internal
         /// The time the current test started in Ticks
         /// </summary>
         public long StartTicks { get; set; }
+
+        /// <summary>
+        /// Gets the elapsed time for running the test in seconds
+        /// </summary>
+        public double Duration
+        {
+            get
+            {
+                var tickCount = Stopwatch.GetTimestamp() - StartTicks;
+                return (double)tickCount / Stopwatch.Frequency;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the current test result

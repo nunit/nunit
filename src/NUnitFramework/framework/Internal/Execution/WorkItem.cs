@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2012-2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +6,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
@@ -337,10 +315,7 @@ namespace NUnit.Framework.Internal.Execution
 
             Result.StartTime = Context.StartTime;
             Result.EndTime = DateTime.UtcNow;
-
-            long tickCount = Stopwatch.GetTimestamp() - Context.StartTicks;
-            double seconds = (double)tickCount / Stopwatch.Frequency;
-            Result.Duration = seconds;
+            Result.Duration = Context.Duration;
 
             // We add in the assert count from the context. If
             // this item is for a test case, we are adding the
@@ -367,8 +342,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="setUpMethods">Unsorted array of setup MethodInfos.</param>
         /// <param name="tearDownMethods">Unsorted array of teardown MethodInfos.</param>
+        /// <param name="methodValidator">Method validator used before each method execution.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
-        protected List<SetUpTearDownItem> BuildSetUpTearDownList(MethodInfo[] setUpMethods, MethodInfo[] tearDownMethods)
+        protected List<SetUpTearDownItem> BuildSetUpTearDownList(
+            IMethodInfo[] setUpMethods, 
+            IMethodInfo[] tearDownMethods,
+            IMethodValidator methodValidator = null)
         {
             Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
             Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
@@ -381,7 +360,7 @@ namespace NUnit.Framework.Internal.Execution
 
             while (fixtureType != null && fixtureType != typeof(object))
             {
-                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods);
+                var node = BuildNode(fixtureType, setUpMethods, tearDownMethods, methodValidator);
                 if (node.HasMethods)
                     list.Add(node);
 
@@ -403,7 +382,11 @@ namespace NUnit.Framework.Internal.Execution
         // teardown methods, found using a single reflection call,
         // and then descend through the inheritance hierarchy,
         // adding each method to the appropriate level as we go.
-        private static SetUpTearDownItem BuildNode(Type fixtureType, IList<MethodInfo> setUpMethods, IList<MethodInfo> tearDownMethods)
+        private static SetUpTearDownItem BuildNode(
+            Type fixtureType, 
+            IList<IMethodInfo> setUpMethods, 
+            IList<IMethodInfo> tearDownMethods,
+            IMethodValidator methodValidator)
         {
             // Create lists of methods for this level only.
             // Note that FindAll can't be used because it's not
@@ -411,15 +394,15 @@ namespace NUnit.Framework.Internal.Execution
             var mySetUpMethods = SelectMethodsByDeclaringType(fixtureType, setUpMethods);
             var myTearDownMethods = SelectMethodsByDeclaringType(fixtureType, tearDownMethods);
 
-            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods);
+            return new SetUpTearDownItem(mySetUpMethods, myTearDownMethods, methodValidator);
         }
 
-        private static List<MethodInfo> SelectMethodsByDeclaringType(Type type, IList<MethodInfo> methods)
+        private static List<IMethodInfo> SelectMethodsByDeclaringType(Type type, IList<IMethodInfo> methods)
         {
-            var list = new List<MethodInfo>();
+            var list = new List<IMethodInfo>();
 
             foreach (var method in methods)
-                if (method.DeclaringType == type)
+                if (method.TypeInfo.Type == type)
                     list.Add(method);
 
             return list;
@@ -542,14 +525,4 @@ namespace NUnit.Framework.Internal.Execution
 
 #endregion
     }
-
-#if NET35
-    static class ActionTargetsExtensions
-    {
-        public static bool HasFlag(this ActionTargets targets, ActionTargets value)
-        {
-            return (targets & value) != 0;
-        }
-    }
-#endif
 }

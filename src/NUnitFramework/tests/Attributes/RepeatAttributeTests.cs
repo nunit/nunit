@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 // TODO: Rework this
 // RepeatAttribute should either
@@ -65,6 +44,26 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(nTries, fixture.SetupCount);
             Assert.AreEqual(nTries, fixture.TeardownCount);
             Assert.AreEqual(nTries, fixture.Count);
+        }
+
+        [Test]
+        public void RepeatUpdatesCurrentRepeatCountPropertyOnEachAttempt()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatedTestVerifyAttempt.PassesTwoTimes));
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 1, "expected that the test failed the last repetition");
+        }
+
+        [Test]
+        public void RepeatUpdatesCurrentRepeatCountPropertyOnGreenTest()
+        {
+            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(typeof(RepeatedTestVerifyAttempt));
+            ITestResult result = TestBuilder.RunTestCase(fixture, nameof(RepeatedTestVerifyAttempt.AlwaysPasses));
+
+            Assert.AreEqual(fixture.TearDownResults.Count, fixture.Count + 1, "expected the CurrentRepeatCount property to be one less than the number of executions");
+            Assert.AreEqual(result.FailCount, 0, "expected that the test passes all repetitions without a failure");
         }
 
         [Test]

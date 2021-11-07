@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007-2013 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -51,6 +30,12 @@ namespace NUnit.Framework.Constraints
                 new TestCaseData(double.NaN, double.NaN.ToString()),
                 new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
             };
+
+        [Test]
+        public void Complex_PassesEquality()
+        {
+            Assert.AreEqual(new System.Numerics.Complex(1, 100), new System.Numerics.Complex(1, 100));
+        }
 
         #region DateTimeEquality
 
@@ -326,6 +311,16 @@ namespace NUnit.Framework.Constraints
                 var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
                 Assert.That(a, Is.EqualTo(b).Within(TimeSpan.FromMinutes(2)));
             }
+
+            [Test]
+            public void FailsOnDateTimeOffsetOutsideOfTimeSpanTolerance()
+            {
+                var a = DateTimeOffset.Parse("2012-01-01T12:00Z");
+                var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(a, new EqualConstraint(b).Within(10).Seconds));
+                Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(TimeSpan.FromSeconds(10))}"));
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(TimeSpan.FromMinutes(1))}"));
+            }
         }
 
         #endregion
@@ -447,6 +442,8 @@ namespace NUnit.Framework.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
                 Assert.That(ex.Message, Does.Contain("+/- 10.0d Percent"));
+                var expectedPercentDiff = (10000 - (double)value) / 100;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
             [TestCase(9500.0f)]
@@ -463,6 +460,19 @@ namespace NUnit.Framework.Constraints
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
                 Assert.That(ex.Message, Does.Contain("+/- 10.0f Percent"));
+                double expectedPercentDiff = (10000 - (float)value) / 100;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
+            }
+
+            [TestCase(1.21)]
+            [TestCase(1.19)]
+            public void FailsOnDoublesOutsideOfAbsoluteTolerance(object value)
+            {
+                const double tolerance = 0.001;
+                var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
+                Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
+                var expectedAbsoluteDiff = 1.2 - (double)value;
+                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
@@ -524,6 +534,19 @@ namespace NUnit.Framework.Constraints
             {
                 Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
                 Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+            }
+        }
+
+        #endregion
+
+        #region ObjectEquality
+
+        public class ObjectEquality
+        {
+            [Test]
+            public void CompareObjectsWithToleranceAsserts()
+            {
+                Assert.Throws<AssertionException>(() => Assert.That("abc", new EqualConstraint("abcd").Within(1)));
             }
         }
 
@@ -726,12 +749,12 @@ namespace NUnit.Framework.Constraints
             get
             {
                 var ptr = new System.IntPtr(0);
-                var ExampleTestA = new ExampleTest.ClassA(0);
-                var ExampleTestB = new ExampleTest.ClassB(0);
+                var exampleTestA = new ExampleTest.ClassA(0);
+                var exampleTestB = new ExampleTest.ClassB(0);
                 var clipTestA = new ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 var clipTestB = new ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip.ReallyLongClassNameShouldBeHere();
                 yield return new object[] { 0, ptr };
-                yield return new object[] { ExampleTestA, ExampleTestB };
+                yield return new object[] { exampleTestA, exampleTestB };
                 yield return new object[] { clipTestA, clipTestB };
             }
         }

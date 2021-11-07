@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2012 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +6,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal.Commands;
+using System.Diagnostics;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -161,8 +141,13 @@ namespace NUnit.Framework.Internal.Execution
 
         private void InitializeSetUpAndTearDownCommands()
         {
+            var methodValidator = Test.HasLifeCycle(LifeCycle.InstancePerTestCase)
+                ? new StaticMethodValidator(
+                    $"Only static OneTimeSetUp and OneTimeTearDown are allowed for {nameof(LifeCycle.InstancePerTestCase)} mode.")
+                : null;
+
             List<SetUpTearDownItem> setUpTearDownItems =
-                BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods);
+                BuildSetUpTearDownList(_suite.OneTimeSetUpMethods, _suite.OneTimeTearDownMethods, methodValidator);
 
             var actionItems = new List<TestActionItem>();
             foreach (ITestAction action in Test.Actions)
@@ -213,7 +198,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new OneTimeSetUpCommand(command, item);
 
                 // Construct the fixture if necessary
-                if (!Test.TypeInfo.IsStaticClass)
+                if (!Test.TypeInfo.IsStaticClass && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                     command = new ConstructFixtureCommand(command);
             }
 
@@ -242,7 +227,7 @@ namespace NUnit.Framework.Internal.Execution
                 command = new OneTimeTearDownCommand(command, item);
 
             // Dispose of fixture if necessary
-            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type))
+            if (Test is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(Test.TypeInfo.Type) && !Test.HasLifeCycle(LifeCycle.InstancePerTestCase))
                 command = new DisposeFixtureCommand(command);
 
             return command;
@@ -313,7 +298,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (WorkItem child in workItem.Children)
             {
-                child.Result.SetResult(resultState, message);
+                SetChildWorkItemSkippedResult(child.Result, resultState, message);
                 _suiteResult.AddResult(child.Result);
 
                 // Some runners may depend on getting the TestFinished event
@@ -323,6 +308,14 @@ namespace NUnit.Framework.Internal.Execution
                 if (child is CompositeWorkItem)
                     SkipChildren((CompositeWorkItem)child, resultState, message);
             }
+        }
+
+        private void SetChildWorkItemSkippedResult(TestResult result, ResultState resultState, string message)
+        {
+            result.SetResult(resultState, message);
+            result.StartTime = Context.StartTime;
+            result.EndTime = DateTime.UtcNow;
+            result.Duration = Context.Duration;
         }
 
         private void PerformOneTimeTearDown()

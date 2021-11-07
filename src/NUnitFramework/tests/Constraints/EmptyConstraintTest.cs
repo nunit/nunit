@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -45,13 +24,15 @@ namespace NUnit.Framework.Constraints
             string.Empty,
             new object[0],
             new ArrayList(),
-            new System.Collections.Generic.List<int>()
+            new System.Collections.Generic.List<int>(),
+            Guid.Empty,
         };
 
         static object[] FailureData = new object[]
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
-            new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" )
+            new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" ),
+            new TestCaseData(new Guid("12345678-1234-1234-1234-123456789012"), "12345678-1234-1234-1234-123456789012"),
         };
 
         [TestCase(null)]
@@ -65,6 +46,14 @@ namespace NUnit.Framework.Constraints
         public void NullStringGivesFailureResult()
         {
             string actual = null;
+            var result = TheConstraint.ApplyTo(actual);
+            Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
+        }
+
+        [Test]
+        public void NullNullableGuidGivesFailureResult()
+        {
+            Guid? actual = null;
             var result = TheConstraint.ApplyTo(actual);
             Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
         }
@@ -133,6 +122,44 @@ namespace NUnit.Framework.Constraints
 
                 Assert.That(testDir.Directory, Is.Not.Empty);
             }
+        }
+    }
+
+    [TestFixture]
+    public class EmptyGuidConstraintTest
+    {
+        [Test]
+        public void EmptyGuid()
+        {
+            Assert.That(Guid.Empty, Is.Empty);
+        }
+
+        [Test]
+        public void EmptyNullableGuid()
+        {
+            Guid? empty = Guid.Empty;
+            Assert.That(empty, Is.Empty);
+        }
+
+        [Test]
+        public void NonEmptyGuid()
+        {
+            Guid nonEmpty = new Guid("10000000-0000-0000-0000-000000000000");
+            Assert.That(nonEmpty, Is.Not.Empty);
+        }
+
+        [Test]
+        public void NonEmptyNullableGuid()
+        {
+            Guid? nonEmpty = new Guid("10000000-0000-0000-0000-000000000000");
+            Assert.That(nonEmpty, Is.Not.Empty);
+        }
+
+        [Test]
+        public void NullNullableGuid()
+        {
+            Guid? nonEmpty = null;
+            Assert.That(nonEmpty, Is.Not.Empty);
         }
     }
 }

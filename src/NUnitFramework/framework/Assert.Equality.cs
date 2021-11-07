@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
@@ -55,36 +34,6 @@ namespace NUnit.Framework
         public static void AreEqual(double expected, double actual, double delta)
         {
             AssertDoublesAreEqual(expected, actual, delta, null, null);
-        }
-
-        /// <summary>
-        /// Verifies that two doubles are equal considering a delta. If the expected value is infinity then the delta
-        /// value is ignored. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void AreEqual(double expected, double? actual, double delta, string? message, params object?[]? args)
-        {
-            // TODO: https://github.com/nunit/nunit/issues/3449
-            //                                    ↓↓↓↓↓↓↓
-            AssertDoublesAreEqual(expected, actual!.Value, delta, message, args);
-        }
-
-        /// <summary>
-        /// Verifies that two doubles are equal considering a delta. If the expected value is infinity then the delta
-        /// value is ignored. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="expected">The expected value</param>
-        /// <param name="actual">The actual value</param>
-        /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
-        public static void AreEqual(double expected, double? actual, double delta)
-        {
-            // TODO: https://github.com/nunit/nunit/issues/3449
-            //                                    ↓↓↓↓↓↓↓
-            AssertDoublesAreEqual(expected, actual!.Value, delta, null, null);
         }
 
         #endregion

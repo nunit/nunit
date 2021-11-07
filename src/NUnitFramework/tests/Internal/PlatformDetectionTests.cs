@@ -1,28 +1,6 @@
-// ***********************************************************************
-// Copyright (c) 2007-2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 
 namespace NUnit.Framework.Internal
 {
@@ -430,14 +408,9 @@ namespace NUnit.Framework.Internal
             bool is32BitProcess = helper.IsPlatformSupported(attr32);
             bool is64BitProcess = helper.IsPlatformSupported(attr64);
             Assert.False(is32BitProcess & is64BitProcess, "Process cannot be both 32 and 64 bit");
-
-#if !NET35
-            // For .NET 4.0 and 4.5, we can check further
             Assert.That(is64BitProcess, Is.EqualTo(Environment.Is64BitProcess));
-#endif
         }
 
-#if !NET35
         [Test]
         public void PlatformAttribute_OperatingSystemBitNess()
         {
@@ -449,6 +422,5 @@ namespace NUnit.Framework.Internal
             Assert.That(helper.IsPlatformSupported(attr32), Is.Not.EqualTo(is64BitOS));
             Assert.That(helper.IsPlatformSupported(attr64), Is.EqualTo(is64BitOS));
         }
-#endif
     }
 }

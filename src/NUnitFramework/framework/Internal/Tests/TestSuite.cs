@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
@@ -53,8 +32,8 @@ namespace NUnit.Framework.Internal
         public TestSuite(string name) : base(name)
         {
             Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new MethodInfo[0];
-            OneTimeTearDownMethods = new MethodInfo[0];
+            OneTimeSetUpMethods = new IMethodInfo[0];
+            OneTimeTearDownMethods = new IMethodInfo[0];
         }
 
         /// <summary>
@@ -66,8 +45,8 @@ namespace NUnit.Framework.Internal
             : base(parentSuiteName, name)
         {
             Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new MethodInfo[0];
-            OneTimeTearDownMethods = new MethodInfo[0];
+            OneTimeSetUpMethods = new IMethodInfo[0];
+            OneTimeTearDownMethods = new IMethodInfo[0];
         }
 
         /// <summary>
@@ -79,8 +58,8 @@ namespace NUnit.Framework.Internal
             : base(fixtureType)
         {
             Arguments = arguments ?? TestParameters.NoArguments;
-            OneTimeSetUpMethods = new MethodInfo[0];
-            OneTimeTearDownMethods = new MethodInfo[0];
+            OneTimeSetUpMethods = new IMethodInfo[0];
+            OneTimeTearDownMethods = new IMethodInfo[0];
         }
 
         /// <summary>
@@ -91,8 +70,8 @@ namespace NUnit.Framework.Internal
             : base(new TypeWrapper(fixtureType))
         {
             Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new MethodInfo[0];
-            OneTimeTearDownMethods = new MethodInfo[0];
+            OneTimeSetUpMethods = new IMethodInfo[0];
+            OneTimeTearDownMethods = new IMethodInfo[0];
         }
 
         /// <summary>
@@ -234,12 +213,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// OneTimeSetUp methods for this suite
         /// </summary>
-        public MethodInfo[] OneTimeSetUpMethods { get; protected set; }
+        public IMethodInfo[] OneTimeSetUpMethods { get; protected set; }
 
         /// <summary>
         /// OneTimeTearDown methods for this suite
         /// </summary>
-        public MethodInfo[] OneTimeTearDownMethods { get; protected set; }
+        public IMethodInfo[] OneTimeTearDownMethods { get; protected set; }
 
         #endregion
 
@@ -306,15 +285,15 @@ namespace NUnit.Framework.Internal
         /// Check that setup and teardown methods marked by certain attributes
         /// meet NUnit's requirements and mark the tests not runnable otherwise.
         /// </summary>
-        protected void CheckSetUpTearDownMethods(MethodInfo[] methods)
+        protected void CheckSetUpTearDownMethods(IMethodInfo[] methods)
         {
-            foreach (MethodInfo method in methods)
+            foreach (IMethodInfo method in methods)
             {
                 if (method.IsAbstract)
                 {
                     MakeInvalid("An abstract SetUp and TearDown methods cannot be run: " + method.Name);
                 }
-                else if (!(method.IsPublic || method.IsFamily))
+                else if (!(method.IsPublic || method.MethodInfo.IsFamily))
                 {
                     MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
@@ -322,16 +301,16 @@ namespace NUnit.Framework.Internal
                 {
                     MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
                 }
-                else if (AsyncToSyncAdapter.IsAsyncOperation(method))
+                else if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
                 {
-                    if (method.ReturnType == typeof(void))
+                    if (method.ReturnType.Type == typeof(void))
                         MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
-                    else if (!Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(method.ReturnType)))
+                    else if (!Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(method.ReturnType.Type)))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
                 else
                 {
-                    if (!Reflect.IsVoidOrUnit(method.ReturnType))
+                    if (!Reflect.IsVoidOrUnit(method.ReturnType.Type))
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
             }

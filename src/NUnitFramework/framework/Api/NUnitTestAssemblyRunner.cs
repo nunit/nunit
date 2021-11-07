@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2012-2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Reflection;
@@ -30,10 +9,11 @@ using NUnit.Framework.Internal.Execution;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 
-#if NET35 || NET40 || NET45
+#if NETFRAMEWORK
 using System.Windows.Forms;
 #endif
 
@@ -312,7 +292,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if NET35 || NET40 || NET45
+#if NETFRAMEWORK
             if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
                 (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
                 PauseBeforeRun();
@@ -332,6 +312,10 @@ namespace NUnit.Framework.Api
             // Apply package settings to the context
             if (Settings.ContainsKey(FrameworkPackageSettings.DefaultTimeout))
                 Context.TestCaseTimeout = (int)Settings[FrameworkPackageSettings.DefaultTimeout];
+            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultCulture))
+                Context.CurrentCulture = new CultureInfo((string)Settings[FrameworkPackageSettings.DefaultCulture], false);
+            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultUICulture))
+                Context.CurrentUICulture = new CultureInfo((string)Settings[FrameworkPackageSettings.DefaultUICulture], false);
             if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
                 Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
 
@@ -368,12 +352,13 @@ namespace NUnit.Framework.Api
         private int CountTestCases(ITest test, ITestFilter filter)
         {
             if (!test.IsSuite)
-                return 1;
+                return filter.Pass(test) ? 1: 0;
 
             int count = 0;
             foreach (ITest child in test.Tests)
-                if (filter.Pass(child))
-                    count += CountTestCases(child, filter);
+            {
+                count += CountTestCases(child, filter);
+            }
 
             return count;
         }
@@ -387,7 +372,7 @@ namespace NUnit.Framework.Api
                    : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 
-#if NET35 || NET40 || NET45
+#if NETFRAMEWORK
         // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
         // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
@@ -407,7 +392,7 @@ namespace NUnit.Framework.Api
         }
 #endif
 
-#if (NET35 || NET40 || NET45)
+#if NETFRAMEWORK
         /// <summary>
         /// Executes the action within an <see cref="NUnitCallContext" />
         /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
@@ -421,11 +406,11 @@ namespace NUnit.Framework.Api
 #endif
         protected void WrapInNUnitCallContext(Action action)
         {
-#if !(NET35 || NET40 || NET45)
-            action();
-#else
+#if NETFRAMEWORK
             using (new NUnitCallContext())
                 action();
+#else
+            action();
 #endif
         }
     }

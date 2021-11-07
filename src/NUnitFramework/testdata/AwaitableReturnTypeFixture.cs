@@ -1,10 +1,9 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
 
 namespace NUnit.TestData
 {
@@ -19,7 +18,6 @@ namespace NUnit.TestData
 
         #region Void result
 
-#if TASK_PARALLEL_LIBRARY_API
 #pragma warning disable 1998
         public Task ReturnsTask()
 #pragma warning restore 1998
@@ -71,7 +69,6 @@ namespace NUnit.TestData
             {
             }
         }
-#endif
 
         public CustomAwaitable ReturnsCustomAwaitable()
         {
@@ -201,7 +198,6 @@ namespace NUnit.TestData
 
         #region Non-void result
 
-#if TASK_PARALLEL_LIBRARY_API
 #pragma warning disable 1998
         [Test(ExpectedResult = 42)]
         public Task<object> ReturnsNonVoidResultTask()
@@ -254,7 +250,6 @@ namespace NUnit.TestData
             {
             }
         }
-#endif
 
         [Test(ExpectedResult = 42)]
         public NonVoidResultCustomAwaitable ReturnsNonVoidResultCustomAwaitable()

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework", "src\NUnitFramework\framework\nunit.framework.csproj", "{B7753E96-F76B-4E9B-9071-47B16DB90FD6}"
 EndProject
@@ -10,13 +10,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		.travis.yml = .travis.yml
 		appveyor.yml = appveyor.yml
+		azure-pipelines.yml = azure-pipelines.yml
 		build.cake = build.cake
 		BUILDING.md = BUILDING.md
 		CHANGES.md = CHANGES.md
 		CONTRIBUTING.md = CONTRIBUTING.md
 		src\NUnitFramework\Directory.Build.props = src\NUnitFramework\Directory.Build.props
+		global.json = global.json
 		LICENSE.txt = LICENSE.txt
 		NOTICES.txt = NOTICES.txt
 		NuGet.config = NuGet.config
@@ -47,10 +48,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "framework", "framework", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nunitlite", "nunitlite", "{8D43A220-7FE8-4214-BBB4-08568B88C7AA}"
 	ProjectSection(SolutionItems) = preProject
-		nuget\nunitlite\install.ps1 = nuget\nunitlite\install.ps1
 		nuget\nunitlite\nunitlite.nuspec = nuget\nunitlite\nunitlite.nuspec
-		nuget\nunitlite\Program.cs = nuget\nunitlite\Program.cs
-		nuget\nunitlite\Program.vb = nuget\nunitlite\Program.vb
 	EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "nunit.testdata.fsharp", "src\NUnitFramework\testdata.fsharp\nunit.testdata.fsharp.fsproj", "{9DF6B262-70E2-44E3-A436-3B65C7FD88DE}"

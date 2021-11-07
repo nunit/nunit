@@ -1,17 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net46;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>NUnit.TestData</RootNamespace>
-
-    <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
-    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <TargetFrameworks>net45;net46;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
-    <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
-    <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">

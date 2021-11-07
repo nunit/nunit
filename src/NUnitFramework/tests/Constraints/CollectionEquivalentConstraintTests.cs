@@ -1,29 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
@@ -32,6 +14,8 @@ namespace NUnit.Framework.Constraints
 {
     public class CollectionEquivalentConstraintTests
     {
+        const int SIZE = 10000; // For large collection tests
+
         [Test]
         public void EqualCollectionsAreEquivalent()
         {
@@ -170,7 +154,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(ints, Is.EquivalentTo(strings).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if !NET35
         [Test]
         public static void UsesProvidedGenericEqualityComparison()
         {
@@ -273,6 +256,145 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(writer.ToString(), Is.EqualTo(expectedMessage));
         }
-#endif
+
+        // The following tests are each running in 14ms to 46ms on my machine. Based on that,
+        // warn at 100ms and fail at 500ms
+        const int LARGE_COLLECTION_WARN_TIME = 100;
+        const int LARGE_COLLECTION_FAIL_TIME = 500;
+
+        [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeIntCollectionsInSameOrder()
+        {
+            var actual = Enumerable.Range(0, SIZE);
+            var expected = Enumerable.Range(0, SIZE);
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(actual);
+            var constraintResult = constraint.ApplyTo(expected);
+            Assert.That(constraintResult.IsSuccess, Is.True);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeIntCollectionsInReversedOrder()
+        {
+            var actual = Enumerable.Range(0, SIZE);
+            var expected = Enumerable.Range(0, SIZE).Select(i => SIZE - i - 1);
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(actual);
+            var constraintResult = constraint.ApplyTo(expected);
+            Assert.That(constraintResult.IsSuccess, Is.True);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeStringCollectionsInSameOrder()
+        {
+            var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
+            var expected = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(actual);
+            var constraintResult = constraint.ApplyTo(expected);
+            Assert.That(constraintResult.IsSuccess, Is.True);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeStringCollectionsInReversedOrder()
+        {
+            var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
+            var expected = Enumerable.Range(0, SIZE).Select(i => (SIZE - i - 1).ToString()).ToList();
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(actual);
+            var constraintResult = constraint.ApplyTo(expected);
+            Assert.That(constraintResult.IsSuccess, Is.True);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeStringCollection()
+        {
+            var actual = new StringCollection();
+            var expected = new StringCollection();
+            foreach(var i in Enumerable.Range(0, SIZE))
+            {
+                actual.Add(i.ToString());
+                expected.Add(i.ToString());
+            }
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(actual);
+            var constraintResult = constraint.ApplyTo(expected);
+            Assert.That(constraintResult.IsSuccess, Is.True);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeByteCollectionsNotEquivalent()
+        {
+            byte[] data = new byte[SIZE];
+            byte[] encrypted = new byte[SIZE];
+            encrypted[0] = 2;
+            encrypted[1] = 3;
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(data);
+            var constraintResult = constraint.ApplyTo(encrypted);
+            Assert.That(constraintResult.IsSuccess, Is.False);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
+
+        [Test(Description = "Issue #2598 - Is.Not.EquivalentTo is extremely slow")]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        public void LargeByteCollectionsNotEquivalentAtEnd()
+        {
+            byte[] data = new byte[SIZE];
+            byte[] encrypted = new byte[SIZE];
+            encrypted[SIZE - 2] = 2;
+            encrypted[SIZE - 1] = 3;
+
+            var watch = Stopwatch.StartNew();
+
+            var constraint = new CollectionEquivalentConstraint(data);
+            var constraintResult = constraint.ApplyTo(encrypted);
+            Assert.That(constraintResult.IsSuccess, Is.False);
+
+            watch.Stop();
+            if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
+                Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
+        }
     }
 }

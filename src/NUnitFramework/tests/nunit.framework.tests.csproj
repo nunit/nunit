@@ -1,47 +1,28 @@
-﻿<Project>
-  <PropertyGroup Condition="'$(OS)' == 'Windows_NT' and '$(TargetFramework)' != 'netcoreapp2.1'">
-    <UseWindowsFormsAndWPF>true</UseWindowsFormsAndWPF>
-    <DefineConstants>$(DefineConstants);UseWindowsFormsAndWPF</DefineConstants>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;net46;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net45;net46;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
 
     <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
-    <!-- Microsoft.Bcl.Build workaround https://github.com/nunit/nunit/issues/2663 -->
-    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+    <PackageReference Include="System.ValueTuple" version="4.5.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
     <ProjectReference Include="..\slow-tests\slow-nunit-tests.csproj" />
     <ProjectReference Include="..\testdata\nunit.testdata.csproj" />
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net35' and '$(TargetFramework)' != 'net40'">
     <ProjectReference Include="..\testdata.fsharp\nunit.testdata.fsharp.fsproj" />
-
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="Microsoft.Bcl" version="1.1.10" />
-    <PackageReference Include="Microsoft.Bcl.Async" version="1.0.168" />
-    <PackageReference Include="Microsoft.Bcl.Build" version="1.0.21" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' != 'net35'">
-    <PackageReference Include="System.ValueTuple" version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
@@ -66,7 +47,4 @@
   <ItemGroup>
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
-
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" Condition="'$(UseWindowsFormsAndWPF)' != 'true'" />
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.WindowsDesktop" Condition="'$(UseWindowsFormsAndWPF)' == 'true'" />
 </Project>

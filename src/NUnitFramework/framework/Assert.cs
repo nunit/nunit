@@ -1,31 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -38,13 +18,11 @@ namespace NUnit.Framework
     /// </summary>
     public delegate void TestDelegate();
 
-#if TASK_PARALLEL_LIBRARY_API
     /// <summary>
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
     /// </summary>
     public delegate System.Threading.Tasks.Task AsyncTestDelegate();
-#endif
 
     /// <summary>
     /// The Assert class contains a collection of static methods that
@@ -92,6 +70,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Pass(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
@@ -111,6 +90,7 @@ namespace NUnit.Framework
         /// of success returned to NUnit.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        [DoesNotReturn]
         static public void Pass(string? message)
         {
             Assert.Pass(message, null);
@@ -121,6 +101,7 @@ namespace NUnit.Framework
         /// that are passed in. This allows a test to be cut short, with a result
         /// of success returned to NUnit.
         /// </summary>
+        [DoesNotReturn]
         static public void Pass()
         {
             Assert.Pass(string.Empty, null);
@@ -200,6 +181,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Ignore(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
@@ -218,6 +200,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as ignored.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        [DoesNotReturn]
         static public void Ignore(string? message)
         {
             Assert.Ignore(message, null);
@@ -227,6 +210,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="IgnoreException"/>.
         /// This causes the test to be reported as ignored.
         /// </summary>
+        [DoesNotReturn]
         static public void Ignore()
         {
             Assert.Ignore(string.Empty, null);
@@ -234,7 +218,7 @@ namespace NUnit.Framework
 
         #endregion
 
-        #region InConclusive
+        #region Inconclusive
 
         /// <summary>
         /// Throws an <see cref="InconclusiveException"/> with the message and arguments
@@ -242,6 +226,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Inconclusive(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
@@ -260,6 +245,7 @@ namespace NUnit.Framework
         /// passed in. This causes the test to be reported as inconclusive.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
+        [DoesNotReturn]
         static public void Inconclusive(string? message)
         {
             Assert.Inconclusive(message, null);
@@ -269,6 +255,7 @@ namespace NUnit.Framework
         /// Throws an <see cref="InconclusiveException"/>.
         /// This causes the test to be reported as Inconclusive.
         /// </summary>
+        [DoesNotReturn]
         static public void Inconclusive()
         {
             Assert.Inconclusive(string.Empty, null);
@@ -335,7 +322,6 @@ namespace NUnit.Framework
             }
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         /// <summary>
         /// Wraps code containing a series of assertions, which should all
         /// be executed, even if they fail. Failed results are saved and
@@ -364,7 +350,6 @@ namespace NUnit.Framework
                 throw new MultipleAssertException(context.CurrentResult);
             }
         }
-#endif
 
         #endregion
 
@@ -411,12 +396,10 @@ namespace NUnit.Framework
         /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the
         /// Environment.StackTrace property." See also <see cref="ExceptionExtensions.GetStackTraceWithoutThrowing"/>.
         /// </summary>
-#if !NET35
         // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
-#endif
         private static string GetEnvironmentStackTraceWithoutThrowing()
         {
             try

@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Internal;
@@ -60,6 +39,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (obj is System.Double) return true;
                 if (obj is System.Single) return true;
+                if (obj is System.Decimal) return true;
             }
             return false;
         }
@@ -70,6 +50,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (type == typeof(double)) return true;
                 if (type == typeof(float)) return true;
+                if (type == typeof(decimal)) return true;
             }
             return false;
         }
@@ -87,7 +68,6 @@ namespace NUnit.Framework.Constraints
             {
                 if (obj is System.Byte) return true;
                 if (obj is System.SByte) return true;
-                if (obj is System.Decimal) return true;
                 if (obj is System.Int32) return true;
                 if (obj is System.UInt32) return true;
                 if (obj is System.Int64) return true;
@@ -114,6 +94,11 @@ namespace NUnit.Framework.Constraints
                 if (type == typeof(char)) return true;
             }
             return false;
+        }
+
+        private static bool IsWithinDecimalRange(double value)
+        {
+            return value >= (double)decimal.MinValue && value <= (double)decimal.MaxValue;
         }
         #endregion
 
@@ -400,10 +385,13 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-                return Convert.ToDouble(expected).CompareTo(Convert.ToDouble(actual));
+            // Treat as decimal if one is decimal and other can be treated as decimal
+            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
+                return eDec.CompareTo(Convert.ToDecimal(actual));
+            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+                return Convert.ToDecimal(expected).CompareTo(aDec);
 
-            if (expected is decimal || actual is decimal)
+            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
                 return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
 
             if (expected is ulong || actual is ulong)
@@ -417,6 +405,76 @@ namespace NUnit.Framework.Constraints
 
             return Convert.ToInt32(expected).CompareTo(Convert.ToInt32(actual));
         }
+        #endregion
+
+        #region Numeric Difference
+
+        /// <summary>
+        /// Calculates the difference between 2 values in absolute/percent mode.
+        /// </summary>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        /// <param name="toleranceMode">Tolerance mode to specify difference representation</param>
+        /// <returns>The difference between the values</returns>
+        internal static object Difference(object expected, object actual, ToleranceMode toleranceMode)
+        {
+            switch (toleranceMode)
+            {
+                case ToleranceMode.Linear:
+                    return Difference(expected, actual, true);
+                case ToleranceMode.Percent:
+                    return Difference(expected, actual, false);
+                default:
+                    throw new InvalidOperationException("Cannot calculate a difference for specified tolerance mode");
+            }
+        }
+
+        private static object Difference(object expected, object actual, bool isAbsolute)
+        {
+            // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
+            if (!IsNumericType(expected) || !IsNumericType(actual))
+                return double.NaN;
+
+            // Treat as decimal if one is decimal and other can be treated as decimal
+            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
+            {
+                var difference = eDec - Convert.ToDecimal(actual);
+                return isAbsolute ? difference : difference / eDec * 100;
+            }
+            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+            {
+                var difference = Convert.ToDecimal(expected) - aDec;
+                return isAbsolute ? difference : difference / Convert.ToDecimal(expected) * 100;
+            }
+
+            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
+            {
+                var difference = Convert.ToDouble(expected) - Convert.ToDouble(actual);
+                return isAbsolute ? difference : difference / Convert.ToDouble(expected) * 100;
+            }
+
+            if (expected is ulong || actual is ulong)
+            {
+                var difference = Convert.ToUInt64(expected) - Convert.ToUInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt64(expected) * 100;
+            }
+
+            if (expected is long || actual is long)
+            {
+                var difference = Convert.ToInt64(expected) - Convert.ToInt64(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToInt64(expected) * 100;
+            }
+
+            if (expected is uint || actual is uint)
+            {
+                var difference = Convert.ToUInt32(expected) - Convert.ToUInt32(actual);
+                return isAbsolute ? difference : difference / (double)Convert.ToUInt32(expected) * 100;
+            }
+
+            var intDifference = Convert.ToInt32(expected) - Convert.ToInt32(actual);
+            return isAbsolute ? intDifference : intDifference / (double)Convert.ToInt32(expected) * 100;
+        }
+
         #endregion
     }
 }

@@ -50,11 +50,50 @@
   <xs:attributeGroup name="TestCaseAttributeGroup">
     <xs:attributeGroup ref="TestBaseAttributeGroup" />
     <xs:attribute name="seed" type="xs:string" use="required" />
-  </xs:attributeGroup>
+  </xs:attributeGroup> 
 
   <!-- NUnit.Framework.Internal.TestSuite.AddToXml -->
   <xs:complexType name="TestSuiteElementType">
     <xs:sequence>
+      <!-- NUnit.Framework.Api.FrameworkController.InsertEnvironmentElement -->
+      <xs:element name="environment" minOccurs="0">
+        <xs:complexType>
+          <xs:attribute name="framework-version" type="xs:string" use="required" />
+          <xs:attribute name="clr-version" type="xs:string" use="required" />
+          <xs:attribute name="os-version" type="xs:string" use="required" />
+          <xs:attribute name="platform" type="xs:string" />
+          <xs:attribute name="cwd" type="xs:string" use="required" />
+          <xs:attribute name="machine-name" type="xs:string" />
+          <xs:attribute name="user" type="xs:string" />
+          <xs:attribute name="user-domain" type="xs:string" />
+          <xs:attribute name="culture" type="xs:string" use="required" />
+          <xs:attribute name="uiculture" type="xs:string" use="required" />
+          <xs:attribute name="os-architecture" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+      <!-- NUnit.Framework.Api.FrameworkController.InsertSettingsElement -->
+      <xs:element name="settings" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <!-- NUnit.Framework.Api.FrameworkController.AddSetting -->
+            <xs:element name="setting" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <!-- NUnit.Framework.Api.FrameworkController.AddDictionaryEntries -->
+                  <xs:element name="item" minOccurs="0" maxOccurs ="unbounded">
+                    <xs:complexType>
+                      <xs:attribute name="key" type="xs:string" use="required" />
+                      <xs:attribute name="value" type="xs:string" use="required" />
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string" use="required" />
+                <xs:attribute name="value" type="xs:string" />
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
       <xs:group ref="TestBaseElementGroup" />
       <xs:group ref="ContainedTestGroup" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>

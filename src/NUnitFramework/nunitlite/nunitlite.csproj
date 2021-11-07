@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net35;net40;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <RootNamespace>NUnitLite</RootNamespace>
   </PropertyGroup>
 
@@ -17,6 +17,10 @@
   <ItemGroup>
     <None Include="..\framework\Schemas\*.xsd" LinkBase="Schemas" CopyToOutputDirectory="Always" />
     <None Update="Schemas\*.xsd" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

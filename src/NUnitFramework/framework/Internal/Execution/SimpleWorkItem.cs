@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2012-2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Threading;
@@ -27,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -40,16 +20,6 @@ namespace NUnit.Framework.Internal.Execution
         private readonly IDebugger _debugger;
 
         readonly TestMethod _testMethod;
-
-        /// <summary>
-        /// Construct a simple work item for a test.
-        /// </summary>
-        /// <param name="test">The test to be executed</param>
-        /// <param name="filter">The filter used to select this test</param>
-        [Obsolete("This member will be removed in a future major release.")]
-        public SimpleWorkItem(TestMethod test, ITestFilter filter) : this(test, filter, new DebuggerProxy())
-        {
-        }
 
         /// <summary>
         /// Construct a simple work item for a test.
@@ -130,13 +100,18 @@ namespace NUnit.Framework.Internal.Execution
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(SetUpAttribute), true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Reflect.GetMethodsWithAttribute(Test.TypeInfo.Type, typeof(TearDownAttribute), true);
+                var setUpMethods = parentFixture?.SetUpMethods ?? Test.TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? Test.TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
                 foreach (var item in setUpTearDownList)
                     command = new SetUpTearDownCommand(command, item);
+
+                // Dispose of fixture if necessary
+                var isInstancePerTestCase = Test.HasLifeCycle(LifeCycle.InstancePerTestCase);
+                if (isInstancePerTestCase && parentFixture is IDisposableFixture && typeof(IDisposable).IsAssignableFrom(parentFixture.TypeInfo.Type))
+                    command = new DisposeFixtureCommand(command);
 
                 // In the current implementation, upstream actions only apply to tests. If that should change in the future,
                 // then actions would have to be tested for here. For now we simply assert it in Debug. We allow
@@ -160,6 +135,11 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
                     command = new ApplyChangesToContextCommand(command, attr);
 
+                // Add a construct command and optionally a dispose command in case of instance per test case.
+                if (isInstancePerTestCase)
+                {
+                    command = new FixturePerTestCaseCommand(command);
+                }
                 // If a timeout is specified, create a TimeoutCommand
                 // Timeout set at a higher level
                 int timeout = Context.TestCaseTimeout;

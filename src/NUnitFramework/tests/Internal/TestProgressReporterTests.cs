@@ -1,31 +1,12 @@
-// ***********************************************************************
-// Copyright (c) 2017 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
+using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -61,6 +42,20 @@ namespace NUnit.Framework.Internal
             Assert.That(startReport, Contains.Substring("type=\"Assembly\""));
 
             Assert.That(_listener.Reports.Count(x => x.StartsWith("<start-suite") && x.Contains("type=\"Assembly\"")), Is.EqualTo(1), "More than one Assembly event");
+        }
+
+        [Test]
+        public void TestStarted_AssemblyIncludesFrameworkVersion()
+        {
+            var work = TestBuilder.CreateWorkItem(new TestAssembly("mytest.dll"));
+            work.Context.Listener = _reporter;
+
+            TestBuilder.ExecuteWorkItem(work);
+
+            var startReport = _listener.Reports.FirstOrDefault();
+            Assert.NotNull(startReport);
+            Assert.That(startReport, Does.StartWith("<start-suite"));
+            Assert.That(startReport, Contains.Substring($"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\""));
         }
 
         [Test]

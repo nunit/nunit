@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -101,7 +80,13 @@ namespace NUnitLite.Tests
                 "Tests Not Run\n\n" +
                 "1) Ignored : NUnit.Tests.Assemblies.MockTestFixture.IgnoreTest\n" +
                 "Ignore Message\n\n" +
-                "2) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest\n\n"));
+                "2) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(1)\n"+
+                "Ignore testcase\n\n"+
+                "3) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(2)\n"+
+                "Ignore testcase\n\n"+
+                "4) Ignored : NUnit.Tests.Assemblies.MockTestFixture.SkippedTest(3)\n"+
+                "Ignore testcase\n\n"+
+                "5) Explicit : NUnit.Tests.Assemblies.MockTestFixture.ExplicitTest\n\n"));
         }
 
         [Test]
@@ -112,9 +97,9 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(
                 "Test Run Summary\n" +
                 "  Overall result: Failed\n" +
-                "  Test Count: 10, Passed: 2, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 2\n" +
+                "  Test Count: 13, Passed: 2, Failed: 4, Warnings: 1, Inconclusive: 1, Skipped: 5\n" +
                 "    Failed Tests - Failures: 1, Errors: 1, Invalid: 2\n" +
-                "    Skipped Tests - Ignored: 1, Explicit: 1, Other: 0\n" +
+                "    Skipped Tests - Ignored: 4, Explicit: 1, Other: 0\n" +
                 "  Start time: 2014-12-02 12:34:56Z\n" +
                 "    End time: 2014-12-02 12:34:56Z\n" +
                 "    Duration: 0.123 seconds\n\n"));

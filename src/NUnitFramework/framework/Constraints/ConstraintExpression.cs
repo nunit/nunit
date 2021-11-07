@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -359,6 +338,18 @@ namespace NUnit.Framework.Constraints
         public NullConstraint Null
         {
             get { return (NullConstraint)this.Append(new NullConstraint()); }
+        }
+
+        #endregion
+
+        #region Null
+
+        /// <summary>
+        /// Returns a constraint that tests for default value
+        /// </summary>
+        public DefaultConstraint Default
+        {
+            get { return (DefaultConstraint)this.Append(new DefaultConstraint()); }
         }
 
         #endregion
@@ -802,30 +793,6 @@ namespace NUnit.Framework.Constraints
         }
         #endregion
 
-        #region StringContaining
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
-        public SubstringConstraint StringContaining(string expected)
-        {
-            return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value contains the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Contains instead.")]
-        public SubstringConstraint ContainsSubstring(string expected)
-        {
-            return (SubstringConstraint)this.Append(new SubstringConstraint(expected));
-        }
-
-        #endregion
-
         #region StartsWith
 
         /// <summary>
@@ -842,16 +809,6 @@ namespace NUnit.Framework.Constraints
         /// value starts with the substring supplied as an argument.
         /// </summary>
         public StartsWithConstraint StartsWith(string expected)
-        {
-            return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
-        }
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value starts with the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.StartWith or StartsWith instead.")]
-        public StartsWithConstraint StringStarting(string expected)
         {
             return (StartsWithConstraint)this.Append(new StartsWithConstraint(expected));
         }
@@ -878,16 +835,6 @@ namespace NUnit.Framework.Constraints
             return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
         }
 
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value ends with the substring supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.EndWith or EndsWith instead.")]
-        public EndsWithConstraint StringEnding(string expected)
-        {
-            return (EndsWithConstraint)this.Append(new EndsWithConstraint(expected));
-        }
-
         #endregion
 
         #region Matches
@@ -900,7 +847,7 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
@@ -918,7 +865,7 @@ namespace NUnit.Framework.Constraints
         {
             return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
-        
+
         /// <summary>
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
@@ -926,17 +873,6 @@ namespace NUnit.Framework.Constraints
         public RegexConstraint Matches(Regex regex)
         {
             return (RegexConstraint)this.Append(new RegexConstraint(regex));
-        }
-
-
-        /// <summary>
-        /// Returns a constraint that succeeds if the actual
-        /// value matches the regular expression supplied as an argument.
-        /// </summary>
-        [Obsolete("This method has been deprecated and will be removed in a future release. Please use Does.Match or Matches instead.")]
-        public RegexConstraint StringMatching(string pattern)
-        {
-            return (RegexConstraint)this.Append(new RegexConstraint(pattern));
         }
 
         #endregion
@@ -1021,6 +957,20 @@ namespace NUnit.Framework.Constraints
             }
 
             return (AnyOfConstraint)this.Append(new AnyOfConstraint(expected));
+        }
+
+        #endregion
+
+        #region ItemAt
+
+        /// <summary>
+        /// Returns a new IndexerConstraintExpression, which will
+        /// apply any following constraint to that indexer value.
+        /// </summary>
+        /// <param name="indexArgs">Index accessor values.</param>
+        public ConstraintExpression ItemAt(params object[] indexArgs)
+        {
+            return this.Append(new IndexerOperator(indexArgs));
         }
 
         #endregion

@@ -1,25 +1,5 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -79,7 +59,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[0], "hello", typeof(Array) };
 
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( 42, "<System.Int32>" ),
             new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
@@ -103,7 +83,7 @@ namespace NUnit.Framework.Constraints
 
         static object[] SuccessData = new object[] { new int[5], "hello" };
 
-        static object[] FailureData = new object[] { 
+        static object[] FailureData = new object[] {
             new TestCaseData( new int[3], "3" ),
             new TestCaseData( "goodbye", "7" ) };
 
@@ -184,7 +164,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(r.Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(r.Description, Is.EqualTo("property Foo and property Bar property Length equal to 5"));
             Assert.That(r.ActualValue, Is.EqualTo(inputObject));
-        }   
+        }
 
         [Test]
         public void FailureMessageContainsChainedConstraintMessage()
@@ -193,7 +173,7 @@ namespace NUnit.Framework.Constraints
 
             //Property Constraint Message with chained Equivalent Constraint.
             var constraint = ((IResolveConstraint)Has.Property("Foo").EquivalentTo(new List<int> { 2, 3, 5, 8 })).Resolve();
-            
+
             //Apply the constraint and write message.
             var result = constraint.ApplyTo(inputObject);
             var textMessageWriter = new TextMessageWriter();

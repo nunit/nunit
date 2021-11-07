@@ -1,38 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2016 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#endif
-
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
 
 namespace NUnit.TestData
 {
@@ -291,7 +263,6 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFour), Is.Not.EqualTo(4), getExceptionMessage);
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Passes_Async()
         {
@@ -303,7 +274,6 @@ namespace NUnit.TestData
         {
             Warn.If(async () => await One(), Is.Not.EqualTo(1));
         }
-#endif
 
         #endregion
 
@@ -571,7 +541,6 @@ namespace NUnit.TestData
             Warn.If(new ActualValueDelegate<int>(ReturnsFive), Is.Not.EqualTo(4), getExceptionMessage);
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void WarnUnless_Fails_Async()
         {
@@ -583,7 +552,6 @@ namespace NUnit.TestData
         {
             Warn.If(async () => await One(), Is.Not.EqualTo(2));
         }
-#endif
 
         #endregion
 
@@ -627,12 +595,10 @@ namespace NUnit.TestData
             return 5;
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         private static Task<int> One()
         {
             return Task.Run(() => 1);
         }
-#endif
 
         #endregion
 
@@ -709,7 +675,6 @@ namespace NUnit.TestData
             }
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public static void WarningInTaskRun()
         {
@@ -723,7 +688,6 @@ namespace NUnit.TestData
             await Task.Delay(1);
             Assert.Warn("(Warning message)");
         }
-#endif
 
 #endregion
     }

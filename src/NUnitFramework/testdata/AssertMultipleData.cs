@@ -1,12 +1,8 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using NUnit.Framework;
-
-#if TASK_PARALLEL_LIBRARY_API
 using System.Threading.Tasks;
-#if NET40
-using Task = System.Threading.Tasks.TaskEx;
-#endif
-#endif
 
 namespace NUnit.TestData.AssertMultipleData
 {
@@ -353,7 +349,6 @@ namespace NUnit.TestData.AssertMultipleData
             });
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void ThreeAssertsSucceed_Async()
         {
@@ -433,7 +428,6 @@ namespace NUnit.TestData.AssertMultipleData
                 });
             });
         }
-#endif
     }
 
     class ComplexNumber

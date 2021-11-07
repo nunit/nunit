@@ -1,30 +1,11 @@
-// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
 using System;
+using System.Reflection;
 using System.Web.UI;
+using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -57,21 +38,20 @@ namespace NUnit.Framework.Internal
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            string startElement = test is TestSuite
-                ? "start-suite"
-                : "start-test";
-
             var parent = GetParent(test);
             try
             {
-                string report = string.Format(
-                    "<{0} id=\"{1}\" parentId=\"{2}\" name=\"{3}\" fullname=\"{4}\" type=\"{5}\"/>",
-                    startElement,
-                    test.Id,
-                    parent != null ? parent.Id : string.Empty,
-                    FormatAttributeValue(test.Name),
-                    FormatAttributeValue(test.FullName),
-                    test.TestType);
+                string report;
+                if (test is TestSuite)
+                {
+                    // Only add framework-version for the Assembly start-suite
+                    string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\" " : "";
+                    report = $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" {version}/>";
+                }
+                else
+                {
+                    report = $"<start-test id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" classname=\"{FormatAttributeValue(test.ClassName ?? "")}\" methodname=\"{FormatAttributeValue(test.MethodName ?? "")}\"/>";
+                }
 
                 handler.RaiseCallbackEvent(report);
             }

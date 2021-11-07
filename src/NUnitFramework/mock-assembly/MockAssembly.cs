@@ -1,27 +1,7 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -113,12 +93,12 @@ namespace NUnit.Tests
         [Category("FixtureCategory")]
         public class MockTestFixture
         {
-            public const int Tests = 10;
-            public const int Suites = 1;
+            public const int Tests = 13;
+            public const int Suites = 2;
 
             public const int Passed = 2;
 
-            public const int Skipped_Ignored = 1;
+            public const int Skipped_Ignored = 4;
             public const int Skipped_Explicit = 1;
             public const int Skipped = Skipped_Ignored + Skipped_Explicit;
 
@@ -154,6 +134,19 @@ namespace NUnit.Tests
 
             [Test, Ignore("Ignore Message")]
             public void IgnoreTest() { }
+
+            [TestCaseSource(nameof(SkippedTestCaseData))]
+            public void SkippedTest(int _)
+            {
+                Assert.Pass();
+            }
+
+            public static IEnumerable<TestCaseData> SkippedTestCaseData => new[]
+            {
+                new TestCaseData(1).Ignore("Ignore testcase"),
+                new TestCaseData(2).Ignore("Ignore testcase"),
+                new TestCaseData(3).Ignore("Ignore testcase")
+            };
 
             [Test, Explicit]
             public void ExplicitTest() { }

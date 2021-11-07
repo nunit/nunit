@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2009 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -72,5 +51,98 @@ namespace NUnit.Framework.Constraints
             Assert.That(comparer.Compare(greater, lesser) > 0);
             Assert.That(comparer.Compare(lesser, greater) < 0);
         }
+
+        [Test]
+        public void Comparables()
+        {
+            var greater = new ClassWithIComparable(42);
+            var lesser = new ClassWithIComparable(-42);
+
+            Assert.That(comparer.Compare(greater, lesser) > 0);
+            Assert.That(comparer.Compare(lesser, greater) < 0);
+        }
+
+        [Test]
+        public void ComparablesOfT()
+        {
+            var greater = new ClassWithIComparableOfT(42);
+            var lesser = new ClassWithIComparableOfT(-42);
+
+            Assert.That(comparer.Compare(greater, lesser) > 0);
+            Assert.That(comparer.Compare(lesser, greater) < 0);
+        }
+
+        [Test]
+        public void ComparablesOfInt1()
+        {
+            int greater = 42;
+            var lesser = new ClassWithIComparableOfT(-42);
+
+            Assert.That(comparer.Compare(greater, lesser) > 0);
+            Assert.That(comparer.Compare(lesser, greater) < 0);
+        }
+
+        [Test]
+        public void ComparablesOfInt2()
+        {
+            var greater = new ClassWithIComparableOfT(42);
+            int lesser = -42;
+
+            Assert.That(comparer.Compare(greater, lesser) > 0);
+            Assert.That(comparer.Compare(lesser, greater) < 0);
+        }
+
+        [Test]
+        public void ComparablesOfInt3()
+        {
+            short greater = 42;
+            var lesser = new ClassWithIComparableOfT(-42);
+
+            Assert.That(comparer.Compare(greater, lesser) > 0);
+            Assert.That(comparer.Compare(lesser, greater) < 0);
+        }
+
+        #region Comparison Test Classes
+
+        private class ClassWithIComparable : IComparable
+        {
+            private readonly int val;
+
+            public ClassWithIComparable(int val)
+            {
+                this.val = val;
+            }
+
+            public int CompareTo(object x)
+            {
+                ClassWithIComparable other = x as ClassWithIComparable;
+                if (x is ClassWithIComparable)
+                    return val.CompareTo(other.val);
+
+                throw new ArgumentException();
+            }
+        }
+
+        private class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
+        {
+            private readonly int val;
+
+            public ClassWithIComparableOfT(int val)
+            {
+                this.val = val;
+            }
+
+            public int CompareTo(ClassWithIComparableOfT other)
+            {
+                return val.CompareTo(other.val);
+            }
+
+            public int CompareTo(int other)
+            {
+                return val.CompareTo(other);
+            }
+        }
+
+        #endregion
     }
 }

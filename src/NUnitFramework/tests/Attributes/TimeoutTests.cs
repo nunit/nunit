@@ -1,32 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2012-2018 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
@@ -81,9 +59,7 @@ namespace NUnit.Framework.Attributes
                 yield return new TestAction(() => Assert.Ignore(IgnoreMessage), AssertIgnoreResult, "Ignore");
                 yield return new TestAction(() => Assert.Inconclusive(InconclusiveMessage), AssertInconclusiveResult, "Inconclusive");
                 yield return new TestAction(MultipleFail, AssertFailResult, "Multiple > Fail");
-#if !NET35 && !NET40
                 yield return new TestAction(AsynchronousMultipleFail, AssertFailResult, "Multiple > Async Fail");
-#endif
             }
         }
 
@@ -92,7 +68,6 @@ namespace NUnit.Framework.Attributes
             Assert.Multiple(() => Assert.Fail(FailureMessage));
         }
 
-#if !NET35 && !NET40
         private static void AsynchronousMultipleFail()
         {
             Assert.Multiple(async () =>
@@ -101,7 +76,6 @@ namespace NUnit.Framework.Attributes
                 Assert.Fail(FailureMessage);
             });
         }
-#endif
 
         private static void AssertPassedResult(ITestResult result)
         {

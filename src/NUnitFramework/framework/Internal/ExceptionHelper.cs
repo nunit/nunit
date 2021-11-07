@@ -1,36 +1,12 @@
-// ***********************************************************************
-// Copyright (c) 2010 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
 using System;
 using System.Collections;
-using System.Globalization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -39,25 +15,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class ExceptionHelper
     {
-#if NET35 || NET40
-        private static readonly Action<Exception> PreserveStackTrace;
-
-        static ExceptionHelper()
-        {
-            var method = typeof(Exception).GetMethod("InternalPreserveStackTrace", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (method != null)
-            {
-                try
-                {
-                    PreserveStackTrace = (Action<Exception>)Delegate.CreateDelegate(typeof(Action<Exception>), method);
-                    return;
-                }
-                catch (InvalidOperationException) { }
-            }
-            PreserveStackTrace = _ => { };
-        }
-#endif
 
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
@@ -65,12 +22,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception to rethrow</param>
         public static void Rethrow(Exception exception)
         {
-#if NET35 || NET40
-            PreserveStackTrace(exception);
-            throw exception;
-#else
             System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(exception).Throw();
-#endif
         }
 
         /// <summary>
@@ -174,7 +126,6 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in reflectionException.LoaderExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-#if TASK_PARALLEL_LIBRARY_API
             if (exception is AggregateException aggregateException)
             {
                 result.AddRange(aggregateException.InnerExceptions);
@@ -182,9 +133,7 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in aggregateException.InnerExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-            else
-#endif
-            if (exception.InnerException != null)
+            else if (exception.InnerException != null)
             {
                 result.Add(exception.InnerException);
                 result.AddRange(FlattenExceptionHierarchy(exception.InnerException));

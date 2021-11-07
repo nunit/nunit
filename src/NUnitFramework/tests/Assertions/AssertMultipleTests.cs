@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2014 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Interfaces;
@@ -42,11 +21,9 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(AM.NestedBlocksInMethodCalls), 3)]
         [TestCase(nameof(AM.ThreeWarnIf_AllPass), 3)]
         [TestCase(nameof(AM.ThreeWarnUnless_AllPass), 3)]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(AM.ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.NestedBlock_ThreeAssertsSucceed_Async), 3)]
         [TestCase(nameof(AM.TwoNestedBlocks_ThreeAssertsSucceed_Async), 3)]
-#endif
         public void AssertMultipleSucceeds(string methodName, int asserts)
         {
             CheckResult(methodName, ResultState.Success, asserts);
@@ -63,10 +40,8 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(AM.MethodCallsFailAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "Message from Assert.Fail")]
         [TestCase(nameof(AM.TwoAssertsFailAfterWarning), 2, "WARNING", "Expected: 5", "ImaginaryPart")]
         [TestCase(nameof(AM.WarningAfterTwoAssertsFail), 2, "Expected: 5", "ImaginaryPart", "WARNING")]
-#if TASK_PARALLEL_LIBRARY_API
         [TestCase(nameof(AM.TwoAsserts_BothAssertsFail_Async), 2, "RealPart", "ImaginaryPart")]
         [TestCase(nameof(AM.TwoNestedBlocks_TwoAssertsFail_Async), 3, "Expected: 5", "ImaginaryPart")]
-#endif
         public void AssertMultipleFails(string methodName, int asserts, params string[] assertionMessages)
         {
             CheckResult(methodName, ResultState.Failure, asserts, assertionMessages);

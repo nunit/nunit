@@ -1,15 +1,7 @@
 image: Visual Studio 2019
 
-branches:
-  except:
-    - /travis-.*/
-
-install:
-  - ps: Invoke-WebRequest 'https://dot.net/v1/dotnet-install.ps1' -OutFile 'dotnet-install.ps1'
-  - ps: .\dotnet-install.ps1 -Version 5.0.100-preview.6.20318.15
-
 build_script:
-  - ps: .\build.ps1 -Target "Appveyor" -Configuration "Release"
+  - ps: .\build.ps1 --target=Appveyor --configuration=Release
 
 # disable built-in tests.
 test: off
@@ -22,6 +14,6 @@ deploy:
     skip_symbols: true
     on:
       branch: master
-      
+
 # For PRs, skip the branch run and only run against the virtual PR merge.
 skip_branch_with_pr: true

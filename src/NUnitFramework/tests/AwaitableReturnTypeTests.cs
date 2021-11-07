@@ -1,3 +1,5 @@
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
@@ -7,10 +9,8 @@ using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
 namespace NUnit.Framework
 {
-#if TASK_PARALLEL_LIBRARY_API
     [TestFixture(nameof(F.ReturnsTask))]
     [TestFixture(nameof(F.ReturnsCustomTask))]
-#endif
     [TestFixture(nameof(F.ReturnsCustomAwaitable))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitOnCompleted))]
     [TestFixture(nameof(F.ReturnsCustomAwaitableWithImplicitUnsafeOnCompleted))]
@@ -211,7 +211,6 @@ namespace NUnit.Framework
             Assert.That(result.Message, Contains.Substring("OperationCanceledException"));
         }
 
-#if TASK_PARALLEL_LIBRARY_API
         [Test]
         public void TaskCanceledExceptionThrownInGetResultShouldBeReportedAsSuch()
         {
@@ -223,6 +222,5 @@ namespace NUnit.Framework
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.Message, Contains.Substring("TaskCanceledException"));
         }
-#endif
     }
 }

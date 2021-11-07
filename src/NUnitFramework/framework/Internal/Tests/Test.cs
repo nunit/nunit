@@ -1,30 +1,10 @@
-// ***********************************************************************
-// Copyright (c) 2012-2015 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
@@ -108,8 +88,8 @@ namespace NUnit.Framework.Internal
             Method = method;
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
-            SetUpMethods = new MethodInfo[0];
-            TearDownMethods = new MethodInfo[0];
+            SetUpMethods = new IMethodInfo[0];
+            TearDownMethods = new IMethodInfo[0];
         }
 
         private static string GetNextId()
@@ -284,12 +264,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The SetUp methods.
         /// </summary>
-        public MethodInfo[] SetUpMethods { get; protected set; }
+        public IMethodInfo[] SetUpMethods { get; protected set; }
 
         /// <summary>
         /// The teardown methods
         /// </summary>
-        public MethodInfo[] TearDownMethods { get; protected set; }
+        public IMethodInfo[] TearDownMethods { get; protected set; }
 
         #endregion
 
@@ -335,7 +315,35 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            ApplyAttributesToTest(provider.GetAttributes<IApplyToTest>(inherit: true));
+            object[] allAttributes = provider.GetCustomAttributes(inherit: true);
+            IEnumerable<IApplyToTest> applyToTestAttributes =
+                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTest>();
+
+            ApplyAttributesToTest(applyToTestAttributes);
+        }
+
+        /// <summary>
+        /// Recursively apply the attributes on <paramref name="type"/> to this test,
+        /// including attributes on nesting types.
+        /// </summary>
+        /// <param name="type">The </param>
+        public void ApplyAttributesToTest(Type type)
+        {
+            foreach (var t in GetNestedTypes(type).Reverse()) 
+                ApplyAttributesToTest((ICustomAttributeProvider) t.GetTypeInfo());
+        }
+        
+        /// <summary>
+        /// Returns all nested types, inner first.
+        /// </summary>
+        private IEnumerable<Type> GetNestedTypes(Type inner)
+        {
+            var current = inner;
+            while (current != null)
+            {
+                yield return current;
+                current = current.DeclaringType;
+            }
         }
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)

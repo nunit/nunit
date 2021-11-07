@@ -1,27 +1,7 @@
-// ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-//
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 using System.Xml;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
@@ -123,11 +103,15 @@ namespace NUnit.Framework.Internal
         /// <returns>True if at least one descendant matches the filter criteria</returns>
         protected virtual bool MatchDescendant(ITest test)
         {
-            if (test.Tests == null)
+            var tests = test.Tests;
+            if (tests == null)
                 return false;
 
-            foreach (ITest child in test.Tests)
+            // Use for-loop to avoid allocating the enumerator
+            int count = tests.Count;
+            for (var index = 0; index < count; index++)
             {
+                ITest child = tests[index];
                 if (Match(child) || MatchDescendant(child))
                     return true;
             }
@@ -172,16 +156,20 @@ namespace NUnit.Framework.Internal
             {
                 case "filter":
                 case "and":
-                    var andFilter = new AndFilter();
+                    List<TestFilter> childFilters = new List<TestFilter>();
+
                     foreach (var childNode in node.ChildNodes)
-                        andFilter.Add(FromXml(childNode));
-                    return andFilter;
+                        childFilters.Add(FromXml(childNode));
+
+                    return new AndFilter(childFilters.ToArray());
 
                 case "or":
-                    var orFilter = new OrFilter();
+                    List<TestFilter> orChildFilters = new List<TestFilter>();
+
                     foreach (var childNode in node.ChildNodes)
-                        orFilter.Add(FromXml(childNode));
-                    return orFilter;
+                        orChildFilters.Add(FromXml(childNode));
+
+                    return new OrFilter(orChildFilters.ToArray());
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));

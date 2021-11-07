@@ -1,25 +1,4 @@
-// ***********************************************************************
-// Copyright (c) 2008 Charlie Poole, Rob Prouse
-//
-// Permission is hereby granted, free of charge, to any person obtaining
-// a copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to
-// permit persons to whom the Software is furnished to do so, subject to
-// the following conditions:
-// 
-// The above copyright notice and this permission notice shall be
-// included in all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// ***********************************************************************
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -121,20 +100,6 @@ namespace NUnit.Framework.Assertions
             Assert.That(five, Is.GreaterThanOrEqualTo(5m));
             //Assert.That(3m, Is.LessThan(five));
             //Assert.That(5m, Is.LessThanOrEqualTo(five));
-        }
-
-        [Test]
-        public void CanCompareWithTolerance()
-        {
-            double? five = 5.0;
-
-            Assert.AreEqual(5.0000001, five, .0001); 
-            Assert.That( five, Is.EqualTo(5.0000001).Within(.0001));
-
-            float? three = 3.0f;
-
-            Assert.AreEqual(3.00001f, three, .001);
-            Assert.That( three, Is.EqualTo(3.00001f).Within(.001));
         }
 
         private enum Colors
