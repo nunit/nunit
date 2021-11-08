@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNullOrEmpty(name, nameof(name));
 
-            Id = SetNextId();
+            Id = GetNextId();
             Name = name;
             FullName = !string.IsNullOrEmpty(pathName)
                 ? pathName + '.' + name
@@ -92,9 +92,14 @@ namespace NUnit.Framework.Internal
             TearDownMethods = new IMethodInfo[0];
         }
 
-        internal string SetNextId()
+        internal void SetNextId()
         {
-            return Id = IdPrefix + unchecked(_nextID++);
+            Id = GetNextId();
+        }
+
+        private static string GetNextId()
+        {
+            return IdPrefix + unchecked(_nextID++);
         }
 
         #endregion
