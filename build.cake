@@ -35,7 +35,6 @@ var AllFrameworks = new string[]
 
 var NetCoreTests = new String[]
 {
-    "netcoreapp2.1",
     "netcoreapp3.1"
 };
 
@@ -216,7 +215,7 @@ Task("Test45")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp2.1", "netcoreapp3.1", "net5.0" })
+foreach (var runtime in new[] { "netcoreapp3.1", "net5.0" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
@@ -343,8 +342,7 @@ Task("PackageZip")
         var zipFiles =
             GetFiles(CurrentImageDir + "*.*") +
             GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netcoreapp2.0/**/*.*");
+            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 

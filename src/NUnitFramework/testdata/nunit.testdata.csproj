@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>NUnit.TestData</RootNamespace>
-    <TargetFrameworks>net45;net46;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net45;net46;netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

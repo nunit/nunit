@@ -48,11 +48,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup .NET Core SDK 2.1.x
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '2.1.x'
-
     - name: Setup .NET Core SDK 3.1.x
       uses: actions/setup-dotnet@v1
       with:
@@ -85,11 +80,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Setup .NET Core SDK 2.1.x
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '2.1.x'
 
     - name: Setup .NET Core SDK 3.1.x
       uses: actions/setup-dotnet@v1

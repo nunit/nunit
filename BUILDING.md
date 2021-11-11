@@ -38,7 +38,6 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
           net5.0
           net45
           net46
-          netcoreapp2.1
           netcoreapp3.1
           netstandard2.0
 ```
