@@ -284,7 +284,6 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(result.IsSuccess);
         }
-#endif
 
         // The following tests are each running in 14ms to 46ms on my machine. Based on that,
         // warn at 100ms and fail at 500ms

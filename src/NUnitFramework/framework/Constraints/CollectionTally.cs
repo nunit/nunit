@@ -68,8 +68,7 @@ namespace NUnit.Framework.Constraints
         {
             this.comparer = comparer;
 
-            foreach (object o in c)
-                _missingItems.Add(o);
+            _missingItems = ToArrayList(c);
 
             if (c.IsSortable())
             {
@@ -120,9 +119,7 @@ namespace NUnit.Framework.Constraints
         {
             if (_isSortable && c.IsSortable())
             {
-                var remove = new ArrayList();
-                foreach (object o in c)
-                    remove.Add(o);
+                var remove = ToArrayList(c);
 
                 if (TrySort(ref remove))
                 {
@@ -148,6 +145,18 @@ namespace NUnit.Framework.Constraints
                 foreach (object o in c)
                     TryRemove(o);
             }
+        }
+
+        private static ArrayList ToArrayList(IEnumerable items)
+        {
+            if (items is ICollection ic)
+                return new ArrayList(ic);
+
+            var list = new ArrayList();
+            foreach (object o in items)
+                list.Add(o);
+
+            return list;
         }
     }
 }
