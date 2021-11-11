@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
     <Deterministic>false</Deterministic>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
   </PropertyGroup>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Core" Version="4.7.2" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 
