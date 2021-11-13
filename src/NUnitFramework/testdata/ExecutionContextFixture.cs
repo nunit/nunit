@@ -24,7 +24,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
 using System.Runtime.Remoting.Messaging;
 #else
 using System.Threading;
@@ -34,7 +34,7 @@ namespace NUnit.TestData
 {
     public static class ExecutionContextFixture
     {
-#if !(NET35 || NET40)
+#if !(NET35 || NET40 || NET45)
         private static readonly AsyncLocal<bool> WasExecutionContextUsed = new AsyncLocal<bool>();
 #endif
 
@@ -76,7 +76,7 @@ namespace NUnit.TestData
 
         private static void AssertAndUseCurrentExecutionContext()
         {
-#if NET35 || NET40
+#if NET35 || NET40 || NET45
             Assert.Null(CallContext.LogicalGetData("WasUsed"));
 
             CallContext.LogicalSetData("WasUsed", true);

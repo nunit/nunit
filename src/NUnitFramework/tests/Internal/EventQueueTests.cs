@@ -314,10 +314,12 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     this.Consumer();
                 }
+#if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
                 {
                     Thread.ResetAbort();
                 }
+#endif
                 catch (Exception ex)
                 {
                     this.myConsumerException = ex;

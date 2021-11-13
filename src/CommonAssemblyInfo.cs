@@ -46,6 +46,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Core 3.1 Debug")]
 #elif NET5_0
 [assembly: AssemblyConfiguration(".NET 5.0 Debug")]
+#elif NET6_0
+[assembly: AssemblyConfiguration(".NET 6.0 Debug")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
@@ -64,6 +66,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Core 3.1")]
 #elif NET5_0
 [assembly: AssemblyConfiguration(".NET 5.0")]
+#elif NET6_0
+[assembly: AssemblyConfiguration(".NET 6.0")]
 #else
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
