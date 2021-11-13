@@ -19,6 +19,7 @@ Supported platforms:
 - .NET Framework 4.5+
 - .NET Standard 2.0+
 - .NET Core 2.1+
+- .NET 5.0+
 
 How to use this package:
 
@@ -36,6 +37,12 @@ How to use this package:
         <dependency id="NUnit" version="[$version$]" />
         <dependency id="NETStandard.Library" version="2.0.0" />
       </group>
+      <group targetFramework="net5.0">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
     </dependencies>
   </metadata>
   <files>
@@ -51,5 +58,9 @@ How to use this package:
     <file src="bin/net45/nunitlite-runner.pdb" target="tools\net45" />
     <file src="bin/netcoreapp3.1/nunitlite-runner.dll" target="tools\netcoreapp3.1" />
     <file src="bin/netcoreapp3.1/nunitlite-runner.pdb" target="tools\netcoreapp3.1" />
+    <file src="bin/net5.0/nunitlite.dll" target="lib\net5.0" />
+    <file src="bin/net5.0/nunitlite.pdb" target="lib\net5.0" />
+    <file src="bin/net6.0/nunitlite.dll" target="lib\net6.0" />
+    <file src="bin/net6.0/nunitlite.pdb" target="lib\net6.0" />
   </files>
 </package>

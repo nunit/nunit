@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Deterministic>false</Deterministic>
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>

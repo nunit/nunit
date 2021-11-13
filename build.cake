@@ -35,7 +35,9 @@ var AllFrameworks = new string[]
 
 var NetCoreTests = new String[]
 {
-    "netcoreapp3.1"
+    "netcoreapp3.1",
+    "net5.0",
+    "net6.0"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -215,11 +217,11 @@ Task("Test45")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp3.1", "net5.0" })
+foreach (var runtime in new[] { "netcoreapp3.1", "net5.0", "net6.0" })
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
-        .WithCriteria(IsRunningOnWindows() || runtime != "net5.0-windows")
+        .WithCriteria(IsRunningOnWindows() || !runtime.EndsWith("windows"))
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>

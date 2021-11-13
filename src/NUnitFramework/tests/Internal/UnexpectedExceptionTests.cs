@@ -179,7 +179,9 @@ namespace NUnit.Framework.Internal
         {
         }
 
+#pragma warning disable SYSLIB0032
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+#pragma warning restore SYSLIB0032
         private static Exception RecordPossiblyDangerousException(Action action)
         {
             try
