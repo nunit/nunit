@@ -92,6 +92,11 @@ namespace NUnit.Framework.Internal
             TearDownMethods = new IMethodInfo[0];
         }
 
+        internal void SetNextId()
+        {
+            Id = GetNextId();
+        }
+
         private static string GetNextId()
         {
             return IdPrefix + unchecked(_nextID++);
