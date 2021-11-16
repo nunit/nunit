@@ -27,12 +27,14 @@ var packageVersion = version + modifier + dbgSuffix;
 // SUPPORTED FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var AllFrameworks = new string[]
+// Equivalent of NUnitLibraryFrameworks in Directory.Build.props
+var LibraryFrameworks = new string[]
 {
     "net45",
     "netstandard2.0"
 };
 
+// Subset of NUnitRuntimeFrameworks in Directory.Build.props
 var NetCoreTests = new String[]
 {
     "netcoreapp3.1",
@@ -179,7 +181,7 @@ Task("Test45")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp3.1", "net5.0", "net6.0" })
+foreach (var runtime in NetCoreTests)
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
@@ -251,7 +253,7 @@ Task("CreateImage")
         CreateDirectory(imageBinDir);
         Information("Created directory " + imageBinDir);
 
-        foreach (var runtime in AllFrameworks)
+        foreach (var runtime in LibraryFrameworks)
         {
             var targetDir = imageBinDir + Directory(runtime);
             var sourceDir = BIN_DIR + Directory(runtime);
@@ -303,10 +305,9 @@ Task("PackageZip")
     {
         CreateDirectory(PACKAGE_DIR);
 
-        var zipFiles =
-            GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*");
+        var zipFiles = GetFiles(CurrentImageDir + "*.*");
+        foreach (var framework in LibraryFrameworks)
+            zipFiles += GetFiles(CurrentImageDir + "bin/"+ framework + "/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 

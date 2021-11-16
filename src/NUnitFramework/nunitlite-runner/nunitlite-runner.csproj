@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>NUnitLite</RootNamespace>
-    <TargetFrameworks>net45;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

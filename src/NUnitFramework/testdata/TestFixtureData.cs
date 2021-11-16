@@ -517,7 +517,7 @@ namespace NUnit.TestData.TestFixtureTests
         [Test]
         public void ChangeCurrentPrincipal()
         {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            IIdentity identity = new GenericIdentity("NUnit");
             GenericPrincipal principal = new GenericPrincipal( identity, new string[] { } );
             System.Threading.Thread.CurrentPrincipal = principal;
         }

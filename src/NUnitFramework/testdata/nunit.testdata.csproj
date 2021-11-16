@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>NUnit.TestData</RootNamespace>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
