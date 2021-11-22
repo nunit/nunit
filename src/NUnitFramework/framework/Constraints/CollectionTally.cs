@@ -89,12 +89,11 @@ namespace NUnit.Framework.Constraints
         {
             this.comparer = comparer;
 
-            foreach (object o in c)
-                _missingItems.Add(o);
+            _missingItems = ToArrayList(c);
 
             if (c.IsSortable())
             {
-                _isSortable = TrySort(_missingItems);
+                _isSortable = TrySort(ref _missingItems);
             }
         }
 
@@ -104,8 +103,9 @@ namespace NUnit.Framework.Constraints
             return comparer.AreEqual(expected, actual, ref tolerance);
         }
 
-        private static bool TrySort(ArrayList items)
+        private static bool TrySort(ref ArrayList items)
         {
+            var original = (ArrayList)items.Clone();
             try
             {
                 items.Sort();
@@ -113,6 +113,7 @@ namespace NUnit.Framework.Constraints
             }
             catch (InvalidOperationException e) when (e.InnerException is ArgumentException ae && ae.Message.Contains(nameof(IComparable)))
             {
+                items = original;
                 return false;
             }
         }
@@ -139,11 +140,9 @@ namespace NUnit.Framework.Constraints
         {
             if (_isSortable && c.IsSortable())
             {
-                var remove = new ArrayList();
-                foreach (object o in c)
-                    remove.Add(o);
+                var remove = ToArrayList(c);
 
-                if (TrySort(remove))
+                if (TrySort(ref remove))
                 {
                     _sorted = true;
 
@@ -167,6 +166,18 @@ namespace NUnit.Framework.Constraints
                 foreach (object o in c)
                     TryRemove(o);
             }
+        }
+
+        private static ArrayList ToArrayList(IEnumerable items)
+        {
+            if (items is ICollection ic)
+                return new ArrayList(ic);
+
+            var list = new ArrayList();
+            foreach (object o in items)
+                list.Add(o);
+
+            return list;
         }
     }
 }
