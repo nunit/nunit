@@ -392,7 +392,15 @@ namespace NUnit.Framework.Constraints
                 return Convert.ToDecimal(expected).CompareTo(aDec);
 
             if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
-                return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
+            {
+                var expectedAsDouble = Convert.ToDouble(expected);
+                var actualAsDouble = Convert.ToDouble(actual);
+
+                if (IsWithinDecimalRange(expectedAsDouble) && IsWithinDecimalRange(actualAsDouble))
+                    return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
+                
+                return expectedAsDouble.CompareTo(actualAsDouble);
+            }
 
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
