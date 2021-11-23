@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
@@ -255,6 +256,33 @@ namespace NUnit.Framework.Constraints
                 "  Extra (1): < \"hocusfocus\" >" + Environment.NewLine;
 
             Assert.That(writer.ToString(), Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void WorksWithNonIComparableTuples()
+        {
+            var message3 = new object();
+            var message4 = new object();
+            var actual = new[]
+            {
+                new Tuple<int, object, CancellationToken>(1, message3, CancellationToken.None),
+                new Tuple<int, object, CancellationToken>(2, message3, CancellationToken.None),
+                new Tuple<int, object, CancellationToken>(1, message4, CancellationToken.None),
+                new Tuple<int, object, CancellationToken>(2, message4, CancellationToken.None)
+            };
+
+            var expected = new[]
+            {
+                new Tuple<int, object, CancellationToken>(1, message4, CancellationToken.None),
+                new Tuple<int, object, CancellationToken>(2, message4, CancellationToken.None),
+                new Tuple<int, object, CancellationToken>(1, message3, CancellationToken.None),
+                new Tuple<int, object, CancellationToken>(2, message3, CancellationToken.None)
+            };
+
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var result = constraint.ApplyTo(actual);
+
+            Assert.That(result.IsSuccess);
         }
 
         // The following tests are each running in 14ms to 46ms on my machine. Based on that,
