@@ -407,34 +407,22 @@ namespace NUnit.Framework.Constraints
             if (!IsNumericType(expected) || !IsNumericType(actual))
                 throw new ArgumentException("Both arguments must be numeric");
 
-            // Treat as decimal if one is decimal and other can be treated as decimal
-            if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
-                return eDec.CompareTo(Convert.ToDecimal(actual));
-            else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
-                return Convert.ToDecimal(expected).CompareTo(aDec);
-
-            if (IsFloatingPointNumeric(expected) || IsFloatingPointNumeric(actual))
+            if (expected is decimal || actual is decimal)
             {
-                var expectedAsDouble = Convert.ToDouble(expected);
-                var actualAsDouble = Convert.ToDouble(actual);
-
-                if (IsWithinDecimalRange(expectedAsDouble) && IsWithinDecimalRange(actualAsDouble))
-                {
-                    var expectedAsDecimal = Convert.ToDecimal(expected);
-                    var actualAsDecimal = Convert.ToDecimal(actual);
-                    var expectedBackAsDouble = Convert.ToDouble(expectedAsDecimal);
-                    var actualBackAsDouble = Convert.ToDouble(actualAsDecimal);
-
-                    // Work around Decimal rounding double to 15 digits.
-                    if (expectedAsDouble == expectedBackAsDouble &&
-                        actualAsDouble == actualBackAsDouble)
-                    {
-                        return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
-                    }
-                }
-                
-                return expectedAsDouble.CompareTo(actualAsDouble);
+                // Treat as decimal if one is decimal and other can be treated as decimal
+                if (expected is decimal eDec && IsWithinDecimalRange(Convert.ToDouble(actual)))
+                    return eDec.CompareTo(Convert.ToDecimal(actual));
+                else if (actual is decimal aDec && IsWithinDecimalRange(Convert.ToDouble(expected)))
+                    return Convert.ToDecimal(expected).CompareTo(aDec);
+                else
+                    return Convert.ToDouble(expected).CompareTo(Convert.ToDouble(actual));
             }
+
+            if (expected is double || actual is double)
+                return Convert.ToDouble(expected).CompareTo(Convert.ToDouble(actual));
+
+            if (expected is float || actual is float)
+                return Convert.ToSingle(expected).CompareTo(Convert.ToSingle(actual));
 
             if (expected is ulong || actual is ulong)
                 return Convert.ToUInt64(expected).CompareTo(Convert.ToUInt64(actual));
