@@ -160,6 +160,14 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void CanCompareHighResDouble()
+        {
+            const double value = 1.0000000000000038d;
+
+            Assert.That(value, Is.GreaterThan(1.0));
+        }
+
+        [Test]
         public void CanCompareMidRangeDecimalAndDouble()
         {
             var expected = 3.14159m;

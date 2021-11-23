@@ -419,7 +419,19 @@ namespace NUnit.Framework.Constraints
                 var actualAsDouble = Convert.ToDouble(actual);
 
                 if (IsWithinDecimalRange(expectedAsDouble) && IsWithinDecimalRange(actualAsDouble))
-                    return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
+                {
+                    var expectedAsDecimal = Convert.ToDecimal(expected);
+                    var actualAsDecimal = Convert.ToDecimal(actual);
+                    var expectedBackAsDouble = Convert.ToDouble(expectedAsDecimal);
+                    var actualBackAsDouble = Convert.ToDouble(actualAsDecimal);
+
+                    // Work around Decimal rounding double to 15 digits.
+                    if (expectedAsDouble == expectedBackAsDouble &&
+                        actualAsDouble == actualBackAsDouble)
+                    {
+                        return Convert.ToDecimal(expected).CompareTo(Convert.ToDecimal(actual));
+                    }
+                }
                 
                 return expectedAsDouble.CompareTo(actualAsDouble);
             }
