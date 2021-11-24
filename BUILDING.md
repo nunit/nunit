@@ -35,6 +35,7 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
  (directory with nunit.sln)
     bin\
        Debug\
+          net6.0
           net5.0
           net45
           net46

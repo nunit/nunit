@@ -12,6 +12,12 @@ jobs:
     vmImage: windows-latest
   steps:
 
+  - task: UseDotNet@2
+    displayName: 'Install .NET SDK'
+    inputs:
+      version: 6.0.100
+      performMultiLevelLookup: true
+
   - powershell: |
      dotnet tool restore
      dotnet cake --target=Test --test-run-name=Windows --configuration=Release
@@ -39,10 +45,16 @@ jobs:
   steps:
 
   - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
+    displayName: 'Install .NET SDK'
     inputs:
-      version: 5.0.202
+      version: 6.0.100
       performMultiLevelLookup: true
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET runtime 5.0'
+    inputs:
+      packageType: runtime
+      version: 5.0.x
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 3.1'
@@ -71,10 +83,16 @@ jobs:
   steps:
 
   - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
+    displayName: 'Install .NET SDK'
     inputs:
-      version: 5.0.202
+      version: 6.0.100
       performMultiLevelLookup: true
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET runtime 5.0'
+    inputs:
+      packageType: runtime
+      version: 5.0.x
 
   - task: UseDotNet@2
     displayName: 'Install .NET Core runtime 3.1'

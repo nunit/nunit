@@ -27,15 +27,19 @@ var packageVersion = version + modifier + dbgSuffix;
 // SUPPORTED FRAMEWORKS
 //////////////////////////////////////////////////////////////////////
 
-var AllFrameworks = new string[]
+// Equivalent of NUnitLibraryFrameworks in Directory.Build.props
+var LibraryFrameworks = new string[]
 {
     "net45",
     "netstandard2.0"
 };
 
+// Subset of NUnitRuntimeFrameworks in Directory.Build.props
 var NetCoreTests = new String[]
 {
-    "netcoreapp3.1"
+    "netcoreapp3.1",
+    "net5.0",
+    "net6.0"
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -141,10 +145,7 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        if(IsRunningOnWindows())
-            MSBuild(SOLUTION_FILE, CreateMsBuildSettings());
-        else
-            DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
     });
 
 DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
@@ -154,41 +155,6 @@ DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
         NoRestore = true,
         Verbosity = DotNetCoreVerbosity.Minimal
     };
-
-MSBuildSettings CreateMsBuildSettings()
-{
-    var settings = new MSBuildSettings { Verbosity = Verbosity.Minimal, Configuration = configuration };
-
-    if (!BuildSystem.IsLocalBuild)
-    {
-        // Extra arguments for NuGet package creation: EmbedUntrackedSources and ContinuousIntegrationBuild for deterministic build
-        settings.ArgumentCustomization = args => args.Append("-p:EmbedUntrackedSources=true -p:ContinuousIntegrationBuild=true");
-    }
-
-    if (IsRunningOnWindows())
-    {
-        // Find MSBuild for Visual Studio 2019 and newer
-        DirectoryPath vsLatest = VSWhereLatest();
-        FilePath msBuildPath = vsLatest?.CombineWithFilePath("./MSBuild/Current/Bin/MSBuild.exe");
-
-        // Find MSBuild for Visual Studio 2017
-        if (msBuildPath != null && !FileExists(msBuildPath))
-            msBuildPath = vsLatest.CombineWithFilePath("./MSBuild/15.0/Bin/MSBuild.exe");
-
-        // Have we found MSBuild yet?
-        if (!FileExists(msBuildPath))
-        {
-            throw new Exception($"Failed to find MSBuild: {msBuildPath}");
-        }
-
-        Information("Building using MSBuild at " + msBuildPath);
-        settings.ToolPath = msBuildPath;
-    }
-    else
-        settings.ToolPath = Context.Tools.Resolve("msbuild");
-
-    return settings;
-}
 
 //////////////////////////////////////////////////////////////////////
 // TEST
@@ -215,11 +181,11 @@ Task("Test45")
 var testNetStandard20 = Task("TestNetStandard20")
     .Description("Tests the .NET Standard 2.0 version of the framework");
 
-foreach (var runtime in new[] { "netcoreapp3.1", "net5.0" })
+foreach (var runtime in NetCoreTests)
 {
     var task = Task("TestNetStandard20 on " + runtime)
         .Description("Tests the .NET Standard 2.0 version of the framework on " + runtime)
-        .WithCriteria(IsRunningOnWindows() || runtime != "net5.0-windows")
+        .WithCriteria(IsRunningOnWindows() || !runtime.EndsWith("windows"))
         .IsDependentOn("Build")
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>
@@ -287,7 +253,7 @@ Task("CreateImage")
         CreateDirectory(imageBinDir);
         Information("Created directory " + imageBinDir);
 
-        foreach (var runtime in AllFrameworks)
+        foreach (var runtime in LibraryFrameworks)
         {
             var targetDir = imageBinDir + Directory(runtime);
             var sourceDir = BIN_DIR + Directory(runtime);
@@ -339,10 +305,9 @@ Task("PackageZip")
     {
         CreateDirectory(PACKAGE_DIR);
 
-        var zipFiles =
-            GetFiles(CurrentImageDir + "*.*") +
-            GetFiles(CurrentImageDir + "bin/net45/**/*.*") +
-            GetFiles(CurrentImageDir + "bin/netstandard2.0/**/*.*");
+        var zipFiles = GetFiles(CurrentImageDir + "*.*");
+        foreach (var framework in LibraryFrameworks)
+            zipFiles += GetFiles(CurrentImageDir + "bin/"+ framework + "/**/*.*");
         Zip(CurrentImageDir, File(ZIP_PACKAGE), zipFiles);
     });
 

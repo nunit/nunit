@@ -6,7 +6,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-
+    <NUnitLibraryFrameworks>net45;netstandard2.0</NUnitLibraryFrameworks>
+    <NUnitRuntimeFrameworks>net45;netcoreapp3.1;net5.0;net6.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
@@ -17,11 +18,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'
-                            and '$(TargetFramework)' != 'netcoreapp2.1'
-                            and '$(TargetFramework)' != 'netcoreapp3.1'
-                            and '$(TargetFramework)' != 'net5.0'
-                            and '$(TargetFramework)' != 'net5.0-windows'">$(DefineConstants);THREAD_ABORT</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">$(DefineConstants);THREAD_ABORT</DefineConstants>
   </PropertyGroup>
 
   <!-- We always want a good debugging experience in tests -->

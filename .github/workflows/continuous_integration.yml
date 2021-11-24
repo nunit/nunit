@@ -19,6 +19,21 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Setup .NET Core SDK 3.1.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x'
+
+    - name: Setup .NET Core SDK 5.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+
+    - name: Setup .NET Core SDK 6.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
     - name: Install dotnet tools
       run: dotnet tool restore
 
@@ -58,6 +73,11 @@ jobs:
       with:
         dotnet-version: '5.0.x'
 
+    - name: Setup .NET Core SDK 6.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
     - name: Install F#
       run: sudo apt-get install fsharp
 
@@ -90,6 +110,11 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0.x'
+
+    - name: Setup .NET Core SDK 6.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
 
     - name: Install dotnet tools
       run: dotnet tool restore
