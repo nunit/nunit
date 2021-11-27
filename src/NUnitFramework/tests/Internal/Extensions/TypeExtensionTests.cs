@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal.Extensions
             typeof(Tuple<int, Tuple<int, Stream>>),
             typeof(ValueTuple<int, Stream>),
             typeof(ValueTuple<int, long, Stream>),
-            typeof(ValueTuple<int, Tuple<int, Stream>>),
+            typeof(ValueTuple<int, ValueTuple<int, Stream>>),
 #endif
         });
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Extensions
             typeof(Tuple<int, Tuple<int, long>>),
             typeof(ValueTuple<int, long>),
             typeof(ValueTuple<int, long, double>),
-            typeof(ValueTuple<int, Tuple<int, long>>),
+            typeof(ValueTuple<int, ValueTuple<int, long>>),
 #endif
         });
 
