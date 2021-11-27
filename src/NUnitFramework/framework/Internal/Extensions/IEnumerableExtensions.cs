@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal.Extensions
             if (itemType is null)
                 return false;
 
-            return itemType.ImplementsIComparable();
+            return itemType.IsSortable();
         }
     }
 }

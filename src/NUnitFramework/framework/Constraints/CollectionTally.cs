@@ -93,7 +93,8 @@ namespace NUnit.Framework.Constraints
 
             if (c.IsSortable())
             {
-                _isSortable = TrySort(ref _missingItems);
+                _missingItems.Sort();
+                _isSortable = true;
             }
         }
 
@@ -101,21 +102,6 @@ namespace NUnit.Framework.Constraints
         {
             Tolerance tolerance = Tolerance.Default;
             return comparer.AreEqual(expected, actual, ref tolerance);
-        }
-
-        private static bool TrySort(ref ArrayList items)
-        {
-            var original = (ArrayList)items.Clone();
-            try
-            {
-                items.Sort();
-                return true;
-            }
-            catch (InvalidOperationException e) when (e.InnerException is ArgumentException ae && ae.Message.Contains(nameof(IComparable)))
-            {
-                items = original;
-                return false;
-            }
         }
 
         /// <summary>Try to remove an object from the tally.</summary>
@@ -141,20 +127,14 @@ namespace NUnit.Framework.Constraints
             if (_isSortable && c.IsSortable())
             {
                 var remove = ToArrayList(c);
+                remove.Sort();
 
-                if (TrySort(ref remove))
-                {
-                    _sorted = true;
+                _sorted = true;
 
-                    // Reverse so that we match removing from the end,
-                    // see issue #2598 - Is.Not.EquivalentTo is extremely slow
-                    for (int index = remove.Count - 1; index >= 0; index--)
-                        TryRemove(remove[index]);
-                }
-                else
-                {
-                    TryRemoveSlow(c);
-                }
+                // Reverse so that we match removing from the end,
+                // see issue #2598 - Is.Not.EquivalentTo is extremely slow
+                for (int index = remove.Count - 1; index >= 0; index--)
+                    TryRemove(remove[index]);
             }
             else
             {
