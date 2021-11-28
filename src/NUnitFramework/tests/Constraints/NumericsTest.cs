@@ -22,7 +22,6 @@
 // ***********************************************************************
 
 using System;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Constraints
 {
@@ -157,6 +156,14 @@ namespace NUnit.Framework.Constraints
             const double value = 0.0099999999999988987;
 
             Assert.That(value, Is.LessThan(maximum));
+        }
+
+        [Test]
+        public void CanCompareHighResDouble()
+        {
+            const double value = 1.0000000000000038d;
+
+            Assert.That(value, Is.GreaterThan(1.0));
         }
 
         [Test]
