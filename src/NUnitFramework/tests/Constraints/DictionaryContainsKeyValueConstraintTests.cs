@@ -88,5 +88,96 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary,
                 new DictionaryContainsKeyValuePairConstraint("HI", "UNIVERSE").Using<string>((x, y) => StringUtil.Compare(x, y, true)));
         }
+
+        [Test]
+        public void SucceedsWithTypeThatImplementsGenericIDictionary()
+        {
+            var dictionary = new TestDictionary()
+            {
+                { 1, "hello" },
+                { 2, "goodbye" },
+                { 3, "hello" },
+                { 4, "goodbye" },
+            };
+            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint(3, "hello"));
+        }
+
+        [Test]
+        public void FailsWhenNullDictionary()
+        {
+            TestDictionary dictionary = null;
+
+            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "hello"));
+
+            Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary But was: null"));
+        }
+
+        class TestDictionary : IDictionary<int, string>
+        {
+            private readonly Dictionary<int, string> _internalDictionary = new Dictionary<int, string>();
+
+            public string this[int key]
+            {
+                get => _internalDictionary[key];
+                set => _internalDictionary[key] = value;
+            }
+
+            public ICollection<int> Keys => throw new System.NotImplementedException();
+
+            public ICollection<string> Values => throw new System.NotImplementedException();
+
+            public int Count => throw new System.NotImplementedException();
+
+            public bool IsReadOnly => throw new System.NotImplementedException();
+
+            public void Add(int key, string value) => _internalDictionary.Add(key, value);
+
+            public void Add(KeyValuePair<int, string> item)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Clear()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool Contains(KeyValuePair<int, string> item)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool ContainsKey(int key)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void CopyTo(KeyValuePair<int, string>[] array, int arrayIndex)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public IEnumerator<KeyValuePair<int, string>> GetEnumerator()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool Remove(int key)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool Remove(KeyValuePair<int, string> item)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public bool TryGetValue(int key, out string value)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator() => _internalDictionary.GetEnumerator();
+        }
     }
 }
