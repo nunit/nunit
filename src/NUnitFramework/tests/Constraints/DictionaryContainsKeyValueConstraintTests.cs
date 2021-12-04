@@ -94,12 +94,11 @@ namespace NUnit.Framework.Constraints
         {
             var dictionary = new TestDictionary()
             {
-                { 1, "hello" },
-                { 2, "goodbye" },
-                { 3, "hello" },
-                { 4, "goodbye" },
+                { 1, "World" },
+                { 2, "Universe" },
+                { 3, "Mundo" }
             };
-            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint(3, "hello"));
+            Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint(3, "Mundo"));
         }
 
         [Test]

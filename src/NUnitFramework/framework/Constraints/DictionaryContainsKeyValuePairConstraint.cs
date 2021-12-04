@@ -62,11 +62,8 @@ namespace NUnit.Framework.Constraints
                 var enumerable = actual as IEnumerable;
 
                 foreach (var item in enumerable)
-                {
                     if (ItemsEqual(item, expected))
                         return true;
-                }
-
                 return false;
             }
 
