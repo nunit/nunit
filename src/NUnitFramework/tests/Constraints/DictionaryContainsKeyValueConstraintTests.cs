@@ -2,8 +2,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -90,7 +88,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
-        public void SucceedsWithTypeThatImplementsGenericIDictionary()
+        public void WorksWithTypeThatImplementsGenericIDictionary()
         {
             var dictionary = new TestDictionary()
             {
@@ -99,6 +97,8 @@ namespace NUnit.Framework.Constraints
                 { 3, "Mundo" }
             };
             Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint(3, "Mundo"));
+            Assert.That(dictionary, Does.ContainKey(2).WithValue("Universe"));
+            Assert.That(dictionary, Does.Not.ContainKey(1).WithValue("Universe"));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Constraints
         {
             TestDictionary dictionary = null;
 
-            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "hello"));
+            TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
 
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary But was: null"));
         }
