@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
 
             // If 'actual' implements IDictionary<TKey, TValue>, construct an 'expected' KeyValuePair<TKey, TValue>
             // and look it up by iterating using IEnumerable
-            if (actual.GetType().GetInterfaces().Any(i => i.FullName.StartsWith("System.Collections.Generic.IDictionary`2[")))
+            if (actual.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
             {
                 var expected = new KeyValuePair<object, object>(_expected.Key, _expected.Value);
                 var enumerable = actual as IEnumerable;
