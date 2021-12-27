@@ -26,11 +26,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
-using NUnit.Framework;
+#if !THREAD_ABORT
+using System.Threading.Tasks;
+#endif
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
+#if THREAD_ABORT
 using NUnit.TestData;
+#endif
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -244,6 +248,23 @@ namespace NUnit.Framework.Attributes
             Assert.That(_testRanToCompletion, () => "Test did not run to completion");
         }
 
+#if !NET35
+        private static readonly CancellationToken CancelledToken = new CancellationToken(true);
+        private static readonly CancellationToken PendingToken = new CancellationToken(false);
+
+        static readonly object[] TokenTestCases = new object[]
+        {
+            new object[] { true, CancelledToken },
+            new object[] { false, PendingToken },
+        };
+
+        [TestCaseSource(nameof(TokenTestCases))]
+        public void WithExistingCancellationTokenArgument(bool cancelled, CancellationToken cancellationToken)
+        {
+            Assert.That(cancellationToken.IsCancellationRequested, Is.EqualTo(cancelled));
+        }
+#endif
+
 #if THREAD_ABORT
         [Test, Timeout(500)]
         public void TestWithTimeoutRunsOnSameThread()
@@ -407,6 +428,90 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {SampleTests.Timeout}ms"));
         }
+
+        [Test, Timeout(500)]
+        public void TestWithTimeoutCurrentContextHasCancellationToken()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CancellationToken, Is.Not.EqualTo(CancellationToken.None));
+        }
+
+        [Test]
+        public void TestWithoutTimeoutCurrentContextHasNoneCancellationToken()
+        {
+            Assert.That(TestExecutionContext.CurrentContext.CancellationToken, Is.EqualTo(CancellationToken.None));
+        }
+
+        [Test, Timeout(500)]
+        public void TestWithTimeoutHasCancellationToken(CancellationToken cancellationToken)
+        {
+            Assert.That(cancellationToken, Is.Not.EqualTo(CancellationToken.None));
+        }
+
+        [Test]
+        public void TestWithoutTimeoutHasNoneCancellationToken(CancellationToken cancellationToken)
+        {
+            Assert.That(cancellationToken, Is.EqualTo(CancellationToken.None));
+        }
+
+        private class SampleCancellationTests
+        {
+            private const int TimeExceedingTimeout = 500;
+
+            public const int Timeout = 50;
+
+            [Timeout(Timeout)]
+            public async Task TestThatTimesOut()
+            {
+                await Task.Delay(TimeExceedingTimeout, TestContext.CurrentContext.CancellationToken);
+                _testRanToCompletion = true;
+            }
+
+            [Timeout(Timeout)]
+            public async Task TestThatAttachesDebuggerAndTimesOut()
+            {
+                _debugger.IsAttached = true;
+                await Task.Delay(TimeExceedingTimeout, TestContext.CurrentContext.CancellationToken);
+                _testRanToCompletion = true;
+            }
+        }
+
+        [Test]
+        public void TimeoutCausesOtherwisePassingTestWithCancellationTokenToFailWithoutDebuggerAttached()
+        {
+            // given
+            var testThatTimesOutButOtherwisePasses =
+                TestBuilder.MakeTestCase(typeof(SampleCancellationTests), nameof(SampleCancellationTests.TestThatTimesOut));
+
+            var detachedDebugger = new StubDebugger { IsAttached = false };
+
+            // when
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, new SampleCancellationTests(), detachedDebugger);
+
+            // then
+            Assert.That(_testRanToCompletion == false, () => "Test ran to completion");
+
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {SampleTests.Timeout}ms"));
+        }
+
+        [Test]
+        public void TestWithCancellationTokenThatTimesOutIsRanToCompletionWhenDebuggerIsAttachedBeforeTimeOut()
+        {
+            // given
+            var testThatAttachesDebuggerAndTimesOut =
+                TestBuilder.MakeTestCase(typeof(SampleCancellationTests), nameof(SampleCancellationTests.TestThatAttachesDebuggerAndTimesOut));
+
+            _debugger = new StubDebugger { IsAttached = false };
+
+            // when
+            var result = TestBuilder.RunTest(testThatAttachesDebuggerAndTimesOut, new SampleCancellationTests(), _debugger);
+
+            // then
+            Assert.That(_testRanToCompletion, () => "Test did not run to completion");
+        }
+
+
 #endif
 
         private class StubDebugger : IDebugger

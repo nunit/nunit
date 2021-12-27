@@ -27,6 +27,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+#if !THREAD_ABORT
+using System.Threading;
+#endif
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -45,7 +48,7 @@ namespace NUnit.Framework
         private TestAdapter? _test;
         private ResultAdapter? _result;
 
-        #region Constructor
+#region Constructor
 
         /// <summary>
         /// Construct a TestContext for an ExecutionContext
@@ -56,9 +59,9 @@ namespace NUnit.Framework
             _testExecutionContext = testExecutionContext;
         }
 
-        #endregion
+#endregion
 
-        #region Properties
+#region Properties
 
         /// <summary>
         /// Get the current test context. This is created
@@ -179,9 +182,19 @@ namespace NUnit.Framework
             get { return _testExecutionContext.CurrentRepeatCount; }
         }
 
-        #endregion
+#if !THREAD_ABORT
+        /// <summary>
+        /// Gets the <see cref="CancellationToken"/> for the test case.
+        /// </summary>
+        public CancellationToken CancellationToken
+        {
+            get { return _testExecutionContext.CancellationToken; }
+        }
+#endif
 
-        #region Static Methods
+#endregion
+
+#region Static Methods
 
         /// <summary>Write the string representation of a boolean value to the current result</summary>
         public static void Write(bool value) { Out.Write(value); }
@@ -416,7 +429,7 @@ namespace NUnit.Framework
                 get { return _test.Arguments; }
             }
 
-            #endregion
+#endregion
         }
 
 #endregion
@@ -530,9 +543,9 @@ namespace NUnit.Framework
 #endregion
         }
 
-        #endregion
+#endregion
 
-        #region Nested PropertyBagAdapter Class
+#region Nested PropertyBagAdapter Class
 
         /// <summary>
         /// <see cref="PropertyBagAdapter"/> adapts an <see cref="IPropertyBag"/>
@@ -607,6 +620,6 @@ namespace NUnit.Framework
             }
         }
 
-        #endregion
+#endregion
     }
 }

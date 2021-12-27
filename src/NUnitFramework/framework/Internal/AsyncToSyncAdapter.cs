@@ -43,6 +43,24 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
+#if !THREAD_ABORT
+        public static bool AcceptsCancellationToken(MethodInfo method)
+        {
+            ParameterInfo[] parameters = method.GetParameters();
+            return parameters.Length > 0 && parameters[parameters.Length - 1].ParameterType == typeof(CancellationToken);
+        }
+
+        public static bool LastArgumentIsCancellationToken(object[] argumentList)
+        {
+            if (argumentList == null || argumentList.Length == 0)
+                return false;
+
+            object lastArgument = argumentList[argumentList.Length - 1];
+
+            return lastArgument != null && lastArgument.GetType() == typeof(CancellationToken);
+        }
+#endif
+
         public static object Await(Func<object> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));

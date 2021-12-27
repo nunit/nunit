@@ -345,6 +345,13 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public int TestCaseTimeout { get; set; }
 
+#if !THREAD_ABORT
+        /// <summary>
+        /// Gets or sets the <see cref="CancellationToken"/> for the test case.
+        /// </summary>
+        public CancellationToken CancellationToken { get; internal set; } = CancellationToken.None;
+#endif
+
         /// <summary>
         /// Gets a list of ITestActions set by upstream tests
         /// </summary>
@@ -452,9 +459,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void IncrementAssertCount(int count)
         {
-            // TODO: Temporary implementation
-            while (count-- > 0)
-                Interlocked.Increment(ref _assertCount);
+            Interlocked.Add(ref _assertCount, count);
         }
 
         /// <summary>
@@ -488,9 +493,9 @@ namespace NUnit.Framework.Internal
             Listener?.SendMessage(new TestMessage(destination, message, CurrentTest.Id));
         }
 
-        #endregion
+#endregion
 
-        #region InitializeLifetimeService
+#region InitializeLifetimeService
 
         /// <summary>
         /// Obtain lifetime service object
@@ -544,9 +549,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
+#endregion
 
-        #region Nested AdhocTestExecutionContext
+#region Nested AdhocTestExecutionContext
 
         /// <summary>
         /// An AdhocTestExecutionContext is created whenever a context is needed

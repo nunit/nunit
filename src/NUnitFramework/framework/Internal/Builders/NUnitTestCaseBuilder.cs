@@ -214,6 +214,15 @@ namespace NUnit.Framework.Internal.Builders
             else if (parms == null || !parms.HasExpectedResult)
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
 
+#if !THREAD_ABORT
+            if (AsyncToSyncAdapter.AcceptsCancellationToken(testMethod.Method.MethodInfo) &&
+                !AsyncToSyncAdapter.LastArgumentIsCancellationToken(arglist))
+            {
+                // Implict CancellationToken argument
+                argsProvided++;
+            }
+#endif
+
             if (argsProvided > 0 && maxArgsNeeded == 0)
                 return MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");
 

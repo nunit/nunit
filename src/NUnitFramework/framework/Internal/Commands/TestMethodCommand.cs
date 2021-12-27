@@ -21,7 +21,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
+#if !THREAD_ABORT
 using System;
+using System.Threading;
+#endif
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
@@ -33,8 +36,8 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestMethodCommand : TestCommand
     {
-        private readonly TestMethod testMethod;
-        private readonly object[] arguments;
+        private readonly TestMethod _testMethod;
+        private readonly object[] _arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
@@ -42,8 +45,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="testMethod">The test.</param>
         public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
-            this.testMethod = testMethod;
-            this.arguments = testMethod.Arguments;
+            this._testMethod = testMethod;
+            this._arguments = testMethod.Arguments;
         }
 
         /// <summary>
@@ -64,8 +67,8 @@ namespace NUnit.Framework.Internal.Commands
 
             object result = RunTestMethod(context);
 
-            if (testMethod.HasExpectedResult)
-                NUnit.Framework.Assert.AreEqual(testMethod.ExpectedResult, result);
+            if (_testMethod.HasExpectedResult)
+                Assert.AreEqual(_testMethod.ExpectedResult, result);
 
             context.CurrentResult.SetResult(ResultState.Success);
 
@@ -77,7 +80,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-            var methodInfo = MethodInfoCache.Get(testMethod.Method);
+            var methodInfo = MethodInfoCache.Get(_testMethod.Method);
 
             if (methodInfo.IsAsyncOperation)
             {
@@ -89,7 +92,21 @@ namespace NUnit.Framework.Internal.Commands
 
         private object InvokeTestMethod(TestExecutionContext context)
         {
-            return testMethod.Method.Invoke(context.TestObject, arguments);
+		    var methodInfo = MethodInfoCache.Get(_testMethod.Method);
+		
+            object[] arguments = _arguments;
+
+#if !THREAD_ABORT
+            if (AsyncToSyncAdapter.AcceptsCancellationToken(_testMethod.Method.MethodInfo) &&
+                !AsyncToSyncAdapter.LastArgumentIsCancellationToken(_arguments))
+            {
+                arguments = new object[_arguments.Length + 1];
+                Array.Copy(_arguments, arguments, _arguments.Length);
+                arguments[_arguments.Length] = context.CancellationToken;
+            }
+#endif
+
+            return _testMethod.Method.Invoke(context.TestObject, arguments);
         }
     }
 }

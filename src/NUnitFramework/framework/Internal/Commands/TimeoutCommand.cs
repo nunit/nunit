@@ -124,24 +124,47 @@ namespace NUnit.Framework.Internal.Commands
         {
             try
             {
+                using var cancellationTokenSource = new CancellationTokenSource();
+
+                context.CancellationToken = cancellationTokenSource.Token;
                 var testExecution = RunTestOnSeparateThread(context);
-                if (Task.WaitAny(new Task[] { testExecution }, _timeout) != -1
+                var tasks = new Task[] { testExecution };
+                if (Task.WaitAny(tasks, _timeout) != -1 
                     || _debugger.IsAttached)
                 {
                     context.CurrentResult = testExecution.GetAwaiter().GetResult();
                 }
                 else
                 {
-                    string message = $"Test exceeded Timeout value of {_timeout}ms";
+                    // Try to cancel the task and see if it completes quickly.
+                    cancellationTokenSource.Cancel();
+                    if (Task.WaitAny(tasks, 10) != -1)
+                    {
+                        context.CurrentResult = testExecution.GetAwaiter().GetResult();
+                    }
+                    else
+                    {
+                        string message = $"Test exceeded Timeout value of {_timeout}ms";
 
-                    context.CurrentResult.SetResult(
-                        new ResultState(TestStatus.Failed, message),
-                        message);
+                        context.CurrentResult.SetResult(
+                            new ResultState(TestStatus.Failed, message),
+                            message);
+                    }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                string message = $"Test exceeded Timeout value of {_timeout}ms";
+                context.CurrentResult.SetResult(new ResultState(
+                    TestStatus.Failed, message, FailureSite.Test), message);
             }
             catch (Exception exception)
             {
                 context.CurrentResult.RecordException(exception, FailureSite.Test);
+            }
+            finally
+            {
+                context.CancellationToken = CancellationToken.None;
             }
 
             return context.CurrentResult;
@@ -149,7 +172,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private Task<TestResult> RunTestOnSeparateThread(TestExecutionContext context)
         {
-            return Task.Run(() => innerCommand.Execute(context));
+            return Task.Run(() => innerCommand.Execute(context), context.CancellationToken);
         }
 #endif
     }
