@@ -24,7 +24,6 @@
 using System;
 using System.Collections;
 using System.IO;
-using NUnit.Framework.Assertions;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
@@ -47,13 +46,15 @@ namespace NUnit.Framework.Constraints
             new ArrayList(),
             new System.Collections.Generic.List<int>(),
             Guid.Empty,
+            new SingleElementCollection<int>(),
         };
 
         static object[] FailureData = new object[]
         {
-            new TestCaseData( "Hello", "\"Hello\"" ),
-            new TestCaseData( new object[] { 1, 2, 3 }, "< 1, 2, 3 >" ),
+            new TestCaseData("Hello", "\"Hello\"" ),
+            new TestCaseData(new object[] { 1, 2, 3 }, "< 1, 2, 3 >" ),
             new TestCaseData(new Guid("12345678-1234-1234-1234-123456789012"), "12345678-1234-1234-1234-123456789012"),
+            new TestCaseData(new SingleElementCollection<int>(1), "< 1 >"),
         };
 
         [TestCase(null)]
@@ -85,6 +86,39 @@ namespace NUnit.Framework.Constraints
             int? testInput = null;
             Assert.That(() => TheConstraint.ApplyTo(testInput),
                Throws.ArgumentException.With.Message.Contains("System.Int32"));
+        }
+
+        private class SingleElementCollection<T>
+        {
+            private T _element;
+
+            public int Count { get; private set; }
+
+            public SingleElementCollection()
+            {
+            }
+
+            public SingleElementCollection(T element)
+            {
+                _element = element;
+                Count = 1;
+            }
+            
+            public T Get()
+            {
+                if (Count == 0)
+                {
+                    throw new InvalidOperationException("Collection is empty");
+                }
+
+                Count--;
+                return _element;
+            }
+
+            public override string ToString()
+            {
+                return Count == 0 ? "<empty>" : "< " + _element.ToString() + " >";
+            }
         }
     }
 

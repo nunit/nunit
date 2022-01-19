@@ -1,5 +1,5 @@
 // ***********************************************************************
-// Copyright (c) 2007 Charlie Poole, Rob Prouse
+// Copyright (c) 2020 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-//
+// 
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-//
+// 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,13 +26,11 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// EmptyConstraint tests a whether a string or collection is empty,
-    /// postponing the decision about which test is applied until the
-    /// type of the actual argument is known.
+    /// CountZeroConstraint tests whether an instance has a property .Count with value zero.
     /// </summary>
-    public class EmptyConstraint : Constraint
+    public class CountZeroConstraint : Constraint
     {
-        private Constraint realConstraint;
+        private const string CountPropertyName = "Count";
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -40,8 +38,15 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return realConstraint == null ? "<empty>" : realConstraint.Description; }
+            get { return "<empty>"; }
         }
+
+        /// <summary>
+        /// Checks if the specified <paramref name="type"/> has a Count property.
+        /// </summary>
+        /// <param name="type">Type to check.</param>
+        /// <returns><see langword="true"/> when <paramref name="type"/> has a 'Count' property, <see langword="false"/> otherwise.</returns>
+        public static bool HasCountProperty(Type type) => type.GetProperty(CountPropertyName) != null;
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -50,23 +55,9 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            // NOTE: actual is string will fail for a null typed as string
-            Type actualType = actual?.GetType() ?? typeof(TActual);
-            
-            if (actualType == typeof(string))
-                realConstraint = new EmptyStringConstraint();
-            else if (actual is Guid || actualType == typeof(Guid?))
-                realConstraint = new EmptyGuidConstraint();
-            else if (actual is System.IO.DirectoryInfo)
-                realConstraint = new EmptyDirectoryConstraint();
-            else if (actual is System.Collections.IEnumerable)
-                realConstraint = new EmptyCollectionConstraint();
-            else if (CountZeroConstraint.HasCountProperty(actualType))
-                realConstraint = new CountZeroConstraint();
-            else
-                throw new ArgumentException($"The actual value must be a string, Guid, have a Count property, non-null IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
-
-            return realConstraint.ApplyTo(actual);
+            System.Reflection.PropertyInfo countProperty = actual?.GetType().GetProperty(CountPropertyName);
+            int? countValue = (int?)countProperty?.GetValue(actual, null);
+            return new ConstraintResult(this, actual, countValue == 0);
         }
     }
 }
