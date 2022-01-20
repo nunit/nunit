@@ -455,6 +455,32 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     #endregion
+
+    [TestFixtureSource(nameof(DataSource))]
+    public abstract class DataSourcePrivateFieldInBaseClass
+    {
+        private static readonly int[] DataSource = { 3, 5 };
+
+        protected DataSourcePrivateFieldInBaseClass(int data)
+        {
+            Data = data;
+        }
+
+        protected int Data { get; }
+    }
+
+    public class DerivedClassUsingBaseClassDataSource : DataSourcePrivateFieldInBaseClass
+    {
+        public DerivedClassUsingBaseClassDataSource(int data) : base(data)
+        {
+        }
+
+        [Test]
+        public void IsOdd()
+        {
+            Assert.That(Data % 2 == 1);
+        }
+    }
 }
 
 [TestFixtureSource("MyData")]

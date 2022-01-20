@@ -44,9 +44,11 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(SourceReturnsFixtureParameters))]
         [TestCase(typeof(ExtraTestFixtureAttributeIsIgnored))]
         [TestCase(typeof(TestFixtureMayUseMultipleSourceAttributes))]
+        [TestCase(typeof(DerivedClassUsingBaseClassDataSource))]
         public void CheckArgument(Type type)
         {
             var result = TestBuilder.RunTestFixture(type);
+            Assert.That(result.HasChildren, Is.True);
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
