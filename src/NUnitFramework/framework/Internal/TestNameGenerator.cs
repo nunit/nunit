@@ -334,19 +334,29 @@ namespace NUnit.Framework.Internal
                     bool tooLong = stringMax > 0 && str.Length > stringMax;
                     int limit = tooLong ? stringMax - THREE_DOTS.Length : 0;
 
-                    var sb = new StringBuilder();
-                    sb.Append("\"");
-                    foreach (char c in str)
+                    if (!tooLong && !MayNeedEscape(str))
                     {
-                        sb.Append(EscapeCharInString(c));
-                        if (tooLong && sb.Length > limit)
-                        {
-                            sb.Append(THREE_DOTS);
-                            break;
-                        }
+                        // common case, no need to process with string builder
+                        display = "\"" + str + "\"";
                     }
-                    sb.Append("\"");
-                    display = sb.ToString();
+                    else
+                    {
+                        // cleanup
+                        var sb = new StringBuilder();
+                        sb.Append("\"");
+                        foreach (char c in str)
+                        {
+                            sb.Append(EscapeCharInString(c));
+
+                            if (tooLong && sb.Length > limit)
+                            {
+                                sb.Append(THREE_DOTS);
+                                break;
+                            }
+                        }
+                        sb.Append("\"");
+                        display = sb.ToString();
+                    }
                 }
                 else if (arg is char c)
                 {
@@ -396,6 +406,31 @@ namespace NUnit.Framework.Internal
                 }
 
                 return display;
+            }
+
+            /// <summary>
+            /// Checks if string contains any character that might need escaping.
+            /// </summary>
+            private static bool MayNeedEscape(string s)
+            {
+                foreach (var c in s)
+                {
+                    if (MayNeedEscape(c))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            /// <summary>
+            /// Checks whether given char *might* need escaping.
+            /// </summary>
+            /// <returns>False when absolutely no escaping is needed, otherwise true.</returns>
+            private static bool MayNeedEscape(char c)
+            {
+                return !char.IsLetterOrDigit(c) && c != '.' && c != '/' && c != '-' && c != '_';
             }
 
             private static string EscapeSingleChar(char c)
@@ -584,7 +619,7 @@ namespace NUnit.Framework.Internal
                     sb.Append('(');
 
                     var parameters = method.GetParameters();
-                    
+
                     for (int i = 0; i < args.Length; i++)
                     {
                         if (i > 0) sb.Append(", ");
