@@ -21,18 +21,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// Combines multiple filters so that a test must pass all 
+    /// Combines multiple filters so that a test must pass all
     /// of them in order to pass this filter.
     /// </summary>
-    internal class AndFilter : CompositeFilter
+    internal sealed class AndFilter : CompositeFilter
     {
         /// <summary>
         /// Constructs an empty AndFilter

@@ -21,10 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -33,7 +30,7 @@ namespace NUnit.Framework.Internal.Filters
     /// CategoryFilter is able to select or exclude tests
     /// based on their categories.
     /// </summary>
-    internal class CategoryFilter : ValueMatchFilter
+    internal sealed class CategoryFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a CategoryFilter using a single category name

@@ -21,8 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -30,13 +28,13 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// IdFilter selects tests based on their id
     /// </summary>
-    internal class IdFilter : ValueMatchFilter
+    internal sealed class IdFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct an IdFilter for a single value
         /// </summary>
         /// <param name="id">The id the filter will recognize.</param>
-        public IdFilter(string id) : base (id) { }
+        public IdFilter(string id) : base(id) { }
 
         /// <summary>
         /// Match a test against a single value.
@@ -45,7 +43,12 @@ namespace NUnit.Framework.Internal.Filters
         {
             // We make a direct test here rather than calling ValueMatchFilter.Match
             // because regular expressions are not supported for ID.
-            return test.Id == ExpectedValue;
+            var testId = test.Id;
+
+            // ids usually differ from the end as we have fixed prefix like 0-
+            return testId.Length == ExpectedValue.Length
+                   && testId[testId.Length - 1] == ExpectedValue[testId.Length - 1]
+                   && testId == ExpectedValue;
         }
 
         /// <summary>

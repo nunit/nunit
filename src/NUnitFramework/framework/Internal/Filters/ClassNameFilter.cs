@@ -21,7 +21,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -29,7 +28,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// ClassName filter selects tests based on the class FullName
     /// </summary>
-    internal class ClassNameFilter : ValueMatchFilter
+    internal sealed class ClassNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a FullNameFilter for a single name

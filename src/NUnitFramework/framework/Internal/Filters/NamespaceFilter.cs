@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// ClassName filter selects tests based on the class FullName
     /// </summary>
-    internal class NamespaceFilter : ValueMatchFilter
+    internal sealed class NamespaceFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a NamespaceFilter for a single namespace
