@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -8,7 +7,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// TestName filter selects tests based on their Name
     /// </summary>
-    internal class TestNameFilter : ValueMatchFilter
+    internal sealed class TestNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a TestNameFilter for a single name

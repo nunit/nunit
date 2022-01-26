@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -8,7 +7,7 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// FullName filter selects tests based on their FullName
     /// </summary>
-    internal class MethodNameFilter : ValueMatchFilter
+    internal sealed class MethodNameFilter : ValueMatchFilter
     {
         /// <summary>
         /// Construct a MethodNameFilter for a single name
