@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 
@@ -150,47 +149,18 @@ namespace NUnit.Framework.Internal
                 case "or":
                     List<TestFilter> orChildFilters = new List<TestFilter>();
 
-                    // check if we have all filters accessing same field in OR fashion without regex
-                    var hashCommonTypeAndNonRegex = node.ChildNodes.Count > 0;
-                    Type commonType = null;
-
                     foreach (var childNode in node.ChildNodes)
                     {
                         var filter = FromXml(childNode);
-
-                        // make sure invariants are valid
-                        commonType ??= filter.GetType();
-                        hashCommonTypeAndNonRegex &= commonType == filter.GetType();
-
-                        // our supported filter types
-                        hashCommonTypeAndNonRegex &=
-                            filter is ClassNameFilter { IsRegex: false }
-                            || filter is FullNameFilter { IsRegex: false }
-                            || filter is IdFilter { IsRegex: false }
-                            || filter is MethodNameFilter { IsRegex: false }
-                            || filter is NamespaceFilter { IsRegex: false }
-                            || filter is TestNameFilter { IsRegex: false };
-
                         orChildFilters.Add(filter);
                     }
 
-                    if (hashCommonTypeAndNonRegex)
+                    var orFilter = new OrFilter(orChildFilters.ToArray());
+                    if (InFilter.TryOptimize(orFilter, out InFilter optimized))
                     {
-                        // we can transform
-                        Func<ITest, string> selector = orChildFilters[0] switch
-                        {
-                            ClassNameFilter _ => test => test.ClassName,
-                            FullNameFilter _ => test => test.FullName,
-                            IdFilter _ => test => test.Id,
-                            MethodNameFilter _ => test => test.MethodName,
-                            NamespaceFilter _ => test => test.TypeInfo?.Namespace,
-                            TestNameFilter _ => test => test.Name,
-                            _ => throw new InvalidOperationException("Invalid filter, logic wrong")
-                        };
-                        return new InFilter(selector, orChildFilters.Select(x => ((ValueMatchFilter) x).ExpectedValue));
+                        return optimized;
                     }
-
-                    return new OrFilter(orChildFilters.ToArray());
+                    return orFilter;
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));
