@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -307,9 +308,18 @@ namespace NUnit.Framework.Internal
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    _actions = Method == null && TypeInfo != null
-                        ? GetActionsForType(TypeInfo.Type)
-                        : GetCustomAttributes<ITestAction>(false);
+                    if (Method == null && TypeInfo != null)
+                    {
+                        _actions = GetActionsForType(TypeInfo.Type);
+                    }
+                    else if (Method != null)
+                    {
+                        _actions = MethodInfoCache.Get(Method).TestActionAttributes;
+                    }
+                    else
+                    {
+                        _actions = GetCustomAttributes<ITestAction>(false);
+                    }
                 }
 
                 return _actions;
