@@ -2,6 +2,7 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -55,7 +56,9 @@ namespace NUnit.Framework.Internal.Commands
 
         private object RunTestMethod(TestExecutionContext context)
         {
-            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
+            var methodInfo = MethodInfoCache.Get(testMethod.Method);
+
+            if (methodInfo.IsAsyncOperation)
             {
                 return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }

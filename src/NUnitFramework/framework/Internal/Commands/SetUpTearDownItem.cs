@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal.Commands
@@ -26,8 +27,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="tearDownMethods">A list teardown methods for this level</param>
         /// <param name="methodValidator">A method validator to validate each method before calling.</param>
         public SetUpTearDownItem(
-            IList<IMethodInfo> setUpMethods, 
-            IList<IMethodInfo> tearDownMethods, 
+            IList<IMethodInfo> setUpMethods,
+            IList<IMethodInfo> tearDownMethods,
             IMethodValidator methodValidator = null)
         {
             _setUpMethods = setUpMethods;
@@ -92,7 +93,9 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
             _methodValidator?.Validate(method.MethodInfo);
 
-            if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
+            var methodInfo = MethodInfoCache.Get(method);
+
+            if (methodInfo.IsAsyncOperation)
                 AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
             else
                 InvokeMethod(method, context);
