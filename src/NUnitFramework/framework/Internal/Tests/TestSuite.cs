@@ -5,8 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -312,6 +312,8 @@ namespace NUnit.Framework.Internal
         {
             foreach (IMethodInfo method in methods)
             {
+                var methodInfo = MethodInfoCache.Get(method);
+
                 if (method.IsAbstract)
                 {
                     MakeInvalid("An abstract SetUp and TearDown methods cannot be run: " + method.Name);
@@ -320,11 +322,11 @@ namespace NUnit.Framework.Internal
                 {
                     MakeInvalid("SetUp and TearDown methods must be public or protected: " + method.Name);
                 }
-                else if (method.GetParameters().Length != 0)
+                else if (methodInfo.Parameters.Length != 0)
                 {
                     MakeInvalid("SetUp and TearDown methods must not have parameters: " + method.Name);
                 }
-                else if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
+                else if (methodInfo.IsAsyncOperation)
                 {
                     if (method.ReturnType.Type == typeof(void))
                         MakeInvalid("SetUp and TearDown methods must not be async void: " + method.Name);
@@ -333,7 +335,7 @@ namespace NUnit.Framework.Internal
                 }
                 else
                 {
-                    if (!Reflect.IsVoidOrUnit(method.ReturnType.Type))
+                    if (!methodInfo.IsVoidOrUnit)
                         MakeInvalid("SetUp and TearDown methods must return void or an awaitable type with a void result: " + method.Name);
                 }
             }

@@ -3,6 +3,7 @@
 #nullable enable
 
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -56,7 +57,9 @@ namespace NUnit.Framework.Internal.Commands
 
         private object? RunTestMethod(TestExecutionContext context)
         {
-            if (AsyncToSyncAdapter.IsAsyncOperation(_testMethod.Method.MethodInfo))
+            var methodInfo = MethodInfoCache.Get(_testMethod.Method);
+
+            if (methodInfo.IsAsyncOperation)
             {
                 return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }
@@ -64,7 +67,7 @@ namespace NUnit.Framework.Internal.Commands
             return InvokeTestMethod(context);
         }
 
-        private object?InvokeTestMethod(TestExecutionContext context)
+        private object? InvokeTestMethod(TestExecutionContext context)
         {
             return _testMethod.Method.Invoke(context.TestObject, _arguments);
         }
