@@ -48,15 +48,29 @@ namespace NUnit.Framework.Internal.Builders
                 IsAsyncOperation = AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo);
                 IsVoidOrUnit = Reflect.IsVoidOrUnit(method.ReturnType.Type);
 
+                // TODO could probably go trough inherited and non inherited in two passes instead of multiple
+
+                // inherited
                 RepeatTestAttributes = method.GetCustomAttributes<IRepeatTest>(true);
+                WrapTestMethodAttributes = method.GetCustomAttributes<IWrapTestMethod>(true);
+                WrapSetupTearDownAttributes = method.GetCustomAttributes<IWrapSetUpTearDown>(true);
+                ApplyToContextAttributes = method.GetCustomAttributes<IApplyToContext>(true);
+
+                // non-inherited
                 TestBuilderAttributes = method.GetCustomAttributes<ITestBuilder>(false);
+                TestActionAttributes = method.GetCustomAttributes<ITestAction>(false);
             }
 
             public IParameterInfo[] Parameters { get; }
-            public IRepeatTest[] RepeatTestAttributes { get; }
             public bool IsAsyncOperation { get; }
             public bool IsVoidOrUnit { get; }
+
+            public IRepeatTest[] RepeatTestAttributes { get; }
             public ITestBuilder[] TestBuilderAttributes { get; }
+            public IWrapTestMethod[] WrapTestMethodAttributes { get; }
+            public ITestAction[] TestActionAttributes { get; }
+            public IWrapSetUpTearDown[] WrapSetupTearDownAttributes { get; }
+            public IApplyToContext[] ApplyToContextAttributes { get; }
         }
     }
 }

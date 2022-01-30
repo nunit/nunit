@@ -4,6 +4,7 @@ using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Extensions;
 
@@ -80,10 +81,10 @@ namespace NUnit.Framework.Internal.Execution
                 // Command to execute test
                 TestCommand command = new TestMethodCommand(_testMethod);
 
-                var method = _testMethod.Method;
+                var method = MethodInfoCache.Get(_testMethod.Method);
 
                 // Add any wrappers to the TestMethodCommand
-                foreach (IWrapTestMethod wrapper in method.GetCustomAttributes<IWrapTestMethod>(true))
+                foreach (IWrapTestMethod wrapper in method.WrapTestMethodAttributes)
                     command = wrapper.Wrap(command);
 
                 // Create TestActionCommands using attributes of the method
@@ -127,11 +128,11 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 // Add wrappers that apply before setup and after teardown
-                foreach (ICommandWrapper decorator in method.GetCustomAttributes<IWrapSetUpTearDown>(true))
+                foreach (ICommandWrapper decorator in method.WrapSetupTearDownAttributes)
                     command = decorator.Wrap(command);
 
                 // Add command to set up context using attributes that implement IApplyToContext
-                foreach (var attr in method.GetCustomAttributes<IApplyToContext>(true))
+                foreach (var attr in method.ApplyToContextAttributes)
                     command = new ApplyChangesToContextCommand(command, attr);
 
                 // Add a construct command and optionally a dispose command in case of instance per test case.
@@ -151,7 +152,7 @@ namespace NUnit.Framework.Internal.Execution
                     command = new TimeoutCommand(command, timeout, _debugger);
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
-                foreach (var repeatableAttribute in method.GetCustomAttributes<IRepeatTest>(true))
+                foreach (var repeatableAttribute in method.RepeatTestAttributes)
                     command = repeatableAttribute.Wrap(command);
 
                 return command;
