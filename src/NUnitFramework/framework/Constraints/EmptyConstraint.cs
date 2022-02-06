@@ -38,12 +38,14 @@ namespace NUnit.Framework.Constraints
                 realConstraint = new EmptyGuidConstraint();
             else if (actual is System.IO.DirectoryInfo)
                 realConstraint = new EmptyDirectoryConstraint();
-            else if (actual is System.Collections.IEnumerable)
-                realConstraint = new EmptyCollectionConstraint();
-            else if (CountZeroConstraint.HasCountProperty(actualType))
+            else if (actual is System.Collections.ICollection)
+                realConstraint = new EmptyCollectionConstraint();       // Uses ICollecion.Count
+            else if (CountZeroConstraint.HasCountProperty(actualType))  // For Collections that have Count but are not ICollection
                 realConstraint = new CountZeroConstraint();
+            else if (actual is System.Collections.IEnumerable)          // Enumerates whole collection
+                realConstraint = new EmptyCollectionConstraint();
             else
-                throw new ArgumentException($"The actual value must be a string, Guid, have a Count property, non-null IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
+                throw new ArgumentException($"The actual value must be not-null, a string, Guid, have an int Count property, IEnumerable or DirectoryInfo. The value passed was of type {actualType}.", nameof(actual));
 
             return realConstraint.ApplyTo(actual);
         }
