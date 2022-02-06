@@ -23,7 +23,7 @@ namespace NUnit.Framework
             {
                 members.AddRange(type.GetMember(name, flags));
             }
-            while ((type = type.BaseType) != null);
+            while (members.Count == 0 && (type = type.BaseType) != null);
             return members.ToArray();
         }
     }

@@ -481,6 +481,21 @@ namespace NUnit.TestData.TestFixtureSourceData
             Assert.That(Data % 2 == 1);
         }
     }
+
+    public class BaseClassUsingDerivedClassDataSource : DataSourcePrivateFieldInBaseClass
+    {
+        private static readonly int[] DataSource = { 2, 4 };
+
+        public BaseClassUsingDerivedClassDataSource(int data) : base(data)
+        {
+        }
+
+        [Test]
+        public void IsEven()
+        {
+            Assert.That(Data % 2 == 0);
+        }
+    }
 }
 
 [TestFixtureSource("MyData")]
