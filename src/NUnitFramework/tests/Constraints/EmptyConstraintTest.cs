@@ -23,6 +23,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Specialized;
 using System.IO;
 using NUnit.TestUtilities;
 
@@ -47,6 +48,10 @@ namespace NUnit.Framework.Constraints
             new System.Collections.Generic.List<int>(),
             Guid.Empty,
             new SingleElementCollection<int>(),
+            new NameValueCollection(),
+#if !NET35 && !NET40
+            System.Collections.Immutable.ImmutableArray<int>.Empty,
+#endif
         };
 
         static object[] FailureData = new object[]
@@ -54,7 +59,11 @@ namespace NUnit.Framework.Constraints
             new TestCaseData("Hello", "\"Hello\"" ),
             new TestCaseData(new object[] { 1, 2, 3 }, "< 1, 2, 3 >" ),
             new TestCaseData(new Guid("12345678-1234-1234-1234-123456789012"), "12345678-1234-1234-1234-123456789012"),
-            new TestCaseData(new SingleElementCollection<int>(1), "< 1 >"),
+            new TestCaseData(new SingleElementCollection<int>(1), "<1>"),
+            new TestCaseData(new NameValueCollection { ["Hello"] = "World" }, "< \"Hello\" >"),
+#if !NET35 && !NET40
+            new TestCaseData(System.Collections.Immutable.ImmutableArray.Create(1), "< 1 >"),
+#endif
         };
 
         [TestCase(null)]
@@ -62,6 +71,12 @@ namespace NUnit.Framework.Constraints
         public void InvalidDataThrowsArgumentException(object data)
         {
             Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
+        }
+
+        public void InvalidDataThrowsArgumentException()
+        {
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(default(SingleElementCollection<int>)));
+            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(new NotReallyACollection()));
         }
 
         [Test]
@@ -90,7 +105,7 @@ namespace NUnit.Framework.Constraints
 
         private class SingleElementCollection<T>
         {
-            private T _element;
+            private readonly T _element;
 
             public int Count { get; private set; }
 
@@ -111,14 +126,21 @@ namespace NUnit.Framework.Constraints
                     throw new InvalidOperationException("Collection is empty");
                 }
 
-                Count--;
+                Count = 0;
                 return _element;
             }
 
             public override string ToString()
             {
-                return Count == 0 ? "<empty>" : "< " + _element.ToString() + " >";
+                return Count == 0 ? "<empty>" : _element.ToString();
             }
+        }
+
+        private class NotReallyACollection
+        {
+#pragma warning disable CA1822 // Mark members as static
+            public double Count => 0;
+#pragma warning restore CA1822 // Mark members as static
         }
     }
 

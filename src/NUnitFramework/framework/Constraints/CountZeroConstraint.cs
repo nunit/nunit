@@ -42,11 +42,11 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Checks if the specified <paramref name="type"/> has a Count property.
+        /// Checks if the specified <paramref name="type"/> has a int Count property.
         /// </summary>
         /// <param name="type">Type to check.</param>
-        /// <returns><see langword="true"/> when <paramref name="type"/> has a 'Count' property, <see langword="false"/> otherwise.</returns>
-        public static bool HasCountProperty(Type type) => type.GetProperty(CountPropertyName) != null;
+        /// <returns><see langword="true"/> when <paramref name="type"/> has a 'int Count' property, <see langword="false"/> otherwise.</returns>
+        public static bool HasCountProperty(Type type) => type.GetProperty(CountPropertyName)?.PropertyType == typeof(int);
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
