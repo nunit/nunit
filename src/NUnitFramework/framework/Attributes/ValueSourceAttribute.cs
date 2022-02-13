@@ -26,7 +26,6 @@
 using System;
 using System.Collections;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -103,8 +102,8 @@ namespace NUnit.Framework
                     ?? throw new InvalidDataSourceException($"The value source type '{sourceType}' does not implement IEnumerable.");
             }
 
-            MemberInfo[] members = sourceType.GetMember(SourceName,
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            MemberInfo[] members = sourceType.GetMemberIncludingFromBase(SourceName,
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
             return ContextUtils.DoIsolated(() => GetDataSourceValue(members))
                 ?? throw CreateSourceNameException();

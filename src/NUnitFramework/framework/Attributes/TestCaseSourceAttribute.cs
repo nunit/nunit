@@ -28,7 +28,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -243,8 +242,8 @@ namespace NUnit.Framework
             if (SourceName == null)
                 return Reflect.Construct(sourceType, null) as IEnumerable;
 
-            MemberInfo[] members = sourceType.GetMember(SourceName,
-                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+            MemberInfo[] members = sourceType.GetMemberIncludingFromBase(SourceName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
             if (members.Length == 1)
             {
