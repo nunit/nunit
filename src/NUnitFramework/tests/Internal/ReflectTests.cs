@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace NUnit.Framework.Internal
 {
@@ -268,6 +267,48 @@ namespace NUnit.Framework.Internal
         private static int MethodThrowingTargetInvocationException()
         {
             throw new TargetInvocationException(new Exception());
+        }
+
+        private const string ValueInBase = "Base";
+        private const string ValueInDerived = "Derived";
+
+        [TestCase(typeof(DerivedWithoutMember), ValueInBase)]
+        [TestCase(typeof(DerivedWithMember), ValueInDerived)]
+        public static void FindMember(Type type, string expected)
+        {
+            MemberInfo[] members = type.GetMemberIncludingFromBase("Data",
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
+
+            Assert.That(members, Has.Length.EqualTo(1), "Expected one result");
+            string actual = null;
+            if (members[0] is FieldInfo field)
+            {
+                actual = (string)field.GetValue(null);
+            }
+            else if (members[0] is PropertyInfo property)
+            {
+                actual = (string)property.GetValue(null, null);
+            }
+
+            Assert.That(actual, Is.EqualTo(expected), "Value");
+        }
+
+        private abstract class BaseWithMember
+        {
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable CS0414 // Remove unused private members
+            private static readonly string Data = ValueInBase;
+#pragma warning restore CS0414 // Remove unused private members
+#pragma warning restore IDE0051 // Remove unused private members
+        }
+
+        private sealed class DerivedWithMember : BaseWithMember
+        {
+            public static string Data => ValueInDerived;
+        }
+
+        private sealed class DerivedWithoutMember : BaseWithMember
+        {
         }
     }
 }
