@@ -52,9 +52,9 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name of the suite.</param>
         public TestSuite(string name) : base(name)
         {
-            Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            Arguments = ArrayHelper.Empty<object>();
+            OneTimeSetUpMethods = ArrayHelper.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = ArrayHelper.Empty<IMethodInfo>();
         }
 
         /// <summary>
@@ -65,9 +65,9 @@ namespace NUnit.Framework.Internal
         public TestSuite(string parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
-            Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            Arguments = ArrayHelper.Empty<object>();
+            OneTimeSetUpMethods = ArrayHelper.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = ArrayHelper.Empty<IMethodInfo>();
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace NUnit.Framework.Internal
         public TestSuite(ITypeInfo fixtureType, object?[]? arguments = null)
             : base(fixtureType)
         {
-            Arguments = arguments ?? TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            Arguments = arguments ?? ArrayHelper.Empty<object>();
+            OneTimeSetUpMethods = ArrayHelper.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = ArrayHelper.Empty<IMethodInfo>();
         }
 
         /// <summary>
@@ -90,9 +90,9 @@ namespace NUnit.Framework.Internal
         public TestSuite(Type fixtureType)
             : base(new TypeWrapper(fixtureType))
         {
-            Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            Arguments = ArrayHelper.Empty<object>();
+            OneTimeSetUpMethods = ArrayHelper.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = ArrayHelper.Empty<IMethodInfo>();
         }
 
         /// <summary>

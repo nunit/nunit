@@ -47,7 +47,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Default constructor
         /// </summary>
-        public TestFixtureAttribute() : this(Internal.TestParameters.NoArguments) { }
+        public TestFixtureAttribute() : this(ArrayHelper.Empty<object>()) { }
 
         /// <summary>
         /// Construct with a object[] representing a set of arguments.
@@ -58,7 +58,7 @@ namespace NUnit.Framework
         {
             RunState = RunState.Runnable;
             Arguments = arguments ?? new object?[] { null };
-            TypeArgs = new Type[0];
+            TypeArgs = ArrayHelper.Empty<Type>();
             Properties = new PropertyBag();
         }
 

@@ -57,7 +57,7 @@ namespace NUnit.Framework
         /// </summary>
         public ValuesAttribute()
         {
-            data = Internal.TestParameters.NoArguments;
+            data = ArrayHelper.Empty<object>();
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace NUnit.Framework
                 return new object[] { true, false };
             }
 
-            return Internal.TestParameters.NoArguments;
+            return ArrayHelper.Empty<object>();
         }
 
         /// <summary>

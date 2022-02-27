@@ -114,7 +114,7 @@ namespace NUnit.Framework.Constraints
 
             // Partly optimization, partly makes any subsequent all()/any() calls reliable
             if (allTypes.Count == 0)
-                return new object[0];
+                return ArrayHelper.Empty<object>();
             
             var distinctTypes = allTypes.Distinct().ToList();
             if (distinctTypes.Count == 1)

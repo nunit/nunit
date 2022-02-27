@@ -34,18 +34,11 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestParameters : ITestData, IApplyToTest
     {
-        internal static readonly object[] NoArguments =
-#if NET35 || NET40 || NET45 // New in net46
-            new object[0];
-#else
-            Array.Empty<object>();
-#endif
-
         /// <summary>
         /// Default Constructor creates an empty parameter set
         /// </summary>
         public TestParameters()
-            : this(RunState.Runnable, NoArguments)
+            : this(RunState.Runnable, ArrayHelper.Empty<object>())
         {
             Properties = new PropertyBag();
         }
@@ -65,7 +58,7 @@ namespace NUnit.Framework.Internal
         /// the provider exception that made it invalid.
         /// </summary>
         public TestParameters(Exception exception)
-            : this(RunState.NotRunnable, NoArguments)
+            : this(RunState.NotRunnable, ArrayHelper.Empty<object>())
         {
             Properties = new PropertyBag();
             Properties.Set(PropertyNames.SkipReason, ExceptionHelper.BuildMessage(exception));

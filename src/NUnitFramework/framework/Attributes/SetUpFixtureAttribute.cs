@@ -78,7 +78,7 @@ namespace NUnit.Framework
                     return false;
                 }
 
-                if (!typeInfo.HasConstructor(new Type[0]))
+                if (!typeInfo.HasConstructor(ArrayHelper.Empty<Type>()))
                 {
                     reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
                     return false;
