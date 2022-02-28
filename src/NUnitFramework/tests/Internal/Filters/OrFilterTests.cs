@@ -214,17 +214,6 @@ namespace NUnit.Framework.Internal.Filters
         }
 
         [Test]
-        public void BuildFromXmlFullName()
-        {
-            TestFilter filter = TestFilter.FromXml(
-                $"<filter><or><test>{DUMMY_CLASS}</test><test>{ANOTHER_CLASS}</test></or></filter>");
-
-            Assert.That(filter, Is.TypeOf<InFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
-        }
-
-        [Test]
         public void BuildFromXmlFullNameRegex()
         {
             TestFilter filter = TestFilter.FromXml(
