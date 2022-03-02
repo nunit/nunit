@@ -2,6 +2,7 @@
 
 #nullable enable
 
+using System;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
@@ -76,7 +77,7 @@ namespace NUnit.Framework.Internal
         {
             return Assembly != null
                 ? Assembly.GetAttributes<TAttr>()
-                : new TAttr[0];
+                : Array.Empty<TAttr>();
         }
 
         /// <summary>

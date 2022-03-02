@@ -214,16 +214,15 @@ namespace NUnit.Framework.Internal
                 case "MACOSX":
                     isSupported = _os.IsMacOSX;
                     break;
+
                 // These bitness tests relate to the process, not the OS.
-                // We can't use Environment.Is64BitProcess because it's
-                // only supported in NET 4.0 and higher.
                 case "64-BIT":
                 case "64-BIT-PROCESS":
-                    isSupported = IntPtr.Size == 8;
+                    isSupported = Environment.Is64BitProcess;
                     break;
                 case "32-BIT":
                 case "32-BIT-PROCESS":
-                    isSupported = IntPtr.Size == 4;
+                    isSupported = !Environment.Is64BitProcess;
                     break;
 
                 case "64-BIT-OS":

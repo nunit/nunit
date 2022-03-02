@@ -197,7 +197,7 @@ namespace NUnit.Framework.Internal
             ClrVersion = version;
             if (Runtime == RuntimeType.Mono && version.Major == 1)
                 FrameworkVersion = new Version(1, 0);
-            if (Runtime == RuntimeType.NetFramework && version.Major == 4 && version.Minor == 5)
+            if (Runtime == RuntimeType.NetFramework && version.Major == 4 && version.Minor >= 5)
                 ClrVersion = new Version(4, 0, 30319);
             if (Runtime == RuntimeType.NetCore)
                 ClrVersion = new Version(4, 0, 30319);

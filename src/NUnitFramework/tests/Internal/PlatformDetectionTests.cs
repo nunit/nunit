@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
             CheckPlatforms(
                 new PlatformHelper( OSPlatform.CurrentPlatform, runtimeFramework ),
                 expectedPlatforms,
-                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH");
+                PlatformHelper.RuntimePlatforms + ",NET-1.0,NET-1.1,NET-2.0,NET-3.0,NET-3.5,NET-4.0,NET-4.5,NET-4.6,MONO-1.0,MONO-2.0,MONO-3.0,MONO-3.5,MONO-4.0,MONOTOUCH");
         }
 
         private void CheckPlatforms( PlatformHelper helper,
@@ -270,6 +270,14 @@ namespace NUnit.Framework.Internal
             CheckRuntimePlatforms(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 5, 0, 0)),
                 "Net,Net-4.0,Net-4.5");
+        }
+
+        [Test]
+        public void DetectNet46()
+        {
+            CheckRuntimePlatforms(
+                new RuntimeFramework(RuntimeType.NetFramework, new Version(4, 6, 0, 0)),
+                "Net,Net-4.0,Net-4.5,Net-4.6");
         }
 
         [Test]
