@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
             Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
         }
 
-#if NET45
+#if NETFRAMEWORK
         [Test]
         public void TargetFrameworkIsSetCorrectly()
         {

@@ -13,12 +13,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public abstract class TestParameters : ITestData, IApplyToTest
     {
-        internal static readonly object[] NoArguments =
-#if NET45 // New in net46
-            new object[0];
-#else
-            Array.Empty<object>();
-#endif
+        internal static readonly object[] NoArguments = Array.Empty<object>();
 
         /// <summary>
         /// Default Constructor creates an empty parameter set

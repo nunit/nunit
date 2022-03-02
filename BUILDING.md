@@ -37,8 +37,7 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
        Debug\
           net6.0
           net5.0
-          net45
-          net46
+          net462
           netcoreapp3.1
           netstandard2.0
 ```
@@ -132,7 +131,7 @@ Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Dire
 - `THREAD_ABORT` enables timeouts and forcible cancellation
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
-For example, `NET45`, `NETSTANDARD2_0`, `NETCOREAPP2_1`, and so on.
+For example, `NET462`, `NETSTANDARD2_0`, `NETCOREAPP2_1`, and so on.
 It is most helpful to call out which platforms are the exception in rather than the rule
 in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
 
@@ -140,15 +139,15 @@ For example, rather than this code:
 
 ```cs
 #if NETSTANDARD2_0 || NETSTANDARD2_1
-// Something that .NET Framework 4.5 can't do
+// Something that .NET Framework can't do
 #endif
 ```
 
 Consider this:
 
 ```cs
-#if !NET45
-// Something that .NET Framework 4.5 can't do
+#if !NETFRAMEWORK
+// Something that .NET Framework can't do
 #endif
 ```
 

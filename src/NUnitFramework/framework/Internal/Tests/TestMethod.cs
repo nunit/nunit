@@ -15,11 +15,7 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
-#if NETSTANDARD2_0
-        private static IList<ITest> _emptyArray = Array.Empty<ITest>();
-#else
-        private static IList<ITest> _emptyArray = new ITest[0];
-#endif
+        private static readonly IList<ITest> _emptyArray = Array.Empty<ITest>();
 
         /// <summary>
         /// The ParameterSet used to create this test method

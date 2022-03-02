@@ -30,7 +30,7 @@ var packageVersion = version + modifier + dbgSuffix;
 // Equivalent of NUnitLibraryFrameworks in Directory.Build.props
 var LibraryFrameworks = new string[]
 {
-    "net45",
+    "net462",
     "netstandard2.0"
 };
 
@@ -164,13 +164,13 @@ Task("CheckForError")
     .Description("Checks for errors running the test suites")
     .Does(() => CheckForError(ref ErrorDetail));
 
-Task("Test45")
-    .Description("Tests the .NET 4.5 version of the framework")
+Task("TestNetFramework")
+    .Description("Tests the .NET Framework version of nunit framework")
     .IsDependentOn("Build")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net45";
+        var runtime = "net462";
         var dir = BIN_DIR + runtime + "/";
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
         //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
@@ -536,7 +536,7 @@ Task("Rebuild")
 Task("Test")
     .Description("Builds and tests all versions of the framework")
     .IsDependentOn("Build")
-    .IsDependentOn("Test45")
+    .IsDependentOn("TestNetFramework")
     .IsDependentOn("TestNetStandard20");
 
 Task("Package")
