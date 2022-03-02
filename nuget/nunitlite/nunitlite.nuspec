@@ -63,8 +63,6 @@ How to use this package:
     <file src="bin/net40/nunitlite-runner.pdb" target="tools\net40" />
     <file src="bin/net45/nunitlite-runner.exe" target="tools\net45" />
     <file src="bin/net45/nunitlite-runner.pdb" target="tools\net45" />
-    <file src="bin/netcoreapp2.1/nunitlite-runner.dll" target="tools\netcoreapp2.1" />
-    <file src="bin/netcoreapp2.1/nunitlite-runner.pdb" target="tools\netcoreapp2.1" />
     <file src="bin/netcoreapp3.1/nunitlite-runner.dll" target="tools\netcoreapp3.1" />
     <file src="bin/netcoreapp3.1/nunitlite-runner.pdb" target="tools\netcoreapp3.1" />
     <file src="../../nuget/nunitlite/Program.cs" target="content" />
