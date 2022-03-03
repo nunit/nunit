@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
@@ -27,7 +26,7 @@ namespace NUnit.Framework.Internal
         }
 
 #if NETFRAMEWORK
-        [Test]
+        [Test, Platform("Win")]
         public void TargetFrameworkIsSetCorrectly()
         {
             // We use reflection so it will compile and pass on Mono,
