@@ -26,16 +26,17 @@ namespace NUnit.Framework.Internal
         }
 
 #if NETFRAMEWORK
-        [Test, Platform("Win")]
+        [Test]
         public void TargetFrameworkIsSetCorrectly()
         {
             // We use reflection so it will compile and pass on Mono,
             // including older versions that do not have the property.
             var prop = typeof(AppDomainSetup).GetProperty("TargetFrameworkName");
             Assume.That(prop, Is.Not.Null);
-            Assert.That(
-                prop.GetValue(AppDomain.CurrentDomain.SetupInformation),
-                Does.StartWith(".NETFramework,Version=v4."));
+
+            var propValue = prop.GetValue(AppDomain.CurrentDomain.SetupInformation);
+            Assume.That(propValue, Is.Not.Null);
+            Assert.That(propValue, Does.StartWith(".NETFramework,Version=v4."));
         }
 
         [Test]
