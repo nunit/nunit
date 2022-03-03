@@ -17,8 +17,10 @@ namespace NUnit.Framework.Internal.Extensions
             if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
             {
                 foreach (var typeArg in type.GetGenericArguments())
+                {
                     if (!typeArg.IsSortable())
                         return false;
+                }
             }
 
             return true;
