@@ -15,8 +15,6 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
-        private static readonly IList<ITest> _emptyArray = Array.Empty<ITest>();
-
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
@@ -117,7 +115,7 @@ namespace NUnit.Framework.Internal
         /// <value>A list of child tests</value>
         public override IList<ITest> Tests
         {
-            get { return _emptyArray; }
+            get { return Array.Empty<ITest>(); }
         }
 
         /// <summary>

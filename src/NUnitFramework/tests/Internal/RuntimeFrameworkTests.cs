@@ -25,29 +25,6 @@ namespace NUnit.Framework.Internal
             Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
         }
 
-#if NETFRAMEWORK
-        [Test]
-        public void TargetFrameworkIsSetCorrectly()
-        {
-            // We use reflection so it will compile and pass on Mono,
-            // including older versions that do not have the property.
-            var prop = typeof(AppDomainSetup).GetProperty("TargetFrameworkName");
-            Assume.That(prop, Is.Not.Null);
-
-            var propValue = prop.GetValue(AppDomain.CurrentDomain.SetupInformation);
-            Assume.That(propValue, Is.Not.Null);
-            Assert.That(propValue, Does.StartWith(".NETFramework,Version=v4."));
-        }
-
-        [Test]
-        public void DoesNotRunIn40CompatibilityModeWhenCompiled45()
-        {
-            var uri = new Uri( "http://host.com/path./" );
-            var uriStr = uri.ToString();
-            Assert.AreEqual( "http://host.com/path./", uriStr );
-        }
-#endif
-
         [Test]
         [TestCaseSource(nameof(netcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
