@@ -69,5 +69,30 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter.Match(_dummyFixture));
             Assert.That(filter.Match(_anotherFixture));
         }
+        
+        [Test]
+        public void WriteToXml()
+        {
+            var orFilters = new[]
+            {
+                new OrFilter(new ClassNameFilter("Id-1"), new ClassNameFilter("Id-2")),
+                new OrFilter(new FullNameFilter("Id-1"), new FullNameFilter("Id-2")),
+                new OrFilter(new IdFilter("Id-1"), new IdFilter("Id-2")),
+                new OrFilter(new MethodNameFilter("Id-1"), new MethodNameFilter("Id-2")),
+                new OrFilter(new NamespaceFilter("Id-1"), new NamespaceFilter("Id-2")),
+                new OrFilter(new TestNameFilter("Id-1"), new TestNameFilter("Id-2")),
+            };
+
+            foreach (var orFilter in orFilters)
+            {
+                InFilter.TryOptimize(orFilter, out var inFilter);
+                Assert.NotNull(inFilter);
+
+                var orFilterXml = orFilter.ToXml(true).OuterXml;
+                var inFilterXml = inFilter.ToXml(true).OuterXml;
+
+                Assert.That(inFilterXml, Is.EqualTo(orFilterXml));
+            }
+        }
     }
 }

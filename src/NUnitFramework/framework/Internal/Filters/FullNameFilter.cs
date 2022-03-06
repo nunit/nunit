@@ -30,6 +30,8 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     internal sealed class FullNameFilter : ValueMatchFilter
     {
+        internal const string XmlElementName = "test";
+
         /// <summary>
         /// Construct a FullNameFilter for a single name
         /// </summary>
@@ -48,9 +50,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "test"; }
-        }
+        protected override string ElementName => XmlElementName;
     }
 }
