@@ -23,7 +23,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 
@@ -188,9 +187,17 @@ namespace NUnit.Framework.Internal
                     List<TestFilter> orChildFilters = new List<TestFilter>();
 
                     foreach (var childNode in node.ChildNodes)
-                        orChildFilters.Add(FromXml(childNode));
+                    {
+                        var filter = FromXml(childNode);
+                        orChildFilters.Add(filter);
+                    }
 
-                    return new OrFilter(orChildFilters.ToArray());
+                    var orFilter = new OrFilter(orChildFilters.ToArray());
+                    if (InFilter.TryOptimize(orFilter, out InFilter optimized))
+                    {
+                        return optimized;
+                    }
+                    return orFilter;
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));

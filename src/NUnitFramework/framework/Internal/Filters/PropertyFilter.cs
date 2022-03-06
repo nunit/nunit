@@ -21,10 +21,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ***********************************************************************
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -33,7 +30,7 @@ namespace NUnit.Framework.Internal.Filters
     /// PropertyFilter is able to select or exclude tests
     /// based on their properties.
     /// </summary>
-    internal class PropertyFilter : ValueMatchFilter
+    internal sealed class PropertyFilter : ValueMatchFilter
     {
         private readonly string _propertyName;
 
@@ -42,7 +39,7 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="propertyName">A property name</param>
         /// <param name="expectedValue">The expected value of the property</param>
-        public PropertyFilter(string propertyName, string expectedValue) : base(expectedValue) 
+        public PropertyFilter(string propertyName, string expectedValue) : base(expectedValue)
         {
             _propertyName = propertyName;
         }

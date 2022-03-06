@@ -8,10 +8,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <see cref="OrFilter"/> correctly combines the results from its sub-filters.
         /// Furthermore it checks that the result from the correct match-function of the
         /// sub-filters is used to calculate the OR combination.
-        /// 
+        ///
         /// The input is an array of booleans (<paramref name="inputBooleans"/>). For each boolean
         /// value a <see cref="MockTestFilter"/> is added to the <see cref="OrFilter"/>
         /// whose match-function (defined through the parameter <paramref name="matchFunction"/>)
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <see cref="OrFilter"/> calls not the same match-function on the
         /// <see cref="MockTestFilter"/>, thus checking that the <see cref="OrFilter"/>
         /// combines the correct results from the sub-filters.
-        /// 
+        ///
         /// See also <see cref="MockTestFilter"/>.
         /// </summary>
         [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
@@ -229,17 +229,6 @@ namespace NUnit.Framework.Internal.Filters
         {
             TestFilter filter = TestFilter.FromXml(
                 "<filter><or><cat>Dummy</cat><cat>Another</cat></or></filter>");
-
-            Assert.That(filter, Is.TypeOf<OrFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
-        }
-
-        [Test]
-        public void BuildFromXmlFullName()
-        {
-            TestFilter filter = TestFilter.FromXml(
-                $"<filter><or><test>{DUMMY_CLASS}</test><test>{ANOTHER_CLASS}</test></or></filter>");
 
             Assert.That(filter, Is.TypeOf<OrFilter>());
             Assert.That(filter.Match(_dummyFixture));

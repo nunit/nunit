@@ -105,8 +105,9 @@ namespace NUnit.Framework.Internal.Builders
         {
             var tests = new List<TestMethod>();
 
-            List<ITestBuilder> builders = new List<ITestBuilder>(
-                method.GetCustomAttributes<ITestBuilder>(false));
+            var metadata = MethodInfoCache.Get(method);
+
+            List<ITestBuilder> builders = new List<ITestBuilder>(metadata.TestBuilderAttributes);
 
             // See if we need to add a CombinatorialAttribute for parameterized data
             if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
