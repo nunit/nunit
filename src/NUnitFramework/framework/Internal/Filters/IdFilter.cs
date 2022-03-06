@@ -9,6 +9,8 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     internal sealed class IdFilter : ValueMatchFilter
     {
+        internal const string XmlElementName = "id";
+
         /// <summary>
         /// Construct an IdFilter for a single value
         /// </summary>
@@ -34,9 +36,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "id"; }
-        }
+        protected override string ElementName => XmlElementName;
     }
 }

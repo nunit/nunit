@@ -10,6 +10,8 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     internal sealed class OrFilter : CompositeFilter
     {
+        internal const string XmlElementName = "or";
+
         /// <summary>
         /// Constructs an empty OrFilter
         /// </summary>
@@ -87,9 +89,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "or"; }
-        }
+        protected override string ElementName => XmlElementName;
     }
 }

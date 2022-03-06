@@ -16,16 +16,19 @@ namespace NUnit.Framework.Internal.Filters
     {
         private readonly Func<ITest, string?> _selector;
         private readonly HashSet<string?> _values;
+        private readonly string _xmlElementName;
 
         /// <summary>
         /// Constructs new InFilter.
         /// </summary>
         /// <param name="selector">Selector to get value to check.</param>
         /// <param name="values">Valid values for the filter.</param>
-        public InFilter(Func<ITest, string?> selector, IEnumerable<string?> values)
+        /// <param name="xmlElementName">The XML element name the original filter used.</param>
+        private InFilter(Func<ITest, string?> selector, IEnumerable<string?> values, string xmlElementName)
         {
             _selector = selector;
             _values = new HashSet<string?>(values);
+            _xmlElementName = xmlElementName;
         }
 
         /// <summary>
@@ -78,8 +81,18 @@ namespace NUnit.Framework.Internal.Filters
                     NamespaceFilter _ => test => test.TypeInfo?.Namespace,
                     TestNameFilter _ => test => test.Name,
                     _ => throw new InvalidOperationException("Invalid filter, logic wrong")
+                }; 
+                string xmlElementName = orFilter.Filters[0] switch
+                {
+                    ClassNameFilter _ => ClassNameFilter.XmlElementName,
+                    FullNameFilter _ => FullNameFilter.XmlElementName,
+                    IdFilter _ => IdFilter.XmlElementName,
+                    MethodNameFilter _ => MethodNameFilter.XmlElementName,
+                    NamespaceFilter _ => NamespaceFilter.XmlElementName,
+                    TestNameFilter _ => TestNameFilter.XmlElementName,
+                    _ => throw new InvalidOperationException("Invalid filter, logic wrong")
                 };
-                optimized = new InFilter(selector, expectedValues);
+                optimized = new InFilter(selector, expectedValues, xmlElementName);
                 return true;
             }
 
@@ -94,7 +107,18 @@ namespace NUnit.Framework.Internal.Filters
 
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
-            throw new NotImplementedException();
+            // we transform OrFilter so that's our root
+            TNode result = parentNode.AddElement(OrFilter.XmlElementName);
+
+            foreach (var value in _values)
+            {
+                if (value != null)
+                {
+                    result.AddElement(_xmlElementName, value);
+                }
+            }
+
+            return result;
         }
     }
 }
