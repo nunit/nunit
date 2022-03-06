@@ -108,8 +108,8 @@ namespace NUnit.Framework.Internal
             Method = method;
             Properties = new PropertyBag();
             RunState = RunState.Runnable;
-            SetUpMethods = new IMethodInfo[0];
-            TearDownMethods = new IMethodInfo[0];
+            SetUpMethods = ArrayHelper.Empty<IMethodInfo>();
+            TearDownMethods = ArrayHelper.Empty<IMethodInfo>();
         }
 
         private static string GetNextId()
@@ -367,7 +367,7 @@ namespace NUnit.Framework.Internal
             if (TypeInfo != null)
                 return TypeInfo.GetCustomAttributes<TAttr>(inherit);
 
-            return new TAttr[0];
+            return ArrayHelper.Empty<TAttr>();
         }
 
         #endregion

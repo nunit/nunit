@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal
                 MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
                     "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
                 if (getDisplayNameMethod != null)
-                    currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, new object[0]);
+                    currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, ArrayHelper.Empty<object>());
             }
             return currentFramework;
         });

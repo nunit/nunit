@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <param name="typeInfo">The type being examined for attributes</param>
         private IFixtureBuilder[] GetFixtureBuilderAttributes(ITypeInfo? typeInfo)
         {
-            IFixtureBuilder[] attrs = new IFixtureBuilder[0];
+            IFixtureBuilder[] attrs = ArrayHelper.Empty<IFixtureBuilder>();
 
             while (typeInfo != null && !typeInfo.IsType(typeof(object)))
             {

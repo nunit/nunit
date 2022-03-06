@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
         {
             return Assembly != null
                 ? Assembly.GetAttributes<TAttr>()
-                : new TAttr[0];
+                : ArrayHelper.Empty<TAttr>();
         }
 
         /// <summary>

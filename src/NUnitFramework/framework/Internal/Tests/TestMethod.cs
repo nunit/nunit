@@ -36,12 +36,6 @@ namespace NUnit.Framework.Internal
     {
         #region Fields
 
-#if NETSTANDARD2_0
-        private static IList<ITest> _emptyArray = Array.Empty<ITest>();
-#else
-        private static IList<ITest> _emptyArray = new ITest[0];
-#endif
-
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
@@ -97,7 +91,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override object?[] Arguments
         {
-            get { return parms != null ? parms.Arguments : TestParameters.NoArguments; }
+            get { return parms != null ? parms.Arguments : ArrayHelper.Empty<object>(); }
         }
 
         /// <summary>
@@ -142,7 +136,7 @@ namespace NUnit.Framework.Internal
         /// <value>A list of child tests</value>
         public override IList<ITest> Tests
         {
-            get { return _emptyArray; }
+            get { return ArrayHelper.Empty<ITest>(); }
         }
 
         /// <summary>
