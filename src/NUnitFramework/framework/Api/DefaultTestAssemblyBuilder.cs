@@ -109,8 +109,10 @@ namespace NUnit.Framework.Api
 
                 if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersDictionary) &&
                     testParametersDictionary is Dictionary<string, string>)
+                {
                     foreach (var parameter in (IDictionary<string, string>)testParametersDictionary)
                         TestContext.Parameters.Add(parameter.Key, parameter.Value);
+                }
                 else
                 {
                     // This cannot be changed without breaking backwards compatibility with old runners.
@@ -119,6 +121,7 @@ namespace NUnit.Framework.Api
                     options.TryGetValue(FrameworkPackageSettings.TestParameters, out object testParameters);
                     string parametersString = testParameters as string;
                     if (!string.IsNullOrEmpty(parametersString))
+                    {
                         foreach (string param in parametersString.Split(new[] { ';' }))
                         {
                             int eq = param.IndexOf('=');
@@ -131,12 +134,15 @@ namespace NUnit.Framework.Api
                                 TestContext.Parameters.Add(name, val);
                             }
                         }
+                    }
                 }
 
                 _filter = new PreFilter();
                 if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object load))
+                {
                     foreach (string filterText in (IList)load)
                         _filter.Add(filterText);
+                }
 
                 var fixtures = GetFixtures(assembly);
 
