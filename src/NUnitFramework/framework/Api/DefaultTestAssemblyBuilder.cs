@@ -99,14 +99,16 @@ namespace NUnit.Framework.Api
 
             try
             {
-                options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object defaultTestNamePattern);
-                TestNameGenerator.DefaultTestNamePattern = defaultTestNamePattern as string;
-                
-                options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object workDirectory);
-                TestContext.DefaultWorkDirectory = workDirectory as string ?? Directory.GetCurrentDirectory();
+                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object defaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = defaultTestNamePattern as string;
 
-                options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersDictionary);
-                if (testParametersDictionary is Dictionary<string, string>)
+                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object workDirectory))
+                    TestContext.DefaultWorkDirectory = workDirectory as string;
+                else
+                    TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
+
+                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersDictionary) &&
+                    testParametersDictionary is Dictionary<string, string>)
                     foreach (var parameter in (IDictionary<string, string>)testParametersDictionary)
                         TestContext.Parameters.Add(parameter.Key, parameter.Value);
                 else
@@ -132,9 +134,9 @@ namespace NUnit.Framework.Api
                 }
 
                 _filter = new PreFilter();
-                options.TryGetValue(FrameworkPackageSettings.LOAD, out object load);
-                foreach (string filterText in (IList)load)
-                    _filter.Add(filterText);
+                if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object load))
+                    foreach (string filterText in (IList)load)
+                        _filter.Add(filterText);
 
                 var fixtures = GetFixtures(assembly);
 

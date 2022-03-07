@@ -98,8 +98,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if( ns  == "" ) return _globalInsertionPoint;
 
-            _namespaceIndex.TryGetValue(ns, out TestSuite suiteToReturn);
-            if (suiteToReturn != null)
+            if (_namespaceIndex.TryGetValue(ns, out TestSuite suiteToReturn))
                 return suiteToReturn;
 
             TestSuite suite;
