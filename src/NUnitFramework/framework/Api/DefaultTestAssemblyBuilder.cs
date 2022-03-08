@@ -107,8 +107,8 @@ namespace NUnit.Framework.Api
                 else
                     TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
 
-                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersDictionary) &&
-                    testParametersDictionary is Dictionary<string, string>)
+                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersObject) &&
+                    testParametersObject is Dictionary<string, string> testParametersDictionary)
                 {
                     foreach (var parameter in (IDictionary<string, string>)testParametersDictionary)
                         TestContext.Parameters.Add(parameter.Key, parameter.Value);
