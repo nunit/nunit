@@ -19,11 +19,15 @@ The development process for making code changes and submitting Pull Requests (PR
 
 There is a single Visual Studio solution, `nunit.sln`, which resides in the NUnit repository root.
 
-NUnit framework can be built from this solution using [Visual Studio 2019 16.8](https://www.visualstudio.com/vs/) or newer (Windows) and [Visual Studio for Mac](https://www.visualstudio.com/vs/) (macOS).
+NUnit framework can be built from this solution using a .NET 6-capable IDE such as:
 
-Currently, MonoDevelop does not support the new multi-targeted `csproj` project format <sup>[1]</sup>. Once MonoDevelop is updated, it should start working again. Until then, we recommend using [Visual Studio Code](https://code.visualstudio.com/) and compiling using the build script instead (see the [Script Build](#script-build) section below for details).
+- [Visual Studio 2022](https://www.visualstudio.com/vs/) or newer (Windows)
+- [Visual Studio for Mac](https://www.visualstudio.com/vs/) (macOS).
+- [Visual Studio Code](https://code.visualstudio.com/)
+   - Compile using the [build script](#script-build) instead if using VS Code (see below for details).
+- [Jetbrains Rider](https://www.jetbrains.com/rider/)
 
-On all platforms, you will need to install [.NET 5.0 SDK](https://www.microsoft.com/net/download/windows) or newer. 
+On all platforms, you will need to install [.NET 6.0 SDK](https://www.microsoft.com/net/download/windows) or newer. 
 
 On Mac or Linux, you will need to install [Mono](https://www.mono-project.com/download/), an open source implementation of Microsoft's .NET Framework. Mono version 6.12.0 Stable (6.12.0.122) has been validated to build the NUnit solution on GNU/Linux Debian 10 'buster'.
 
@@ -42,10 +46,6 @@ As the NUnit solution targets multiple frameworks, a single build will generate 
           netstandard2.0
 ```
 
-### Notes
-1. MonoDevelop 2.0 introduced support for multiple target frameworks up to and including .Net 3.0 and 3.5 ([MonoDevelop 2.0 release notes](https://www.monodevelop.com/documentation/release-notes/monodevelop-2.0-released/)). Unfortunately, subsequent releases have not extended that support to .Net Core or .Net 5 and beyond. There is a Kanban board maintained for [MonoDevelop Multi-targeting Support](https://github.com/mono/monodevelop/projects/1) however it's showing the most recent update being 9 Aug 2019. MonoDevelop Version 7.8.4 (build 2) was verified as unable to build `nunit.sln` due to lack of multi-targeting support. This footnote was correct as of 9 June 2021.
-2. GitHub repository cloned and built on 9 June 2021.
-
 ## Running Tests
 
 The tests that should be run in the solution are grouped by project name:
@@ -55,17 +55,15 @@ The tests that should be run in the solution are grouped by project name:
 
 Other test projects contain tests designed to fail purposely for integration tests.
 
-Normally you should be able to run the unit tests directly from within your development IDE of choice (as you would when using NUnit in any other development project). For example, this is what it looks like in JetBrains Rider (2021.1.2) when right clicking on the `AssertEqualsTests` TextFixture:
+You should then be able to run the unit tests directly from within your development IDE of choice against one or all target frameworks (as you would when using NUnit in any other development project). For example, this is what it looks like in JetBrains Rider (2021.1.2) when right clicking on the `AssertEqualsTests` TextFixture:
 
 ![image](https://user-images.githubusercontent.com/52075808/121511286-61775580-c9e0-11eb-8e1e-ff44d0d8873d.png)
 
-Because NUnit solution targets multiple frameworks, JetBrains Rider knows this and offers the option to run the tests against a specific framework and/or all target frameworks.
+### Known Issues and Workarounds
 
-Unfortunately, there is currently a known issue ([#3008](https://github.com/nunit/nunit/issues/3008)) preventing the tests from being run in Visual Studio and JetBrains Rider IDEs. Equally there is also a known issue ([#3867](https://github.com/nunit/nunit/issues/3867)) preventing the tests from being run from the command line using `dotnet test`
+Unfortunately, there are currently some known issues with building and running tests locally.
 
-### Workarounds
-
-#### 1. NUnit Lite Runner (run from command prompt / terminal)
+#### Tests will not from the command line using `dotnet test` ([#3867](https://github.com/nunit/nunit/issues/3867))
 
 The NUnit solution contains [NUnit Lite Runner](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Runner.html), a lightweight test runner. It is similar to NUnit console but with fewer features and without the overhead of a full NUnit installation. 
 
@@ -77,7 +75,7 @@ NUnit Lite Runner accepts a number of [command line arguments](https://docs.nuni
 
 For example, the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll.
 
-#### 2. NUnit Lite Runner (run by the IDE after a build)
+#### Tests will not run within Rider or Visual Studio ([#3008](https://github.com/nunit/nunit/issues/3008))
 
 You can run NUnit Lite in a similar way to above, but from the development IDE after a successful build. 
 
