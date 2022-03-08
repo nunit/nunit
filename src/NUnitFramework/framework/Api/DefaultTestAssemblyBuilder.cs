@@ -99,51 +99,50 @@ namespace NUnit.Framework.Api
 
             try
             {
-                if (options.ContainsKey(FrameworkPackageSettings.DefaultTestNamePattern))
-                    TestNameGenerator.DefaultTestNamePattern = options[FrameworkPackageSettings.DefaultTestNamePattern] as string;
+                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object defaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = defaultTestNamePattern as string;
 
-                if (options.ContainsKey(FrameworkPackageSettings.WorkDirectory))
-                    TestContext.DefaultWorkDirectory = options[FrameworkPackageSettings.WorkDirectory] as string;
+                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object workDirectory))
+                    TestContext.DefaultWorkDirectory = workDirectory as string;
                 else
                     TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
 
-                if (options.ContainsKey(FrameworkPackageSettings.TestParametersDictionary))
+                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersObject) &&
+                    testParametersObject is Dictionary<string, string> testParametersDictionary)
                 {
-                    var testParametersDictionary = options[FrameworkPackageSettings.TestParametersDictionary] as IDictionary<string, string>;
-                    if (testParametersDictionary != null)
-                    {
-                        foreach (var parameter in testParametersDictionary)
-                            TestContext.Parameters.Add(parameter.Key, parameter.Value);
-                    }
+                    foreach (var parameter in testParametersDictionary)
+                        TestContext.Parameters.Add(parameter.Key, parameter.Value);
                 }
                 else
                 {
                     // This cannot be changed without breaking backwards compatibility with old runners.
                     // Deserializes the way old runners understand.
-
-                    if (options.ContainsKey(FrameworkPackageSettings.TestParameters))
+                    
+                    options.TryGetValue(FrameworkPackageSettings.TestParameters, out object testParameters);
+                    string parametersString = testParameters as string;
+                    if (!string.IsNullOrEmpty(parametersString))
                     {
-                        string parameters = options[FrameworkPackageSettings.TestParameters] as string;
-                        if (!string.IsNullOrEmpty(parameters))
-                            foreach (string param in parameters.Split(new[] { ';' }))
+                        foreach (string param in parametersString.Split(new[] { ';' }))
+                        {
+                            int eq = param.IndexOf('=');
+                        
+                            if (eq > 0 && eq < param.Length - 1)
                             {
-                                int eq = param.IndexOf('=');
-
-                                if (eq > 0 && eq < param.Length - 1)
-                                {
-                                    var name = param.Substring(0, eq);
-                                    var val = param.Substring(eq + 1);
-
-                                    TestContext.Parameters.Add(name, val);
-                                }
+                                var name = param.Substring(0, eq);
+                                var val = param.Substring(eq + 1);
+                        
+                                TestContext.Parameters.Add(name, val);
                             }
+                        }
                     }
                 }
 
                 _filter = new PreFilter();
-                if (options.ContainsKey(FrameworkPackageSettings.LOAD))
-                    foreach (string filterText in (IList)options[FrameworkPackageSettings.LOAD])
+                if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object load))
+                {
+                    foreach (string filterText in (IList)load)
                         _filter.Add(filterText);
+                }
 
                 var fixtures = GetFixtures(assembly);
 
