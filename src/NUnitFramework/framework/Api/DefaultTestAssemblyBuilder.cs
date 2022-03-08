@@ -110,7 +110,7 @@ namespace NUnit.Framework.Api
                 if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersObject) &&
                     testParametersObject is Dictionary<string, string> testParametersDictionary)
                 {
-                    foreach (var parameter in (IDictionary<string, string>)testParametersDictionary)
+                    foreach (var parameter in testParametersDictionary)
                         TestContext.Parameters.Add(parameter.Key, parameter.Value);
                 }
                 else
