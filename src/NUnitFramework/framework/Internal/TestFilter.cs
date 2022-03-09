@@ -23,10 +23,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Indicates whether this is the EmptyFilter
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return this is TestFilter.EmptyFilter; }
-        }
+        public bool IsEmpty => this is EmptyFilter;
 
         /// <summary>
         /// Indicates whether this is a top-level filter,
@@ -156,20 +153,10 @@ namespace NUnit.Framework.Internal
             {
                 case "filter":
                 case "and":
-                    var childFilters = new List<TestFilter>(node.ChildNodes.Count);
-
-                    foreach (var childNode in node.ChildNodes)
-                        childFilters.Add(FromXml(childNode));
-
-                    return new AndFilter(childFilters.ToArray());
+                    return new AndFilter(GetChildNodeFilters(node));
 
                 case "or":
-                    var orChildFilters = new List<TestFilter>(node.ChildNodes.Count);
-
-                    foreach (var childNode in node.ChildNodes)
-                        orChildFilters.Add(FromXml(childNode));
-
-                    return new OrFilter(orChildFilters.ToArray());
+                    return new OrFilter(GetChildNodeFilters(node));
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));
@@ -203,6 +190,16 @@ namespace NUnit.Framework.Internal
             }
 
             throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
+        }
+
+        private static TestFilter[] GetChildNodeFilters(TNode node)
+        {
+            var childFilters = new TestFilter[node.ChildNodes.Count];
+            int i = 0;
+            foreach (var childNode in node.ChildNodes)
+                childFilters[i++] = FromXml(childNode);
+
+            return childFilters;
         }
 
         /// <summary>
