@@ -156,7 +156,7 @@ namespace NUnit.Framework.Internal
             {
                 case "filter":
                 case "and":
-                    List<TestFilter> childFilters = new List<TestFilter>();
+                    var childFilters = new List<TestFilter>(node.ChildNodes.Count);
 
                     foreach (var childNode in node.ChildNodes)
                         childFilters.Add(FromXml(childNode));
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Internal
                     return new AndFilter(childFilters.ToArray());
 
                 case "or":
-                    List<TestFilter> orChildFilters = new List<TestFilter>();
+                    var orChildFilters = new List<TestFilter>(node.ChildNodes.Count);
 
                     foreach (var childNode in node.ChildNodes)
                         orChildFilters.Add(FromXml(childNode));
@@ -178,27 +178,27 @@ namespace NUnit.Framework.Internal
                     return new IdFilter(node.Value);
 
                 case "test":
-                    return new FullNameFilter(node.Value) { IsRegex = isRegex };
+                    return new FullNameFilter(node.Value, isRegex);
 
                 case "name":
-                    return new TestNameFilter(node.Value) { IsRegex = isRegex };
+                    return new TestNameFilter(node.Value, isRegex);
 
                 case "method":
-                    return new MethodNameFilter(node.Value) { IsRegex = isRegex };
+                    return new MethodNameFilter(node.Value, isRegex);
 
                 case "class":
-                    return new ClassNameFilter(node.Value) { IsRegex = isRegex };
+                    return new ClassNameFilter(node.Value, isRegex);
 
                 case "namespace":
-                    return new NamespaceFilter(node.Value) { IsRegex = isRegex };
+                    return new NamespaceFilter(node.Value, isRegex);
 
                 case "cat":
-                    return new CategoryFilter(node.Value) { IsRegex = isRegex };
+                    return new CategoryFilter(node.Value, isRegex);
 
                 case "prop":
                     string name = node.Attributes["name"];
                     if (name != null)
-                        return new PropertyFilter(name, node.Value) { IsRegex = isRegex };
+                        return new PropertyFilter(name, node.Value, isRegex);
                     break;
             }
 

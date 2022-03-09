@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections;
@@ -21,7 +21,8 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="propertyName">A property name</param>
         /// <param name="expectedValue">The expected value of the property</param>
-        public PropertyFilter(string propertyName, string expectedValue) : base(expectedValue) 
+        /// <param name="isRegex">Indicated that the value in <paramref name="expectedValue"/> is a regular expression.</param>
+        public PropertyFilter(string propertyName, string expectedValue, bool isRegex = false) : base(expectedValue, isRegex) 
         {
             _propertyName = propertyName;
         }

@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal.Filters
 
         public DoubleNegativeFilterTests(string value, bool isRegex)
         {
-            _filter = new NotFilter(new NotFilter(new TestNameFilter(value) { IsRegex = isRegex }));
+            _filter = new NotFilter(new NotFilter(new TestNameFilter(value, isRegex)));
         }
 
         [Test]

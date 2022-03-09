@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchTestFullNameRegex()
         {
-            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX) { IsRegex = true }, new FullNameFilter(ANOTHER_CLASS_REGEX) { IsRegex = true });
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, isRegex: true), new FullNameFilter(ANOTHER_CLASS_REGEX, isRegex: true));
 
             Assert.That(filter.Match(_dummyFixture));
             Assert.That(filter.Match(_anotherFixture));
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void PassTestFullNameRegex()
         {
-            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX) { IsRegex = true }, new FullNameFilter(ANOTHER_CLASS_REGEX) { IsRegex = true });
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, isRegex: true), new FullNameFilter(ANOTHER_CLASS_REGEX, isRegex: true));
 
             Assert.That(filter.Pass(_topLevelSuite));
             Assert.That(filter.Pass(_dummyFixture));

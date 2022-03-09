@@ -14,7 +14,8 @@ namespace NUnit.Framework.Internal.Filters
         /// Construct a MethodNameFilter for a single name
         /// </summary>
         /// <param name="expectedValue">The name the filter will recognize.</param>
-        public MethodNameFilter(string expectedValue) : base(expectedValue) { }
+        /// <param name="isRegex">Indicated that the value in <paramref name="expectedValue"/> is a regular expression.</param>
+        public MethodNameFilter(string expectedValue, bool isRegex = false) : base(expectedValue, isRegex) { }
 
         /// <summary>
         /// Match a test against a single value.
