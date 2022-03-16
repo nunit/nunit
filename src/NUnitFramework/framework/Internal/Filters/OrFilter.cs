@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal.Filters
     /// </summary>
     internal class OrFilter : CompositeFilter
     {
-        private bool _matchFullName;
+        private readonly bool _matchFullName;
         private readonly HashSet<string> _fullNames;
 
         /// <summary>

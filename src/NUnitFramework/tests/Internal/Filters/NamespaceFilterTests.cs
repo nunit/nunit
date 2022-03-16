@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal.Filters
 
         public NamespaceFilterTests(string value, bool isRegex, bool expected)
         {
-            _filter = new NamespaceFilter(value) { IsRegex = isRegex };
+            _filter = new NamespaceFilter(value, isRegex);
             _expected = expected;
         }
 

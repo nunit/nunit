@@ -14,7 +14,8 @@ namespace NUnit.Framework.Internal.Filters
         /// Construct a FullNameFilter for a single name
         /// </summary>
         /// <param name="expectedValue">The name the filter will recognize.</param>
-        public FullNameFilter(string expectedValue) : base(expectedValue) { }
+        /// <param name="isRegex">Indicated that the value in <paramref name="expectedValue"/> is a regular expression.</param>
+        public FullNameFilter(string expectedValue, bool isRegex = false) : base(expectedValue, isRegex) { }
 
         /// <summary>
         /// Match a test against a single value.
