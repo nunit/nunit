@@ -10,7 +10,7 @@ namespace NUnit.Framework.Constraints.Comparers
     /// </summary>
     internal sealed class StreamsComparer : IChainComparer
     {
-        private static readonly int BUFFER_SIZE = 4096;
+        private const int BUFFER_SIZE = 4096;
 
         private readonly NUnitEqualityComparer _equalityComparer;
 
@@ -21,11 +21,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (!(x is Stream) || !(y is Stream))
+            if (!(x is Stream xStream) || !(y is Stream yStream))
                 return null;
-
-            Stream xStream = (Stream)x;
-            Stream yStream = (Stream)y;
 
             if (xStream == yStream) return true;
 

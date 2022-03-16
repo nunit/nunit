@@ -18,11 +18,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (!(x is string) || !(y is string))
+            if (!(x is string xString) || !(y is string yString))
                 return null;
-
-            string xString = (string)x;
-            string yString = (string)y;
 
             bool caseInsensitive = _equalityComparer.IgnoreCase;
 

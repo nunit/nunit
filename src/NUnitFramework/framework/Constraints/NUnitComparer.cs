@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
             // It however also prevents finding CompareTo(TBase) when called with TDerived
             // Nor will it find CompareTo(int) when called with a short.
             // We fallback to explicitly exclude CompareTo(object)
-            bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
+            static bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
 
             MethodInfo method = xType.GetMethod("CompareTo", new Type[] { yType });
             if (method != null && !IsIComparable(method))
@@ -55,11 +55,11 @@ namespace NUnit.Framework.Constraints
             if (method != null && !IsIComparable(method))
                 return -(int)method.Invoke(y, new object[] { x });
 
-            if (x is IComparable)
-                return ((IComparable)x).CompareTo(y);
+            if (x is IComparable xComparable)
+                return xComparable.CompareTo(y);
 
-            if (y is IComparable)
-                return -((IComparable)y).CompareTo(x);
+            if (y is IComparable yComparable)
+                return -yComparable.CompareTo(x);
 
             throw new ArgumentException("Neither value implements IComparable or IComparable<T>");
         }

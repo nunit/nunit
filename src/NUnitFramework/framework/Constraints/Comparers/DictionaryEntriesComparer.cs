@@ -19,11 +19,8 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
             // Issue #70 - EquivalentTo isn't compatible with IgnoreCase for dictionaries
-            if (!(x is DictionaryEntry) || !(y is DictionaryEntry))
+            if (!(x is DictionaryEntry xDictionaryEntry) || !(y is DictionaryEntry yDictionaryEntry))
                 return null;
-
-            DictionaryEntry xDictionaryEntry = (DictionaryEntry)x;
-            DictionaryEntry yDictionaryEntry = (DictionaryEntry)y;
 
             var keyTolerance = Tolerance.Exact;
             return _equalityComparer.AreEqual(xDictionaryEntry.Key, yDictionaryEntry.Key, ref keyTolerance, state.PushComparison(x, y)) 

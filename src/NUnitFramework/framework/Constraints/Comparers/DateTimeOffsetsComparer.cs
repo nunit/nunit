@@ -18,17 +18,13 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (!(x is DateTimeOffset) || !(y is DateTimeOffset))
+            if (!(x is DateTimeOffset xOffset) || !(y is DateTimeOffset yOffset))
                 return null;
 
             bool result;
 
-            DateTimeOffset xOffset = (DateTimeOffset)x;
-            DateTimeOffset yOffset = (DateTimeOffset)y;
-
-            if (tolerance != null && tolerance.Amount is TimeSpan)
+            if (tolerance?.Amount is TimeSpan amount)
             {
-                TimeSpan amount = (TimeSpan)tolerance.Amount;
                 result = (xOffset - yOffset).Duration() <= amount;
             }
             else
