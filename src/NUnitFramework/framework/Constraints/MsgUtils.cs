@@ -70,21 +70,21 @@ namespace NUnit.Framework.Constraints
 
             AddFormatter(next => val => val is ValueType ? string.Format(Fmt_ValueType, val) : next(val));
 
-            AddFormatter(next => val => val is DateTime ? FormatDateTime((DateTime)val) : next(val));
+            AddFormatter(next => val => val is DateTime value ? FormatDateTime(value) : next(val));
 
-            AddFormatter(next => val => val is DateTimeOffset ? FormatDateTimeOffset((DateTimeOffset)val) : next(val));
+            AddFormatter(next => val => val is DateTimeOffset value ? FormatDateTimeOffset(value) : next(val));
 
-            AddFormatter(next => val => val is decimal ? FormatDecimal((decimal)val) : next(val));
+            AddFormatter(next => val => val is decimal value ? FormatDecimal(value) : next(val));
 
-            AddFormatter(next => val => val is float ? FormatFloat((float)val) : next(val));
+            AddFormatter(next => val => val is float value ? FormatFloat(value) : next(val));
 
-            AddFormatter(next => val => val is double ? FormatDouble((double)val) : next(val));
+            AddFormatter(next => val => val is double value ? FormatDouble(value) : next(val));
 
             AddFormatter(next => val => val is char ? string.Format(Fmt_Char, val) : next(val));
 
-            AddFormatter(next => val => val is IEnumerable ? FormatCollection((IEnumerable)val) : next(val));
+            AddFormatter(next => val => val is IEnumerable value ? FormatCollection(value) : next(val));
 
-            AddFormatter(next => val => val is string ? FormatString((string)val) : next(val));
+            AddFormatter(next => val => val is string value ? FormatString(value) : next(val));
 
             AddFormatter(next => val => val is DictionaryEntry de ? FormatKeyValuePair(de.Key, de.Value) : next(val));
 
@@ -353,8 +353,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public static string GetTypeRepresentation(object obj)
         {
-            Array? array = obj as Array;
-            if (array == null)
+            if (!(obj is Array array))
                 return string.Format("<{0}>", obj.GetType());
 
             StringBuilder sb = new StringBuilder();

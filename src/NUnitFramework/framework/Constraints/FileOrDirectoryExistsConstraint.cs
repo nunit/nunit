@@ -85,20 +85,17 @@ namespace NUnit.Framework.Constraints
             if (actual == null)
                 throw new ArgumentNullException(nameof(actual), "The actual value must be a non-null string" + ErrorSubstring);
 
-            var stringValue = actual as string;
-            if (stringValue != null)
+            if (actual is string stringValue)
             {
                 return CheckString(stringValue);
             }
 
-            var fileInfo = actual as FileInfo;
-            if (!_ignoreFiles && fileInfo != null)
+            if (!_ignoreFiles && actual is FileInfo fileInfo)
             {
                 return new ConstraintResult(this, actual, fileInfo.Exists);
             }
 
-            var directoryInfo = actual as DirectoryInfo;
-            if (!_ignoreDirectories && directoryInfo != null)
+            if (!_ignoreDirectories && actual is DirectoryInfo directoryInfo)
             {
                 return new ConstraintResult(this, actual, directoryInfo.Exists);
             }
