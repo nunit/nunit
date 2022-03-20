@@ -24,8 +24,8 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             return new ConstraintResult(this, actual, 
-                actual is double && double.IsNaN((double)(object)actual) ||
-                actual is float && float.IsNaN((float)(object)actual));
+                actual is double d && double.IsNaN(d) ||
+                actual is float f && float.IsNaN(f));
         }
     }
 }

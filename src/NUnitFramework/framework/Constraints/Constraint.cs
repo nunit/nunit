@@ -101,7 +101,6 @@ namespace NUnit.Framework.Constraints
             return ApplyTo(GetTestObject(del));
         }
 
-#pragma warning disable 3006
         /// <summary>
         /// Test whether the constraint is satisfied by a given reference.
         /// The default implementation simply dereferences the value but
@@ -113,7 +112,6 @@ namespace NUnit.Framework.Constraints
         {
             return ApplyTo(actual);
         }
-#pragma warning restore 3006
 
         /// <summary>
         /// Retrieves the value to be tested from an ActualValueDelegate.
@@ -156,20 +154,19 @@ namespace NUnit.Framework.Constraints
             foreach (object arg in Arguments)
             {
                 sb.Append(" ");
-                sb.Append(_displayable(arg));
+                sb.Append(Displayable(arg));
             }
 
             sb.Append(">");
 
             return sb.ToString();
-        }
 
-        private static string _displayable(object o)
-        {
-            if (o == null) return "null";
-
-            string fmt = o is string ? "\"{0}\"" : "{0}";
-            return string.Format(System.Globalization.CultureInfo.InvariantCulture, fmt, o);
+            static string Displayable(object o)
+            {
+                if (o == null) return "null";
+                else if (o is string s) return $"\"{s}\"";
+                else return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
+            }
         }
 
         #endregion

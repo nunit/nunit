@@ -32,8 +32,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         protected static bool IsEmpty(IEnumerable enumerable)
         {
-            ICollection collection = enumerable as ICollection;
-            if (collection != null)
+            if (enumerable is ICollection collection)
                 return collection.Count == 0;
 
             foreach (object o in enumerable)

@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         {
             ConstraintUtils.RequireActual<Exception>(actual, nameof(actual), allowNull: true);
 
-            actualType = actual == null ? null : actual.GetType();
+            actualType = actual?.GetType();
 
             return new ExceptionTypeConstraintResult(this, actual, actualType, this.Matches(actual));
         }
@@ -46,15 +46,13 @@ namespace NUnit.Framework.Constraints
             {
                 if (this.Status == ConstraintStatus.Failure)
                 {
-                    Exception ex = caughtException as Exception;
-
-                    if (ex == null)
+                    if (caughtException is Exception ex)
                     {
-                        base.WriteActualValueTo(writer);
+                        writer.WriteActualValue(ex);
                     }
                     else
                     {
-                        writer.WriteActualValue(ex);
+                        base.WriteActualValueTo(writer);
                     }
                 }
             }

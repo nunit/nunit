@@ -63,14 +63,14 @@ namespace NUnit.Framework.Constraints
 
         private void DisplayDifferences(MessageWriter writer, object expected, object actual, int depth)
         {
-            if (expected is string && actual is string)
-                DisplayStringDifferences(writer, (string)expected, (string)actual);
-            else if (expected is ICollection && actual is ICollection)
-                DisplayCollectionDifferences(writer, (ICollection)expected, (ICollection)actual, depth);
-            else if (expected is IEnumerable && actual is IEnumerable)
-                DisplayEnumerableDifferences(writer, (IEnumerable)expected, (IEnumerable)actual, depth);
-            else if (expected is Stream && actual is Stream)
-                DisplayStreamDifferences(writer, (Stream)expected, (Stream)actual, depth);
+            if (expected is string expectedString && actual is string actualString)
+                DisplayStringDifferences(writer, expectedString, actualString);
+            else if (expected is ICollection expectedCollection && actual is ICollection actualCollection)
+                DisplayCollectionDifferences(writer, expectedCollection, actualCollection, depth);
+            else if (expected is IEnumerable expectedEnumerable && actual is IEnumerable actualEnumerable)
+                DisplayEnumerableDifferences(writer, expectedEnumerable, actualEnumerable, depth);
+            else if (expected is Stream expectedStream && actual is Stream actualStream)
+                DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
             else if (tolerance != null)
                 writer.DisplayDifferences(expected, actual, tolerance);
             else
@@ -153,12 +153,12 @@ namespace NUnit.Framework.Constraints
         private void DisplayTypesAndSizes(MessageWriter writer, IEnumerable expected, IEnumerable actual, int indent)
         {
             string sExpected = MsgUtils.GetTypeRepresentation(expected);
-            if (expected is ICollection && !(expected is Array))
-                sExpected += string.Format(" with {0} elements", ((ICollection)expected).Count);
+            if (expected is ICollection expectedCollection && !(expected is Array))
+                sExpected += string.Format(" with {0} elements", expectedCollection.Count);
 
             string sActual = MsgUtils.GetTypeRepresentation(actual);
-            if (actual is ICollection && !(actual is Array))
-                sActual += string.Format(" with {0} elements", ((ICollection)actual).Count);
+            if (actual is ICollection actualCollection && !(actual is Array))
+                sActual += string.Format(" with {0} elements", actualCollection.Count);
 
             if (sExpected == sActual)
                 writer.WriteMessageLine(indent, CollectionType_1, sExpected);

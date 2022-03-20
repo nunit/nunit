@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            actualType = actual == null ? null : actual.GetType();
+            actualType = actual?.GetType();
 
             if (actual is Exception)
                 return new ConstraintResult(this, actual, this.Matches(actual));

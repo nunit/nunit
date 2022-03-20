@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly NUnitEqualityComparer comparer;
+        private readonly NUnitEqualityComparer _comparer;
 
         private readonly bool _isSortable;
         private bool _sorted = false;
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
-            this.comparer = comparer;
+            this._comparer = comparer;
 
             _missingItems = ToArrayList(c);
 
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         private bool ItemsEqual(object expected, object actual)
         {
             Tolerance tolerance = Tolerance.Default;
-            return comparer.AreEqual(expected, actual, ref tolerance);
+            return _comparer.AreEqual(expected, actual, ref tolerance);
         }
 
         /// <summary>Try to remove an object from the tally.</summary>
