@@ -7,21 +7,14 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Char"/>s.
     /// </summary>
-    internal sealed class CharsComparer : IChainComparer
+    internal static class CharsComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal CharsComparer(NUnitEqualityComparer equalityComparer)
-        {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (!(x is char xChar) || !(y is char yChar))
                 return null;
 
-            bool caseInsensitive = _equalityComparer.IgnoreCase;
+            bool caseInsensitive = equalityComparer.IgnoreCase;
 
             char c1 = caseInsensitive ? Char.ToLower(xChar) : xChar;
             char c2 = caseInsensitive ? Char.ToLower(yChar) : yChar;

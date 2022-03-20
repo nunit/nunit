@@ -7,9 +7,9 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DateTime"/>s or <see cref="TimeSpan"/>s.
     /// </summary>
-    internal sealed class TimeSpanToleranceComparer : IChainComparer
+    internal static class TimeSpanToleranceComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (tolerance?.Amount is TimeSpan amount)
             {

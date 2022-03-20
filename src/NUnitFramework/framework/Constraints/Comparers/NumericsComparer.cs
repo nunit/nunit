@@ -5,9 +5,9 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Numerics"/>s.
     /// </summary>
-    internal sealed class NumericsComparer : IChainComparer
+    internal static class NumericsComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (!Numerics.IsNumericType(x) || !Numerics.IsNumericType(y))
                 return null;
