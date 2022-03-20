@@ -56,25 +56,6 @@ namespace NUnit.Framework.Internal.Filters
             return false;
         }
 
-        ///// <summary>
-        ///// Determine whether any descendant of the test matches the filter criteria.
-        ///// </summary>
-        ///// <param name="test">The test to be matched</param>
-        ///// <returns>True if at least one descendant matches the filter criteria</returns>
-        //protected override bool MatchDescendant(ITest test)
-        //{
-        //    if (!test.HasChildren || test.Tests == null || TopLevel && test.RunState == RunState.Explicit)
-        //        return false;
-
-        //    foreach (ITest child in test.Tests)
-        //    {
-        //        if (Match(child) || MatchDescendant(child))
-        //            return true;
-        //    }
-
-        //    return false;
-        //}	
-
         /// <summary>
         /// Adds an XML node
         /// </summary>

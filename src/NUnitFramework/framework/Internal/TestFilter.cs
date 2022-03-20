@@ -26,12 +26,6 @@ namespace NUnit.Framework.Internal
         public bool IsEmpty => this is EmptyFilter;
 
         /// <summary>
-        /// Indicates whether this is a top-level filter,
-        /// not contained in any other filter.
-        /// </summary>
-        public bool TopLevel { get; set; }
-
-        /// <summary>
         /// Determine if a particular test passes the filter criteria. The default
         /// implementation checks the test itself, its parents and any descendants.
         ///
@@ -136,8 +130,6 @@ namespace NUnit.Framework.Internal
                 : count == 1
                     ? FromXml(topNode.FirstChild)
                     : FromXml(topNode);
-
-            filter.TopLevel = true;
 
             return filter;
         }
