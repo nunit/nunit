@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
-        private readonly List<EqualityAdapter> _externalComparers = new List<EqualityAdapter>();
+        private List<EqualityAdapter> _externalComparers;
 
         /// <summary>
         /// List of points at which a failure occurred.
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public IList<EqualityAdapter> ExternalComparers
         {
-            get { return _externalComparers; }
+            get { return _externalComparers ??= new List<EqualityAdapter>(); }
         }
 
         /// <summary>
@@ -180,9 +180,12 @@ namespace NUnit.Framework.Constraints
 
         private EqualityAdapter GetExternalComparer(object x, object y)
         {
-            foreach (EqualityAdapter adapter in _externalComparers)
-                if (adapter.CanCompare(x, y))
-                    return adapter;
+            if (_externalComparers != null)
+            {
+                foreach (EqualityAdapter adapter in _externalComparers)
+                    if (adapter.CanCompare(x, y))
+                        return adapter;
+            }
 
             return null;
         }
