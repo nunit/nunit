@@ -1,3 +1,40 @@
+# NUnit Release Notes
+
+## NUnit 3.13.3 - March 20, 2022
+
+This release includes several performance enhancements. [@lahma](https://github.com/lahma) provided a massive speed improvement for large parametrized test suites. In addition, quivalency tests with large unsortable collections run faster by determining if the collections are sortable before attempting to sort them.
+
+We've added several fixes for .NET 6.0 and we've stopped testing NUnit against .NET Core 2.1 which is now out of support.
+
+There are also several fixes for the new `FixtureLifeCycle` feature and other smaller bug fixes and performance improvements.
+
+### Issues Resolved
+
+* 2963 Flakey tests in FrameworkControllerTests
+* 3643 Assert.Pass(message) produces "reason" in XML-Result
+* 3841 Breaking change: Is.SupersetOf with ValueTuple requires IComparable in NUnit 3.13.2
+* 3843 IDisposable & InstancePerTestCase: Object created for OneTimeSetUp is not disposed
+* 3898 NUnit 3.13.2 : LessThanOrEqualTo fails on a case which should succeed
+* 3903 Backport race condition fix (PR 3883)
+* 3904 Backport fix for "IDisposable & InstancePerTestCase" (PR 3843)
+* 3929 Fix high precision decimal calculations in v3.13 (#3898)
+* 3959 Marked 'NUnitEqualityComparer.AreEqual(object, object, Tolerance, bool)' as obsolete
+* 3962 Ensure that AfterTest always runs in AfterTestCommand
+* 3971 Backport "Add missing `[DoesNotReturn]` annotations" from #3958
+* 3976 Equivalency fallback for non-IComparable types can leave CollectionTally in corrupt state
+* 3998 Eagerly determine when a set is unsortable
+* 3999 Numeric comparison fails when it should succeed.
+* 4000 OverflowException comparing large double values
+* 4007 Eagerly detect sortable types for equivalency tests in 3.13.x
+* 4030 IsEmpty doesn't work with new .NET6 PriorityQueue
+* 4032 Tests won't run with an abstract base class that has a TestCaseFixtureSource
+* 4033 Recognized private members in base class for Source attributes
+* 4034 Improve method discovery and filtering performance
+* 4041 Minimze empty array allocations via centralized helper for pre-net46
+* 4043 Stop testing the framework against netcoreapp21 in v3.13 branch
+* 4045 Drop netcore2.1 as a target (backport #3986)
+* 4058 Remove TopLevel property from ValueMatchFilter
+
 ## NUnit 3.13.2 - April 27, 2021
 
 This release fixes a new issue with the `FixtureLifeCycle` attribute where `IDisposable` test fixtures were not being disposed properly. As always, [@gleb-osokin](https://github.com/gleb-osokin) has been a great help with this new feature.
