@@ -2,7 +2,7 @@
 
 ## NUnit 3.13.3 - March 20, 2022
 
-This release includes several performance enhancements. [@lahma](https://github.com/lahma) provided a massive speed improvement for large parametrized test suites. In addition, quivalency tests with large unsortable collections run faster by determining if the collections are sortable before attempting to sort them.
+This release includes several performance enhancements. [@lahma](https://github.com/lahma) provided a massive speed improvement for large parametrized test suites. In addition, equivalency tests with large unsortable collections run faster by determining if the collections are sortable before attempting to sort them.
 
 We've added several fixes for .NET 6.0 and we've stopped testing NUnit against .NET Core 2.1 which is now out of support.
 
