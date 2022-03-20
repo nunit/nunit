@@ -18,11 +18,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (!(x is IDictionary) || !(y is IDictionary))
+            if (!(x is IDictionary xDictionary) || !(y is IDictionary yDictionary))
                 return null;
-
-            IDictionary xDictionary = (IDictionary)x;
-            IDictionary yDictionary = (IDictionary)y;
 
             if (xDictionary.Count != yDictionary.Count)
                 return false;

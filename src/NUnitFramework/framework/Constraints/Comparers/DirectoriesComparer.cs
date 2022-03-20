@@ -11,11 +11,8 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
-            if (!(x is DirectoryInfo) || !(y is DirectoryInfo))
+            if (!(x is DirectoryInfo xDirectoryInfo) || !(y is DirectoryInfo yDirectoryInfo))
                 return null;
-
-            DirectoryInfo xDirectoryInfo = (DirectoryInfo)x;
-            DirectoryInfo yDirectoryInfo = (DirectoryInfo)y;
 
             // Do quick compares first
             if (xDirectoryInfo.Attributes != yDirectoryInfo.Attributes ||
