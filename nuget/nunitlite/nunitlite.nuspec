@@ -27,7 +27,7 @@ How to use this package:
 3. Add your tests to the test project and simply start the project to execute them.</description>
     <language>en-US</language>
     <tags>test unit testing tdd framework fluent assert device phone embedded</tags>
-    <copyright>Copyright (c) 2021 Charlie Poole, Rob Prouse</copyright>
+    <copyright>Copyright (c) 2022 Charlie Poole, Rob Prouse</copyright>
     <dependencies>
       <group targetFramework="net35">
         <dependency id="NUnit" version="[$version$]" />
