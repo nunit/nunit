@@ -8,5 +8,20 @@ namespace NUnit.Framework.Internal.Extensions
     {
         public static bool ImplementsIComparable(this Type type) =>
             type?.GetInterface("System.IComparable") != null;
+
+        public static bool IsSortable(this Type type)
+        {
+            if (!type.ImplementsIComparable())
+                return false;
+
+            if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
+            {
+                foreach (var typeArg in type.GetGenericArguments())
+                    if (!typeArg.IsSortable())
+                        return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NUnit.Framework.Internal.Extensions
 {
@@ -19,6 +20,42 @@ namespace NUnit.Framework.Internal.Extensions
         {
             Assert.That(type.ImplementsIComparable(), Is.False);
         }
+
+        [TestCaseSource(nameof(TypesThatAreSortable))]
+        public void TypesThatAreSortable_ReturnTrue(Type type)
+        {
+            Assert.That(type.IsSortable(), Is.True);
+        }
+
+        [TestCaseSource(nameof(TypesThatAreNotSortable))]
+        public void TypesThatAreNotSortable_ReturnFalse(Type type)
+        {
+            Assert.That(type.IsSortable(), Is.False);
+        }
+
+        public static IEnumerable<Type> TypesThatAreNotSortable => TypesThatDontImplementIComparable.Union(new Type[]
+        {
+#if NET40_OR_GREATER
+            typeof(Tuple<int, Stream>),
+            typeof(Tuple<int, long, Stream>),
+            typeof(Tuple<int, Tuple<int, Stream>>),
+            typeof(ValueTuple<int, Stream>),
+            typeof(ValueTuple<int, long, Stream>),
+            typeof(ValueTuple<int, ValueTuple<int, Stream>>),
+#endif
+        });
+
+        public static IEnumerable<Type> TypesThatAreSortable => TypesThatImplementIComparable.Union(new Type[]
+        {
+#if NET40_OR_GREATER
+            typeof(Tuple<int, long>),
+            typeof(Tuple<int, long, double>),
+            typeof(Tuple<int, Tuple<int, long>>),
+            typeof(ValueTuple<int, long>),
+            typeof(ValueTuple<int, long, double>),
+            typeof(ValueTuple<int, ValueTuple<int, long>>),
+#endif
+        });
 
         public static IEnumerable<Type> TypesThatImplementIComparable => new[]
         {
