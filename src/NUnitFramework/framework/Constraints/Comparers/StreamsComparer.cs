@@ -8,18 +8,11 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Stream"/>s.
     /// </summary>
-    internal sealed class StreamsComparer : IChainComparer
+    internal static class StreamsComparer
     {
         private const int BUFFER_SIZE = 4096;
 
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal StreamsComparer(NUnitEqualityComparer equalityComparer)
-        {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (!(x is Stream xStream) || !(y is Stream yStream))
                 return null;
@@ -66,7 +59,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             fp.ExpectedValue = bufferExpected[count];
                             fp.ActualHasData = true;
                             fp.ActualValue = bufferActual[count];
-                            _equalityComparer.FailurePoints.Insert(0, fp);
+                            equalityComparer.FailurePoints.Insert(0, fp);
                             return false;
                         }
                     }

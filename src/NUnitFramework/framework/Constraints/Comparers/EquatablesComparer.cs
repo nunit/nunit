@@ -8,18 +8,11 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two types related by <see cref="IEquatable{T}"/>.
     /// </summary>
-    internal sealed class EquatablesComparer : IChainComparer
+    internal static class EquatablesComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal EquatablesComparer(NUnitEqualityComparer equalityComparer)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
-        {
-            if (_equalityComparer.CompareAsCollection && state.TopLevelComparison)
+            if (equalityComparer.CompareAsCollection && state.TopLevelComparison)
                 return null;
 
             Type xType = x.GetType();

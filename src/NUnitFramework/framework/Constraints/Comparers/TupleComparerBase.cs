@@ -9,25 +9,15 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Base class for comparators for tuples (both regular Tuples and ValueTuples).
     /// </summary>
-    internal abstract class TupleComparerBase : IChainComparer
+    internal static class TupleComparerBase
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal TupleComparerBase(NUnitEqualityComparer equalityComparer)
-        {
-            _equalityComparer = equalityComparer;
-        }
-
-        protected abstract bool IsCorrectType(Type type);
-
-        protected abstract object GetValue(Type type, string propertyName, object obj);
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer,
+                                  Func<Type, bool> isCorrectType, Func<Type, string, object, object> getValue)
         {
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            if (!IsCorrectType(xType) || !IsCorrectType(yType))
+            if (!isCorrectType(xType) || !isCorrectType(yType))
                 return null;
 
             int numberOfGenericArgs = xType.GetGenericArguments().Length;
@@ -38,10 +28,10 @@ namespace NUnit.Framework.Constraints.Comparers
             for (int i = 0; i < numberOfGenericArgs; i++)
             {
                 string propertyName = i < 7 ? "Item" + (i + 1) : "Rest";
-                object xItem = GetValue(xType, propertyName, x);
-                object yItem = GetValue(yType, propertyName, y);
+                object xItem = getValue(xType, propertyName, x);
+                object yItem = getValue(yType, propertyName, y);
 
-                bool comparison = _equalityComparer.AreEqual(xItem, yItem, ref tolerance, state.PushComparison(x, y));
+                bool comparison = equalityComparer.AreEqual(xItem, yItem, ref tolerance, state.PushComparison(x, y));
                 if (!comparison)
                     return false;
             }

@@ -7,20 +7,11 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="Array"/>s.
     /// </summary>
-    internal sealed class ArraysComparer : IChainComparer
+    internal static class ArraysComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-        private readonly EnumerablesComparer _enumerablesComparer;
-
-        internal ArraysComparer(NUnitEqualityComparer equalityComparer, EnumerablesComparer enumerablesComparer)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            _equalityComparer = equalityComparer;
-            _enumerablesComparer = enumerablesComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
-        {
-            if (!x.GetType().IsArray || !y.GetType().IsArray || _equalityComparer.CompareAsCollection)
+            if (!x.GetType().IsArray || !y.GetType().IsArray || equalityComparer.CompareAsCollection)
                 return null;
 
             Array xArray = (Array)x;
@@ -35,7 +26,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 if (xArray.GetLength(r) != yArray.GetLength(r))
                     return false;
 
-            return _enumerablesComparer.Equal(xArray, yArray, ref tolerance, state);
+            return EnumerablesComparer.Equal(xArray, yArray, ref tolerance, state, equalityComparer);
         }
     }
 }

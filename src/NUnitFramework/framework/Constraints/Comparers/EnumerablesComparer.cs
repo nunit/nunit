@@ -8,16 +8,9 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="IEnumerable"/>s.
     /// </summary>
-    internal sealed class EnumerablesComparer : IChainComparer
+    internal static class EnumerablesComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal EnumerablesComparer(NUnitEqualityComparer equalityComparer)
-        {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             if (!(x is IEnumerable xIEnumerable) || !(y is IEnumerable yIEnumerable))
                 return null;
@@ -37,7 +30,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             return true;
 
                         if (expectedHasData != actualHasData ||
-                            !_equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, state.PushComparison(x, y)))
+                            !equalityComparer.AreEqual(expectedEnum.Current, actualEnum.Current, ref tolerance, state.PushComparison(x, y)))
                         {
                             NUnitEqualityComparer.FailurePoint fp = new NUnitEqualityComparer.FailurePoint();
                             fp.Position = count;
@@ -47,7 +40,7 @@ namespace NUnit.Framework.Constraints.Comparers
                             fp.ActualHasData = actualHasData;
                             if (actualHasData)
                                 fp.ActualValue = actualEnum.Current;
-                            _equalityComparer.FailurePoints.Insert(0, fp);
+                            equalityComparer.FailurePoints.Insert(0, fp);
                             return false;
                         }
                     }
