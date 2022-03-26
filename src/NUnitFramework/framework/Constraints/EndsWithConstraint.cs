@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(string actual)
         {
             if (this.caseInsensitive)
-                return actual != null && actual.ToLower().EndsWith(expected.ToLower());
+                return actual != null && actual.EndsWith(expected, System.StringComparison.CurrentCultureIgnoreCase);
             else
                 return actual != null && actual.EndsWith(expected);
         }

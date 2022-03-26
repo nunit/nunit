@@ -14,12 +14,10 @@ namespace NUnit.Framework.Constraints.Comparers
             if (!(x is string xString) || !(y is string yString))
                 return null;
 
-            bool caseInsensitive = equalityComparer.IgnoreCase;
+            if (equalityComparer.IgnoreCase)
+                return xString.Equals(yString, StringComparison.CurrentCultureIgnoreCase);
 
-            string s1 = caseInsensitive ? xString.ToLower() : xString;
-            string s2 = caseInsensitive ? yString.ToLower() : yString;
-
-            return s1.Equals(s2);
+            return xString.Equals(yString);
         }
     }
 }
