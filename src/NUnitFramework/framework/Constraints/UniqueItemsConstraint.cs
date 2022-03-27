@@ -263,7 +263,7 @@ namespace NUnit.Framework.Constraints
                 if (obj is null)
                     return 0;
                 else if (_ignoreCase)
-                    return obj.ToLower().GetHashCode();
+                    return StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj);
                 else
                     return obj.GetHashCode();
             }

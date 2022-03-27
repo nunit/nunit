@@ -37,6 +37,29 @@ namespace NUnit.Framework.Constraints
             Assert.AreEqual(new System.Numerics.Complex(1, 100), new System.Numerics.Complex(1, 100));
         }
 
+        #region StringEquality
+        [Test]
+        public void RespectsCultureWhenCaseIgnored()
+        {
+            var constraint = new EqualConstraint("r\u00E9sum\u00E9").IgnoreCase;
+
+            var result = constraint.ApplyTo("re\u0301sume\u0301");
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
+        [Test]
+        public void DoesntRespectCultureWhenCasingMatters()
+        {
+            var constraint = new EqualConstraint("r\u00E9sum\u00E9");
+
+            var result = constraint.ApplyTo("re\u0301sume\u0301");
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        #endregion
+
         #region DateTimeEquality
 
         public class DateTimeEquality
