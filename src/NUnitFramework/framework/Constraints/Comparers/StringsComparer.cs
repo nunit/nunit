@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -14,10 +16,8 @@ namespace NUnit.Framework.Constraints.Comparers
             if (!(x is string xString) || !(y is string yString))
                 return null;
 
-            if (equalityComparer.IgnoreCase)
-                return xString.Equals(yString, StringComparison.CurrentCultureIgnoreCase);
-
-            return xString.Equals(yString);
+            var stringComparison = equalityComparer.IgnoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal;
+            return xString.Equals(yString, stringComparison);
         }
     }
 }
