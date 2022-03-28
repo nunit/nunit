@@ -12,8 +12,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-        static readonly string UriSchemeFile = Uri.UriSchemeFile;
-        static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
+        private static readonly string UriSchemeFile = Uri.UriSchemeFile;
+        private static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
 
         #region GetAssemblyPath
 
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsFileUri(string uri)
         {
-            return uri.StartsWith(UriSchemeFile, StringComparison.CurrentCultureIgnoreCase);
+            return uri.StartsWith(UriSchemeFile, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
