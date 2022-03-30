@@ -1,5 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
+using System;
+
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
@@ -26,10 +30,8 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(string actual)
         {
-            if (this.caseInsensitive)
-                return actual != null && actual.ToLower().StartsWith(expected.ToLower());
-            else
-                return actual != null && actual.StartsWith(expected);
+            var stringComparison = this.caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            return actual != null && actual.StartsWith(expected, stringComparison);
         }
     }
 }

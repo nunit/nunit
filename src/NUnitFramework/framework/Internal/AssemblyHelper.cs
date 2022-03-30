@@ -12,8 +12,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class AssemblyHelper
     {
-        static readonly string UriSchemeFile = Uri.UriSchemeFile;
-        static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
+        private static readonly string UriSchemeFile = Uri.UriSchemeFile;
+        private static readonly string SchemeDelimiter = Uri.SchemeDelimiter;
 
         #region GetAssemblyPath
 
@@ -140,10 +140,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static Assembly Load(string nameOrPath)
         {
-            var ext = Path.GetExtension(nameOrPath).ToLower();
+            var ext = Path.GetExtension(nameOrPath);
 
             // Handle case where this is the path to an assembly
-            if (ext == ".dll" || ext == ".exe")
+            if (ext.Equals(".dll", StringComparison.OrdinalIgnoreCase) || ext.Equals(".exe", StringComparison.OrdinalIgnoreCase))
             {
                 return Assembly.Load(AssemblyName.GetAssemblyName(nameOrPath));
             }
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsFileUri(string uri)
         {
-            return uri.ToLower().StartsWith(UriSchemeFile);
+            return uri.StartsWith(UriSchemeFile, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
