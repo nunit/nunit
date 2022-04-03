@@ -8,9 +8,9 @@ namespace NUnit.Framework.Internal
         {
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
-                if (value is int)
+                if (value is int iValue)
                 {
-                    step = new ComparableStep<int>((int)value, (prev, stepValue) => checked(prev + stepValue));
+                    step = new ComparableStep<int>(iValue, (prev, stepValue) => checked(prev + stepValue));
                     return true;
                 }
 

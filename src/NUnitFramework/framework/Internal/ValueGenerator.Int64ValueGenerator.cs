@@ -8,9 +8,9 @@ namespace NUnit.Framework.Internal
         {
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
-                if (value is long)
+                if (value is long lValue)
                 {
-                    step = new ComparableStep<long>((long)value, (prev, stepValue) => checked(prev + stepValue));
+                    step = new ComparableStep<long>(lValue, (prev, stepValue) => checked(prev + stepValue));
                     return true;
                 }
 

@@ -37,8 +37,7 @@ namespace NUnit.Framework.Internal
             // special quality of blocking until complete in GetResult.
             // As long as the pattern-based adapters are reflection-based, this
             // is much more efficient as well.
-            var task = awaitable as System.Threading.Tasks.Task;
-            if (task != null) return TaskAwaitAdapter.Create(task);
+            if (awaitable is System.Threading.Tasks.Task task) return TaskAwaitAdapter.Create(task);
 
             // Await all the (C# and F#) things
             var adapter =

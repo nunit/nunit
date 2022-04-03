@@ -542,9 +542,9 @@ namespace NUnit.Framework.Internal
             {
                 ex = ValidateAndUnwrap(ex);
 
-                if (ex is ResultStateException)
+                if (ex is ResultStateException exception)
                 {
-                    ResultState = ((ResultStateException)ex).ResultState.WithSite(site);
+                    ResultState = exception.ResultState.WithSite(site);
                     Message = ex.GetMessageWithoutThrowing();
                     StackTrace = StackFilter.DefaultFilter.Filter(ex.GetStackTraceWithoutThrowing());
                 }
