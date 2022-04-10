@@ -10,9 +10,9 @@ namespace NUnit.Framework.Internal
         {
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
-                if (value is double)
+                if (value is double dValue)
                 {
-                    step = new ComparableStep<double>((double)value, (prev, stepValue) =>
+                    step = new ComparableStep<double>(dValue, (prev, stepValue) =>
                     {
                         var next = prev + stepValue;
                         if (stepValue > 0 ? next <= prev : prev <= next)

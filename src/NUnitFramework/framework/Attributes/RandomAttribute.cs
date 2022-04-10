@@ -304,9 +304,8 @@ namespace NUnit.Framework
 
                 foreach (object obj in _source.GetData(parameter))
                 {
-                    if (obj is int)
+                    if (obj is int ival)
                     {
-                        int ival = (int)obj; // unbox first
                         if (parmType == typeof(short))
                             yield return (short)ival;
                         else if (parmType == typeof(ushort))
@@ -318,9 +317,8 @@ namespace NUnit.Framework
                         else if (parmType == typeof(decimal))
                             yield return (decimal)ival;
                     }
-                    else if (obj is double)
+                    else if (obj is double d)
                     {
-                        double d = (double)obj; // unbox first
                         if (parmType == typeof(decimal))
                             yield return (decimal)d;
                     }

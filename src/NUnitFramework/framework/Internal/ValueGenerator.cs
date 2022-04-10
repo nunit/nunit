@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -102,8 +101,8 @@ namespace NUnit.Framework.Internal
                 _apply = apply;
             }
 
-            public override bool IsPositive => Comparer<TStep>.Default.Compare(default(TStep), _step) < 0;
-            public override bool IsNegative => Comparer<TStep>.Default.Compare(_step, default(TStep)) < 0;
+            public override bool IsPositive => Comparer<TStep>.Default.Compare(default, _step) < 0;
+            public override bool IsNegative => Comparer<TStep>.Default.Compare(_step, default) < 0;
 
             /// <summary>
             /// Increments the given value and returns the result.

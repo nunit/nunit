@@ -183,13 +183,14 @@ namespace NUnit.Framework.Internal.Execution
             log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
             // Currently, we only track CompositeWorkItems - this could be expanded
-            var composite = work as CompositeWorkItem;
-            if (composite != null)
+            if (work is CompositeWorkItem composite)
+            {
                 lock (_activeWorkItems)
                 {
                     _activeWorkItems.Add(composite);
                     composite.Completed += OnWorkItemCompletion;
                 }
+            }
 
             switch (strategy)
             {

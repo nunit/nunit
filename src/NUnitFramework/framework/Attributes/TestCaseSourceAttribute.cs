@@ -166,8 +166,7 @@ namespace NUnit.Framework
                             // 3. An array was passed, it may be an object[]
                             //    or possibly some other kind of array, which
                             //    TestCaseSource can accept.
-                            var array = item as Array;
-                            if (array != null)
+                            if (item is Array array)
                             {
                                 // If array has the same number of elements as parameters
                                 // and it does not fit exactly into single existing parameter
