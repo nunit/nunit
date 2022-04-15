@@ -24,6 +24,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if !(NET35 || NET40)
+using System.Collections.Immutable;
+#endif
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
@@ -447,5 +450,17 @@ namespace NUnit.Framework.Constraints
             if (watch.ElapsedMilliseconds > LARGE_COLLECTION_WARN_TIME)
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
+
+#if !(NET35 || NET40)
+        [Test]
+        public void WorksWithImmutableDictionary()
+        {
+            var numbers = Enumerable.Range(1, 3);
+            var test1 = numbers.ToImmutableDictionary(t => t);
+            var test2 = numbers.ToImmutableDictionary(t => t);
+
+            Assert.That(test1, Is.EquivalentTo(test2));
+        }
+#endif
     }
 }
