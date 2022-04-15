@@ -129,10 +129,8 @@ namespace NUnit.Framework.Constraints
 
         private static ArrayList ToArrayList(IEnumerable items)
         {
-            if (items is ICollection ic)
-                return new ArrayList(ic);
+            var list = items is ICollection ic ? new ArrayList(ic.Count) : new ArrayList();
 
-            var list = new ArrayList();
             foreach (object o in items)
                 list.Add(o);
 
