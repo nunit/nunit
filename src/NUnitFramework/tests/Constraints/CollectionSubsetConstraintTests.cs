@@ -3,6 +3,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
@@ -87,6 +89,16 @@ namespace NUnit.Framework.Constraints
             ICollection subset = new SimpleObjectCollection(2, 3);
 
             Assert.That(subset, Is.SubsetOf(set).Using<int, string>((i, s) => i.ToString() == s));
+        }
+
+        [Test]
+        public void WorksWithImmutableDictionary()
+        {
+            var numbers = Enumerable.Range(1, 3);
+            var test1 = numbers.ToImmutableDictionary(t => t);
+            var test2 = numbers.ToImmutableDictionary(t => t);
+
+            Assert.That(test1, Is.SubsetOf(test2));
         }
     }
 }
