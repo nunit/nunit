@@ -3,9 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !(NET35 || NET40)
 using System.Collections.Immutable;
-#endif
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
@@ -428,7 +426,6 @@ namespace NUnit.Framework.Constraints
                 Assert.Warn($"{TestContext.CurrentContext.Test.MethodName} took {watch.ElapsedMilliseconds} ms.");
         }
 
-#if !(NET35 || NET40)
         [Test]
         public void WorksWithImmutableDictionary()
         {
@@ -438,6 +435,5 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(test1, Is.EquivalentTo(test2));
         }
-#endif
     }
 }

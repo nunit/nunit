@@ -3,9 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if !(NET35 || NET40)
 using System.Collections.Immutable;
-#endif
 using System.Linq;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
@@ -93,7 +91,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(subset, Is.SubsetOf(set).Using<int, string>((i, s) => i.ToString() == s));
         }
 
-#if !(NET35 || NET40)
         [Test]
         public void WorksWithImmutableDictionary()
         {
@@ -103,6 +100,5 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(test1, Is.SubsetOf(test2));
         }
-#endif
     }
 }
