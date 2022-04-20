@@ -7,6 +7,7 @@ using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {
@@ -508,4 +509,24 @@ public class NoNamespaceTestFixtureSourceWithSingleValue
 #pragma warning disable 414
     static object[] MyData = { 1 };
 #pragma warning restore 414
+}
+
+[TestFixtureSource("Data")]
+[Parallelizable(ParallelScope.All)]
+public class TextFixtureSourceWithParallelizableAttribute
+{
+    public TextFixtureSourceWithParallelizableAttribute(string arg) { }
+
+    static IEnumerable Data()
+    {
+        yield return new TestFixtureData("a");
+        yield return new TestFixtureData("b");
+        yield return new TestFixtureData("c");
+    }
+
+    [Test]
+    public void Test()
+    {
+        Thread.Sleep(1000);
+    }
 }
