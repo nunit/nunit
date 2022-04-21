@@ -395,6 +395,14 @@ namespace NUnit.Framework
                 get { return _test.Arguments; }
             }
 
+            /// <summary>
+            /// The expected result if there is one for the test
+            /// </summary>
+            public object? ExpectedResult 
+            {
+                get { return (_test as TestMethod)?.ExpectedResult;
+            }
+
             #endregion
         }
 
