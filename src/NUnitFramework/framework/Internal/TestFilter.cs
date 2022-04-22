@@ -23,16 +23,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Indicates whether this is the EmptyFilter
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return this is TestFilter.EmptyFilter; }
-        }
-
-        /// <summary>
-        /// Indicates whether this is a top-level filter,
-        /// not contained in any other filter.
-        /// </summary>
-        public bool TopLevel { get; set; }
+        public bool IsEmpty => this is EmptyFilter;
 
         /// <summary>
         /// Determine if a particular test passes the filter criteria. The default
@@ -140,8 +131,6 @@ namespace NUnit.Framework.Internal
                     ? FromXml(topNode.FirstChild)
                     : FromXml(topNode);
 
-            filter.TopLevel = true;
-
             return filter;
         }
 
@@ -156,20 +145,10 @@ namespace NUnit.Framework.Internal
             {
                 case "filter":
                 case "and":
-                    List<TestFilter> childFilters = new List<TestFilter>();
-
-                    foreach (var childNode in node.ChildNodes)
-                        childFilters.Add(FromXml(childNode));
-
-                    return new AndFilter(childFilters.ToArray());
+                    return new AndFilter(GetChildNodeFilters(node));
 
                 case "or":
-                    List<TestFilter> orChildFilters = new List<TestFilter>();
-
-                    foreach (var childNode in node.ChildNodes)
-                        orChildFilters.Add(FromXml(childNode));
-
-                    return new OrFilter(orChildFilters.ToArray());
+                    return new OrFilter(GetChildNodeFilters(node));
 
                 case "not":
                     return new NotFilter(FromXml(node.FirstChild));
@@ -178,31 +157,41 @@ namespace NUnit.Framework.Internal
                     return new IdFilter(node.Value);
 
                 case "test":
-                    return new FullNameFilter(node.Value) { IsRegex = isRegex };
+                    return new FullNameFilter(node.Value, isRegex);
 
                 case "name":
-                    return new TestNameFilter(node.Value) { IsRegex = isRegex };
+                    return new TestNameFilter(node.Value, isRegex);
 
                 case "method":
-                    return new MethodNameFilter(node.Value) { IsRegex = isRegex };
+                    return new MethodNameFilter(node.Value, isRegex);
 
                 case "class":
-                    return new ClassNameFilter(node.Value) { IsRegex = isRegex };
+                    return new ClassNameFilter(node.Value, isRegex);
 
                 case "namespace":
-                    return new NamespaceFilter(node.Value) { IsRegex = isRegex };
+                    return new NamespaceFilter(node.Value, isRegex);
 
                 case "cat":
-                    return new CategoryFilter(node.Value) { IsRegex = isRegex };
+                    return new CategoryFilter(node.Value, isRegex);
 
                 case "prop":
                     string name = node.Attributes["name"];
                     if (name != null)
-                        return new PropertyFilter(name, node.Value) { IsRegex = isRegex };
+                        return new PropertyFilter(name, node.Value, isRegex);
                     break;
             }
 
             throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
+        }
+
+        private static TestFilter[] GetChildNodeFilters(TNode node)
+        {
+            var childFilters = new TestFilter[node.ChildNodes.Count];
+            int i = 0;
+            foreach (var childNode in node.ChildNodes)
+                childFilters[i++] = FromXml(childNode);
+
+            return childFilters;
         }
 
         /// <summary>

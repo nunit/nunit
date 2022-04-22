@@ -25,6 +25,15 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null , "null" ) };
+
+        [Test]
+        public void RespectsCulture()
+        {
+            var constraint = new StartsWithConstraint("r\u00E9sum\u00E9");
+
+            var result = constraint.ApplyTo("re\u0301sume\u0301");
+            Assert.That(result.IsSuccess, Is.True);
+        }
     }
 
     [TestFixture]
@@ -47,5 +56,14 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( "say hello to Fred", "\"say hello to Fred\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),
             new TestCaseData( null , "null" ) };
+
+        [Test]
+        public void RespectsCulture()
+        {
+            var constraint = new EndsWithConstraint("r\u00E9sum\u00E9").IgnoreCase;
+
+            var result = constraint.ApplyTo("re\u0301sume\u0301");
+            Assert.That(result.IsSuccess, Is.True);
+        }
     }
 }

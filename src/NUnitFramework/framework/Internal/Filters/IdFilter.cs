@@ -15,7 +15,7 @@ namespace NUnit.Framework.Internal.Filters
         /// Construct an IdFilter for a single value
         /// </summary>
         /// <param name="id">The id the filter will recognize.</param>
-        public IdFilter(string id) : base (id) { }
+        public IdFilter(string id) : base(id, false) { }
 
         /// <summary>
         /// Match a test against a single value.

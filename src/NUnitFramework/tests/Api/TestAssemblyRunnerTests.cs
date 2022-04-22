@@ -125,20 +125,16 @@ namespace NUnit.Framework.Api
         public void CountTestCases_FullNameRegexFilterForFixture_AfterLoad_ReturnsCorrectCount()
         {
             LoadMockAssembly();
-            Assert.That(_runner.CountTestCases(new FullNameFilter(".*BadFixture.*")
-            {
-                IsRegex = true
-            }), Is.EqualTo(BadFixture.Tests));
+            Assert.That(_runner.CountTestCases(new FullNameFilter(".*BadFixture.*", isRegex: true)),
+                Is.EqualTo(BadFixture.Tests));
         }
 
         [Test]
         public void CountTestCases_FullNameRegexFilterForAssembly_AfterLoad_ReturnsCorrectCount()
         {
             LoadMockAssembly();
-            Assert.That(_runner.CountTestCases(new FullNameFilter(".*mock-assembly.dll")
-            {
-                IsRegex = true
-            }), Is.EqualTo(MockAssembly.Tests));
+            Assert.That(_runner.CountTestCases(new FullNameFilter(".*mock-assembly.dll", isRegex: true)),
+                Is.EqualTo(MockAssembly.Tests));
         }
 
         [Test]

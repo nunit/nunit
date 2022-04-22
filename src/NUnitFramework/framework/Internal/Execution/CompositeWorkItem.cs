@@ -306,8 +306,8 @@ namespace NUnit.Framework.Internal.Execution
                 // even for tests that have been skipped at a higher level.
                 Context.Listener.TestFinished(child.Result);
 
-                if (child is CompositeWorkItem)
-                    SkipChildren((CompositeWorkItem)child, resultState, message);
+                if (child is CompositeWorkItem item)
+                    SkipChildren(item, resultState, message);
             }
         }
 
@@ -350,8 +350,7 @@ namespace NUnit.Framework.Internal.Execution
             // only blocks its own children.
             lock (_childCompletionLock)
             {
-                WorkItem childTask = sender as WorkItem;
-                if (childTask != null)
+                if (sender is WorkItem childTask)
                 {
                     childTask.Completed -= new EventHandler(OnChildItemCompleted);
                     _suiteResult.AddResult(childTask.Result);

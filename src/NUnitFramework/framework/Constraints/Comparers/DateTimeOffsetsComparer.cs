@@ -7,28 +7,17 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DateTimeOffset"/>s.
     /// </summary>
-    internal sealed class DateTimeOffsetsComparer : IChainComparer
+    internal static class DateTimeOffsetsComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal DateTimeOffsetsComparer(NUnitEqualityComparer equalityComparer)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
-        {
-            if (!(x is DateTimeOffset) || !(y is DateTimeOffset))
+            if (!(x is DateTimeOffset xOffset) || !(y is DateTimeOffset yOffset))
                 return null;
 
             bool result;
 
-            DateTimeOffset xOffset = (DateTimeOffset)x;
-            DateTimeOffset yOffset = (DateTimeOffset)y;
-
-            if (tolerance != null && tolerance.Amount is TimeSpan)
+            if (tolerance?.Amount is TimeSpan amount)
             {
-                TimeSpan amount = (TimeSpan)tolerance.Amount;
                 result = (xOffset - yOffset).Duration() <= amount;
             }
             else
@@ -36,7 +25,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 result = xOffset == yOffset;
             }
 
-            if (result && _equalityComparer.WithSameOffset)
+            if (result && equalityComparer.WithSameOffset)
             {
                 result = xOffset.Offset == yOffset.Offset;
             }

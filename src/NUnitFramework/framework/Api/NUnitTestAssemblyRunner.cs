@@ -69,7 +69,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         public ITestResult Result
         {
-            get { return TopLevelWorkItem == null ? null : TopLevelWorkItem.Result; }
+            get { return TopLevelWorkItem?.Result; }
         }
 
         /// <summary>

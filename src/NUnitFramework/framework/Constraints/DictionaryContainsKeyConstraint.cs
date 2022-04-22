@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
     public class DictionaryContainsKeyConstraint : CollectionItemsEqualConstraint
     {
         private const string ContainsMethodName = "Contains";
-        private bool _isDeprecatedMode = false;
+        private readonly bool _isDeprecatedMode = false;
 
         /// <summary>
         /// Construct a DictionaryContainsKeyConstraint

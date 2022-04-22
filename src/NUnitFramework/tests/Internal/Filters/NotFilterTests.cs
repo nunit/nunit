@@ -69,7 +69,6 @@ namespace NUnit.Framework.Internal.Filters
                 "<filter><not><cat>Dummy</cat></not></filter>");
 
             Assert.That(filter, Is.TypeOf<NotFilter>());
-            Assert.That(filter, Has.Property("TopLevel").EqualTo(true));
             Assert.False(filter.Match(_dummyFixture));
             Assert.True(filter.Match(_anotherFixture));
         }

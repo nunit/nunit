@@ -33,8 +33,7 @@ namespace NUnit.Framework
         /// </summary>
         public void ApplyToTest(Test test)
         {
-            var testFixture = test as TestFixture;
-            if (testFixture != null)
+            if (test is TestFixture testFixture)
             {
                 testFixture.LifeCycle = LifeCycle;
             }

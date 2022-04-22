@@ -379,9 +379,9 @@ namespace NUnit.Framework.Internal
         /// <param name="value">The value of the object, if the cast succeeded.</param>
         internal static bool TryCast<T>(object obj, [MaybeNull] out T value)
         {
-            if (obj is T)
+            if (obj is T tObj)
             {
-                value = (T)obj;
+                value = tObj;
                 return true;
             }
 

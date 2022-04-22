@@ -8,15 +8,15 @@ namespace NUnit.Framework.Internal
         {
             public override bool TryCreateStep(object value, out ValueGenerator.Step step)
             {
-                if (value is ushort)
+                if (value is ushort uValue)
                 {
-                    step = new ComparableStep<ushort>((ushort)value, (prev, stepValue) => checked((ushort)(prev + stepValue)));
+                    step = new ComparableStep<ushort>(uValue, (prev, stepValue) => checked((ushort)(prev + stepValue)));
                     return true;
                 }
 
-                if (value is int)
+                if (value is int iValue)
                 {
-                    step = new ComparableStep<int>((int)value, (prev, stepValue) => checked((ushort)(prev + stepValue)));
+                    step = new ComparableStep<int>(iValue, (prev, stepValue) => checked((ushort)(prev + stepValue)));
                     return true;
                 }
 

@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -7,29 +9,15 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="String"/>s.
     /// </summary>
-    internal sealed class StringsComparer : IChainComparer
+    internal static class StringsComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal StringsComparer(NUnitEqualityComparer equalityComparer)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
-        {
-            if (!(x is string) || !(y is string))
+            if (!(x is string xString) || !(y is string yString))
                 return null;
 
-            string xString = (string)x;
-            string yString = (string)y;
-
-            bool caseInsensitive = _equalityComparer.IgnoreCase;
-
-            string s1 = caseInsensitive ? xString.ToLower() : xString;
-            string s2 = caseInsensitive ? yString.ToLower() : yString;
-
-            return s1.Equals(s2);
+            var stringComparison = equalityComparer.IgnoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal;
+            return xString.Equals(yString, stringComparison);
         }
     }
 }

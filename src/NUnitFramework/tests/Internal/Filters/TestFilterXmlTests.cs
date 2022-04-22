@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void ClassNameFilter_ToXml_Regex()
         {
-            TestFilter filter = new ClassNameFilter("FULLNAME") { IsRegex = true };
+            TestFilter filter = new ClassNameFilter("FULLNAME", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<class re=\"1\">FULLNAME</class>"));
         }
 
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MethodNameFilter_ToXml_Regex()
         {
-            TestFilter filter = new MethodNameFilter("Test") { IsRegex = true };
+            TestFilter filter = new MethodNameFilter("Test", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<method re=\"1\">Test</method>"));
         }
 
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void TestNameFilter_ToXml_Regex()
         {
-            TestFilter filter = new TestNameFilter("TestFilterTests+DummyFixture") { IsRegex = true };
+            TestFilter filter = new TestNameFilter("TestFilterTests+DummyFixture", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<name re=\"1\">TestFilterTests+DummyFixture</name>"));
         }
 
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void FullNameFilter_ToXml_Regex()
         {
-            TestFilter filter = new FullNameFilter("FULLNAME") { IsRegex = true };
+            TestFilter filter = new FullNameFilter("FULLNAME", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<test re=\"1\">FULLNAME</test>"));
         }
 
@@ -232,14 +232,14 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void CategoryFilter_ToXml_Regex()
         {
-            TestFilter filter = new CategoryFilter("CATEGORY") { IsRegex = true };
+            TestFilter filter = new CategoryFilter("CATEGORY", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">CATEGORY</cat>"));
         }
 
         [Test]
         public void CategoryFilterWithSpecialCharacters_ToXml_Regex()
         {
-            TestFilter filter = new CategoryFilter("Special,Character-Fixture+!") { IsRegex = true };
+            TestFilter filter = new CategoryFilter("Special,Character-Fixture+!", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<cat re=\"1\">Special,Character-Fixture+!</cat>"));
         }
 
@@ -281,7 +281,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void PropertyFilter_ToXml_Regex()
         {
-            TestFilter filter = new PropertyFilter("Priority", "High") { IsRegex = true };
+            TestFilter filter = new PropertyFilter("Priority", "High", isRegex: true);
             Assert.That(filter.ToXml(false).OuterXml, Is.EqualTo("<prop re=\"1\" name=\"Priority\">High</prop>"));
         }
 

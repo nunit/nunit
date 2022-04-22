@@ -85,7 +85,7 @@ namespace NUnit.Framework
         /// </summary>
         public TestAdapter Test
         {
-            get { return _test ?? (_test = new TestAdapter(_testExecutionContext.CurrentTest)); }
+            get { return _test ??= new TestAdapter(_testExecutionContext.CurrentTest); }
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace NUnit.Framework
         /// </summary>
         public ResultAdapter Result
         {
-            get { return _result ?? (_result = new ResultAdapter(_testExecutionContext.CurrentResult)); }
+            get { return _result ??= new ResultAdapter(_testExecutionContext.CurrentResult); }
         }
 
         /// <summary>

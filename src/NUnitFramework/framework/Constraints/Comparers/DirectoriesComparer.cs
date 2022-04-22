@@ -7,15 +7,12 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="DirectoryInfo"/>s.
     /// </summary>
-    internal sealed class DirectoriesComparer : IChainComparer
+    internal static class DirectoriesComparer
     {
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!(x is DirectoryInfo) || !(y is DirectoryInfo))
+            if (!(x is DirectoryInfo xDirectoryInfo) || !(y is DirectoryInfo yDirectoryInfo))
                 return null;
-
-            DirectoryInfo xDirectoryInfo = (DirectoryInfo)x;
-            DirectoryInfo yDirectoryInfo = (DirectoryInfo)y;
 
             // Do quick compares first
             if (xDirectoryInfo.Attributes != yDirectoryInfo.Attributes ||

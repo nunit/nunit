@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal.Filters
 
         public MethodNameFilterTests(string value, bool isRegex)
         {
-            _filter = new MethodNameFilter(value) { IsRegex = isRegex };
+            _filter = new MethodNameFilter(value, isRegex);
         }
 
         [Test]

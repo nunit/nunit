@@ -18,7 +18,8 @@ namespace NUnit.Framework.Internal.Filters
         /// Construct a CategoryFilter using a single category name
         /// </summary>
         /// <param name="name">A category name</param>
-        public CategoryFilter( string name ) : base(name) { }
+        /// <param name="isRegex">Indicated that the value in <paramref name="name"/> is a regular expression.</param>
+        public CategoryFilter(string name, bool isRegex = false) : base(name, isRegex) { }
 
         /// <summary>
         /// Check whether the filter matches a test

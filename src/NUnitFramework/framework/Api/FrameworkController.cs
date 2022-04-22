@@ -205,7 +205,7 @@ namespace NUnit.Framework.Api
 
         class ActionCallback : ICallbackEventHandler
         {
-            Action<string> _callback;
+            private readonly Action<string> _callback;
 
             public ActionCallback(Action<string> callback)
             {
@@ -385,18 +385,14 @@ namespace NUnit.Framework.Api
             TNode setting = new TNode("setting");
             setting.AddAttribute("name", name);
 
-            if (value != null)
+            if (value is IDictionary dict)
             {
-                var dict = value as IDictionary;
-                if (dict != null)
-                {
-                    AddDictionaryEntries(setting, dict);
-                    AddBackwardsCompatibleDictionaryEntries(setting, dict);
-                }
-                else
-                {
-                    setting.AddAttribute("value", value.ToString());
-                }
+                AddDictionaryEntries(setting, dict);
+                AddBackwardsCompatibleDictionaryEntries(setting, dict);
+            }
+            else if (value != null)
+            {
+                setting.AddAttribute("value", value.ToString());
             }
             else
             {

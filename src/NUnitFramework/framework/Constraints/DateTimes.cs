@@ -13,14 +13,14 @@ namespace NUnit.Framework.Constraints
 
         internal static object Difference(object x, object y)
         {
-            if (x is DateTime && y is DateTime)
-                return ((DateTime)x - (DateTime)y).Duration();
+            if (x is DateTime xDateTime && y is DateTime yDateTime)
+                return (xDateTime - yDateTime).Duration();
 
-            if (x is TimeSpan && y is TimeSpan)
-                return ((TimeSpan)x - (TimeSpan)y).Duration();
+            if (x is TimeSpan xTimeSpan && y is TimeSpan yTimeSpan)
+                return (xTimeSpan - yTimeSpan).Duration();
 
-            if (x is DateTimeOffset && y is DateTimeOffset)
-                return ((DateTimeOffset)x - (DateTimeOffset)y).Duration();
+            if (x is DateTimeOffset xDateTimeOffset && y is DateTimeOffset yDateTimeOffset)
+                return (xDateTimeOffset - yDateTimeOffset).Duration();
 
             throw new ArgumentException("Both arguments must be DateTime, DateTimeOffset or TimeSpan");
         }

@@ -28,9 +28,7 @@ namespace NUnit.Framework.Constraints
             Guid.Empty,
             new SingleElementCollection<int>(),
             new NameValueCollection(),
-#if !NET35 && !NET40
             System.Collections.Immutable.ImmutableArray<int>.Empty,
-#endif
         };
 
         static object[] FailureData = new object[]
@@ -40,9 +38,7 @@ namespace NUnit.Framework.Constraints
             new TestCaseData(new Guid("12345678-1234-1234-1234-123456789012"), "12345678-1234-1234-1234-123456789012"),
             new TestCaseData(new SingleElementCollection<int>(1), "<1>"),
             new TestCaseData(new NameValueCollection { ["Hello"] = "World" }, "< \"Hello\" >"),
-#if !NET35 && !NET40
             new TestCaseData(System.Collections.Immutable.ImmutableArray.Create(1), "< 1 >"),
-#endif
         };
 
         [TestCase(null)]

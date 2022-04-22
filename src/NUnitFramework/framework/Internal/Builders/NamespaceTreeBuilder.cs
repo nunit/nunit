@@ -98,8 +98,8 @@ namespace NUnit.Framework.Internal.Builders
 
             if( ns  == "" ) return _globalInsertionPoint;
 
-            if (_namespaceIndex.ContainsKey(ns))
-                return _namespaceIndex[ns];
+            if (_namespaceIndex.TryGetValue(ns, out TestSuite suiteToReturn))
+                return suiteToReturn;
 
             TestSuite suite;
             int index = ns.LastIndexOf('.');

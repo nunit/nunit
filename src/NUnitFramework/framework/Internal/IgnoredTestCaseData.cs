@@ -20,7 +20,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The previous RunState
         /// </summary>
-        private RunState _prevRunState;
+        private readonly RunState _prevRunState;
 
         #endregion
 

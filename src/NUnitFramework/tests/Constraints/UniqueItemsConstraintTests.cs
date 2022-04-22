@@ -180,6 +180,28 @@ namespace NUnit.Framework.Constraints
             Assert.That(result.NonUniqueItems, Is.EqualTo(expectedFailures));
         }
 
+        [Test]
+        public void RespectsCultureWhenCaseIgnored()
+        {
+            var constraint = new UniqueItemsConstraint().IgnoreCase;
+            var items = new[] { "r\u00E9sum\u00E9", "re\u0301sume\u0301" };
+
+            var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
+
+            Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void DoesntRespectCultureWhenCasingMatters()
+        {
+            var constraint = new UniqueItemsConstraint();
+            var items = new[] { "r\u00E9sum\u00E9", "re\u0301sume\u0301" };
+
+            var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
+
+            Assert.That(result.IsSuccess, Is.True);
+        }
+
         private static TestCaseData[] RequiresDefaultComparer
         {
             get

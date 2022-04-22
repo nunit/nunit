@@ -254,10 +254,8 @@ namespace NUnit.Framework.Constraints
 
             public bool Equals(string x, string y)
             {
-                string s1 = _ignoreCase ? x.ToLower() : x;
-                string s2 = _ignoreCase ? y.ToLower() : y;
-
-                return s1.Equals(s2);
+                var stringComparison = _ignoreCase ? StringComparison.CurrentCultureIgnoreCase : StringComparison.Ordinal;
+                return x.Equals(y, stringComparison);
             }
 
             public int GetHashCode(string obj)
@@ -265,7 +263,7 @@ namespace NUnit.Framework.Constraints
                 if (obj is null)
                     return 0;
                 else if (_ignoreCase)
-                    return obj.ToLower().GetHashCode();
+                    return StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj);
                 else
                     return obj.GetHashCode();
             }

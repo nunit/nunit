@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly NUnitEqualityComparer comparer;
+        private readonly NUnitEqualityComparer _comparer;
 
         private readonly bool _isSortable;
         private bool _sorted = false;
@@ -66,35 +66,21 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
-            this.comparer = comparer;
+            this._comparer = comparer;
 
             _missingItems = ToArrayList(c);
 
             if (c.IsSortable())
             {
-                _isSortable = TrySort(ref _missingItems);
+                _missingItems.Sort();
+                _isSortable = true;
             }
         }
 
         private bool ItemsEqual(object expected, object actual)
         {
             Tolerance tolerance = Tolerance.Default;
-            return comparer.AreEqual(expected, actual, ref tolerance);
-        }
-
-        private static bool TrySort(ref ArrayList items)
-        {
-            var original = (ArrayList)items.Clone();
-            try
-            {
-                items.Sort();
-                return true;
-            }
-            catch (InvalidOperationException e) when (e.InnerException is ArgumentException ae && ae.Message.Contains(nameof(IComparable)))
-            {
-                items = original;
-                return false;
-            }
+            return _comparer.AreEqual(expected, actual, ref tolerance);
         }
 
         /// <summary>Try to remove an object from the tally.</summary>
@@ -120,20 +106,14 @@ namespace NUnit.Framework.Constraints
             if (_isSortable && c.IsSortable())
             {
                 var remove = ToArrayList(c);
+                remove.Sort();
 
-                if (TrySort(ref remove))
-                {
-                    _sorted = true;
+                _sorted = true;
 
-                    // Reverse so that we match removing from the end,
-                    // see issue #2598 - Is.Not.EquivalentTo is extremely slow
-                    for (int index = remove.Count - 1; index >= 0; index--)
-                        TryRemove(remove[index]);
-                }
-                else
-                {
-                    TryRemoveSlow(c);
-                }
+                // Reverse so that we match removing from the end,
+                // see issue #2598 - Is.Not.EquivalentTo is extremely slow
+                for (int index = remove.Count - 1; index >= 0; index--)
+                    TryRemove(remove[index]);
             }
             else
             {
@@ -149,10 +129,8 @@ namespace NUnit.Framework.Constraints
 
         private static ArrayList ToArrayList(IEnumerable items)
         {
-            if (items is ICollection ic)
-                return new ArrayList(ic);
+            var list = items is ICollection ic ? new ArrayList(ic.Count) : new ArrayList();
 
-            var list = new ArrayList();
             foreach (object o in items)
                 list.Add(o);
 

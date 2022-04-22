@@ -10,16 +10,9 @@ namespace NUnit.Framework.Constraints.Comparers
     /// <summary>
     /// Comparator for two <see cref="KeyValuePair{TKey, TValue}"/>s.
     /// </summary>
-    internal sealed class KeyValuePairsComparer : IChainComparer
+    internal static class KeyValuePairsComparer
     {
-        private readonly NUnitEqualityComparer _equalityComparer;
-
-        internal KeyValuePairsComparer(NUnitEqualityComparer equalityComparer)
-        {
-            _equalityComparer = equalityComparer;
-        }
-
-        public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
             // IDictionary<,> will eventually try to compare its key value pairs when using CollectionTally
             Type xType = x.GetType();
@@ -38,8 +31,8 @@ namespace NUnit.Framework.Constraints.Comparers
             object xValue = xType.GetProperty("Value").GetValue(x, null);
             object yValue = yType.GetProperty("Value").GetValue(y, null);
 
-            return _equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state.PushComparison(x, y)) 
-                && _equalityComparer.AreEqual(xValue, yValue, ref tolerance, state.PushComparison(x, y));
+            return equalityComparer.AreEqual(xKey, yKey, ref keyTolerance, state.PushComparison(x, y)) 
+                && equalityComparer.AreEqual(xValue, yValue, ref tolerance, state.PushComparison(x, y));
         }
     }
 }
