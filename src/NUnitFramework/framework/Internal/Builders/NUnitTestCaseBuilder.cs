@@ -23,6 +23,7 @@
 
 #nullable enable
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -58,51 +59,58 @@ namespace NUnit.Framework.Internal.Builders
                 Seed = _randomizer.Next()
             };
 
-            var metadata = MethodInfoCache.Get(method);
-
-            CheckTestMethodAttributes(testMethod, metadata);
-
-            CheckTestMethodSignature(testMethod, metadata, parms);
-
-            if (parms == null || parms.Arguments.Length == 0)
-                testMethod.ApplyAttributesToTest(method.MethodInfo);
-
-            // NOTE: After the call to CheckTestMethodSignature, the Method
-            // property of testMethod may no longer be the same as the
-            // original MethodInfo, so we don't use it here.
-            string prefix = testMethod.Method.TypeInfo.FullName;
-
-            // Needed to give proper full name to test in a parameterized fixture.
-            // Without this, the arguments to the fixture are not included.
-            if (parentSuite != null)
-                prefix = parentSuite.FullName;
-
-            if (parms != null)
+            try
             {
-                parms.ApplyToTest(testMethod);
+                var metadata = MethodInfoCache.Get(method);
 
-                if (parms.TestName != null)
+                CheckTestMethodAttributes(testMethod, metadata);
+
+                CheckTestMethodSignature(testMethod, metadata, parms);
+
+                if (parms == null || parms.Arguments.Length == 0)
+                    testMethod.ApplyAttributesToTest(method.MethodInfo);
+
+                // NOTE: After the call to CheckTestMethodSignature, the Method
+                // property of testMethod may no longer be the same as the
+                // original MethodInfo, so we don't use it here.
+                string prefix = testMethod.Method.TypeInfo.FullName;
+
+                // Needed to give proper full name to test in a parameterized fixture.
+                // Without this, the arguments to the fixture are not included.
+                if (parentSuite != null)
+                    prefix = parentSuite.FullName;
+
+                if (parms != null)
                 {
-                    // The test is simply for efficiency
-                    testMethod.Name = parms.TestName.Contains("{")
-                        ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
-                        : parms.TestName;
-                }
-                else if (parms.ArgDisplayNames != null)
-                {
-                    testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                    parms.ApplyToTest(testMethod);
+
+                    if (parms.TestName != null)
+                    {
+                        // The test is simply for efficiency
+                        testMethod.Name = parms.TestName.Contains("{")
+                            ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
+                            : parms.TestName;
+                    }
+                    else if (parms.ArgDisplayNames != null)
+                    {
+                        testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
+                    }
+                    else
+                    {
+                        testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    }
                 }
                 else
                 {
-                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, parms.OriginalArguments);
+                    testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
                 }
-            }
-            else
-            {
-                testMethod.Name = _nameGenerator.GetDisplayName(testMethod, null);
-            }
 
-            testMethod.FullName = prefix + "." + testMethod.Name;
+                testMethod.FullName = prefix + "." + testMethod.Name;
+            }
+            catch (Exception ex)
+            {
+                testMethod.MakeInvalid(ex, "Failure building TestMethod");
+            }
 
             return testMethod;
         }
