@@ -354,6 +354,20 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Mark the test as Invalid (not runnable) specifying a reason and an exception.
+        /// </summary>
+        /// <param name="exception">The exception that was the cause.</param>
+        /// <param name="reason">The reason the test is not runnable</param>
+        public void MakeInvalid(Exception exception, string reason)
+        {
+            Guard.ArgumentNotNull(exception, nameof(exception));
+            Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
+
+            MakeInvalid(reason + Environment.NewLine + ExceptionHelper.BuildMessage(exception));
+            Properties.Add(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
+        }
+
+        /// <summary>
         /// Get custom attributes applied to a test
         /// </summary>
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
