@@ -11,8 +11,8 @@ using System.Reflection;
 [assembly: AssemblyTrademark("NUnit is a trademark of NUnit Software")]
 
 #if DEBUG
-#if NET45
-[assembly: AssemblyConfiguration(".NET Framework 4.5 Debug")]
+#if NET462
+[assembly: AssemblyConfiguration(".NET Framework 4.6.2 Debug")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
 #elif NETCOREAPP2_1
@@ -27,8 +27,8 @@ using System.Reflection;
 #error Missing AssemblyConfiguration attribute for this target.
 #endif
 #else
-#if NET45
-[assembly: AssemblyConfiguration(".NET Framework 4.5")]
+#if NET462
+[assembly: AssemblyConfiguration(".NET Framework 4.6.2")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0")]
 #elif NETCOREAPP2_1

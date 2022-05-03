@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Reflection;
 
 namespace NUnit.Framework.Internal
 {
@@ -25,28 +24,6 @@ namespace NUnit.Framework.Internal
             Assert.That(framework.Runtime, Is.EqualTo(currentRuntime), "#1");
             Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
         }
-
-#if NET45
-        [Test]
-        public void TargetFrameworkIsSetCorrectly()
-        {
-            // We use reflection so it will compile and pass on Mono,
-            // including older versions that do not have the property.
-            var prop = typeof(AppDomainSetup).GetProperty("FrameworkName");
-            Assume.That(prop, Is.Not.Null);
-            Assert.That(
-                prop.GetValue(AppDomain.CurrentDomain.SetupInformation),
-                Is.EqualTo(".NETFramework,Version=v4.5"));
-        }
-
-        [Test]
-        public void DoesNotRunIn40CompatibilityModeWhenCompiled45()
-        {
-            var uri = new Uri( "http://host.com/path./" );
-            var uriStr = uri.ToString();
-            Assert.AreEqual( "http://host.com/path./", uriStr );
-        }
-#endif
 
         [Test]
         [TestCaseSource(nameof(netcoreRuntimes))]
@@ -317,6 +294,7 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.NetFramework, new Version(3,5), new Version(2,0,50727), "net-3.5", "Net 3.5"),
             new FrameworkData(RuntimeType.NetFramework, new Version(4,0), new Version(4,0,30319), "net-4.0", "Net 4.0"),
             new FrameworkData(RuntimeType.NetFramework, new Version(4,5), new Version(4,0,30319), "net-4.5", "Net 4.5"),
+            new FrameworkData(RuntimeType.NetFramework, new Version(4,6), new Version(4,0,30319), "net-4.6", "Net 4.6"),
             new FrameworkData(RuntimeType.NetFramework, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "net", "Net"),
             new FrameworkData(RuntimeType.NetCore, new Version(2, 0), new Version(4,0,30319), "netcore-2.0", "NetCore 2.0"),
             new FrameworkData(RuntimeType.NetCore, new Version(2, 1), new Version(4,0,30319), "netcore-2.1", "NetCore 2.1"),

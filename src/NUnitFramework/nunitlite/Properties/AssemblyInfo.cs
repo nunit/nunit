@@ -11,8 +11,8 @@ using System.Runtime.CompilerServices;
                               "bee5e972a004ddd692dec8fa404ba4591e847a8cf35de21c2d3" +
                               "723bc8d775a66b594adeb967537729fe2a446b548cd57a6")]
 
-#if NET45
-[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.5)")]
+#if NET462
+[assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.6.2)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
 #else
