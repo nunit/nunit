@@ -182,6 +182,15 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
+        public static EqualConstraint<T> EqualTo<T>(T expected)
+            where T : struct, IEquatable<T>
+        {
+            return new EqualConstraint<T>(expected);
+        }
+
+        /// <summary>
+        /// Returns a constraint that tests two items for equality
+        /// </summary>
         public static EqualConstraint EqualTo(object expected)
         {
             return new EqualConstraint(expected);
