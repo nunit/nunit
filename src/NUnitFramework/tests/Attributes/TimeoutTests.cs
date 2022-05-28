@@ -264,7 +264,9 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(fixture);
             TestMethod testMethod = (TestMethod)TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
@@ -276,7 +278,9 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(fixture);
             TestMethod testMethod = (TestMethod)TestFinder.Find("Test1", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "TearDown was not run");
         }
@@ -288,7 +292,9 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeFixture(fixture);
             TestMethod testMethod = (TestMethod)TestFinder.Find("Test1", suite, false);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
             Assert.That(fixture.TearDownWasRun, "Base TearDown should not have been run but was");
         }
@@ -297,11 +303,14 @@ namespace NUnit.Framework.Attributes
         public void TimeoutCanBeSetOnTestFixture()
         {
             ITestResult suiteResult = TestBuilder.RunTestFixture(typeof(TimeoutFixtureWithTimeoutOnFixture));
-            Assert.That(suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
+            Assert.That(suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Does.Contain("50ms"));
         }
 
@@ -322,6 +331,7 @@ namespace NUnit.Framework.Attributes
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {SampleTests.Timeout}ms"));
         }
 
@@ -369,7 +379,9 @@ namespace NUnit.Framework.Attributes
                 TestBuilder.MakeTestFromMethod(typeof(TimeoutFixture), nameof(TimeoutFixture.TimeoutWithMessagePumpShouldAbort)),
                 new TimeoutFixture());
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
             Assert.That(result.Message, Is.EqualTo("Test exceeded Timeout value of 500ms"));
         }
 #endif
@@ -392,7 +404,8 @@ namespace NUnit.Framework.Attributes
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo($"Test exceeded Timeout value {SampleTests.Timeout}ms."));
+            Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
+            Assert.That(result.Message, Is.EqualTo($"Test exceeded Timeout value of {SampleTests.Timeout}ms"));
         }
 #endif
 

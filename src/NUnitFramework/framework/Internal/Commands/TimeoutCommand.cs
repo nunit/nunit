@@ -101,7 +101,11 @@ namespace NUnit.Framework.Internal.Commands
                 // If the timer cancelled the current thread, change the result
                 if (_commandTimedOut)
                 {
-                    context.CurrentResult.SetResult(ResultState.Failure, $"Test exceeded Timeout value of {timeout}ms");
+                    string message = $"Test exceeded Timeout value of {timeout}ms";
+
+                    context.CurrentResult.SetResult(
+                        new ResultState(TestStatus.Failed, message),
+                        message);
                 }
             };
 #else
@@ -128,10 +132,11 @@ namespace NUnit.Framework.Internal.Commands
                 }
                 else
                 {
-                    context.CurrentResult.SetResult(new ResultState(
-                        TestStatus.Failed,
-                        $"Test exceeded Timeout value {_timeout}ms.",
-                        FailureSite.Test));
+                    string message = $"Test exceeded Timeout value of {_timeout}ms";
+
+                    context.CurrentResult.SetResult(
+                        new ResultState(TestStatus.Failed, message),
+                        message);
                 }
             }
             catch (Exception exception)
