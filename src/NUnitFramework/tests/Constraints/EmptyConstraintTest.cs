@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using NUnit.TestUtilities;
@@ -29,16 +30,18 @@ namespace NUnit.Framework.Constraints
             new SingleElementCollection<int>(),
             new NameValueCollection(),
             System.Collections.Immutable.ImmutableArray<int>.Empty,
+            new EnumerableWithIndependentCount(1, new int[0])
         };
 
-        static object[] FailureData = new object[]
+        private static object[] FailureData = new object[]
         {
-            new TestCaseData("Hello", "\"Hello\"" ),
-            new TestCaseData(new object[] { 1, 2, 3 }, "< 1, 2, 3 >" ),
+            new TestCaseData("Hello", "\"Hello\""),
+            new TestCaseData(new object[] { 1, 2, 3 }, "< 1, 2, 3 >"),
             new TestCaseData(new Guid("12345678-1234-1234-1234-123456789012"), "12345678-1234-1234-1234-123456789012"),
             new TestCaseData(new SingleElementCollection<int>(1), "<1>"),
             new TestCaseData(new NameValueCollection { ["Hello"] = "World" }, "< \"Hello\" >"),
             new TestCaseData(System.Collections.Immutable.ImmutableArray.Create(1), "< 1 >"),
+            new TestCaseData(new EnumerableWithIndependentCount(0, new[] { 1 }), "< 1 >"),
         };
 
         [TestCase(null)]
@@ -93,7 +96,7 @@ namespace NUnit.Framework.Constraints
                 _element = element;
                 Count = 1;
             }
-            
+
             public T Get()
             {
                 if (Count == 0)
@@ -116,6 +119,21 @@ namespace NUnit.Framework.Constraints
 #pragma warning disable CA1822 // Mark members as static
             public double Count => 0;
 #pragma warning restore CA1822 // Mark members as static
+        }
+
+        private class EnumerableWithIndependentCount : IEnumerable<int>
+        {
+            private readonly IReadOnlyCollection<int> _items;
+            public int Count { get; }
+
+            public EnumerableWithIndependentCount(int count, IReadOnlyCollection<int> items)
+            {
+                _items = items;
+                Count = count;
+            }
+
+            public IEnumerator<int> GetEnumerator() => _items.GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 
