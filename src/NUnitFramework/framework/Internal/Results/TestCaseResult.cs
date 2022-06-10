@@ -2,6 +2,7 @@
 
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
@@ -87,7 +88,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override IEnumerable<ITestResult> Children
         {
-            get { return new ITestResult[0]; }
+            get { return Array.Empty<ITestResult>(); }
         }
 
         #endregion
