@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void OptimizeAllRegex()
         {
-            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX) { IsRegex = true }, new FullNameFilter(ANOTHER_CLASS_REGEX) { IsRegex = true });
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, true), new FullNameFilter(ANOTHER_CLASS_REGEX, true));
 
             Assert.False(InFilter.TryOptimize(filter, out _));
         }
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void OptimizeSomeRegex()
         {
-            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX) { IsRegex = true }, new FullNameFilter("Dummy") { IsRegex = false });
+            var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, true), new FullNameFilter("Dummy", false));
 
             Assert.False(InFilter.TryOptimize(filter, out _));
         }
