@@ -45,12 +45,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            return filtered?.ToArray() ??
-#if NETSTANDARD2_0_OR_GREATER
-                Array.Empty<T>();
-#else
-                new T[0];
-#endif
+            return filtered?.ToArray() ?? Array.Empty<T>();
         }
     }
 }
