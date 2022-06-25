@@ -209,7 +209,7 @@ namespace NUnit.Framework
         [Test]
         public void TestCanAccessEmptyArgumentsArrayWhenDoesNotHaveArguments()
         {
-            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(new object[0]));
+            Assert.That(TestContext.CurrentContext.Test.Arguments, Is.EqualTo(Array.Empty<object>()));
         }
 
         #endregion

@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal
         public void CapturesNoArgumentsForConstructorWithoutArgsSupplied()
         {
             var fixture = TestBuilder.MakeFixture(typeof(RegularFixtureWithOneTest));
-            Assert.That(fixture.Arguments, Is.EqualTo(new object[0]));
+            Assert.That(fixture.Arguments, Is.EqualTo(Array.Empty<object>()));
         }
 
         [Test]

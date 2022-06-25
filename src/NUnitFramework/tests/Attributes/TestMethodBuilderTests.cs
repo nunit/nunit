@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Interfaces;
+using System;
 
 namespace NUnit.Framework.Attributes
 {
@@ -203,7 +204,7 @@ namespace NUnit.Framework.Attributes
             [Values(1, 2, 3)]int x,
             [Values(10, 20)]int y) { }
 
-        static object[] ZeroData = new object[0];
+        static object[] ZeroData = Array.Empty<object>();
 
         static object[] GoodData = new object[] {
             new object[] { 12, 3 },
