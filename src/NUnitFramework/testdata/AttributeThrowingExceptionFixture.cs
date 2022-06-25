@@ -2,6 +2,8 @@
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.TestData.AttributeThrowingExceptionFixture
 {
@@ -20,6 +22,12 @@ namespace NUnit.TestData.AttributeThrowingExceptionFixture
         public void TestWithFailingAttribute()
         {
             Assert.Pass();
+        }
+
+        [Test]
+        [ExceptionThrowingApplyTo]
+        public void SpecialTestHandling()
+        {
         }
     }
 
@@ -62,5 +70,13 @@ namespace NUnit.TestData.AttributeThrowingExceptionFixture
         }
 
         public string Message { get; }
+    }
+
+    public class ExceptionThrowingApplyToAttribute : Attribute, IApplyToTest
+    {
+        public void ApplyToTest(Test test)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
