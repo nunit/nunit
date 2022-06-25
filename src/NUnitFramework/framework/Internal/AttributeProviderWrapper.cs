@@ -24,8 +24,7 @@ namespace NUnit.Framework.Internal
 
         public object[] GetCustomAttributes(bool inherit)
         {
-            var attributes = _innerProvider.GetCustomAttributes(inherit);
-            return GetFiltered(attributes);
+            throw new InvalidOperationException("Should not be called as 3rd party attributes could throw exceptions");
         }
 
         public bool IsDefined(Type attributeType, bool inherit)
