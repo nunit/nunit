@@ -784,7 +784,7 @@ namespace NUnit.Framework.Internal
             try
             {
                 GenericIdentity identity = new GenericIdentity("foo");
-                context.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
+                context.CurrentPrincipal = new GenericPrincipal(identity, Array.Empty<string>());
                 Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name, "Principal was not set");
                 Assert.AreEqual("foo", context.CurrentPrincipal.Identity.Name, "Principal not in new context");
                 Assert.AreEqual(_setupContext.CurrentPrincipal, originalPrincipal, "Original context should not change");

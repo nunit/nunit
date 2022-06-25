@@ -57,7 +57,7 @@ namespace NUnit.Framework.Attributes
         {
             get
             {
-                return new object[0];
+                return Array.Empty<object>();
             }
         }
 

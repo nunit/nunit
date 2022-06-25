@@ -361,7 +361,7 @@ namespace NUnit.Framework.Attributes
         {
             // TODO: This test requires fixture setup and all tests to run on same thread
             GenericIdentity identity = new GenericIdentity("foo");
-            Thread.CurrentPrincipal = new GenericPrincipal(identity, new string[0]);
+            Thread.CurrentPrincipal = new GenericPrincipal(identity, Array.Empty<string>());
 
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB");
             Thread.CurrentThread.CurrentCulture = culture;

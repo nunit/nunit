@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     {
         private AsyncSetupTearDownFixture _testObject;
         private TestExecutionContext _context;
-        private static readonly IList<IMethodInfo> Empty = new IMethodInfo[0];
+        private static readonly IList<IMethodInfo> Empty = Array.Empty<IMethodInfo>();
 
         [SetUp]
         public void Setup()

@@ -32,8 +32,8 @@ namespace NUnit.Framework.Internal
         public TestSuite(string name) : base(name)
         {
             Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            OneTimeSetUpMethods = Array.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = Array.Empty<IMethodInfo>();
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace NUnit.Framework.Internal
             : base(parentSuiteName, name)
         {
             Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            OneTimeSetUpMethods = Array.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = Array.Empty<IMethodInfo>();
         }
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace NUnit.Framework.Internal
             : base(fixtureType)
         {
             Arguments = arguments ?? TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            OneTimeSetUpMethods = Array.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = Array.Empty<IMethodInfo>();
         }
 
         /// <summary>
@@ -70,8 +70,8 @@ namespace NUnit.Framework.Internal
             : base(new TypeWrapper(fixtureType))
         {
             Arguments = TestParameters.NoArguments;
-            OneTimeSetUpMethods = new IMethodInfo[0];
-            OneTimeTearDownMethods = new IMethodInfo[0];
+            OneTimeSetUpMethods = Array.Empty<IMethodInfo>();
+            OneTimeTearDownMethods = Array.Empty<IMethodInfo>();
         }
 
         /// <summary>

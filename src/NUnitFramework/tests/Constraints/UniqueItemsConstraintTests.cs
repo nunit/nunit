@@ -22,7 +22,7 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "all items unique";
         }
 
-        static object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, new object[0] };
+        static object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
         static object[] FailureData = new object[] { new object[] {
             new int[] { 1, 3, 17, 3, 34 },
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
