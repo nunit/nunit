@@ -3,8 +3,10 @@
 #nullable enable
 
 #if NET5_0_OR_GREATER
+using System;
 using System.Linq;
 using System.Runtime.Versioning;
+using NUnit.Framework.Interfaces;
 #endif
 
 namespace NUnit.Framework.Attributes
@@ -31,7 +33,7 @@ namespace NUnit.Framework.Attributes
         {
             var supported = new SupportedOSPlatformAttribute("Windows7.0");
 
-            var platform = (PlatformAttribute)OSPlatformTranslator.Translate(new[] { supported }).Single();
+            PlatformAttribute platform = TranslateIntoSinglePlatform(supported);
             Assert.That(platform.Include, Is.EqualTo("Windows7"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
         }
@@ -41,7 +43,7 @@ namespace NUnit.Framework.Attributes
         {
             var unsupported = new UnsupportedOSPlatformAttribute("Linux");
 
-            var platform = (PlatformAttribute)OSPlatformTranslator.Translate(new[] { unsupported }).Single();
+            PlatformAttribute platform = TranslateIntoSinglePlatform(unsupported);
             Assert.That(platform.Include, Is.Null, nameof(platform.Include));
             Assert.That(platform.Exclude, Is.EqualTo("Linux"), nameof(platform.Exclude));
         }
@@ -53,10 +55,7 @@ namespace NUnit.Framework.Attributes
             var supported2 = new SupportedOSPlatformAttribute("Linux");
             var osPlatforms = new OSPlatformAttribute[] { supported1, supported2 };
 
-            object[] attributes = OSPlatformTranslator.Translate(osPlatforms).ToArray();
-            Assert.That(attributes, Has.Length.EqualTo(1));
-            Assert.That(attributes[0], Is.InstanceOf<PlatformAttribute>());
-            var platform = (PlatformAttribute)attributes[0];
+            PlatformAttribute platform = TranslateIntoSinglePlatform(osPlatforms);
             Assert.That(platform.Include, Is.EqualTo("Windows7,Linux"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
         }
@@ -67,12 +66,8 @@ namespace NUnit.Framework.Attributes
             var supported1 = new SupportedOSPlatformAttribute("Windows7.0");
             var supported2 = new SupportedOSPlatformAttribute("Linux");
             var unsupported = new UnsupportedOSPlatformAttribute("Android");
-            var osPlatforms = new OSPlatformAttribute[] { supported1, unsupported, supported2 };
 
-            object[] attributes = OSPlatformTranslator.Translate(osPlatforms).ToArray();
-            Assert.That(attributes, Has.Length.EqualTo(1));
-            Assert.That(attributes[0], Is.InstanceOf<PlatformAttribute>());
-            var platform = (PlatformAttribute)attributes[0];
+            PlatformAttribute platform = TranslateIntoSinglePlatform(supported1, unsupported, supported2);
             Assert.That(platform.Include, Is.EqualTo("Windows7,Linux"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.EqualTo("Android"), nameof(platform.Exclude));
         }
@@ -83,12 +78,8 @@ namespace NUnit.Framework.Attributes
             var supported1 = new SupportedOSPlatformAttribute("Windows");
             var supported2 = new SupportedOSPlatformAttribute("Windows10");
             var sourcePlatform = new PlatformAttribute("Win");
-            var sourceAttributes = new object[] { supported1, supported2, sourcePlatform };
 
-            object[] attributes = OSPlatformTranslator.Translate(sourceAttributes).ToArray();
-            Assert.That(attributes, Has.Length.EqualTo(1));
-            Assert.That(attributes[0], Is.InstanceOf<PlatformAttribute>());
-            var platform = (PlatformAttribute)attributes[0];
+            PlatformAttribute platform = TranslateIntoSinglePlatform(sourcePlatform, supported1, supported2);
             Assert.That(platform.Include, Is.EqualTo("Win,Windows10"), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.Null, nameof(platform.Exclude));
         }
@@ -98,18 +89,28 @@ namespace NUnit.Framework.Attributes
         {
             var original = new PlatformAttribute("Win");
 
-            var platform = (PlatformAttribute)OSPlatformTranslator.Translate(new[] { original }).Single();
+            PlatformAttribute platform = TranslateIntoSinglePlatform(original);
             Assert.That(platform.Include, Is.EqualTo(original.Include), nameof(platform.Include));
             Assert.That(platform.Exclude, Is.EqualTo(original.Exclude), nameof(platform.Exclude));
         }
 
         [Test]
-        public void TranslateUnknownAttribute()
+        public void PassThroughAttribute()
         {
-            var unknown = new TestAttribute();
+            IApplyToTest source = new TestAttribute();
 
-            object attribute = OSPlatformTranslator.Translate(new[] { unknown }).Single();
-            Assert.That(attribute, Is.SameAs(unknown));
+            IApplyToTest result = OSPlatformTranslator.Translate(Array.Empty<Attribute>(), new[] { source }).Single();
+            Assert.That(result, Is.SameAs(source));
+        }
+
+        private static PlatformAttribute TranslateIntoSinglePlatform(params OSPlatformAttribute[] osPlatformAttributes)
+        {
+            return (PlatformAttribute)OSPlatformTranslator.Translate(osPlatformAttributes, Array.Empty<IApplyToTest>()).Single();
+        }
+
+        private static PlatformAttribute TranslateIntoSinglePlatform(IApplyToTest applyToTestAttribute, params OSPlatformAttribute[] osPlatformAttributes)
+        {
+            return (PlatformAttribute)OSPlatformTranslator.Translate(osPlatformAttributes, new[] { applyToTestAttribute }).Single();
         }
 #endif
     }

@@ -317,11 +317,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            object[] allAttributes = provider.GetCustomAttributes(inherit: true);
-            IEnumerable<IApplyToTest> applyToTestAttributes =
-                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTest>();
-
-            ApplyAttributesToTest(applyToTestAttributes);
+            ApplyAttributesToTest(OSPlatformTranslator.RetrieveAndTranslate(provider));
         }
 
         /// <summary>
@@ -381,9 +377,9 @@ namespace NUnit.Framework.Internal
             return Array.Empty<TAttr>();
         }
 
-        #endregion
+#endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Add standard attributes and members to a test node.
@@ -418,9 +414,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
         private static ITestAction[] GetActionsForType(Type type)
         {
@@ -439,9 +435,9 @@ namespace NUnit.Framework.Internal
             return actions.ToArray();
         }
 
-        #endregion
+#endregion
 
-        #region IXmlNodeBuilder Members
+#region IXmlNodeBuilder Members
 
         /// <summary>
         /// Returns the XML representation of the test
@@ -462,9 +458,9 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
-        #endregion
+#endregion
 
-        #region IComparable Members
+#region IComparable Members
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
         /// <param name="obj">An object to compare with this instance. </param>
@@ -480,6 +476,6 @@ namespace NUnit.Framework.Internal
             return other == null ? -1 : this.FullName.CompareTo(other.FullName);
         }
 
-        #endregion
+#endregion
     }
 }
