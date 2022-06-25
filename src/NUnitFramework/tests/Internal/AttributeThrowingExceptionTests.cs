@@ -31,6 +31,17 @@ namespace NUnit.Framework.Internal
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
+        [Test]
+        public void FailureInTestAttributeIsDetected()
+        {
+            ITestResult result = RunDataTestCase(nameof(AttributeOnTestMethodThrowingExceptionFixture.SpecialTestHandling));
+
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Message, Does.Contain("Failure building Test"));
+            Assert.That(result.FullName, Does.Contain(nameof(AttributeOnTestMethodThrowingExceptionFixture.SpecialTestHandling)));
+            Assert.That(result.StackTrace, Does.Contain(nameof(ExceptionThrowingApplyToAttribute) + "." + nameof(IApplyToTest.ApplyToTest)));
+        }
+
         [TestCase(typeof(AttributeOnTestMethodThrowingExceptionFixture))]
         [TestCase(typeof(AttributeOnFixtureThrowingExceptionFixture))]
         [TestCase(typeof(AttributeOnOneTimeSetUpMethodsThrowingExceptionFixture))]
@@ -40,7 +51,7 @@ namespace NUnit.Framework.Internal
             TestSuite suite = TestBuilder.MakeFixture(fixtureType);
 
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(suite.Tests, Has.Count.EqualTo(2));
+            Assert.That(suite.Tests, Has.Count.EqualTo(3));
         }
     }
 }
