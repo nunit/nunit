@@ -16,14 +16,11 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void FailRecordsExceptionFromAttribute()
+        public void DoesNotTriggerUserAttribute()
         {
             ITestResult result = RunDataTestCase(nameof(AttributeOnTestMethodThrowingExceptionFixture.TestWithFailingAttribute));
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Does.Contain("Failure building Test"));
-            Assert.That(result.FullName, Does.Contain(nameof(AttributeOnTestMethodThrowingExceptionFixture.TestWithFailingAttribute)));
-            Assert.That(result.StackTrace, Does.Contain(nameof(ExceptionThrowingAttribute) + "..ctor"));
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
         [Test]
@@ -36,28 +33,14 @@ namespace NUnit.Framework.Internal
 
         [TestCase(typeof(AttributeOnTestMethodThrowingExceptionFixture))]
         [TestCase(typeof(AttributeOnFixtureThrowingExceptionFixture))]
+        [TestCase(typeof(AttributeOnOneTimeSetUpMethodsThrowingExceptionFixture))]
+        [TestCase(typeof(AttributeOnSetUpMethodsThrowingExceptionFixture))]
         public void TestSuiteContainsAllTests(Type fixtureType)
         {
             TestSuite suite = TestBuilder.MakeFixture(fixtureType);
 
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite.Tests, Has.Count.EqualTo(2));
-        }
-
-        [TestCase(typeof(AttributeOnOneTimeSetUpMethodsThrowingExceptionFixture))]
-        [TestCase(typeof(AttributeOnSetUpMethodsThrowingExceptionFixture))]
-        public void TestSuiteWithErrorsContainsNoTests(Type fixtureType)
-        {
-            TestSuite suite = TestBuilder.MakeFixture(fixtureType);
-
-            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(suite.Tests, Has.Count.EqualTo(0));
-
-            ITestResult result = TestBuilder.RunTest(suite);
-            Assert.That(result.ResultState.Status, Is.EqualTo(ResultState.NotRunnable.Status));
-            Assert.That(result.Message, Does.Contain("Failure building TestFixture"));
-            Assert.That(result.FullName, Is.EqualTo(fixtureType.FullName));
-            Assert.That(result.StackTrace, Does.Contain(nameof(ExceptionThrowingAttribute) + "..ctor"));
         }
     }
 }
