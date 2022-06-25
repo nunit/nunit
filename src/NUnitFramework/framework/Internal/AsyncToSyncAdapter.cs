@@ -5,16 +5,17 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
     internal static class AsyncToSyncAdapter
     {
+        private static readonly Type _asyncStateMachineAttributeType = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute, System.Runtime", false);
+
         public static bool IsAsyncOperation(MethodInfo method)
         {
             return AwaitAdapter.IsAwaitable(method.ReturnType)
-                || method.GetCustomAttributes(false).Any(attr => attr.GetType().FullName == "System.Runtime.CompilerServices.AsyncStateMachineAttribute");
+                || method.IsDefined(_asyncStateMachineAttributeType, false);
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
