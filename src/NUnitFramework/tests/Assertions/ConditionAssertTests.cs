@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace NUnit.Framework.Assertions
 {
@@ -131,7 +132,7 @@ namespace NUnit.Framework.Assertions
         {
             Assert.IsEmpty( "", "Failed on empty String" );
             Assert.IsEmpty(Array.Empty<int>(), "Failed on empty Array" );
-            Assert.IsEmpty((IEnumerable)Array.Empty<int>(), "Failed on empty IEnumerable");
+            Assert.IsEmpty(Enumerable.Empty<int>(), "Failed on empty IEnumerable");
 
             Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
             Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
@@ -220,7 +221,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty((IEnumerable)Array.Empty<int>()));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(Enumerable.Empty<int>()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
