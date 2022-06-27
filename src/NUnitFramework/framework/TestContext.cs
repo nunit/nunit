@@ -18,7 +18,7 @@ namespace NUnit.Framework
     /// This is an adapter for the internal ExecutionContext
     /// class, hiding the internals from the user test.
     /// </summary>
-    public class TestContext
+    public class TestContext : IProgress<int>, IProgress<string>
     {
         private readonly TestExecutionContext _testExecutionContext;
         private TestAdapter? _test;
@@ -584,6 +584,22 @@ namespace NUnit.Framework
                     return _source.Keys;
                 }
             }
+        }
+
+        #endregion
+
+        #region IProgress
+
+        /// <inheritdoc/>
+        void IProgress<int>.Report(int value)
+        {
+            Progress.WriteLine($"{value}%");
+        }
+
+        /// <inheritdoc/>
+        void IProgress<string>.Report(string value)
+        {
+            Progress.WriteLine(value);
         }
 
         #endregion
