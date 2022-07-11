@@ -15,6 +15,12 @@ namespace NUnit.Framework
 {
     /// <summary>
     /// Indicates the source to be used to provide test fixture instances for a test class.
+    /// <list>
+    /// <listheader>The name parameter is a <see cref="string"/> representing the name of the source used to provide test cases. It has the following characteristics:</listheader>
+    /// <item>It must be a static field, property, or method in the same class as the test case.</item>
+    /// <item>It must return an <see cref="IEnumerable"/> or a type that implements <see cref="IEnumerable"/>, such as an array, a <c>List</c>, or your own iterator.</item>
+    /// <item>Each item returned by the enumerator must be compatible with the signature of the method on which the attribute appears.</item>
+    /// </list>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
@@ -273,6 +279,6 @@ namespace NUnit.Framework
                                                         ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
                                                         "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.";
 
-#endregion
+        #endregion
     }
 }
