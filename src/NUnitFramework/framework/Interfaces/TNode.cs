@@ -48,7 +48,7 @@ namespace NUnit.Framework.Interfaces
         public TNode(string name, string? value, bool valueIsCDATA)
             : this(name)
         {
-            Value = value;
+            Value = EscapeInvalidXmlCharacters(value);
             ValueIsCDATA = valueIsCDATA;
         }
 
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns>The newly created child element</returns>
         public TNode AddElement(string name, string value)
         {
-            TNode childResult = new TNode(name, EscapeInvalidXmlCharacters(value));
+            TNode childResult = new TNode(name, value);
             ChildNodes.Add(childResult);
             return childResult;
         }
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns>The newly created child element</returns>
         public TNode AddElementWithCDATA(string name, string value)
         {
-            TNode childResult = new TNode(name, EscapeInvalidXmlCharacters(value), true);
+            TNode childResult = new TNode(name, value, true);
             ChildNodes.Add(childResult);
             return childResult;
         }

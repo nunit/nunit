@@ -30,5 +30,21 @@ namespace NUnit.Framework.Tests.Interfaces
             expected.AppendFormat("><![CDATA[{0}]]></test-output>", text);
             Assert.That(testOutput.ToXml(), Is.EqualTo(expected.ToString()));
         }
+
+        [Test]
+        public void SerializeXmlWithInvalidCharacter()
+        {
+            var testOutput = new TestOutput("\u001bHappyFace", string.Empty, string.Empty, string.Empty);
+            // This throws if the output value is not properly escaped
+            Assert.That(testOutput.ToXml(), Contains.Substring("><![CDATA[\\u001bHappyFace]]></test-output>"));
+        }
+
+        [Test]
+        public void SerializeXmlWithInvalidCharacter_NonFirstPosition()
+        {
+            var testOutput = new TestOutput("Happy\u001bFace", string.Empty, string.Empty, string.Empty);
+            // This throws if the output value is not properly escaped
+            Assert.That(testOutput.ToXml(), Contains.Substring("><![CDATA[Happy\\u001bFace]]></test-output>"));
+        }
     }
 }
