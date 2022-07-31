@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace NUnit.Framework.Assertions
 {
@@ -130,8 +131,8 @@ namespace NUnit.Framework.Assertions
         public void IsEmpty()
         {
             Assert.IsEmpty( "", "Failed on empty String" );
-            Assert.IsEmpty( new int[0], "Failed on empty Array" );
-            Assert.IsEmpty((IEnumerable)new int[0], "Failed on empty IEnumerable");
+            Assert.IsEmpty(Array.Empty<int>(), "Failed on empty Array" );
+            Assert.IsEmpty(Enumerable.Empty<int>(), "Failed on empty IEnumerable");
 
             Assert.IsEmpty( new ArrayList(), "Failed on empty ArrayList" );
             Assert.IsEmpty( new Hashtable(), "Failed on empty Hashtable" );
@@ -210,7 +211,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( new int[0] ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty( Array.Empty<int>() ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -220,7 +221,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty((IEnumerable)new int[0]));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(Enumerable.Empty<int>()));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

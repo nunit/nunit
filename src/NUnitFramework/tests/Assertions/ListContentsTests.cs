@@ -37,7 +37,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new object[0] ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", Array.Empty<object>() ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

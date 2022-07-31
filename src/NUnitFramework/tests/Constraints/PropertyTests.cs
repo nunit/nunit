@@ -57,7 +57,7 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<propertyexists Length>";
         }
 
-        static object[] SuccessData = new object[] { new int[0], "hello", typeof(Array) };
+        static object[] SuccessData = new object[] { Array.Empty<int>(), "hello", typeof(Array) };
 
         static object[] FailureData = new object[] {
             new TestCaseData( 42, "<System.Int32>" ),

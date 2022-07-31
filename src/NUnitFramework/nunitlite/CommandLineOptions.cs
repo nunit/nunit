@@ -201,7 +201,7 @@ namespace NUnit.Common
             get
             {
                 if (noresult)
-                    return new OutputSpecification[0];
+                    return Array.Empty<OutputSpecification>();
 
                 if (resultOutputSpecifications.Count == 0)
                     resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));

@@ -23,14 +23,14 @@ namespace NUnit.Framework.Constraints
         static object[] SuccessData = new object[]
         {
             string.Empty,
-            new object[0],
+            Array.Empty<object>(),
             new ArrayList(),
             new System.Collections.Generic.List<int>(),
             Guid.Empty,
             new SingleElementCollection<int>(),
             new NameValueCollection(),
             System.Collections.Immutable.ImmutableArray<int>.Empty,
-            new EnumerableWithIndependentCount(1, new int[0])
+            new EnumerableWithIndependentCount(1, Array.Empty<int>())
         };
 
         private static object[] FailureData = new object[]

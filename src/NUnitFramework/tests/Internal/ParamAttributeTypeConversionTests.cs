@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void NullTypeArgumentShouldThrowArgumentNullException()
         {
-            Assert.That(() => ParamAttributeTypeConversions.ConvertData(new object[0], null), Throws.ArgumentNullException);
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(Array.Empty<object>(), null), Throws.ArgumentNullException);
         }
 
         [TestCase(typeof(short))]

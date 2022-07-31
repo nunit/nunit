@@ -37,7 +37,7 @@ namespace NUnit.Framework
         {
             RunState = RunState.Runnable;
             Arguments = arguments ?? new object?[] { null };
-            TypeArgs = new Type[0];
+            TypeArgs = Array.Empty<Type>();
             Properties = new PropertyBag();
         }
 

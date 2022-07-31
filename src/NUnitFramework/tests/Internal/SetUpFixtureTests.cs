@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Compatibility;
@@ -272,7 +273,7 @@ namespace NUnit.Framework.Internal
         public void InvalidSetUpFixtureTest()
         {
             Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace6").ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            TestUtilities.SimpleEventRecorder.Verify(new string[0]);
+            TestUtilities.SimpleEventRecorder.Verify(Array.Empty<string>());
         }
 
         #endregion

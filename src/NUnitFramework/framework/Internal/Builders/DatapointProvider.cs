@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Builders
                         else if (method != null)
                         {
                             instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
-                            foreach (object data in (IEnumerable)method.Invoke(instance, new Type[0]))
+                            foreach (object data in (IEnumerable)method.Invoke(instance, Array.Empty<Type>()))
                                 datapoints.Add(data);
                         }
                     }

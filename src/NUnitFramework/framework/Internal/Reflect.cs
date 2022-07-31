@@ -30,9 +30,6 @@ namespace NUnit.Framework.Internal
     {
         internal static readonly BindingFlags AllMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
 
-        // A zero-length Type array - not provided by System.Type for all CLR versions we support.
-        private static readonly Type[] EmptyTypes = new Type[0];
-
         #region Get Methods of a type
 
         /// <summary>
@@ -63,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type)
         {
-            ConstructorInfo ctor = type.GetConstructor(EmptyTypes);
+            ConstructorInfo ctor = type.GetConstructor(Array.Empty<Type>());
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a default constructor");
 

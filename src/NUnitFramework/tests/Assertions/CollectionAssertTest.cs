@@ -536,7 +536,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ContainsFails_EmptyICollection()
         {
-            var ca = new SimpleObjectCollection(new object[0]);
+            var ca = new SimpleObjectCollection(Array.Empty<object>());
 
             var expectedMessage =
                 "  Expected: some item equal to \"x\"" + Environment.NewLine +
