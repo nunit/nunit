@@ -189,3 +189,4 @@ project.lock.json
 *.out
 .ionide
 .fake
+BenchmarkDotNet.Artifacts*
