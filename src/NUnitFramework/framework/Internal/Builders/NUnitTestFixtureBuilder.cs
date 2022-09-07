@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (fixture.Name != name) // name was changed
             {
-                string nspace = typeInfo.Namespace;
+                string? nspace = typeInfo.Namespace;
                 fixture.FullName = nspace != null && nspace != ""
                     ? nspace + "." + fixture.Name
                     : fixture.Name;
