@@ -48,7 +48,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the namespace of the Type
         /// </summary>
-        string Namespace { get; }
+        string? Namespace { get; }
 
         /// <summary>
         /// Gets a value indicating whether the type is abstract.

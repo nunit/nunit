@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the namespace of the Type
         /// </summary>
-        public string Namespace
+        public string? Namespace
         {
             get { return Type.Namespace; }
         }

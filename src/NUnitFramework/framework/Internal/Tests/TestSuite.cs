@@ -41,7 +41,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="parentSuiteName">Name of the parent suite.</param>
         /// <param name="name">The name of the suite.</param>
-        public TestSuite(string parentSuiteName, string name)
+        public TestSuite(string? parentSuiteName, string name)
             : base(parentSuiteName, name)
         {
             Arguments = TestParameters.NoArguments;
