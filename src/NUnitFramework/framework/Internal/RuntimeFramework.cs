@@ -1,13 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 #if NETSTANDARD2_0
-using System.Runtime.Versioning;
-#else
-using Microsoft.Win32;
+using System.Runtime.CompilerServices;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -34,8 +33,8 @@ namespace NUnit.Framework.Internal
 
         private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
         {
-            Type monoRuntimeType = null;
-            Type monoTouchType = null;
+            Type? monoRuntimeType = null;
+            Type? monoTouchType = null;
 
             try
             {
@@ -105,7 +104,7 @@ namespace NUnit.Framework.Internal
 
             if (isMono)
             {
-                MethodInfo getDisplayNameMethod = monoRuntimeType.GetMethod(
+                MethodInfo? getDisplayNameMethod = monoRuntimeType!.GetMethod(
                     "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
                 if (getDisplayNameMethod != null)
                     currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, Array.Empty<object>());
@@ -210,13 +209,7 @@ namespace NUnit.Framework.Internal
         /// Static method to return a RuntimeFramework object
         /// for the framework that is currently in use.
         /// </summary>
-        public static RuntimeFramework CurrentFramework
-        {
-            get
-            {
-                return currentFramework.Value;
-            }
-        }
+        public static RuntimeFramework CurrentFramework => currentFramework.Value;
 
         /// <summary>
         /// The type of this runtime framework
@@ -226,21 +219,18 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The framework version for this runtime framework
         /// </summary>
-        public Version FrameworkVersion { get; private set; }
+        public Version FrameworkVersion { get; private set; } = null!;
 
         /// <summary>
         /// The CLR version for this runtime framework
         /// </summary>
-        public Version ClrVersion { get; private set; }
+        public Version ClrVersion { get; private set; } = null!;
 
         /// <summary>
         /// Return true if any CLR version may be used in
         /// matching this RuntimeFramework object.
         /// </summary>
-        public bool AllowAnyVersion
-        {
-            get { return ClrVersion == DefaultVersion; }
-        }
+        public bool AllowAnyVersion => ClrVersion == DefaultVersion;
 
         /// <summary>
         /// Returns the Display name for this framework
@@ -352,7 +342,7 @@ namespace NUnit.Framework.Internal
 #if NETSTANDARD2_0
             // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch
             // block to stop any inlining in release builds and check whether the type exists
-            Type runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
+            Type? runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
             if (runtimeInfoType != null)
             {
                 try
