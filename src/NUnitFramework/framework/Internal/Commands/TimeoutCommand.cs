@@ -1,7 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if THREAD_ABORT
 using System.Threading;
-#if !THREAD_ABORT
+#else
+using System;
 using System.Threading.Tasks;
 #endif
 using NUnit.Framework.Interfaces;
