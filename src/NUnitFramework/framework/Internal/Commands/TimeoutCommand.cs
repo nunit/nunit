@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Threading;
 #if !THREAD_ABORT
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace NUnit.Framework.Internal.Commands
         private readonly int _timeout;
         private readonly IDebugger _debugger;
 #if THREAD_ABORT
-        Timer _commandTimer;
+        Timer _commandTimer = null!;
         private bool _commandTimedOut;
 #endif
 
@@ -40,14 +39,14 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotNull(debugger, nameof(debugger));
 
 #if THREAD_ABORT
-            BeforeTest = (context) =>
+            BeforeTest = context =>
             {
                 var testThread = Thread.CurrentThread;
                 var nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
 
                 // Create a timer to cancel the current thread
                 _commandTimer = new Timer(
-                    (o) =>
+                    o =>
                     {
                         if (_debugger.IsAttached)
                         {
@@ -70,7 +69,7 @@ namespace NUnit.Framework.Internal.Commands
                 // If the timer cancelled the current thread, change the result
                 if (_commandTimedOut)
                 {
-                    string message = $"Test exceeded Timeout value of {timeout}ms";
+                    var message = $"Test exceeded Timeout value of {timeout}ms";
 
                     context.CurrentResult.SetResult(
                         new ResultState(TestStatus.Failed, message),

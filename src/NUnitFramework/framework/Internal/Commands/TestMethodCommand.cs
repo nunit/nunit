@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -12,7 +13,7 @@ namespace NUnit.Framework.Internal.Commands
     public class TestMethodCommand : TestCommand
     {
         private readonly TestMethod testMethod;
-        private readonly object[] arguments;
+        private readonly object?[] arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
@@ -21,7 +22,7 @@ namespace NUnit.Framework.Internal.Commands
         public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
             this.testMethod = testMethod;
-            this.arguments = testMethod.Arguments;
+            arguments = testMethod.Arguments;
         }
 
         /// <summary>
@@ -40,10 +41,10 @@ namespace NUnit.Framework.Internal.Commands
             // make it impossible to write a wrapper command to
             // implement ExpectedException, among other things.
 
-            object result = RunTestMethod(context);
+            var result = RunTestMethod(context);
 
             if (testMethod.HasExpectedResult)
-                NUnit.Framework.Assert.AreEqual(testMethod.ExpectedResult, result);
+                Assert.AreEqual(testMethod.ExpectedResult, result);
 
             context.CurrentResult.SetResult(ResultState.Success);
 
@@ -65,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object InvokeTestMethod(TestExecutionContext context)
         {
-            return testMethod.Method.Invoke(context.TestObject, arguments);
+            return testMethod.Method.Invoke(context.TestObject, arguments)!;
         }
     }
 }

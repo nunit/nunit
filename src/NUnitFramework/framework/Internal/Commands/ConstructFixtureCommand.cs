@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -18,19 +20,15 @@ namespace NUnit.Framework.Internal.Commands
         {
             Guard.ArgumentValid(Test is TestSuite, "ConstructFixtureCommand must reference a TestSuite", nameof(innerCommand));
 
-            BeforeTest = (context) =>
+            BeforeTest = context =>
             {
-                ITypeInfo typeInfo = Test.TypeInfo;
+                ITypeInfo? typeInfo = Test.TypeInfo;
 
-                if (typeInfo != null)
-                {
+                if (typeInfo is {IsStaticClass: false})
                     // Use preconstructed fixture if available, otherwise construct it
-                    if (!typeInfo.IsStaticClass)
-                    {
-                        context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
-                        if (Test.Fixture == null)
-                            Test.Fixture = context.TestObject;
-                    }
+                {
+                    context.TestObject = Test.Fixture ?? typeInfo.Construct(((TestSuite)Test).Arguments);
+                    Test.Fixture ??= context.TestObject;
                 }
             };
         }
