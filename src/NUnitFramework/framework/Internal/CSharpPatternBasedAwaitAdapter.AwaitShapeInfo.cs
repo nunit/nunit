@@ -1,8 +1,9 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
@@ -23,7 +24,7 @@ namespace NUnit.Framework.Internal
                 _getResultMethod = getResultMethod;
             }
 
-            public static AwaitShapeInfo TryCreate(Type awaitableType)
+            public static AwaitShapeInfo? TryCreate(Type awaitableType)
             {
                 // See https://docs.microsoft.com/dotnet/csharp/language-reference/language-specification/expressions#awaitable-expressions
                 // This section was first established in C# 5 and has not been updated as of C# 7.3.
