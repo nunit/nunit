@@ -95,9 +95,6 @@ namespace NUnit.Framework.Internal
         protected virtual bool MatchDescendant(ITest test)
         {
             var tests = test.Tests;
-            if (tests == null)
-                return false;
-
             // Use for-loop to avoid allocating the enumerator
             int count = tests.Count;
             for (var index = 0; index < count; index++)
