@@ -37,6 +37,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Set this to perform action after the inner command.
         /// </summary>
-        protected Action<TestExecutionContext> AfterTest = null!;
+        protected Action<TestExecutionContext>? AfterTest;
     }
 }

@@ -32,6 +32,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Action to perform before the inner command.
         /// </summary>
-        protected Action<TestExecutionContext> BeforeTest = null!;
+        protected Action<TestExecutionContext>? BeforeTest;
     }
 }

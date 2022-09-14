@@ -48,11 +48,11 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Perform the before test action
         /// </summary>
-        protected Action<TestExecutionContext> BeforeTest = null!;
+        protected Action<TestExecutionContext>? BeforeTest;
 
         /// <summary>
         /// Perform the after test action
         /// </summary>
-        protected Action<TestExecutionContext> AfterTest = null!;
+        protected Action<TestExecutionContext>? AfterTest;
     }
 }
