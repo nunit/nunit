@@ -3,6 +3,7 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 #if NETSTANDARD2_0
@@ -136,6 +137,8 @@ namespace NUnit.Framework.Internal
             DisplayName = GetDefaultDisplayName(runtime, version);
         }
 
+        [MemberNotNull(nameof(FrameworkVersion))]
+        [MemberNotNull(nameof(ClrVersion))]
         private void InitFromFrameworkVersion(Version version)
         {
             FrameworkVersion = ClrVersion = version;
@@ -190,6 +193,8 @@ namespace NUnit.Framework.Internal
             throw new ArgumentException("Unknown framework version " + version, nameof(version));
         }
 
+        [MemberNotNull(nameof(FrameworkVersion))]
+        [MemberNotNull(nameof(ClrVersion))]
         private void InitFromClrVersion(Version version)
         {
             FrameworkVersion = new Version(version.Major, version.Minor);
@@ -219,12 +224,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The framework version for this runtime framework
         /// </summary>
-        public Version FrameworkVersion { get; private set; } = null!;
+        public Version FrameworkVersion { get; private set; }
 
         /// <summary>
         /// The CLR version for this runtime framework
         /// </summary>
-        public Version ClrVersion { get; private set; } = null!;
+        public Version ClrVersion { get; private set; }
 
         /// <summary>
         /// Return true if any CLR version may be used in
