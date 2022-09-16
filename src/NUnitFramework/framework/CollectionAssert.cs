@@ -445,7 +445,7 @@ namespace NUnit.Framework
 
         #region IsNotEmpty
         /// <summary>
-        /// Assert that an array, list or other collection is empty
+        /// Assert that an array, list or other collection is not empty
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         /// <param name="message">The message to be displayed on failure</param>
@@ -456,7 +456,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Assert that an array,list or other collection is empty
+        /// Assert that an array,list or other collection is not empty
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         public static void IsNotEmpty(IEnumerable collection)
