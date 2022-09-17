@@ -120,7 +120,7 @@ namespace NUnit.Framework.Api
 
                     if (options.TryGetValue(FrameworkPackageSettings.TestParameters, out var testParameters))
                     {
-                        var parametersString = (string)testParameters;
+                        var parametersString = (string?)testParameters;
                         if (!string.IsNullOrEmpty(parametersString))
                         {
                             foreach (var param in parametersString.Split(';'))
