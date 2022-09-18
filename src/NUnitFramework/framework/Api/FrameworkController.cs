@@ -287,9 +287,7 @@ namespace NUnit.Framework.Api
         {
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
-            // Insert elements as first child in reverse order
-            if (Settings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, Settings);
+            InsertSettingsElement(result, Settings);
             InsertEnvironmentElement(result);
 
             handler.RaiseCallbackEvent(result.OuterXml);
@@ -317,9 +315,7 @@ namespace NUnit.Framework.Api
         /// <returns>The updated target node</returns>
         private TNode InsertChildElements(TNode targetNode)
         {
-            // Insert elements as first child in reverse order
-            if (Settings != null) // Some platforms don't have settings
-                InsertSettingsElement(targetNode, Settings);
+            InsertSettingsElement(targetNode, Settings);
             InsertEnvironmentElement(targetNode);
 
             return targetNode;
