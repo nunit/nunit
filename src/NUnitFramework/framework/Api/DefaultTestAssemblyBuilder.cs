@@ -123,7 +123,7 @@ namespace NUnit.Framework.Api
                         var parametersString = (string?)testParameters;
                         if (!string.IsNullOrEmpty(parametersString))
                         {
-                            foreach (var param in parametersString.Split(';'))
+                            foreach (var param in parametersString!.Split(';'))
                             {
                                 var eq = param.IndexOf('=');
 
