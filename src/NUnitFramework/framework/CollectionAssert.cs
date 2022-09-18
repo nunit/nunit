@@ -456,7 +456,7 @@ namespace NUnit.Framework
         }
 
         /// <summary>
-        /// Assert that an array,list or other collection is not empty
+        /// Assert that an array, list or other collection is not empty.
         /// </summary>
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         public static void IsNotEmpty(IEnumerable collection)
