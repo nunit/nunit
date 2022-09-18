@@ -536,7 +536,7 @@ namespace NUnit.Framework.Internal
         {
             public ResultState ResultState { get; }
             public string Message { get; }
-            public string StackTrace { get; }
+            public string? StackTrace { get; }
 
             public ExceptionResult(Exception ex, FailureSite site)
             {
