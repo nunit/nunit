@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal.Commands
             return context.CurrentResult;
         }
 
-        private object RunTestMethod(TestExecutionContext context)
+        private object? RunTestMethod(TestExecutionContext context)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
             {
@@ -64,9 +64,9 @@ namespace NUnit.Framework.Internal.Commands
             return InvokeTestMethod(context);
         }
 
-        private object InvokeTestMethod(TestExecutionContext context)
+        private object?InvokeTestMethod(TestExecutionContext context)
         {
-            return testMethod.Method.Invoke(context.TestObject, arguments)!;
+            return testMethod.Method.Invoke(context.TestObject, arguments);
         }
     }
 }
