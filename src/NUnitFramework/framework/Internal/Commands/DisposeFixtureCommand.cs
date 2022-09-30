@@ -42,13 +42,13 @@ namespace NUnit.Framework.Internal.Commands
         private static bool HasDisposableFixture(ITest test)
         {
             ITest? current = test;
-            while (current != null)
+            do
             {
                 if (current is IDisposableFixture)
                     return true;
 
                 current = current.Parent;
-            }
+            } while (current != null);
 
             return false;
         }
