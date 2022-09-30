@@ -30,15 +30,15 @@ namespace NUnit.Framework.Internal.Commands
                 // we should move the maxtime calculation to the
                 // higher level eventually.
 
-                var tickCount = Stopwatch.GetTimestamp() - context.StartTicks;
-                var seconds = (double)tickCount / Stopwatch.Frequency;
+                long tickCount = Stopwatch.GetTimestamp() - context.StartTicks;
+                double seconds = (double)tickCount / Stopwatch.Frequency;
                 TestResult result = context.CurrentResult;
 
                 result.Duration = seconds;
 
                 if (result.ResultState == ResultState.Success)
                 {
-                    var elapsedTime = result.Duration * 1000d;
+                    double elapsedTime = result.Duration * 1000d;
 
                     if (elapsedTime > maxTime)
                         result.SetResult(ResultState.Failure,
