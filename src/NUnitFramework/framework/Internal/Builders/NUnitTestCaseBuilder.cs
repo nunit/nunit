@@ -190,10 +190,10 @@ namespace NUnit.Framework.Internal.Builders
                 return MarkAsNotRunnable(testMethod, "No arguments were provided");
 
             if (argsProvided < minArgsNeeded)
-                return MarkAsNotRunnable(testMethod, string.Format("Not enough arguments provided, provide at least {0} arguments.", minArgsNeeded));
+                return MarkAsNotRunnable(testMethod, $"Not enough arguments provided, provide at least {minArgsNeeded} arguments.");
 
             if (argsProvided > maxArgsNeeded)
-                return MarkAsNotRunnable(testMethod, string.Format("Too many arguments provided, provide at most {0} arguments.", maxArgsNeeded));
+                return MarkAsNotRunnable(testMethod, $"Too many arguments provided, provide at most {maxArgsNeeded} arguments.");
 
             if (testMethod.Method.IsGenericMethodDefinition && arglist != null)
             {

@@ -242,7 +242,7 @@ namespace NUnit.Framework.Constraints
 
         private static string FormatKeyValuePair(object? key, object? value)
         {
-            return string.Format("[{0}, {1}]", FormatValue(key), FormatValue(value));
+            return $"[{FormatValue(key)}, {FormatValue(value)}]";
         }
 
         private static object? GetValueFromTuple(Type type, string propertyName, object obj)
@@ -354,7 +354,7 @@ namespace NUnit.Framework.Constraints
         public static string GetTypeRepresentation(object obj)
         {
             if (!(obj is Array array))
-                return string.Format("<{0}>", obj.GetType());
+                return $"<{obj.GetType()}>";
 
             StringBuilder sb = new StringBuilder();
             Type elementType = array.GetType();
@@ -376,7 +376,7 @@ namespace NUnit.Framework.Constraints
             while (--nest > 0)
                 sb.Append("[]");
 
-            return string.Format("<{0}>", sb.ToString());
+            return $"<{sb.ToString()}>";
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace NUnit.Framework.Constraints
                         case '\x0085':
                         case '\x2028':
                         case '\x2029':
-                            sb.Append(string.Format("\\x{0:X4}", (int)c));
+                            sb.Append($"\\x{(int)c:X4}");
                             break;
 
                         default:

@@ -138,7 +138,7 @@ namespace NUnit.Framework.Constraints
         {
             string rep = GetStringRepresentation();
 
-            return this.Builder == null ? rep : string.Format("<unresolved {0}>", rep);
+            return this.Builder == null ? rep : $"<unresolved {rep}>";
         }
 
         /// <summary>

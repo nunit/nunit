@@ -492,7 +492,7 @@ namespace NUnit.Framework.Api
 
         private static string GetSkipReason(TNode result)
         {
-            var propNode = result.SelectSingleNode(string.Format("properties/property[@name='{0}']", PropertyNames.SkipReason));
+            var propNode = result.SelectSingleNode($"properties/property[@name='{PropertyNames.SkipReason}']");
             return propNode == null ? null : propNode.Attributes["value"];
         }
 
