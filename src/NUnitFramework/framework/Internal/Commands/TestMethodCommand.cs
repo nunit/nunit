@@ -12,8 +12,8 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class TestMethodCommand : TestCommand
     {
-        private readonly TestMethod testMethod;
-        private readonly object?[] arguments;
+        private readonly TestMethod _testMethod;
+        private readonly object?[] _arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
@@ -21,8 +21,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="testMethod">The test.</param>
         public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
-            this.testMethod = testMethod;
-            arguments = testMethod.Arguments;
+            _testMethod = testMethod;
+            _arguments = testMethod.Arguments;
         }
 
         /// <summary>
@@ -43,8 +43,8 @@ namespace NUnit.Framework.Internal.Commands
 
             var result = RunTestMethod(context);
 
-            if (testMethod.HasExpectedResult)
-                Assert.AreEqual(testMethod.ExpectedResult, result);
+            if (_testMethod.HasExpectedResult)
+                Assert.AreEqual(_testMethod.ExpectedResult, result);
 
             context.CurrentResult.SetResult(ResultState.Success);
 
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object? RunTestMethod(TestExecutionContext context)
         {
-            if (AsyncToSyncAdapter.IsAsyncOperation(testMethod.Method.MethodInfo))
+            if (AsyncToSyncAdapter.IsAsyncOperation(_testMethod.Method.MethodInfo))
             {
                 return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
             }
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private object?InvokeTestMethod(TestExecutionContext context)
         {
-            return testMethod.Method.Invoke(context.TestObject, arguments);
+            return _testMethod.Method.Invoke(context.TestObject, _arguments);
         }
     }
 }
