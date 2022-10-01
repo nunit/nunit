@@ -108,7 +108,7 @@ The build.cake script contains a large number of interdependent tasks. The most 
 | Test     | Runs all tests. Dependent on Build. |
 | Package  | Creates all packages without building first. See Note below. |
 
-For example, the following command `.\build.ps --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target. 
+For example, the following command `.\build.ps1 --target=Test --configuration=Release` (PowerShell on Windows) will perform a full release build for all target frameworks and then execute the unit tests against each target. 
 
 For a full list of tasks, run `.\build.ps1 --showdescription` (PowerShell on Windows) or `./build.sh --showdescription` (bash on Linux).
 
