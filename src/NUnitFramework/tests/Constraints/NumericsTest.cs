@@ -25,6 +25,7 @@ using System;
 
 namespace NUnit.Framework.Constraints
 {
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
     [TestFixture]
     public class NumericsTests
     {
@@ -202,4 +203,5 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000m, 11500m, ref tenPercent)));
         }
     }
+#pragma warning restore CS0618
 }

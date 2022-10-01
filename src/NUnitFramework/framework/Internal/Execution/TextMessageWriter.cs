@@ -327,9 +327,11 @@ namespace NUnit.Framework.Internal
             if (tolerance.Mode != ToleranceMode.Linear && tolerance.Mode != ToleranceMode.Percent)
                 return;
 
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             string differenceString = tolerance.Amount is TimeSpan
                 ? MsgUtils.FormatValue(DateTimes.Difference(expected, actual)) // TimeSpan tolerance applied in linear mode only
                 : MsgUtils.FormatValue(Numerics.Difference(expected, actual, tolerance.Mode));
+#pragma warning restore CS0618
 
             if (differenceString != double.NaN.ToString())
             {

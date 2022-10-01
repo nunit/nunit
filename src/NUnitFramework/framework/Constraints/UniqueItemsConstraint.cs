@@ -150,7 +150,9 @@ namespace NUnit.Framework.Constraints
         {
             if (type.IsGenericType)
                 return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2");
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             else if (Numerics.IsNumericType(type))
+#pragma warning restore CS0618
                 return true;
             else
                 return

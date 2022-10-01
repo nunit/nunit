@@ -30,10 +30,12 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state)
         {
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             if (!Numerics.IsNumericType(x) || !Numerics.IsNumericType(y))
                 return null;
 
             return Numerics.AreEqual(x, y, ref tolerance);
+#pragma warning restore CS0618
         }
     }
 }
