@@ -29,6 +29,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// The Numerics class contains common operations on numeric values.
     /// </summary>
+    [Obsolete("This class is not intended for public use. It will not be part of the public API of the next major version.")]
     public static class Numerics
     {
         #region Numeric Type Recognition
