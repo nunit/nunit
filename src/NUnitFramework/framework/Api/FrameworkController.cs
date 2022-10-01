@@ -298,11 +298,6 @@ namespace NUnit.Framework.Api
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
 
-        private void StopRun(ICallbackEventHandler handler, bool force)
-        {
-            StopRun(force);
-        }
-
         private void CountTests(ICallbackEventHandler handler, string filter)
         {
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
@@ -558,7 +553,7 @@ namespace NUnit.Framework.Api
             /// <remarks>A forced stop will cause threads and processes to be killed as needed.</remarks>
             public StopRunAction(FrameworkController controller, bool force, object handler)
             {
-                controller.StopRun((ICallbackEventHandler)handler, force);
+                controller.StopRun(force);
             }
         }
 

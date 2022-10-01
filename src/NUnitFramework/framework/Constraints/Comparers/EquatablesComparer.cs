@@ -47,9 +47,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private static EquatableMethodImpl[] GetEquatableImplementations(Type type)
         {
-            static bool IsIEquatableOfT(Type t, object filter) => t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(IEquatable<>));
+            static bool IsIEquatableOfT(Type t) => t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(IEquatable<>));
             
-            var interfaces = type.FindInterfaces((t,f) => IsIEquatableOfT(t,f), string.Empty);
+            var interfaces = type.FindInterfaces((t,f) => IsIEquatableOfT(t), string.Empty);
             var implementations = new EquatableMethodImpl[interfaces.Length];
 
             for(var i = 0; i < interfaces.Length; i++)

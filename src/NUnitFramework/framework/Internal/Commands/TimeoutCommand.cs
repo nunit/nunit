@@ -40,14 +40,14 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotNull(debugger, nameof(debugger));
 
 #if THREAD_ABORT
-            BeforeTest = (context) =>
+            BeforeTest = _ =>
             {
                 var testThread = Thread.CurrentThread;
                 var nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
 
                 // Create a timer to cancel the current thread
                 _commandTimer = new Timer(
-                    (o) =>
+                    _ =>
                     {
                         if (_debugger.IsAttached)
                         {
