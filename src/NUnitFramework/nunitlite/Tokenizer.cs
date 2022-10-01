@@ -48,9 +48,9 @@ namespace NUnit.Common
 
         public override string ToString()
         {
-            return Text != null
-                ? Kind.ToString() + ":" + Text
-                : Kind.ToString();
+            if (Text == null)
+                return Kind.ToString();
+            return $"{Kind}:{Text}";
         }
 
         public static bool operator ==(Token t1, Token t2)

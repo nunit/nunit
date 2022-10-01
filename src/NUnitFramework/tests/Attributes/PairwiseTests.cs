@@ -72,7 +72,7 @@ namespace NUnit.Framework.Attributes
                 int n = dimensions[i];
                 sources[i] = new string[n];
                 for (int j = 0; j < n; j++)
-                    sources[i][j] = featureName + j.ToString();
+                    sources[i][j] = featureName + j;
             }
 
             ICombiningStrategy strategy = new PairwiseStrategy();

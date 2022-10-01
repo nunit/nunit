@@ -818,7 +818,7 @@ namespace NUnit.Options
                 return false;
             for (int i = 0; i < n.Length; ++i) {
                 Option p;
-                string opt = f + n [i].ToString ();
+                string opt = f + n [i];
                 string rn = n [i].ToString ();
                 if (!Contains (rn)) {
                     if (i == 0)

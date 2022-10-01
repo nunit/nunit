@@ -195,7 +195,7 @@ namespace NUnit.Framework.Constraints
                     if (_steps[0].PropertyName != null)
                     {
                         if (current == null)
-                            throw new ArgumentNullException(nameof(actual), "Null value at index " + _breakingIndex.ToString());
+                            throw new ArgumentNullException(nameof(actual), $"Null value at index {_breakingIndex}");
 
                         foreach (var step in _steps)
                         {

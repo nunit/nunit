@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal.Execution
             // TODO: Avoid creating all the workers till needed
             for (int i = 1; i <= LevelOfParallelism; i++)
             {
-                string name = string.Format("ParallelWorker#" + i.ToString());
+                string name = $"ParallelWorker#{i}";
                 ParallelShift.Assign(new TestWorker(ParallelQueue, name));
             }
 
