@@ -347,7 +347,7 @@ namespace NUnit.Framework.Interfaces
 
         private static string CharToUnicodeSequence(char symbol)
         {
-            return $"\\u{((int)symbol).ToString("x4")}";
+            return $"\\u{(int)symbol:x4}";
         }
 
         private void WriteCDataTo(XmlWriter writer)
