@@ -74,13 +74,8 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the OSPlatform under which we are currently running
         /// </summary>
-        public static OSPlatform CurrentPlatform
-        {
-            get
-            {
-                return currentPlatform.Value;
-            }
-        }
+        public static OSPlatform CurrentPlatform => currentPlatform.Value;
+
         #endregion
 
         #region Members used for Win32NT platform only
@@ -280,76 +275,48 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if this is a windows platform
         /// </summary>
-        public bool IsWindows
-        {
-            get
-            {
-                return Platform == PlatformID.Win32NT
-                    || Platform == PlatformID.Win32Windows
-                    || Platform == PlatformID.Win32S
-                    || Platform == PlatformID.WinCE;
-            }
-        }
+        public bool IsWindows =>
+            Platform == PlatformID.Win32NT
+            || Platform == PlatformID.Win32Windows
+            || Platform == PlatformID.Win32S
+            || Platform == PlatformID.WinCE;
 
         /// <summary>
         /// Return true if this is a Unix or Linux platform
         /// </summary>
-        public bool IsUnix
-        {
-            get
-            {
-                return Platform == UnixPlatformID_Microsoft
-                    || Platform == UnixPlatformID_Mono;
-            }
-        }
+        public bool IsUnix =>
+            Platform == UnixPlatformID_Microsoft
+            || Platform == UnixPlatformID_Mono;
 
         /// <summary>
         /// Return true if the platform is Win32S
         /// </summary>
-        public bool IsWin32S
-        {
-            get { return Platform == PlatformID.Win32S; }
-        }
+        public bool IsWin32S => Platform == PlatformID.Win32S;
 
         /// <summary>
         /// Return true if the platform is Win32Windows
         /// </summary>
-        public bool IsWin32Windows
-        {
-            get { return Platform == PlatformID.Win32Windows; }
-        }
+        public bool IsWin32Windows => Platform == PlatformID.Win32Windows;
 
         /// <summary>
         ///  Return true if the platform is Win32NT
         /// </summary>
-        public bool IsWin32NT
-        {
-            get { return Platform == PlatformID.Win32NT; }
-        }
+        public bool IsWin32NT => Platform == PlatformID.Win32NT;
 
         /// <summary>
         /// Return true if the platform is Windows CE
         /// </summary>
-        public bool IsWinCE
-        {
-            get { return Platform == PlatformID.WinCE; }
-        }
+        public bool IsWinCE => Platform == PlatformID.WinCE;
 
         /// <summary>
         /// Return true if the platform is Xbox
         /// </summary>
-        public bool IsXbox
-        {
-            get { return Platform == XBoxPlatformID; }
-        }
+        public bool IsXbox => Platform == XBoxPlatformID;
 
         /// <summary>
         /// Return true if the platform is MacOSX
         /// </summary>
-        public bool IsMacOSX
-        {
-            get { return Platform == MacOSXPlatformID; }
-        }
+        public bool IsMacOSX => Platform == MacOSXPlatformID;
 
         static int UnameSafe(IntPtr buf)
         {
@@ -391,210 +358,132 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is Windows 95
         /// </summary>
-        public bool IsWin95
-        {
-            get { return Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 0; }
-        }
+        public bool IsWin95 => Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 0;
 
         /// <summary>
         /// Return true if the platform is Windows 98
         /// </summary>
-        public bool IsWin98
-        {
-            get { return Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 10; }
-        }
+        public bool IsWin98 => Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 10;
 
         /// <summary>
         /// Return true if the platform is Windows ME
         /// </summary>
-        public bool IsWinME
-        {
-            get { return Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 90; }
-        }
+        public bool IsWinME => Platform == PlatformID.Win32Windows && Version.Major == 4 && Version.Minor == 90;
 
         /// <summary>
         /// Return true if the platform is NT 3
         /// </summary>
-        public bool IsNT3
-        {
-            get { return Platform == PlatformID.Win32NT && Version.Major == 3; }
-        }
+        public bool IsNT3 => Platform == PlatformID.Win32NT && Version.Major == 3;
 
         /// <summary>
         /// Return true if the platform is NT 4
         /// </summary>
-        public bool IsNT4
-        {
-            get { return Platform == PlatformID.Win32NT && Version.Major == 4; }
-        }
+        public bool IsNT4 => Platform == PlatformID.Win32NT && Version.Major == 4;
 
         /// <summary>
         /// Return true if the platform is NT 5
         /// </summary>
-        public bool IsNT5
-        {
-            get { return Platform == PlatformID.Win32NT && Version.Major == 5; }
-        }
+        public bool IsNT5 => Platform == PlatformID.Win32NT && Version.Major == 5;
 
         /// <summary>
         /// Return true if the platform is Windows 2000
         /// </summary>
-        public bool IsWin2K
-        {
-            get { return IsNT5 && Version.Minor == 0; }
-        }
+        public bool IsWin2K => IsNT5 && Version.Minor == 0;
 
         /// <summary>
         /// Return true if the platform is Windows XP
         /// </summary>
-        public bool IsWinXP
-        {
-            get { return IsNT5 && (Version.Minor == 1  || Version.Minor == 2 && Product == ProductType.WorkStation); }
-        }
+        public bool IsWinXP => IsNT5 && (Version.Minor == 1  || Version.Minor == 2 && Product == ProductType.WorkStation);
 
         /// <summary>
         /// Return true if the platform is Windows 2003 Server
         /// </summary>
-        public bool IsWin2003Server
-        {
-            get { return IsNT5 && Version.Minor == 2 && Product == ProductType.Server; }
-        }
+        public bool IsWin2003Server => IsNT5 && Version.Minor == 2 && Product == ProductType.Server;
 
         /// <summary>
         /// Return true if the platform is NT 6
         /// </summary>
-        public bool IsNT6
-        {
-            get { return Platform == PlatformID.Win32NT && Version.Major == 6; }
-        }
+        public bool IsNT6 => Platform == PlatformID.Win32NT && Version.Major == 6;
 
         /// <summary>
         /// Return true if the platform is NT 6.0
         /// </summary>
-        public bool IsNT60
-        {
-            get { return IsNT6 && Version.Minor == 0; }
-        }
+        public bool IsNT60 => IsNT6 && Version.Minor == 0;
 
         /// <summary>
         /// Return true if the platform is NT 6.1
         /// </summary>
-        public bool IsNT61
-        {
-            get { return IsNT6 && Version.Minor == 1; }
-        }
+        public bool IsNT61 => IsNT6 && Version.Minor == 1;
 
         /// <summary>
         /// Return true if the platform is NT 6.2
         /// </summary>
-        public bool IsNT62
-        {
-            get { return IsNT6 && Version.Minor == 2; }
-        }
+        public bool IsNT62 => IsNT6 && Version.Minor == 2;
 
         /// <summary>
         /// Return true if the platform is NT 6.3
         /// </summary>
-        public bool IsNT63
-        {
-            get { return IsNT6 && Version.Minor == 3; }
-        }
+        public bool IsNT63 => IsNT6 && Version.Minor == 3;
 
         /// <summary>
         /// Return true if the platform is Vista
         /// </summary>
-        public bool IsVista
-        {
-            get { return IsNT60 && Product == ProductType.WorkStation; }
-        }
+        public bool IsVista => IsNT60 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 2008 Server (original or R2)
         /// </summary>
-        public bool IsWin2008Server
-        {
-            get { return IsWin2008ServerR1 || IsWin2008ServerR2; }
-        }
+        public bool IsWin2008Server => IsWin2008ServerR1 || IsWin2008ServerR2;
 
         /// <summary>
         /// Return true if the platform is Windows 2008 Server (original)
         /// </summary>
-        public bool IsWin2008ServerR1
-        {
-            get { return IsNT60 && Product == ProductType.Server; }
-        }
+        public bool IsWin2008ServerR1 => IsNT60 && Product == ProductType.Server;
 
         /// <summary>
         /// Return true if the platform is Windows 2008 Server R2
         /// </summary>
-        public bool IsWin2008ServerR2
-        {
-            get { return IsNT61 && Product == ProductType.Server; }
-        }
+        public bool IsWin2008ServerR2 => IsNT61 && Product == ProductType.Server;
 
         /// <summary>
         /// Return true if the platform is Windows 2012 Server (original or R2)
         /// </summary>
-        public bool IsWin2012Server
-        {
-            get { return IsWin2012ServerR1 || IsWin2012ServerR2; }
-        }
+        public bool IsWin2012Server => IsWin2012ServerR1 || IsWin2012ServerR2;
 
         /// <summary>
         /// Return true if the platform is Windows 2012 Server (original)
         /// </summary>
-        public bool IsWin2012ServerR1
-        {
-            get { return IsNT62 && Product == ProductType.Server; }
-        }
+        public bool IsWin2012ServerR1 => IsNT62 && Product == ProductType.Server;
 
         /// <summary>
         /// Return true if the platform is Windows 2012 Server R2
         /// </summary>
-        public bool IsWin2012ServerR2
-        {
-            get { return IsNT63 && Product == ProductType.Server; }
-        }
+        public bool IsWin2012ServerR2 => IsNT63 && Product == ProductType.Server;
 
         /// <summary>
         /// Return true if the platform is Windows 7
         /// </summary>
-        public bool IsWindows7
-        {
-            get { return IsNT61 && Product == ProductType.WorkStation; }
-        }
+        public bool IsWindows7 => IsNT61 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 8
         /// </summary>
-        public bool IsWindows8
-        {
-            get { return IsNT62 && Product == ProductType.WorkStation; }
-        }
+        public bool IsWindows8 => IsNT62 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 8.1
         /// </summary>
-        public bool IsWindows81
-        {
-            get { return IsNT63 && Product == ProductType.WorkStation; }
-        }
+        public bool IsWindows81 => IsNT63 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 10
         /// </summary>
-        public bool IsWindows10
-        {
-            get { return Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.WorkStation; }
-        }
+        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows Server. This is named Windows
         /// Server 10 to distinguish it from previous versions of Windows Server.
         /// </summary>
-        public bool IsWindowsServer10
-        {
-            get { return Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.Server; }
-        }
+        public bool IsWindowsServer10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.Server;
     }
 }

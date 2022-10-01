@@ -17,10 +17,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return "No Exception to be thrown"; }
-        }
+        public override string Description => "No Exception to be thrown";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

@@ -213,13 +213,7 @@ namespace NUnit.Common
         /// <summary>
         /// Peek ahead at the next character in input
         /// </summary>
-        private char NextChar
-        {
-            get
-            {
-                return _index < _input.Length ? _input[_index] : EOF_CHAR;
-            }
-        }
+        private char NextChar => _index < _input.Length ? _input[_index] : EOF_CHAR;
 
         private void SkipBlanks()
         {

@@ -21,10 +21,7 @@ namespace NUnit.Framework.Constraints
         /// Gets the default ComparisonAdapter, which wraps an
         /// NUnitComparer object.
         /// </summary>
-        public static ComparisonAdapter Default
-        {
-            get { return new DefaultComparisonAdapter(); }
-        }
+        public static ComparisonAdapter Default => new DefaultComparisonAdapter();
 
         /// <summary>
         /// Returns a ComparisonAdapter that wraps an <see cref="IComparer"/>

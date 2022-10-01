@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "InstanceOf"; } }
+        public override string DisplayName => "InstanceOf";
 
         /// <summary>
         /// Apply the constraint to an actual value, returning true if it succeeds

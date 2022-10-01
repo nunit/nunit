@@ -122,14 +122,9 @@ namespace NUnit.Framework.Internal
     [Serializable]
     public class MyPrincipal : IPrincipal
     {
-        public IIdentity Identity
-        {
-            get
-            {
-                // TODO:  Add MyPrincipal.Identity getter implementation
-                return null;
-            }
-        }
+        public IIdentity Identity =>
+            // TODO:  Add MyPrincipal.Identity getter implementation
+            null;
 
         public bool IsInRole(string role)
         {

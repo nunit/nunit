@@ -175,10 +175,7 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>The list of child tests</value>
-        public override IList<ITest> Tests
-        {
-            get { return tests; }
-        }
+        public override IList<ITest> Tests => tests;
 
         /// <summary>
         /// Gets a count of test cases represented by
@@ -236,22 +233,13 @@ namespace NUnit.Framework.Internal
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>
-        public override bool HasChildren
-        {
-            get
-            {
-                return tests.Count > 0;
-            }
-        }
+        public override bool HasChildren => tests.Count > 0;
 
         /// <summary>
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string XmlElementName
-        {
-            get { return "test-suite"; }
-        }
+        public override string XmlElementName => "test-suite";
 
         /// <summary>
         /// Returns an XmlNode representing the current result after

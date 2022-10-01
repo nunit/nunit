@@ -39,10 +39,7 @@ namespace NUnit.Framework.Internal.Commands
         ///  Returns true if this level has any methods at all.
         ///  This flag is used to discard levels that do nothing.
         /// </summary>
-        public bool HasMethods
-        {
-            get { return _setUpMethods.Count > 0 || _tearDownMethods.Count > 0; }
-        }
+        public bool HasMethods => _setUpMethods.Count > 0 || _tearDownMethods.Count > 0;
 
         /// <summary>
         /// Run SetUp on this level.

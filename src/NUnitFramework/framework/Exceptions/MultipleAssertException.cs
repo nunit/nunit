@@ -43,10 +43,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the <see cref="ResultState"/> provided by this exception.
         /// </summary>
-        public override ResultState ResultState
-        {
-            get { return ResultState.Failure; }
-        }
+        public override ResultState ResultState => ResultState.Failure;
 
         /// <summary>
         /// Gets the <see cref="ITestResult"/> of this test at the point the exception was thrown,

@@ -61,9 +61,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "prop"; }
-        }
+        protected override string ElementName => "prop";
     }
 }

@@ -15,10 +15,7 @@ namespace NUnit.Framework.Assertions
         private readonly ActualValueDelegate<System.Threading.Tasks.Task> _throwsAsyncTask = async () => await ThrowAsyncTask();
         private readonly ActualValueDelegate<Task<int>> _throwsAsyncGenericTask = async () => await ThrowAsyncGenericTask();
 
-        private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint
-        {
-            get { return new ThrowsConstraint(new ExactTypeConstraint(typeof(InvalidOperationException))); }
-        }
+        private static ThrowsConstraint ThrowsInvalidOperationExceptionConstraint => new ThrowsConstraint(new ExactTypeConstraint(typeof(InvalidOperationException)));
 
         [Test]
         public void ThrowsConstraintAsyncTask()

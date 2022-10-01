@@ -67,90 +67,57 @@ namespace NUnit.TestUtilities
             }
         }
 
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name => name;
 
-        public bool Success
-        {
-            get { return failureCount == 0; }
-        }
+        public bool Success => failureCount == 0;
 
         /// <summary>
         /// Returns the number of test cases for which results
         /// have been summarized. Any tests excluded by use of
         /// Category or Explicit attributes are not counted.
         /// </summary>
-        public int ResultCount
-        {
-            get { return resultCount; }
-        }
+        public int ResultCount => resultCount;
 
         /// <summary>
         /// Returns the number of test cases actually run, which
         /// is the same as ResultCount, less any Skipped, Ignored
         /// or NonRunnable tests.
         /// </summary>
-        public int TestsRun
-        {
-            get { return Passed + Failed + Inconclusive; }
-        }
+        public int TestsRun => Passed + Failed + Inconclusive;
 
         /// <summary>
         /// Returns the number of tests that passed
         /// </summary>
-        public int Passed
-        {
-            get { return successCount; }
-        }
+        public int Passed => successCount;
 
         /// <summary>
         /// Returns the number of test cases that failed.
         /// </summary>
-        public int Failed
-        {
-            get { return failureCount; }
-        }
+        public int Failed => failureCount;
 
         /// <summary>
         /// Returns the number of test cases that failed.
         /// </summary>
-        public int Inconclusive
-        {
-            get { return inconclusiveCount; }
-        }
+        public int Inconclusive => inconclusiveCount;
 
         /// <summary>
         /// Returns the number of test cases that were skipped.
         /// </summary>
-        public int Skipped
-        {
-            get { return skipCount; }
-        }
+        public int Skipped => skipCount;
 
         /// <summary>
         /// Gets the start time of the test run.
         /// </summary>
-        public DateTime StartTime
-        {
-            get { return startTime; }
-        }
+        public DateTime StartTime => startTime;
 
         /// <summary>
         /// Gets the end time of the test run.
         /// </summary>
-        public DateTime EndTime
-        {
-            get { return endTime; }
-        }
+        public DateTime EndTime => endTime;
 
         /// <summary>
         /// Gets the duration of the test run in seconds.
         /// </summary>
-        public double Duration
-        {
-            get { return duration; }
-        }
+        public double Duration => duration;
     }
 }

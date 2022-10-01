@@ -11,10 +11,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "<empty>"; }
-        }
+        public override string Description => "<empty>";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

@@ -41,8 +41,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public object LeftContext
         {
-            get { return leftContext; }
-            set { leftContext = value; }
+            get => leftContext;
+            set => leftContext = value;
         }
 
         /// <summary>
@@ -50,27 +50,21 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public object RightContext
         {
-            get { return rightContext; }
-            set { rightContext = value; }
+            get => rightContext;
+            set => rightContext = value;
         }
 
         /// <summary>
         /// The precedence value used when the operator
         /// is about to be pushed to the stack.
         /// </summary>
-        public virtual int LeftPrecedence
-        {
-            get { return left_precedence; }
-        }
+        public virtual int LeftPrecedence => left_precedence;
 
         /// <summary>
         /// The precedence value used when the operator
         /// is on the top of the stack.
         /// </summary>
-        public virtual int RightPrecedence
-        {
-            get { return right_precedence; }
-        }
+        public virtual int RightPrecedence => right_precedence;
 
         /// <summary>
         /// Reduce produces a constraint from the operator and 

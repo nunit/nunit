@@ -70,10 +70,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Is true for intervals created with a non-zero value
         /// </summary>
-        public bool IsNotZero
-        {
-            get { return _value != 0; }
-        }
+        public bool IsNotZero => _value != 0;
 
         /// <summary>
         /// Returns a string that represents the current object.

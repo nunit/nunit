@@ -10,10 +10,7 @@ namespace NUnit.TestUtilities.Comparers
     {
         public bool WasCalled = false;
 
-        public Comparison<T> Delegate
-        {
-            get { return new Comparison<T>(Compare); }
-        }
+        public Comparison<T> Delegate => new Comparison<T>(Compare);
 
         public int Compare(T x, T y)
         {

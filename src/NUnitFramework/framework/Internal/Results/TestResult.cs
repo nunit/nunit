@@ -113,32 +113,26 @@ namespace NUnit.Framework.Internal
                     RwLock.ExitReadLock();
                 }
             }
-            private set { _resultState = value; }
+            private set => _resultState = value;
         }
 
         /// <summary>
         /// Gets the name of the test result
         /// </summary>
-        public virtual string Name
-        {
-            get { return Test.Name; }
-        }
+        public virtual string Name => Test.Name;
 
         /// <summary>
         /// Gets the full name of the test result
         /// </summary>
-        public virtual string FullName
-        {
-            get { return Test.FullName; }
-        }
+        public virtual string FullName => Test.FullName;
 
         /// <summary>
         /// Gets or sets the elapsed time for running the test in seconds
         /// </summary>
         public double Duration
         {
-            get { return _duration; }
-            set { _duration = value >= MIN_DURATION ? value : MIN_DURATION; }
+            get => _duration;
+            set => _duration = value >= MIN_DURATION ? value : MIN_DURATION;
         }
 
         /// <summary>
@@ -184,10 +178,7 @@ namespace NUnit.Framework.Internal
                 }
 
             }
-            private set
-            {
-                _message = value;
-            }
+            private set => _message = value;
         }
 
         /// <summary>
@@ -209,10 +200,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            private set
-            {
-                _stackTrace = value;
-            }
+            private set => _stackTrace = value;
         }
 
         /// <summary>
@@ -234,10 +222,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            internal set
-            {
-                InternalAssertCount = value;
-            }
+            internal set => InternalAssertCount = value;
         }
 
         /// <summary>
@@ -308,10 +293,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a list of assertion results associated with the test.
         /// </summary>
-        public IList<AssertionResult> AssertionResults
-        {
-            get { return _assertionResults; }
-        }
+        public IList<AssertionResult> AssertionResults => _assertionResults;
 
         #endregion
 

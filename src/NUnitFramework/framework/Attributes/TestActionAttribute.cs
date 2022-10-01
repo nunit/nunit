@@ -29,9 +29,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Provides the target for the action attribute
         /// </summary>
-        public virtual ActionTargets Targets
-        {
-            get { return ActionTargets.Default; }
-        }
+        public virtual ActionTargets Targets => ActionTargets.Default;
     }
 }

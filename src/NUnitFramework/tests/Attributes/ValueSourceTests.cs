@@ -171,10 +171,7 @@ namespace NUnit.Framework.Attributes
             return null;
         }
 
-        public static IEnumerable<int> NullDataSourceProperty
-        {
-            get { return null; }
-        }
+        public static IEnumerable<int> NullDataSourceProperty => null;
 
         [Test, Explicit("Null or nonexistent data sources definitions should not prevent other tests from run #1121")]
         public void ValueSourceMayNotBeNull(

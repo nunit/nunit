@@ -71,10 +71,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the property dictionary for this attribute
         /// </summary>
-        public IPropertyBag Properties
-        {
-            get { return properties; }
-        }
+        public IPropertyBag Properties => properties;
 
         #region IApplyToTest Members
 

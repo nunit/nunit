@@ -433,23 +433,11 @@ namespace NUnit.Framework.Constraints
             this.enumerator = enumerator;
         }
 
-        public bool Disposed { get { return disposedValue; } }
+        public bool Disposed => disposedValue;
 
-        public T Current
-        {
-            get
-            {
-                return enumerator.Current;
-            }
-        }
+        public T Current => enumerator.Current;
 
-        object IEnumerator.Current
-        {
-            get
-            {
-                return enumerator.Current;
-            }
-        }
+        object IEnumerator.Current => enumerator.Current;
 
         public bool MoveNext()
         {

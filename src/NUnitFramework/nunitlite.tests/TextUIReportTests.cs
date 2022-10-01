@@ -131,10 +131,7 @@ namespace NUnitLite.Tests
 
         #region Private Properties and Methods
 
-        private string Report
-        {
-            get { return _reportBuilder.ToString().Replace(NL, "\n"); }
-        }
+        private string Report => _reportBuilder.ToString().Replace(NL, "\n");
 
         private IList<string> GetReportLines()
         {

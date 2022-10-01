@@ -125,10 +125,7 @@ namespace NUnit.Framework.Internal.Execution
                     Properties.Add(PropertyNames.ApartmentState, apartmentState);
             }
 
-            public override object[] Arguments
-            {
-                get { throw new System.NotImplementedException(); }
-            }
+            public override object[] Arguments => throw new System.NotImplementedException();
 
             public override string XmlElementName => "MockTest";
 

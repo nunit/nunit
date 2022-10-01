@@ -228,10 +228,7 @@ namespace NUnit.Common
                 "Unexpected token '{0}' at position {1} in selection expression.", token.Text, token.Pos));
         }
 
-        private Token LookAhead
-        {
-            get { return _tokenizer.LookAhead; }
-        }
+        private Token LookAhead => _tokenizer.LookAhead;
 
         private bool LookingAt(params Token[] tokens)
         {

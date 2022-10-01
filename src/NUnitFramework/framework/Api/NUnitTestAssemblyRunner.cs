@@ -54,10 +54,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Gets the default level of parallel execution (worker threads)
         /// </summary>
-        public static int DefaultLevelOfParallelism
-        {
-            get { return Math.Max(Environment.ProcessorCount, 2); }
-        }
+        public static int DefaultLevelOfParallelism => Math.Max(Environment.ProcessorCount, 2);
 
         /// <summary>
         /// The tree of tests that was loaded by the builder
@@ -67,34 +64,22 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The test result, if a run has completed
         /// </summary>
-        public ITestResult Result
-        {
-            get { return TopLevelWorkItem?.Result; }
-        }
+        public ITestResult Result => TopLevelWorkItem?.Result;
 
         /// <summary>
         /// Indicates whether a test is loaded
         /// </summary>
-        public bool IsTestLoaded
-        {
-            get { return LoadedTest != null; }
-        }
+        public bool IsTestLoaded => LoadedTest != null;
 
         /// <summary>
         /// Indicates whether a test is running
         /// </summary>
-        public bool IsTestRunning
-        {
-            get { return TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Running; }
-        }
+        public bool IsTestRunning => TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Running;
 
         /// <summary>
         /// Indicates whether a test run is complete
         /// </summary>
-        public bool IsTestComplete
-        {
-            get { return TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Complete; }
-        }
+        public bool IsTestComplete => TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Complete;
 
         /// <summary>
         /// Our settings, specified when loading the assembly

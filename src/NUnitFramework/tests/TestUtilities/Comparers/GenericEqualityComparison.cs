@@ -8,10 +8,7 @@ namespace NUnit.TestUtilities.Comparers
     {
         public bool WasCalled = false;
 
-        public Func<T, T, bool> Delegate
-        {
-            get { return new Func<T, T, bool>(Compare); }
-        }
+        public Func<T, T, bool> Delegate => new Func<T, T, bool>(Compare);
 
         public bool Compare(T x, T y)
         {

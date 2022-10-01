@@ -17,10 +17,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return "XML serializable"; }
-        }
+        public override string Description => "XML serializable";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

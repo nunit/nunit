@@ -37,10 +37,7 @@ namespace NUnit.Framework.Internal
         /// Returns the character encoding in which the output is written.
         /// </summary>
         /// <returns>The character encoding in which the output is written.</returns>
-        public override System.Text.Encoding Encoding
-        {
-            get { return writer.Encoding; }
-        }
+        public override System.Text.Encoding Encoding => writer.Encoding;
 
         /// <summary>
         /// Writes a character to the text string or stream.

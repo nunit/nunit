@@ -169,21 +169,9 @@ namespace NUnit.Framework.Internal.Builders
                 _features = new FeatureInfo[] { feature1, feature2 };
             }
 
-            public int Length
-            {
-                get
-                {
-                    return _features.Length;
-                }
-            }
+            public int Length => _features.Length;
 
-            public FeatureInfo this[int index]
-            {
-                get
-                {
-                    return _features[index];
-                }
-            }
+            public FeatureInfo this[int index] => _features[index];
         }
 
         /// <summary>

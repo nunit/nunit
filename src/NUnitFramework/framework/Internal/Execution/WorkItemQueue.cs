@@ -130,8 +130,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public int ItemsProcessed
         {
-            get { return _itemsProcessed; }
-            private set { _itemsProcessed = value; }
+            get => _itemsProcessed;
+            private set => _itemsProcessed = value;
         }
 
         private int _state;
@@ -140,8 +140,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public WorkItemQueueState State
         {
-            get { return (WorkItemQueueState)_state; }
-            private set { _state = (int)value; }
+            get => (WorkItemQueueState)_state;
+            private set => _state = (int)value;
         }
 
         /// <summary>

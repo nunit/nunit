@@ -39,9 +39,6 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the ResultState provided by this exception
         /// </summary>
-        public override ResultState ResultState
-        {
-            get { return ResultState.Success; }
-        }
+        public override ResultState ResultState => ResultState.Success;
     }
 }

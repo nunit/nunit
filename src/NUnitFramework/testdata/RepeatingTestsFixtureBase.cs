@@ -41,27 +41,15 @@ namespace NUnit.TestData.RepeatingTests
             teardownCount++;
         }
 
-        public int FixtureSetupCount
-        {
-            get { return fixtureSetupCount; }
-        }
-        public int FixtureTeardownCount
-        {
-            get { return fixtureTeardownCount; }
-        }
-        public int SetupCount
-        {
-            get { return setupCount; }
-        }
-        public int TeardownCount
-        {
-            get { return teardownCount; }
-        }
+        public int FixtureSetupCount => fixtureSetupCount;
 
-        public List<string> TearDownResults
-        {
-            get { return tearDownResults; }
-        }
+        public int FixtureTeardownCount => fixtureTeardownCount;
+
+        public int SetupCount => setupCount;
+
+        public int TeardownCount => teardownCount;
+
+        public List<string> TearDownResults => tearDownResults;
         public int Count { get; protected set; }
     }
 }
