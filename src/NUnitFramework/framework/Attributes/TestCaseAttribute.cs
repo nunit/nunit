@@ -423,7 +423,7 @@ namespace NUnit.Framework
                 if (_untilDate > DateTimeOffset.UtcNow)
                 {
                     test.RunState = RunState.Ignored;
-                    string reason = $"Ignoring until {_untilDate.Value.ToString("u")}. {IgnoreReason}";
+                    string reason = $"Ignoring until {_untilDate.Value:u}. {IgnoreReason}";
                     test.Properties.Set(PropertyNames.SkipReason, reason);
                 }
                 else
