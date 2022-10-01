@@ -124,7 +124,7 @@ namespace NUnit.Framework.Attributes
 
         private void CheckValues(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetTypeInfo().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
             ParameterInfo param = method.GetParameters()[0];
 
             var attr = param.GetAttributes<ValuesAttribute>(false).Single();

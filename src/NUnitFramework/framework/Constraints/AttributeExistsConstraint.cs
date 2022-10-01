@@ -22,7 +22,7 @@ namespace NUnit.Framework.Constraints
         {
             this.expectedType = type;
 
-            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
+            if (!typeof(Attribute).IsAssignableFrom(expectedType))
                 throw new ArgumentException(string.Format(
                     "Type {0} is not an attribute", expectedType), nameof(type));
         }

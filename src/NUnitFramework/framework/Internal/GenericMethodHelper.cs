@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal
             {
                 ApplyArgType(parmType, argType);
             }
-            else if (parmType.GetTypeInfo().ContainsGenericParameters)
+            else if (parmType.ContainsGenericParameters)
             {
                 var genericArgTypes = parmType.IsArray
                     ? new[] { parmType.GetElementType() }
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal
                 {
                     ApplyArgType(genericArgTypes[0], argType.GetElementType());
                 }
-                else if (argType.GetTypeInfo().IsGenericType && IsAssignableToGenericType(argType, parmType))
+                else if (argType.IsGenericType && IsAssignableToGenericType(argType, parmType))
                 {
                     Type[] argTypes = argType.GetGenericArguments();
 
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Internal
 
             foreach (var iterator in interfaceTypes)
             {
-                if (iterator.GetTypeInfo().IsGenericType)
+                if (iterator.IsGenericType)
                 {
                     // The Type returned by GetGenericTyeDefinition may have the
                     // FullName set to null, so we do our own comparison
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal
                 }
             }
 
-            if (givenType.GetTypeInfo().IsGenericType)
+            if (givenType.IsGenericType)
             {
                 // The Type returned by GetGenericTyeDefinition may have the
                 // FullName set to null, so we do our own comparison
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
                     return true;
             }
 
-            Type baseType = givenType.GetTypeInfo().BaseType;
+            Type baseType = givenType.BaseType;
             if (baseType == null)
                 return false;
 

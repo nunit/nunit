@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
             {
                 var type = this.GetType();
                 var displayName = type.Name;
-                if (type.GetTypeInfo().IsGenericType)
+                if (type.IsGenericType)
                     displayName = displayName.Substring(0, displayName.Length - 2);
                 if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
                     displayName = displayName.Substring(0, displayName.Length - 10);

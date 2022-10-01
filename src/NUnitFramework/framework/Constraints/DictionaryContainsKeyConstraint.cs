@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
-            if (method == null && type.GetTypeInfo().IsGenericType)
+            if (method == null && type.IsGenericType)
             {
                 var definition = type.GetGenericTypeDefinition();
                 var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
@@ -157,7 +157,7 @@ namespace NUnit.Framework.Constraints
         {
             for (; ; )
             {
-                type = type.GetTypeInfo().BaseType;
+                type = type.BaseType;
                 if (type == null) break;
                 yield return type;
             }

@@ -24,7 +24,7 @@ namespace NUnit.Framework.Api
         private const string EMPTY_FILTER = "<filter/>";
         private const string FIXTURE_CAT_FILTER = "<filter><cat>FixtureCategory</cat></filter>";
 
-        private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
+        private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).Assembly.FullName;
         private static readonly string EXPECTED_NAME = MOCK_ASSEMBLY_FILE;
         private static readonly string MOCK_ASSEMBLY_PATH = Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE);
 
@@ -233,7 +233,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
         {
-            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
+            _controller = new FrameworkController(typeof(MockAssembly).Assembly, "ID", _settings);
             new FrameworkController.LoadTestsAction(_controller, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 

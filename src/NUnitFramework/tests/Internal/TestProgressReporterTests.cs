@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal
             var startReport = _listener.Reports.FirstOrDefault();
             Assert.NotNull(startReport);
             Assert.That(startReport, Does.StartWith("<start-suite"));
-            Assert.That(startReport, Contains.Substring($"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\""));
+            Assert.That(startReport, Contains.Substring($"framework-version=\"{typeof(TestProgressReporter).Assembly.GetName().Version}\""));
         }
 
         [Test]

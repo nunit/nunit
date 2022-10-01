@@ -331,7 +331,7 @@ namespace NUnit.Framework.Api
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
 
-            env.AddAttribute("framework-version", typeof(FrameworkController).GetTypeInfo().Assembly.GetName().Version.ToString());
+            env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version.ToString());
             env.AddAttribute("clr-version", Environment.Version.ToString());
 #if NETSTANDARD2_0
             env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);

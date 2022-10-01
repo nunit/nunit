@@ -344,8 +344,8 @@ namespace NUnit.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-            bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
-                !tt.GetTypeInfo().IsGenericTypeDefinition &&
+            bool nullable = tt.IsValueType && tt.IsGenericType &&
+                !tt.IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 

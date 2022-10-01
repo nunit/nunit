@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                var baseType = Type.GetTypeInfo().BaseType;
+                var baseType = Type.BaseType;
 
                 return baseType != null
                     ? new TypeWrapper(baseType)
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public Assembly Assembly
         {
-            get { return Type.GetTypeInfo().Assembly; }
+            get { return Type.Assembly; }
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsAbstract
         {
-            get { return Type.GetTypeInfo().IsAbstract; }
+            get { return Type.IsAbstract; }
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsGenericType
         {
-            get { return Type.GetTypeInfo().IsGenericType; }
+            get { return Type.IsGenericType; }
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool ContainsGenericParameters
         {
-            get { return Type.GetTypeInfo().ContainsGenericParameters; }
+            get { return Type.ContainsGenericParameters; }
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsGenericTypeDefinition
         {
-            get { return Type.GetTypeInfo().IsGenericTypeDefinition; }
+            get { return Type.IsGenericTypeDefinition; }
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsSealed
         {
-            get { return Type.GetTypeInfo().IsSealed; }
+            get { return Type.IsSealed; }
         }
 
         /// <summary>

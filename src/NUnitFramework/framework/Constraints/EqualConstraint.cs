@@ -411,7 +411,7 @@ namespace NUnit.Framework.Constraints
             if (arg != null)
             {
                 Type argType = arg.GetType();
-                Type genericTypeDefinition = argType.GetTypeInfo().IsGenericType ? argType.GetGenericTypeDefinition() : null;
+                Type genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
                 if (genericTypeDefinition == typeof(ArraySegment<>) && argType.GetProperty("Array").GetValue(arg, null) == null)
                 {

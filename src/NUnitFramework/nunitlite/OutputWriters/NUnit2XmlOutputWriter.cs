@@ -93,7 +93,7 @@ namespace NUnitLite
         private void WriteEnvironment()
         {
             xmlWriter.WriteStartElement("environment");
-            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).GetTypeInfo().Assembly);
+            var assemblyName = AssemblyHelper.GetAssemblyName(typeof(NUnit2XmlOutputWriter).Assembly);
             xmlWriter.WriteAttributeString("nunit-version",
                                            assemblyName.Version.ToString());
             xmlWriter.WriteAttributeString("clr-version",
