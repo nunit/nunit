@@ -47,16 +47,11 @@ namespace NUnit.Framework.Internal
 
 #region Properties
 
-        internal bool HasExpectedResult
-        {
-            get { return parms != null && parms.HasExpectedResult; }
-        }
+        internal bool HasExpectedResult => parms is {HasExpectedResult: true};
 
-        internal object? ExpectedResult
-        {
-            get { return parms?.ExpectedResult; }
-        }
-#endregion
+        internal object? ExpectedResult => parms?.ExpectedResult;
+
+        #endregion
 
 #region Test Overrides
 
