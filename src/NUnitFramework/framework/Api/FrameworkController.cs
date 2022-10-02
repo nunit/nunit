@@ -124,8 +124,8 @@ namespace NUnit.Framework.Api
                 }
                 else
                 {
-                    var workDirectory = Settings.TryGetValue(FrameworkPackageSettings.WorkDirectory, out var workDirectoryValue) ?
-                        (string)workDirectoryValue :
+                    var workDirectory = Settings.TryGetValue(FrameworkPackageSettings.WorkDirectory, out var workDirectoryValue)
+                        ? (string)workDirectoryValue :
                         Directory.GetCurrentDirectory();
                     using var process = Process.GetCurrentProcess();
                     var id = process.Id;
