@@ -24,7 +24,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="args">The arguments.</param>
         public TestCaseData(params object?[]? args)
-            : base(args == null ? new object?[] { null } : args)
+            : base(args ?? new object?[] { null })
         {
         }
 

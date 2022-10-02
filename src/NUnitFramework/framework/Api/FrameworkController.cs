@@ -127,7 +127,8 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.TryGetValue(FrameworkPackageSettings.WorkDirectory, out var workDirectoryValue) ?
                         (string)workDirectoryValue :
                         Directory.GetCurrentDirectory();
-                    var id = Process.GetCurrentProcess().Id;
+                    using var process = Process.GetCurrentProcess();
+                    var id = process.Id;
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyNameOrPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
@@ -201,7 +202,7 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(string filter)
         {
-            TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
+            TNode result = Runner.Run(TestListener.NULL, TestFilter.FromXml(filter)).ToXml(true);
             return InsertChildElements(result).OuterXml;
         }
 
