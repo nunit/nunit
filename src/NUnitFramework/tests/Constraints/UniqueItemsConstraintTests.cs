@@ -22,9 +22,9 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "all items unique";
         }
 
-        static object[] SuccessData = new object[] { new int[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
+        static object[] SuccessData = new object[] { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
         static object[] FailureData = new object[] { new object[] {
-            new int[] { 1, 3, 17, 3, 34 },
+            new[] { 1, 3, 17, 3, 34 },
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
 
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Constraints
                 container.AddRange(refTypes);
                 container.AddRange(valueTypes);
 
-                return new TestCaseData[] {
+                return new[] {
                     new TestCaseData(new SimpleObjectCollection(container.Cast<object>()), true)
                     {
                         ArgDisplayNames = new[] { "IEnumerable<dynamic>", "true" }
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Constraints
             {
                 var sameRef = new TestReferenceType() { A = 1 };
 
-                return new TestCaseData[] {
+                return new[] {
                     new TestCaseData() {
                         Arguments = new object[]
                         {

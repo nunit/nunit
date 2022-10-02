@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal
 {
     public class GenericMethodHelperTests
     {
-        static TestCaseData[] TypeArgData = new TestCaseData[] {
+        static TestCaseData[] TypeArgData = new[] {
             new TestCaseData("MethodWithOneTypeAndOneParameter",
                 ArgList(42),
                 TypeArgs<int>()),
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
                 ArgList(42.0, 42, "forty-two"),
                 TypeArgs<int,double,string>()),
             new TestCaseData("MethodWithOneTypeAndOneParameter",
-                ArgList(new int[] { 1, 2, 3 }),
+                ArgList(new[] { 1, 2, 3 }),
                 TypeArgs<int[]>()),
             new TestCaseData("MethodWithGenericListOfType",
                 ArgList(new List<int>()),
@@ -64,10 +64,10 @@ namespace NUnit.Framework.Internal
                 ArgList(new List<List<int>>()),
                 TypeArgs<int>()),
             new TestCaseData("MethodWithGenericEnumerableOfType",
-                ArgList(new List<int>(new int[] { 1, 2, 3 })),
+                ArgList(new List<int>(new[] { 1, 2, 3 })),
                 TypeArgs<int>()),
             new TestCaseData("MethodWithGenericEnumerableOfType",
-                ArgList(new int[] { 1, 2, 3 }),
+                ArgList(new[] { 1, 2, 3 }),
                 TypeArgs<int>()),
             new TestCaseData("MethodWithGenericEnumerableOfTypeAsSecondArg",
                 ArgList("X", new int[] { } ),
@@ -96,9 +96,9 @@ namespace NUnit.Framework.Internal
 
         private static object[] ArgList(params object[] args) { return args; }
 
-        private static Type[] TypeArgs<T>() { return new Type[] { typeof(T) }; }
-        private static Type[] TypeArgs<T1, T2>() { return new Type[] { typeof(T1), typeof(T2) }; }
-        private static Type[] TypeArgs<T1, T2, T3>() { return new Type[] { typeof(T1), typeof(T2), typeof(T3) }; }
+        private static Type[] TypeArgs<T>() { return new[] { typeof(T) }; }
+        private static Type[] TypeArgs<T1, T2>() { return new[] { typeof(T1), typeof(T2) }; }
+        private static Type[] TypeArgs<T1, T2, T3>() { return new[] { typeof(T1), typeof(T2), typeof(T3) }; }
 
         void MethodWithOneTypeAndOneParameter<T>(T x) { }
         void MethodWithOneTypeAndTwoParameters<T>(T x, T y) { }

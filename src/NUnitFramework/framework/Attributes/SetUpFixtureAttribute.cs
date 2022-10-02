@@ -64,7 +64,7 @@ namespace NUnit.Framework
                 }
             }
 
-            var invalidAttributes = new Type[] {
+            var invalidAttributes = new[] {
                 typeof(SetUpAttribute),
                 typeof(TearDownAttribute)
             };

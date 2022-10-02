@@ -32,7 +32,7 @@ class SomeClass
         {
             string code = template1.Replace("$FRAGMENT$", fragment);
             TestCompiler compiler = new TestCompiler(
-                new string[] { "system.dll", "nunit.framework.dll" },
+                new[] { "system.dll", "nunit.framework.dll" },
                 "test.dll");
             CompilerResults results = compiler.CompileCode(code);
             if (results.NativeCompilerReturnValue == 0)
@@ -62,7 +62,7 @@ class SomeClass
         {
             string code = template2.Replace("$FRAGMENT$", fragment);
             TestCompiler compiler = new TestCompiler(
-                new string[] { "system.dll", "nunit.framework.dll" },
+                new[] { "system.dll", "nunit.framework.dll" },
                 "test.dll");
             CompilerResults results = compiler.CompileCode(code);
             if (results.NativeCompilerReturnValue == 0)

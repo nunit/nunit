@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void IndexSetsListOfValues()
         {
-            bag["Zip"] = new string[] {"junk", "more junk"};
+            bag["Zip"] = new[] {"junk", "more junk"};
             Assert.That(bag["Zip"].Count, Is.EqualTo(2));
             Assert.That(bag["Zip"], Contains.Item("junk"));
             Assert.That(bag["Zip"], Contains.Item("more junk"));
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal
             }
 
             Assert.That(props,
-                Is.EquivalentTo(new string[] { "Answer=42", "Tag=bug", "Tag=easy" }));
+                Is.EquivalentTo(new[] { "Answer=42", "Tag=bug", "Tag=easy" }));
         }
 
         [Test]

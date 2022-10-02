@@ -326,8 +326,8 @@ namespace NUnit.Framework.Attributes
         static object[] testCases =
         {
             new TestCaseData(
-                new string[] { "A" },
-                new string[] { "B" })
+                new[] { "A" },
+                new[] { "B" })
         };
 
         [Test, TestCaseSource(nameof(testCases))]
@@ -402,15 +402,15 @@ namespace NUnit.Framework.Attributes
             new object[] { 12, 6, 2 } };
 
         static object[] MyIntData = new object[] {
-            new int[] { 12, 3, 4 },
-            new int[] { 12, 4, 3 },
-            new int[] { 12, 6, 2 } };
+            new[] { 12, 3, 4 },
+            new[] { 12, 4, 3 },
+            new[] { 12, 6, 2 } };
 
         static object[] MyArrayData = new object[]
         {
-            new int[] { 12 },
-            new int[] { 12, 4 },
-            new int[] { 12, 6, 2 }
+            new[] { 12 },
+            new[] { 12, 4 },
+            new[] { 12, 6, 2 }
         };
 
         public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
@@ -423,7 +423,7 @@ namespace NUnit.Framework.Attributes
             new TestCaseData( 12, 4, 3, 0 ),
             new TestCaseData( 12, 5, 2, 2 ) };
 
-        static int[] EvenNumbers = new int[] { 2, 4, 6, 8 };
+        static int[] EvenNumbers = new[] { 2, 4, 6, 8 };
 
         static object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },

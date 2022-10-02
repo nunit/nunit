@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal.Extensions
             Assert.That(type.IsSortable(), Is.False);
         }
 
-        public static IEnumerable<Type> TypesThatAreNotSortable => TypesThatDontImplementIComparable.Union(new Type[]
+        public static IEnumerable<Type> TypesThatAreNotSortable => TypesThatDontImplementIComparable.Union(new[]
         {
             typeof(Tuple<int, Stream>),
             typeof(Tuple<int, long, Stream>),
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Extensions
             typeof(ValueTuple<int, ValueTuple<int, Stream>>)
         });
 
-        public static IEnumerable<Type> TypesThatAreSortable => TypesThatImplementIComparable.Union(new Type[]
+        public static IEnumerable<Type> TypesThatAreSortable => TypesThatImplementIComparable.Union(new[]
         {
             typeof(Tuple<int, long>),
             typeof(Tuple<int, long, double>),

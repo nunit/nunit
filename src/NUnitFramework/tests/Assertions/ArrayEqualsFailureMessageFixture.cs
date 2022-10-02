@@ -20,8 +20,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysHaveDifferentRanks()
         {
-            int[] expected = new int[] { 1, 2, 3, 4 };
-            int[,] actual = new int[,] { { 1, 2 }, { 3, 4 } };
+            int[] expected = new[] { 1, 2, 3, 4 };
+            int[,] actual = new[,] { { 1, 2 }, { 3, 4 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL;
@@ -33,8 +33,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ExpectedArrayIsLonger()
         {
-            int[] expected = new int[] { 1, 2, 3, 4, 5 };
-            int[] actual = new int[] { 1, 2, 3 };
+            int[] expected = new[] { 1, 2, 3, 4, 5 };
+            int[] actual = new[] { 1, 2, 3 };
 
             var expectedMessage =
                 "  Expected is <System.Int32[5]>, actual is <System.Int32[3]>" + NL +
@@ -48,8 +48,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ActualArrayIsLonger()
         {
-            int[] expected = new int[] { 1, 2, 3 };
-            int[] actual = new int[] { 1, 2, 3, 4, 5, 6, 7 };
+            int[] expected = new[] { 1, 2, 3 };
+            int[] actual = new[] { 1, 2, 3, 4, 5, 6, 7 };
 
             var expectedMessage =
                 "  Expected is <System.Int32[3]>, actual is <System.Int32[7]>" + NL +
@@ -63,8 +63,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void FailureOnSingleDimensionedArrays()
         {
-            int[] expected = new int[] { 1, 2, 3 };
-            int[] actual = new int[] { 1, 5, 3 };
+            int[] expected = new[] { 1, 2, 3 };
+            int[] actual = new[] { 1, 5, 3 };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[3]>" + NL +
@@ -79,8 +79,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DoubleDimensionedArrays()
         {
-            int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            int[,] actual = new int[,] { { 1, 3, 2 }, { 4, 0, 6 } };
+            int[,] expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            int[,] actual = new[,] { { 1, 3, 2 }, { 4, 0, 6 } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,3]>" + NL +
@@ -95,8 +95,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void TripleDimensionedArrays()
         {
-            int[, ,] expected = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            int[, ,] actual = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
+            int[, ,] expected = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[, ,] actual = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2]>" + NL +
@@ -127,8 +127,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void JaggedArrays()
         {
-            int[][] expected = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6, 7 }, new int[] { 8, 9 } };
-            int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 0, 7 }, new int[] { 8, 9 } };
+            int[][] expected = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
+            int[][] actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 0, 7 }, new[] { 8, 9 } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[3][]>" + NL +
@@ -145,8 +145,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void JaggedArrayComparedToSimpleArray()
         {
-            int[] expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 0, 7 }, new int[] { 8, 9 } };
+            int[] expected = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            int[][] actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 0, 7 }, new[] { 8, 9 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[9]>, actual is <System.Int32[3][]>" + NL +
@@ -161,8 +161,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysWithDifferentRanksAsCollection()
         {
-            int[] expected = new int[] { 1, 2, 3, 4 };
-            int[,] actual = new int[,] { { 1, 0 }, { 3, 4 } };
+            int[] expected = new[] { 1, 2, 3, 4 };
+            int[,] actual = new[,] { { 1, 0 }, { 3, 4 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL +
@@ -177,8 +177,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysWithDifferentDimensionsAsCollection()
         {
-            int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            int[,] actual = new int[,] { { 1, 2 }, { 3, 0 }, { 5, 6 } };
+            int[,] expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            int[,] actual = new[,] { { 1, 2 }, { 3, 0 }, { 5, 6 } };
 
             var expectedMessage =
                 "  Expected is <System.Int32[2,3]>, actual is <System.Int32[3,2]>" + NL +
@@ -229,8 +229,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArrayAndCollection_Failure()
         {
-            int[] expected = new int[] { 1, 2, 3 };
-            var actual = new List<int>(new int[] { 1, 3 });
+            int[] expected = new[] { 1, 2, 3 };
+            var actual = new List<int>(new[] { 1, 3 });
 
             var expectedMessage =
                 "  Expected is <System.Int32[3]>, actual is <System.Collections.Generic.List`1[System.Int32]> with 2 elements" + NL +

@@ -141,7 +141,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions();
             var args = new[] { "--arg1", "@file1.txt", "--arg2" };
-            var expectedErrors = new string[] { "@ nesting exceeds maximum depth of 3." };
+            var expectedErrors = new[] { "@ nesting exceeds maximum depth of 3." };
 
             using (new TestFile(Path.Combine(TestContext.CurrentContext.TestDirectory, "file1.txt"), "@file1.txt", true))
             {
@@ -196,12 +196,12 @@ namespace NUnitLite.Tests
             }
         }
 
-        [TestCase("WhereClause", "where", new string[] { "cat==Fast" }, new string[0])]
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "Before", "After", "All" }, new string[] { "JUNK" })]
-        [TestCase("OutFile", "output|out", new string[] { "output.txt" }, new string[0])]
-        [TestCase("ErrFile", "err", new string[] { "error.txt" }, new string[0])]
-        [TestCase("WorkDirectory", "work", new string[] { "results" }, new string[0])]
-        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new string[] { "JUNK" })]
+        [TestCase("WhereClause", "where", new[] { "cat==Fast" }, new string[0])]
+        [TestCase("DisplayTestLabels", "labels", new[] { "Off", "On", "Before", "After", "All" }, new[] { "JUNK" })]
+        [TestCase("OutFile", "output|out", new[] { "output.txt" }, new string[0])]
+        [TestCase("ErrFile", "err", new[] { "error.txt" }, new string[0])]
+        [TestCase("WorkDirectory", "work", new[] { "results" }, new string[0])]
+        [TestCase("InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" }, new[] { "JUNK" })]
         public void CanRecognizeStringOptions(string propertyName, string pattern, string[] goodValues, string[] badValues)
         {
             string[] prototypes = pattern.Split('|');
@@ -228,8 +228,8 @@ namespace NUnitLite.Tests
             }
         }
 
-        [TestCase("DisplayTestLabels", "labels", new string[] { "Off", "On", "All" })]
-        [TestCase("InternalTraceLevel", "trace", new string[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
+        [TestCase("DisplayTestLabels", "labels", new[] { "Off", "On", "All" })]
+        [TestCase("InternalTraceLevel", "trace", new[] { "Off", "Error", "Warning", "Info", "Debug", "Verbose" })]
         public void CanRecognizeLowerCaseOptionValues(string propertyName, string optionName, string[] canonicalValues)
         {
             PropertyInfo property = GetPropertyInfo(propertyName);
@@ -273,7 +273,7 @@ namespace NUnitLite.Tests
             var property = GetPropertyInfo(propertyName);
             Assert.That(property.PropertyType, Is.EqualTo(typeof(IList<string>)));
 
-            var options = new NUnitLiteOptions(args.Split(new char[] { '|' }));
+            var options = new NUnitLiteOptions(args.Split(new[] { '|' }));
             var list = (IList<string>)property.GetValue(options, null);
             Assert.That(list, Is.EqualTo(expected));
         }

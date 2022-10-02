@@ -47,15 +47,15 @@ namespace NUnit.Framework.Attributes
         // https://web.archive.org/web/20100305233703/www.freequality.org/sites/www_freequality_org/documents/tools/Tagarray_files/tamatrix.htm
         static internal object[] cases = new object[]
         {
-            new TestCaseData( new int[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
-            new TestCaseData( new int[] { 2, 2, 2 }, 4, 4 ).SetName("Test 2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2 }, 6, 6 ).SetName("Test 3x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2x2"),
-            new TestCaseData( new int[] { 3, 2, 2, 2, 2, 2 }, 8, 8 ).SetName("Test 3x2x2x2x2x2"),
-            new TestCaseData( new int[] { 3, 3, 3 }, 9, 9 ).SetName("Test 3x3x3"),
-            new TestCaseData( new int[] { 4, 4, 4 }, 17, 16 ).SetName("Test 4x4x4"),
-            new TestCaseData( new int[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
+            new TestCaseData( new[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
+            new TestCaseData( new[] { 2, 2, 2 }, 4, 4 ).SetName("Test 2x2x2"),
+            new TestCaseData( new[] { 3, 2, 2 }, 6, 6 ).SetName("Test 3x2x2"),
+            new TestCaseData( new[] { 3, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2"),
+            new TestCaseData( new[] { 3, 2, 2, 2, 2 }, 6, 6 ).SetName("Test 3x2x2x2x2"),
+            new TestCaseData( new[] { 3, 2, 2, 2, 2, 2 }, 8, 8 ).SetName("Test 3x2x2x2x2x2"),
+            new TestCaseData( new[] { 3, 3, 3 }, 9, 9 ).SetName("Test 3x3x3"),
+            new TestCaseData( new[] { 4, 4, 4 }, 17, 16 ).SetName("Test 4x4x4"),
+            new TestCaseData( new[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
         };
 
         [Test, TestCaseSource(nameof(cases))]

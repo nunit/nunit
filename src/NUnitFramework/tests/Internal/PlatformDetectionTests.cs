@@ -42,8 +42,8 @@ namespace NUnit.Framework.Internal
         private void CheckPlatforms( PlatformHelper helper,
             string expectedPlatforms, string checkPlatforms )
         {
-            string[] expected = expectedPlatforms.Split( new char[] { ',' } );
-            string[] check = checkPlatforms.Split( new char[] { ',' } );
+            string[] expected = expectedPlatforms.Split( new[] { ',' } );
+            string[] check = checkPlatforms.Split( new[] { ',' } );
 
             foreach( string testPlatform in check )
             {
@@ -356,7 +356,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void ArrayOfPlatforms()
         {
-            string[] platforms = new string[] { "NT4", "Win2K", "WinXP" };
+            string[] platforms = new[] { "NT4", "Win2K", "WinXP" };
             Assert.IsTrue( winXPHelper.IsPlatformSupported( platforms ) );
             Assert.IsFalse( win95Helper.IsPlatformSupported( platforms ) );
         }

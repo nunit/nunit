@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         public void PropertyBagAdapter_Keys()
         {
             var actual = _adapter.Keys;
-            var expected = new string[] { "key", "meaningOfLife" };
+            var expected = new[] { "key", "meaningOfLife" };
 
             CollectionAssert.AreEquivalent(expected, actual);
         }
@@ -74,9 +74,9 @@ namespace NUnit.Framework.Internal
 
             Assert.IsTrue(_adapter.ContainsKey("newKey"));
             Assert.AreEqual("newVal", _adapter.Get("newKey"));
-            CollectionAssert.AreEquivalent(new string[] { "newVal" }, _adapter["newKey"]);
+            CollectionAssert.AreEquivalent(new[] { "newVal" }, _adapter["newKey"]);
             Assert.AreEqual(1, _adapter.Count("newKey"));
-            CollectionAssert.AreEquivalent(new string[] { "key", "meaningOfLife", "newKey" }, _adapter.Keys);
+            CollectionAssert.AreEquivalent(new[] { "key", "meaningOfLife", "newKey" }, _adapter.Keys);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal
         {
             GenericIdentity ident = new GenericIdentity("Bob");
             GenericPrincipal prpal = new GenericPrincipal(ident,
-                    new string[] {"Level1"});
+                    new[] {"Level1"});
 
             CallContext.SetData( CONTEXT_DATA, new PrincipalCallContextData( prpal ) );
         }
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal
         {
             GenericIdentity ident = new GenericIdentity("Bob");
             GenericPrincipal prpal = new GenericPrincipal(ident,
-                    new string[] {"Level1"});
+                    new[] {"Level1"});
 
             System.Threading.Thread.CurrentPrincipal = prpal;
         }
@@ -83,7 +83,7 @@ namespace NUnit.Framework.Internal
         public void UseCustomIdentity()
         {
             TestIdentity ident = new TestIdentity( "test" );
-            GenericPrincipal principal = new GenericPrincipal( ident, new string[] { "Level1" } );
+            GenericPrincipal principal = new GenericPrincipal( ident, new[] { "Level1" } );
 
             System.Threading.Thread.CurrentPrincipal = principal;
         }
