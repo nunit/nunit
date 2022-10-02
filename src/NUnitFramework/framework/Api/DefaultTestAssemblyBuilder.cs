@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,8 +28,6 @@ namespace NUnit.Framework.Api
         /// The default suite builder used by the test assembly builder.
         /// </summary>
         readonly ISuiteBuilder _defaultSuiteBuilder;
-
-        private PreFilter _filter;
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Api
         {
             log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
 
-            TestSuite testAssembly = null;
+            TestSuite testAssembly;
 
             try
             {
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Api
 
         private TestSuite Build(Assembly assembly, string assemblyNameOrPath, IDictionary<string, object> options)
         {
-            TestSuite testAssembly = null;
+            TestSuite testAssembly;
 
             try
             {
@@ -117,34 +117,36 @@ namespace NUnit.Framework.Api
                 {
                     // This cannot be changed without breaking backwards compatibility with old runners.
                     // Deserializes the way old runners understand.
-                    
-                    options.TryGetValue(FrameworkPackageSettings.TestParameters, out object testParameters);
-                    string parametersString = testParameters as string;
-                    if (!string.IsNullOrEmpty(parametersString))
+
+                    if (options.TryGetValue(FrameworkPackageSettings.TestParameters, out var testParameters))
                     {
-                        foreach (string param in parametersString.Split(new[] { ';' }))
+                        var parametersString = (string?)testParameters;
+                        if (!string.IsNullOrEmpty(parametersString))
                         {
-                            int eq = param.IndexOf('=');
-                        
-                            if (eq > 0 && eq < param.Length - 1)
+                            foreach (var param in parametersString!.Split(';'))
                             {
-                                var name = param.Substring(0, eq);
-                                var val = param.Substring(eq + 1);
-                        
-                                TestContext.Parameters.Add(name, val);
+                                var eq = param.IndexOf('=');
+
+                                if (eq > 0 && eq < param.Length - 1)
+                                {
+                                    var name = param.Substring(0, eq);
+                                    var val = param.Substring(eq + 1);
+
+                                    TestContext.Parameters.Add(name, val);
+                                }
                             }
                         }
                     }
                 }
 
-                _filter = new PreFilter();
+                var filter = new PreFilter();
                 if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object load))
                 {
                     foreach (string filterText in (IList)load)
-                        _filter.Add(filterText);
+                        filter.Add(filterText);
                 }
 
-                var fixtures = GetFixtures(assembly);
+                var fixtures = GetFixtures(assembly, filter);
 
                 testAssembly = BuildTestAssembly(assembly, assemblyNameOrPath, fixtures);
             }
@@ -161,12 +163,12 @@ namespace NUnit.Framework.Api
 
         #region Helper Methods
 
-        private IList<Test> GetFixtures(Assembly assembly)
+        private IList<Test> GetFixtures(Assembly assembly, PreFilter filter)
         {
             var fixtures = new List<Test>();
             log.Debug("Examining assembly for test fixtures");
 
-            var testTypes = GetCandidateFixtureTypes(assembly);
+            var testTypes = GetCandidateFixtureTypes(assembly, filter);
 
             log.Debug("Found {0} classes to examine", testTypes.Count);
 #if LOAD_TIMING
@@ -187,7 +189,7 @@ namespace NUnit.Framework.Api
                     // Any exceptions from this call are fatal problems in NUnit itself,
                     // since this is always DefaultSuiteBuilder and the current implementation
                     // of DefaultSuiteBuilder.BuildFrom handles all exceptions from user code.
-                    Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo, _filter);
+                    Test fixture = _defaultSuiteBuilder.BuildFrom(typeInfo, filter);
                     fixtures.Add(fixture);
                     testcases += fixture.TestCaseCount;
                 }
@@ -202,12 +204,12 @@ namespace NUnit.Framework.Api
             return fixtures;
         }
 
-        private IList<Type> GetCandidateFixtureTypes(Assembly assembly)
+        private IList<Type> GetCandidateFixtureTypes(Assembly assembly, PreFilter filter)
         {
             var result = new List<Type>();
 
             foreach (Type type in assembly.GetTypes())
-                if (_filter.IsMatch(type))
+                if (filter.IsMatch(type))
                     result.Add(type);
 
             return result;
@@ -238,7 +240,8 @@ namespace NUnit.Framework.Api
 
             try
             {
-                testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+                using var process = System.Diagnostics.Process.GetCurrentProcess();
+                testAssembly.Properties.Set(PropertyNames.ProcessId, process.Id);
             }
             catch (PlatformNotSupportedException)
             { }

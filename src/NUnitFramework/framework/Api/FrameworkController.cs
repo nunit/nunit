@@ -125,7 +125,8 @@ namespace NUnit.Framework.Api
                     var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
                         ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
                         : Directory.GetCurrentDirectory();
-                    var id = Process.GetCurrentProcess().Id;
+                    using var process = Process.GetCurrentProcess();
+                    var id = process.Id;
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyNameOrPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
@@ -199,7 +200,7 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(string filter)
         {
-            TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
+            TNode result = Runner.Run(TestListener.NULL, TestFilter.FromXml(filter)).ToXml(true);
             return InsertChildElements(result).OuterXml;
         }
 
@@ -287,9 +288,7 @@ namespace NUnit.Framework.Api
         {
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
-            // Insert elements as first child in reverse order
-            if (Settings != null) // Some platforms don't have settings
-                InsertSettingsElement(result, Settings);
+            InsertSettingsElement(result, Settings);
             InsertEnvironmentElement(result);
 
             handler.RaiseCallbackEvent(result.OuterXml);
@@ -317,9 +316,7 @@ namespace NUnit.Framework.Api
         /// <returns>The updated target node</returns>
         private TNode InsertChildElements(TNode targetNode)
         {
-            // Insert elements as first child in reverse order
-            if (Settings != null) // Some platforms don't have settings
-                InsertSettingsElement(targetNode, Settings);
+            InsertSettingsElement(targetNode, Settings);
             InsertEnvironmentElement(targetNode);
 
             return targetNode;
