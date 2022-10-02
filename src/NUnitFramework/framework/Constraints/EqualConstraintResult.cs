@@ -181,8 +181,8 @@ namespace NUnit.Framework.Constraints
             Array expectedArray = expected as Array;
             Array actualArray = actual as Array;
 
-            int expectedRank = expectedArray != null ? expectedArray.Rank : 1;
-            int actualRank = actualArray != null ? actualArray.Rank : 1;
+            int expectedRank = expectedArray?.Rank ?? 1;
+            int actualRank = actualArray?.Rank ?? 1;
 
             bool useOneIndex = expectedRank == actualRank;
 
