@@ -31,7 +31,6 @@ namespace NUnit.Framework.Api
         // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CANCEL_TEST_DELAY = SlowTests.SINGLE_TEST_DELAY * 2;
 
-        private static readonly string MOCK_ASSEMBLY_NAME = typeof(MockAssembly).GetTypeInfo().Assembly.FullName;
         private const string INVALID_FILTER_ELEMENT_MESSAGE = "Invalid filter element: {0}";
 
         private static readonly IDictionary<string, object> EMPTY_SETTINGS = new Dictionary<string, object>();

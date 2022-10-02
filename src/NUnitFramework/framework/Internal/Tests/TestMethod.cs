@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal
 
         internal object? ExpectedResult
         {
-            get { return parms != null ? parms.ExpectedResult : null; }
+            get { return parms?.ExpectedResult; }
         }
 #endregion
 
