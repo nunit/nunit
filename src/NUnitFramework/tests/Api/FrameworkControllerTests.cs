@@ -232,7 +232,7 @@ namespace NUnit.Framework.Api
         [Test]
         public void LoadTestsAction_Assembly_ReturnsRunnableSuite()
         {
-            _controller = new FrameworkController(typeof(MockAssembly).GetTypeInfo().Assembly, "ID", _settings);
+            _controller = new FrameworkController(typeof(MockAssembly).Assembly, "ID", _settings);
             new FrameworkController.LoadTestsAction(_controller, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
