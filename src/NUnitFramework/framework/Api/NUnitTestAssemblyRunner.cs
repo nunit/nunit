@@ -365,7 +365,7 @@ namespace NUnit.Framework.Api
         [SecuritySafeCritical]
         private static void PauseBeforeRun()
         {
-            var process = Process.GetCurrentProcess();
+            using var process = Process.GetCurrentProcess();
 
             MessageBox.Show(
                 $"Pausing as requested. If you would like to attach a debugger, the process name and ID are {process.ProcessName}.exe and {process.Id}." + Environment.NewLine

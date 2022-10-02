@@ -47,11 +47,16 @@ namespace NUnit.Framework.Internal
 
 #region Properties
 
-        internal bool HasExpectedResult => parms != null && parms.HasExpectedResult;
+        internal bool HasExpectedResult
+        {
+            get { return parms != null && parms.HasExpectedResult; }
+        }
 
-        internal object? ExpectedResult => parms != null ? parms.ExpectedResult : null;
-
-        #endregion
+        internal object? ExpectedResult
+        {
+            get { return parms?.ExpectedResult; }
+        }
+#endregion
 
 #region Test Overrides
 
@@ -63,7 +68,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in executing the test method, or empty array if none are provided.
         /// </summary>
-        public override object?[] Arguments => parms != null ? parms.Arguments : TestParameters.NoArguments;
+        public override object?[] Arguments
+        {
+            get { return parms != null ? parms.Arguments : TestParameters.NoArguments; }
+        }
 
         /// <summary>
         /// Overridden to return a TestCaseResult.
@@ -78,7 +86,10 @@ namespace NUnit.Framework.Internal
         /// Gets a bool indicating whether the current test
         /// has any descendant tests.
         /// </summary>
-        public override bool HasChildren => false;
+        public override bool HasChildren
+        {
+            get { return false; }
+        }
 
         /// <summary>
         /// Returns a TNode representing the current result after
@@ -102,19 +113,28 @@ namespace NUnit.Framework.Internal
         /// Gets this test's child tests
         /// </summary>
         /// <value>A list of child tests</value>
-        public override IList<ITest> Tests => Array.Empty<ITest>();
+        public override IList<ITest> Tests
+        {
+            get { return Array.Empty<ITest>(); }
+        }
 
         /// <summary>
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string XmlElementName => "test-case";
+        public override string XmlElementName
+        {
+            get { return "test-case"; }
+        }
 
         /// <summary>
         /// Returns the name of the method
         /// </summary>
-        public override string MethodName => Method.Name;
+        public override string MethodName
+        {
+            get { return Method.Name; }
+        }
 
-        #endregion
+#endregion
     }
 }
