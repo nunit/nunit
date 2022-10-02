@@ -54,7 +54,7 @@ namespace NUnit.Framework.Interfaces
         public ResultState(TestStatus status, string? label, FailureSite site)
         {
             Status = status;
-            Label = label == null ? string.Empty : label;
+            Label = label ?? string.Empty;
             Site = site;
         }
 

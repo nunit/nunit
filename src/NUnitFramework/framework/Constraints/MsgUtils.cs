@@ -509,7 +509,7 @@ namespace NUnit.Framework.Constraints
         {
             Array? array = collection as Array;
 
-            int rank = array == null ? 1 : array.Rank;
+            int rank = array?.Rank ?? 1;
             int[] result = new int[rank];
 
             for (int r = rank; --r > 0;)
