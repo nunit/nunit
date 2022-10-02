@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -21,15 +23,15 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static StackFilter DefaultFilter = new StackFilter();
 
-        private readonly Regex _topOfStackRegex;
-        private readonly Regex _bottomOfStackRegex;
+        private readonly Regex? _topOfStackRegex;
+        private readonly Regex? _bottomOfStackRegex;
 
         /// <summary>
         /// Construct a stack filter instance
         /// </summary>
         /// <param name="topOfStackPattern">Regex pattern used to delete lines from the top of the stack</param>
         /// <param name="bottomOfStackPattern">Regex pattern used to delete lines from the bottom of the stack</param>
-        public StackFilter(string topOfStackPattern, string bottomOfStackPattern)
+        public StackFilter(string? topOfStackPattern, string? bottomOfStackPattern)
         {
             if (topOfStackPattern != null)
                 _topOfStackRegex = new Regex(topOfStackPattern, RegexOptions.Compiled);
@@ -55,7 +57,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="rawTrace">The original stack trace</param>
         /// <returns>A filtered stack trace</returns>
-        public string Filter(string rawTrace)
+        public string? Filter(string? rawTrace)
         {
             if (rawTrace == null) return null;
 
@@ -64,7 +66,7 @@ namespace NUnit.Framework.Internal
 
             try
             {
-                string line = sr.ReadLine();
+                var line = sr.ReadLine();
 
                 if (_topOfStackRegex != null)
                     // First, skip past any Assert, Assume or MultipleAssertBlock lines
