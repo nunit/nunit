@@ -410,7 +410,8 @@ namespace NUnitLite
                     ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 
-            var id = Process.GetCurrentProcess().Id;
+            using var process = Process.GetCurrentProcess();
+            var id = process.Id;
 
             return string.Format(logFileFormat, id, baseName, ext);
         }
