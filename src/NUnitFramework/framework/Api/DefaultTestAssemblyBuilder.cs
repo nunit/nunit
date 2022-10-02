@@ -240,7 +240,8 @@ namespace NUnit.Framework.Api
 
             try
             {
-                testAssembly.Properties.Set(PropertyNames.ProcessId, System.Diagnostics.Process.GetCurrentProcess().Id);
+                using var process = System.Diagnostics.Process.GetCurrentProcess();
+                testAssembly.Properties.Set(PropertyNames.ProcessId, process.Id);
             }
             catch (PlatformNotSupportedException)
             { }
