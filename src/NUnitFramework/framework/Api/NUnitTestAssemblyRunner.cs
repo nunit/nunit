@@ -318,9 +318,9 @@ namespace NUnit.Framework.Api
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
                 Context.TestCaseTimeout = (int)timeout;
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
-                Context.CurrentCulture = new((string)culture, false);
+                Context.CurrentCulture = new CultureInfo((string)culture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
-                Context.CurrentUICulture = new((string)uiCulture, false);
+                Context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
                 Context.StopOnError = (bool)stopOnError;
 
