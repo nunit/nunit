@@ -373,6 +373,19 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region ContainedIn
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// contains a value from the collection supplied as an argument.
+        /// </summary>
+        public static CollectionContainsAnyConstraint ContainedIn(IEnumerable expected)
+        {
+            return new CollectionContainsAnyConstraint(expected);
+        }
+
+        #endregion
+
         #region SubsetOf
 
         /// <summary>

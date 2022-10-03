@@ -17,13 +17,17 @@ namespace NUnit.Framework.Constraints
             /// <summary>Items that were not in the expected collection.</summary>
             public List<object> ExtraItems { get; }
 
+            /// <summary>Items that are present in both the expected and actual collections.</summary>
+            public List<object> PresentItems { get; }
+
             /// <summary>Items that were not accounted for in the expected collection.</summary>
             public List<object> MissingItems { get; }
 
             /// <summary>Initializes a new instance of the <see cref="CollectionTallyResult"/> class with the given fields.</summary>
-            public CollectionTallyResult(List<object> missingItems, List<object> extraItems)
+            public CollectionTallyResult(List<object> missingItems, List<object> presentItems, List<object> extraItems)
             {
                 MissingItems = missingItems;
+                PresentItems = presentItems;
                 ExtraItems = extraItems;
             }
         }
@@ -42,6 +46,10 @@ namespace NUnit.Framework.Constraints
                 foreach (var o in _missingItems)
                     missingItems.Add(o);
 
+                var presentItems = new List<object>(_presentItems.Count);
+                foreach (var o in _presentItems)
+                    presentItems.Add(o);
+
                 List<object> extraItems = new List<object>(_extraItems.Count);
                 if (_sorted)
                 {
@@ -53,11 +61,13 @@ namespace NUnit.Framework.Constraints
                     extraItems.AddRange(_extraItems);
                 }
 
-                return new CollectionTallyResult(missingItems, extraItems);
+                return new CollectionTallyResult(missingItems, presentItems, extraItems);
             }
         }
 
         private readonly ArrayList _missingItems = new ArrayList();
+
+        private readonly List<object> _presentItems = new List<object>();
 
         private readonly List<object> _extraItems = new List<object>();
 
@@ -91,6 +101,7 @@ namespace NUnit.Framework.Constraints
             {
                 if (ItemsEqual(_missingItems[index], o))
                 {
+                    _presentItems.Add(o);
                     _missingItems.RemoveAt(index);
                     return;
                 }

@@ -294,6 +294,30 @@ namespace NUnit.Framework
         }
         #endregion
 
+        #region ContainsAny
+        /// <summary>
+        /// Asserts that collection contains any element of another collection.
+        /// </summary>
+        /// <param name="collection">IEnumerable of objects to be considered</param>
+        /// <param name="expected">IEnumerable of Objects to be found within collection</param>
+        public static void ContainsAny(IEnumerable collection, IEnumerable expected)
+        {
+            ContainsAny(collection, expected, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Asserts that collection contains any element of another collection.
+        /// </summary>
+        /// <param name="collection">IEnumerable of objects to be considered</param>
+        /// <param name="expected">IEnumerable of Objects to be found within collection</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void ContainsAny(IEnumerable collection, IEnumerable expected, string message, params object[] args)
+        {
+            Assert.That(collection, Is.ContainedIn(expected), message, args);
+        }
+        #endregion
+
         #region DoesNotContain
 
         /// <summary>
@@ -316,6 +340,30 @@ namespace NUnit.Framework
         public static void DoesNotContain (IEnumerable collection, Object actual, string message, params object[] args)
         {
             Assert.That(collection, Has.No.Member(actual), message, args);
+        }
+        #endregion
+
+        #region DoesNotContainAny
+        /// <summary>
+        /// Asserts that collection does not contain any element of another collection.
+        /// </summary>
+        /// <param name="collection">IEnumerable of objects to be considered</param>
+        /// <param name="expected">IEnumerable of Objects to be found within collection</param>
+        public static void DoesNotContainAny(IEnumerable collection, IEnumerable expected)
+        {
+            DoesNotContainAny(collection, expected, string.Empty, null);
+        }
+
+        /// <summary>
+        /// Asserts that collection does not contain any element of another collection.
+        /// </summary>
+        /// <param name="collection">IEnumerable of objects to be considered</param>
+        /// <param name="expected">IEnumerable of Objects to be found within collection</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        public static void DoesNotContainAny(IEnumerable collection, IEnumerable expected, string message, params object[] args)
+        {
+            Assert.That(collection, Is.Not.ContainedIn(expected), message, args);
         }
         #endregion
 
