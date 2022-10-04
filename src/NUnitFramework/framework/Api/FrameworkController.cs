@@ -114,18 +114,21 @@ namespace NUnit.Framework.Api
             var newSettings = settings as IDictionary<string, object>;
             Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
 
-            if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceLevel))
+            if (Settings.TryGetValue(FrameworkPackageSettings.InternalTraceLevel, out var traceLevelValue))
             {
-                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)Settings[FrameworkPackageSettings.InternalTraceLevel], true);
+                var traceLevel = (InternalTraceLevel)Enum.Parse(typeof(InternalTraceLevel), (string)traceLevelValue, true);
 
-                if (Settings.ContainsKey(FrameworkPackageSettings.InternalTraceWriter))
-                    InternalTrace.Initialize((TextWriter)Settings[FrameworkPackageSettings.InternalTraceWriter], traceLevel);
+                if (Settings.TryGetValue(FrameworkPackageSettings.InternalTraceWriter, out var textWriterValue))
+                {
+                    InternalTrace.Initialize((TextWriter)textWriterValue, traceLevel);
+                }
                 else
                 {
-                    var workDirectory = Settings.ContainsKey(FrameworkPackageSettings.WorkDirectory)
-                        ? (string)Settings[FrameworkPackageSettings.WorkDirectory]
+                    var workDirectory = Settings.TryGetValue(FrameworkPackageSettings.WorkDirectory, out var workDirectoryValue)
+                        ? (string)workDirectoryValue
                         : Directory.GetCurrentDirectory();
-                    var id = Process.GetCurrentProcess().Id;
+                    using var process = Process.GetCurrentProcess();
+                    var id = process.Id;
                     var logName = string.Format(LOG_FILE_FORMAT, id, Path.GetFileName(assemblyNameOrPath));
                     InternalTrace.Initialize(Path.Combine(workDirectory, logName), traceLevel);
                 }
@@ -199,7 +202,7 @@ namespace NUnit.Framework.Api
         /// <returns>The XML result of the test run</returns>
         public string RunTests(string filter)
         {
-            TNode result = Runner.Run(new TestProgressReporter(null), TestFilter.FromXml(filter)).ToXml(true);
+            TNode result = Runner.Run(TestListener.NULL, TestFilter.FromXml(filter)).ToXml(true);
             return InsertChildElements(result).OuterXml;
         }
 

@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal
                 return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
-            if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
+            if (convertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
                 return true;
 
             return from
