@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
-using System.Globalization;
 
 namespace NUnit.Framework.Internal
 {
     /// <summary>
     /// Provides methods to support legacy string comparison methods.
     /// </summary>
-    public class StringUtil
+    public static class StringUtil
     {
         /// <summary>
         /// Compares two strings for equality, ignoring case if requested.

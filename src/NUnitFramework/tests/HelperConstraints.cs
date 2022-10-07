@@ -1,14 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
-    public sealed class HelperConstraints
+    public static class HelperConstraints
     {
         public static Constraint HasMaxTime(int milliseconds)
         {
@@ -33,7 +33,7 @@ namespace NUnit.Framework
             {
                 var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-                var invokeMethod = @delegate.GetType().GetTypeInfo().GetMethod("Invoke");
+                var invokeMethod = @delegate.GetType().GetTypeInfo().GetMethod("Invoke")!;
                 if (invokeMethod.GetParameters().Length != 0)
                     throw new ArgumentException("Delegate must be parameterless.", nameof(actual));
 

@@ -14,7 +14,7 @@ namespace NUnit.Framework
     /// that must be met for the test to succeed. If
     /// any test fails, a warning is issued.
     /// </summary>
-    public class Warn
+    public static class Warn
     {
         #region Equals and ReferenceEquals
 

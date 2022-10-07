@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// ExceptionHelper provides static methods for working with exceptions
     /// </summary>
-    public class ExceptionHelper
+    public static class ExceptionHelper
     {
 
         /// <summary>
