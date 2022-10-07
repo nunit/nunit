@@ -5,6 +5,8 @@
 using System.Collections;
 using NUnit.Framework.Constraints;
 using System;
+using System.Diagnostics.CodeAnalysis;
+#pragma warning disable CS8777
 
 namespace NUnit.Framework
 {
@@ -194,7 +196,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotNull(object? anObject, string? message, params object?[]? args)
+        public static void NotNull([NotNull] object? anObject, string? message, params object?[]? args)
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
@@ -204,7 +206,7 @@ namespace NUnit.Framework
         /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void NotNull(object? anObject)
+        public static void NotNull([NotNull] object? anObject)
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
@@ -216,7 +218,7 @@ namespace NUnit.Framework
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotNull(object? anObject, string? message, params object?[]? args)
+        public static void IsNotNull([NotNull] object? anObject, string? message, params object?[]? args)
         {
             Assert.That(anObject, Is.Not.Null ,message, args);
         }
@@ -226,7 +228,7 @@ namespace NUnit.Framework
         /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="anObject">The object that is to be tested</param>
-        public static void IsNotNull(object? anObject)
+        public static void IsNotNull([NotNull] object? anObject)
         {
             Assert.That(anObject, Is.Not.Null ,null, null);
         }
