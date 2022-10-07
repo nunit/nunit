@@ -28,7 +28,7 @@ namespace NUnit.Framework
         /// <param name="name">The name of the author.</param>
         /// <param name="email">The email address of the author.</param>
         public AuthorAttribute(string name, string email)
-            : base(PropertyNames.Author, string.Format("{0} <{1}>", name, email))
+            : base(PropertyNames.Author, $"{name} <{email}>")
         {
         }
     }

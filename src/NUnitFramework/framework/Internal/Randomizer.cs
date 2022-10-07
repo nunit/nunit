@@ -70,8 +70,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static Randomizer GetRandomizer(MemberInfo member)
         {
-            if (Randomizers.ContainsKey(member))
-                return Randomizers[member];
+            if (Randomizers.TryGetValue(member, out var randomizer))
+                return randomizer;
             else
             {
                 var r = CreateRandomizer();

@@ -53,7 +53,7 @@ namespace NUnitLite
 
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid XML output format '{0}'", spec.Format),
+                        $"Invalid XML output format '{spec.Format}'",
                         nameof(spec));
             }
 
@@ -83,7 +83,7 @@ namespace NUnitLite
 
                 default:
                     throw new ArgumentException(
-                        string.Format("Invalid output format '{0}'", spec.Format),
+                        $"Invalid output format '{spec.Format}'",
                         nameof(spec));
             }
 

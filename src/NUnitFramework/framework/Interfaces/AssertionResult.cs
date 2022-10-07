@@ -64,7 +64,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         public override string ToString()
         {
-            return string.Format("Assert {0}: {1}", Status, Message) + Environment.NewLine + StackTrace;
+            return $"Assert {Status}: {Message}" + Environment.NewLine + StackTrace;
         }
     }
 }
