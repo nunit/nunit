@@ -61,9 +61,9 @@ namespace NUnitLite
 
             var configAttr = executingAssembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
             if (configAttr != null)
-                build = string.Format("({0})", configAttr.Configuration);
+                build = $"({configAttr.Configuration})";
 
-            WriteHeader(String.Format("NUnitLite {0} {1}", version.ToString(3), build));
+            WriteHeader($"NUnitLite {version.ToString(3)} {build}");
             WriteSubHeader(copyright);
             Writer.WriteLine();
         }
@@ -494,7 +494,7 @@ namespace NUnitLite
                 foreach (var assertion in result.AssertionResults)
                 {
                     if (numAsserts > 1)
-                        assertId = string.Format("{0}-{1}", reportId, ++assertionCounter);
+                        assertId = $"{reportId}-{++assertionCounter}";
                     ColorStyle style = GetColorStyle(resultState);
                     string status = assertion.Status.ToString();
                     DisplayTestResult(style, assertId, status, fullName, assertion.Message, assertion.StackTrace);
@@ -512,7 +512,7 @@ namespace NUnitLite
         {
             Writer.WriteLine();
             Writer.WriteLine(
-                style, string.Format("{0}) {1} : {2}", prefix, status, fullName));
+                style, $"{prefix}) {status} : {fullName}");
 
             if (!string.IsNullOrEmpty(message))
                 Writer.WriteLine(style, message.TrimEnd(TRIM_CHARS));

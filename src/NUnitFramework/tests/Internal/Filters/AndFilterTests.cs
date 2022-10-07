@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal.Filters
         public void BuildFromXml()
         {
             TestFilter filter = TestFilter.FromXml(
-                string.Format("<filter><and><cat>Dummy</cat><id>{0}</id></and></filter>", _dummyFixture.Id));
+                $"<filter><and><cat>Dummy</cat><id>{_dummyFixture.Id}</id></and></filter>");
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
             Assert.That(filter.Match(_dummyFixture));
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal.Filters
         public void BuildFromXml_TopLevelDefaultsToAnd()
         {
             TestFilter filter = TestFilter.FromXml(
-                string.Format("<filter><cat>Dummy</cat><id>{0}</id></filter>", _dummyFixture.Id));
+                $"<filter><cat>Dummy</cat><id>{_dummyFixture.Id}</id></filter>");
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
             Assert.That(filter.Match(_dummyFixture));

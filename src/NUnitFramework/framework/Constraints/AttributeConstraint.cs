@@ -27,9 +27,8 @@ namespace NUnit.Framework.Constraints
             this.expectedType = type;
             this.DescriptionPrefix = "attribute " + expectedType.FullName;
 
-            if (!typeof(Attribute).IsAssignableFrom(expectedType))
-                throw new ArgumentException(string.Format(
-                    "Type {0} is not an attribute", expectedType), nameof(type));
+            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
+                throw new ArgumentException($"Type {expectedType} is not an attribute", nameof(type));
         }
 
         /// <summary>
@@ -42,7 +41,7 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentNotNull(actual, nameof(actual));
             Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
             if (attrs.Length == 0)
-                throw new ArgumentException(string.Format("Attribute {0} was not found", expectedType), nameof(actual));
+                throw new ArgumentException($"Attribute {expectedType} was not found", nameof(actual));
 
             attrFound = attrs[0];
             return BaseConstraint.ApplyTo(attrFound);
@@ -53,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<attribute {0} {1}>", expectedType, BaseConstraint);
+            return $"<attribute {expectedType} {BaseConstraint}>";
         }
     }
 }

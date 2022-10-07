@@ -20,27 +20,26 @@ namespace NUnit.Framework.Internal
         private void ExpectMatch( string culture )
         {
             if ( !detector.IsCultureSupported( culture ) )
-                Assert.Fail( string.Format( "Failed to match \"{0}\"" , culture ) );
+                Assert.Fail($"Failed to match \"{culture}\"");
         }
 
         private void ExpectMatch( CultureAttribute attr )
         {
             if ( !detector.IsCultureSupported( attr ) )
-                Assert.Fail( string.Format( "Failed to match attribute with Include=\"{0}\",Exclude=\"{1}\"", attr.Include, attr.Exclude ) );
+                Assert.Fail($"Failed to match attribute with Include=\"{attr.Include}\",Exclude=\"{attr.Exclude}\"");
         }
 
         private void ExpectFailure( string culture )
         {
             if ( detector.IsCultureSupported( culture ) )
-                Assert.Fail( string.Format( "Should not match \"{0}\"" , culture ) );
+                Assert.Fail($"Should not match \"{culture}\"");
             Assert.AreEqual( "Only supported under culture " + culture, detector.Reason );
         }
 
         private void ExpectFailure( CultureAttribute attr, string msg )
         {
             if ( detector.IsCultureSupported( attr ) )
-                Assert.Fail( string.Format( "Should not match attribute with Include=\"{0}\",Exclude=\"{1}\"",
-                    attr.Include, attr.Exclude ) );
+                Assert.Fail($"Should not match attribute with Include=\"{attr.Include}\",Exclude=\"{attr.Exclude}\"");
             Assert.AreEqual( msg, detector.Reason );
         }
 

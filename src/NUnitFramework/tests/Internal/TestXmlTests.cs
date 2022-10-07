@@ -161,12 +161,11 @@ namespace NUnit.Framework.Internal
 
             if (recursive)
             {
-                TestSuite suite = test as TestSuite;
-                if (suite != null)
+                if (test is TestSuite suite)
                 {
                     foreach (Test child in suite.Tests)
                     {
-                        string xpathQuery = string.Format("{0}[@id={1}]", child.XmlElementName, child.Id);
+                        string xpathQuery = $"{child.XmlElementName}[@id={child.Id}]";
                         TNode childNode = topNode.SelectSingleNode(xpathQuery);
                         Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 
