@@ -60,13 +60,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a fixed point numeric type</returns>
-        public static bool IsFixedPointNumeric(Object obj)
+        public static bool IsFixedPointNumeric(object obj)
         {
-            if (null != obj)
-            {
-                if (obj is System.Byte or System.SByte or System.Int32 or System.UInt32 or System.Int64 or System.UInt64 or System.Int16 or System.UInt16 or System.Char) return true;
-            }
-            return false;
+            return
+                obj is
+                byte or
+                sbyte or
+                int or
+                uint or
+                long or
+                ulong or
+                short or
+                ushort or
+                char;
         }
 
         internal static bool IsFixedPointNumeric(Type type)
