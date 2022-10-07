@@ -98,9 +98,7 @@ namespace NUnit.Framework.Internal
 
                 Assert.That(node.Name, Is.EqualTo("property"));
                 
-                props[i] = string.Format("{0}={1}",
-                    node.Attributes["name"],
-                    node.Attributes["value"]);
+                props[i] = $"{node.Attributes["name"]}={node.Attributes["value"]}";
             }
 
             Assert.That(props,

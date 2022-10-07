@@ -417,7 +417,7 @@ namespace NUnit.Framework.Internal
                     case '\x0085':
                     case '\x2028':
                     case '\x2029':
-                        return string.Format("\\x{0:X4}", (int)c);
+                        return $"\\x{(int)c:X4}";
 
                     default:
                         return c.ToString();
