@@ -84,7 +84,7 @@ namespace NUnit.Framework.Constraints
                 var descriptionPrefix =
                     _expectedCount == 0 ? "no item" :
                     _expectedCount == 1 ? "exactly one item" :
-                    string.Format("exactly {0} items", _expectedCount);
+                    $"exactly {_expectedCount} items";
 
                 return _itemConstraint != null ? PrefixConstraint.FormatDescription(descriptionPrefix, _itemConstraint) : descriptionPrefix;
             }

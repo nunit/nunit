@@ -9,8 +9,8 @@ namespace NUnit.Framework.Constraints
         public void SetUp()
         {
             TheConstraint = new InstanceOfTypeConstraint(typeof(D1));
-            ExpectedDescription = string.Format("instance of <{0}>", typeof(D1));
-            StringRepresentation = string.Format("<instanceof {0}>", typeof(D1));
+            ExpectedDescription = $"instance of <{typeof(D1)}>";
+            StringRepresentation = $"<instanceof {typeof(D1)}>";
         }
 
         static object[] SuccessData = new object[] { new D1(), new D2() };

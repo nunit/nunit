@@ -9,8 +9,8 @@ namespace NUnit.Framework.Constraints
         public void SetUp()
         {
             TheConstraint = new ExactTypeConstraint(typeof(D1));
-            ExpectedDescription = string.Format("<{0}>", typeof(D1));
-            StringRepresentation = string.Format("<typeof {0}>", typeof(D1));
+            ExpectedDescription = $"<{typeof(D1)}>";
+            StringRepresentation = $"<typeof {typeof(D1)}>";
         }
 
         static object[] SuccessData = new object[] { new D1() };

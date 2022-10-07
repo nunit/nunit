@@ -203,8 +203,7 @@ namespace NUnit.Framework.Internal
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
 
-                var argArray = arg as Array;
-                if (argArray != null && argArray.Rank == 1)
+                if (arg is Array {Rank: 1} argArray)
                 {
                     if (argArray.Length == 0)
                         display = "[]";
@@ -222,9 +221,8 @@ namespace NUnit.Framework.Internal
                                 builder.Append(", ");
 
                             var element = argArray.GetValue(i);
-                            var childArray = element as Array;
 
-                            if (childArray != null && childArray.Rank == 1)
+                            if (element is Array {Rank: 1} childArray)
                             {
                                 builder.Append(childArray.GetType().GetElementType().Name);
                                 builder.Append("[]");
@@ -419,7 +417,7 @@ namespace NUnit.Framework.Internal
                     case '\x0085':
                     case '\x2028':
                     case '\x2029':
-                        return string.Format("\\x{0:X4}", (int)c);
+                        return $"\\x{(int)c:X4}";
 
                     default:
                         return c.ToString();
