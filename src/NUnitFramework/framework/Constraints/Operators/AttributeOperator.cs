@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
+            if (RightContext is null or BinaryOperator)
                 stack.Push(new AttributeExistsConstraint(type));
             else
                 stack.Push(new AttributeConstraint(type, stack.Pop()));

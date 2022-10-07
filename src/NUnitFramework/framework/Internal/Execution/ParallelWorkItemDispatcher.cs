@@ -161,7 +161,7 @@ namespace NUnit.Framework.Internal.Execution
         // possible, this one gives the user a predictable result.
         private static ParallelExecutionStrategy InitialExecutionStrategy(WorkItem workItem)
         {
-            return workItem.ParallelScope == ParallelScope.Default || workItem.ParallelScope == ParallelScope.None
+            return workItem.ParallelScope is ParallelScope.Default or ParallelScope.None
                 ? ParallelExecutionStrategy.NonParallel
                 : ParallelExecutionStrategy.Parallel;
         }

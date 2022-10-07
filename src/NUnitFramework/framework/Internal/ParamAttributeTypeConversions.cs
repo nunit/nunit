@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
             }
             else if (underlyingTargetType == typeof(decimal))
             {
-                convert = value is double || value is string || value is int;
+                convert = value is double or string or int;
             }
             else if (underlyingTargetType == typeof(DateTime))
             {

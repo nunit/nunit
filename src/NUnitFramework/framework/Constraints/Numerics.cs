@@ -37,9 +37,7 @@ namespace NUnit.Framework.Constraints
         {
             if (null != obj)
             {
-                if (obj is System.Double) return true;
-                if (obj is System.Single) return true;
-                if (obj is System.Decimal) return true;
+                if (obj is System.Double or System.Single or System.Decimal) return true;
             }
             return false;
         }
@@ -66,15 +64,7 @@ namespace NUnit.Framework.Constraints
         {
             if (null != obj)
             {
-                if (obj is System.Byte) return true;
-                if (obj is System.SByte) return true;
-                if (obj is System.Int32) return true;
-                if (obj is System.UInt32) return true;
-                if (obj is System.Int64) return true;
-                if (obj is System.UInt64) return true;
-                if (obj is System.Int16) return true;
-                if (obj is System.UInt16) return true;
-                if (obj is System.Char) return true;
+                if (obj is System.Byte or System.SByte or System.Int32 or System.UInt32 or System.Int64 or System.UInt64 or System.Int16 or System.UInt16 or System.Char) return true;
             }
             return false;
         }

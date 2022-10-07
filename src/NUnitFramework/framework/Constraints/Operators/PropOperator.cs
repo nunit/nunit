@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
+            if (RightContext is null or BinaryOperator)
                 stack.Push(new PropertyExistsConstraint(name));
             else
                 stack.Push(new PropertyConstraint(name, stack.Pop()));

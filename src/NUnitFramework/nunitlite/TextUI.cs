@@ -33,7 +33,7 @@ namespace NUnitLite
 
             string labelsOption = options.DisplayTestLabels?.ToUpperInvariant() ?? "ON";
 
-            _displayBeforeTest = labelsOption == "ALL" || labelsOption == "BEFORE";
+            _displayBeforeTest = labelsOption is "ALL" or "BEFORE";
             _displayAfterTest = labelsOption == "AFTER";
             _displayBeforeOutput = _displayBeforeTest || _displayAfterTest || labelsOption == "ON";
         }
@@ -444,17 +444,14 @@ namespace NUnitLite
 
         private void DisplayErrorsFailuresAndWarnings(ITestResult result)
         {
-            bool display =
-                result.ResultState.Status == TestStatus.Failed ||
-                result.ResultState.Status == TestStatus.Warning;
+      result.ResultState.Status is TestStatus.Failed or TestStatus.WarningultState.Status == TestStatus.Warning;
 
             if (result.Test.IsSuite)
             {
                 if (display)
                 {
                     var suite = result.Test as TestSuite;
-                    var site = result.ResultState.Site;
-                    if (suite.TestType == "Theory" || site == FailureSite.SetUp || site == FailureSite.TearDown)
+                    var site = result.Resulsuite.TestType == "Theory" || site is FailureSite.SetUp or FailureSite.TearDownSetUp || site == FailureSite.TearDown)
                         DisplayTestResult(result);
                     if (site == FailureSite.SetUp) return;
                 }
@@ -546,12 +543,10 @@ namespace NUnitLite
         private static string GetResultStatus(ResultState resultState)
         {
             string status = resultState.Label;
-            if (string.IsNullOrEmpty(status))
-                status = resultState.Status.ToString();
+            if (string.IsNullOrEmpty(ststatus is "Failed" or "Error"tate.Status.ToString();
 
-            if (status == "Failed" || status == "Error")
-            {
-                var site = resultState.Site.ToString();
+            if (status is "Failed" or "Error")
+          site is "SetUp" or "TearDown"State.Site.ToString();
                 if (site == "SetUp" || site == "TearDown")
                     status = site + " " + status;
             }

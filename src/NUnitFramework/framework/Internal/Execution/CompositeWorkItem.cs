@@ -245,7 +245,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             catch (Exception ex)
             {
-                if (ex is NUnitException || ex is TargetInvocationException)
+                if (ex is NUnitException or TargetInvocationException)
                     ex = ex.InnerException;
 
                 Result.RecordException(ex, FailureSite.SetUp);

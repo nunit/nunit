@@ -434,7 +434,7 @@ namespace NUnit.Framework
 
             if (IncludePlatform != null || ExcludePlatform != null)
             {
-                if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
+                if (test.RunState is RunState.NotRunnable or RunState.Ignored)
                 {
                     yield return test;
                     yield break;

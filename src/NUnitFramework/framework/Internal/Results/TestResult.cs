@@ -526,7 +526,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(ex, nameof(ex));
 
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
+            if (ex is NUnitException or TargetInvocationException && ex.InnerException != null)
                 return ex.InnerException;
 
             return ex;

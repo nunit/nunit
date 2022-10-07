@@ -222,7 +222,7 @@ namespace NUnit.Framework.Internal
                     break;
 
                 case TestStatus.Warning:
-                    if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                    if (ResultState.Status is TestStatus.Inconclusive or TestStatus.Passed)
                         SetResult(ResultState.ChildWarning, CHILD_WARNINGS_MESSAGE);
                     break;
 
@@ -235,7 +235,7 @@ namespace NUnit.Framework.Internal
 
                 case TestStatus.Skipped:
                     if (childResultState.Label == "Ignored")
-                        if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
+                        if (ResultState.Status is TestStatus.Inconclusive or TestStatus.Passed)
                             SetResult(ResultState.ChildIgnored, CHILD_IGNORE_MESSAGE);
                     break;
             }

@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Builders
 
             containingSuite.Tests.Clear();
 
-            if (containingSuite is SetUpFixture || containingSuite is TestAssembly)
+            if (containingSuite is SetUpFixture or TestAssembly)
             {
                 // If the parent suite is another SetUpFixture or a TestAssembly,
                 // it must be retained, because it may have properties set, which

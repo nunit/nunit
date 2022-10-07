@@ -58,8 +58,7 @@ namespace NUnit.Framework.Constraints
             string leadingSeparators = "";
 
             foreach (char c in path)
-            {
-                if (c == WindowsDirectorySeparatorChar || c == NonWindowsDirectorySeparatorChar)
+            {c is WindowsDirectorySeparatorChar or NonWindowsDirectorySeparatorCharirectorySeparatorChar)
                 {
                     leadingSeparators += Path.DirectorySeparatorChar;
                 }

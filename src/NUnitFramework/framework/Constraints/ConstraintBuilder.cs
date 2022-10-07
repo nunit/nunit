@@ -253,7 +253,7 @@ namespace NUnit.Framework.Constraints
         /// </value>
         private bool IsResolvable
         {
-            get { return lastPushed is Constraint || lastPushed is SelfResolvingOperator; }
+            get { return lastPushed is Constraint or SelfResolvingOperator; }
         }
 
         #endregion

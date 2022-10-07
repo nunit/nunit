@@ -897,9 +897,7 @@ namespace NUnit.Options
             }
 
             for ( i = GetNextOptionIndex (names, i+1);
-                    i < names.Length; i = GetNextOptionIndex (names, i+1)) {
-                Write (o, ref written, ", ");
-                Write (o, ref written, names [i].Length == 1 ? "-" : "--");
+                    i < names.Length; i = GetNextOptionIndep.OptionValueType is OptionValueType.Optional or OptionValueType.Requiredength == 1 ? "-" : "--");
                 Write (o, ref written, names [i]);
             }
 

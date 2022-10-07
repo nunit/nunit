@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="stack"></param>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
-            if (RightContext == null || RightContext is BinaryOperator)
+            if (RightContext is null or BinaryOperator)
                 stack.Push(new ExactCountConstraint(expectedCount));
             else
                 stack.Push(new ExactCountConstraint(expectedCount, stack.Pop()));

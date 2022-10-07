@@ -57,7 +57,7 @@ namespace NUnit.Framework
             }
             else if (Scope.HasFlag(ParallelScope.Fixtures))
             {
-                if (test is TestMethod || test is ParameterizedMethodSuite)
+                if (test is TestMethod or ParameterizedMethodSuite)
                     test.MakeInvalid("May not specify ParallelScope.Fixtures on a test method");
             }
             else if (Scope.HasFlag(ParallelScope.Children))

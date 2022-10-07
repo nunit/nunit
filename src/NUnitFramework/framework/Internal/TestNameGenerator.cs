@@ -140,7 +140,7 @@ namespace NUnit.Framework.Internal
                         break;
                     default:
                         char c = token[1];
-                        if (token.Length >= 5 && token[2] == ':' && (c == 'a' || c == 'p' || char.IsDigit(c)))
+                        if (token.Length >= 5 && token[2] == ':' && (c is 'a' or 'p' || char.IsDigit(c)))
                         {
                             if (int.TryParse(token.Substring(3, token.Length - 4), out var length) && length > 0)
                             {

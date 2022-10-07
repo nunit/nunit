@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                return RightContext is CollectionOperator || RightContext is ExactCountOperator
+                return RightContext is CollectionOperator or ExactCountOperator
                     ? base.LeftPrecedence + 10
                     : base.LeftPrecedence;
             }

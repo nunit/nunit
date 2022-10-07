@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal
                 object? arg = arglist[i];
                 string? display = arg == null ? "null" : arg.ToString();
 
-                if (arg is double || arg is float)
+                if (arg is double or float)
                 {
                     if (display.IndexOf('.') == -1)
                         display += ".0";
@@ -221,18 +221,18 @@ namespace NUnit.Framework.Internal
                 {
                     Type argType = arg.GetType();
                     Type targetType = parameters[i].ParameterType;
-                    bool convert = false;
+                    var convert = false;
 
                     if (argType != targetType && IsNumeric(argType) && IsNumeric(targetType))
                     {
                         if (targetType == typeof(double) || targetType == typeof(float))
-                            convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
+                            convert = arg is int or long or short or byte or sbyte;
                         else
                             if (targetType == typeof(long))
-                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
+                                convert = arg is int or short or byte or sbyte;
                             else
                                 if (targetType == typeof(short))
-                                    convert = arg is byte || arg is sbyte;
+                                    convert = arg is byte or sbyte;
                     }
 
                     if (convert)
@@ -268,7 +268,7 @@ namespace NUnit.Framework.Internal
                     {
                         if (typeParameters[i].IsGenericParameter || parameters[j].ParameterType.Equals(typeParameters[i]))
                         {
-                            if (!TypeHelper.TryGetBestCommonType(
+                            if (!TryGetBestCommonType(
                                 typeArgs[i],
                                 arglist[j]?.GetType(),
                                 out typeArgs[i]))
@@ -308,8 +308,8 @@ namespace NUnit.Framework.Internal
             if (type.GetTypeInfo().BaseType == typeof(object))
                 return interfaces.ToArray();
 
-            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
-            List<Type> declaredInterfaces = new List<Type>();
+            var baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
+            var declaredInterfaces = new List<Type>();
 
             foreach (Type interfaceType in interfaces)
             {

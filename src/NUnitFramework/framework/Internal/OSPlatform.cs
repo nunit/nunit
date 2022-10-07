@@ -284,10 +284,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                return Platform == PlatformID.Win32NT
-                    || Platform == PlatformID.Win32Windows
-                    || Platform == PlatformID.Win32S
-                    || Platform == PlatformID.WinCE;
+                return Platform is PlatformID.Win32NT or PlatformID.Win32Windows or PlatformID.Win32S or PlatformID.WinCE;
             }
         }
 
