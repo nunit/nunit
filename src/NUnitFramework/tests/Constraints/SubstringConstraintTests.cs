@@ -78,16 +78,15 @@ namespace NUnit.Framework.Constraints
                 Throws.TypeOf<InvalidOperationException>());
 
             // Invoke IgnoreCase before Using method
-            var substringConstraint = (SubstringConstraint)subStringConstraint.IgnoreCase;
-            Assert.That(() => substringConstraint.Using(StringComparison.CurrentCulture),
+            Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.CurrentCulture),
                 Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => substringConstraint.Using(StringComparison.InvariantCulture),
+            Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.InvariantCulture),
                 Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => substringConstraint.Using(StringComparison.InvariantCultureIgnoreCase),
+            Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.InvariantCultureIgnoreCase),
                 Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => substringConstraint.Using(StringComparison.Ordinal).IgnoreCase,
+            Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.Ordinal).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
-            Assert.That(() => substringConstraint.Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
+            Assert.That(() => ((SubstringConstraint)subStringConstraint.IgnoreCase).Using(StringComparison.OrdinalIgnoreCase).IgnoreCase,
                 Throws.TypeOf<InvalidOperationException>());
         }
 
