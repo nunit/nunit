@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
             public void SetWaitHandle_Enqueue_Asynchronous()
             {
-                using (AutoResetEvent waitHandle = new AutoResetEvent(false))
+                using (new AutoResetEvent(false))
                 {
                     this.q = new EventQueue();
                     this.afterEnqueue = false;

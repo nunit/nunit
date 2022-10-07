@@ -73,8 +73,6 @@ namespace NUnit.Framework.Internal
             if (IsEmpty)
                 return true;
 
-            string typeName = type.FullName;
-
             foreach (FilterElement filter in _filters)
             {
                 if (filter.Match(type))
