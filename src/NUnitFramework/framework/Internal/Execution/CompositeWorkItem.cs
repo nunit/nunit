@@ -428,7 +428,7 @@ namespace NUnit.Framework.Internal.Execution
             /// </summary>
             public override string Name
             {
-                get { return string.Format("{0} OneTimeTearDown", base.Name); }
+                get { return $"{base.Name} OneTimeTearDown"; }
             }
 
             /// <summary>

@@ -14,7 +14,7 @@ namespace NUnit.Framework.Syntax
             string defaultCaseSensitivity = Path.DirectorySeparatorChar == '\\'
                 ? "ignorecase" : "respectcase";
 
-            ParseTree = string.Format(@"<samepath ""{0}"" {1}>", path, defaultCaseSensitivity);
+            ParseTree = $@"<samepath ""{path}"" {defaultCaseSensitivity}>";
             StaticSyntax = Is.SamePath(path);
             BuilderSyntax = Builder().SamePath(path);
         }
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<samepath ""{0}"" ignorecase>", path);
+            ParseTree = $@"<samepath ""{path}"" ignorecase>";
             StaticSyntax = Is.SamePath(path).IgnoreCase;
             BuilderSyntax = Builder().SamePath(path).IgnoreCase;
         }
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<not <samepath ""{0}"" ignorecase>>", path);
+            ParseTree = $@"<not <samepath ""{path}"" ignorecase>>";
             StaticSyntax = Is.Not.SamePath(path).IgnoreCase;
             BuilderSyntax = Builder().Not.SamePath(path).IgnoreCase;
         }
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<samepath ""{0}"" respectcase>", path);
+            ParseTree = $@"<samepath ""{path}"" respectcase>";
             StaticSyntax = Is.SamePath(path).RespectCase;
             BuilderSyntax = Builder().SamePath(path).RespectCase;
         }
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<not <samepath ""{0}"" respectcase>>", path);
+            ParseTree = $@"<not <samepath ""{path}"" respectcase>>";
             StaticSyntax = Is.Not.SamePath(path).RespectCase;
             BuilderSyntax = Builder().Not.SamePath(path).RespectCase;
         }
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Syntax
             string defaultCaseSensitivity = Path.DirectorySeparatorChar == '\\'
                 ? "ignorecase" : "respectcase";
 
-            ParseTree = string.Format(@"<samepathorunder ""{0}"" {1}>", path, defaultCaseSensitivity);
+            ParseTree = $@"<samepathorunder ""{path}"" {defaultCaseSensitivity}>";
             StaticSyntax = Is.SamePathOrUnder(path);
             BuilderSyntax = Builder().SamePathOrUnder(path);
         }
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<samepathorunder ""{0}"" ignorecase>", path);
+            ParseTree = $@"<samepathorunder ""{path}"" ignorecase>";
             StaticSyntax = Is.SamePathOrUnder(path).IgnoreCase;
             BuilderSyntax = Builder().SamePathOrUnder(path).IgnoreCase;
         }
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<not <samepathorunder ""{0}"" ignorecase>>", path);
+            ParseTree = $@"<not <samepathorunder ""{path}"" ignorecase>>";
             StaticSyntax = Is.Not.SamePathOrUnder(path).IgnoreCase;
             BuilderSyntax = Builder().Not.SamePathOrUnder(path).IgnoreCase;
         }
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<samepathorunder ""{0}"" respectcase>", path);
+            ParseTree = $@"<samepathorunder ""{path}"" respectcase>";
             StaticSyntax = Is.SamePathOrUnder(path).RespectCase;
             BuilderSyntax = Builder().SamePathOrUnder(path).RespectCase;
         }
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Syntax
         {
             string path = "/path/to/match";
 
-            ParseTree = string.Format(@"<not <samepathorunder ""{0}"" respectcase>>", path);
+            ParseTree = $@"<not <samepathorunder ""{path}"" respectcase>>";
             StaticSyntax = Is.Not.SamePathOrUnder(path).RespectCase;
             BuilderSyntax = Builder().Not.SamePathOrUnder(path).RespectCase;
         }

@@ -79,7 +79,7 @@ namespace NUnit.Framework
         {
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
             Assert.NotNull(workDirectory);
-            Assert.That(Directory.Exists(workDirectory), string.Format("Directory {0} does not exist", workDirectory));
+            Assert.That(Directory.Exists(workDirectory), $"Directory {workDirectory} does not exist");
         }
 
         [TestCaseSource(nameof(WorkDirectorySource))]

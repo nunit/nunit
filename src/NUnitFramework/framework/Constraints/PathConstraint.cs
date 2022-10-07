@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<{0} \"{1}\" {2}>", DisplayName.ToLower(), expected, caseInsensitive ? "ignorecase" : "respectcase");
+            return $"<{DisplayName.ToLower()} \"{expected}\" {(caseInsensitive ? "ignorecase" : "respectcase")}>";
         }
 
         #region Helper Methods

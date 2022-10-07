@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Execution
             for (int index = 0; index < events.Length; index++)
             {
                 Event e = q.Dequeue(false);
-                Assert.AreEqual(events[index].GetType(), e.GetType(), string.Format("Event {0}", index));
+                Assert.AreEqual(events[index].GetType(), e.GetType(), $"Event {index}");
             }
         }
 
