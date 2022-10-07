@@ -201,6 +201,10 @@ namespace NUnit.Framework.Internal
                 case "WIN10":
                     isSupported = _os.IsWindows10;
                     break;
+                case "WINDOWS11":
+                case "WIN11":
+                    isSupported = _os.IsWindows11;
+                    break;
                 case "WINDOWSSERVER10":
                     isSupported = _os.IsWindowsServer10;
                     break;
