@@ -53,13 +53,13 @@ namespace NUnit.Framework
             {
                 if (typeInfo.IsAbstract)
                 {
-                    reason = string.Format("{0} is an abstract class", typeInfo.FullName);
+                    reason = $"{typeInfo.FullName} is an abstract class";
                     return false;
                 }
 
                 if (!typeInfo.HasConstructor(Array.Empty<Type>()))
                 {
-                    reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
+                    reason = $"{typeInfo.FullName} does not have a default constructor";
                     return false;
                 }
             }

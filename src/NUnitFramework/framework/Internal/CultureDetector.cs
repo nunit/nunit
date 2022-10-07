@@ -63,13 +63,13 @@ namespace NUnit.Framework.Internal
             //{
                 if (include != null && !IsCultureSupported(include))
                 {
-                    reason = string.Format("Only supported under culture {0}", include);
+                    reason = $"Only supported under culture {include}";
                     return false;
                 }
 
                 if (exclude != null && IsCultureSupported(exclude))
                 {
-                    reason = string.Format("Not supported under culture {0}", exclude);
+                    reason = $"Not supported under culture {exclude}";
                     return false;
                 }
             //}

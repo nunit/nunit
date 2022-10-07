@@ -224,8 +224,7 @@ namespace NUnit.Common
 
         private Exception InvalidTokenError(Token token)
         {
-            return new TestSelectionParserException(string.Format(
-                "Unexpected token '{0}' at position {1} in selection expression.", token.Text, token.Pos));
+            return new TestSelectionParserException($"Unexpected token '{token.Text}' at position {token.Pos} in selection expression.");
         }
 
         private Token LookAhead
