@@ -56,13 +56,13 @@ namespace NUnit.TestData.ActionAttributeTests
         [SetUp]
         public void SetUp()
         {
-            Events.Add(string.Format("{0}.SetUpTearDown.Before.Test", TestContext.CurrentContext.Test.Name));
+            Events.Add($"{TestContext.CurrentContext.Test.Name}.SetUpTearDown.Before.Test");
         }
 
         [TearDown]
         public void TearDown()
         {
-            Events.Add(string.Format("{0}.SetUpTearDown.After.Test", TestContext.CurrentContext.Test.Name));
+            Events.Add($"{TestContext.CurrentContext.Test.Name}.SetUpTearDown.After.Test");
         }
 
         [TestCase("One", TestName="CaseOne")]
@@ -146,7 +146,7 @@ namespace NUnit.TestData.ActionAttributeTests
 
         private void AddResult(string phase, ITest test)
         {
-            string message = string.Format("{0}.{1}.{2}.{3}", test.Name, _tag, phase, _targets);
+            string message = $"{test.Name}.{_tag}.{phase}.{_targets}";
 
             if(ActionAttributeFixture.Events != null)
                 ActionAttributeFixture.Events.Add(message);

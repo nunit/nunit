@@ -293,7 +293,7 @@ namespace NUnit.Framework.Internal.Filters
         public void IdFilter_FromXml()
         {
             TestFilter filter = TestFilter.FromXml(
-                string.Format("<filter><id>{0}</id></filter>", _dummyFixture.Id));
+                $"<filter><id>{_dummyFixture.Id}</id></filter>");
 
             Assert.That(filter, Is.TypeOf<IdFilter>());
             Assert.That(filter.Match(_dummyFixture));

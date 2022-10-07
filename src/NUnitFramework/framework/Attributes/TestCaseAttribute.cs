@@ -359,10 +359,7 @@ namespace NUnit.Framework
                             if (i < parms.Arguments.Length)
                                 newArgList[i] = parms.Arguments[i];
                             else
-                                throw new TargetParameterCountException(string.Format(
-                                    "Method requires {0} arguments but TestCaseAttribute only supplied {1}",
-                                    argsNeeded,
-                                    argsProvided));
+                                throw new TargetParameterCountException($"Method requires {argsNeeded} arguments but TestCaseAttribute only supplied {argsProvided}");
                         }
                     }
                     parms.Arguments = newArgList;
@@ -426,7 +423,7 @@ namespace NUnit.Framework
                 if (_untilDate > DateTimeOffset.UtcNow)
                 {
                     test.RunState = RunState.Ignored;
-                    string reason = string.Format("Ignoring until {0}. {1}", _untilDate.Value.ToString("u"), IgnoreReason);
+                    string reason = $"Ignoring until {_untilDate.Value:u}. {IgnoreReason}";
                     test.Properties.Set(PropertyNames.SkipReason, reason);
                 }
                 else

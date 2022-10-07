@@ -154,11 +154,11 @@ namespace NUnit.Framework.Constraints
         {
             string sExpected = MsgUtils.GetTypeRepresentation(expected);
             if (expected is ICollection expectedCollection && !(expected is Array))
-                sExpected += string.Format(" with {0} elements", expectedCollection.Count);
+                sExpected += $" with {expectedCollection.Count} elements";
 
             string sActual = MsgUtils.GetTypeRepresentation(actual);
             if (actual is ICollection actualCollection && !(actual is Array))
-                sActual += string.Format(" with {0} elements", actualCollection.Count);
+                sActual += $" with {actualCollection.Count} elements";
 
             if (sExpected == sActual)
                 writer.WriteMessageLine(indent, CollectionType_1, sExpected);

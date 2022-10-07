@@ -99,13 +99,13 @@ namespace NUnit.Framework.Internal
         {
             if (include != null && !IsPlatformSupported(include))
             {
-                _reason = string.Format("Only supported on {0}", include);
+                _reason = $"Only supported on {include}";
                 return false;
             }
 
             if (exclude != null && IsPlatformSupported(exclude))
             {
-                _reason = string.Format("Not supported on {0}", exclude);
+                _reason = $"Not supported on {exclude}";
                 return false;
             }
 
