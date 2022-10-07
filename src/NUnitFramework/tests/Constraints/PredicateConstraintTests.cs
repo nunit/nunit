@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         public static void ActualMayBeNullForNullableTypes(Type type)
         {
             // https://github.com/nunit/nunit/issues/1215
-            var methodInfo = typeof(PredicateConstraintTests).GetTypeInfo()
+            var methodInfo = typeof(PredicateConstraintTests)
                 .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
                 .Single(method => method.Name == nameof(ActualMayBeNullForNullableTypes) && method.GetParameters().Length == 0)
                 .MakeGenericMethod(type);
