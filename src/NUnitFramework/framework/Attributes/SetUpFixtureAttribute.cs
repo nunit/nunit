@@ -39,7 +39,7 @@ namespace NUnit.Framework
     /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
     /// under a given namespace.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
