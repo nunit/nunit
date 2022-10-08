@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
         public void ParameterizedTest(int x, int y, string s)
         {
             CheckNames(
-                string.Format("ParameterizedTest({0},{1},\"{2}\")", x, y, s.Replace("\"", "\\\"")),
+                $"ParameterizedTest({x},{y},\"{s.Replace("\"", "\\\"")}\")",
                 "ParameterizedTest", 
                 OUTER_CLASS);
         }

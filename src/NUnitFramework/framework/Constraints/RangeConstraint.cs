@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description
         {
-            get { return string.Format("in range ({0},{1})", from, to); }
+            get { return $"in range ({from},{to})"; }
         }
 
         /// <summary>
