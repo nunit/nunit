@@ -1,12 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
     /// <summary>
-    /// Comparator for two <see cref="Char"/>s.
+    /// Comparator for two <see cref="char"/>s.
     /// </summary>
     internal static class CharsComparer
     {
