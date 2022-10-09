@@ -112,6 +112,7 @@ namespace NUnitLite.Tests
         {
             _textUI.DisplayErrorsFailuresAndWarningsReport(_result);
             var lines = GetReportLines();
+            lines = RemoveInvokeStubLines(lines);
 
             // NOTE: Although this could be done by a very long regular expression,
             // any error messages would be hard to interpret.
@@ -146,6 +147,19 @@ namespace NUnitLite.Tests
                 lines.Add(line);
 
             return lines;
+        }
+
+        private IList<string> RemoveInvokeStubLines(IList<string> lines)
+        {
+            var cleanLines = new List<string>(lines.Count);
+            foreach ( var line in lines )
+            {
+                if ( !line.Contains("InvokeStub_") )
+                {
+                    cleanLines.Add(line);
+                }
+            }
+            return cleanLines;
         }
 
         #endregion
