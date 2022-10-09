@@ -224,7 +224,8 @@ namespace NUnit.Framework.Assertions
         [TestCase(nameof(WarningFixture.WarningInThreadStart), 2)]
         [TestCase(nameof(WarningFixture.WarningInBeginInvoke), 5, ExcludePlatform = "mono", Reason = "Warning has no effect inside BeginInvoke on Mono")]
 #if NET7_0_OR_GREATER
-        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 4)]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 4, ExcludePlatform = "MacOSX")]
+        [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 5, IncludePlatform = "MacOSX")]
 #else
         [TestCase(nameof(WarningFixture.WarningInThreadPoolQueueUserWorkItem), 2)]
 #endif
