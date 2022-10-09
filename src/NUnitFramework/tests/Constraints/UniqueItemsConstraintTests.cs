@@ -1,9 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using static NUnit.Framework.Constraints.UniqueItemsConstraint;

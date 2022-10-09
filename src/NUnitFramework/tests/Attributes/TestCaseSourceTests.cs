@@ -1,9 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;

@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.TestUtilities;
 using NUnit.TestData.SetUpData;

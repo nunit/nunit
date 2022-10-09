@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Globalization;
-using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Interfaces;
