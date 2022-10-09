@@ -6,6 +6,7 @@
     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
     <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
     <NoWarn>$(NoWarn);NU1604</NoWarn>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
