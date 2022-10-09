@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestUtilities.Collections;
-using NUnit.TestUtilities.Comparers;
-
 namespace NUnit.Framework.Assertions
 {
     /// <summary>

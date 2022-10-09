@@ -3,8 +3,6 @@
 using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using NUnit.TestUtilities.Collections;
-using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {

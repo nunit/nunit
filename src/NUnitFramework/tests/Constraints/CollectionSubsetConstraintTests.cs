@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Immutable;
-using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints
 {

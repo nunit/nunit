@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestUtilities.Comparers;
-
 namespace NUnit.Framework.Syntax
 {
     public class UniqueTest : SyntaxTest
