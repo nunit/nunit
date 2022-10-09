@@ -2,7 +2,6 @@
 
 using System.Threading;
 using System.Diagnostics;
-using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 

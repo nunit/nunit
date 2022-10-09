@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Text;
 
 namespace NUnit.Framework.Constraints

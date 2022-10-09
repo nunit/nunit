@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Collections.Concurrent;
-using NUnit.TestData.ParallelExecutionData;
-
 namespace NUnit.Framework.Internal.Execution
 {
     [TestFixtureSource(nameof(GetParallelSuites))]

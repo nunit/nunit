@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Globalization;
-
 #if !NETFRAMEWORK
 #endif
 

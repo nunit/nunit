@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 #if NETSTANDARD2_0
 using System.Runtime.CompilerServices;

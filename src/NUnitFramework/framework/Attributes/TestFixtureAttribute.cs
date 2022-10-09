@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System.Diagnostics.CodeAnalysis;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal.Builders;
 

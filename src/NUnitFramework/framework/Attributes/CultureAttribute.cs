@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-
 namespace NUnit.Framework
 {
     /// <summary>

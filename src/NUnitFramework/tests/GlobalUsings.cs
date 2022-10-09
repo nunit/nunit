@@ -2,6 +2,7 @@
 
 global using System;
 global using System.Collections;
+global using System.Collections.Concurrent;
 global using System.Collections.Generic;
 global using System.Collections.Immutable;
 global using System.Collections.Specialized;
@@ -30,7 +31,9 @@ global using NUnit.Framework.Internal.Filters;
 global using NUnit.TestData;
 global using NUnit.TestData.ActionAttributeTests;
 global using NUnit.TestData.AssertMultipleData;
+global using NUnit.TestData.ParallelExecutionData;
 global using NUnit.TestData.RepeatingTests;
+global using NUnit.TestData.TestFixtureTests;
 global using NUnit.Tests.Assemblies;
 global using NUnit.TestUtilities;
 global using NUnit.TestUtilities.Collections;

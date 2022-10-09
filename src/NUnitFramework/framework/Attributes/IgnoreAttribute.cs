@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System.Globalization;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
