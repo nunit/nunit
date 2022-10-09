@@ -2,7 +2,6 @@
 
 using System.Collections;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Attributes

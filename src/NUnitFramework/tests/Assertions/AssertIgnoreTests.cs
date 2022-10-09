@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;
 
 namespace NUnit.Framework.Assertions

@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.Globalization;
-using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseAttributeFixture;
 using System.Threading.Tasks;
 

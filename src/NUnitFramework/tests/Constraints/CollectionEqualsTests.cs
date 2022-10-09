@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.Collections.Immutable;
-using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints

@@ -2,7 +2,6 @@
 
 using System.Collections;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {

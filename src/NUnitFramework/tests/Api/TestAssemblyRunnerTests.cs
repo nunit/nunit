@@ -1,11 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using NUnit.Compatibility;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;

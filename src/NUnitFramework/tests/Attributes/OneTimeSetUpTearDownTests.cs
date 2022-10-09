@@ -2,7 +2,6 @@
 
 using System.Security.Principal;
 using System.Threading;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 

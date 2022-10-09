@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Diagnostics;
-using System.Reflection;
 using System.Threading;
 using System.Globalization;
 using NUnit.Framework.Constraints;

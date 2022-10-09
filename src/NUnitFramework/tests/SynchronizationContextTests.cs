@@ -2,7 +2,6 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using NUnit.Framework.Internal;
 using NUnit.TestData;
 
 namespace NUnit.Framework
