@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal.Execution;
-using NUnit.TestData;
 
 namespace NUnit.Framework.Attributes
 {

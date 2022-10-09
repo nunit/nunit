@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading.Tasks;
-using NUnit.TestData;
-
 namespace NUnit.Framework
 {
     public static class SynchronizationContextTests

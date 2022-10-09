@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 
-using NUnit.TestData;
-
 namespace NUnit.Framework.Internal.Results
 {
     [TestFixture]

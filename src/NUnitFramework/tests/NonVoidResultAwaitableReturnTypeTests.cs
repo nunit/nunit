@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestData;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
 namespace NUnit.Framework

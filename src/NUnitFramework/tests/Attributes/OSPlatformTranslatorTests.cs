@@ -2,11 +2,6 @@
 
 #nullable enable
 
-#if NET5_0_OR_GREATER
-using System.Linq;
-using System.Runtime.Versioning;
-#endif
-
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]

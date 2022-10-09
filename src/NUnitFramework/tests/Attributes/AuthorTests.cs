@@ -2,8 +2,6 @@
 
 #region Using Directives
 
-using NUnit.TestData;
-
 #endregion
 
 namespace NUnit.Framework.Attributes

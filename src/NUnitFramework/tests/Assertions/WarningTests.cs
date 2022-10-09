@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestData;
-using System.Threading.Tasks;
-
 namespace NUnit.Framework.Assertions
 {
     [TestFixture]
