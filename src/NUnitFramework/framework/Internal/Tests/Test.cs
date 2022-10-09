@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -334,10 +333,10 @@ namespace NUnit.Framework.Internal
         /// <param name="type">The </param>
         public void ApplyAttributesToTest(Type type)
         {
-            foreach (var t in GetNestedTypes(type).Reverse()) 
-                ApplyAttributesToTest((ICustomAttributeProvider) t);
+            foreach (var t in GetNestedTypes(type).Reverse())
+                ApplyAttributesToTest(t);
         }
-        
+
         /// <summary>
         /// Returns all nested types, inner first.
         /// </summary>
