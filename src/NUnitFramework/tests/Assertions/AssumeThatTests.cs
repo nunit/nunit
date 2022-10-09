@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Constraints;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Assertions

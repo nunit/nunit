@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.TestData.TestCaseSourceAttributeFixture;
-using System.Globalization;
 
 namespace NUnit.Framework.Attributes
 {

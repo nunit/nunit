@@ -2,8 +2,6 @@
 
 #region Using Directives
 
-using NUnit.Framework.Constraints;
-
 #endregion
 
 namespace NUnit.Framework.Constraints

@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Diagnostics;
-using System.Globalization;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 using System.Security.Principal;
 using System.Threading.Tasks;
