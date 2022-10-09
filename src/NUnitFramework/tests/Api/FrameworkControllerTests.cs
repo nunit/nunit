@@ -1,9 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Collections;
 using System.Web.UI;
 using NUnit.Compatibility;
-using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api
 {
