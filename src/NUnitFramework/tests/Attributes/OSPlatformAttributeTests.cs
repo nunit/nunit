@@ -20,6 +20,7 @@ namespace NUnit.Framework.Attributes
 
         [SupportedOSPlatform("Windows")]
         [SupportedOSPlatform("Windows10.0")]
+        [SupportedOSPlatform("Windows11.0")]
         [Test]
         public void SupportedBackwardSlashDirectorySeparator()
         {
