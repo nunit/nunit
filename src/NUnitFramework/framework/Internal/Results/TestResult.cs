@@ -383,18 +383,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a count of pending failures (from Multiple Assert)
         /// </summary>
-        public int PendingFailures
-        {
-            get { return AssertionResults.Count(ar => ar.Status == AssertionStatus.Failed); }
-        }
+        public int PendingFailures => AssertionResults.Count(ar => ar.Status == AssertionStatus.Failed);
 
         /// <summary>
         /// Gets the worst assertion status (highest enum) in all the assertion results
         /// </summary>
-        public AssertionStatus WorstAssertionStatus
-        {
-            get { return AssertionResults.Aggregate((ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status; }
-        }
+        public AssertionStatus WorstAssertionStatus => AssertionResults.Aggregate((ar1, ar2) => ar1.Status > ar2.Status ? ar1 : ar2).Status;
 
         #endregion
 

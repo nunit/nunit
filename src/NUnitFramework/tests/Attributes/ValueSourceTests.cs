@@ -49,10 +49,7 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual("InstanceProperty", source);
         }
 
-        IEnumerable InstanceProperty
-        {
-            get { return new object[] { "InstanceProperty" }; }
-        }
+        IEnumerable InstanceProperty => new object[] { "InstanceProperty" };
 
         [Test]
         public void ValueSourceCanBeStaticMethod(

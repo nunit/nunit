@@ -77,18 +77,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Get a representation of the current test.
         /// </summary>
-        public TestAdapter Test
-        {
-            get { return _test ??= new TestAdapter(_testExecutionContext.CurrentTest); }
-        }
+        public TestAdapter Test => _test ??= new(_testExecutionContext.CurrentTest);
 
         /// <summary>
         /// Gets a Representation of the TestResult for the current test.
         /// </summary>
-        public ResultAdapter Result
-        {
-            get { return _result ??= new ResultAdapter(_testExecutionContext.CurrentResult); }
-        }
+        public ResultAdapter Result => _result ??= new(_testExecutionContext.CurrentResult);
 
         /// <summary>
         /// Gets the unique name of the Worker that is executing this test.

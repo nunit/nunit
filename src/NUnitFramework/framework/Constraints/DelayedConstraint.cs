@@ -211,10 +211,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return $"{BaseConstraint.Description} after {DelayInterval} delay"; }
-        }
+        public override string Description => $"{BaseConstraint.Description} after {DelayInterval} delay";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

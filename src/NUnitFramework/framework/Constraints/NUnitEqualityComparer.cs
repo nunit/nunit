@@ -108,10 +108,7 @@ namespace NUnit.Framework.Constraints
         /// test for equality. They are applied to members of
         /// collections, in place of NUnit's own logic.
         /// </summary>
-        public IList<EqualityAdapter> ExternalComparers
-        {
-            get { return _externalComparers ??= new List<EqualityAdapter>(); }
-        }
+        public IList<EqualityAdapter> ExternalComparers => _externalComparers ??= new();
 
         /// <summary>
         /// Gets the list of failure points for the last Match performed.
