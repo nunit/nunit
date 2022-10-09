@@ -2,8 +2,6 @@
 
 #region Using Directives
 
-using NUnit.Framework;
-
 #endregion
 
 namespace NUnit.Framework.Attributes

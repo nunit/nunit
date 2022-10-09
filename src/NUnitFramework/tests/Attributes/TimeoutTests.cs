@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Globalization;
-using System.Threading;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.TestData;
 

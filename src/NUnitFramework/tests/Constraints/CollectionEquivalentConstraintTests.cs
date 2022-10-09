@@ -3,7 +3,6 @@
 using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Threading;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 

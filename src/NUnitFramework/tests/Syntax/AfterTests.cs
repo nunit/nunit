@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading;
-
 namespace NUnit.Framework.Syntax
 {
     // NOTE: The tests in this file ensure that the various

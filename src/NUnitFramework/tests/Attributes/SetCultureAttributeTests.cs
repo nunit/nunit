@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading;
 using System.Globalization;
-using NUnit.Framework;
 using NUnit.TestData.CultureAttributeData;
 
 namespace NUnit.Framework.Attributes
