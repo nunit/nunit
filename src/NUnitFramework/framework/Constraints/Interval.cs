@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0} {1}{2}", _value, _mode.ToString().ToLower(), _value > 1 ? "s" : string.Empty);
+            return $"{_value} {_mode.ToString().ToLower()}{(_value > 1 ? "s" : string.Empty)}";
         }
 
         /// <summary>

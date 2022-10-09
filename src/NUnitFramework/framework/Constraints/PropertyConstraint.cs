@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<property {0} {1}>", name, BaseConstraint);
+            return $"<property {name} {BaseConstraint}>";
         }
     }
 }

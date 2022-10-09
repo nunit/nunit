@@ -40,8 +40,7 @@ namespace NUnit.Framework.Internal.Commands
 
                     if (elapsedTime > maxTime)
                         result.SetResult(ResultState.Failure,
-                            string.Format("Elapsed time of {0}ms exceeds maximum of {1}ms",
-                                elapsedTime, maxTime));
+                            $"Elapsed time of {elapsedTime}ms exceeds maximum of {maxTime}ms");
                 }
             };
         }

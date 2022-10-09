@@ -110,8 +110,10 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
-                Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
+            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeedValue))
+            {
+                Randomizer.InitialSeed = (int)randomSeedValue;
+            }
 
             WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assemblyNameOrPath, settings));
             return LoadedTest;
@@ -128,8 +130,10 @@ namespace NUnit.Framework.Api
         {
             Settings = settings;
 
-            if (settings.ContainsKey(FrameworkPackageSettings.RandomSeed))
-                Randomizer.InitialSeed = (int)settings[FrameworkPackageSettings.RandomSeed];
+            if (settings.TryGetValue(FrameworkPackageSettings.RandomSeed, out var randomSeed))
+            {
+                Randomizer.InitialSeed = (int)randomSeed;
+            }
 
             WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assembly, settings));
             return LoadedTest;
@@ -247,7 +251,8 @@ namespace NUnit.Framework.Api
             Console.SetError(new EventListenerTextWriter("Error", Console.Error));
 
             // Queue and pump events, unless settings have SynchronousEvents == false
-            if (!Settings.ContainsKey(FrameworkPackageSettings.SynchronousEvents) || !(bool)Settings[FrameworkPackageSettings.SynchronousEvents])
+            if (!Settings.TryGetValue(FrameworkPackageSettings.SynchronousEvents, out var synchronousEvents) ||
+                !(bool)synchronousEvents)
             {
                 QueuingEventListener queue = new QueuingEventListener();
                 Context.Listener = queue;
@@ -256,13 +261,13 @@ namespace NUnit.Framework.Api
                 _pump.Start();
             }
 
-            if (!System.Diagnostics.Debugger.IsAttached &&
-                Settings.ContainsKey(FrameworkPackageSettings.DebugTests) &&
-                (bool)Settings[FrameworkPackageSettings.DebugTests])
+            if (!Debugger.IsAttached &&
+                Settings.TryGetValue(FrameworkPackageSettings.DebugTests, out var debugTests) &&
+                (bool)debugTests)
             {
                 try
                 {
-                    System.Diagnostics.Debugger.Launch();
+                    Debugger.Launch();
                 }
                 catch (SecurityException)
                 {
@@ -278,8 +283,8 @@ namespace NUnit.Framework.Api
             }
 
 #if NETFRAMEWORK
-            if (Settings.ContainsKey(FrameworkPackageSettings.PauseBeforeRun) &&
-                (bool)Settings[FrameworkPackageSettings.PauseBeforeRun])
+            if (Settings.TryGetValue(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
+                (bool)pauseBeforeRun)
                 PauseBeforeRun();
 #endif
 
@@ -295,14 +300,14 @@ namespace NUnit.Framework.Api
             Context = new TestExecutionContext();
 
             // Apply package settings to the context
-            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultTimeout))
-                Context.TestCaseTimeout = (int)Settings[FrameworkPackageSettings.DefaultTimeout];
-            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultCulture))
-                Context.CurrentCulture = new CultureInfo((string)Settings[FrameworkPackageSettings.DefaultCulture], false);
-            if (Settings.ContainsKey(FrameworkPackageSettings.DefaultUICulture))
-                Context.CurrentUICulture = new CultureInfo((string)Settings[FrameworkPackageSettings.DefaultUICulture], false);
-            if (Settings.ContainsKey(FrameworkPackageSettings.StopOnError))
-                Context.StopOnError = (bool)Settings[FrameworkPackageSettings.StopOnError];
+            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
+                Context.TestCaseTimeout = (int)timeout;
+            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
+                Context.CurrentCulture = new CultureInfo((string)culture, false);
+            if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
+                Context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
+            if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
+                Context.StopOnError = (bool)stopOnError;
 
             // Apply attributes to the context
 
@@ -311,8 +316,8 @@ namespace NUnit.Framework.Api
 
             int levelOfParallelism = GetLevelOfParallelism();
 
-            if (Settings.ContainsKey(FrameworkPackageSettings.RunOnMainThread) &&
-                (bool)Settings[FrameworkPackageSettings.RunOnMainThread])
+            if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
+                (bool)runOnMainThread)
                 Context.Dispatcher = new MainThreadWorkItemDispatcher();
             else if (levelOfParallelism > 0)
                 Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
@@ -350,11 +355,11 @@ namespace NUnit.Framework.Api
 
         private int GetLevelOfParallelism()
         {
-            return Settings.ContainsKey(FrameworkPackageSettings.NumberOfTestWorkers)
-                ? (int)Settings[FrameworkPackageSettings.NumberOfTestWorkers]
-                : (LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
+            return Settings.TryGetValue(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
+                ? (int)numberOfTestWorkers
+                : LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
                    ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
-                   : NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
+                   : NUnitTestAssemblyRunner.DefaultLevelOfParallelism;
         }
 
 #if NETFRAMEWORK

@@ -34,7 +34,10 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Indicates whether this work item should use a separate dispatcher.
         /// </summary>
-        public override bool IsolateChildTests => ExecutionStrategy == ParallelExecutionStrategy.NonParallel && Context.Dispatcher.LevelOfParallelism > 0;
+        public override bool IsolateChildTests
+        {
+            get { return ExecutionStrategy == ParallelExecutionStrategy.NonParallel && Context.Dispatcher.LevelOfParallelism > 0; }
+        }
 
         private CountdownEvent _childTestCountdown;
 
@@ -423,12 +426,18 @@ namespace NUnit.Framework.Internal.Execution
             /// <summary>
             /// The WorkItem name, overridden to indicate this is the teardown.
             /// </summary>
-            public override string Name => string.Format("{0} OneTimeTearDown", base.Name);
+            public override string Name
+            {
+                get { return $"{base.Name} OneTimeTearDown"; }
+            }
 
             /// <summary>
             /// The ExecutionStrategy for use in running this work item
             /// </summary>
-            public override ParallelExecutionStrategy ExecutionStrategy => _originalWorkItem.ExecutionStrategy;
+            public override ParallelExecutionStrategy ExecutionStrategy
+            {
+                get { return _originalWorkItem.ExecutionStrategy; }
+            }
 
             /// <summary>
             ///

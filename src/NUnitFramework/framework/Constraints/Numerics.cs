@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// The Numerics class contains common operations on numeric values.
     /// </summary>
-    public static class Numerics
+    internal static class Numerics
     {
         #region Numeric Type Recognition
         /// <summary>

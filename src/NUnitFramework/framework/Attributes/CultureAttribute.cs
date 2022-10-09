@@ -60,13 +60,13 @@ namespace NUnit.Framework
         {
             if (Include != null && !cultureDetector.IsCultureSupported(Include))
             {
-                reason = string.Format("Only supported under culture {0}", Include);
+                reason = $"Only supported under culture {Include}";
                 return false;
             }
 
             if (Exclude != null && cultureDetector.IsCultureSupported(Exclude))
             {
-                reason = string.Format("Not supported under culture {0}", Exclude);
+                reason = $"Not supported under culture {Exclude}";
                 return false;
             }
 

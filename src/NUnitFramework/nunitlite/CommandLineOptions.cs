@@ -260,7 +260,7 @@ namespace NUnit.Common
             }
 
             if (!isValid)
-                ErrorMessages.Add(string.Format("The value '{0}' is not valid for option '{1}'.", val, option));
+                ErrorMessages.Add($"The value '{val}' is not valid for option '{option}'.");
 
             return val;
         }

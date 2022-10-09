@@ -211,7 +211,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description => string.Format("{0} after {1} delay", BaseConstraint.Description, DelayInterval);
+        public override string Description
+        {
+            get { return $"{BaseConstraint.Description} after {DelayInterval} delay"; }
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -336,7 +339,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<after {0} {1}>", DelayInterval.AsTimeSpan.TotalMilliseconds, BaseConstraint);
+            return $"<after {DelayInterval.AsTimeSpan.TotalMilliseconds} {BaseConstraint}>";
         }
 
         /// <summary>

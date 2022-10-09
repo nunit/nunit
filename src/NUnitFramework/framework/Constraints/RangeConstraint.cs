@@ -31,7 +31,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description => string.Format("in range ({0},{1})", from, to);
+        public override string Description
+        {
+            get { return $"in range ({from},{to})"; }
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

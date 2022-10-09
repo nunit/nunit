@@ -18,7 +18,7 @@ namespace NUnit.Framework
     /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures
     /// under a given namespace.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class SetUpFixtureAttribute : NUnitAttribute, IFixtureBuilder
     {
         #region ISuiteBuilder Members
@@ -53,13 +53,13 @@ namespace NUnit.Framework
             {
                 if (typeInfo.IsAbstract)
                 {
-                    reason = string.Format("{0} is an abstract class", typeInfo.FullName);
+                    reason = $"{typeInfo.FullName} is an abstract class";
                     return false;
                 }
 
                 if (!typeInfo.HasConstructor(Array.Empty<Type>()))
                 {
-                    reason = string.Format("{0} does not have a default constructor", typeInfo.FullName);
+                    reason = $"{typeInfo.FullName} does not have a default constructor";
                     return false;
                 }
             }

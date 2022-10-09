@@ -30,7 +30,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_BooleanWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assume.That(2 + 2 == 4, getExceptionMessage);
         }
 
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_BooleanLambdaWithWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assume.That(() => 2 + 2 == 4, getExceptionMessage);
         }
 
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_ActualAndConstraintWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assume.That(2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
 
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_ActualLambdaAndConstraintWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assume.That(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
 
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumptionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assume.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
         }
 

@@ -612,7 +612,7 @@ namespace NUnit.Framework.Internal
 
             int counter = 0;
             foreach (var assertion in AssertionResults)
-                writer.WriteLine(string.Format("  {0}) {1}", ++counter, assertion.Message));
+                writer.WriteLine($"  {++counter}) {assertion.Message}");
 
             return writer.ToString();
         }

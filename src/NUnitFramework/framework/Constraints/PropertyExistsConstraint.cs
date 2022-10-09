@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override string GetStringRepresentation()
         {
-            return string.Format("<propertyexists {0}>", name);
+            return $"<propertyexists {name}>";
         }
     }
 }
