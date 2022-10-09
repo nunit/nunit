@@ -5,7 +5,6 @@ using System.Threading;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

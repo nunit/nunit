@@ -2,8 +2,6 @@
 
 #region Using Directives
 
-using NUnit.TestUtilities;
-
 #endregion
 
 namespace NUnit.Framework.Assertions

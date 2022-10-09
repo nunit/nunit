@@ -2,7 +2,6 @@
 
 using System.Threading;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

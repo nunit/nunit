@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 using NUnit.Tests.Assemblies;
 
 namespace NUnit.Framework.Api

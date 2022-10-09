@@ -3,7 +3,6 @@
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Assertions

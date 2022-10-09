@@ -3,7 +3,6 @@
 using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

@@ -3,7 +3,6 @@
 using System.Collections;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {

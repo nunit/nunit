@@ -6,3 +6,5 @@ global using System.IO;
 global using System.Linq;
 global using System.Numerics;
 global using NUnit.Framework.Interfaces;
+global using NUnit.TestData.AssertMultipleData;
+global using NUnit.TestUtilities;

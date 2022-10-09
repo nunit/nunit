@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.Collections.Specialized;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {

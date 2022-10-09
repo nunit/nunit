@@ -2,7 +2,6 @@
 
 using System.Threading;
 using NUnit.Framework.Internal.Abstractions;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {

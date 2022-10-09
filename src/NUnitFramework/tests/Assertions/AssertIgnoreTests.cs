@@ -2,7 +2,6 @@
 
 using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {

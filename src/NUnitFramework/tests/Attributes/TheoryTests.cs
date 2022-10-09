@@ -2,7 +2,6 @@
 
 using System.Reflection;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;
 
 namespace NUnit.Framework.Attributes

@@ -2,7 +2,6 @@
 
 
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Results
 {

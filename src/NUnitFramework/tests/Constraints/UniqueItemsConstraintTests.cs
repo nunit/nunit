@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.Diagnostics;
-using NUnit.TestUtilities;
 using NUnit.TestUtilities.Collections;
 using static NUnit.Framework.Constraints.UniqueItemsConstraint;
 

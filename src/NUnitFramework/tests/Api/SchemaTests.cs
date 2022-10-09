@@ -2,7 +2,6 @@
 
 using System.Xml.Linq;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
 {

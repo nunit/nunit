@@ -4,7 +4,6 @@
 
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 #endregion
 
