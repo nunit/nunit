@@ -4,7 +4,6 @@ using System.Collections;
 using System.Reflection;
 using System.Web.UI;
 using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 using NUnit.Tests.Assemblies;

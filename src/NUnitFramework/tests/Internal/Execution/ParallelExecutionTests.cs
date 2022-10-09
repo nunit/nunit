@@ -3,7 +3,6 @@
 using System.Collections.Concurrent;
 using System.Text;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData.ParallelExecutionData;
 using NUnit.TestUtilities;
 

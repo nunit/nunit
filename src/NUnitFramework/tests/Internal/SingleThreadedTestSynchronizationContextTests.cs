@@ -2,7 +2,6 @@
 
 using System.Diagnostics;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal

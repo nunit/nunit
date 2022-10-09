@@ -2,7 +2,6 @@
 
 using System.Collections;
 using System.Reflection;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;

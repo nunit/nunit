@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
 using NUnit.Framework.Api;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.ActionAttributeTests;
 

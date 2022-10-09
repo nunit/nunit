@@ -4,7 +4,6 @@ using System.Reflection;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Attributes
 {
