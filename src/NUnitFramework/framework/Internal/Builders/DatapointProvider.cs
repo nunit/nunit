@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using NUnit.Compatibility;
-
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>

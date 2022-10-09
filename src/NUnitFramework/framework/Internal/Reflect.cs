@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System.Linq;
 using System.Runtime.ExceptionServices;
 
 namespace NUnit.Framework.Internal

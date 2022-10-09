@@ -3,7 +3,6 @@
 #nullable enable
 
 using System.Text;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {

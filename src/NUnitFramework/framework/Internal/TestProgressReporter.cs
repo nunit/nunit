@@ -3,7 +3,6 @@
 #nullable enable
 
 using System.Web.UI;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {

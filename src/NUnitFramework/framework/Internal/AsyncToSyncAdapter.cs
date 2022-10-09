@@ -1,9 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Linq;
 using System.Security;
 using System.Threading;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {

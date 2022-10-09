@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System.Linq;
-using NUnit.Compatibility;
-
 namespace NUnit.Framework
 {
     /// <summary>

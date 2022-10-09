@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Linq;
-
 namespace NUnit.Framework.Internal
 {
     internal abstract class ValueGenerator<T> : ValueGenerator

@@ -1,10 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Linq;
 using System.Diagnostics;
 using System.Security;
 using System.Web.UI;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Api
 {

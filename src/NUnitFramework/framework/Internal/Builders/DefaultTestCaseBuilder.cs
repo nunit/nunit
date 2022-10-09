@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Linq;
-
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>

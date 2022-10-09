@@ -2,7 +2,6 @@
 
 using System.Diagnostics;
 using System.Threading;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints
 {

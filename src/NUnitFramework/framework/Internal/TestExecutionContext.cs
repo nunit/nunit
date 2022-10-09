@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
-using NUnit.Compatibility;
 
 #if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
