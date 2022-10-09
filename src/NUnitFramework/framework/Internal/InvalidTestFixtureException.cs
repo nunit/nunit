@@ -2,7 +2,6 @@
 
 namespace NUnit.Framework.Internal
 {
-    using System;
     using System.Runtime.Serialization;
 
     /// <summary>

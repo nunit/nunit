@@ -2,10 +2,6 @@
 
 #nullable enable
 
-using System;
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
-
 namespace NUnit.Framework
 {
     public partial class Assert

@@ -2,16 +2,11 @@
 
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Compatibility;
 
 namespace NUnit.Framework
 {
     using System.Diagnostics.CodeAnalysis;
-    using Interfaces;
-    using Internal;
 
     /// <summary>
     /// Identifies a class as containing <see cref="OneTimeSetUpAttribute" /> or

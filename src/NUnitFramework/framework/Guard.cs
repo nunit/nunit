@@ -2,11 +2,8 @@
 
 #nullable enable
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using NUnit.Compatibility;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {

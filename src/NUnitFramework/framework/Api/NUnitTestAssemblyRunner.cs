@@ -1,13 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Reflection;
 using System.Threading;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-using NUnit.Framework.Internal.Execution;
-using System.Collections.Generic;
-using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using System.Security;

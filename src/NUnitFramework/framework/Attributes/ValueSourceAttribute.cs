@@ -2,12 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Collections;
-using System.Reflection;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-
 namespace NUnit.Framework
 {
     /// <summary>

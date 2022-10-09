@@ -2,13 +2,7 @@
 
 #nullable enable
 
-using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {

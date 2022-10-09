@@ -2,13 +2,9 @@
 
 #nullable enable
 
-using System;
-using System.Collections;
-using System.ComponentModel;
 using System.Globalization;
 
 #if !NETFRAMEWORK
-using System.Reflection;
 #endif
 
 namespace NUnit.Framework.Internal

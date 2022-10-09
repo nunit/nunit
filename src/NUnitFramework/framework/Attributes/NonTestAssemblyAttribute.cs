@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.ComponentModel;
-
 namespace NUnit.Framework
 {
     /// <summary>

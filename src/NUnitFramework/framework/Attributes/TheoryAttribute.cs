@@ -2,11 +2,8 @@
 
 #nullable enable
 
-using System;
-
 namespace NUnit.Framework
 {
-    using Interfaces;
     using Internal.Builders;
 
     /// <summary>

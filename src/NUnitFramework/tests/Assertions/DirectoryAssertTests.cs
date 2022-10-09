@@ -2,7 +2,6 @@
 
 #region Using Directives
 
-using System;
 using System.IO;
 using NUnit.TestUtilities;
 

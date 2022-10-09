@@ -2,12 +2,8 @@
 
 #nullable enable
 
-using System;
-
 namespace NUnit.Framework
 {
-    using Interfaces;
-
     /// <summary>
     /// Abstract attribute providing actions to execute before and after tests.
     /// </summary>

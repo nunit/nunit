@@ -2,14 +2,8 @@
 
 #nullable enable
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace NUnit.Framework
 {
-    using Interfaces;
-    using Internal;
     using Internal.Builders;
 
     /// <summary>

@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Reflection;
 using NUnit.Compatibility;
 
 namespace NUnit.Framework.Interfaces

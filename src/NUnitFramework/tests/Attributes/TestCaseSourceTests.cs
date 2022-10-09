@@ -8,7 +8,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
-using System;
 using System.Globalization;
 
 namespace NUnit.Framework.Attributes

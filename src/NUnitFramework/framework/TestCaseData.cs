@@ -1,10 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System;
 using System.Globalization;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {

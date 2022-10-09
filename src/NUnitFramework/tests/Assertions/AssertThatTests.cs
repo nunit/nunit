@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 namespace NUnit.Framework.Assertions
 {
-    using System;
-
     [TestFixture]
     public class AssertThatTests
     {

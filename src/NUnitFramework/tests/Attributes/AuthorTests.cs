@@ -2,7 +2,6 @@
 
 #region Using Directives
 
-using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;

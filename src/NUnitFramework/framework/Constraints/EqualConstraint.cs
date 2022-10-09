@@ -1,9 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Compatibility;
 using NUnit.Framework.Constraints.Comparers;
 

@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security;
 using System.Threading.Tasks;

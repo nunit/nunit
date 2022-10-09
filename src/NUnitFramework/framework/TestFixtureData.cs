@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-
 namespace NUnit.Framework
 {
     /// <summary>

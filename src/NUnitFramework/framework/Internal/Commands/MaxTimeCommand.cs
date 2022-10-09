@@ -1,9 +1,8 @@
  // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Diagnostics;
-using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Internal.Commands
+ namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
     /// <see cref="MaxTimeCommand" /> adjusts the result of a successful test

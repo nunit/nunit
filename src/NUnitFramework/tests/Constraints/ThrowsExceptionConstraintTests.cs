@@ -2,7 +2,6 @@
 
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
-using System;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Constraints

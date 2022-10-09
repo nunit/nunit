@@ -4,8 +4,6 @@
 
 namespace NUnit.Framework
 {
-    using System;
-
     /// <summary>
     /// Identifies a method to be called immediately before each test is run.
     /// </summary>

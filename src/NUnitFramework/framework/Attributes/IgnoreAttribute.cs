@@ -2,10 +2,7 @@
 
 #nullable enable
 
-using System;
 using System.Globalization;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
