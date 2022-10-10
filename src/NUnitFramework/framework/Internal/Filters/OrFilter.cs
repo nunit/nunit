@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -97,11 +99,7 @@ namespace NUnit.Framework.Internal.Filters
                 return _fullNames.Contains(test.FullName);
             }
 
-            foreach( TestFilter filter in Filters )
-                if ( filter.Match( test ) )
-                    return true;
-
-            return false;
+            return Filters.Any(filter => filter.Match(test));
         }
 
         /// <summary>
@@ -111,20 +109,13 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters explicit match, otherwise false</returns>
         public override bool IsExplicitMatch( ITest test )
         {
-            foreach( TestFilter filter in Filters )
-                if ( filter.IsExplicitMatch( test ) )
-                    return true;
-
-            return false;
+            return Filters.Any(filter => filter.IsExplicitMatch(test));
         }
 
         /// <summary>
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "or"; }
-        }
+        protected override string ElementName => "or";
     }
 }
