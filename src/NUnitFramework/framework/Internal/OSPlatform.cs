@@ -589,6 +589,14 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Return true if the platform is Windows 10
+        /// </summary>
+        public bool IsWindows11
+        {
+            get { return Platform == PlatformID.Win32NT && Version.Major == 11 && Product == ProductType.WorkStation; }
+        }
+
+        /// <summary>
         /// Return true if the platform is Windows Server. This is named Windows
         /// Server 10 to distinguish it from previous versions of Windows Server.
         /// </summary>
