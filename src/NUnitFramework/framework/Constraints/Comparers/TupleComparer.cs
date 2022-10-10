@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
 using NUnit.Framework.Internal;
 
@@ -22,6 +23,5 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
             => TupleComparerBase.Equal(x, y, ref tolerance, state, equalityComparer, IsCorrectType, GetValue);
-
     }
 }
