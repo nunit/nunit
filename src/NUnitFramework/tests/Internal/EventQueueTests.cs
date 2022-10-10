@@ -133,42 +133,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        [TestFixture]
-        public class SetWaitHandle_Enqueue_AsynchronousTest : ProducerConsumerTest
-        {
-            private EventQueue q;
-            private volatile bool afterEnqueue;
-
-            [Test]
-#if THREAD_ABORT
-            [Timeout(1000)]
-#endif
-            public void SetWaitHandle_Enqueue_Asynchronous()
-            {
-                using (new AutoResetEvent(false))
-                {
-                    this.q = new EventQueue();
-                    this.afterEnqueue = false;
-                    this.RunProducerConsumer();
-                }
-            }
-
-            protected override void Producer()
-            {
-                Event asynchronousEvent = new TestStartedEvent(new TestSuite("Dummy"));
-                this.q.Enqueue(asynchronousEvent);
-                this.afterEnqueue = true;
-                Thread.MemoryBarrier();
-            }
-
-            protected override void Consumer()
-            {
-                this.q.Dequeue(true);
-                Thread.Sleep(30);
-                Assert.IsTrue(this.afterEnqueue);
-            }
-        }
-
         #endregion
 
         #region QueuingEventListener Tests
