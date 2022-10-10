@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal.Filters
     internal class OrFilter : CompositeFilter
     {
         private readonly bool _matchFullName;
-        private readonly HashSet<string> _fullNames;
+        private readonly HashSet<string> _fullNames = new();
 
         /// <summary>
         /// Constructs an empty OrFilter
@@ -35,7 +35,6 @@ namespace NUnit.Framework.Internal.Filters
             {
                 if (filter is FullNameFilter {IsRegex: false} fullNameFilter)
                 {
-                    _fullNames ??= new HashSet<string>();
                     _fullNames.Add(fullNameFilter.ExpectedValue);
                 }
                 else
