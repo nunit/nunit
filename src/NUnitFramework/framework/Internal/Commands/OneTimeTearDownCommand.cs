@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
-using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestSuite, "OneTimeTearDownCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(setUpTearDownItem, nameof(setUpTearDownItem));
 
-            AfterTest = (context) =>
+            AfterTest = context =>
             {
                 TestResult suiteResult = context.CurrentResult;
 
