@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System.Collections;
 using System.Collections.Specialized;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace NUnit.Framework.Internal.Extensions
 {
     internal static class IEnumerableExtensions
     {
-        public static bool IsSortable(this IEnumerable collection)
+        public static bool IsSortable(this IEnumerable? collection)
         {
             if (collection is null)
                 return false;
@@ -20,16 +21,12 @@ namespace NUnit.Framework.Internal.Extensions
 
             var @interface = collectionType
                 .GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && 
-                    i.Namespace == "System.Collections.Generic" && 
+                .FirstOrDefault(i => i.IsGenericType &&
+                    i.Namespace == "System.Collections.Generic" &&
                     i.Name == "IEnumerable`1");
 
-            if (@interface is null)
-                return false;
-
-            var itemType = @interface
-                .GetGenericArguments()
-                .FirstOrDefault();
+            var itemType = @interface?.GetGenericArguments()
+                                     .FirstOrDefault();
 
             if (itemType is null)
                 return false;
