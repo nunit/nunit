@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
+#nullable enable
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -23,7 +21,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestSuite, "BeforeTestActionCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
-            AfterTest = (context) =>
+            AfterTest = context =>
             {
                 if (action.BeforeTestWasRun)
                 {
@@ -35,7 +33,7 @@ namespace NUnit.Framework.Internal.Commands
                     // in teardown. Redo test completion so they are listed properly.
                     if (context.CurrentResult.AssertionResults.Count > oldCount)
                         context.CurrentResult.RecordTestCompletion();
-                };
+                }
             };
         }
     }

@@ -1,13 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
+#nullable enable
 
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionBeforeCommand handles the BeforeTest method of a single 
+    /// TestActionBeforeCommand handles the BeforeTest method of a single
     /// TestActionItem, relying on the item to remember it has been run.
     /// </summary>
     public class BeforeTestActionCommand : BeforeTestCommand
@@ -23,7 +21,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(innerCommand.Test is TestSuite, "TestActionBeforeCommand may only apply to a TestSuite", nameof(innerCommand));
             Guard.ArgumentNotNull(action, nameof(action));
 
-            BeforeTest = (context) =>
+            BeforeTest = context =>
             {
                 action.BeforeTest(Test);
             };

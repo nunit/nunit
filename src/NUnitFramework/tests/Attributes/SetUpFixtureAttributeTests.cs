@@ -61,6 +61,15 @@ namespace NUnit.Framework.Attributes
                 Assert.That(fixture.RunState, Is.EqualTo(RunState.Runnable));
         }
 
+        [Test]
+        public void AttributeUsage_NoInheritance()
+        {
+            var usageAttrib = Attribute.GetCustomAttribute(typeof(SetUpFixtureAttribute), typeof(AttributeUsageAttribute)) as AttributeUsageAttribute;
+
+            Assert.NotNull(usageAttrib);
+            Assert.False(usageAttrib.Inherited);
+        }
+
         private static class StaticSetupClass
         {
             [OneTimeSetUp]
