@@ -589,7 +589,7 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
-        /// Return true if the platform is Windows 10
+        /// Return true if the platform is Windows 11
         /// </summary>
         public bool IsWindows11
         {

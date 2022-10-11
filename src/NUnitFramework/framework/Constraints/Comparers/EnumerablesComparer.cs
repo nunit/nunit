@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
 using System.Collections;
 
@@ -12,7 +13,7 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!(x is IEnumerable xIEnumerable) || !(y is IEnumerable yIEnumerable))
+            if (x is not IEnumerable xIEnumerable || y is not IEnumerable yIEnumerable)
                 return null;
 
             var expectedEnum = xIEnumerable.GetEnumerator();

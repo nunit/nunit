@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -18,10 +17,7 @@ namespace NUnit.Framework.Internal.Commands
         public ApplyChangesToContextCommand(TestCommand innerCommand, IApplyToContext change)
             : base(innerCommand)
         {
-            BeforeTest = (context) =>
-            {
-                change.ApplyToContext(context);
-            };
+            BeforeTest = change.ApplyToContext;
         }
     }
 }

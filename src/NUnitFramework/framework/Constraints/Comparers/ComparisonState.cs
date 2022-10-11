@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -9,7 +10,7 @@ namespace NUnit.Framework.Constraints.Comparers
         /// <summary>
         /// Flag indicating whether or not this is the top level comparison.
         /// </summary>
-        public readonly bool TopLevelComparison { get; }
+        public bool TopLevelComparison { get; }
 
         /// <summary>
         /// A list of tracked comparisons
@@ -46,8 +47,8 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private readonly struct Comparison
         {
-            public readonly object X { get; }
-            public readonly object Y { get; }
+            public object X { get; }
+            public object Y { get; }
 
             public Comparison(object x, object y)
             {

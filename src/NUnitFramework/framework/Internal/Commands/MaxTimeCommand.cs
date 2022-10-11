@@ -1,5 +1,7 @@
  // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System.Diagnostics;
 using NUnit.Framework.Interfaces;
 
@@ -20,10 +22,10 @@ namespace NUnit.Framework.Internal.Commands
         public MaxTimeCommand(TestCommand innerCommand, int maxTime)
             : base(innerCommand)
         {
-            AfterTest = (context) =>
+            AfterTest = context =>
             {
                 // TODO: This command duplicates the calculation of the
-                // duration of the test because that calculation is 
+                // duration of the test because that calculation is
                 // normally performed at a higher level. Most likely,
                 // we should move the maxtime calculation to the
                 // higher level eventually.
