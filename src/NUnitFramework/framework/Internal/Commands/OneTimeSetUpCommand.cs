@@ -1,5 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -19,7 +21,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentValid(Test is TestSuite && Test.TypeInfo != null,
                 "OneTimeSetUpCommand must reference a TestFixture or SetUpFixture", nameof(innerCommand));
 
-            BeforeTest = (context) =>
+            BeforeTest = context =>
             {
                 setUpTearDown.RunSetUp(context);
             };

@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
@@ -23,7 +25,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="test">The test to be executed</param>
         public TestCommand(Test test)
         {
-            this.Test = test;
+            Test = test;
         }
 
         #region Public Methods
