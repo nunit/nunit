@@ -193,7 +193,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-            log.Debug("Found {0} fixtures with {1} test cases in {2} seconds", fixtures.Count, testcases, timer.Elapsed);
+            log.Debug("Found {0} fixtures with {1} test cases in {2}ms", fixtures.Count, testcases, timer.ElapsedMilliseconds);
 
             return fixtures;
         }
