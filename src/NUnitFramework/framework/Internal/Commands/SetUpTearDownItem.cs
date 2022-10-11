@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
@@ -14,7 +15,7 @@ namespace NUnit.Framework.Internal.Commands
     /// </summary>
     public class SetUpTearDownItem
     {
-        private readonly IMethodValidator _methodValidator;
+        private readonly IMethodValidator? _methodValidator;
         private readonly IList<IMethodInfo> _setUpMethods;
         private readonly IList<IMethodInfo> _tearDownMethods;
         private bool _setUpWasRun;
@@ -26,9 +27,9 @@ namespace NUnit.Framework.Internal.Commands
         /// <param name="tearDownMethods">A list teardown methods for this level</param>
         /// <param name="methodValidator">A method validator to validate each method before calling.</param>
         public SetUpTearDownItem(
-            IList<IMethodInfo> setUpMethods, 
-            IList<IMethodInfo> tearDownMethods, 
-            IMethodValidator methodValidator = null)
+            IList<IMethodInfo> setUpMethods,
+            IList<IMethodInfo> tearDownMethods,
+            IMethodValidator? methodValidator = null)
         {
             _setUpMethods = setUpMethods;
             _tearDownMethods = tearDownMethods;
@@ -72,7 +73,7 @@ namespace NUnit.Framework.Internal.Commands
 
                     // Even though we are only running one level at a time, we
                     // run the teardowns in reverse order to provide consistency.
-                    int index = _tearDownMethods.Count;
+                    var index = _tearDownMethods.Count;
                     while (--index >= 0)
                         RunSetUpOrTearDownMethod(context, _tearDownMethods[index]);
 
@@ -100,7 +101,7 @@ namespace NUnit.Framework.Internal.Commands
 
         private static object InvokeMethod(IMethodInfo method, TestExecutionContext context)
         {
-            return method.Invoke(method.IsStatic ? null : context.TestObject, null);
+            return method.Invoke(method.IsStatic ? null : context.TestObject, null)!;
         }
     }
 }

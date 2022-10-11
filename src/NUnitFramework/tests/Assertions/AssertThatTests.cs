@@ -35,7 +35,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertionPasses_BooleanWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assert.That(2 + 2 == 4, getExceptionMessage);
         }
 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertionPasses_ActualAndConstraintWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assert.That(2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
 
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertionPasses_ActualLambdaAndConstraintWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assert.That(() => 2 + 2, Is.EqualTo(4), getExceptionMessage);
         }
 
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
         }
 
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void FailureThrowsAssertionException_BooleanWithMessageStringFunc()
         {
-            Func<string> getExceptionMessage = () => string.Format("Not Equal to {0}", 4);
+            Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("Not Equal to 4"));
         }

@@ -573,7 +573,7 @@ namespace NUnit.Framework.Internal.Builders
 
                                 if ( !IsTupleCovered( testCases, tuple ) )
                                 {
-                                    throw new InvalidOperationException( string.Format( "PairwiseStrategy : Not all pairs are covered : {0}", tuple.ToString() ) );
+                                    throw new InvalidOperationException($"PairwiseStrategy : Not all pairs are covered : {tuple}");
                                 }
                             }
                         }

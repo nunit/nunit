@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type)
         {
-            ConstructorInfo ctor = type.GetConstructor(Array.Empty<Type>());
+            ConstructorInfo? ctor = type.GetConstructor(Array.Empty<Type>());
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a default constructor");
 
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
             if (arguments == null) return Construct(type);
 
             Type?[] argTypes = GetTypeArray(arguments);
-            ConstructorInfo ctor = GetConstructors(type, argTypes).FirstOrDefault();
+            ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
             if (ctor == null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal
                 return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
-            if (convertibleValueTypes.ContainsKey(to) && convertibleValueTypes[to].Contains(from))
+            if (convertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
                 return true;
 
             return from
@@ -187,34 +187,29 @@ namespace NUnit.Framework.Internal
         [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
         public static object? InvokeMethod(MethodInfo method, object? fixture, params object?[]? args)
         {
-            if (method != null)
+            try
             {
-                try
-                {
-                    return method.Invoke(fixture, args);
-                }
-                catch (TargetInvocationException e)
-                {
-                    throw new NUnitException("Rethrown", e.InnerException);
-                }
-                catch (Exception e)
-#if THREAD_ABORT
-                    // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
-                    // will not rethrow at the end of the catch block. Instead, it will resurrect
-                    // the ThreadAbortException at the end of the next unrelated catch block that
-                    // executes on the same thread after handling an unrelated exception.
-                    // The end result is that an unrelated test will error with the message "Test
-                    // cancelled by user."
-
-                    // This is just cleaner than catching and rethrowing:
-                    when (!(e is System.Threading.ThreadAbortException))
-#endif
-                {
-                    throw new NUnitException("Rethrown", e);
-                }
+                return method.Invoke(fixture, args);
             }
+            catch (TargetInvocationException e)
+            {
+                throw new NUnitException("Rethrown", e.InnerException);
+            }
+            catch (Exception e)
+#if THREAD_ABORT
+                // If ThreadAbortException is caught, it must be rethrown or else Mono 5.18.1
+                // will not rethrow at the end of the catch block. Instead, it will resurrect
+                // the ThreadAbortException at the end of the next unrelated catch block that
+                // executes on the same thread after handling an unrelated exception.
+                // The end result is that an unrelated test will error with the message "Test
+                // cancelled by user."
 
-            return null;
+                // This is just cleaner than catching and rethrowing:
+                when (e is not System.Threading.ThreadAbortException)
+#endif
+            {
+                throw new NUnitException("Rethrown", e);
+            }
         }
 
         #endregion
@@ -361,7 +356,7 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException ex)
             {
-                ExceptionHelper.Rethrow(ex.InnerException);
+                ExceptionHelper.Rethrow(ex.InnerException!);
 
                 // If this line is reached, ExceptionHelper.Rethrow is very broken.
                 throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
@@ -376,7 +371,7 @@ namespace NUnit.Framework.Internal
             }
             catch (TargetInvocationException ex)
             {
-                ExceptionHelper.Rethrow(ex.InnerException);
+                ExceptionHelper.Rethrow(ex.InnerException!);
 
                 // If this line is reached, ExceptionHelper.Rethrow is very broken.
                 throw new InvalidOperationException("ExceptionHelper.Rethrow failed to throw an exception.");
@@ -441,12 +436,13 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public static MemberInfo[] GetMemberIncludingFromBase(this Type type, string name, BindingFlags flags)
         {
+            Type? currentType = type;
             MemberInfo[] members;
             do
             {
-                members = type.GetMember(name, flags);
+                members = currentType.GetMember(name, flags);
             }
-            while (members.Length == 0 && (type = type.BaseType) != null);
+            while (members.Length == 0 && (currentType = currentType.BaseType) != null);
             return members;
         }
     }

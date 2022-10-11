@@ -213,7 +213,7 @@ namespace NUnitLite.Tests
             {
                 foreach (string value in goodValues)
                 {
-                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    string optionPlusValue = $"--{option}:{value}";
                     var options = new NUnitLiteOptions(optionPlusValue);
                     Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
                     Assert.AreEqual(value, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);
@@ -221,7 +221,7 @@ namespace NUnitLite.Tests
 
                 foreach (string value in badValues)
                 {
-                    string optionPlusValue = string.Format("--{0}:{1}", option, value);
+                    string optionPlusValue = $"--{option}:{value}";
                     var options = new NUnitLiteOptions(optionPlusValue);
                     Assert.False(options.Validate(), "Should not be valid: " + optionPlusValue);
                 }
@@ -238,7 +238,7 @@ namespace NUnitLite.Tests
             foreach (string canonicalValue in canonicalValues)
             {
                 string lowercaseValue = canonicalValue.ToLowerInvariant();
-                string optionPlusValue = string.Format("--{0}:{1}", optionName, lowercaseValue);
+                string optionPlusValue = $"--{optionName}:{lowercaseValue}";
                 var options = new NUnitLiteOptions(optionPlusValue);
                 Assert.True(options.Validate(), "Should be valid: " + optionPlusValue);
                 Assert.AreEqual(canonicalValue, (string)property.GetValue(options, null), "Didn't recognize " + optionPlusValue);

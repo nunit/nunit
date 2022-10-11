@@ -282,7 +282,7 @@ namespace NUnit.Framework.Internal
 
             public override string ToString()
             {
-                return string.Format("<{0},{1},{2}>", this.Runtime, this.FrameworkVersion, this.ClrVersion);
+                return $"<{this.Runtime},{this.FrameworkVersion},{this.ClrVersion}>";
             }
         }
 

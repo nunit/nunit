@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
 
         private static Type GetTestDataType(string typeName)
         {
-            string qualifiedName = string.Format("{0},{1}", typeName, dataAssembly);
+            string qualifiedName = $"{typeName},{dataAssembly}";
             Type type = Type.GetType(qualifiedName);
             return type;
         }

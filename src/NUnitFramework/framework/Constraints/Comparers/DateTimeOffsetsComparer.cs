@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -11,7 +12,7 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!(x is DateTimeOffset xOffset) || !(y is DateTimeOffset yOffset))
+            if (x is not DateTimeOffset xOffset || y is not DateTimeOffset yOffset)
                 return null;
 
             bool result;

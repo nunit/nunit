@@ -102,7 +102,7 @@ namespace NUnit.Framework.Assertions
                 {
                     // Since the order of argument evaluation is not guaranteed, we don't
                     // want 'i' to appear more than once in the Assert statement.
-                    string errmsg = string.Format("AssertionResult {0}", i + 1);
+                    string errmsg = $"AssertionResult {i + 1}";
                     Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
