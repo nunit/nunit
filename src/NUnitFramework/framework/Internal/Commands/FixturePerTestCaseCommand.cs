@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -17,9 +18,9 @@ namespace NUnit.Framework.Internal.Commands
         public FixturePerTestCaseCommand(TestCommand innerCommand)
             : base(innerCommand)
         {
-            TestFixture testFixture = null;
+            TestFixture? testFixture = null;
 
-            ITest currentTest = Test;
+            ITest? currentTest = Test;
             while (currentTest != null && testFixture == null)
             {
                 testFixture = currentTest as TestFixture;
@@ -28,11 +29,11 @@ namespace NUnit.Framework.Internal.Commands
 
             Guard.ArgumentValid(testFixture != null, "FixturePerTestCaseCommand must reference a TestFixture", nameof(innerCommand));
 
-            ITypeInfo typeInfo = testFixture.TypeInfo;
+            ITypeInfo? typeInfo = testFixture.TypeInfo;
 
-            BeforeTest = (context) =>
+            BeforeTest = context =>
             {
-                if (typeInfo != null && !typeInfo.IsStaticClass)
+                if (typeInfo is {IsStaticClass: false})
                 {
                     context.TestObject = typeInfo.Construct(testFixture.Arguments);
                     Test.Fixture = context.TestObject;

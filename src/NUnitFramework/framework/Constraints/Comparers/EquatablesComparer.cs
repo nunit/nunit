@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
 using System.Reflection;
 
@@ -18,7 +19,7 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            MethodInfo equals = FirstImplementsIEquatableOfSecond(xType, yType);
+            MethodInfo? equals = FirstImplementsIEquatableOfSecond(xType, yType);
             if (equals != null)
                 return InvokeFirstIEquatableEqualsSecond(x, y, equals);
 
@@ -29,7 +30,7 @@ namespace NUnit.Framework.Constraints.Comparers
             return null;
         }
 
-        private static MethodInfo FirstImplementsIEquatableOfSecond(Type first, Type second)
+        private static MethodInfo? FirstImplementsIEquatableOfSecond(Type first, Type second)
         {
             var mostDerived = default(EquatableMethodImpl);
 
@@ -47,9 +48,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private static EquatableMethodImpl[] GetEquatableImplementations(Type type)
         {
-            static bool IsIEquatableOfT(Type t) => t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(IEquatable<>));
-            
-            var interfaces = type.FindInterfaces((t,f) => IsIEquatableOfT(t), string.Empty);
+            static bool IsIEquatableOfT(Type t) => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEquatable<>);
+
+            var interfaces = type.FindInterfaces((t,_) => IsIEquatableOfT(t), string.Empty);
             var implementations = new EquatableMethodImpl[interfaces.Length];
 
             for(var i = 0; i < interfaces.Length; i++)
@@ -63,15 +64,15 @@ namespace NUnit.Framework.Constraints.Comparers
             return implementations;
         }
 
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
+        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo? equals)
         {
-            return equals != null ? (bool)equals.Invoke(first, new object[] { second }) : false;
+            return equals != null && (bool)equals.Invoke(first, new[] { second });
         }
 
         private readonly struct EquatableMethodImpl
         {
-            public readonly MethodInfo Method { get; }
-            public readonly Type Argument { get; }
+            public MethodInfo Method { get; }
+            public Type Argument { get; }
 
             public EquatableMethodImpl(MethodInfo method, Type arg)
             {
