@@ -2,8 +2,6 @@
 
 using System;
 using System.IO;
-using NUnit.Framework.Assertions;
-using NUnit.Framework.Constraints;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
@@ -28,7 +26,7 @@ namespace NUnit.Framework.Constraints
         [TearDown]
         public void TearDown()
         {
-            if (_goodDir != null) _goodDir.Dispose();
+            _goodDir?.Dispose();
         }
 
         [Test]

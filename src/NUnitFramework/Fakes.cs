@@ -99,8 +99,7 @@ namespace NUnit.TestUtilities
 
         public override void Execute()
         {
-            if (Executed != null)
-                Executed(this, System.EventArgs.Empty);
+            Executed?.Invoke(this, EventArgs.Empty);
         }
 
         protected override void PerformWork() { }
