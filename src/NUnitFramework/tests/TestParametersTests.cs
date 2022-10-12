@@ -47,7 +47,7 @@ namespace NUnit.Framework
         [Test]
         public void Add_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Add((string)null, "X"), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Add(null, "X"), Throws.ArgumentNullException);
         }
 
         [Test]

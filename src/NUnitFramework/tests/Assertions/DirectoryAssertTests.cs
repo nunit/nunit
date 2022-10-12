@@ -29,8 +29,8 @@ namespace NUnit.Framework.Assertions
         [TearDown]
         public void TearDown()
         {
-            if (_goodDir1 != null) _goodDir1.Dispose();
-            if (_goodDir2 != null) _goodDir2.Dispose();
+            _goodDir1?.Dispose();
+            _goodDir2?.Dispose();
         }
 
 #region AreEqual
