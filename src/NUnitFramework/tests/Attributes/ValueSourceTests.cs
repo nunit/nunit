@@ -136,7 +136,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void ValueSourceMayBeGeneric(
-            [ValueSourceAttribute(typeof(ValueProvider), nameof(ValueProvider.IntegerProvider))] int val)
+            [ValueSource(typeof(ValueProvider), nameof(ValueProvider.IntegerProvider))] int val)
         {
             Assert.That(2 * val, Is.EqualTo(val + val));
         }

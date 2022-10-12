@@ -695,8 +695,8 @@ namespace NUnit.Options
                 if (!Parse (argument, c))
                     Unprocessed (unprocessed, def, c, argument);
             }
-            if (c.Option != null)
-                c.Option.Invoke (c);
+
+            c.Option?.Invoke (c);
             return unprocessed;
         }
 

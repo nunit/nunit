@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal
         /// <param name="assembly">The <see cref="TestAssembly"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
-            : base(assembly as TestSuite, filter)
+            : base(assembly, filter)
         {
             this.Name     = assembly.Name;
             this.Assembly = assembly.Assembly;

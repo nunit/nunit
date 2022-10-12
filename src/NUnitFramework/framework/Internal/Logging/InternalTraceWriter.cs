@@ -96,8 +96,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override void Flush()
         {
-            if ( writer != null )
-                writer.Flush();
+            writer?.Flush();
         }
     }
 }

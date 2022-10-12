@@ -159,7 +159,7 @@ namespace NUnit.Framework.Constraints
             allData.Add(new TestValueType() { A = 1 });
             allData.AddRange(testData);
 
-            var items = new SimpleObjectCollection((IEnumerable<object>)allData);
+            var items = new SimpleObjectCollection(allData);
             var constraint = new UniqueItemsConstraint();
             var stopwatch = new Stopwatch();
 

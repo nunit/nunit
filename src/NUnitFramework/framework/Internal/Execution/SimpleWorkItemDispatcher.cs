@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -59,20 +57,15 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            if (work != null)
-                work.Execute();
+            work?.Execute();
         }
-
 
         private void RunnerThreadProc()
         {
             _topLevelWorkItem.Execute();
         }
 
-
-
         private readonly object cancelLock = new object();
-
 
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.

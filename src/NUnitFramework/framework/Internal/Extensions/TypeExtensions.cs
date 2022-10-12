@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
+using System.Linq;
 
 namespace NUnit.Framework.Internal.Extensions
 {
@@ -16,11 +18,8 @@ namespace NUnit.Framework.Internal.Extensions
 
             if (TypeHelper.IsTuple(type) || TypeHelper.IsValueTuple(type))
             {
-                foreach (var typeArg in type.GetGenericArguments())
-                {
-                    if (!typeArg.IsSortable())
-                        return false;
-                }
+                return type.GetGenericArguments()
+                           .All(arg => arg.IsSortable());
             }
 
             return true;

@@ -210,7 +210,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ushort NextUShort()
         {
-            return NextUShort((ushort)0, ushort.MaxValue);
+            return NextUShort(0, ushort.MaxValue);
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public ushort NextUShort(ushort max)
         {
-            return NextUShort((ushort)0, max);
+            return NextUShort(0, max);
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public byte NextByte()
         {
-            return NextByte((byte)0, Byte.MaxValue);
+            return NextByte(0, Byte.MaxValue);
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public byte NextByte(byte max)
         {
-            return NextByte((byte)0, max);
+            return NextByte(0, max);
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public sbyte NextSByte()
         {
-            return NextSByte((sbyte)0, SByte.MaxValue);
+            return NextSByte(0, SByte.MaxValue);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace NUnit.Framework.Internal
         [CLSCompliant(false)]
         public sbyte NextSByte(sbyte max)
         {
-            return NextSByte((sbyte)0, max);
+            return NextSByte(0, max);
         }
 
         /// <summary>

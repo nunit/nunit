@@ -481,7 +481,7 @@ namespace NUnit.Framework.Internal
         public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.WorkStation;
 
         /// <summary>
-        /// Return true if the platform is Windows 10
+        /// Return true if the platform is Windows 11
         /// </summary>
         public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 11 && Product == ProductType.WorkStation;
 

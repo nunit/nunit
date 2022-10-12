@@ -288,8 +288,7 @@ namespace NUnit.Framework.Interfaces
                 if(c > 0x20 && c < 0x7F)
                 {
                     // ASCII characters - break quickly for these
-                    if (builder != null)
-                        builder.Append(c);
+                    builder?.Append(c);
                 }
                 // From the XML specification: https://www.w3.org/TR/xml/#charsets
                 // Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
@@ -304,8 +303,7 @@ namespace NUnit.Framework.Interfaces
                     c != 0xFFFE &&
                     c != 0xFFFF)
                 {
-                    if (builder != null)
-                        builder.Append(c);
+                    builder?.Append(c);
                 }
                 // Also check if the char is actually a high/low surrogate pair of two characters.
                 // If it is, then it is a valid XML character (from above based on the surrogate blocks).
