@@ -6,7 +6,7 @@ using System.IO;
 
 namespace NUnit.Framework.Assertions
 {
-	[TestFixture]
+    [TestFixture]
     public class AssertEqualsTests
     {
         [Test]
@@ -253,8 +253,6 @@ namespace NUnit.Framework.Assertions
             Assert.IsTrue(actual == integer);
             Assert.AreEqual(actual, integer);
         }
-
-
 
         /// <summary>
         /// Checks to see that a value comparison works with all types.
@@ -582,11 +580,7 @@ namespace NUnit.Framework.Assertions
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-
-            var other = obj as ThrowsIfToStringIsCalled;
-            if (other == null)
+            if (obj is not ThrowsIfToStringIsCalled other)
                 return false;
 
             return _x == other._x;
@@ -604,4 +598,3 @@ namespace NUnit.Framework.Assertions
         }
     }
 }
-

@@ -179,8 +179,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator &(Constraint left, Constraint right)
         {
-            IResolveConstraint l = (IResolveConstraint)left;
-            IResolveConstraint r = (IResolveConstraint)right;
+            var l = (IResolveConstraint)left;
+            var r = (IResolveConstraint)right;
             return new AndConstraint(l.Resolve(), r.Resolve());
         }
 
@@ -190,8 +190,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator |(Constraint left, Constraint right)
         {
-            IResolveConstraint l = (IResolveConstraint)left;
-            IResolveConstraint r = (IResolveConstraint)right;
+            var l = (IResolveConstraint)left;
+            var r = (IResolveConstraint)right;
             return new OrConstraint(l.Resolve(), r.Resolve());
         }
 
@@ -201,7 +201,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public static Constraint operator !(Constraint constraint)
         {
-            IResolveConstraint r = (IResolveConstraint)constraint;
+            var r = (IResolveConstraint)constraint;
             return new NotConstraint(r.Resolve());
         }
 

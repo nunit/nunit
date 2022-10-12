@@ -39,7 +39,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(scope));
         }
 
-        [TestCaseSourceAttribute(nameof(Scopes))]
+        [TestCaseSource(nameof(Scopes))]
         public void ApplyScopeToTestFixture(ParallelScope scope)
         {
             var fixture = new TestFixture(new TypeWrapper(typeof(FixtureClass)));

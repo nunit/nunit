@@ -8,7 +8,7 @@ namespace NUnit.TestData.ParallelExecutionData
     [SetUpFixture]
     public class SetUpFixture1
     {
-        [OneTimeSetUpAttribute]
+        [OneTimeSetUp]
         public void RunOneTimeSetUp()
         {
             Thread.Sleep(100);
@@ -24,7 +24,7 @@ namespace NUnit.TestData.ParallelExecutionData
     [SetUpFixture]
     public class SetUpFixture2
     {
-        [OneTimeSetUpAttribute]
+        [OneTimeSetUp]
         public void RunOneTimeSetUp()
         {
             Thread.Sleep(100);

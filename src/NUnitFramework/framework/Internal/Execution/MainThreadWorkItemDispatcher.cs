@@ -36,8 +36,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="work">The item to dispatch</param>
         public void Dispatch(WorkItem work)
         {
-            if (work != null)
-                work.Execute();
+            work?.Execute();
         }
 
         /// <summary>
