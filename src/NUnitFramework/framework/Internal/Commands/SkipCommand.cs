@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+#nullable enable
+
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
@@ -48,14 +49,14 @@ namespace NUnit.Framework.Internal.Commands
             return testResult;
         }
 
-        private string GetSkipReason()
+        private string? GetSkipReason()
         {
-            return (string)Test.Properties.Get(PropertyNames.SkipReason);
+            return (string?)Test.Properties.Get(PropertyNames.SkipReason);
         }
 
-        private string GetProviderStackTrace()
+        private string? GetProviderStackTrace()
         {
-            return (string)Test.Properties.Get(PropertyNames.ProviderStackTrace);
+            return (string?)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
     }
 }

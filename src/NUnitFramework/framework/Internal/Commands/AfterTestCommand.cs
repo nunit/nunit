@@ -1,8 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
+
 using System;
-using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -37,6 +37,6 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Set this to perform action after the inner command.
         /// </summary>
-        protected Action<TestExecutionContext> AfterTest;
+        protected Action<TestExecutionContext>? AfterTest;
     }
 }

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System.IO;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -11,7 +12,7 @@ namespace NUnit.Framework.Constraints.Comparers
     {
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!(x is DirectoryInfo xDirectoryInfo) || !(y is DirectoryInfo yDirectoryInfo))
+            if (x is not DirectoryInfo xDirectoryInfo || y is not DirectoryInfo yDirectoryInfo)
                 return null;
 
             // Do quick compares first
