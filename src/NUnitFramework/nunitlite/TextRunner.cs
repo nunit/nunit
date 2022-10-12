@@ -426,8 +426,7 @@ namespace NUnitLite
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            if (_teamCity != null)
-                _teamCity.TestStarted(test);
+            _teamCity?.TestStarted(test);
 
             _textUI.TestStarted(test);
         }
@@ -438,8 +437,7 @@ namespace NUnitLite
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
         {
-            if (_teamCity != null)
-                _teamCity.TestFinished(result);
+            _teamCity?.TestFinished(result);
 
             _textUI.TestFinished(result);
         }

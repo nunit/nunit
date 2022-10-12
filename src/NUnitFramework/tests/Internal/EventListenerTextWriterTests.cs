@@ -310,14 +310,12 @@ namespace NUnit.Framework.Internal
 
             void ITestListener.TestStarted(ITest test)
             {
-                if (DefaultListener != null)
-                    DefaultListener.TestStarted(test);
+                DefaultListener?.TestStarted(test);
             }
 
             void ITestListener.TestFinished(ITestResult result)
             {
-                if (DefaultListener != null)
-                    DefaultListener.TestFinished(result);
+                DefaultListener?.TestFinished(result);
             }
 
             void ITestListener.TestOutput(TestOutput output)
@@ -325,8 +323,7 @@ namespace NUnit.Framework.Internal
                 Assert.IsNotNull(output);
                 Outputs.Add(output.Text);
 
-                if (DefaultListener != null)
-                    DefaultListener.TestOutput(output);
+                DefaultListener?.TestOutput(output);
             }
 
             void ITestListener.SendMessage(TestMessage message)
