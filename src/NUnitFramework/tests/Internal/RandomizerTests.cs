@@ -189,7 +189,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomUShortsInRangeAreUnique()
         {
-            UniqueValues.Check(() => _randomizer.NextUShort((ushort)27, (ushort)200), 10, 100);
+            UniqueValues.Check(() => _randomizer.NextUShort(27, 200), 10, 100);
         }
 
         #endregion
@@ -306,7 +306,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomByteWithMaximum()
         {
-            byte max = (byte)96;
+            byte max = 96;
             byte b = _randomizer.NextByte(max);
             Assert.That(b >= byte.MinValue && b < max);
         }
@@ -314,8 +314,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomByteInRange()
         {
-            byte min = (byte)16;
-            byte max = (byte)96;
+            byte min = 16;
+            byte max = 96;
             byte b = _randomizer.NextByte(min, max);
             Assert.That(b >= min && b < max);
         }
@@ -323,8 +323,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomByteInRange_Reversed()
         {
-            byte min = (byte)96;
-            byte max = (byte)16;
+            byte min = 96;
+            byte max = 16;
             Assert.That(() => _randomizer.NextByte(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
@@ -361,7 +361,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSByteWithMaximum()
         {
-            sbyte max = (sbyte)96;
+            sbyte max = 96;
             sbyte b = _randomizer.NextSByte(max);
             Assert.That(b >= 0 && b < max);
         }
@@ -369,8 +369,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSByteInRange()
         {
-            sbyte min = (sbyte)16;
-            sbyte max = (sbyte)96;
+            sbyte min = 16;
+            sbyte max = 96;
             sbyte b = _randomizer.NextSByte(min, max);
             Assert.That(b >= min && b < max);
         }
@@ -378,8 +378,8 @@ namespace NUnit.Framework.Internal
         [Test]
         public void RandomSByteInRange_Reversed()
         {
-            sbyte min = (sbyte)96;
-            sbyte max = (sbyte)16;
+            sbyte min = 96;
+            sbyte max = 16;
             Assert.That(() => _randomizer.NextSByte(min, max), Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 

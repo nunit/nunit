@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System;
 using System.IO;
 
@@ -14,7 +15,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)
         {
-            if (!(x is Stream xStream) || !(y is Stream yStream))
+            if (x is not Stream xStream || y is not Stream yStream)
                 return null;
 
             if (xStream == yStream) return true;

@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -21,15 +22,9 @@ namespace NUnit.Framework.Internal.Commands
             Guard.OperationValid(Test.TypeInfo != null, "TestMethod must have a non-null TypeInfo");
             Guard.ArgumentNotNull(setUpTearDown, nameof(setUpTearDown));
 
-            BeforeTest = (context) =>
-            {
-                setUpTearDown.RunSetUp(context);
-            };
+            BeforeTest = setUpTearDown.RunSetUp;
 
-            AfterTest = (context) =>
-            {
-                setUpTearDown.RunTearDown(context);
-            };
+            AfterTest = setUpTearDown.RunTearDown;
         }
     }
 }
