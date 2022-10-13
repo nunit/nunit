@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Builders
         private static string GetNamespaceForFixture(TestSuite fixture)
         {
             string ns = fixture.FullName;
-            int index = ns.IndexOfAny(new char[] { '[', '(' });
+            int index = ns.IndexOfAny(new[] { '[', '(' });
             if (index >= 0) ns = ns.Substring(0, index);
             index = ns.LastIndexOf('.');
             ns = index > 0 ? ns.Substring(0, index) : string.Empty;

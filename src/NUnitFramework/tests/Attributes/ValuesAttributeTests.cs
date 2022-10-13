@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
@@ -169,7 +168,7 @@ namespace NUnit.Framework.Attributes
         public void MethodWithArrayArguments([Values(
             new object[] { 1, "text", null },
             new object[0],
-            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })] object o)
         {
         }

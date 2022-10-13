@@ -38,8 +38,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysOfInt()
         {
-            int[] a = new int[] { 1, 2, 3 };
-            int[] b = new int[] { 1, 2, 3 };
+            int[] a = new[] { 1, 2, 3 };
+            int[] b = new[] { 1, 2, 3 };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -47,8 +47,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysOfDouble()
         {
-            double[] a = new double[] { 1.0, 2.0, 3.0 };
-            double[] b = new double[] { 1.0, 2.0, 3.0 };
+            double[] a = new[] { 1.0, 2.0, 3.0 };
+            double[] b = new[] { 1.0, 2.0, 3.0 };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -56,8 +56,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysOfDecimal()
         {
-            decimal[] a = new decimal[] { 1.0m, 2.0m, 3.0m };
-            decimal[] b = new decimal[] { 1.0m, 2.0m, 3.0m };
+            decimal[] a = new[] { 1.0m, 2.0m, 3.0m };
+            decimal[] b = new[] { 1.0m, 2.0m, 3.0m };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -65,8 +65,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArrayOfIntAndArrayOfDouble()
         {
-            int[] a = new int[] { 1, 2, 3 };
-            double[] b = new double[] { 1.0, 2.0, 3.0 };
+            int[] a = new[] { 1, 2, 3 };
+            double[] b = new[] { 1.0, 2.0, 3.0 };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -93,8 +93,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DoubleDimensionedArrays()
         {
-            int[,] a = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-            int[,] b = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] a = new[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] b = new[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -102,8 +102,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void TripleDimensionedArrays()
         {
-            int[, ,] expected = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            int[,,] actual = new int[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[, ,] expected = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[,,] actual = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
 
             Assert.AreEqual(expected, actual);
         }
@@ -120,8 +120,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysOfArrays()
         {
-            int[][] a = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 }, new int[] { 7, 8, 9 } };
-            int[][] b = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6 }, new int[] { 7, 8, 9 } };
+            int[][] a = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
+            int[][] b = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -129,8 +129,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void JaggedArrays()
         {
-            int[][] expected = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6, 7 }, new int[] { 8, 9 } };
-            int[][] actual = new int[][] { new int[] { 1, 2, 3 }, new int[] { 4, 5, 6, 7 }, new int[] { 8, 9 } };
+            int[][] expected = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
+            int[][] actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
 
             Assert.AreEqual(expected, actual);
         }
@@ -138,8 +138,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysPassedAsObjects()
         {
-            object a = new int[] { 1, 2, 3 };
-            object b = new double[] { 1.0, 2.0, 3.0 };
+            object a = new[] { 1, 2, 3 };
+            object b = new[] { 1.0, 2.0, 3.0 };
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
         }
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArrayAndCollection()
         {
-            int[] a = new int[] { 1, 2, 3 };
+            int[] a = new[] { 1, 2, 3 };
             ICollection b = new SimpleObjectCollection( 1, 2, 3 );
             Assert.AreEqual(a, b);
             Assert.AreEqual(b, a);
@@ -156,8 +156,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysWithDifferentRanksComparedAsCollection()
         {
-            int[] expected = new int[] { 1, 2, 3, 4 };
-            int[,] actual = new int[,] { { 1, 2 }, { 3, 4 } };
+            int[] expected = new[] { 1, 2, 3, 4 };
+            int[,] actual = new[,] { { 1, 2 }, { 3, 4 } };
 
             Assert.AreNotEqual(expected, actual);
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
@@ -166,8 +166,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArraysWithDifferentDimensionsMatchedAsCollection()
         {
-            int[,] expected = new int[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            int[,] actual = new int[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+            int[,] expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
+            int[,] actual = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
 
             Assert.AreNotEqual(expected, actual);
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
@@ -179,28 +179,28 @@ namespace NUnit.Framework.Assertions
         public void ArraySegmentAndArray()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new int[] { 2, 3, 4 }));
+            Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new[] { 2, 3, 4 }));
         }
 
         [Test]
         public void EmptyArraySegmentAndArray()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new ArraySegment<int>(), Is.Not.EqualTo(new int[] { 2, 3, 4 }));
+            Assert.That(new ArraySegment<int>(), Is.Not.EqualTo(new[] { 2, 3, 4 }));
         }
 
         [Test]
         public void ArrayAndArraySegment()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new int[] { 2, 3, 4 }, Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
+            Assert.That(new[] { 2, 3, 4 }, Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
         }
 
         [Test]
         public void ArrayAndEmptyArraySegment()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new int[] { 2, 3, 4 }, Is.Not.EqualTo(new ArraySegment<int>()));
+            Assert.That(new[] { 2, 3, 4 }, Is.Not.EqualTo(new ArraySegment<int>()));
         }
 
         [Test]

@@ -86,7 +86,7 @@ namespace NUnit.Framework.Syntax
             public List<int> Items { get; }
             public Unit()
             {
-                Items = new List<int>(new int[] { 1, 2, 3, 4, 5 });
+                Items = new List<int>(new[] { 1, 2, 3, 4, 5 });
             }
         }
     }

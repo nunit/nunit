@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal.Builders
 
                     // If none of them have args, return the first one
                     if (withArgs == 0)
-                        return new IFixtureBuilder[] { attrs[0] };
+                        return new[] { attrs[0] };
 
                     // Some of each - extract those with args
                     var result = new IFixtureBuilder[withArgs];

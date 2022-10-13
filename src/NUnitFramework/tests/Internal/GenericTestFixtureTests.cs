@@ -8,8 +8,8 @@ using System.Text;
 namespace NUnit.Framework.Internal
 {
     [TestFixture(typeof(List<int>))]
-    [TestFixture(TypeArgs=new Type[] {typeof(List<object>)} )]
-    [TestFixture(TypeArgs=new Type[] {typeof(ArrayList)} )]
+    [TestFixture(TypeArgs=new[] {typeof(List<object>)} )]
+    [TestFixture(TypeArgs=new[] {typeof(ArrayList)} )]
     public class GenericTestFixture_IList<T> where T : IList, new()
     {
         [Test]

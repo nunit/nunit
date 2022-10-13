@@ -714,8 +714,8 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void UsesProvidedArrayComparer()
             {
-                var array1 = new int[] {2, 3};
-                var array2 = new int[] {3, 4};
+                var array1 = new[] {2, 3};
+                var array2 = new[] {3, 4};
 
                 var list11 = new List<int[]>() {array1};
                 var list22 = new List<int[]>() {array2};

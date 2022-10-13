@@ -118,7 +118,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
             Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
-            Assert.That(result.AssertionResults[0].StackTrace.Split(new char[] { '\n' }).Length, Is.LessThan(3));
+            Assert.That(result.AssertionResults[0].StackTrace.Split(new[] { '\n' }).Length, Is.LessThan(3));
 
             if (expectedMessage != null)
             {

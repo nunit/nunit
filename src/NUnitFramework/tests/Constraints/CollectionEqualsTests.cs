@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         public void CanMatchAnArrayWithACollection()
         {
             ICollection collection = new SimpleObjectCollection(1, 2, 3);
-            int[] array = new int[] { 1, 2, 3 };
+            int[] array = new[] { 1, 2, 3 };
 
             Assert.That(collection, Is.EqualTo(array));
             Assert.That(array, Is.EqualTo(collection));
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailureForEnumerablesWithDifferentSizes()
         {
-            IEnumerable<int> expected = new int[] { 1, 2, 3 }.Select(i => i);
+            IEnumerable<int> expected = new[] { 1, 2, 3 }.Select(i => i);
             IEnumerable<int> actual = expected.Take(2);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailureMatchingArrayAndCollection()
         {
-            int[] expected = new int[] { 1, 2, 3 };
+            int[] expected = new[] { 1, 2, 3 };
             ICollection actual = new SimpleObjectCollection(1, 5, 3);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Constraints
         public void StructuralComparerOnDifferentCollection_OfDifferentUnderlyingType_UsesNUnitComparer()
         {
             var integerTypes = ImmutableArray.Create<int>(1);
-            var floatingTypes = new double[] { 1.1 };
+            var floatingTypes = new[] { 1.1 };
 
             Assert.That(integerTypes, Is.Not.EqualTo(floatingTypes));
             Assert.That(integerTypes, Is.EqualTo(floatingTypes).Within(0.5));

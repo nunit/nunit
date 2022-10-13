@@ -53,7 +53,7 @@ namespace NUnit.Framework.Attributes
             new CategoryAttribute("group1").ApplyToTest(test);
             new CategoryAttribute("group2").ApplyToTest(test);
             Assert.That(test.Properties[PropertyNames.Category],
-                Is.EquivalentTo( new string[] { "group1", "group2" } ));
+                Is.EquivalentTo( new[] { "group1", "group2" } ));
         }
 
         #endregion

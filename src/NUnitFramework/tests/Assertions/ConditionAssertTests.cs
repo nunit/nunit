@@ -164,7 +164,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( new int[] { 1, 2, 3 } ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( new[] { 1, 2, 3 } ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -174,14 +174,14 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty((IEnumerable)new int[] { 1, 2, 3 }));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty((IEnumerable)new[] { 1, 2, 3 }));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void IsNotEmpty()
         {
-            int[] array = new int[] { 1, 2, 3 };
+            int[] array = new[] { 1, 2, 3 };
 
             Assert.IsNotEmpty( "Hi!", "Failed on String" );
             Assert.IsNotEmpty( array, "Failed on Array" );
