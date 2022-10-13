@@ -18,7 +18,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="type">The type that is being tested.</param>
         public TestOfAttribute(Type type)
-            : base(PropertyNames.TestOf, type.FullName)
+            : base(PropertyNames.TestOf, type.FullName!)
         {
         }
 

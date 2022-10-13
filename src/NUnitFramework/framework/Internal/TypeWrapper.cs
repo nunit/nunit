@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string FullName
         {
-            get { return Type.FullName;  }
+            get { return Type.FullName!;  }
         }
 
         /// <summary>

@@ -95,7 +95,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 var fixture = new TestFixture(typeInfo);
                 if (ex is System.Reflection.TargetInvocationException)
-                    ex = ex.InnerException;
+                    ex = ex.InnerException!;
 
                 fixture.MakeInvalid("An exception was thrown while loading the test." + Environment.NewLine + ex.ToString());
 

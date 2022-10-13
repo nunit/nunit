@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -19,7 +18,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
     public class TestFixtureAttribute : NUnitAttribute, IFixtureBuilder2, ITestFixtureData
     {
-        private readonly NUnitTestFixtureBuilder _builder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _builder = new();
 
         #region Constructors
 
@@ -120,7 +119,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
-                Properties.Set(PropertyNames.TestOf, value.FullName);
+                Properties.Set(PropertyNames.TestOf, value.FullName!);
             }
         }
         private Type? _testOf;

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
         public MethodWrapper(Type type, string methodName)
         {
             TypeInfo = new TypeWrapper(type);
-            MethodInfo = type.GetMethod(methodName);
+            MethodInfo = type.GetMethod(methodName)!;
         }
 
         #region IMethod Implementation

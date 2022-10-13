@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -95,9 +95,9 @@ namespace NUnit.Framework
         /// </summary>
         private static IEnumerable GenerateData(Type targetType)
         {
-            if (IsNullableEnum(targetType))
+            if (TryGetNullableEnumType(targetType, out var enumType))
             {
-                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(targetType));
+                var enumValues = Enum.GetValues(enumType);
                 var enumValuesWithNull = new object[enumValues.Length + 1];
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
@@ -121,10 +121,23 @@ namespace NUnit.Framework
         /// <summary>
         /// To Check if type is nullable enum.
         /// </summary>
-        private static bool IsNullableEnum(Type t)
+        private static bool TryGetNullableEnumType(Type t, [NotNullWhen(true)] out Type? underlyingType)
         {
-            Type u = Nullable.GetUnderlyingType(t);
-            return (u != null) && u.GetTypeInfo().IsEnum;
+            Type? u = Nullable.GetUnderlyingType(t);
+            if (u == null)
+            {
+                underlyingType = null;
+                return false;
+            }
+
+            if (u.GetTypeInfo().IsEnum)
+            {
+                underlyingType = u;
+                return true;
+            }
+
+            underlyingType = null;
+            return false;
         }
     }
 }
