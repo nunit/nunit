@@ -417,7 +417,7 @@ namespace NUnit.Framework.Constraints
                 {
                     var elementType = argType.GetGenericArguments()[0];
                     var array = Array.CreateInstance(elementType, 0);
-                    var ctor = argType.GetConstructor(new Type[] { array.GetType() });
+                    var ctor = argType.GetConstructor(new[] { array.GetType() });
                     arg = (T)ctor.Invoke(new object[] { array });
                 }
             }

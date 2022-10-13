@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
             if (nameSpace != null)
-                options["LOAD"] = new string[] { nameSpace };
+                options["LOAD"] = new[] { nameSpace };
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
             IDictionary<string, object> options = new Dictionary<string, object>();
-            options["LOAD"] = new string[] { nameSpace };
+            options["LOAD"] = new[] { nameSpace };
             ITest suite = builder.Build(ASSEMBLY_PATH, options);
 
             Assert.IsNotNull(suite);
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace6";
             IDictionary<string, object> options = new Dictionary<string, object>();
-            options["LOAD"] = new string[] { nameSpace };
+            options["LOAD"] = new[] { nameSpace };
             ITest suite = builder.Build(ASSEMBLY_PATH, options);
 
             Assert.IsNotNull(suite);

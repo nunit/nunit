@@ -154,18 +154,18 @@ namespace NUnit.Framework.Internal.Filters
         /// 
         /// See also <see cref="MockTestFilter"/>.
         /// </summary>
-        [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { true, false }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { false, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { true, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
-        [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { true, false }, true, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { false, true }, true, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { true, true }, true, MockTestFilter.MatchFunction.Match)]
-        [TestCase(new bool[] { false, false }, false, MockTestFilter.MatchFunction.Pass)]
-        [TestCase(new bool[] { true, false }, true, MockTestFilter.MatchFunction.Pass)]
-        [TestCase(new bool[] { false, true }, true, MockTestFilter.MatchFunction.Pass)]
-        [TestCase(new bool[] { true, true }, true, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { true, false }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { false, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { true, false }, true, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { false, true }, true, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.Match)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { true, false }, true, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { false, true }, true, MockTestFilter.MatchFunction.Pass)]
+        [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.Pass)]
         public void CombineTest(IEnumerable<bool> inputBooleans, bool expectedResult,
             MockTestFilter.MatchFunction matchFunction)
         {

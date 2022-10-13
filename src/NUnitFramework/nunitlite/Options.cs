@@ -368,7 +368,7 @@ namespace NUnit.Options
         internal string[] Names           {get {return names;}}
         internal string[] ValueSeparators {get {return separators;}}
 
-        static readonly char[] NameTerminator = new char[]{'=', ':'};
+        static readonly char[] NameTerminator = new[]{'=', ':'};
 
         private OptionValueType ParsePrototype ()
         {
@@ -401,7 +401,7 @@ namespace NUnit.Options
                         "prototype");
             if (count > 1) {
                 if (seps.Count == 0)
-                    this.separators = new string[]{":", "="};
+                    this.separators = new[]{":", "="};
                 else if (seps.Count == 1 && seps [0].Length == 0)
                     this.separators = null;
                 else
@@ -781,7 +781,7 @@ namespace NUnit.Options
             if (option != null)
                 foreach (string o in c.Option.ValueSeparators != null
                         ? option.Split (c.Option.ValueSeparators, StringSplitOptions.None)
-                        : new string[]{option}) {
+                        : new[]{option}) {
                     c.OptionValues.Add (o);
                 }
             if (c.OptionValues.Count == c.Option.MaxValueCount ||
@@ -942,9 +942,9 @@ namespace NUnit.Options
                 return maxIndex == 1 ? "VALUE" : "VALUE" + (index + 1);
             string[] nameStart;
             if (maxIndex == 1)
-                nameStart = new string[]{"{0:", "{"};
+                nameStart = new[]{"{0:", "{"};
             else
-                nameStart = new string[]{"{" + index + ":"};
+                nameStart = new[]{"{" + index + ":"};
             for (int i = 0; i < nameStart.Length; ++i) {
                 int start, j = 0;
                 do {
