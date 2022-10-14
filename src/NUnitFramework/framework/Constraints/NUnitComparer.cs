@@ -56,8 +56,10 @@ namespace NUnit.Framework.Constraints
             else if (y == null)
                 return +1;
 
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
                 return Numerics.Compare(x, y);
+#pragma warning restore CS0618
 
             Type xType = x.GetType();
             Type yType = y.GetType();

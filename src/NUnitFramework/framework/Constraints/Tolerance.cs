@@ -245,8 +245,10 @@ namespace NUnit.Framework.Constraints
                     ? ModeMustFollowTolerance
                     : MultipleToleranceModes);
 
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             if (!Numerics.IsNumericType(Amount))
                 throw new InvalidOperationException(NumericToleranceRequired);
+#pragma warning restore CS0618
         }
 
         private Range LinearRange(object value)
@@ -293,7 +295,9 @@ namespace NUnit.Framework.Constraints
                 return new Range(v - amount, v + amount);
             }
 
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             if (Numerics.IsFixedPointNumeric(Amount) && Numerics.IsFixedPointNumeric(value))
+#pragma warning restore CS0618
             {
                 var amount = Convert.ToInt32(Amount);
                 var v = Convert.ToInt32(value);
@@ -305,8 +309,10 @@ namespace NUnit.Framework.Constraints
 
         private Range PercentRange(object value)
         {
+#pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             if (!Numerics.IsNumericType(Amount) || !Numerics.IsNumericType(value))
                 throw new InvalidOperationException("Cannot create range for a non-numeric value");
+#pragma warning restore CS0618
 
             var v = Convert.ToDouble(value);
             var offset = v * Convert.ToDouble(Amount) / 100.0;
