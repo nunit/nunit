@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Linq;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -35,10 +36,7 @@ namespace NUnit.Framework.Constraints
             if (enumerable is ICollection collection)
                 return collection.Count == 0;
 
-            foreach (object o in enumerable)
-                return false;
-
-            return true;
+            return !enumerable.Cast<object>().Any();
         }
 
         /// <summary>
