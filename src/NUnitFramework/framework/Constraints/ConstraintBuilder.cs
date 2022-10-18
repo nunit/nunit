@@ -27,8 +27,7 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// Initializes a new instance of the <see cref="OperatorStack"/> class.
             /// </summary>
-            /// <param name="builder">The ConstraintBuilder using this stack.</param>
-            public OperatorStack(ConstraintBuilder builder)
+            public OperatorStack()
             {
             }
 
@@ -143,7 +142,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ConstraintBuilder()
         {
-            this.ops = new OperatorStack(this);
+            this.ops = new OperatorStack();
             this.constraints = new ConstraintStack(this);
         }
 
