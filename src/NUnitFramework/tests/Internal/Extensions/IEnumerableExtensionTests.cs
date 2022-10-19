@@ -24,8 +24,8 @@ namespace NUnit.Framework.Internal.Extensions
 
         public static IEnumerable<TestCaseData> SortableCollections => new[]
         {
-            new TestCaseData(new int[] { 1 }).SetArgDisplayNames("int[]"),
-            new TestCaseData(new string[] { "1" }).SetArgDisplayNames("string[]"),
+            new TestCaseData(new[] { 1 }).SetArgDisplayNames("int[]"),
+            new TestCaseData(new[] { "1" }).SetArgDisplayNames("string[]"),
             new TestCaseData(Enumerable.Range(0, 10)).SetArgDisplayNames("IEnumerable<int>"),
             new TestCaseData(Enumerable.Range(0, 10).Select(n => n.ToString())).SetArgDisplayNames("IEnumerable<string>"),
             new TestCaseData(new List<int> { 1 }).SetArgDisplayNames("List<int>"),

@@ -266,7 +266,7 @@ namespace NUnit.Framework.Api
             new FrameworkController.LoadTestsAction(new FrameworkController(BAD_FILE, "ID", _settings), _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             // Minimal check here to allow for platform differences
@@ -284,7 +284,7 @@ namespace NUnit.Framework.Api
             new FrameworkController.ExploreTestsAction(_controller, FIXTURE_CAT_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["id"], Is.Not.Null.And.StartWith("ID"));
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
@@ -358,7 +358,7 @@ namespace NUnit.Framework.Api
             new FrameworkController.ExploreTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
@@ -448,7 +448,7 @@ namespace NUnit.Framework.Api
             new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
@@ -465,7 +465,7 @@ namespace NUnit.Framework.Api
             new FrameworkController.RunTestsAction(controller, EMPTY_FILTER, _handler);
             var result = TNode.FromXml(_handler.GetCallbackResult());
 
-            Assert.That(result.Name.ToString(), Is.EqualTo("test-suite"));
+            Assert.That(result.Name, Is.EqualTo("test-suite"));
             Assert.That(result.Attributes["type"], Is.EqualTo("Assembly"));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));

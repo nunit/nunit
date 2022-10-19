@@ -211,8 +211,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void WorksWithHashSets()
         {
-            var hash1 = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
-            var hash2 = new HashSet<string>(new string[] { "abracadabra", "presto", "hocuspocus" });
+            var hash1 = new HashSet<string>(new[] { "presto", "abracadabra", "hocuspocus" });
+            var hash2 = new HashSet<string>(new[] { "abracadabra", "presto", "hocuspocus" });
 
             Assert.That(new CollectionEquivalentConstraint(hash1).ApplyTo(hash2).IsSuccess);
         }
@@ -220,8 +220,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void WorksWithHashSetAndArray()
         {
-            var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
-            var array = new string[] { "abracadabra", "presto", "hocuspocus" };
+            var hash = new HashSet<string>(new[] { "presto", "abracadabra", "hocuspocus" });
+            var array = new[] { "abracadabra", "presto", "hocuspocus" };
 
             var constraint = new CollectionEquivalentConstraint(hash);
             Assert.That(constraint.ApplyTo(array).IsSuccess);
@@ -230,8 +230,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void WorksWithArrayAndHashSet()
         {
-            var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
-            var array = new string[] { "abracadabra", "presto", "hocuspocus" };
+            var hash = new HashSet<string>(new[] { "presto", "abracadabra", "hocuspocus" });
+            var array = new[] { "abracadabra", "presto", "hocuspocus" };
 
             var constraint = new CollectionEquivalentConstraint(array);
             Assert.That(constraint.ApplyTo(hash).IsSuccess);
@@ -240,8 +240,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailureMessageWithHashSetAndArray()
         {
-            var hash = new HashSet<string>(new string[] { "presto", "abracadabra", "hocuspocus" });
-            var array = new string[] { "abracadabra", "presto", "hocusfocus" };
+            var hash = new HashSet<string>(new[] { "presto", "abracadabra", "hocuspocus" });
+            var array = new[] { "abracadabra", "presto", "hocusfocus" };
 
             var constraint = new CollectionEquivalentConstraint(hash);
             var constraintResult = constraint.ApplyTo(array);

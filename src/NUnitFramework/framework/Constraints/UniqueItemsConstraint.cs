@@ -111,7 +111,7 @@ namespace NUnit.Framework.Constraints
                             return (ICollection)CharsUniqueIgnoringCase((IEnumerable<char>)itemsOfT);
                     }
 
-                    return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new object[] { itemsOfT });
+                    return (ICollection)ItemsUniqueMethod.MakeGenericMethod(itemsType).Invoke(null, new[] { itemsOfT });
                 }
             }
             else

@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void StopQueue_WithWorkers()
         {
-            var workers = new TestWorker[]
+            var workers = new[]
             {
                 new TestWorker(_queue, "1"),
                 new TestWorker(_queue, "2"),
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Internal.Execution
         public void DequeueBeforeEnqueue()
         {
             _queue.Start();
-            var names = new string[] { "Test1", "Test2", "Test3" };
+            var names = new[] { "Test1", "Test2", "Test3" };
 
             new Thread(new ThreadStart(() =>
             {

@@ -7,7 +7,7 @@ namespace NUnit.Framework.Constraints
 {
     public class ExactCountConstraintTests
     {
-        private static readonly string[] names = new string[] { "Charlie", "Fred", "Joe", "Charlie" };
+        private static readonly string[] names = new[] { "Charlie", "Fred", "Joe", "Charlie" };
 
         [Test]
         public void ZeroItemsMatch()
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Constraints
         [Description("Test that the " + nameof(ExactCountConstraint) + " returns all ten elements of the given list without a triple dot")]
         public void OutputStringTestWithTenItems()
         {
-            var longElementList = new string[]
+            var longElementList = new[]
             {
                 "Alfa", "Bravo", "Charlie", "Delta", "Echo",
                 "Foxtrot", "Golf", "Hotel", "India", "Juliett",
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Constraints
         [Description("Test that the " + nameof(ExactCountConstraint) + " returns only ten elements of the given list with a triple dot")]
         public void OutputStringTestWithMoreAsTenItems()
         {
-            var longElementList = new string[]
+            var longElementList = new[]
             {
                 "Alfa", "Bravo", "Charlie", "Delta", "Echo",
                 "Foxtrot", "Golf", "Hotel", "India", "Juliett",

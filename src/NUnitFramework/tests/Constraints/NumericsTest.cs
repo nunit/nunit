@@ -94,7 +94,6 @@ namespace NUnit.Framework.Constraints
             Assert.That(expected, Is.GreaterThan(actual));
         }
 
-
         [Test]
         public void CanCalculateDifferenceDecimalsWithHighPrecision()
         {

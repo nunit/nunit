@@ -382,7 +382,7 @@ namespace NUnit.Framework.Constraints
 
             public override string ToString()
             {
-                return A.ToString() + "," + B.ToString();
+                return $"{A},{B}";
             }
         }
 
@@ -429,7 +429,7 @@ namespace NUnit.Framework.Constraints
 
             public override string ToString()
             {
-                return A.ToString() + "," + B.ToString();
+                return $"{A},{B}";
             }
         }
 

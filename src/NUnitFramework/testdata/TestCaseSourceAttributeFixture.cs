@@ -183,9 +183,9 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         static object[] ComplexArrayBasedTestInput = new[]
         {
-            new object[] { 1, "text", new object() },
+            new[] { 1, "text", new object() },
             Array.Empty<object>(),
-            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
@@ -193,7 +193,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
         {
             foreach (var argumentValue in ComplexArrayBasedTestInput)
-                yield return new TestCaseData(args: new object[] { argumentValue });
+                yield return new TestCaseData(args: new[] { argumentValue });
         }
 
         #region Test name tests

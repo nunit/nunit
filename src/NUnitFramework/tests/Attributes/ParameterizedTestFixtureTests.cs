@@ -121,9 +121,9 @@ namespace NUnit.Framework.Attributes
                 fullnames.Add(test.FullName);
             }
 
-            Assert.That(names, Is.EquivalentTo(new string[] {
+            Assert.That(names, Is.EquivalentTo(new[] {
                 "ParameterizedTestFixture(1)", "ParameterizedTestFixture(2)" }));
-            Assert.That(fullnames, Is.EquivalentTo(new string[] {
+            Assert.That(fullnames, Is.EquivalentTo(new[] {
                 "NUnit.TestData.ParameterizedTestFixture(1)", "NUnit.TestData.ParameterizedTestFixture(2)" }));
         }
 
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyMultipleCategories()
         {
             Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithMultipleCategories));
-            Assert.AreEqual(new string[] { "X", "Y", "Z" }, fixture.Properties[PropertyNames.Category]);
+            Assert.AreEqual(new[] { "X", "Y", "Z" }, fixture.Properties[PropertyNames.Category]);
         }
 
         [Test]

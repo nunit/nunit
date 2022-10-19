@@ -54,17 +54,17 @@ namespace NUnit.Framework.Attributes
 
         private static readonly object[] Cases =
         {
-            new Type[]
+            new[]
             {
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(ThirdTestCaseOrderAttributeFixture)
             },
-            new Type[]
+            new[]
             {
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(AnotherTestCaseOrderAttributeFixture)
             },
-            new Type[]
+            new[]
             {
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(AnotherTestCaseOrderAttributeFixture),
