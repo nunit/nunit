@@ -341,59 +341,60 @@ namespace NUnit.Framework
             /// <summary>
             /// Gets the unique Id of a test
             /// </summary>
-            public String ID
-            {
-                get { return _test.Id; }
-            }
+            public string ID => _test.Id;
 
             /// <summary>
             /// The name of the test, which may or may not be
             /// the same as the method name.
             /// </summary>
-            public string Name
-            {
-                get { return _test.Name; }
-            }
+            public string Name => _test.Name;
+
+            /// <summary>
+            /// The name of the test, which may or may not be
+            /// the same as the method name.
+            /// </summary>
+            public string? Namespace => _test.TypeInfo?.Namespace;
+
+            /// <summary>
+            /// The name of the test, which may or may not be
+            /// the same as the method name.
+            /// </summary>
+            public string? DisplayName => _test.TypeInfo?.GetDisplayName();
 
             /// <summary>
             /// The name of the method representing the test.
             /// </summary>
-            public string? MethodName
-            {
-                get { return (_test as TestMethod)?.Method.Name; }
-            }
+            public string? MethodName => (_test as TestMethod)?.Method.Name;
+
+            /// <summary>
+            /// The method representing the test.
+            /// </summary>
+            public IMethodInfo? Method => (_test as TestMethod)?.Method;
+
+            /// <summary>
+            /// Gets the underlying Type.
+            /// </summary>
+            public Type? Type => _test.TypeInfo?.Type;
 
             /// <summary>
             /// The FullName of the test
             /// </summary>
-            public string FullName
-            {
-                get { return _test.FullName; }
-            }
+            public string FullName => _test.FullName;
 
             /// <summary>
             /// The ClassName of the test
             /// </summary>
-            public string? ClassName
-            {
-                get { return _test.ClassName;  }
-            }
+            public string? ClassName => _test.ClassName;
 
             /// <summary>
             /// A shallow copy of the properties of the test.
             /// </summary>
-            public PropertyBagAdapter Properties
-            {
-                get { return new PropertyBagAdapter(_test.Properties); }
-            }
+            public PropertyBagAdapter Properties => new(_test.Properties);
 
             /// <summary>
             /// The arguments to use in creating the test or empty array if none are required.
             /// </summary>
-            public object?[] Arguments
-            {
-                get { return _test.Arguments; }
-            }
+            public object?[] Arguments => _test.Arguments;
 
             #endregion
         }
