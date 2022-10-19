@@ -350,8 +350,7 @@ namespace NUnit.Framework
             public string Name => _test.Name;
 
             /// <summary>
-            /// The name of the test, which may or may not be
-            /// the same as the method name.
+            /// Get the Namespace of the test.
             /// </summary>
             public string? Namespace => _test.TypeInfo?.Namespace;
 
