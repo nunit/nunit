@@ -4,8 +4,6 @@
 using System.Text.RegularExpressions;
 using NUnit.Framework.Interfaces;
 
-#nullable enable
-
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>

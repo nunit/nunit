@@ -54,7 +54,11 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters explicit match, otherwise false</returns>
         public override bool IsExplicitMatch( ITest test )
         {
-            return Filters.All(filter => filter.IsExplicitMatch(test));
+            foreach( TestFilter filter in Filters )
+                if ( !filter.IsExplicitMatch( test ) )
+                    return false;
+
+            return true;
         }
 
         /// <summary>
