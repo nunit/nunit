@@ -145,8 +145,8 @@ namespace NUnit.Framework.Internal.Execution
         {
             foreach (var worker in Workers)
             {
-                worker.Busy += (s, ea) => Interlocked.Increment(ref _busyCount);
-                worker.Idle += (s, ea) =>
+                worker.Busy += (_, _) => Interlocked.Increment(ref _busyCount);
+                worker.Idle += (_, _) =>
                 {
                     // Quick check first using Interlocked.Decrement
                     if (Interlocked.Decrement(ref _busyCount) == 0 && !HasWork)

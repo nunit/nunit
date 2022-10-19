@@ -393,7 +393,7 @@ namespace NUnit.Framework.Internal
         /// <param name="recursive"></param>
         protected void PopulateTestNode(TNode thisNode, bool recursive)
         {
-            thisNode.AddAttribute("id", this.Id.ToString());
+            thisNode.AddAttribute("id", this.Id);
             thisNode.AddAttribute("name", this.Name);
             thisNode.AddAttribute("fullname", this.FullName);
             if (this.MethodName != null)

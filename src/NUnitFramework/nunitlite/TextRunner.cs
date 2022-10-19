@@ -234,8 +234,6 @@ namespace NUnitLite
 
         public int RunTests(TestFilter filter, IDictionary<string, object> runSettings)
         {
-            var startTime = DateTime.UtcNow;
-
             ITestResult result = _runner.Run(this, filter);
 
             ReportResults(result);
