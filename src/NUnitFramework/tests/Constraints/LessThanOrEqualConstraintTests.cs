@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
                 () => Assert.That(actual, Is.LessThanOrEqualTo(expected).Within(tolerance)),
                 "Assertion should have failed");
 
-            Assert.That(ex.Message, Contains.Substring("Expected: less than or equal to " + expected.ToString()));
+            Assert.That(ex.Message, Contains.Substring("Expected: less than or equal to " + expected));
         }
 
         [TestCase(4.0, 5.0, 1)]

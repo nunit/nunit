@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security;
@@ -171,11 +172,8 @@ namespace NUnit.Framework.Api
             var testTypes = GetCandidateFixtureTypes(assembly, filter);
 
             log.Debug("Found {0} classes to examine", testTypes.Count);
-#if LOAD_TIMING
-            System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
-            timer.Start();
-#endif
-            int testcases = 0;
+            var timer = Stopwatch.StartNew();
+            var testcases = 0;
             foreach (Type testType in testTypes)
             {
                 var typeInfo = new TypeWrapper(testType);
@@ -195,11 +193,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-#if LOAD_TIMING
-            log.Debug("Found {0} fixtures with {1} test cases in {2} seconds", fixtures.Count, testcases, timer.Elapsed);
-#else
-            log.Debug("Found {0} fixtures with {1} test cases", fixtures.Count, testcases);
-#endif
+            log.Debug("Found {0} fixtures with {1} test cases in {2}ms", fixtures.Count, testcases, timer.ElapsedMilliseconds);
 
             return fixtures;
         }
