@@ -55,7 +55,7 @@ namespace NUnitLite.Tests
         [Test]
         public void DisplayErrors()
         {
-            CreateTextUI().DisplayErrors(new string[] { "This is an error", "Another error", "Final error" });
+            CreateTextUI().DisplayErrors(new[] { "This is an error", "Another error", "Final error" });
 
             Assert.That(Report, Is.EqualTo("This is an error\nAnother error\nFinal error\n"));
         }
@@ -71,7 +71,7 @@ namespace NUnitLite.Tests
         [Test]
         public void DisplayTestFiles()
         {
-            CreateTextUI().DisplayTestFiles(new string[] { "test1.dll", "another.test.dll", "final.test.dll" });
+            CreateTextUI().DisplayTestFiles(new[] { "test1.dll", "another.test.dll", "final.test.dll" });
 
             Assert.That(Report, Is.EqualTo("Test Files\n    test1.dll\n    another.test.dll\n    final.test.dll\n\n"));
         }

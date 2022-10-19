@@ -121,7 +121,7 @@ namespace NUnit.Framework.Internal.Execution
                     ITestAction action = Context.UpstreamActions[index];
                     System.Diagnostics.Debug.Assert(
                         action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test),
-                        "Invalid target on upstream action: " + action.Targets.ToString());
+                        $"Invalid target on upstream action: {action.Targets}");
 
                     command = new TestActionCommand(command, action);
                 }

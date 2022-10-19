@@ -148,14 +148,14 @@ namespace NUnit.Framework
                             object?[]? args = item as object?[];
                             if (args == null)
                             {
-                                args = new object?[] { item };
+                                args = new[] { item };
                             }
 
                             parms = new TestFixtureParameters(args);
                         }
 
                         if (this.Category != null)
-                            foreach (string cat in this.Category.Split(new char[] { ',' }))
+                            foreach (string cat in this.Category.Split(new[] { ',' }))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
                         data.Add(parms);
@@ -211,7 +211,7 @@ namespace NUnit.Framework
             var parms = new TestFixtureParameters();
             parms.RunState = RunState.NotRunnable;
             parms.Properties.Set(PropertyNames.SkipReason, MUST_BE_STATIC);
-            return new TestFixtureParameters[] { parms };
+            return new[] { parms };
         }
 
         #endregion

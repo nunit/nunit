@@ -44,9 +44,9 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void SimpleEqualityTests()
         {
-            int[] i3 = new int[] { 1, 2, 3 };
-            double[] d3 = new double[] { 1.0, 2.0, 3.0 };
-            int[] iunequal = new int[] { 1, 3, 2 };
+            int[] i3 = new[] { 1, 2, 3 };
+            double[] d3 = new[] { 1.0, 2.0, 3.0 };
+            int[] iunequal = new[] { 1, 3, 2 };
 
             Assert.That(2 + 2, Is.EqualTo(4));
             Assert.That(2 + 2 == 4);
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Syntax
             List<string> list = new List<string>();
             list.Add("foo");
             list.Add("bar");
-            Assert.That(list, Is.EqualTo(new string[] { "foo", "bar" }));
+            Assert.That(list, Is.EqualTo(new[] { "foo", "bar" }));
         }
 
         [Test]

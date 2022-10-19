@@ -41,7 +41,7 @@ namespace NUnit.TestData.DatapointFixture
     public class SquareRootTest_Field_ArrayOfDouble : SquareRootTest
     {
         [Datapoints]
-        public double[] values = new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
+        public double[] values = new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
     }
 
     public class SquareRootTest_Field_IEnumerableOfDouble : SquareRootTest
@@ -88,7 +88,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] Values
         {
-            get { return new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity }; }
+            get { return new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity }; }
         }
     }
 
@@ -97,7 +97,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] GetValues()
         {
-            return new double[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
+            return new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
         }
     }
  
@@ -141,7 +141,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] GetCommonValues()
         {
-            return new double[] { 0.0, 1.0, -1.0 };
+            return new[] { 0.0, 1.0, -1.0 };
         }
     }
 
@@ -150,7 +150,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public double[] GetValues()
         {
-            return new double[] { double.MaxValue, double.PositiveInfinity };
+            return new[] { double.MaxValue, double.PositiveInfinity };
         }
     }
 }

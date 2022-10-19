@@ -16,25 +16,25 @@ namespace NUnit.Framework.Constraints
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new CollectionSupersetConstraint(new int[] { 1, 2, 3, 4, 5 });
+            TheConstraint = new CollectionSupersetConstraint(new[] { 1, 2, 3, 4, 5 });
             StringRepresentation = "<supersetof System.Int32[]>";
             ExpectedDescription = "superset of < 1, 2, 3, 4, 5 >";
         }
 
         static object[] SuccessData = new object[]
         {
-            new int[] { 1, 2, 3, 4, 5, 6 }
-            , new int[] { 1, 2, 3, 4, 5 }
-            , new int[] { 1, 2, 2, 2, 3, 4, 5, 3 }
-            , new int[] { 1, 2, 2, 2, 3, 4, 5, 7 }
+            new[] { 1, 2, 3, 4, 5, 6 }
+            , new[] { 1, 2, 3, 4, 5 }
+            , new[] { 1, 2, 2, 2, 3, 4, 5, 3 }
+            , new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
         };
 
         static object[] FailureData = new object[]
         {
-            new object[] { new int[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
-            , new object[] { new int[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
-            , new object[] { new int[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
-            , new object[] { new int[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
+            new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
+            , new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }
+            , new object[] { new[] { 1, 2, 3, 5 }, "< 1, 2, 3, 5 >", "< 4 >" }
+            , new object[] { new[] { 1, 2, 3, 5, 7 }, "< 1, 2, 3, 5, 7 >", "< 4 >" }
         };
 
         [Test, TestCaseSource(nameof(SuccessData))]

@@ -190,14 +190,14 @@ namespace NUnit.Framework
 
                             if (args == null)
                             {
-                                args = new object?[] { item };
+                                args = new[] { item };
                             }
 
                             parms = new TestCaseParameters(args);
                         }
 
                         if (this.Category != null)
-                            foreach (string cat in this.Category.Split(new char[] { ',' }))
+                            foreach (string cat in this.Category.Split(new[] { ',' }))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
                         data.Add(parms);
@@ -264,7 +264,7 @@ namespace NUnit.Framework
             var parms = new TestCaseParameters();
             parms.RunState = RunState.NotRunnable;
             parms.Properties.Set(PropertyNames.SkipReason, errorMessage);
-            return new TestCaseParameters[] { parms };
+            return new[] { parms };
         }
 
         private const string SourceMustBeStatic =

@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (ex is System.Reflection.TargetInvocationException)
                     ex = ex.InnerException;
 
-                fixture.MakeInvalid("An exception was thrown while loading the test." + Environment.NewLine + ex.ToString());
+                fixture.MakeInvalid($"An exception was thrown while loading the test.{Environment.NewLine}{ex}");
 
                 return fixture;
             }
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Internal.Builders
 
                     // If none of them have args, return the first one
                     if (withArgs == 0)
-                        return new IFixtureBuilder[] { attrs[0] };
+                        return new[] { attrs[0] };
 
                     // Some of each - extract those with args
                     var result = new IFixtureBuilder[withArgs];

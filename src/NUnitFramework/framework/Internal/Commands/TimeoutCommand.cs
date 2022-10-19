@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotNull(debugger, nameof(debugger));
 
 #if THREAD_ABORT
-            BeforeTest = context =>
+            BeforeTest = _ =>
             {
                 var testThread = Thread.CurrentThread;
                 var nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
