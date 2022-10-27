@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+#nullable enable
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -30,21 +29,13 @@ namespace NUnit.Framework.Internal.Filters
         {
             IList testCategories = test.Properties[PropertyNames.Category];
 
-            if ( testCategories != null)
-                foreach (string cat in testCategories)
-                    if ( Match(cat))
-                        return true;
-
-            return false;
+            return testCategories.Cast<string>().Any(Match);
         }
 
         /// <summary>
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName
-        {
-            get { return "cat"; }
-        }
+        protected override string ElementName => "cat";
     }
 }
