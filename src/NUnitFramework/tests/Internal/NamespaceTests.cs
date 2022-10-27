@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AllExportedNameSpacesAreNotSystem()
         {
-            var exportedTypes = typeof(FrameworkController).GetTypeInfo().Assembly.GetExportedTypes();
+            var exportedTypes = typeof(FrameworkController).Assembly.GetExportedTypes();
 
             var exportedTypesWhitelist = new[] 
             {

@@ -168,7 +168,7 @@ namespace NUnit.Framework
                     _source = new DecimalDataSource(_count);
                 else if (parmType == typeof(Guid))
                     _source = new GuidDataSource(_count);
-                else if (parmType.GetTypeInfo().IsEnum)
+                else if (parmType.IsEnum)
                     _source = new EnumDataSource(_count);
                 else // Default
                     _source = new IntDataSource(_count);
@@ -603,7 +603,7 @@ namespace NUnit.Framework
 
             public override IEnumerable GetData(IParameterInfo parameter)
             {
-                Guard.ArgumentValid(parameter.ParameterType.GetTypeInfo().IsEnum, "EnumDataSource requires an enum parameter", nameof(parameter));
+                Guard.ArgumentValid(parameter.ParameterType.IsEnum, "EnumDataSource requires an enum parameter", nameof(parameter));
 
                 Randomizer randomizer = Randomizer.GetRandomizer(parameter.ParameterInfo);
                 DataType = parameter.ParameterType;

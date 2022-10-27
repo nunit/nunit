@@ -246,7 +246,7 @@ namespace NUnit.Framework
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo, IPreFilter filter)
         {
             var fixture = _builder.BuildFrom(typeInfo, filter, this);
-            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.GetTypeInfo().Assembly));
+            fixture.ApplyAttributesToTest(new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.Assembly));
             fixture.ApplyAttributesToTest(typeInfo.Type);
 
             yield return fixture;

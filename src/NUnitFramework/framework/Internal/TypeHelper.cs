@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
             if (type.IsGenericParameter)
                 return type.Name;
 
-            if (type.GetTypeInfo().IsGenericType)
+            if (type.IsGenericType)
             {
                 string name = type.FullName;
                 int index = name.IndexOf('[');
@@ -305,10 +305,10 @@ namespace NUnit.Framework.Internal
         {
             List<Type> interfaces = new List<Type>(type.GetInterfaces());
 
-            if (type.GetTypeInfo().BaseType == typeof(object))
+            if (type.BaseType == typeof(object))
                 return interfaces.ToArray();
 
-            List<Type> baseInterfaces = new List<Type>(type.GetTypeInfo().BaseType.GetInterfaces());
+            List<Type> baseInterfaces = new List<Type>(type.BaseType.GetInterfaces());
             List<Type> declaredInterfaces = new List<Type>();
 
             foreach (Type interfaceType in interfaces)

@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal
             if (from == null)
             {
                 // Look for the marker that indicates from was null
-                return to.GetTypeInfo().IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
+                return to.IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
             if (convertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
@@ -247,7 +247,7 @@ namespace NUnit.Framework.Internal
                 // If we're searching for both public and nonpublic properties, search for only public first
                 // because chances are if there is a public property, it would be very surprising to detect the private shadowing property.
 
-                for (var publicSearchType = type; publicSearchType != null; publicSearchType = publicSearchType.GetTypeInfo().BaseType)
+                for (var publicSearchType = type; publicSearchType != null; publicSearchType = publicSearchType.BaseType)
                 {
                     var property = publicSearchType.GetProperty(name, (bindingFlags | BindingFlags.DeclaredOnly) & ~BindingFlags.NonPublic);
                     if (property != null) return property;
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Internal
                 bindingFlags &= ~BindingFlags.Public;
             }
 
-            for (var searchType = type; searchType != null; searchType = searchType.GetTypeInfo().BaseType)
+            for (var searchType = type; searchType != null; searchType = searchType.BaseType)
             {
                 var property = searchType.GetProperty(name, bindingFlags | BindingFlags.DeclaredOnly);
                 if (property != null) return property;
@@ -269,20 +269,20 @@ namespace NUnit.Framework.Internal
         internal static bool IsAssignableFromNull(Type type)
         {
             Guard.ArgumentNotNull(type, nameof(type));
-            return !type.GetTypeInfo().IsValueType || IsNullable(type);
+            return !type.IsValueType || IsNullable(type);
         }
 
         private static bool IsNullable(Type type)
         {
             // Compare with https://github.com/dotnet/coreclr/blob/bb01fb0d954c957a36f3f8c7aad19657afc2ceda/src/mscorlib/src/System/Nullable.cs#L152-L157
-            return type.GetTypeInfo().IsGenericType
-                && !type.GetTypeInfo().IsGenericTypeDefinition
+            return type.IsGenericType
+                && !type.IsGenericTypeDefinition
                 && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
         }
 
         internal static IEnumerable<Type> TypeAndBaseTypes(this Type type)
         {
-            for (; type != null; type = type.GetTypeInfo().BaseType)
+            for (; type != null; type = type.BaseType)
             {
                 yield return type;
             }
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Internal
 
         internal static PropertyInfo? GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
         {
-            for (var currentType = type; currentType != null; currentType = currentType.GetTypeInfo().BaseType)
+            for (var currentType = type; currentType != null; currentType = currentType.BaseType)
             {
                 var property = currentType
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(type, nameof(type));
 
-            if (type.GetTypeInfo().IsGenericType
+            if (type.IsGenericType
                 && type.GetGenericTypeDefinition().FullName == "Microsoft.FSharp.Core.FSharpOption`1")
             {
                 someType = type.GetGenericArguments()[0];
