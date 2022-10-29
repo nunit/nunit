@@ -62,8 +62,8 @@ namespace NUnit.Framework.Constraints
             DelegateReturningFalse = new ActualValueDelegate(MethodReturningFalse);
             DelegateReturningZero = new ActualValueDelegate(MethodReturningZero);
 
-            SuccessDelegates = new ActualValueDelegate<object>[] { DelegateReturningValue };
-            FailureDelegates = new ActualValueDelegate<object>[] { DelegateReturningFalse, DelegateReturningZero };
+            SuccessDelegates = new[] { DelegateReturningValue };
+            FailureDelegates = new[] { DelegateReturningFalse, DelegateReturningZero };
         }
 
         [Test, TestCaseSource(nameof(SuccessDelegates))]

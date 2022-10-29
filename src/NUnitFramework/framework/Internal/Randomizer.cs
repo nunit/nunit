@@ -640,7 +640,7 @@ namespace NUnit.Framework.Internal
 
         private static uint MaskToRemoveBitsGuaranteedToExceedMaximum(uint maximum)
         {
-            // http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
+            // https://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2 but
             // without the value-- and value++
 
             var value = maximum;

@@ -343,7 +343,7 @@ namespace NUnit.Framework.Constraints
         public static IEnumerable<TestCaseData> GetRecursiveContainsTestCases()
         {
             var enumerable = new SelfContainer();
-            var enumerableContainer = new SelfContainer[] { new SelfContainer(), enumerable };
+            var enumerableContainer = new[] { new SelfContainer(), enumerable };
 
             yield return new TestCaseData(enumerable, enumerableContainer);
 

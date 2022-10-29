@@ -156,7 +156,7 @@ namespace NUnit.Framework.Internal.Builders
             /// <param name="feature1">Single feature.</param>
             public FeatureTuple( FeatureInfo feature1 )
             {
-                _features = new FeatureInfo[] { feature1 };
+                _features = new[] { feature1 };
             }
 
             /// <summary>
@@ -166,7 +166,7 @@ namespace NUnit.Framework.Internal.Builders
             /// <param name="feature2">Second feature.</param>
             public FeatureTuple( FeatureInfo feature1, FeatureInfo feature2 )
             {
-                _features = new FeatureInfo[] { feature1, feature2 };
+                _features = new[] { feature1, feature2 };
             }
 
             public int Length => _features.Length;

@@ -138,7 +138,7 @@ namespace NUnit.Framework.Internal
                     TNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
-                    prop.AddAttribute("name", key.ToString());
+                    prop.AddAttribute("name", key);
                     prop.AddAttribute("value", value.ToString());
                 }
             }

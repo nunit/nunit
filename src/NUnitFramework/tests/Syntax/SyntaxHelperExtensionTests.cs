@@ -31,19 +31,19 @@ namespace NUnit.Framework.Syntax
 
         public static IEnumerable<Type> InheritableClassesWithNoInstanceMembers =>
             ClassesExtensibleThroughInheritance.Where(type =>
-                type.GetTypeInfo()
+                type
                     .GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
                     .All(member => member is ConstructorInfo)); // Since they are inheritable, the exception is an instance constructor.
 
         [TestCaseSource(nameof(InheritableClassesWithNoInstanceMembers))]
         public static void InheritableClassWithOnlyStaticMembersShouldBeAbstract(Type type)
         {
-            Assert.That(type.GetTypeInfo().IsAbstract);
+            Assert.That(type.IsAbstract);
         }
 
         private static bool IsInheritable(Type type)
         {
-            if (type.GetTypeInfo().IsSealed) return false;
+            if (type.IsSealed) return false;
 
             return type.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Any()
                 || type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic).Any(IsAccessibleFromExternalSubclass);

@@ -227,7 +227,7 @@ namespace NUnit.Framework.Constraints
                 return null;
 
             Type valueType = value.GetType();
-            if (!valueType.GetTypeInfo().IsGenericType)
+            if (!valueType.IsGenericType)
                 return null;
 
             Type baseValueType = valueType.GetGenericTypeDefinition();
@@ -364,7 +364,7 @@ namespace NUnit.Framework.Constraints
                 elementType = elementType.GetElementType();
                 ++nest;
             }
-            sb.Append(elementType.ToString());
+            sb.Append(elementType);
             sb.Append('[');
             for (int r = 0; r < array.Rank; r++)
             {
@@ -376,7 +376,7 @@ namespace NUnit.Framework.Constraints
             while (--nest > 0)
                 sb.Append("[]");
 
-            return $"<{sb.ToString()}>";
+            return $"<{sb}>";
         }
 
         /// <summary>

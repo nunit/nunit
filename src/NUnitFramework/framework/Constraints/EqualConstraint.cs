@@ -402,13 +402,13 @@ namespace NUnit.Framework.Constraints
             if (arg != null)
             {
                 Type argType = arg.GetType();
-                Type genericTypeDefinition = argType.GetTypeInfo().IsGenericType ? argType.GetGenericTypeDefinition() : null;
+                Type genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
                 if (genericTypeDefinition == typeof(ArraySegment<>) && argType.GetProperty("Array").GetValue(arg, null) == null)
                 {
                     var elementType = argType.GetGenericArguments()[0];
                     var array = Array.CreateInstance(elementType, 0);
-                    var ctor = argType.GetConstructor(new Type[] { array.GetType() });
+                    var ctor = argType.GetConstructor(new[] { array.GetType() });
                     arg = (T)ctor.Invoke(new object[] { array });
                 }
             }

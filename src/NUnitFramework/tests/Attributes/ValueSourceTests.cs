@@ -114,9 +114,9 @@ namespace NUnit.Framework.Attributes
             Assert.AreEqual(q, n / d);
         }
 
-        internal static int[] Numerators = new int[] { 12, 12, 12 };
-        internal static int[] Denominators = new int[] { 3, 4, 6 };
-        internal static int[] Quotients = new int[] { 4, 3, 2 };
+        internal static int[] Numerators = new[] { 12, 12, 12 };
+        internal static int[] Denominators = new[] { 3, 4, 6 };
+        internal static int[] Quotients = new[] { 4, 3, 2 };
 
         [Test, Sequential]
         public void ValueSourceMayBeInAnotherClass(
@@ -129,9 +129,9 @@ namespace NUnit.Framework.Attributes
 
         private class DivideDataProvider
         {
-            internal static int[] Numerators = new int[] { 12, 12, 12 };
-            internal static int[] Denominators = new int[] { 3, 4, 6 };
-            internal static int[] Quotients = new int[] { 4, 3, 2 };
+            internal static int[] Numerators = new[] { 12, 12, 12 };
+            internal static int[] Denominators = new[] { 3, 4, 6 };
+            internal static int[] Quotients = new[] { 4, 3, 2 };
         }
 
         [Test]
@@ -202,9 +202,9 @@ namespace NUnit.Framework.Attributes
 
         static object[] ComplexArrayBasedTestInput = new[]
         {
-            new object[] { 1, "text", new object() },
+            new[] { 1, "text", new object() },
             Array.Empty<object>(),
-            new object[] { 1, new int[] { 2, 3 }, 4 },
+            new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 },
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };

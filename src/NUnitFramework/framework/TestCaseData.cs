@@ -33,7 +33,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="arg">The argument.</param>
         public TestCaseData(object? arg)
-            : base(new object?[] { arg })
+            : base(new[] { arg })
         {
         }
 
@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// <param name="arg1">The first argument.</param>
         /// <param name="arg2">The second argument.</param>
         public TestCaseData(object? arg1, object? arg2)
-            : base(new object?[] { arg1, arg2 })
+            : base(new[] { arg1, arg2 })
         {
         }
 
@@ -54,7 +54,7 @@ namespace NUnit.Framework
         /// <param name="arg2">The second argument.</param>
         /// <param name="arg3">The third argument.</param>
         public TestCaseData(object? arg1, object? arg2, object? arg3)
-            : base(new object?[] { arg1, arg2, arg3 })
+            : base(new[] { arg1, arg2, arg3 })
         {
         }
 

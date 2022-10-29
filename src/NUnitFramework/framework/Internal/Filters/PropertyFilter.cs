@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
+#nullable enable
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -22,7 +21,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="propertyName">A property name</param>
         /// <param name="expectedValue">The expected value of the property</param>
         /// <param name="isRegex">Indicated that the value in <paramref name="expectedValue"/> is a regular expression.</param>
-        public PropertyFilter(string propertyName, string expectedValue, bool isRegex = false) : base(expectedValue, isRegex) 
+        public PropertyFilter(string propertyName, string expectedValue, bool isRegex = false) : base(expectedValue, isRegex)
         {
             _propertyName = propertyName;
         }
@@ -31,17 +30,11 @@ namespace NUnit.Framework.Internal.Filters
         /// Check whether the filter matches a test
         /// </summary>
         /// <param name="test">The test to be matched</param>
-        /// <returns></returns>
         public override bool Match(ITest test)
         {
             IList values = test.Properties[_propertyName];
 
-            if (values != null)
-                foreach (string val in values)
-                    if (Match(val))
-                        return true;
-
-            return false;
+            return values.Cast<string>().Any(Match);
         }
 
         /// <summary>

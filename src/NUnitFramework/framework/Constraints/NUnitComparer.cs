@@ -44,13 +44,13 @@ namespace NUnit.Framework.Constraints
             // We fallback to explicitly exclude CompareTo(object)
             static bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
 
-            MethodInfo method = xType.GetMethod("CompareTo", new Type[] { yType });
+            MethodInfo method = xType.GetMethod("CompareTo", new[] { yType });
             if (method != null && !IsIComparable(method))
-                return (int)method.Invoke(x, new object[] { y });
+                return (int)method.Invoke(x, new[] { y });
 
-            method = yType.GetMethod("CompareTo", new Type[] { xType });
+            method = yType.GetMethod("CompareTo", new[] { xType });
             if (method != null && !IsIComparable(method))
-                return -(int)method.Invoke(y, new object[] { x });
+                return -(int)method.Invoke(y, new[] { x });
 
             if (x is IComparable xComparable)
                 return xComparable.CompareTo(y);

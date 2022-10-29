@@ -323,7 +323,7 @@ namespace NUnit.Framework.Internal
         public void ApplyAttributesToTest(Type type)
         {
             foreach (var t in GetNestedTypes(type).Reverse()) 
-                ApplyAttributesToTest((ICustomAttributeProvider) t.GetTypeInfo());
+                ApplyAttributesToTest((ICustomAttributeProvider) t);
         }
         
         /// <summary>
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Internal
         /// <param name="recursive"></param>
         protected void PopulateTestNode(TNode thisNode, bool recursive)
         {
-            thisNode.AddAttribute("id", this.Id.ToString());
+            thisNode.AddAttribute("id", this.Id);
             thisNode.AddAttribute("name", this.Name);
             thisNode.AddAttribute("fullname", this.FullName);
             if (this.MethodName != null)
@@ -405,12 +405,12 @@ namespace NUnit.Framework.Internal
 
             if (type != null && type != typeof(object))
             {
-                actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
+                actions.AddRange(GetActionsForType(type.BaseType));
 
                 foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
-                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false));
+                    actions.AddRange(interfaceType.GetAttributes<ITestAction>(false));
 
-                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false));
+                actions.AddRange(type.GetAttributes<ITestAction>(false));
             }
 
             return actions.ToArray();

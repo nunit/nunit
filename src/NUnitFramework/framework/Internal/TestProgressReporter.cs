@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
                 if (test is TestSuite)
                 {
                     // Only add framework-version for the Assembly start-suite
-                    string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).GetTypeInfo().Assembly.GetName().Version}\" " : "";
+                    string version = test.TestType == "Assembly" ? $"framework-version=\"{typeof(TestProgressReporter).Assembly.GetName().Version}\" " : "";
                     report = $"<start-suite id=\"{test.Id}\" parentId=\"{(parent != null ? parent.Id : string.Empty)}\" name=\"{FormatAttributeValue(test.Name)}\" fullname=\"{FormatAttributeValue(test.FullName)}\" type=\"{test.TestType}\" {version}/>";
                 }
                 else
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing " + test.FullName + Environment.NewLine + ex.ToString());
+                log.Error($"Exception processing {test.FullName}{Environment.NewLine}{ex}");
             }
         }
 
@@ -73,11 +73,11 @@ namespace NUnit.Framework.Internal
                 var node = result.ToXml(false);
                 var parent = GetParent(result.Test);
                 node.Attributes.Add("parentId", parent != null ? parent.Id : string.Empty);
-                handler.RaiseCallbackEvent(node.OuterXml);                
+                handler.RaiseCallbackEvent(node.OuterXml);
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing " + result.FullName + Environment.NewLine + ex.ToString());
+                log.Error($"Exception processing {result.FullName}{Environment.NewLine}{ex}");
             }
         }
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing TestOutput event" + Environment.NewLine + ex.ToString());
+                log.Error($"Exception processing TestOutput event{Environment.NewLine}{ex}");
             }
         }
 
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error("Exception processing SendMessage event" + Environment.NewLine + ex.ToString());
+                log.Error($"Exception processing SendMessage event{Environment.NewLine}{ex}");
             }
         }
 

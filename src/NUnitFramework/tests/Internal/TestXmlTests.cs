@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal
             //}
 
             Assert.That(topNode.Name, Is.EqualTo(test.XmlElementName));
-            Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id.ToString()));
+            Assert.That(topNode.Attributes["id"], Is.EqualTo(test.Id));
             Assert.That(topNode.Attributes["name"], Is.EqualTo(test.Name));
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
             if (test.TypeInfo != null)
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Internal
                 var expectedProps = new List<string>();
                 foreach (string key in test.Properties.Keys)
                     foreach (object value in test.Properties[key])
-                        expectedProps.Add(key + "=" + value.ToString());
+                        expectedProps.Add(key + "=" + value);
 
                 TNode propsNode = topNode.SelectSingleNode("properties");
                 Assert.NotNull(propsNode);
@@ -153,7 +153,7 @@ namespace NUnit.Framework.Internal
                 {
                     string name = node.Attributes["name"];
                     string value = node.Attributes["value"];
-                    actualProps.Add(name + "=" + value.ToString());
+                    actualProps.Add(name + "=" + value);
                 }
 
                 Assert.That(actualProps, Is.EquivalentTo(expectedProps));

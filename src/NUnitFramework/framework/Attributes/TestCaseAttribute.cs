@@ -46,7 +46,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg)
         {
             RunState = RunState.Runnable;
-            Arguments = new object?[] { arg };
+            Arguments = new[] { arg };
             Properties = new PropertyBag();
         }
 
@@ -58,7 +58,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg1, object? arg2)
         {
             RunState = RunState.Runnable;
-            Arguments = new object?[] { arg1, arg2 };
+            Arguments = new[] { arg1, arg2 };
             Properties = new PropertyBag();
         }
 
@@ -71,7 +71,7 @@ namespace NUnit.Framework
         public TestCaseAttribute(object? arg1, object? arg2, object? arg3)
         {
             RunState = RunState.Runnable;
-            Arguments = new object?[] { arg1, arg2, arg3 };
+            Arguments = new[] { arg1, arg2, arg3 };
             Properties = new PropertyBag();
         }
 
@@ -261,7 +261,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
 
-                foreach (string cat in value.Split(new char[] { ',' }) )
+                foreach (string cat in value.Split(new[] { ',' }) )
                     Properties.Add(PropertyNames.Category, cat);
             }
         }

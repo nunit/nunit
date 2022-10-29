@@ -184,7 +184,7 @@ namespace NUnitLite
                     ? AssemblyHelper.GetAssemblyPath(_testAssembly)
                     : _options.InputFile;
 
-                _textUI.DisplayTestFiles(new string[] { testFile });
+                _textUI.DisplayTestFiles(new[] { testFile });
                 if (_testAssembly == null)
                     _testAssembly = AssemblyHelper.Load(testFile);
 
@@ -234,8 +234,6 @@ namespace NUnitLite
 
         public int RunTests(TestFilter filter, IDictionary<string, object> runSettings)
         {
-            var startTime = DateTime.UtcNow;
-
             ITestResult result = _runner.Run(this, filter);
 
             ReportResults(result);
@@ -308,7 +306,7 @@ namespace NUnitLite
 
                 foreach (var testName in options.TestList)
                 {
-                    int end = testName.IndexOfAny(new char[] { '(', '<' });
+                    int end = testName.IndexOfAny(new[] { '(', '<' });
                     if (end > 0)
                         prefilters.Add(testName.Substring(0, end).Trim());
                     else

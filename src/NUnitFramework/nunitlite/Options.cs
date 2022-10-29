@@ -342,8 +342,8 @@ namespace NUnit.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-            bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
-                !tt.GetTypeInfo().IsGenericTypeDefinition &&
+            bool nullable = tt.IsValueType && tt.IsGenericType &&
+                !tt.IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 
@@ -366,7 +366,7 @@ namespace NUnit.Options
         internal string[] Names => names;
         internal string[] ValueSeparators => separators;
 
-        static readonly char[] NameTerminator = new char[]{'=', ':'};
+        static readonly char[] NameTerminator = new[]{'=', ':'};
 
         private OptionValueType ParsePrototype ()
         {
@@ -399,7 +399,7 @@ namespace NUnit.Options
                         "prototype");
             if (count > 1) {
                 if (seps.Count == 0)
-                    this.separators = new string[]{":", "="};
+                    this.separators = new[]{":", "="};
                 else if (seps.Count == 1 && seps [0].Length == 0)
                     this.separators = null;
                 else
@@ -777,7 +777,7 @@ namespace NUnit.Options
             if (option != null)
                 foreach (string o in c.Option.ValueSeparators != null
                         ? option.Split (c.Option.ValueSeparators, StringSplitOptions.None)
-                        : new string[]{option}) {
+                        : new[]{option}) {
                     c.OptionValues.Add (o);
                 }
             if (c.OptionValues.Count == c.Option.MaxValueCount ||
@@ -812,7 +812,7 @@ namespace NUnit.Options
                 return false;
             for (int i = 0; i < n.Length; ++i) {
                 Option p;
-                string opt = f + n [i].ToString ();
+                string opt = f + n [i];
                 string rn = n [i].ToString ();
                 if (!Contains (rn)) {
                     if (i == 0)
@@ -938,9 +938,9 @@ namespace NUnit.Options
                 return maxIndex == 1 ? "VALUE" : "VALUE" + (index + 1);
             string[] nameStart;
             if (maxIndex == 1)
-                nameStart = new string[]{"{0:", "{"};
+                nameStart = new[]{"{0:", "{"};
             else
-                nameStart = new string[]{"{" + index + ":"};
+                nameStart = new[]{"{" + index + ":"};
             for (int i = 0; i < nameStart.Length; ++i) {
                 int start, j = 0;
                 do {

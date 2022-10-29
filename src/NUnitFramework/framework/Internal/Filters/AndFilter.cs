@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
+#nullable enable
 using System.Linq;
 using NUnit.Framework.Interfaces;
 
@@ -45,11 +44,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters match, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            foreach( TestFilter filter in Filters )
-                if ( !filter.Match( test ) )
-                    return false;
-
-            return true;
+            return Filters.All(filter => filter.Match(test));
         }
 
         /// <summary>

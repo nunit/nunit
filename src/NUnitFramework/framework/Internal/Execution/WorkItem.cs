@@ -360,7 +360,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (node.HasMethods)
                     list.Add(node);
 
-                fixtureType = fixtureType.GetTypeInfo().BaseType;
+                fixtureType = fixtureType.BaseType;
             }
 
             return list;

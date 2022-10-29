@@ -45,7 +45,7 @@ namespace NUnit.Framework
         /// <param name="arg1"></param>
         public ValuesAttribute(object? arg1)
         {
-            data = new object?[] { arg1 };
+            data = new[] { arg1 };
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace NUnit.Framework
         /// <param name="arg2"></param>
         public ValuesAttribute(object? arg1, object? arg2)
         {
-            data = new object?[] { arg1, arg2 };
+            data = new[] { arg1, arg2 };
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NUnit.Framework
         /// <param name="arg3"></param>
         public ValuesAttribute(object? arg1, object? arg2, object? arg3)
         {
-            data = new object?[] { arg1, arg2, arg3 };
+            data = new[] { arg1, arg2, arg3 };
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace NUnit.Framework
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
             }
-            if (targetType.GetTypeInfo().IsEnum)
+            if (targetType.IsEnum)
             {
                 return Enum.GetValues(targetType);
             }
@@ -124,7 +124,7 @@ namespace NUnit.Framework
         private static bool IsNullableEnum(Type t)
         {
             Type u = Nullable.GetUnderlyingType(t);
-            return (u != null) && u.GetTypeInfo().IsEnum;
+            return (u != null) && u.IsEnum;
         }
     }
 }
