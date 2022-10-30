@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Web.UI;
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>

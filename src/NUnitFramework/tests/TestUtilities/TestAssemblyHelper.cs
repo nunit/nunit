@@ -2,8 +2,6 @@
 
 #if NETFRAMEWORK
 
-using System.CodeDom.Compiler;
-
 namespace NUnit.TestUtilities
 {
     public static class TestAssemblyHelper

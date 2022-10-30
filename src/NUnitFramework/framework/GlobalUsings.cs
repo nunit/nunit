@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+global using System.CodeDom.Compiler;
 global using System.Collections;
 global using System.Collections.Concurrent;
 global using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@ global using System.Text;
 global using System.Text.RegularExpressions;
 global using System.Xml;
 global using System.Xml.Serialization;
+global using System.Web.UI;
 global using NUnit.Compatibility;
 global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Constraints.Comparers;
