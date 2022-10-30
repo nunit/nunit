@@ -26,6 +26,7 @@ global using NUnit.TestUtilities.Collections;
 global using NUnit.TestUtilities.Comparers;
 global using System.Collections;
 global using System.Collections.Concurrent;
+global using System.Collections.Specialized;
 global using System.Diagnostics;
 global using System.Globalization;
 global using System.Runtime.Versioning;
@@ -36,6 +37,9 @@ global using System.Security.Principal;
 global using System.Runtime.Serialization;
 global using System.Text;
 global using System.Collections.Immutable;
+global using System.Security;
+global using System.Security.Permissions;
+global using System.Security.Policy;
 #if NETFRAMEWORK
 global using System.Runtime.Remoting.Messaging;
 #endif
