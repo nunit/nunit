@@ -178,21 +178,6 @@ namespace NUnit.Tests
         }
     }
 
-    namespace TestAssembly
-    {
-        [TestFixture]
-        public class MockTestFixture
-        {
-            public const int Tests = 1;
-            public const int Suites = 1;
-
-            [Test]
-            public void MyTest()
-            {
-            }
-        }
-    }
-
     [TestFixture, Ignore("BECAUSE")]
     public class IgnoredFixture
     {
