@@ -3,9 +3,6 @@
 using System.Collections;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {

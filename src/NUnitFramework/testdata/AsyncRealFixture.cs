@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Threading.Tasks;
+
 
 // Don’t warn when async is used without await
 #pragma warning disable CS1998

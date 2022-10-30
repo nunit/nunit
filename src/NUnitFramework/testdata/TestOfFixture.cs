@@ -2,8 +2,6 @@
 
 #region Using Directives
 
-using NUnit.Framework.Internal;
-
 #endregion
 
 namespace NUnit.TestData
