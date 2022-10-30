@@ -4,7 +4,6 @@
 
 using System;
 using System.ComponentModel;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {

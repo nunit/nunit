@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using NUnit.Framework.Constraints;
 using System;
 
 namespace NUnit.Framework

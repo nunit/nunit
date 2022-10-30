@@ -5,5 +5,6 @@ global using System.Globalization;
 global using System.Reflection;
 global using System.Security;
 global using NUnit.Compatibility;
+global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;

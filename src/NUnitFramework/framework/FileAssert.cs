@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.ComponentModel;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {

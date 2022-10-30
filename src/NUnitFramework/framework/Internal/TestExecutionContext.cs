@@ -2,7 +2,6 @@
 
 using System.Diagnostics;
 using System.Security.Principal;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 
 #if NETFRAMEWORK
