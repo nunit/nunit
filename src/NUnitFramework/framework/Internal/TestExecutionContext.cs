@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Diagnostics;
-using System.Security.Principal;
-using NUnit.Framework.Internal.Execution;
 
 #if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;

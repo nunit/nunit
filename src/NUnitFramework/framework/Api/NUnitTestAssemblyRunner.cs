@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal.Execution;
 using System.Diagnostics;
 using NUnit.Framework.Internal.Abstractions;
 

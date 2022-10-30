@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using NUnit.Framework.Internal.Execution;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
