@@ -2,8 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 

@@ -3,8 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestUtilities;
 

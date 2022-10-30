@@ -3,7 +3,6 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Results
 {

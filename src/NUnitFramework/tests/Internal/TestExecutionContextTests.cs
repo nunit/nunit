@@ -8,7 +8,6 @@ using System.Globalization;
 using System.IO;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Interfaces;
 using System.Security.Principal;
 using System.Threading.Tasks;
 

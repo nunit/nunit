@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData.TestMethodSignatureFixture;
 using NUnit.TestUtilities;
 

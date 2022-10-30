@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData.ParallelExecutionData;
 using NUnit.TestUtilities;
 

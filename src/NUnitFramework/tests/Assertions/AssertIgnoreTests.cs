@@ -2,8 +2,6 @@
 
 using System;
 using System.Linq;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;
 using NUnit.TestUtilities;
 

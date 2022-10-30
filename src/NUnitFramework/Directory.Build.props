@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">9</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">10</LangVersion>
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
@@ -10,6 +10,7 @@
     <NUnitRuntimeFrameworks>net462;netcoreapp3.1;net5.0;net6.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">

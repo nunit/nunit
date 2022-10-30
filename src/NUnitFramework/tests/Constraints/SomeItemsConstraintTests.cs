@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {

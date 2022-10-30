@@ -4,8 +4,6 @@ using System;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;

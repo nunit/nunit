@@ -2,7 +2,6 @@
 
 using System;
 using System.Linq;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;

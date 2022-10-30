@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;

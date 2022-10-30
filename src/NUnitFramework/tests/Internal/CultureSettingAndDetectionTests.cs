@@ -3,7 +3,6 @@
 using System;
 using System.Threading;
 using System.Globalization;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData.CultureAttributeData;
 using NUnit.TestUtilities;
 

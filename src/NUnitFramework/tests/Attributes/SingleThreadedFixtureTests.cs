@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 

@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NUnit.Framework.Internal;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 using NUnit.Tests.Singletons;

@@ -2,8 +2,6 @@
 
 using System;
 using System.Reflection;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.TestData.RepeatingTests;
 using NUnit.TestUtilities;
 

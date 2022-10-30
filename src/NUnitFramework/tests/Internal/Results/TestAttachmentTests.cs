@@ -2,7 +2,6 @@
 
 
 using System.IO;
-using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 

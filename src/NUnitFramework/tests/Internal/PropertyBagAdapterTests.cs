@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NUnit.Framework.Interfaces;
 using static NUnit.Framework.TestContext;
 
 namespace NUnit.Framework.Internal

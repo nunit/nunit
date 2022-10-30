@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Attributes
 {

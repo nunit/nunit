@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Collections;
 
 namespace NUnit.Framework.Constraints

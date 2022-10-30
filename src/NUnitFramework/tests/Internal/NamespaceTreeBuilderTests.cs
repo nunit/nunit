@@ -2,7 +2,6 @@
 
 using System;
 using System.Text;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {

@@ -3,7 +3,6 @@
 using System;
 using System.Reflection;
 using System.Threading;
-using NUnit.Framework.Internal;
 
 namespace NUnit.TestUtilities
 {

@@ -8,8 +8,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
