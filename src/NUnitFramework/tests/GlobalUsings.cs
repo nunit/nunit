@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 global using System.Collections;
+global using System.Collections.Concurrent;
 global using System.Diagnostics;
 global using System.Globalization;
 global using NUnit.Framework.Interfaces;
@@ -16,6 +17,7 @@ global using System.Security.Principal;
 global using System.Runtime.Serialization;
 global using System.Text;
 global using NUnit.Compatibility;
+global using NUnit.Framework;
 global using NUnit.Framework.Api;
 global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Internal.Builders;
