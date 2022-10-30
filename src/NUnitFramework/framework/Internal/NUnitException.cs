@@ -2,8 +2,6 @@
 
 namespace NUnit.Framework.Internal
 {
-    using System.Runtime.Serialization;
-
     /// <summary>
     /// Thrown when an assertion failed. Here to preserve the inner
     /// exception and hence its stack trace.

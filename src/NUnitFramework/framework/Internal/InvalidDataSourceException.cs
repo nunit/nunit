@@ -3,7 +3,6 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// InvalidTestFixtureException is thrown when an appropriate test

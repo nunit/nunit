@@ -3,7 +3,6 @@
 namespace NUnit.Framework.Internal
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// TestCaseTimeoutException is thrown when a test running directly
