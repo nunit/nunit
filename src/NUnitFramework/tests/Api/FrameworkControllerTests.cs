@@ -1,14 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Web.UI;
-using NUnit.Compatibility;
-using NUnit.Tests.Assemblies;
-
 namespace NUnit.Framework.Api
 {
     // Functional tests of the FrameworkController and all subordinate classes

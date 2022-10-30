@@ -2,7 +2,6 @@
 
 using System;
 using NUnit.TestUtilities.Comparers;
-using System.Collections;
 
 namespace NUnit.Framework.Constraints
 {
