@@ -3,7 +3,6 @@
 #nullable enable
 
 using System.Diagnostics.CodeAnalysis;
-using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
 {

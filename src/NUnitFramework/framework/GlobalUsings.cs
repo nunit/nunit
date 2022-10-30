@@ -10,3 +10,4 @@ global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
 global using NUnit.Framework.Internal.Execution;
+global using NUnit.Framework.Internal.Builders;
