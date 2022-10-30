@@ -12,3 +12,6 @@ global using NUnit.Framework.Internal;
 global using NUnit.Framework.Internal.Filters;
 global using NUnit.Tests.Assemblies;
 global using NUnit.TestUtilities;
+global using NUnit.Framework.Internal.Builders;
+global using NUnit.Framework.Internal.Execution;
+global using NUnit.Framework.Internal.Abstractions;
