@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Reflection;
-using NUnit.Framework;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Abstractions;

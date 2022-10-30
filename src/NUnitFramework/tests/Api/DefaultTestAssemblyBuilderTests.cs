@@ -1,10 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using NUnit.Tests;
-using NUnit.Tests.Assemblies;
 using NUnit.Tests.Singletons;
 
 namespace NUnit.Framework.Api
