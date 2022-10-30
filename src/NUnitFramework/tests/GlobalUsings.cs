@@ -6,6 +6,7 @@ global using NUnit.Framework.Internal;
 global using System.Runtime.Versioning;
 global using System.Web.UI;
 global using System.Xml.Linq;
+global using NUnit.Framework.Internal.Filters;
 global using NUnit.TestUtilities;
 global using NUnit.Tests.Assemblies;
 #if NETFRAMEWORK
