@@ -3,4 +3,5 @@
 global using System.Security.Principal;
 global using NUnit.Framework;
 global using System.Collections;
+global using System.Runtime.CompilerServices;
 global using NUnit.Framework.Interfaces;

@@ -3,10 +3,12 @@
 global using System.Collections;
 global using System.Collections.Concurrent;
 global using System.Collections.ObjectModel;
+global using System.ComponentModel;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
+global using System.Runtime.InteropServices;
 global using System.Security;
 global using System.Security.Principal;
 global using System.Text;

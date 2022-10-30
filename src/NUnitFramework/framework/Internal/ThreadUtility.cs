@@ -4,7 +4,6 @@
 
 #if THREAD_ABORT
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 #endif
 
 namespace NUnit.Framework.Internal

@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Collections.Concurrent;
-
 namespace NUnit.Framework.Internal
 {
     internal static partial class CSharpPatternBasedAwaitAdapter

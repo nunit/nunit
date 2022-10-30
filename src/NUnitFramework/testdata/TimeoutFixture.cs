@@ -1,9 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #if THREAD_ABORT
-using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 
 namespace NUnit.TestData
 {

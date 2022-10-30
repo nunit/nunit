@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Runtime.CompilerServices;
-
 namespace NUnit.TestData
 {
     public sealed class AwaitableReturnTypeFixture

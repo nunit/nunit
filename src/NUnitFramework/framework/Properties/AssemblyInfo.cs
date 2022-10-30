@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Runtime.CompilerServices;
-
 [assembly: InternalsVisibleTo("nunit.framework.tests, PublicKey=002400000480000094" +
                               "000000060200000024000052534131000400000100010031eea" +
                               "370b1984bfa6d1ea760e1ca6065cee41a1a279ca234933fe977" +

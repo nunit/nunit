@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Collections.ObjectModel;
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>
