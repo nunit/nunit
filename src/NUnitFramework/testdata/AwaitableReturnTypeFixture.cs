@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using NUnit.Framework;
 using System.Threading.Tasks;
 
 namespace NUnit.TestData

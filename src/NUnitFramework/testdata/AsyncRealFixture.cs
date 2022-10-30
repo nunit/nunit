@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading.Tasks;
-using NUnit.Framework;
 
 // Don’t warn when async is used without await
 #pragma warning disable CS1998

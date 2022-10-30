@@ -2,3 +2,4 @@
 
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
+global using System.Runtime.Versioning;

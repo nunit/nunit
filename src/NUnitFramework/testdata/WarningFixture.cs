@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 using System.Threading.Tasks;
 

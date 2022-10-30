@@ -2,7 +2,6 @@
 #if NET5_0_OR_GREATER
 
 using System.IO;
-using System.Runtime.Versioning;
 
 namespace NUnit.Framework.Attributes
 {

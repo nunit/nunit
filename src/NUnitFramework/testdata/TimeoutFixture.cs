@@ -4,7 +4,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using NUnit.Framework;
 
 namespace NUnit.TestData
 {
