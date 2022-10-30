@@ -2,12 +2,6 @@
 
 // Enable these tests if you need to debug unhandled exceptions
 #if false
-using System;
-using System.Collections;
-using System.Text;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests
 {

@@ -2,10 +2,6 @@
 
 namespace NUnitLite.Tests
 {
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-
     [TestFixture]
     public class CommandLineTests
     {
