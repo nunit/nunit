@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Interfaces;
 using NUnit.TestData.ActionAttributeTests;
 
 [assembly: TaggedAction("OnAssembly", ActionTargets.Suite | ActionTargets.Test)]
