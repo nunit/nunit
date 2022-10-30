@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System;
-
 namespace NUnit.Framework.Internal.Extensions
 {
     /// <summary>

@@ -2,7 +2,6 @@
 
 #nullable enable
 using System.Collections.Specialized;
-using System.Linq;
 
 namespace NUnit.Framework.Internal.Extensions
 {

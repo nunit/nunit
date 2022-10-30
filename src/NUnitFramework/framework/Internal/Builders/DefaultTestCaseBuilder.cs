@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace NUnit.Framework.Internal.Builders
 {
     /// <summary>

@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System;
-
 namespace NUnit.Framework.Internal
 {
     internal static partial class CSharpPatternBasedAwaitAdapter

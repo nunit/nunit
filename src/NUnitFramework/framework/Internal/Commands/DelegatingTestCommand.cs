@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Threading;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>

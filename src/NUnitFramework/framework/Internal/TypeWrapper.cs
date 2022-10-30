@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Linq;
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>

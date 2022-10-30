@@ -2,10 +2,7 @@
 
 #nullable enable
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.ExceptionServices;
 
 namespace NUnit.Framework.Internal

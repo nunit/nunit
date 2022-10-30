@@ -2,9 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Threading;
-
 #if THREAD_ABORT
 using System.ComponentModel;
 using System.Runtime.InteropServices;

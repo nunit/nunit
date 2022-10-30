@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Collections.Generic;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal.Commands

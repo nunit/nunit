@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System;
 using System.Collections.Concurrent;
 
 namespace NUnit.Framework.Internal

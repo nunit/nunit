@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System;
 using System.ComponentModel;
 
 #if !NETFRAMEWORK
