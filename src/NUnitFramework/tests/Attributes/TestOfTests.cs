@@ -2,7 +2,6 @@
 
 #region Using Directives
 
-using System;
 using NUnit.TestData;
 
 #endregion

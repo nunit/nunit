@@ -7,11 +7,8 @@
 //
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
-using System;
-using System.Linq;
-using System.Reflection;
+
 using NUnit.Framework.Internal.Builders;
-using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
 
 namespace NUnit.Framework.Attributes
