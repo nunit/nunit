@@ -1,10 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Globalization;
-using System.IO;
-using NUnit.Framework.Interfaces;
-
 namespace NUnitLite
 {
     /// <summary>

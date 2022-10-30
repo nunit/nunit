@@ -1,9 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.IO;
-using System.Text;
-
 namespace NUnit.Common
 {
     public class ColorConsoleWriter : ExtendedTextWrapper

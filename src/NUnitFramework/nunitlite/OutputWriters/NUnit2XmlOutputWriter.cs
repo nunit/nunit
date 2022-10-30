@@ -1,15 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
-using System.Xml;
-using System.IO;
-using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
-
 namespace NUnitLite
 {
     /// <summary>

@@ -128,18 +128,13 @@
 // 11/5/2015 -
 // Change namespace to avoid conflict with user code use of mono.options
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
-using NUnit.Compatibility;
 
 // Missing XML Docs
 #pragma warning disable 1591
