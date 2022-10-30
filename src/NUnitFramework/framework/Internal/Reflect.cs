@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Runtime.ExceptionServices;
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>

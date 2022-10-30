@@ -1,10 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #if NETFRAMEWORK
-using System;
-using System.Threading;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Principal;
 using NUnit.TestData.TestFixtureTests;
 
 namespace NUnit.Framework.Internal

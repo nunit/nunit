@@ -8,6 +8,7 @@ global using System.Diagnostics.CodeAnalysis;
 global using System.Globalization;
 global using System.Reflection;
 global using System.Runtime.CompilerServices;
+global using System.Runtime.ExceptionServices;
 global using System.Runtime.InteropServices;
 global using System.Security;
 global using System.Security.Principal;
