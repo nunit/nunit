@@ -2,10 +2,6 @@
 
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 namespace NUnit.Framework
 {
     /// <summary>

@@ -3,10 +3,13 @@
 global using System.Collections;
 global using System.Globalization;
 global using System.Reflection;
+global using System.Runtime.CompilerServices;
 global using System.Security;
 global using System.Security.Principal;
+global using System.Text.RegularExpressions;
 global using NUnit.Compatibility;
 global using NUnit.Framework.Constraints;
+global using NUnit.Framework.Constraints.Comparers;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
 global using NUnit.Framework.Internal.Execution;

@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Collections.Generic;
-
 namespace NUnit.Framework.Interfaces
 {
     // TODO: These methods should really return IEnumerable<TestFixture>,
