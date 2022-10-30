@@ -5,6 +5,7 @@ global using System.Runtime.CompilerServices;
 global using System.Text;
 global using System.Reflection;
 global using System.Xml;
+global using System.Runtime.Serialization;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
 global using NUnit.Options;
