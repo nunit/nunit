@@ -2,10 +2,6 @@
 
 #nullable enable
 
-#if NETSTANDARD2_0
-using System.Runtime.CompilerServices;
-#endif
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>

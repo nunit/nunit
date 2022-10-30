@@ -6,6 +6,7 @@ global using NUnit.Common;
 global using NUnit.Framework;
 global using NUnit.Options;
 global using System.Xml;
+global using System.Xml.Schema;
 global using System.Reflection;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
