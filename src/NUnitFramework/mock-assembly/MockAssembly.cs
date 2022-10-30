@@ -178,20 +178,6 @@ namespace NUnit.Tests
         }
     }
 
-    namespace Singletons
-    {
-        [TestFixture]
-        public class OneTestCase
-        {
-            public const int Tests = 1;
-            public const int Suites = 1;
-
-            [Test]
-            public virtual void TestCase()
-            {}
-        }
-    }
-
     namespace TestAssembly
     {
         [TestFixture]
