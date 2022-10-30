@@ -23,6 +23,8 @@ global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Constraints.Comparers;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
+global using NUnit.Framework.Internal.Abstractions;
 global using NUnit.Framework.Internal.Execution;
 global using NUnit.Framework.Internal.Builders;
+global using NUnit.Framework.Internal.Commands;
 global using NUnit.Framework.Internal.Extensions;

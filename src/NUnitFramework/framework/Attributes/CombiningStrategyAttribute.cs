@@ -4,8 +4,6 @@
 
 namespace NUnit.Framework
 {
-    using Internal.Builders;
-
     /// <summary>
     /// Marks a test as using a particular CombiningStrategy to join any supplied parameter data.
     /// Since this is the default, the attribute is optional.

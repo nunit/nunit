@@ -4,8 +4,6 @@ using System.Diagnostics;
 
 namespace NUnit.Framework.Internal.Execution
 {
-    using Commands;
-
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
     /// a higher level grouping of tests. All WorkItems inherit

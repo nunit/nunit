@@ -4,8 +4,6 @@
 
 namespace NUnit.Framework
 {
-    using System;
-
     /// <summary>
     /// Identifies a method to be called once after all the child tests have run. 
     /// The method is guaranteed to be called, even if an exception is thrown.
