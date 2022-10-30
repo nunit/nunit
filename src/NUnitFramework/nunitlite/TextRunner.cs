@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reflection;
 using NUnit.Common;
 using NUnit;
-using NUnit.Framework.Api;
 using NUnit.Framework.Internal.Filters;
 
 namespace NUnitLite

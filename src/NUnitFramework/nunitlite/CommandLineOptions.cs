@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Text.RegularExpressions;
-using NUnit.Options;
-using System.Text;
 
 namespace NUnit.Common
 {
