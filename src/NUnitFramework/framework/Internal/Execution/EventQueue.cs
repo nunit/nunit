@@ -166,13 +166,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the count of items in the queue.
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return _queue.Count;
-            }
-        }
+        public int Count => _queue.Count;
 
         /// <summary>
         /// Enqueues the specified event

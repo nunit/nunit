@@ -30,10 +30,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "type with attribute " + MsgUtils.FormatValue(expectedType); }
-        }
+        public override string Description => "type with attribute " + MsgUtils.FormatValue(expectedType);
 
         /// <summary>
         /// Tests whether the object provides the expected attribute.

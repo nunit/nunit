@@ -69,10 +69,7 @@ namespace NUnit.TestUtilities
             }
         }
 
-        public long FileLength
-        {
-            get { return _fileLength; }
-        }
+        public long FileLength => _fileLength;
 
         public long OffsetOf(char target)
         {
@@ -107,7 +104,7 @@ namespace NUnit.TestUtilities
         /// <summary>
         /// Gets the test file.
         /// </summary>
-        public FileInfo File { get { return _fileInfo; } }
+        public FileInfo File => _fileInfo;
 
         /// <summary>
         /// Returns the full path of the contained test directory

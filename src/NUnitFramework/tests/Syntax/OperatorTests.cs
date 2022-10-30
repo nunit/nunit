@@ -271,33 +271,18 @@ namespace NUnit.Framework.Syntax
     {
         class A
         {
-            B B
-            {
-                get { return new B(); }
-            }
+            B B => new B();
 
-            string X
-            {
-                get { return "X in A"; }
-            }
+            string X => "X in A";
 
-            string Y
-            {
-                get { return "Y in A"; }
-            }
+            string Y => "Y in A";
         }
 
         class B
         {
-            string X
-            {
-                get { return "X in B"; }
-            }
+            string X => "X in B";
 
-            string Y
-            {
-                get { return "Y in B"; }
-            }
+            string Y => "Y in B";
         }
 
         [Test]

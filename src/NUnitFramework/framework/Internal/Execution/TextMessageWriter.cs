@@ -71,8 +71,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int MaxLineLength
         {
-            get { return maxLineLength; }
-            set { maxLineLength = value; }
+            get => maxLineLength;
+            set => maxLineLength = value;
         }
         #endregion
 

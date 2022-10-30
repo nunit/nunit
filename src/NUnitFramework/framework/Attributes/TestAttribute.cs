@@ -57,7 +57,7 @@ namespace NUnit.Framework
         /// <value>The result.</value>
         public object? ExpectedResult
         {
-            get { return _expectedResult; }
+            get => _expectedResult;
             set
             {
                 _expectedResult = value;

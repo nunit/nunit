@@ -31,10 +31,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether the parameter is optional
         /// </summary>
-        public bool IsOptional
-        {
-            get { return ParameterInfo.IsOptional;  }
-        }
+        public bool IsOptional => ParameterInfo.IsOptional;
 
         /// <summary>
         /// Gets an IMethodInfo representing the method for which this is a parameter.
@@ -49,10 +46,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Type of the parameter
         /// </summary>
-        public Type ParameterType
-        {
-            get { return ParameterInfo.ParameterType;  }
-        }
+        public Type ParameterType => ParameterInfo.ParameterType;
 
         #endregion
 

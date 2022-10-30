@@ -121,3 +121,14 @@ csharp_style_var_when_type_is_apparent = true:suggestion
 
 # DOC100: Place text in paragraphs
 dotnet_diagnostic.DOC100.severity = silent
+
+
+# Expression-bodied members
+csharp_style_expression_bodied_accessors = when_on_single_line:warning
+csharp_style_expression_bodied_constructors = false:none
+csharp_style_expression_bodied_indexers = when_on_single_line:warning
+csharp_style_expression_bodied_lambdas = when_on_single_line:warning
+csharp_style_expression_bodied_local_functions = when_on_single_line:warning
+csharp_style_expression_bodied_methods = false:none
+csharp_style_expression_bodied_operators = when_on_single_line:warning
+csharp_style_expression_bodied_properties = when_on_single_line:warning

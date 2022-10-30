@@ -62,13 +62,7 @@ namespace NUnit.Framework.Internal
         /// Gets the name used for the top-level element in the
         /// XML representation of this test
         /// </summary>
-        public override string TestType
-        {
-            get
-            {
-                return "Assembly";
-            }
-        }
+        public override string TestType => "Assembly";
 
         /// <summary>
         /// Get custom attributes specified on the assembly

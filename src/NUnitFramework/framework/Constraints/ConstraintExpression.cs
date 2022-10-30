@@ -116,19 +116,13 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public ConstraintExpression Not
-        {
-            get { return this.Append(new NotOperator()); }
-        }
+        public ConstraintExpression Not => this.Append(new NotOperator());
 
         /// <summary>
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public ConstraintExpression No
-        {
-            get { return this.Append(new NotOperator()); }
-        }
+        public ConstraintExpression No => this.Append(new NotOperator());
 
         #endregion
 
@@ -139,10 +133,7 @@ namespace NUnit.Framework.Constraints
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-        public ConstraintExpression All
-        {
-            get { return this.Append(new AllOperator()); }
-        }
+        public ConstraintExpression All => this.Append(new AllOperator());
 
         #endregion
 
@@ -153,10 +144,7 @@ namespace NUnit.Framework.Constraints
         /// the following constraint to all members of a collection,
         /// succeeding if at least one of them succeeds.
         /// </summary>
-        public ConstraintExpression Some
-        {
-            get { return this.Append(new SomeOperator()); }
-        }
+        public ConstraintExpression Some => this.Append(new SomeOperator());
 
         #endregion
 
@@ -167,10 +155,7 @@ namespace NUnit.Framework.Constraints
         /// the following constraint to all members of a collection,
         /// succeeding if all of them fail.
         /// </summary>
-        public ConstraintExpression None
-        {
-            get { return this.Append(new NoneOperator()); }
-        }
+        public ConstraintExpression None => this.Append(new NoneOperator());
 
         #endregion
 
@@ -228,10 +213,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Length
-        {
-            get { return Property("Length"); }
-        }
+        public ResolvableConstraintExpression Length => Property("Length");
 
         #endregion
 
@@ -241,10 +223,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Count
-        {
-            get { return Property("Count"); }
-        }
+        public ResolvableConstraintExpression Count => Property("Count");
 
         #endregion
 
@@ -254,10 +233,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression Message
-        {
-            get { return Property("Message"); }
-        }
+        public ResolvableConstraintExpression Message => Property("Message");
 
         #endregion
 
@@ -267,10 +243,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public ResolvableConstraintExpression InnerException
-        {
-            get { return Property("InnerException"); }
-        }
+        public ResolvableConstraintExpression InnerException => Property("InnerException");
 
         #endregion
 
@@ -301,10 +274,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// With is currently a NOP - reserved for future use.
         /// </summary>
-        public ConstraintExpression With
-        {
-            get { return this.Append(new WithOperator()); }
-        }
+        public ConstraintExpression With => this.Append(new WithOperator());
 
         #endregion
 
@@ -335,10 +305,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for null
         /// </summary>
-        public NullConstraint Null
-        {
-            get { return (NullConstraint)this.Append(new NullConstraint()); }
-        }
+        public NullConstraint Null => (NullConstraint)this.Append(new NullConstraint());
 
         #endregion
 
@@ -347,10 +314,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for default value
         /// </summary>
-        public DefaultConstraint Default
-        {
-            get { return (DefaultConstraint)this.Append(new DefaultConstraint()); }
-        }
+        public DefaultConstraint Default => (DefaultConstraint)this.Append(new DefaultConstraint());
 
         #endregion
 
@@ -359,10 +323,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for True
         /// </summary>
-        public TrueConstraint True
-        {
-            get { return (TrueConstraint)this.Append(new TrueConstraint()); }
-        }
+        public TrueConstraint True => (TrueConstraint)this.Append(new TrueConstraint());
 
         #endregion
 
@@ -371,10 +332,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for False
         /// </summary>
-        public FalseConstraint False
-        {
-            get { return (FalseConstraint)this.Append(new FalseConstraint()); }
-        }
+        public FalseConstraint False => (FalseConstraint)this.Append(new FalseConstraint());
 
         #endregion
 
@@ -383,10 +341,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for a positive value
         /// </summary>
-        public GreaterThanConstraint Positive
-        {
-            get { return (GreaterThanConstraint)this.Append(new GreaterThanConstraint(0)); }
-        }
+        public GreaterThanConstraint Positive => (GreaterThanConstraint)this.Append(new GreaterThanConstraint(0));
 
         #endregion
 
@@ -395,10 +350,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for a negative value
         /// </summary>
-        public LessThanConstraint Negative
-        {
-            get { return (LessThanConstraint)this.Append(new LessThanConstraint(0)); }
-        }
+        public LessThanConstraint Negative => (LessThanConstraint)this.Append(new LessThanConstraint(0));
 
         #endregion
 
@@ -407,10 +359,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests if item is equal to zero
         /// </summary>
-        public EqualConstraint Zero
-        {
-            get { return (EqualConstraint)this.Append(new EqualConstraint(0)); }
-        }
+        public EqualConstraint Zero => (EqualConstraint)this.Append(new EqualConstraint(0));
 
         #endregion
 
@@ -419,10 +368,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for NaN
         /// </summary>
-        public NaNConstraint NaN
-        {
-            get { return (NaNConstraint)this.Append(new NaNConstraint()); }
-        }
+        public NaNConstraint NaN => (NaNConstraint)this.Append(new NaNConstraint());
 
         #endregion
 
@@ -431,10 +377,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests for empty
         /// </summary>
-        public EmptyConstraint Empty
-        {
-            get { return (EmptyConstraint)this.Append(new EmptyConstraint()); }
-        }
+        public EmptyConstraint Empty => (EmptyConstraint)this.Append(new EmptyConstraint());
 
         #endregion
 
@@ -444,28 +387,19 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
-        public UniqueItemsConstraint Unique
-        {
-            get { return (UniqueItemsConstraint)this.Append(new UniqueItemsConstraint()); }
-        }
+        public UniqueItemsConstraint Unique => (UniqueItemsConstraint)this.Append(new UniqueItemsConstraint());
 
         #endregion
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
-        public BinarySerializableConstraint BinarySerializable
-        {
-            get { return (BinarySerializableConstraint)this.Append(new BinarySerializableConstraint()); }
-        }
+        public BinarySerializableConstraint BinarySerializable => (BinarySerializableConstraint)this.Append(new BinarySerializableConstraint());
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
-        public XmlSerializableConstraint XmlSerializable
-        {
-            get { return (XmlSerializableConstraint)this.Append(new XmlSerializableConstraint()); }
-        }
+        public XmlSerializableConstraint XmlSerializable => (XmlSerializableConstraint)this.Append(new XmlSerializableConstraint());
 
         #region EqualTo
 
@@ -694,10 +628,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests whether a collection is ordered
         /// </summary>
-        public CollectionOrderedConstraint Ordered
-        {
-            get { return (CollectionOrderedConstraint)this.Append(new CollectionOrderedConstraint()); }
-        }
+        public CollectionOrderedConstraint Ordered => (CollectionOrderedConstraint)this.Append(new CollectionOrderedConstraint());
 
         #endregion
 
@@ -936,10 +867,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
         /// </summary>
-        public Constraint Exist
-        {
-            get { return Append(new FileOrDirectoryExistsConstraint()); }
-        }
+        public Constraint Exist => Append(new FileOrDirectoryExistsConstraint());
 
         #endregion
 

@@ -81,13 +81,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets or sets the current state of the pump
         /// </summary>
-        public EventPumpState PumpState
-        {
-            get
-            {
-                return (EventPumpState)_pumpState;
-            }
-        }
+        public EventPumpState PumpState => (EventPumpState)_pumpState;
 
         /// <summary>
         /// Gets or sets the name of this EventPump

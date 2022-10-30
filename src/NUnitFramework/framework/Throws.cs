@@ -18,10 +18,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected exception
         /// </summary>
-        public static ResolvableConstraintExpression Exception
-        {
-            get { return new ConstraintExpression().Append(new ThrowsOperator()); }
-        }
+        public static ResolvableConstraintExpression Exception => new ConstraintExpression().Append(new ThrowsOperator());
 
         #endregion
 
@@ -30,10 +27,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an exception with a given InnerException
         /// </summary>
-        public static ResolvableConstraintExpression InnerException
-        {
-            get { return Exception.InnerException; }
-        }
+        public static ResolvableConstraintExpression InnerException => Exception.InnerException;
 
         #endregion
 
@@ -42,10 +36,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected TargetInvocationException
         /// </summary>
-        public static ExactTypeConstraint TargetInvocationException
-        {
-            get { return TypeOf(typeof(System.Reflection.TargetInvocationException)); }
-        }
+        public static ExactTypeConstraint TargetInvocationException => TypeOf(typeof(System.Reflection.TargetInvocationException));
 
         #endregion
 
@@ -54,10 +45,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected ArgumentException
         /// </summary>
-        public static ExactTypeConstraint ArgumentException
-        {
-            get { return TypeOf(typeof(System.ArgumentException)); }
-        }
+        public static ExactTypeConstraint ArgumentException => TypeOf(typeof(System.ArgumentException));
 
         #endregion
 
@@ -66,10 +54,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected ArgumentNullException
         /// </summary>
-        public static ExactTypeConstraint ArgumentNullException
-        {
-            get { return TypeOf(typeof (System.ArgumentNullException)); }
-        }
+        public static ExactTypeConstraint ArgumentNullException => TypeOf(typeof (System.ArgumentNullException));
 
         #endregion
 
@@ -78,10 +63,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying an expected InvalidOperationException
         /// </summary>
-        public static ExactTypeConstraint InvalidOperationException
-        {
-            get { return TypeOf(typeof(System.InvalidOperationException)); }
-        }
+        public static ExactTypeConstraint InvalidOperationException => TypeOf(typeof(System.InvalidOperationException));
 
         #endregion
 
@@ -90,10 +72,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying that no exception is thrown
         /// </summary>
-        public static ThrowsNothingConstraint Nothing
-        {
-            get { return new ThrowsNothingConstraint(); }
-        }
+        public static ThrowsNothingConstraint Nothing => new ThrowsNothingConstraint();
 
         #endregion
 

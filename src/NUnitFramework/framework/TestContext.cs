@@ -45,18 +45,12 @@ namespace NUnit.Framework
         /// use within a test, but it should not be used
         /// outside the test for which it is created.
         /// </summary>
-        public static TestContext CurrentContext
-        {
-            get { return new TestContext(TestExecutionContext.CurrentContext); }
-        }
+        public static TestContext CurrentContext => new TestContext(TestExecutionContext.CurrentContext);
 
         /// <summary>
         /// Gets a TextWriter that will send output to the current test result.
         /// </summary>
-        public static TextWriter Out
-        {
-            get { return TestExecutionContext.CurrentContext.OutWriter; }
-        }
+        public static TextWriter Out => TestExecutionContext.CurrentContext.OutWriter;
 
         /// <summary>
         /// Gets a TextWriter that will send output directly to Console.Error
@@ -83,26 +77,17 @@ namespace NUnit.Framework
         /// <summary>
         /// Get a representation of the current test.
         /// </summary>
-        public TestAdapter Test
-        {
-            get { return _test ??= new TestAdapter(_testExecutionContext.CurrentTest); }
-        }
+        public TestAdapter Test => _test ??= new(_testExecutionContext.CurrentTest);
 
         /// <summary>
         /// Gets a Representation of the TestResult for the current test.
         /// </summary>
-        public ResultAdapter Result
-        {
-            get { return _result ??= new ResultAdapter(_testExecutionContext.CurrentResult); }
-        }
+        public ResultAdapter Result => _result ??= new(_testExecutionContext.CurrentResult);
 
         /// <summary>
         /// Gets the unique name of the Worker that is executing this test.
         /// </summary>
-        public string? WorkerId
-        {
-            get { return _testExecutionContext.TestWorker?.Name; }
-        }
+        public string? WorkerId => _testExecutionContext.TestWorker?.Name;
 
         /// <summary>
         /// Gets the directory containing the current test assembly.
@@ -135,28 +120,19 @@ namespace NUnit.Framework
         /// <value>
         /// The random generator.
         /// </value>
-        public Randomizer Random
-        {
-            get { return _testExecutionContext.RandomGenerator; }
-        }
+        public Randomizer Random => _testExecutionContext.RandomGenerator;
 
         /// <summary>
         /// Gets the number of assertions executed
         /// up to this point in the test.
         /// </summary>
-        public int AssertCount
-        {
-            get { return _testExecutionContext.AssertCount; }
-        }
+        public int AssertCount => _testExecutionContext.AssertCount;
 
         /// <summary>
         /// Get the number of times the current Test has been repeated 
         /// when using the <see cref="RetryAttribute"/> or <see cref="RepeatAttribute"/>.
         /// </summary>
-        public int CurrentRepeatCount
-        {
-            get { return _testExecutionContext.CurrentRepeatCount; }
-        }
+        public int CurrentRepeatCount => _testExecutionContext.CurrentRepeatCount;
 
         #endregion
 
@@ -341,59 +317,38 @@ namespace NUnit.Framework
             /// <summary>
             /// Gets the unique Id of a test
             /// </summary>
-            public String ID
-            {
-                get { return _test.Id; }
-            }
+            public String ID => _test.Id;
 
             /// <summary>
             /// The name of the test, which may or may not be
             /// the same as the method name.
             /// </summary>
-            public string Name
-            {
-                get { return _test.Name; }
-            }
+            public string Name => _test.Name;
 
             /// <summary>
             /// The name of the method representing the test.
             /// </summary>
-            public string? MethodName
-            {
-                get { return (_test as TestMethod)?.Method.Name; }
-            }
+            public string? MethodName => (_test as TestMethod)?.Method.Name;
 
             /// <summary>
             /// The FullName of the test
             /// </summary>
-            public string FullName
-            {
-                get { return _test.FullName; }
-            }
+            public string FullName => _test.FullName;
 
             /// <summary>
             /// The ClassName of the test
             /// </summary>
-            public string? ClassName
-            {
-                get { return _test.ClassName;  }
-            }
+            public string? ClassName => _test.ClassName;
 
             /// <summary>
             /// A shallow copy of the properties of the test.
             /// </summary>
-            public PropertyBagAdapter Properties
-            {
-                get { return new PropertyBagAdapter(_test.Properties); }
-            }
+            public PropertyBagAdapter Properties => new PropertyBagAdapter(_test.Properties);
 
             /// <summary>
             /// The arguments to use in creating the test or empty array if none are required.
             /// </summary>
-            public object?[] Arguments
-            {
-                get { return _test.Arguments; }
-            }
+            public object?[] Arguments => _test.Arguments;
 
             #endregion
         }
@@ -429,84 +384,57 @@ namespace NUnit.Framework
             /// Gets a ResultState representing the outcome of the test
             /// up to this point in its execution.
             /// </summary>
-            public ResultState Outcome
-            {
-                get { return _result.ResultState; }
-            }
+            public ResultState Outcome => _result.ResultState;
 
             /// <summary>
             /// Gets a list of the assertion results generated
             /// up to this point in the test.
             /// </summary>
-            public IEnumerable<AssertionResult> Assertions
-            {
-                get { return _result.AssertionResults; }
-            }
+            public IEnumerable<AssertionResult> Assertions => _result.AssertionResults;
 
             /// <summary>
             /// Gets the message associated with a test
             /// failure or with not running the test
             /// </summary>
-            public string? Message
-            {
-                get { return _result.Message; }
-            }
+            public string? Message => _result.Message;
 
             /// <summary>
             /// Gets any stack trace associated with an
             /// error or failure.
             /// </summary>
-            public virtual string? StackTrace
-            {
-                get { return _result.StackTrace; }
-            }
+            public virtual string? StackTrace => _result.StackTrace;
 
             /// <summary>
             /// Gets the number of test cases that failed
             /// when running the test and all its children.
             /// </summary>
-            public int FailCount
-            {
-                get { return _result.FailCount; }
-            }
+            public int FailCount => _result.FailCount;
 
             /// <summary>
             /// Gets the number of test cases that had warnings
             /// when running the test and all its children.
             /// </summary>
-            public int WarningCount
-            {
-                get { return _result.WarningCount; }
-            }
+            public int WarningCount => _result.WarningCount;
 
             /// <summary>
             /// Gets the number of test cases that passed
             /// when running the test and all its children.
             /// </summary>
-            public int PassCount
-            {
-                get { return _result.PassCount; }
-            }
+            public int PassCount => _result.PassCount;
 
             /// <summary>
             /// Gets the number of test cases that were skipped
             /// when running the test and all its children.
             /// </summary>
-            public int SkipCount
-            {
-                get { return _result.SkipCount; }
-            }
+            public int SkipCount => _result.SkipCount;
 
             /// <summary>
             /// Gets the number of test cases that were inconclusive
             /// when running the test and all its children.
             /// </summary>
-            public int InconclusiveCount
-            {
-                get { return _result.InconclusiveCount; }
-            }
+            public int InconclusiveCount => _result.InconclusiveCount;
 
-#endregion
+            #endregion
         }
 
         #endregion
@@ -577,13 +505,7 @@ namespace NUnit.Framework
             /// <summary>
             /// Returns a collection of the property keys.
             /// </summary>
-            public ICollection<string> Keys
-            {
-                get
-                {
-                    return _source.Keys;
-                }
-            }
+            public ICollection<string> Keys => _source.Keys;
         }
 
         #endregion

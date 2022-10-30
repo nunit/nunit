@@ -26,10 +26,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return Left.Description + " and " + Right.Description; }
-        }
+        public override string Description => Left.Description + " and " + Right.Description;
 
         /// <summary>
         /// Apply both member constraints to an actual value, succeeding 

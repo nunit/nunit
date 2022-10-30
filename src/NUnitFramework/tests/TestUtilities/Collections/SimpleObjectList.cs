@@ -31,20 +31,11 @@ namespace NUnit.TestUtilities.Collections
             ((ICollection)contents).CopyTo(array, index);
         }
 
-        public int Count
-        {
-            get { return contents.Count; }
-        }
+        public int Count => contents.Count;
 
-        public bool IsSynchronized
-        {
-            get { return  ((ICollection)contents).IsSynchronized; }
-        }
+        public bool IsSynchronized => ((ICollection)contents).IsSynchronized;
 
-        public object SyncRoot
-        {
-            get { return ((ICollection)contents).SyncRoot; }
-        }
+        public object SyncRoot => ((ICollection)contents).SyncRoot;
 
         #endregion
 
@@ -85,15 +76,9 @@ namespace NUnit.TestUtilities.Collections
             contents.Insert(index, value);
         }
 
-        public bool IsFixedSize
-        {
-            get { return false; }
-        }
+        public bool IsFixedSize => false;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        public bool IsReadOnly => false;
 
         public void Remove(object value)
         {
@@ -107,8 +92,8 @@ namespace NUnit.TestUtilities.Collections
 
         public object this[int index]
         {
-            get { return contents[index]; }
-            set { contents[index] = value; }
+            get => contents[index];
+            set => contents[index] = value;
         }
 
         #endregion

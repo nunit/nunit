@@ -11,10 +11,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "NaN"; }
-        }
+        public override string Description => "NaN";
 
         /// <summary>
         /// Test that the actual value is an NaN

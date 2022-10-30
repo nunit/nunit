@@ -47,9 +47,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        public static ITestListener NULL
-        {
-            get { return new TestListener();}
-        }
+        public static ITestListener NULL => new TestListener();
     }
 }

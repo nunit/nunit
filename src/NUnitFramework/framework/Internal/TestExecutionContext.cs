@@ -128,14 +128,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            get
-            {
-                return _currentContext.Value ?? (_currentContext.Value = new AdhocContext());
-            }
+            get => _currentContext.Value ?? (_currentContext.Value = new AdhocContext());
             internal set // internal so that AdhocTestExecutionTests can get at it
-            {
-                _currentContext.Value = value;
-            }
+                =>
+                    _currentContext.Value = value;
         }
 #else
         // In all other builds, we use the CallContext
@@ -210,7 +206,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public TestResult CurrentResult
         {
-            get { return _currentResult; }
+            get => _currentResult;
             set
             {
                 _currentResult = value;
@@ -264,8 +260,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal ITestListener Listener
         {
-            get { return _listener; }
-            set { _listener = value; }
+            get => _listener;
+            set => _listener = value;
         }
 
         /// <summary>
@@ -309,10 +305,7 @@ namespace NUnit.Framework.Internal
         /// Gets the assert count.
         /// </summary>
         /// <value>The assert count.</value>
-        internal int AssertCount
-        {
-            get { return _assertCount; }
-        }
+        internal int AssertCount => _assertCount;
 
         /// <summary>
         /// The current nesting level of multiple assert blocks
@@ -338,7 +331,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentCulture
         {
-            get { return _sandboxedThreadState.Culture; }
+            get => _sandboxedThreadState.Culture;
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithCulture(value);
@@ -351,7 +344,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureInfo CurrentUICulture
         {
-            get { return _sandboxedThreadState.UICulture; }
+            get => _sandboxedThreadState.UICulture;
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithUICulture(value);
@@ -364,7 +357,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public IPrincipal CurrentPrincipal
         {
-            get { return _sandboxedThreadState.Principal; }
+            get => _sandboxedThreadState.Principal;
             set
             {
                 _sandboxedThreadState = _sandboxedThreadState.WithPrincipal(value);

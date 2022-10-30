@@ -48,26 +48,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the name of the method.
         /// </summary>
-        public string Name
-        {
-            get { return MethodInfo.Name;  }
-        }
+        public string Name => MethodInfo.Name;
 
         /// <summary>
         /// Gets a value indicating whether the method is abstract.
         /// </summary>
-        public bool IsAbstract
-        {
-            get { return MethodInfo.IsAbstract; }
-        }
+        public bool IsAbstract => MethodInfo.IsAbstract;
 
         /// <summary>
         /// Gets a value indicating whether the method is public.
         /// </summary>
-        public bool IsPublic
-        {
-            get { return MethodInfo.IsPublic;  }
-        }
+        public bool IsPublic => MethodInfo.IsPublic;
 
         /// <summary>
         /// Gets a value indicating whether the method is static.
@@ -77,34 +68,22 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether the method contains unassigned generic type parameters.
         /// </summary>
-        public bool ContainsGenericParameters
-        {
-            get { return MethodInfo.ContainsGenericParameters; }
-        }
+        public bool ContainsGenericParameters => MethodInfo.ContainsGenericParameters;
 
         /// <summary>
         /// Gets a value indicating whether the method is a generic method.
         /// </summary>
-        public bool IsGenericMethod
-        {
-            get { return MethodInfo.IsGenericMethod; }
-        }
+        public bool IsGenericMethod => MethodInfo.IsGenericMethod;
 
         /// <summary>
         /// Gets a value indicating whether the MethodInfo represents the definition of a generic method.
         /// </summary>
-        public bool IsGenericMethodDefinition
-        {
-            get { return MethodInfo.IsGenericMethodDefinition; }
-        }
+        public bool IsGenericMethodDefinition => MethodInfo.IsGenericMethodDefinition;
 
         /// <summary>
         /// Gets the return Type of the method.
         /// </summary>
-        public ITypeInfo ReturnType
-        {
-            get { return new TypeWrapper(MethodInfo.ReturnType); }
-        }
+        public ITypeInfo ReturnType => new TypeWrapper(MethodInfo.ReturnType);
 
         /// <summary>
         /// Gets the parameters of the method.

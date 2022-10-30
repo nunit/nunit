@@ -112,10 +112,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The name of the work item - defaults to the Test name.
         /// </summary>
-        public virtual string Name
-        {
-            get { return Test.Name; }
-        }
+        public virtual string Name => Test.Name;
 
         /// <summary>
         /// Filter used to include or exclude child tests

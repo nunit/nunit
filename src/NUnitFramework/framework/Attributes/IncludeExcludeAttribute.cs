@@ -36,8 +36,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Include
         {
-            get { return this.include; }
-            set { include = value; }
+            get => this.include;
+            set => include = value;
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Exclude
         {
-            get { return this.exclude; }
-            set { this.exclude = value; }
+            get => this.exclude;
+            set => this.exclude = value;
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Reason
         {
-            get { return reason; }
-            set { reason = value; }
+            get => reason;
+            set => reason = value;
         }
     }
 }

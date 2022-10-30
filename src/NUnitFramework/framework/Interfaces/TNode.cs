@@ -84,10 +84,7 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the first ChildNode
         /// </summary>
-        public TNode? FirstChild
-        {
-            get { return ChildNodes.Count == 0 ? null : ChildNodes[0]; }
-        }
+        public TNode? FirstChild => ChildNodes.Count == 0 ? null : ChildNodes[0];
 
         /// <summary>
         /// Gets the XML representation of this node.
@@ -435,12 +432,6 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>Value of the attribute or null</returns>
-        public new string? this[string key]
-        {
-            get
-            {
-                return TryGetValue(key, out var value) ? value : null;
-            }
-        }
+        public new string? this[string key] => TryGetValue(key, out var value) ? value : null;
     }
 }

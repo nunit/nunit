@@ -17,10 +17,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns the default NUnitComparer.
         /// </summary>
-        public static NUnitComparer Default
-        {
-            get { return new NUnitComparer(); }
-        }
+        public static NUnitComparer Default => new NUnitComparer();
 
         /// <summary>
         /// Compares two objects

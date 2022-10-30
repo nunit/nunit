@@ -23,28 +23,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets the left precedence of the operator
         /// </summary>
-        public override int LeftPrecedence
-        {
-            get
-            {
-                return RightContext is CollectionOperator || RightContext is ExactCountOperator
-                    ? base.LeftPrecedence + 10
-                    : base.LeftPrecedence;
-            }
-        }
+        public override int LeftPrecedence =>
+            RightContext is CollectionOperator || RightContext is ExactCountOperator
+                ? base.LeftPrecedence + 10
+                : base.LeftPrecedence;
 
         /// <summary>
         /// Gets the right precedence of the operator
         /// </summary>
-        public override int RightPrecedence
-        {
-            get
-            {
-                return RightContext is CollectionOperator
-                    ? base.RightPrecedence + 10
-                    : base.RightPrecedence;
-            }
-        }
+        public override int RightPrecedence =>
+            RightContext is CollectionOperator
+                ? base.RightPrecedence + 10
+                : base.RightPrecedence;
 
         /// <summary>
         /// Abstract method that produces a constraint by applying
