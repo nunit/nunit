@@ -2,10 +2,6 @@
 
 #nullable enable
 
-#if THREAD_ABORT
-using System.ComponentModel;
-#endif
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>

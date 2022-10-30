@@ -2,8 +2,6 @@
 
 namespace NUnit.Framework.Internal
 {
-    using System;
-
     /// <summary>
     /// TestCaseTimeoutException is thrown when a test running directly
     /// on a TestWorker thread is cancelled due to timeout.

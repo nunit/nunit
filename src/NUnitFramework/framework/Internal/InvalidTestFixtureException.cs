@@ -2,8 +2,6 @@
 
 namespace NUnit.Framework.Internal
 {
-    using System;
-
     /// <summary>
     /// InvalidTestFixtureException is thrown when an appropriate test
     /// fixture constructor using the provided arguments cannot be found.
