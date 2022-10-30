@@ -8,7 +8,6 @@
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
 
-using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.RepeatingTests;
 
 namespace NUnit.Framework.Attributes

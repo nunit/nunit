@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Text;
 using NUnit.Framework.Api;
 using NUnit.TestData.ActionAttributeTests;
 

@@ -1,13 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
 {

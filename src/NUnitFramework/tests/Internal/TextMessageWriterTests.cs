@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using System.Globalization;
 
 namespace NUnit.Framework.Internal
 {

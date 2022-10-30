@@ -1,11 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#region Using Directives
-
-using NUnit.TestData;
-
-#endregion
-
 namespace NUnit.Framework.Attributes
 {
     [TestFixture]

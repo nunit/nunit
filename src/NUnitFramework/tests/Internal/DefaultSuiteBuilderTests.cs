@@ -1,11 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestData;
-
 namespace NUnit.Framework.Internal
 {
-    using Builders;
-
     // NOTE: Because this fixture tests the IImplyFixture interface, the attribute must be
     // present. Otherwise, if implied fixture recognition did not work, the tests would not run.
     [TestFixture]

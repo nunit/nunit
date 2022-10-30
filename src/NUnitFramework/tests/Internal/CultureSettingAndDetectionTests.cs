@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using System.Globalization;
 using NUnit.TestData.CultureAttributeData;
 
 namespace NUnit.Framework.Internal

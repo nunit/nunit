@@ -2,7 +2,6 @@
 
 using System;
 using System.Linq;
-using NUnit.Framework.Internal.Builders;
 using NUnit.TestData.TestFixtureTests;
 
 namespace NUnit.Framework.Internal

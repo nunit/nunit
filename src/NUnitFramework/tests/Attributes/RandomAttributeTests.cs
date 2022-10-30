@@ -1,8 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Text;
-using NUnit.TestData.RandomAttributeTests;
-
 namespace NUnit.Framework.Attributes
 {
     public class RandomAttributeTests

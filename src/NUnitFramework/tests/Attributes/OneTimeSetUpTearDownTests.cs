@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Security.Principal;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 
 namespace NUnit.Framework.Attributes
