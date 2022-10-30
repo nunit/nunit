@@ -2,7 +2,6 @@
 
 using NUnit.Framework.Constraints;
 using NUnit.TestData;
-using System.Threading.Tasks;
 
 namespace NUnit.Framework.Assertions
 {

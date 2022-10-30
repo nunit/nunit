@@ -2,9 +2,6 @@
 
 #region Using Directives
 
-using System;
-using System.IO;
-
 #endregion
 
 namespace NUnit.Framework.Assertions

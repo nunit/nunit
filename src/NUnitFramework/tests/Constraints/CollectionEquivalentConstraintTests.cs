@@ -7,7 +7,6 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints

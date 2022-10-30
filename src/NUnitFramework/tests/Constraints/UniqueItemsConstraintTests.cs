@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NUnit.TestUtilities.Collections;
 using static NUnit.Framework.Constraints.UniqueItemsConstraint;
 
 namespace NUnit.Framework.Constraints

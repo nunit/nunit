@@ -9,6 +9,8 @@ global using System.Xml.Linq;
 global using NUnit.Framework.Internal.Filters;
 global using NUnit.TestUtilities;
 global using NUnit.Tests.Assemblies;
+global using System.Reflection;
+global using NUnit.TestUtilities.Collections;
 #if NETFRAMEWORK
 global using System.Runtime.Remoting.Messaging;
 #endif
