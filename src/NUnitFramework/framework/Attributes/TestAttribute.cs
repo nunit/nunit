@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework
