@@ -4,8 +4,6 @@
 
 namespace NUnit.Framework
 {
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Identifies a class as containing <see cref="OneTimeSetUpAttribute" /> or
     /// <see cref="OneTimeTearDownAttribute" /> methods for all the test fixtures

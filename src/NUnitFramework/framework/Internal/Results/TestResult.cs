@@ -3,7 +3,6 @@
 #nullable enable
 
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace NUnit.Framework.Internal
 {

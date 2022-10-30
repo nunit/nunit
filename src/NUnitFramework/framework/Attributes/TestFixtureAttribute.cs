@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace NUnit.Framework
 {
     /// <summary>

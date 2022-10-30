@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Text;
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>

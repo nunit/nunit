@@ -2,7 +2,6 @@
 
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace NUnit.Framework.Internal
 {

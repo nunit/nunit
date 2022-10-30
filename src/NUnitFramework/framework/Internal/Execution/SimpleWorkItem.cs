@@ -2,7 +2,6 @@
 
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
-using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {

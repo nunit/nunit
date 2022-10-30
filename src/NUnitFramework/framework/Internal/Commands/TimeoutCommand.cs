@@ -1,12 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-#if THREAD_ABORT
-using System.Threading;
-#else
-using System;
-using System.Threading.Tasks;
-#endif
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Commands

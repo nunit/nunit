@@ -3,7 +3,6 @@
 #nullable enable
 
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework
 {
