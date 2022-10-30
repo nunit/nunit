@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework

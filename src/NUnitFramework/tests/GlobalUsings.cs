@@ -32,6 +32,7 @@ global using NUnit.TestData.CategoryAttributeData;
 global using NUnit.TestData.DatapointFixture;
 global using NUnit.TestData.PropertyAttributeTests;
 global using NUnit.TestData.RandomAttributeTests;
+global using NUnit.TestData.TestContextData;
 global using NUnit.TestUtilities.Collections;
 global using NUnit.TestUtilities.Comparers;
 #if NETFRAMEWORK

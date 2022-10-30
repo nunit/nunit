@@ -2,7 +2,6 @@
 
 #nullable enable
 using System;
-using System.Collections;
 
 namespace NUnit.Framework.Constraints.Comparers
 {

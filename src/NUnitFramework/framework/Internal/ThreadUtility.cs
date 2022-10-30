@@ -8,7 +8,6 @@ using System.Threading;
 #if THREAD_ABORT
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Security;
 #endif
 
 namespace NUnit.Framework.Internal

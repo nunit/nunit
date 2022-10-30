@@ -2,14 +2,11 @@
 
 using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Security;
 using System.Web.UI;
 using NUnit.Compatibility;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Api
 {

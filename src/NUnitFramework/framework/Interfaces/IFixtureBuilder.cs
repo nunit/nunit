@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 namespace NUnit.Framework.Interfaces
 {
-    using Internal;
-
     // TODO: These methods should really return IEnumerable<TestFixture>,
     // but that requires changes to the Test hierarchy.
 

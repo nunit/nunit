@@ -8,7 +8,6 @@ using System.Collections.Generic;
 namespace NUnit.Framework
 {
     using System.Diagnostics.CodeAnalysis;
-    using Internal;
 
     /// <summary>
     /// Identifies a class as containing <see cref="OneTimeSetUpAttribute" /> or

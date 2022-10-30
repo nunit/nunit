@@ -2,7 +2,6 @@
 
 using System;
 using System.Linq;
-using System.Security;
 using System.Threading;
 using NUnit.Compatibility;
 

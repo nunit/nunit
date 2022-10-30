@@ -2,7 +2,6 @@
 
 using System;
 using NUnit.Compatibility;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {

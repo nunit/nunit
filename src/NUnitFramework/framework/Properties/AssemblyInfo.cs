@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Security;
 
 [assembly: InternalsVisibleTo("nunit.framework.tests, PublicKey=002400000480000094" +
                               "000000060200000024000052534131000400000100010031eea" +

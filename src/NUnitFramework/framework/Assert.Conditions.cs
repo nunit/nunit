@@ -2,7 +2,6 @@
 
 #nullable enable
 
-using System.Collections;
 using NUnit.Framework.Constraints;
 using System;
 

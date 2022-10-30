@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal

@@ -2,7 +2,7 @@
 
 #nullable enable
 
-using NUnit.Framework.Internal; // TODO: We shouldn't reference this in the interface
+// TODO: We shouldn't reference this in the interface
 
 namespace NUnit.Framework.Interfaces
 {

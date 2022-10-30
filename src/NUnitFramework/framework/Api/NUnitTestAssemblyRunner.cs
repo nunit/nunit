@@ -1,9 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using System.Diagnostics;
-using System.Security;
 using NUnit.Framework.Internal.Abstractions;
 
 #if NETFRAMEWORK

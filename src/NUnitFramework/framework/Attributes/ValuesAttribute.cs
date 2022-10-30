@@ -3,9 +3,7 @@
 #nullable enable
 
 using System;
-using System.Collections;
 using NUnit.Compatibility;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {

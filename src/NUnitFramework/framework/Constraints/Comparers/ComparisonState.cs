@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using NUnit.Framework.Internal;
-
 namespace NUnit.Framework.Constraints.Comparers
 {
     internal readonly ref struct ComparisonState

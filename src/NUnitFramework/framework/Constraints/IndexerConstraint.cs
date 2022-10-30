@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {

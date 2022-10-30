@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System.Collections;
 using System.Linq;
 
 namespace NUnit.Framework.Internal.Filters

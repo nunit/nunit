@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NUnit.Compatibility;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework

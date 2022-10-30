@@ -2,7 +2,6 @@
 
 using System;
 using System.ComponentModel;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework

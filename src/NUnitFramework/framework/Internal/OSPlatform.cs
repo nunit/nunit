@@ -3,7 +3,6 @@
 using Microsoft.Win32;
 using System;
 using System.Runtime.InteropServices;
-using System.Security;
 using System.Text;
 
 namespace NUnit.Framework.Internal

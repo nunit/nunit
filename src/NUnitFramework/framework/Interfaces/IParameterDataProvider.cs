@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using System.Collections;
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>

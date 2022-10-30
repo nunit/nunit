@@ -3,12 +3,9 @@
 #nullable enable
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Security;
-using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Api

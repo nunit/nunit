@@ -3,7 +3,6 @@
 #if NETFRAMEWORK
 using System;
 using System.Runtime.Remoting.Messaging;
-using System.Security;
 
 namespace NUnit.Framework.Internal
 {
