@@ -5,5 +5,6 @@ global using NUnit.Framework;
 global using System.Collections;
 global using System.Runtime.CompilerServices;
 global using System.Runtime.InteropServices;
+global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
