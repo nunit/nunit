@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Constraints
 {

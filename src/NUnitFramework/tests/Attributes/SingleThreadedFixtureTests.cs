@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

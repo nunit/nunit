@@ -3,7 +3,6 @@
 #if THREAD_ABORT
 using System.Runtime.InteropServices;
 using System.Threading;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {

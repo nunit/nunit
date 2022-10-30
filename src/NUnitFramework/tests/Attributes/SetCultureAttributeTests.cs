@@ -5,7 +5,6 @@ using System.Threading;
 using System.Globalization;
 using NUnit.Framework;
 using NUnit.TestData.CultureAttributeData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

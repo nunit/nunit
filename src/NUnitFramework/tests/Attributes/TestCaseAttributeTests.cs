@@ -5,7 +5,6 @@ using System.Collections;
 using System.Globalization;
 using System.Linq;
 using NUnit.TestData.TestCaseAttributeFixture;
-using NUnit.TestUtilities;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Attributes

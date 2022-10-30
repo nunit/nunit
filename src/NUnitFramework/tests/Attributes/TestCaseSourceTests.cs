@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
-using NUnit.TestUtilities;
 using System;
 using System.Globalization;
 

@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using NUnit.TestData.AssertIgnoreData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
 {

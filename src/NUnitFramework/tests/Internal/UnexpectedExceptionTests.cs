@@ -2,7 +2,6 @@
 
 using System;
 using NUnit.TestData.UnexpectedExceptionFixture;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.TestData.TestContextData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework
 {

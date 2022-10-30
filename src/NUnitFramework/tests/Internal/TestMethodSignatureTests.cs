@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.TestData.TestMethodSignatureFixture;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {

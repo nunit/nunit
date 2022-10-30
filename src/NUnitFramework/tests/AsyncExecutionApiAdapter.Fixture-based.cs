@@ -2,7 +2,6 @@
 
 using System;
 using NUnit.Framework.Internal.Builders;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework
 {

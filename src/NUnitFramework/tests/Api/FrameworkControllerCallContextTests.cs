@@ -1,11 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #if NETFRAMEWORK
-using System;
-using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Api
 {

@@ -2,7 +2,6 @@
 
 using System;
 using NUnit.TestData.CategoryAttributeData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

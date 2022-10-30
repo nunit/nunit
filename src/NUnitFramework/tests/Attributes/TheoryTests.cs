@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NUnit.TestUtilities;
 using NUnit.TestData.TheoryFixture;
 
 namespace NUnit.Framework.Attributes

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.TestData.ParallelExecutionData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {

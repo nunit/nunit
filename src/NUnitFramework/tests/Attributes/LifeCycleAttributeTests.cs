@@ -2,7 +2,6 @@
 
 using System.Linq;
 using NUnit.TestData.LifeCycleTests;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

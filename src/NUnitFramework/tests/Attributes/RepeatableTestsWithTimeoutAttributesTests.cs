@@ -4,7 +4,6 @@ using System;
 using System.Reflection;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
-using NUnit.TestUtilities;
 
 #if THREAD_ABORT
 

@@ -3,7 +3,6 @@
 using System.Collections;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal
 {

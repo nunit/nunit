@@ -13,7 +13,6 @@ using System.Reflection;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

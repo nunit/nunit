@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Text;
 using System.Linq;
 using NUnit.TestData.RandomAttributeTests;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

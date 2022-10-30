@@ -2,7 +2,6 @@
 
 using System;
 using System.Linq;
-using NUnit.TestUtilities;
 using NUnit.TestData.SetUpData;
 
 namespace NUnit.Framework.Internal

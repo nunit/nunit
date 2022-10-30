@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Internal.Execution
 {

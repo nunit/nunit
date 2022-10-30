@@ -11,7 +11,6 @@ using NUnit.Compatibility;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
-using NUnit.TestUtilities;
 using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Api

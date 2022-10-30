@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Internal.Execution;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
 {

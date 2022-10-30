@@ -2,7 +2,6 @@
 
 using System;
 using NUnit.TestData.AssertMultipleData;
-using NUnit.TestUtilities;
 using AM = NUnit.TestData.AssertMultipleData.AssertMultipleFixture;
 
 namespace NUnit.Framework.Assertions
