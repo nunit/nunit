@@ -3,9 +3,6 @@
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
-using NUnit.Tests.Assemblies;
-using NUnit.TestUtilities;
 
 namespace NUnitLite.Tests
 {

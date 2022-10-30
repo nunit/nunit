@@ -2,12 +2,9 @@
 
 #if !NETCOREAPP1_1
 using System;
-using System.Globalization;
 using System.IO;
 using System.Xml;
 using NUnit.Framework;
-using NUnit.Framework.Interfaces;
-using NUnit.Tests.Assemblies;
 
 namespace NUnitLite.Tests
 {

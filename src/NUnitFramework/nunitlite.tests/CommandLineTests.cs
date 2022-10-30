@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Globalization;
 using NUnit.Framework;
 
 namespace NUnitLite.Tests
@@ -9,7 +8,6 @@ namespace NUnitLite.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using NUnit.TestUtilities;
 
     [TestFixture]
     public class CommandLineTests

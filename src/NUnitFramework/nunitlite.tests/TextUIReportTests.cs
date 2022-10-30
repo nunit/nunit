@@ -6,7 +6,6 @@ using System.IO;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
-using NUnit.Tests.Assemblies;
 using NUnit.Framework.Interfaces;
 
 namespace NUnitLite.Tests
