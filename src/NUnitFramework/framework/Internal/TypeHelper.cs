@@ -5,10 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text;
 using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {

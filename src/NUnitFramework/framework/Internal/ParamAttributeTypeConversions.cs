@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Globalization;
 
 #if !NETFRAMEWORK
 using System.Reflection;

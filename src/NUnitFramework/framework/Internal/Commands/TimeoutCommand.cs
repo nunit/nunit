@@ -7,7 +7,6 @@ using System.Threading;
 using System;
 using System.Threading.Tasks;
 #endif
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Commands

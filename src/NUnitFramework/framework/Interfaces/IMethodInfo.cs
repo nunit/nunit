@@ -3,7 +3,6 @@
 #nullable enable
 
 using System;
-using System.Reflection;
 
 namespace NUnit.Framework.Interfaces
 {

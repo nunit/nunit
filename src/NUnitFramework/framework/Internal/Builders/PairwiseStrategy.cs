@@ -5,7 +5,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
 {

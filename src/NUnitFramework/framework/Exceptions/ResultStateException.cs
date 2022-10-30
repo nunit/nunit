@@ -6,8 +6,6 @@ using System;
 
 namespace NUnit.Framework
 {
-    using Interfaces;
-
     /// <summary>
     /// Abstract base for Exceptions that terminate a test and provide a ResultState.
     /// </summary>

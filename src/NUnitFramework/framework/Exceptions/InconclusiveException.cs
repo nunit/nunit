@@ -6,8 +6,6 @@ using System;
 
 namespace NUnit.Framework
 {
-    using Interfaces;
-
     /// <summary>
     /// Thrown when a test executes inconclusively.
     /// </summary>

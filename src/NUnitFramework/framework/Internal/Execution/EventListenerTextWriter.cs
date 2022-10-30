@@ -3,7 +3,6 @@
 using System;
 using System.IO;
 using System.Text;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {

@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Globalization;
 using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Internal

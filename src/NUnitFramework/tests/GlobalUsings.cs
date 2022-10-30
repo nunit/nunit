@@ -18,6 +18,7 @@ global using System.Runtime.Serialization;
 global using System.Text;
 global using NUnit.Compatibility;
 global using NUnit.Framework;
+global using NUnit.Framework.Internal.Abstractions;
 global using NUnit.Framework.Api;
 global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Internal.Builders;

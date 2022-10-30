@@ -3,7 +3,6 @@
 #nullable enable
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
 {

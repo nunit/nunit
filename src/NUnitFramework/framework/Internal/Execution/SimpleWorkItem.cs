@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Extensions;

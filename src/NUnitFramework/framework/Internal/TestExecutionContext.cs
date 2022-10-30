@@ -3,15 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
 using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
 
 #if NETFRAMEWORK

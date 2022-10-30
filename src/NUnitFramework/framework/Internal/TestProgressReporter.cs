@@ -3,10 +3,8 @@
 #nullable enable
 
 using System;
-using System.Reflection;
 using System.Web.UI;
 using NUnit.Compatibility;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
 {

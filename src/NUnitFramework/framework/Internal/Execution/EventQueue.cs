@@ -2,7 +2,6 @@
 
 using System.Collections.Concurrent;
 using System.Threading;
-using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {

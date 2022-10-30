@@ -2,8 +2,6 @@
 
 #nullable enable
 
-using NUnit.Framework.Interfaces;
-
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
