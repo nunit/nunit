@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading;
 using NUnit.Framework.Internal.Abstractions;
 
 namespace NUnit.Framework.Internal.Execution

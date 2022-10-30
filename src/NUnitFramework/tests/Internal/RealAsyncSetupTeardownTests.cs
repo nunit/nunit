@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading.Tasks;
-
 namespace NUnit.Framework.Internal
 {
 #pragma warning disable 1998

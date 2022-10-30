@@ -1,10 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Reflection;
-using NUnit.Compatibility;
-using System.Threading.Tasks;
-
 namespace NUnit.Framework.Internal
 {
     public static class ExceptionHelperTests

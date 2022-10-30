@@ -2,7 +2,6 @@
 
 using NUnit.Framework.Api;
 using NUnit.TestData.OneTimeSetUpTearDownData;
-using System.IO;
 
 namespace NUnit.Framework.Internal
 {
