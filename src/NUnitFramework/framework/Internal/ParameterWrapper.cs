@@ -3,7 +3,6 @@
 #nullable enable
 
 using System;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {

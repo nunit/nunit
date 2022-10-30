@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Compatibility;
 using NUnit.Framework.Constraints.Comparers;
 
 namespace NUnit.Framework.Constraints

@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework

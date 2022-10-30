@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Web.UI;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Api
 {

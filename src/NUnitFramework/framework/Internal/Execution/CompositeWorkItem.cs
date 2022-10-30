@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal.Commands;
 using System.Diagnostics;
 using NUnit.Framework.Internal.Extensions;

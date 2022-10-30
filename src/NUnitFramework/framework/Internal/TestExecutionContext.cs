@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Security.Principal;
 using System.Threading;
-using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal.Execution;
 
