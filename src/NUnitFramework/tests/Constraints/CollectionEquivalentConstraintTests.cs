@@ -2,7 +2,6 @@
 
 using System.Collections.Immutable;
 using System.Collections.Specialized;
-using System.Diagnostics;
 
 namespace NUnit.Framework.Constraints
 {

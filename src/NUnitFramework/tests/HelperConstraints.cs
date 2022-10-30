@@ -3,7 +3,6 @@
 using System;
 using System.Reflection;
 using NUnit.Compatibility;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework
 {

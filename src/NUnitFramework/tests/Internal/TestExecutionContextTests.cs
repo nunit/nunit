@@ -1,13 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.IO;
 using System.Security.Principal;
-using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal.Execution;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal

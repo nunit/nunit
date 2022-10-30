@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace NUnit.TestUtilities
 {

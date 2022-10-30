@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 global using System.Collections;
+global using System.Diagnostics;
 global using System.Globalization;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
@@ -15,8 +16,10 @@ global using System.Security.Principal;
 global using System.Runtime.Serialization;
 global using System.Text;
 global using NUnit.Compatibility;
+global using NUnit.Framework.Constraints;
 global using NUnit.Framework.Internal.Builders;
 global using NUnit.Framework.Internal.Commands;
+global using NUnit.Framework.Internal.Execution;
 global using NUnit.TestData;
 global using NUnit.TestData.AssertIgnoreData;
 global using NUnit.TestData.PropertyAttributeTests;
