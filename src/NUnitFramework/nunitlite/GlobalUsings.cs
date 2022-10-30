@@ -8,4 +8,5 @@ global using System.Xml;
 global using NUnit.Framework.Interfaces;
 global using NUnit.Framework.Internal;
 global using NUnit.Options;
+global using NUnit.Common;
 global using NUnit.Framework.Api;

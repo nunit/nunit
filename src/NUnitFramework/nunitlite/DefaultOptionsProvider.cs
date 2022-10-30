@@ -2,8 +2,6 @@
 
 namespace NUnit.Common
 {
-    using System;
-
     internal sealed class DefaultOptionsProvider : IDefaultOptionsProvider
     {
         private const string EnvironmentVariableTeamcityProjectName = "TEAMCITY_PROJECT_NAME";

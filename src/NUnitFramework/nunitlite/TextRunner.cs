@@ -2,7 +2,6 @@
 
 using System.Diagnostics;
 using System.Reflection;
-using NUnit.Common;
 using NUnit;
 using NUnit.Framework.Internal.Filters;
 
