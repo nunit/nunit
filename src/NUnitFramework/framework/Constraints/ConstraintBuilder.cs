@@ -35,18 +35,12 @@ namespace NUnit.Framework.Constraints
             /// Gets a value indicating whether this <see cref="OperatorStack"/> is empty.
             /// </summary>
             /// <value><see langword="true"/> if empty; otherwise, <see langword="false"/>.</value>
-            public bool Empty
-            {
-                get { return stack.Count == 0; }
-            }
+            public bool Empty => stack.Count == 0;
 
             /// <summary>
             /// Gets the topmost operator without modifying the stack.
             /// </summary>
-            public ConstraintOperator Top
-            {
-                get { return stack.Peek(); }
-            }
+            public ConstraintOperator Top => stack.Peek();
 
             /// <summary>
             /// Pushes the specified operator onto the stack.
@@ -92,10 +86,7 @@ namespace NUnit.Framework.Constraints
             /// Gets a value indicating whether this <see cref="ConstraintStack"/> is empty.
             /// </summary>
             /// <value><see langword="true"/> if empty; otherwise, <see langword="false"/>.</value>
-            public bool Empty
-            {
-                get { return stack.Count == 0; }
-            }
+            public bool Empty => stack.Count == 0;
 
             /// <summary>
             /// Pushes the specified constraint. As a side effect,
@@ -250,10 +241,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         /// 	<see langword="true"/> if this instance is resolvable; otherwise, <see langword="false"/>.
         /// </value>
-        private bool IsResolvable
-        {
-            get { return lastPushed is Constraint || lastPushed is SelfResolvingOperator; }
-        }
+        private bool IsResolvable => lastPushed is Constraint || lastPushed is SelfResolvingOperator;
 
         #endregion
     }

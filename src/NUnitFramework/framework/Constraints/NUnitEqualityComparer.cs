@@ -89,8 +89,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool IgnoreCase
         {
-            get { return _caseInsensitive; }
-            set { _caseInsensitive = value; }
+            get => _caseInsensitive;
+            set => _caseInsensitive = value;
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public bool CompareAsCollection
         {
-            get { return _compareAsCollection; }
-            set { _compareAsCollection = value; }
+            get => _compareAsCollection;
+            set => _compareAsCollection = value;
         }
 
         /// <summary>
@@ -108,10 +108,7 @@ namespace NUnit.Framework.Constraints
         /// test for equality. They are applied to members of
         /// collections, in place of NUnit's own logic.
         /// </summary>
-        public IList<EqualityAdapter> ExternalComparers
-        {
-            get { return _externalComparers ??= new List<EqualityAdapter>(); }
-        }
+        public IList<EqualityAdapter> ExternalComparers => _externalComparers ??= new();
 
         /// <summary>
         /// Gets the list of failure points for the last Match performed.
@@ -119,10 +116,7 @@ namespace NUnit.Framework.Constraints
         /// This generally means that the caller may only make use of
         /// objects it has placed on the list at a particular depth.
         /// </summary>
-        public IList<FailurePoint> FailurePoints
-        {
-            get { return _failurePoints; }
-        }
+        public IList<FailurePoint> FailurePoints => _failurePoints;
 
         /// <summary>
         /// Flags the comparer to include <see cref="DateTimeOffset.Offset"/>

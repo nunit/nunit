@@ -102,7 +102,7 @@ namespace NUnit.Framework
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
             }
-            if (targetType.GetTypeInfo().IsEnum)
+            if (targetType.IsEnum)
             {
                 return Enum.GetValues(targetType);
             }
@@ -124,7 +124,7 @@ namespace NUnit.Framework
         private static bool IsNullableEnum(Type t)
         {
             Type u = Nullable.GetUnderlyingType(t);
-            return (u != null) && u.GetTypeInfo().IsEnum;
+            return (u != null) && u.IsEnum;
         }
     }
 }

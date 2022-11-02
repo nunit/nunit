@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
             this.expectedType = type;
             this.DescriptionPrefix = "attribute " + expectedType.FullName;
 
-            if (!typeof(Attribute).GetTypeInfo().IsAssignableFrom(expectedType.GetTypeInfo()))
+            if (!typeof(Attribute).IsAssignableFrom(expectedType))
                 throw new ArgumentException($"Type {expectedType} is not an attribute", nameof(type));
         }
 

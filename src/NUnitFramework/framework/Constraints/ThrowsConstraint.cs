@@ -24,20 +24,14 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Get the actual exception thrown - used by Assert.Throws.
         /// </summary>
-        public Exception ActualException
-        {
-            get { return caughtException; }
-        }
+        public Exception ActualException => caughtException;
 
         #region Constraint Overrides
 
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description
-        {
-            get { return BaseConstraint.Description; }
-        }
+        public override string Description => BaseConstraint.Description;
 
         /// <summary>
         /// Executes the code of the delegate and captures any exception.

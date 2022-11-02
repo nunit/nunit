@@ -552,20 +552,11 @@ namespace NUnit.Framework.Attributes
 
             public Type ParameterType { get; }
 
-            public bool IsOptional
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public bool IsOptional => throw new NotImplementedException();
 
-            public IMethodInfo Method
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public IMethodInfo Method => throw new NotImplementedException();
 
-            public ParameterInfo ParameterInfo
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public ParameterInfo ParameterInfo => throw new NotImplementedException();
 
             public T[] GetCustomAttributes<T>(bool inherit) where T : class
             {

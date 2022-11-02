@@ -23,10 +23,7 @@ namespace NUnit.Framework.Internal
         /// Return a new PreFilter, without elements, which is considered
         /// empty and always matches.
         /// </summary>
-        public static PreFilter Empty
-        {
-            get { return new PreFilter(); }
-        }
+        public static PreFilter Empty => new PreFilter();
 
         /// <summary>
         /// Return true if the filter is empty, in which case it
@@ -34,10 +31,7 @@ namespace NUnit.Framework.Internal
         /// you can add elements but it's best to use Empty when
         /// you need an empty filter and new when you plan to add.
         /// </summary>
-        public bool IsEmpty
-        {
-            get { return _filters.Count == 0; }
-        }
+        public bool IsEmpty => _filters.Count == 0;
 
         /// <summary>
         /// Add a new filter element to the filter

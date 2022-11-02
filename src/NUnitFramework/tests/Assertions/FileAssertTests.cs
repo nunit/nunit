@@ -73,10 +73,7 @@ namespace NUnit.Framework.Assertions
 
         private class FakeStream : MemoryStream
         {
-            public override bool CanSeek
-            {
-                get { return false; }
-            }
+            public override bool CanSeek => false;
         }
 
         [Test]

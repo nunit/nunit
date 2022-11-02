@@ -18,10 +18,7 @@ namespace NUnit.Framework
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public static ConstraintExpression Not
-        {
-            get { return new ConstraintExpression().Not; }
-        }
+        public static ConstraintExpression Not => new ConstraintExpression().Not;
 
         #endregion
 
@@ -31,10 +28,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
         /// </summary>
-        public static FileOrDirectoryExistsConstraint Exist
-        {
-            get { return new FileOrDirectoryExistsConstraint(); }
-        }
+        public static FileOrDirectoryExistsConstraint Exist => new FileOrDirectoryExistsConstraint();
 
         #endregion
 

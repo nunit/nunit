@@ -153,18 +153,18 @@ namespace NUnit.Common
         public IDictionary<string, string> TestParameters { get; } = new Dictionary<string, string>();
 
         public string WhereClause { get; private set; }
-        public bool WhereClauseSpecified { get { return WhereClause != null; } }
+        public bool WhereClauseSpecified => WhereClause != null;
 
         public int DefaultTimeout { get; private set; } = -1;
-        public bool DefaultTimeoutSpecified { get { return DefaultTimeout >= 0; } }
+        public bool DefaultTimeoutSpecified => DefaultTimeout >= 0;
 
         public int RandomSeed { get; private set; } = -1;
-        public bool RandomSeedSpecified { get { return RandomSeed >= 0; } }
+        public bool RandomSeedSpecified => RandomSeed >= 0;
 
         public string DefaultTestNamePattern { get; private set; }
 
         public int NumberOfTestWorkers { get; private set; } = -1;
-        public bool NumberOfTestWorkersSpecified { get { return NumberOfTestWorkers >= 0; } }
+        public bool NumberOfTestWorkersSpecified => NumberOfTestWorkers >= 0;
 
         public bool StopOnError { get; private set; }
 
@@ -178,22 +178,19 @@ namespace NUnit.Common
         public bool TeamCity { get; private set; }
 
         public string OutFile { get; private set; }
-        public bool OutFileSpecified { get { return OutFile != null; } }
+        public bool OutFileSpecified => OutFile != null;
 
         public string ErrFile { get; private set; }
-        public bool ErrFileSpecified { get { return ErrFile != null; } }
+        public bool ErrFileSpecified => ErrFile != null;
 
         public string DisplayTestLabels { get; private set; }
 
         private string workDirectory = null;
-        public string WorkDirectory
-        {
-            get { return workDirectory ?? DEFAULT_WORK_DIRECTORY; }
-        }
-        public bool WorkDirectorySpecified { get { return workDirectory != null; } }
+        public string WorkDirectory => workDirectory ?? DEFAULT_WORK_DIRECTORY;
+        public bool WorkDirectorySpecified => workDirectory != null;
 
         public string InternalTraceLevel { get; private set; }
-        public bool InternalTraceLevelSpecified { get { return InternalTraceLevel != null; } }
+        public bool InternalTraceLevelSpecified => InternalTraceLevel != null;
 
         private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications

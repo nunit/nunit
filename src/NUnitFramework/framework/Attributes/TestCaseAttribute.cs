@@ -110,7 +110,7 @@ namespace NUnit.Framework
         /// <value>The result.</value>
         public object? ExpectedResult
         {
-            get { return _expectedResult; }
+            get => _expectedResult;
             set
             {
                 _expectedResult = value;
@@ -142,7 +142,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Description
         {
-            get { return Properties.Get(PropertyNames.Description) as string; }
+            get => Properties.Get(PropertyNames.Description) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -156,7 +156,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Author
         {
-            get { return Properties.Get(PropertyNames.Author) as string; }
+            get => Properties.Get(PropertyNames.Author) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -170,7 +170,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public Type? TestOf
         {
-            get { return _testOf; }
+            get => _testOf;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -186,7 +186,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Ignore
         {
-            get { return IgnoreReason; }
+            get => IgnoreReason;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -202,8 +202,8 @@ namespace NUnit.Framework
         /// </value>
         public bool Explicit
         {
-            get { return RunState == RunState.Explicit; }
-            set { RunState = value ? RunState.Explicit : RunState.Runnable; }
+            get => RunState == RunState.Explicit;
+            set => RunState = value ? RunState.Explicit : RunState.Runnable;
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Reason
         {
-            get { return Properties.Get(PropertyNames.SkipReason) as string; }
+            get => Properties.Get(PropertyNames.SkipReason) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -229,7 +229,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? IgnoreReason
         {
-            get { return Reason; }
+            get => Reason;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -256,7 +256,7 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Category
         {
-            get { return Properties.Get(PropertyNames.Category) as string; }
+            get => Properties.Get(PropertyNames.Category) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
@@ -271,7 +271,7 @@ namespace NUnit.Framework
         /// </summary>
         public string? Until
         {
-            get { return Properties.Get(PropertyNames.IgnoreUntilDate) as string; }
+            get => Properties.Get(PropertyNames.IgnoreUntilDate) as string;
             set
             {
                 if (!string.IsNullOrEmpty(IgnoreReason))

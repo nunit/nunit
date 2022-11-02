@@ -41,7 +41,7 @@ namespace NUnit.TestData.ActionAttributeTests
     {
         public static List<string> Events { get; }
 
-        List<string> IWithAction.Events { get { return Events; } }
+        List<string> IWithAction.Events => Events;
 
         static ActionAttributeFixture()
         {
@@ -139,10 +139,7 @@ namespace NUnit.TestData.ActionAttributeTests
             AddResult("After", test);
         }
 
-        public override ActionTargets Targets
-        {
-            get { return _targets; }
-        }
+        public override ActionTargets Targets => _targets;
 
         private void AddResult(string phase, ITest test)
         {

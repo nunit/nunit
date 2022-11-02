@@ -227,10 +227,7 @@ namespace NUnit.Common
             return new TestSelectionParserException($"Unexpected token '{token.Text}' at position {token.Pos} in selection expression.");
         }
 
-        private Token LookAhead
-        {
-            get { return _tokenizer.LookAhead; }
-        }
+        private Token LookAhead => _tokenizer.LookAhead;
 
         private bool LookingAt(params Token[] tokens)
         {

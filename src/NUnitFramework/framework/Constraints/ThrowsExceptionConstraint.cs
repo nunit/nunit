@@ -16,10 +16,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "an exception to be thrown"; }
-        }
+        public override string Description => "an exception to be thrown";
 
         /// <summary>
         /// Executes the code and returns success if an exception is thrown.

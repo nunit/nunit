@@ -158,8 +158,9 @@ namespace NUnit.Options
 
         #region ICollection
         void ICollection.CopyTo (Array array, int index)  {(values as ICollection).CopyTo (array, index);}
-        bool ICollection.IsSynchronized                   {get {return (values as ICollection).IsSynchronized;}}
-        object ICollection.SyncRoot                       {get {return (values as ICollection).SyncRoot;}}
+        bool ICollection.IsSynchronized => (values as ICollection).IsSynchronized;
+        object ICollection.SyncRoot => (values as ICollection).SyncRoot;
+
         #endregion
 
         #region ICollection<T>
@@ -168,8 +169,9 @@ namespace NUnit.Options
         public bool Contains (string item)                  {return values.Contains (item);}
         public void CopyTo (string[] array, int arrayIndex) {values.CopyTo (array, arrayIndex);}
         public bool Remove (string item)                    {return values.Remove (item);}
-        public int Count                                    {get {return values.Count;}}
-        public bool IsReadOnly                              {get {return false;}}
+        public int Count => values.Count;
+        public bool IsReadOnly => false;
+
         #endregion
 
         #region IEnumerable
@@ -187,8 +189,10 @@ namespace NUnit.Options
         void IList.Insert (int index, object value) {(values as IList).Insert (index, value);}
         void IList.Remove (object value)            {(values as IList).Remove (value);}
         void IList.RemoveAt (int index)             {(values as IList).RemoveAt (index);}
-        bool IList.IsFixedSize                      {get {return false;}}
-        object IList.this [int index]               {get {return this [index];} set {(values as IList)[index] = value;}}
+        bool IList.IsFixedSize => false;
+        object IList.this [int index]               {get => this [index];
+            set => (values as IList)[index] = value;
+        }
         #endregion
 
         #region IList<T>
@@ -214,9 +218,7 @@ namespace NUnit.Options
                 AssertValid (index);
                 return index >= values.Count ? null : values [index];
             }
-            set {
-                values [index] = value;
-            }
+            set => values [index] = value;
         }
         #endregion
 
@@ -250,27 +252,23 @@ namespace NUnit.Options
         }
 
         public Option Option {
-            get {return option;}
-            set {option = value;}
+            get => option;
+            set => option = value;
         }
 
         public string OptionName {
-            get {return name;}
-            set {name = value;}
+            get => name;
+            set => name = value;
         }
 
         public int OptionIndex {
-            get {return index;}
-            set {index = value;}
+            get => index;
+            set => index = value;
         }
 
-        public OptionSet OptionSet {
-            get {return set;}
-        }
+        public OptionSet OptionSet => set;
 
-        public OptionValueCollection OptionValues {
-            get {return c;}
-        }
+        public OptionValueCollection OptionValues => c;
     }
 
     public enum OptionValueType {
@@ -324,10 +322,10 @@ namespace NUnit.Options
                         nameof(prototype));
         }
 
-        public string           Prototype       {get {return prototype;}}
-        public string           Description     {get {return description;}}
-        public OptionValueType  OptionValueType {get {return type;}}
-        public int              MaxValueCount   {get {return count;}}
+        public string           Prototype => prototype;
+        public string           Description => description;
+        public OptionValueType  OptionValueType => type;
+        public int              MaxValueCount => count;
 
         public string[] GetNames ()
         {
@@ -344,8 +342,8 @@ namespace NUnit.Options
         protected static T Parse<T> (string value, OptionContext c)
         {
             Type tt = typeof (T);
-            bool nullable = tt.GetTypeInfo().IsValueType && tt.GetTypeInfo().IsGenericType &&
-                !tt.GetTypeInfo().IsGenericTypeDefinition &&
+            bool nullable = tt.IsValueType && tt.IsGenericType &&
+                !tt.IsGenericTypeDefinition &&
                 tt.GetGenericTypeDefinition () == typeof (Nullable<>);
             Type targetType = nullable ? tt.GetGenericArguments () [0] : typeof (T);
 
@@ -365,8 +363,8 @@ namespace NUnit.Options
             return t;
         }
 
-        internal string[] Names           {get {return names;}}
-        internal string[] ValueSeparators {get {return separators;}}
+        internal string[] Names => names;
+        internal string[] ValueSeparators => separators;
 
         static readonly char[] NameTerminator = new[]{'=', ':'};
 
@@ -486,9 +484,7 @@ namespace NUnit.Options
             this.option = info.GetString ("OptionName");
         }
 
-        public string OptionName {
-            get {return this.option;}
-        }
+        public string OptionName => this.option;
 
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)

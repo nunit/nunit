@@ -30,16 +30,13 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "ContainsKeyValuePair"; } }
+        public override string DisplayName => "ContainsKeyValuePair";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "dictionary containing entry " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "dictionary containing entry " + MsgUtils.FormatValue(_expected);
 
         private bool Matches(object actual)
         {
