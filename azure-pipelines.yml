@@ -21,7 +21,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET SDK 7.0'
     inputs:
-      version: 7.0.100-rc.1.22431.12
+      version: 7.0.100
       performMultiLevelLookup: true
 
   - powershell: |
@@ -59,7 +59,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET SDK 7.0'
     inputs:
-      version: 7.0.100-rc.1.22431.12
+      version: 7.0.100
       performMultiLevelLookup: true
 
   - task: UseDotNet@2
@@ -103,7 +103,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Install .NET SDK 7.0'
     inputs:
-      version: 7.0.100-rc.1.22431.12
+      version: 7.0.100
       performMultiLevelLookup: true
 
   - task: UseDotNet@2
