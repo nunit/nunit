@@ -435,5 +435,17 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(test1, Is.EquivalentTo(test2));
         }
+
+        [Test(Description = "Issue #4252 - CollectionAssert.AreEquivalent with multidimensional arrays throws System.RankException")]
+        public void WorksWithMultiRankArray()
+        {
+            var expected = new string[,,] { { { "value1", "value2", "value3" } } };
+            var actual = new string[,,] { { { "value2", "value3", "value1" } } };
+
+            var constraint = new CollectionEquivalentConstraint(expected);
+            var constraintResult = constraint.ApplyTo(actual);
+
+            Assert.That(constraintResult.IsSuccess, Is.True);
+        }
     }
 }
