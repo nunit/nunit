@@ -46,6 +46,9 @@ How to use this package:
       <group targetFramework="net6.0">
         <dependency id="NUnit" version="[$version$]" />
       </group>
+      <group targetFramework="net7.0">
+        <dependency id="NUnit" version="[$version$]" />
+      </group>
     </dependencies>
   </metadata>
   <files>
@@ -65,5 +68,7 @@ How to use this package:
     <file src="bin/net5.0/nunitlite.pdb" target="lib\net5.0" />
     <file src="bin/net6.0/nunitlite.dll" target="lib\net6.0" />
     <file src="bin/net6.0/nunitlite.pdb" target="lib\net6.0" />
+    <file src="bin/net7.0/nunitlite.dll" target="lib\net7.0" />
+    <file src="bin/net7.0/nunitlite.pdb" target="lib\net7.0" />
   </files>
 </package>
