@@ -371,7 +371,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME * 2)]
         public void LargeStringCollectionsInReversedOrder()
         {
             var actual = Enumerable.Range(0, SIZE).Select(i => i.ToString()).ToList();
@@ -389,7 +389,7 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
-        [Timeout(LARGE_COLLECTION_FAIL_TIME)]
+        [Timeout(LARGE_COLLECTION_FAIL_TIME * 2)]
         public void LargeStringCollection()
         {
             var actual = new StringCollection();
