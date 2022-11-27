@@ -70,7 +70,8 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentNotNull(actual, nameof(actual));
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            PropertyInfo property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
+            actualType = typeof(TActual);
+            PropertyInfo property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
 
             if (property == null && typeof(TActual).IsInterface)
             {
@@ -83,8 +84,22 @@ namespace NUnit.Framework.Constraints
 
             if (property == null)
             {
-                actualType = actual as Type ?? actual.GetType();
-                property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                if (actual is Type actualIsType)
+                {
+                    actualType = actualIsType;
+                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+
+                    if (property == null)
+                    {
+                        // Do not set actualType to System.RuntimeType as that is no expected
+                        property = Reflect.GetUltimateShadowingProperty(actual.GetType(), name, bindingFlags);
+                    }
+                }
+                else
+                {
+                    actualType = actual.GetType();
+                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                }
             }
 
             return new ConstraintResult(this, actualType, property != null);
