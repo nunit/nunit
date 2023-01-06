@@ -140,11 +140,15 @@ namespace NUnitLite.Tests
             string line;
             var lines = new List<string>();
             while ((line = rdr.ReadLine()) != null)
-                lines.Add(line);
+            {
+                if ( !line.Contains("InvokeStub_") )
+                {
+                    lines.Add(line);
+                }
+            }
 
             return lines;
         }
-
         #endregion
     }
 }
