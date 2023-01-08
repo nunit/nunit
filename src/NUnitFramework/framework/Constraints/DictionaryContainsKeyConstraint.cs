@@ -34,16 +34,13 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "ContainsKey"; } }
+        public override string DisplayName => "ContainsKey";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "dictionary containing key " + MsgUtils.FormatValue(Expected); }
-        }
+        public override string Description => "dictionary containing key " + MsgUtils.FormatValue(Expected);
 
         /// <summary>
         /// Gets the expected object
@@ -128,7 +125,7 @@ namespace NUnit.Framework.Constraints
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
-            if (method == null && type.GetTypeInfo().IsGenericType)
+            if (method == null && type.IsGenericType)
             {
                 var definition = type.GetGenericTypeDefinition();
                 var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
@@ -157,7 +154,7 @@ namespace NUnit.Framework.Constraints
         {
             for (; ; )
             {
-                type = type.GetTypeInfo().BaseType;
+                type = type.BaseType;
                 if (type == null) break;
                 yield return type;
             }

@@ -338,8 +338,8 @@ namespace NUnit.Framework.Constraints
 
             public string this[int key]
             {
-                get { throw new NotImplementedException(); }
-                set { throw new NotImplementedException(); }
+                get => throw new NotImplementedException();
+                set => throw new NotImplementedException();
             }
 
             public ICollection<int> Keys { get; }
@@ -382,8 +382,8 @@ namespace NUnit.Framework.Constraints
 
             public object this[object key]
             {
-                get { throw new NotImplementedException(); }
-                set { throw new NotImplementedException(); }
+                get => throw new NotImplementedException();
+                set => throw new NotImplementedException();
             }
 
             public ICollection Keys { get; }
@@ -432,10 +432,7 @@ namespace NUnit.Framework.Constraints
 
             public int Count { get; }
 
-            public IEnumerable<string> this[int key]
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public IEnumerable<string> this[int key] => throw new NotImplementedException();
         }
 
         public class TestReadOnlyDictionary : IReadOnlyDictionary<string, string>
@@ -468,10 +465,7 @@ namespace NUnit.Framework.Constraints
                 throw new NotImplementedException();
             }
 
-            public string this[string key]
-            {
-                get { throw new NotImplementedException(); }
-            }
+            public string this[string key] => throw new NotImplementedException();
 
             public IEnumerable<string> Keys { get; }
             public IEnumerable<string> Values { get; }

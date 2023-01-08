@@ -49,7 +49,7 @@ namespace NUnitLite
         /// </summary>
         public void DisplayHeader()
         {
-            Assembly executingAssembly = GetType().GetTypeInfo().Assembly;
+            Assembly executingAssembly = GetType().Assembly;
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
             string copyright = "Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt";

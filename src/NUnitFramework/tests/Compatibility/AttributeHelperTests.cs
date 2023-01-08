@@ -10,7 +10,7 @@ namespace NUnit.Framework.Compatibility
         [Test]
         public void CanGetAttributesOnAssemblies()
         {
-            var assembly = typeof(TestAttribute).GetTypeInfo().Assembly;
+            var assembly = typeof(TestAttribute).Assembly;
             Assert.That(assembly, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(assembly, typeof(AssemblyCompanyAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var method = type.GetTypeInfo().GetMethod("Add");
+            var method = type.GetMethod("Add");
             Assert.That(method, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(method, typeof(AuthorAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var property = type.GetTypeInfo().GetProperty("MyProperty");
+            var property = type.GetProperty("MyProperty");
             Assert.That(property, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(property, typeof(DatapointSourceAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var field = type.GetTypeInfo().GetField(nameof(A.Field));
+            var field = type.GetField(nameof(A.Field));
             Assert.That(field, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(field, typeof(DatapointAttribute), true);
             Assert.That(attr, Is.Not.Null);
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Compatibility
         {
             var type = typeof(A);
             Assert.That(type, Is.Not.Null);
-            var method = type.GetTypeInfo().GetMethod("Add");
+            var method = type.GetMethod("Add");
             Assert.That(method, Is.Not.Null);
             ParameterInfo[] param = method.GetParameters();
             Assert.That(param, Is.Not.Null);

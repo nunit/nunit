@@ -227,7 +227,7 @@ namespace NUnit.Framework.Constraints
                 return null;
 
             Type valueType = value.GetType();
-            if (!valueType.GetTypeInfo().IsGenericType)
+            if (!valueType.IsGenericType)
                 return null;
 
             Type baseValueType = valueType.GetGenericTypeDefinition();

@@ -21,10 +21,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "all items unique"; }
-        }
+        public override string Description => "all items unique";
 
         /// <summary>
         /// Check that all items are unique.

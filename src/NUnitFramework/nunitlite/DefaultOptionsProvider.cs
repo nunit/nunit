@@ -8,12 +8,6 @@ namespace NUnit.Common
     {
         private const string EnvironmentVariableTeamcityProjectName = "TEAMCITY_PROJECT_NAME";
 
-        public bool TeamCity
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(EnvironmentVariableTeamcityProjectName));
-            }
-        }
+        public bool TeamCity => !string.IsNullOrEmpty(Environment.GetEnvironmentVariable(EnvironmentVariableTeamcityProjectName));
     }
 }

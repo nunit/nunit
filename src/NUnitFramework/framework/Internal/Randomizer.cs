@@ -49,7 +49,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static int InitialSeed
         {
-            get { return _initialSeed; }
+            get => _initialSeed;
             set
             {
                 _initialSeed = value;

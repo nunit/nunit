@@ -131,10 +131,7 @@ namespace NUnitLite.Tests
 
         #region Private Properties and Methods
 
-        private string Report
-        {
-            get { return _reportBuilder.ToString().Replace(NL, "\n"); }
-        }
+        private string Report => _reportBuilder.ToString().Replace(NL, "\n");
 
         private IList<string> GetReportLines()
         {
@@ -143,11 +140,15 @@ namespace NUnitLite.Tests
             string line;
             var lines = new List<string>();
             while ((line = rdr.ReadLine()) != null)
-                lines.Add(line);
+            {
+                if ( !line.Contains("InvokeStub_") )
+                {
+                    lines.Add(line);
+                }
+            }
 
             return lines;
         }
-
         #endregion
     }
 }

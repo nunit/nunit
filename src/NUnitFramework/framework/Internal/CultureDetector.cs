@@ -112,9 +112,6 @@ namespace NUnit.Framework.Internal
         /// defined if called before IsSupported( Attribute )
         /// is called.
         /// </summary>
-        public string Reason
-        {
-            get { return reason; }
-        }
+        public string Reason => reason;
     }
 }

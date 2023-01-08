@@ -31,13 +31,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get
-            {
-                return "any of " + MsgUtils.FormatValue(_expected);
-            }
-        }
+        public override string Description => "any of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
         /// Test whether item is present in expected collection

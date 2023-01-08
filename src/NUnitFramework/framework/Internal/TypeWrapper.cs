@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                var baseType = Type.GetTypeInfo().BaseType;
+                var baseType = Type.BaseType;
 
                 return baseType != null
                     ? new TypeWrapper(baseType)
@@ -49,50 +49,32 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Name of the Type
         /// </summary>
-        public string Name
-        {
-            get { return Type.Name; }
-        }
+        public string Name => Type.Name;
 
         /// <summary>
         /// Gets the FullName of the Type
         /// </summary>
-        public string FullName
-        {
-            get { return Type.FullName!;  }
-        }
+        public string FullName => Type.FullName!;
 
         /// <summary>
         /// Gets the assembly in which the type is declared
         /// </summary>
-        public Assembly Assembly
-        {
-            get { return Type.GetTypeInfo().Assembly; }
-        }
+        public Assembly Assembly => Type.Assembly;
 
         /// <summary>
         /// Gets the namespace of the Type
         /// </summary>
-        public string? Namespace
-        {
-            get { return Type.Namespace; }
-        }
+        public string? Namespace => Type.Namespace;
 
         /// <summary>
         /// Gets a value indicating whether the type is abstract.
         /// </summary>
-        public bool IsAbstract
-        {
-            get { return Type.GetTypeInfo().IsAbstract; }
-        }
+        public bool IsAbstract => Type.IsAbstract;
 
         /// <summary>
         /// Gets a value indicating whether the Type is a generic Type
         /// </summary>
-        public bool IsGenericType
-        {
-            get { return Type.GetTypeInfo().IsGenericType; }
-        }
+        public bool IsGenericType => Type.IsGenericType;
 
         /// <summary>
         /// Returns true if the Type wrapped is T
@@ -105,26 +87,17 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a value indicating whether the Type has generic parameters that have not been replaced by specific Types.
         /// </summary>
-        public bool ContainsGenericParameters
-        {
-            get { return Type.GetTypeInfo().ContainsGenericParameters; }
-        }
+        public bool ContainsGenericParameters => Type.ContainsGenericParameters;
 
         /// <summary>
         /// Gets a value indicating whether the Type is a generic Type definition
         /// </summary>
-        public bool IsGenericTypeDefinition
-        {
-            get { return Type.GetTypeInfo().IsGenericTypeDefinition; }
-        }
+        public bool IsGenericTypeDefinition => Type.IsGenericTypeDefinition;
 
         /// <summary>
         /// Gets a value indicating whether the type is sealed.
         /// </summary>
-        public bool IsSealed
-        {
-            get { return Type.GetTypeInfo().IsSealed; }
-        }
+        public bool IsSealed => Type.IsSealed;
 
         /// <summary>
         /// Gets a value indicating whether this type represents a static class.

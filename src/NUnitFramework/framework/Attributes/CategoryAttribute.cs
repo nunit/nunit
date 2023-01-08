@@ -53,10 +53,7 @@ namespace NUnit.Framework
         /// <summary>
         /// The name of the category
         /// </summary>
-        public string Name 
-        {
-            get { return categoryName; }
-        }
+        public string Name => categoryName;
 
         #region IApplyToTest Members
 

@@ -49,10 +49,7 @@ namespace NUnit.Common
         /// <summary>
         /// Gets the encoding for this ExtendedTextWriter
         /// </summary>
-        public override Encoding Encoding
-        {
-            get { return _writer.Encoding; }
-        }
+        public override Encoding Encoding => _writer.Encoding;
 
         /// <summary>
         /// Dispose the Extended TextWriter

@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
             {
                 var type = this.GetType();
                 var displayName = type.Name;
-                if (type.GetTypeInfo().IsGenericType)
+                if (type.IsGenericType)
                     displayName = displayName.Substring(0, displayName.Length - 2);
                 if (displayName.EndsWith("Constraint", StringComparison.Ordinal))
                     displayName = displayName.Substring(0, displayName.Length - 10);
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public virtual string DisplayName { get { return _displayName.Value; } }
+        public virtual string DisplayName => _displayName.Value;
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -234,10 +234,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression by appending And
         /// to the current constraint.
         /// </summary>
-        public ConstraintExpression With
-        {
-            get { return this.And; }
-        }
+        public ConstraintExpression With => this.And;
 
         /// <summary>
         /// Returns a ConstraintExpression by appending Or

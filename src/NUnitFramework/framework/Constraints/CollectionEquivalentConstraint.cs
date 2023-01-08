@@ -31,16 +31,13 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "Equivalent"; } }
+        public override string DisplayName => "Equivalent";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "equivalent to " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "equivalent to " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
         /// Test whether two collections are equivalent

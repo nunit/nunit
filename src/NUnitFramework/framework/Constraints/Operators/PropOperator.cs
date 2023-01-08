@@ -14,10 +14,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets the name of the property to which the operator applies
         /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name => name;
 
         /// <summary>
         /// Constructs a PropOperator for a particular named property

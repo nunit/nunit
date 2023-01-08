@@ -153,10 +153,7 @@ namespace NUnit.Framework.Internal
         /// Gets the name of the method implementing this test.
         /// Returns null if the test is not implemented as a method.
         /// </summary>
-        public virtual string? MethodName
-        {
-            get { return null; }
-        }
+        public virtual string? MethodName => null;
 
         /// <summary>
         /// The arguments to use in creating the test or empty array if none required.
@@ -175,7 +172,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public IMethodInfo? Method
         {
-            get { return _method; }
+            get => _method;
             set
             {
                 _declaringTypeInfo = null;
@@ -199,19 +196,13 @@ namespace NUnit.Framework.Internal
         /// value in the XML representation of a test and has no other
         /// function in the framework.
         /// </summary>
-        public virtual string TestType
-        {
-            get { return this.GetType().Name; }
-        }
+        public virtual string TestType => this.GetType().Name;
 
         /// <summary>
         /// Gets a count of test cases represented by
         /// or contained under this test.
         /// </summary>
-        public virtual int TestCaseCount
-        {
-            get { return 1; }
-        }
+        public virtual int TestCaseCount => 1;
 
         /// <summary>
         /// Gets the properties for this test
@@ -221,10 +212,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Returns true if this is a TestSuite
         /// </summary>
-        public bool IsSuite
-        {
-            get { return this is TestSuite; }
-        }
+        public bool IsSuite => this is TestSuite;
 
         /// <summary>
         /// Gets a bool indicating whether the current test
@@ -334,7 +322,7 @@ namespace NUnit.Framework.Internal
         public void ApplyAttributesToTest(Type type)
         {
             foreach (var t in GetNestedTypes(type).Reverse()) 
-                ApplyAttributesToTest((ICustomAttributeProvider) t.GetTypeInfo());
+                ApplyAttributesToTest((ICustomAttributeProvider) t);
         }
         
         /// <summary>
@@ -416,12 +404,12 @@ namespace NUnit.Framework.Internal
 
             if (type != null && type != typeof(object))
             {
-                actions.AddRange(GetActionsForType(type.GetTypeInfo().BaseType));
+                actions.AddRange(GetActionsForType(type.BaseType));
 
                 foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
-                    actions.AddRange(interfaceType.GetTypeInfo().GetAttributes<ITestAction>(false));
+                    actions.AddRange(interfaceType.GetAttributes<ITestAction>(false));
 
-                actions.AddRange(type.GetTypeInfo().GetAttributes<ITestAction>(false));
+                actions.AddRange(type.GetAttributes<ITestAction>(false));
             }
 
             return actions.ToArray();

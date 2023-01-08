@@ -42,7 +42,7 @@ namespace NUnit.Framework
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception> 
         public string? Until
         {
-            get { return _until; }
+            get => _until;
             set
             {
                 _until = value;

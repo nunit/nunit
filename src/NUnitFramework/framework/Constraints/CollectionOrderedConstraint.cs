@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "Ordered"; } }
+        public override string DisplayName => "Ordered";
 
         ///<summary>
         /// If used performs a default ascending comparison

@@ -18,10 +18,7 @@ namespace NUnit.Framework
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public static ConstraintExpression No
-        {
-            get { return new ConstraintExpression().Not; }
-        }
+        public static ConstraintExpression No => new ConstraintExpression().Not;
 
         #endregion
 
@@ -32,10 +29,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-        public static ConstraintExpression All
-        {
-            get { return new ConstraintExpression().All; }
-        }
+        public static ConstraintExpression All => new ConstraintExpression().All;
 
         #endregion
 
@@ -46,10 +40,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if at least one of them succeeds.
         /// </summary>
-        public static ConstraintExpression Some
-        {
-            get { return new ConstraintExpression().Some; }
-        }
+        public static ConstraintExpression Some => new ConstraintExpression().Some;
 
         #endregion
 
@@ -60,10 +51,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them fail.
         /// </summary>
-        public static ConstraintExpression None
-        {
-            get { return new ConstraintExpression().None; }
-        }
+        public static ConstraintExpression None => new ConstraintExpression().None;
 
         #endregion
 
@@ -88,13 +76,7 @@ namespace NUnit.Framework
         /// the following constraint to only one member of the collection,
         /// and fail if none or more than one match occurs.
         /// </summary>
-        public static ItemsConstraintExpression One
-        {
-            get
-            {
-                return new ConstraintExpression().Exactly(1);
-            }
-        }
+        public static ItemsConstraintExpression One => new ConstraintExpression().Exactly(1);
 
         #endregion
 
@@ -118,10 +100,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Length
-        {
-            get { return Property("Length"); }
-        }
+        public static ResolvableConstraintExpression Length => Property("Length");
 
         #endregion
 
@@ -131,10 +110,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Count
-        {
-            get { return Property("Count"); }
-        }
+        public static ResolvableConstraintExpression Count => Property("Count");
 
         #endregion
 
@@ -144,10 +120,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Message
-        {
-            get { return Property("Message"); }
-        }
+        public static ResolvableConstraintExpression Message => Property("Message");
 
         #endregion
 
@@ -157,10 +130,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression InnerException
-        {
-            get { return Property("InnerException"); }
-        }
+        public static ResolvableConstraintExpression InnerException => Property("InnerException");
 
         #endregion
 

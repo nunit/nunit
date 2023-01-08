@@ -12,26 +12,11 @@ namespace NUnit.Framework.Attributes
 
         #region Overrides
 
-        public string TestKind
-        {
-            get { return "dummy-test"; }
-        }
+        public string TestKind => "dummy-test";
 
-        public override bool HasChildren
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool HasChildren => false;
 
-        public override System.Collections.Generic.IList<ITest> Tests
-        {
-            get
-            {
-                return Array.Empty<ITest>();
-            }
-        }
+        public override System.Collections.Generic.IList<ITest> Tests => Array.Empty<ITest>();
 
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
@@ -48,18 +33,9 @@ namespace NUnit.Framework.Attributes
             throw new NotImplementedException();
         }
 
-        public override string XmlElementName
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override string XmlElementName => throw new NotImplementedException();
 
-        public override object[] Arguments
-        {
-            get
-            {
-                return Array.Empty<object>();
-            }
-        }
+        public override object[] Arguments => Array.Empty<object>();
 
         #endregion
     }

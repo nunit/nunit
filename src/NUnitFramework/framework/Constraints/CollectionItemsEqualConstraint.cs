@@ -34,18 +34,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Get a flag indicating whether the user requested us to ignore case.
         /// </summary>
-        protected bool IgnoringCase
-        {
-            get { return _comparer.IgnoreCase; }
-        }
+        protected bool IgnoringCase => _comparer.IgnoreCase;
 
         /// <summary>
         /// Get a flag indicating whether any external comparers are in use.
         /// </summary>
-        protected bool UsingExternalComparer
-        {
-            get { return _comparer.ExternalComparers.Count > 0; }
-        }
+        protected bool UsingExternalComparer => _comparer.ExternalComparers.Count > 0;
 
         #endregion
 

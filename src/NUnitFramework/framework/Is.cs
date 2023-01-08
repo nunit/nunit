@@ -19,10 +19,7 @@ namespace NUnit.Framework
         /// Returns a ConstraintExpression that negates any
         /// following constraint.
         /// </summary>
-        public static ConstraintExpression Not
-        {
-            get { return new ConstraintExpression().Not; }
-        }
+        public static ConstraintExpression Not => new ConstraintExpression().Not;
 
         #endregion
 
@@ -33,10 +30,7 @@ namespace NUnit.Framework
         /// the following constraint to all members of a collection,
         /// succeeding if all of them succeed.
         /// </summary>
-        public static ConstraintExpression All
-        {
-            get { return new ConstraintExpression().All; }
-        }
+        public static ConstraintExpression All => new ConstraintExpression().All;
 
         #endregion
 
@@ -45,10 +39,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for null
         /// </summary>
-        public static NullConstraint Null
-        {
-            get { return new NullConstraint(); }
-        }
+        public static NullConstraint Null => new NullConstraint();
 
         #endregion
 
@@ -57,10 +48,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for default value
         /// </summary>
-        public static DefaultConstraint Default
-        {
-            get { return new DefaultConstraint(); }
-        }
+        public static DefaultConstraint Default => new DefaultConstraint();
 
         #endregion
 
@@ -69,10 +57,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for True
         /// </summary>
-        public static TrueConstraint True
-        {
-            get { return new TrueConstraint(); }
-        }
+        public static TrueConstraint True => new TrueConstraint();
 
         #endregion
 
@@ -81,10 +66,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for False
         /// </summary>
-        public static FalseConstraint False
-        {
-            get { return new FalseConstraint(); }
-        }
+        public static FalseConstraint False => new FalseConstraint();
 
         #endregion
 
@@ -93,10 +75,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for a positive value
         /// </summary>
-        public static GreaterThanConstraint Positive
-        {
-            get { return new GreaterThanConstraint(0); }
-        }
+        public static GreaterThanConstraint Positive => new GreaterThanConstraint(0);
 
         #endregion
 
@@ -105,10 +84,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for a negative value
         /// </summary>
-        public static LessThanConstraint Negative
-        {
-            get { return new LessThanConstraint(0); }
-        }
+        public static LessThanConstraint Negative => new LessThanConstraint(0);
 
         #endregion
 
@@ -117,10 +93,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for equality with zero
         /// </summary>
-        public static EqualConstraint Zero
-        {
-            get { return new EqualConstraint(0); }
-        }
+        public static EqualConstraint Zero => new EqualConstraint(0);
 
         #endregion
 
@@ -129,10 +102,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for NaN
         /// </summary>
-        public static NaNConstraint NaN
-        {
-            get { return new NaNConstraint(); }
-        }
+        public static NaNConstraint NaN => new NaNConstraint();
 
         #endregion
 
@@ -141,10 +111,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for empty
         /// </summary>
-        public static EmptyConstraint Empty
-        {
-            get { return new EmptyConstraint(); }
-        }
+        public static EmptyConstraint Empty => new EmptyConstraint();
 
         #endregion
 
@@ -154,28 +121,19 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
-        public static UniqueItemsConstraint Unique
-        {
-            get { return new UniqueItemsConstraint(); }
-        }
+        public static UniqueItemsConstraint Unique => new UniqueItemsConstraint();
 
         #endregion
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
-        public static BinarySerializableConstraint BinarySerializable
-        {
-            get { return new BinarySerializableConstraint(); }
-        }
+        public static BinarySerializableConstraint BinarySerializable => new BinarySerializableConstraint();
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
-        public static XmlSerializableConstraint XmlSerializable
-        {
-            get { return new XmlSerializableConstraint(); }
-        }
+        public static XmlSerializableConstraint XmlSerializable => new XmlSerializableConstraint();
 
         #region EqualTo
 
@@ -404,10 +362,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests whether a collection is ordered
         /// </summary>
-        public static CollectionOrderedConstraint Ordered
-        {
-            get { return new CollectionOrderedConstraint(); }
-        }
+        public static CollectionOrderedConstraint Ordered => new CollectionOrderedConstraint();
 
         #endregion
 

@@ -93,10 +93,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public string? TestName
         {
-            get
-            {
-                return _testName;
-            }
+            get => _testName;
             set
             {
                 Guard.OperationValid(ArgDisplayNames == null || value == null, "TestName cannot be set when argument display names are set.");
@@ -136,10 +133,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal string[]? ArgDisplayNames
         {
-            get
-            {
-                return _argDisplayNames;
-            }
+            get => _argDisplayNames;
             set
             {
                 Guard.OperationValid(TestName == null || value == null, "Argument display names cannot be set when TestName is set.");

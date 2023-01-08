@@ -23,18 +23,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a default Tolerance object, equivalent to an exact match.
         /// </summary>
-        public static Tolerance Default
-        {
-            get { return new Tolerance(0, ToleranceMode.Unset); }
-        }
+        public static Tolerance Default => new Tolerance(0, ToleranceMode.Unset);
 
         /// <summary>
         /// Returns an empty Tolerance object, equivalent to an exact match.
         /// </summary>
-        public static Tolerance Exact
-        {
-            get { return new Tolerance(0, ToleranceMode.Linear); }
-        }
+        public static Tolerance Exact => new Tolerance(0, ToleranceMode.Linear);
 
         #endregion
 
@@ -177,10 +171,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns true if the current tolerance has not been set or is using the .
         /// </summary>
-        public bool IsUnsetOrDefault
-        {
-            get { return Mode == ToleranceMode.Unset; }
-        }
+        public bool IsUnsetOrDefault => Mode == ToleranceMode.Unset;
 
         #endregion
 
