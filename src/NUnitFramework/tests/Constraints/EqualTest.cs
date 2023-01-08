@@ -150,7 +150,7 @@ namespace NUnit.Framework.Constraints
         {
             public string BrokenProp
             {
-                get { return string.Empty; }
+                get => string.Empty;
                 private set { }
             }
         }

@@ -57,10 +57,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         /// The tolerance.
         /// </value>
-        public Tolerance Tolerance
-        {
-            get { return _tolerance; }
-        }
+        public Tolerance Tolerance => _tolerance;
 
         /// <summary>
         /// Gets a value indicating whether to compare case insensitive.
@@ -68,10 +65,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         ///   <see langword="true"/> if comparing case insensitive; otherwise, <see langword="false"/>.
         /// </value>
-        public bool CaseInsensitive
-        {
-            get { return _comparer.IgnoreCase; }
-        }
+        public bool CaseInsensitive => _comparer.IgnoreCase;
 
         /// <summary>
         /// Gets a value indicating whether or not to clip strings.
@@ -87,10 +81,7 @@ namespace NUnit.Framework.Constraints
         /// <value>
         /// The failure points.
         /// </value>
-        public IList<NUnitEqualityComparer.FailurePoint> FailurePoints
-        {
-            get { return _comparer.FailurePoints; }
-        }
+        public IList<NUnitEqualityComparer.FailurePoint> FailurePoints => _comparer.FailurePoints;
 
         #endregion
 
@@ -411,7 +402,7 @@ namespace NUnit.Framework.Constraints
             if (arg != null)
             {
                 Type argType = arg.GetType();
-                Type genericTypeDefinition = argType.GetTypeInfo().IsGenericType ? argType.GetGenericTypeDefinition() : null;
+                Type genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
                 if (genericTypeDefinition == typeof(ArraySegment<>) && argType.GetProperty("Array").GetValue(arg, null) == null)
                 {

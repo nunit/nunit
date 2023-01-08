@@ -14,10 +14,7 @@ namespace NUnit.Framework
         private const string ERROR_TEXT = "Written directly to console";
         private static readonly string NL = Environment.NewLine;
 
-        private string CapturedOutput
-        {
-            get { return TestExecutionContext.CurrentContext.CurrentResult.Output; }
-        }
+        private string CapturedOutput => TestExecutionContext.CurrentContext.CurrentResult.Output;
 
         [Test]
         public void ConsoleWrite_WritesToResult()

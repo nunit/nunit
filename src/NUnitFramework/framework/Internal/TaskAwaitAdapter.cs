@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
             var genericTaskType = task
                 .GetType()
                 .TypeAndBaseTypes()
-                .FirstOrDefault(t => t.GetTypeInfo().IsGenericType && t.GetGenericTypeDefinition() == typeof(Task<>));
+                .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Task<>));
 
             if (genericTaskType != null)
             {

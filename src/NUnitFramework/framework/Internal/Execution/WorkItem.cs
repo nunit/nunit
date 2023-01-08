@@ -112,10 +112,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The name of the work item - defaults to the Test name.
         /// </summary>
-        public virtual string Name
-        {
-            get { return Test.Name; }
-        }
+        public virtual string Name => Test.Name;
 
         /// <summary>
         /// Filter used to include or exclude child tests
@@ -363,7 +360,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (node.HasMethods)
                     list.Add(node);
 
-                fixtureType = fixtureType.GetTypeInfo().BaseType;
+                fixtureType = fixtureType.BaseType;
             }
 
             return list;

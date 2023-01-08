@@ -29,10 +29,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Gets the Encoding in use by this TextWriter
         /// </summary>
-        public override System.Text.Encoding Encoding
-        {
-            get { return _defaultWriter.Encoding; }
-        }
+        public override System.Text.Encoding Encoding => _defaultWriter.Encoding;
 
         /// <summary>
         /// Writes a single character

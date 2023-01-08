@@ -87,10 +87,7 @@ namespace NUnit.Framework.Internal
         /// Gets a collection containing all the keys in the property set
         /// </summary>
         /// <value></value>
-        public ICollection<string> Keys
-        {
-            get { return inner.Keys; }
-        }
+        public ICollection<string> Keys => inner.Keys;
 
         /// <summary>
         /// Gets or sets the list of values for a particular key
@@ -106,10 +103,7 @@ namespace NUnit.Framework.Internal
                 }
                 return list;
             }
-            set
-            {
-                inner[key] = value;
-            }
+            set => inner[key] = value;
         }
 
         #endregion

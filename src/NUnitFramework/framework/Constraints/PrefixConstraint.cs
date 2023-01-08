@@ -33,10 +33,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return FormatDescription(DescriptionPrefix, BaseConstraint); }
-        }
+        public override string Description => FormatDescription(DescriptionPrefix, BaseConstraint);
 
         /// <summary>
         /// Formats a prefix constraint's description.

@@ -22,9 +22,9 @@ namespace NUnit.Framework.Internal.Execution
         private ConcurrentQueue<TestEvent> _events;
         private TestResult _result;
 
-        private IEnumerable<TestEvent> AllEvents { get { return _events.AsEnumerable();  } }
-        private IEnumerable<TestEvent> ShiftEvents {  get { return AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);  } }
-        private IEnumerable<TestEvent> TestEvents {  get { return AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished); } }
+        private IEnumerable<TestEvent> AllEvents => _events.AsEnumerable();
+        private IEnumerable<TestEvent> ShiftEvents => AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);
+        private IEnumerable<TestEvent> TestEvents => AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished);
 
         public ParallelExecutionTests(TestSuite testSuite)
         {

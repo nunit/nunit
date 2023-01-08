@@ -3,8 +3,6 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
 
 namespace NUnit.Framework.Constraints.Comparers
 {
@@ -19,8 +17,8 @@ namespace NUnit.Framework.Constraints.Comparers
             Type xType = x.GetType();
             Type yType = y.GetType();
 
-            Type? xGenericTypeDefinition = xType.GetTypeInfo().IsGenericType ? xType.GetGenericTypeDefinition() : null;
-            Type? yGenericTypeDefinition = yType.GetTypeInfo().IsGenericType ? yType.GetGenericTypeDefinition() : null;
+            Type? xGenericTypeDefinition = xType.IsGenericType ? xType.GetGenericTypeDefinition() : null;
+            Type? yGenericTypeDefinition = yType.IsGenericType ? yType.GetGenericTypeDefinition() : null;
 
             if (xGenericTypeDefinition != typeof(KeyValuePair<,>) ||
                 yGenericTypeDefinition != typeof(KeyValuePair<,>))

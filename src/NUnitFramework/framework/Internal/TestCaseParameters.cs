@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public object? ExpectedResult
         {
-            get { return _expectedResult; }
+            get => _expectedResult;
             set
             {
                 _expectedResult = value;

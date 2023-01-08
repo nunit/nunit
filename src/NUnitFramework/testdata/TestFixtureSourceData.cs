@@ -103,10 +103,11 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public InstanceProperty_SameClass(string arg) : base(arg, "InstancePropertyInClass") { }
 
-        object[] InstanceProperty
-        {
-            get { return new object[] { new object[] { "InstancePropertyInClass" } }; }
-        }
+        object[] InstanceProperty =>
+            new object[]
+            {
+                new object[] { "InstancePropertyInClass" }
+            };
     }
 
     [TestFixtureSource("InstanceMethod")]
@@ -413,19 +414,21 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     class SourceData
     {
-        public static object[] InheritedStaticProperty
-        {
-            get { return new object[] { new object[] { "StaticProperty" } }; }
-        }
+        public static object[] InheritedStaticProperty =>
+            new object[]
+            {
+                new object[] { "StaticProperty" }
+            };
 
 #pragma warning disable 414
         static object[] StaticField = new object[] { "StaticField" };
 #pragma warning restore 414
 
-        static object[] StaticProperty
-        {
-            get { return new object[] { new object[] { "StaticProperty" } }; }
-        }
+        static object[] StaticProperty =>
+            new object[]
+            {
+                new object[] { "StaticProperty" }
+            };
 
         static object[] StaticMethod()
         {

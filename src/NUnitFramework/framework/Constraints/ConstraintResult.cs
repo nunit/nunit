@@ -90,21 +90,18 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// True if actual value meets the Constraint criteria otherwise false.
         /// </summary>
-        public virtual bool IsSuccess
-        {
-            get { return Status == ConstraintStatus.Success; }
-        }
+        public virtual bool IsSuccess => Status == ConstraintStatus.Success;
 
         /// <summary>
         /// Display friendly name of the constraint.
         /// </summary>
-        public string Name { get { return _constraint.DisplayName; } }
+        public string Name => _constraint.DisplayName;
 
         /// <summary>
         /// Description of the constraint may be affected by the state the constraint had
         /// when <see cref="Constraint.ApplyTo{TActual}(TActual)"/> was performed against the actual value.
         /// </summary>
-        public string Description { get { return _constraint.Description; } }
+        public string Description => _constraint.Description;
 
         #endregion
 

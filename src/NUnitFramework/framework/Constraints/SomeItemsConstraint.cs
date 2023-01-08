@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "Some"; } }
+        public override string DisplayName => "Some";
 
         /// <summary>
         /// Apply the item constraint to each item in the collection,

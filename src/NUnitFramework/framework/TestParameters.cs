@@ -21,18 +21,12 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets the number of test parameters
         /// </summary>
-        public int Count
-        {
-            get { return _parameters.Count; }
-        }
+        public int Count => _parameters.Count;
 
         /// <summary>
         /// Gets a collection of the test parameter names
         /// </summary>
-        public ICollection<string> Names
-        {
-            get { return _parameters.Keys; }
-        }
+        public ICollection<string> Names => _parameters.Keys;
 
         /// <summary>
         /// Gets a flag indicating whether a parameter with the specified name exists.
@@ -49,10 +43,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="name">Name of the parameter</param>
         /// <returns>Value of the parameter or null if not present</returns>
-        public string? this[string name]
-        {
-            get { return Get(name); }
-        }
+        public string? this[string name] => Get(name);
 
         /// <summary>
         /// Get method is a simple alternative to the indexer

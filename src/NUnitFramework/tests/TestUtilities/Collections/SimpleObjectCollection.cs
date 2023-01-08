@@ -31,20 +31,11 @@ namespace NUnit.TestUtilities.Collections
             ((ICollection)contents).CopyTo(array, index);
         }
 
-        public int Count
-        {
-            get { return contents.Count; }
-        }
+        public int Count => contents.Count;
 
-        public bool IsSynchronized
-        {
-            get { return  ((ICollection)contents).IsSynchronized; }
-        }
+        public bool IsSynchronized => ((ICollection)contents).IsSynchronized;
 
-        public object SyncRoot
-        {
-            get { return ((ICollection)contents).SyncRoot; }
-        }
+        public object SyncRoot => ((ICollection)contents).SyncRoot;
 
         #endregion
 

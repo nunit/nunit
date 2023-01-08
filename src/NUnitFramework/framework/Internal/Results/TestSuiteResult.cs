@@ -158,21 +158,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Indicates whether this result has any child results.
         /// </summary>
-        public override bool HasChildren
-        {
-            get
-            {
-                return !_children.IsEmpty;
-            }
-        }
+        public override bool HasChildren => !_children.IsEmpty;
 
         /// <summary>
         /// Gets the collection of child results.
         /// </summary>
-        public override IEnumerable<ITestResult> Children
-        {
-            get { return _children; }
-        }
+        public override IEnumerable<ITestResult> Children => _children;
 
         #endregion
 

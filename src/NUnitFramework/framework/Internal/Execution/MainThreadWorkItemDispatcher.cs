@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         ///  The level of parallelism supported
         /// </summary>
-        public int LevelOfParallelism { get { return 0; } }
+        public int LevelOfParallelism => 0;
 
         /// <summary>
         /// Start execution, dispatching the top level

@@ -44,7 +44,7 @@ namespace NUnit.TestUtilities
         /// <summary>
         /// Gets the test directory.
         /// </summary>
-        public DirectoryInfo Directory { get { return _testDir; } }
+        public DirectoryInfo Directory => _testDir;
 
         /// <summary>
         /// Returns the full path of the contained test directory

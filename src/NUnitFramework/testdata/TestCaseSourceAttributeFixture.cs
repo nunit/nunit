@@ -34,17 +34,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        private static IEnumerable IgnoredSource
-        {
-            get
-            {
-                return new object[] {
-                    new TestCaseData(1),
-                    new TestCaseData(2).Ignore("Don't Run Me!"),
-
-                };
-            }
-        }
+        private static IEnumerable IgnoredSource =>
+            new object[] {
+                new TestCaseData(1),
+                new TestCaseData(2).Ignore("Don't Run Me!"),
+            };
 
         private static IEnumerable IgnoredWithDateSource
         {
@@ -69,17 +63,12 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        private static IEnumerable ExplicitSource
-        {
-            get
-            {
-                return new object[] {
-                    new TestCaseData(1),
-                    new TestCaseData(2).Explicit(),
-                    new TestCaseData(3).Explicit("Connection failing")
-                };
-            }
-        }
+        private static IEnumerable ExplicitSource =>
+            new object[] {
+                new TestCaseData(1),
+                new TestCaseData(2).Explicit(),
+                new TestCaseData(3).Explicit("Connection failing")
+            };
 
         #endregion
 
@@ -91,10 +80,11 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             Assert.AreEqual("InstanceProperty", source);
         }
 
-        IEnumerable InstanceProperty
-        {
-            get { return new object[] { new object[] { "InstanceProperty" } }; }
-        }
+        IEnumerable InstanceProperty =>
+            new object[]
+            {
+                new object[] { "InstanceProperty" }
+            };
 
         [Test, TestCaseSource(nameof(InstanceMethod))]
         public void MethodWithInstanceMethodAsSource(string source)

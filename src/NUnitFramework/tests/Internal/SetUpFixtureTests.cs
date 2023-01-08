@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class SetUpFixtureTests
     {
-        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).GetTypeInfo().Assembly);
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).Assembly);
 
         ITestAssemblyBuilder builder;
         ITestAssemblyRunner runner;

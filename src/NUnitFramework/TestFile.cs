@@ -43,12 +43,12 @@ namespace NUnit.TestUtilities
             }
 
             // HACK! Only way I can figure out to avoid having two copies of TestFile
-            _resourceName = GetType().GetTypeInfo().Assembly.GetName().Name.Contains("nunitlite")
+            _resourceName = GetType().Assembly.GetName().Name.Contains("nunitlite")
                 ? "NUnitLite.Tests." + contentSource
                 : "NUnit.Framework." + contentSource;
             _fileLength = 0L;
 
-            Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
+            Assembly a = typeof(TestFile).Assembly;
             using (Stream s = a.GetManifestResourceStream(_resourceName))
             {
                 if (s == null)
@@ -69,17 +69,14 @@ namespace NUnit.TestUtilities
             }
         }
 
-        public long FileLength
-        {
-            get { return _fileLength; }
-        }
+        public long FileLength => _fileLength;
 
         public long OffsetOf(char target)
         {
             if (_resourceName == null)
                 return -1L;
 
-            Assembly a = typeof(TestFile).GetTypeInfo().Assembly;
+            Assembly a = typeof(TestFile).Assembly;
             using (Stream s = a.GetManifestResourceStream(_resourceName))
             {
                 if (s == null)
@@ -107,7 +104,7 @@ namespace NUnit.TestUtilities
         /// <summary>
         /// Gets the test file.
         /// </summary>
-        public FileInfo File { get { return _fileInfo; } }
+        public FileInfo File => _fileInfo;
 
         /// <summary>
         /// Returns the full path of the contained test directory

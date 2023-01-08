@@ -33,16 +33,13 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "SubsetOf"; } }
+        public override string DisplayName => "SubsetOf";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "subset of " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "subset of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
         /// Test whether the actual collection is a subset of 

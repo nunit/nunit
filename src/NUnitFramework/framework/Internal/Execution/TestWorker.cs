@@ -73,10 +73,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Indicates whether the worker thread is running
         /// </summary>
-        public bool IsAlive
-        {
-            get { return _workerThread.IsAlive; }
-        }
+        public bool IsAlive => _workerThread.IsAlive;
 
         #endregion
 

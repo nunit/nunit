@@ -36,15 +36,10 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a string representing the type of test
         /// </summary>
-        public override string TestType
-        {
-            get
-            {
-                return _genericFixture
-                    ? "GenericFixture"
-                    : "ParameterizedFixture";
-            }
-        }
+        public override string TestType =>
+            _genericFixture
+                ? "GenericFixture"
+                : "ParameterizedFixture";
 
         /// <summary>
         /// Creates a filtered copy of the test suite.

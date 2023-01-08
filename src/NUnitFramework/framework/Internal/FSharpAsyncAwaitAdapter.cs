@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal
         {
             if (asyncType == null) return null;
 
-            if (!asyncType.GetTypeInfo().IsGenericType) return null;
+            if (!asyncType.IsGenericType) return null;
             var genericDefinition = asyncType.GetGenericTypeDefinition();
             if (genericDefinition.FullName != "Microsoft.FSharp.Control.FSharpAsync`1") return null;
 
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
 
             if (_startImmediateAsTaskMethod == null)
             {
-                var asyncHelperMethodsType = info.FSharpAsyncTypeDefinition.GetTypeInfo().Assembly.GetType("Microsoft.FSharp.Control.FSharpAsync");
+                var asyncHelperMethodsType = info.FSharpAsyncTypeDefinition.Assembly.GetType("Microsoft.FSharp.Control.FSharpAsync");
                 if (asyncHelperMethodsType == null)
                     throw new InvalidOperationException("Cannot find non-generic FSharpAsync type in the same assembly as the generic one.");
 

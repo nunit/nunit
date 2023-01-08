@@ -86,10 +86,15 @@ namespace NUnit.TestData.DatapointFixture
     public class SquareRootTest_Property_ArrayOfDouble : SquareRootTest
     {
         [Datapoints]
-        public double[] Values
-        {
-            get { return new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity }; }
-        }
+        public double[] Values =>
+            new[]
+            {
+                0.0,
+                1.0,
+                -1.0,
+                double.MaxValue,
+                double.PositiveInfinity
+            };
     }
 
     public class SquareRootTest_Method_ArrayOfDouble : SquareRootTest

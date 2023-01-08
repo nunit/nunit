@@ -53,7 +53,6 @@ namespace NUnit.Framework.Interfaces
         /// <param name="value">The value</param>
         void Add(string key, object value);
 
-        
         /// <summary>
         /// Sets the value for a key, removing any other
         /// values that are already in the property set.

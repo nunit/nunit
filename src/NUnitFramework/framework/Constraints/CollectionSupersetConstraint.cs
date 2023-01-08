@@ -34,16 +34,13 @@ namespace NUnit.Framework.Constraints
         /// trailing "Constraint" removed. Derived classes may set
         /// this to another name in their constructors.
         /// </summary>
-        public override string DisplayName { get { return "SupersetOf"; } }
+        public override string DisplayName => "SupersetOf";
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "superset of " + MsgUtils.FormatValue(_expected); }
-        }
+        public override string Description => "superset of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
         /// Test whether the actual collection is a superset of 

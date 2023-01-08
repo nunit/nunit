@@ -34,10 +34,7 @@ namespace NUnit.Framework.Constraints
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description
-        {
-            get { return "property " + name; }
-        }
+        public override string Description => "property " + name;
 
         /// <summary>
         /// Test whether the property exists for a given object
