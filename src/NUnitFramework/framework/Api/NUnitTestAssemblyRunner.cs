@@ -165,7 +165,7 @@ namespace NUnit.Framework.Api
             if (filter == TestFilter.Empty)
                 return LoadedTest;
 
-            return new TestAssembly(LoadedTest as TestAssembly, filter);
+            return new TestAssembly((TestAssembly)LoadedTest, filter);
         }
 
         /// <summary>

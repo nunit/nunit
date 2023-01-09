@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -175,7 +174,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
-                Properties.Set(PropertyNames.TestOf, value.FullName);
+                Properties.Set(PropertyNames.TestOf, value.FullName!);
             }
         }
         private Type? _testOf;
@@ -312,7 +311,7 @@ namespace NUnit.Framework
                 {
                     IParameterInfo lastParameter = parameters[argsNeeded - 1];
                     Type lastParameterType = lastParameter.ParameterType;
-                    Type elementType = lastParameterType.GetElementType();
+                    Type elementType = lastParameterType.GetElementType()!;
 
                     if (lastParameterType.IsArray && lastParameter.IsDefined<ParamArrayAttribute>(false))
                     {
@@ -346,7 +345,7 @@ namespace NUnit.Framework
                 //Special handling for optional parameters
                 if (parms.Arguments.Length < argsNeeded)
                 {
-                    object?[] newArgList = new object?[parameters.Length];
+                    var newArgList = new object?[parameters.Length];
                     Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);
 
                     //Fill with Type.Missing for remaining required parameters where optional
@@ -417,7 +416,7 @@ namespace NUnit.Framework
         public IEnumerable<TestMethod> BuildFrom(IMethodInfo method, Test? suite)
         {
             TestMethod test = new NUnitTestCaseBuilder().BuildTestMethod(method, suite, GetParametersForTestCase(method));
-            
+
             if (_untilDate.HasValue)
             {
                 if (_untilDate > DateTimeOffset.UtcNow)
@@ -434,7 +433,7 @@ namespace NUnit.Framework
 
             if (IncludePlatform != null || ExcludePlatform != null)
             {
-                if (test.RunState == RunState.NotRunnable || test.RunState == RunState.Ignored)
+                if (test.RunState is RunState.NotRunnable or RunState.Ignored)
                 {
                     yield return test;
                     yield break;

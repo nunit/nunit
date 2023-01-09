@@ -169,10 +169,10 @@ namespace NUnit.Framework.Constraints
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =
-            typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic);
+            typeof(UniqueItemsConstraint).GetMethod(nameof(ItemsUnique), BindingFlags.Static | BindingFlags.NonPublic)!;
 
         private static readonly MethodInfo ItemsCastMethod =
-            typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public);
+            typeof(Enumerable).GetMethod(nameof(Enumerable.Cast), BindingFlags.Static | BindingFlags.Public)!;
 
         private static ICollection<T> ItemsUnique<T>(IEnumerable<T> actual)
             => NonUniqueItemsInternal(actual, EqualityComparer<T>.Default);

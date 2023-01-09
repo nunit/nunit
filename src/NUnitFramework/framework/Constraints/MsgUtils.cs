@@ -361,7 +361,7 @@ namespace NUnit.Framework.Constraints
             int nest = 0;
             while (elementType.IsArray)
             {
-                elementType = elementType.GetElementType();
+                elementType = elementType.GetElementType()!;
                 ++nest;
             }
             sb.Append(elementType);

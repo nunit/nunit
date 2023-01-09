@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
 
             if (type.IsGenericType)
             {
-                string name = type.FullName;
+                string name = type.FullName!;
                 int index = name.IndexOf('[');
                 if (index >= 0) name = name.Substring(0, index);
 
@@ -342,7 +342,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsTupleInternal(Type type, string tupleName)
         {
-            string typeName = type.FullName;
+            string typeName = type.FullName!;
 
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
                 return false;
