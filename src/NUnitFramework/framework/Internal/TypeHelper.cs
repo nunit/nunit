@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -15,7 +14,7 @@ namespace NUnit.Framework.Internal
     /// <summary>
     /// TypeHelper provides static methods that operate on Types.
     /// </summary>
-    public class TypeHelper
+    public static class TypeHelper
     {
         private const int STRING_MAX = 40;
         private const int STRING_LIMIT = STRING_MAX - 3;

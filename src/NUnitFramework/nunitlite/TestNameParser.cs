@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#nullable enable
 using System.Collections.Generic;
 
 namespace NUnit.Common
@@ -8,7 +9,7 @@ namespace NUnit.Common
     /// TestNameParser is used to parse the arguments to the 
     /// -run option, separating testnames at the correct point.
     /// </summary>
-    public class TestNameParser
+    public static class TestNameParser
     {
         /// <summary>
         /// Parse the -run argument and return an array of argument
@@ -23,7 +24,7 @@ namespace NUnit.Common
             while (index < argument.Length)
             {
                 string name = GetTestName(argument, ref index);
-                if (name != null && name != string.Empty)
+                if (name != string.Empty)
                     list.Add(name);
             }
 
