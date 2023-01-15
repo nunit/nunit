@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.Framework.Internal 
+namespace NUnit.Framework.Internal
 {
     public static class ExceptionHelperOutputExceptionDataTests
     {

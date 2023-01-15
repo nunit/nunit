@@ -16,7 +16,7 @@ namespace NUnit.Framework
     public class ActionAttributeTests
     {
         // NOTE: An earlier version of this fixture attempted to test
-        // the exact order of all actions. However, the order of execution 
+        // the exact order of all actions. However, the order of execution
         // of the individual tests cannot be predicted reliably across
         // different runtimes, so we now look only at the relative position
         // of before and after actions with respect to the test.

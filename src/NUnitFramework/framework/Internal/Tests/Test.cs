@@ -321,10 +321,10 @@ namespace NUnit.Framework.Internal
         /// <param name="type">The </param>
         public void ApplyAttributesToTest(Type type)
         {
-            foreach (var t in GetNestedTypes(type).Reverse()) 
+            foreach (var t in GetNestedTypes(type).Reverse())
                 ApplyAttributesToTest((ICustomAttributeProvider) t);
         }
-        
+
         /// <summary>
         /// Returns all nested types, inner first.
         /// </summary>

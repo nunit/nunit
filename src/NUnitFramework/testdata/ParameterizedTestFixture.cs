@@ -19,12 +19,12 @@ namespace NUnit.TestData
         {
         }
     }
-    
+
     [TestFixture(Category = "XYZ")]
     public class TestFixtureWithSingleCategory
     {
     }
-    
+
     [TestFixture(Category = "X,Y,Z")]
     public class TestFixtureWithMultipleCategories
     {

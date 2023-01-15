@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal
 
             public bool Match(Type type)
             {
-                return MatchElementType(type) || 
+                return MatchElementType(type) ||
                        MatchSetUpFixture(type);
             }
 

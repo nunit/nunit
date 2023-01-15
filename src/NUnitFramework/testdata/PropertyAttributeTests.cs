@@ -16,8 +16,8 @@ namespace NUnit.TestData.PropertyAttributeTests
 
         [Test, Priority(5)]
         public void Test3() { }
-        
-        [Test, CustomProperty]	
+
+        [Test, CustomProperty]
         public void Test4() { }
 
         [Test, Property("A", "A"), Property("B", "B"), Property("C", "C"), Property("D", "D"), Property("E", "E"), Property("F", "F")]

@@ -7,7 +7,7 @@ namespace NUnit.TestData.CategoryAttributeData
 {
     [TestFixture, InheritableCategory("MyCategory")]
     public abstract class AbstractBase { }
-    
+
     [TestFixture, Category( "DataBase" )]
     public class FixtureWithCategories : AbstractBase
     {
@@ -33,7 +33,7 @@ namespace NUnit.TestData.CategoryAttributeData
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=false)]
     public class CriticalAttribute : CategoryAttribute { }
-    
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=true, Inherited=true)]
     public class InheritableCategoryAttribute : CategoryAttribute
     {

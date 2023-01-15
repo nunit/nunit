@@ -43,7 +43,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ShouldPassAfter3RetriesAndTimeoutIsResetEachTime()
         {
-            // Rather than testing with sleeps, this tests that the execution will occur in the correct 
+            // Rather than testing with sleeps, this tests that the execution will occur in the correct
             // order by checking which commands are run when. As the retry command comes first, the
             // timeout will be reset each time it runs
             var test = TestBuilder.MakeTestFromMethod(typeof(HelperMethodForTimeoutsClass), nameof(HelperMethodForTimeoutsClass.ShouldPassAfter3RetriesAndTimeoutIsResetEachTime));
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime()
         {
-            // Rather than testing with sleeps, this tests that the execution will occur in the correct 
+            // Rather than testing with sleeps, this tests that the execution will occur in the correct
             // order by checking which commands are run when. As the repeat command comes first, the
             // timeout will be reset each time it runs
             var test = TestBuilder.MakeTestFromMethod(typeof(HelperMethodForTimeoutsClass), nameof(HelperMethodForTimeoutsClass.ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime));
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Attributes
             var testCase = TestBuilder.MakeTestCase(GetType(), nameof(TestMethodForRepeatAndRetryExpectedFail));
             var workItem = TestBuilder.CreateWorkItem(testCase);
             var result = TestBuilder.ExecuteWorkItem(workItem);
-            
+
             Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
             Assert.AreEqual(FailureSite.Test, result.ResultState.Site);
             Assert.AreEqual("Invalid", result.ResultState.Label);

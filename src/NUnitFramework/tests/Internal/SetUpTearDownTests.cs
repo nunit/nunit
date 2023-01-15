@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal
 {
     [TestFixture]
     public class SetUpTearDownTests
-    {	
+    {
         [Test]
         public void SetUpAndTearDownCounter()
         {
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(3, fixture.TearDownCounter);
         }
 
-        
+
         [Test]
         public void MakeSureSetUpAndTearDownAreCalled()
         {

@@ -14,7 +14,7 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { new D1() };
-        
+
         static object[] FailureData = new object[] { 
             new TestCaseData( new B(), "<" + typeof(B).FullName + ">" ),
             new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" )

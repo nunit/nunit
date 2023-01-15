@@ -26,7 +26,7 @@ namespace NUnit.Framework
         /// Initializes a new instance of the <see cref="TestOfAttribute"/> class.
         /// </summary>
         /// <param name="typeName">The type that is being tested.</param>
-        public TestOfAttribute(string typeName) 
+        public TestOfAttribute(string typeName)
             : base(PropertyNames.TestOf, typeName)
         {
         }

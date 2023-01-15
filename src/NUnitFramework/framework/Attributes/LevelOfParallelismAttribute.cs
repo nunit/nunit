@@ -7,7 +7,7 @@ using System;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Sets the number of worker threads that may be allocated by the framework 
+    /// Sets the number of worker threads that may be allocated by the framework
     /// for running tests.
     /// </summary>
     [AttributeUsage( AttributeTargets.Assembly, AllowMultiple=false, Inherited=false )]

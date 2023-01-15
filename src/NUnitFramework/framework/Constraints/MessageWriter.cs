@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Method to write single line message with optional args, usually
-        /// written to precede the general failure message, at a given 
+        /// written to precede the general failure message, at a given
         /// indentation level.
         /// </summary>
         /// <param name="level">The indentation level of the message</param>
@@ -48,8 +48,8 @@ namespace NUnit.Framework.Constraints
 
         /// <summary>
         /// Display Expected and Actual lines for a constraint. This
-        /// is called by MessageWriter's default implementation of 
-        /// WriteMessageTo and provides the generic two-line display. 
+        /// is called by MessageWriter's default implementation of
+        /// WriteMessageTo and provides the generic two-line display.
         /// </summary>
         /// <param name="result">The failing constraint result</param>
         public abstract void DisplayDifferences(ConstraintResult result);

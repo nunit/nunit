@@ -5,7 +5,7 @@
 namespace NUnit.Framework.Internal.Commands
 {
     /// <summary>
-    /// TestActionAfterCommand handles the AfterTest method of a single 
+    /// TestActionAfterCommand handles the AfterTest method of a single
     /// TestActionItem, provided the items BeforeTest has been run.
     /// </summary>
     public class AfterTestActionCommand : AfterTestCommand

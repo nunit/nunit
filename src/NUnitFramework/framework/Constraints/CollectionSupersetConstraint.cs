@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
             _expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Constraints
         public override string Description => "superset of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
-        /// Test whether the actual collection is a superset of 
+        /// Test whether the actual collection is a superset of
         /// the expected collection provided.
         /// </summary>
         /// <param name="actual"></param>
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(IEnumerable actual)
         {
             // Create tally from 'actual' collection, and remove '_expected'.
-            // ExtraItems from tally would be missing items for '_expected' collection. 
+            // ExtraItems from tally would be missing items for '_expected' collection.
             CollectionTally tally = Tally(actual);
             tally.TryRemove(_expected);
 

@@ -13,7 +13,7 @@ namespace NUnit.Framework.Interfaces
         Inconclusive,
 
         /// <summary>
-        /// The test has skipped 
+        /// The test has skipped
         /// </summary>
         Skipped,
 

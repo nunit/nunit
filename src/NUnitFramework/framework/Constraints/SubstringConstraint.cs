@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected.</param>
-        public SubstringConstraint(string expected) : base(expected) 
+        public SubstringConstraint(string expected) : base(expected)
         {
             descriptionText = "String containing";
         }

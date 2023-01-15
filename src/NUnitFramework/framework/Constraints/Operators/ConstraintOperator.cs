@@ -4,8 +4,8 @@ namespace NUnit.Framework.Constraints
 {
     /// <summary>
     /// The ConstraintOperator class is used internally by a
-    /// ConstraintBuilder to represent an operator that 
-    /// modifies or combines constraints. 
+    /// ConstraintBuilder to represent an operator that
+    /// modifies or combines constraints.
     /// 
     /// Constraint operators use left and right precedence
     /// values to determine whether the top operator on the
@@ -67,8 +67,8 @@ namespace NUnit.Framework.Constraints
         public virtual int RightPrecedence => right_precedence;
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>

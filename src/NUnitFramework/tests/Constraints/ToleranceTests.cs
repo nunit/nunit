@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         public void TestModeMustFollowTolerance()
         {
             var tolerance = Tolerance.Default; // which is new Tolerance(0, ToleranceMode.Unset)
-            Assert.That(() => tolerance.Percent, 
+            Assert.That(() => tolerance.Percent,
                 Throws.TypeOf<InvalidOperationException>().With.Message.Contains("Tolerance amount must be specified"));
         }
     }

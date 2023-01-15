@@ -188,7 +188,7 @@ namespace NUnitLite.Tests
             result.OutWriter.Write(new [] { 'A', 'B', 'C' });
             result.OutWriter.Write('+');
             result.OutWriter.WriteLine("XYZ");
-            
+
             CreateTextUI(labels).TestFinished(result);
 
             Assert.That(Report, Is.EqualTo(expected));
@@ -280,7 +280,7 @@ namespace NUnitLite.Tests
             var textUI = CreateTextUI(labels);
             foreach (var output in outputs)
                 textUI.TestOutput(output);
-            
+
             Assert.That(Report, Is.EqualTo(expected));
         }
 

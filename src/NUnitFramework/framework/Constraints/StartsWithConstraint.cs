@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="StartsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
-        public StartsWithConstraint(string expected) : base(expected) 
+        public StartsWithConstraint(string expected) : base(expected)
         {
             descriptionText = "String starting with";
         }

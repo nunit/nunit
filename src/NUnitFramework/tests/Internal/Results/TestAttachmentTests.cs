@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal.Results
         public void FilePathAndAttachmentPassedThroughToTestResult()
         {
             var result = TestBuilder.RunTestCase(typeof(TestAttachmentsTests), nameof(TestAttachmentsTests.AttachmentWithDescription));
-            Assert.That(result.TestAttachments, 
+            Assert.That(result.TestAttachments,
                 Has.Exactly(1).Property(nameof(TestAttachment.FilePath)).EqualTo(_tempFilePath)
                 .And.Property(nameof(TestAttachment.Description)).EqualTo(TestAttachmentsTests.Description));
         }

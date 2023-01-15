@@ -112,7 +112,7 @@ namespace NUnitLite
         public int InvalidTestFixtures { get; private set; }
 
         /// <summary>
-        /// Gets the ResultState of the test result, which 
+        /// Gets the ResultState of the test result, which
         /// indicates the success or failure of the test.
         /// </summary>
         public ResultState ResultState { get; }

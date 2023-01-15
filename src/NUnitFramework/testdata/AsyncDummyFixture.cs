@@ -43,7 +43,7 @@ namespace NUnit.TestData
         {
             await Task.Delay(0);
         }
-        
+
         [TestCase(ExpectedResult = 1)]
         public async void AsyncVoidTestCaseWithExpectedResult()
         {

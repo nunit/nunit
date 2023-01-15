@@ -43,7 +43,7 @@ namespace NUnit.Framework.Attributes
         }
 
         // Test data is taken from various sources. See "Lessons Learned
-        // in Software Testing" pp 53-59, for example. For orthogonal cases, see 
+        // in Software Testing" pp 53-59, for example. For orthogonal cases, see
         // https://web.archive.org/web/20100305233703/www.freequality.org/sites/www_freequality_org/documents/tools/Tagarray_files/tamatrix.htm
         static internal object[] cases = new object[]
         {
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Attributes
             //Assert.That(cases, Is.AtMost(targetCases), "Number of test cases exceeded target");
 #endif
         }
-        
+
         class PairCounter : System.Collections.Generic.Dictionary<string, object> { }
     }
 }

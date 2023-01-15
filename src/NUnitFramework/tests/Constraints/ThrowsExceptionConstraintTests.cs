@@ -45,7 +45,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(async () => await AsyncTestDelegates.ThrowsArgumentExceptionAsync(), Throws.Exception);
         }
-        
+
         [Test]
         public static void CatchesAsyncTaskOfTException()
         {

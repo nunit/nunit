@@ -5,7 +5,7 @@
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Abstract base for attributes that are used to include tests in 
+    /// Abstract base for attributes that are used to include tests in
     /// the test run based on environmental settings.
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute

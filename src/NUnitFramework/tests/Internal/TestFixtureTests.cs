@@ -146,7 +146,7 @@ namespace NUnit.Framework.Internal
             Assert.AreEqual(RunState.Ignored, suite.RunState);
             Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
         }
-        
+
         [Test]
         public void FixtureWithNestedIgnoreAttributeIsIgnored() {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreAttribute.SubFixture));

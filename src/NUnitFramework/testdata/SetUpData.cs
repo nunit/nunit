@@ -58,7 +58,7 @@ namespace NUnit.TestData.SetUpData
         [Test]
         public void TestThree(){}
     }
-        
+
     [TestFixture]
     public class InheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
@@ -156,7 +156,7 @@ namespace NUnit.TestData.SetUpData
         public Exception SetupException;
         public Exception TearDownException;
 
-        [SetUp] 
+        [SetUp]
         public void SetUp()
         {
             if (SetupException != null) throw SetupException;

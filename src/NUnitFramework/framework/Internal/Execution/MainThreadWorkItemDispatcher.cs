@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
         /// <summary>
-        /// This method is not supported for 
+        /// This method is not supported for
         /// this dispatcher. Using it will throw a
         /// NotSupportedException.
         /// </summary>

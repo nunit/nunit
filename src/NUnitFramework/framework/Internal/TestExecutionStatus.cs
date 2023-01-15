@@ -3,7 +3,7 @@
 namespace NUnit.Framework.Internal
 {
     /// <summary>
-    /// Enumeration indicating whether the tests are 
+    /// Enumeration indicating whether the tests are
     /// running normally or being cancelled.
     /// </summary>
     public enum TestExecutionStatus

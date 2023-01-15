@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(Is.EqualTo(5).ToString(), Is.EqualTo("<equal 5>"));
             Assert.That(Has.Property("X").ToString(), Is.EqualTo("<propertyexists X>"));
-            Assert.That(Has.Attribute(typeof(TestAttribute)).ToString(), 
+            Assert.That(Has.Attribute(typeof(TestAttribute)).ToString(),
                 Is.EqualTo("<attributeexists NUnit.Framework.TestAttribute>"));
         }
 

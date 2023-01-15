@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         {
             var exportedTypes = typeof(FrameworkController).Assembly.GetExportedTypes();
 
-            var exportedTypesWhitelist = new[] 
+            var exportedTypesWhitelist = new[]
             {
                 typeof(System.Web.UI.ICallbackEventHandler)
             };

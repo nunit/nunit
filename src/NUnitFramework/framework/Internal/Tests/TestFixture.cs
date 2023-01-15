@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="fixture">The <see cref="TestFixture"/> to copy.</param>
         /// <param name="filter">Determines which descendants are copied.</param>
-        private TestFixture(TestFixture fixture, ITestFilter filter) 
+        private TestFixture(TestFixture fixture, ITestFilter filter)
             : base(fixture, filter)
         {
         }

@@ -10,7 +10,7 @@ using NUnit.Framework.Internal.Commands;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Specifies that a test method should be rerun on failure up to the specified 
+    /// Specifies that a test method should be rerun on failure up to the specified
     /// maximum number of times.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]

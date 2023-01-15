@@ -275,7 +275,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     }
 
     [TestFixture]
-    public class MisbehavingFixture 
+    public class MisbehavingFixture
     {
         public bool BlowUpInSetUp = false;
         public bool BlowUpInTest = false;
@@ -294,7 +294,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [OneTimeSetUp]
-        public void SetUp() 
+        public void SetUp()
         {
             SetUpCount++;
             if (BlowUpInSetUp)
@@ -310,7 +310,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Test() 
+        public void Test()
         {
             if (BlowUpInTest)
                 throw new Exception("This was thrown from a test");
@@ -335,13 +335,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class IgnoreInFixtureSetUp
     {
         [OneTimeSetUp]
-        public void SetUpCallsIgnore() 
+        public void SetUpCallsIgnore()
         {
             Assert.Ignore("OneTimeSetUp called Ignore");
         }
 
         [Test]
-        public void NothingToTest() 
+        public void NothingToTest()
         {
         }
     }
@@ -420,7 +420,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     {
         public int DisposeCalled = 0;
         public List<String> Actions = new List<String>();
-        
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
@@ -453,7 +453,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(3)]
         [TestCase(4)]
         public void TestCaseTest(int data) { }
-        
+
         public void Dispose()
         {
             DisposeCalled++;

@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal
             //catch( ArgumentException ex )
             //{
             //    reason = string.Format( "Invalid culture: {0}", ex.ParamName );
-            //    return false; 
+            //    return false;
             //}
 
             return true;

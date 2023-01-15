@@ -22,7 +22,7 @@ namespace NUnit.Framework.Constraints
         static object[] SuccessData = new object[] { 5, 23, 42 };
 
         static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
-        
+
         [TestCase(null)]
         [TestCase("xxx")]
         public void InvalidDataThrowsArgumentException(object data)

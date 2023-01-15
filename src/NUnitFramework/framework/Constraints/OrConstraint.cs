@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
         public override string Description => Left.Description + " or " + Right.Description;
 
         /// <summary>
-        /// Apply the member constraints to an actual value, succeeding 
+        /// Apply the member constraints to an actual value, succeeding
         /// succeeding as soon as one of them succeeds.
         /// </summary>
         /// <param name="actual">The actual value</param>

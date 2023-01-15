@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal
             var copiedTestSuite = testSuite.Copy(TestFilter.Empty);
             Assert.That(copiedTestSuite, Is.TypeOf<TestSuite>());
         }
-        
+
         [Test]
         public void CopyParameterizedTestFixtureReturnsCorrectType()
         {

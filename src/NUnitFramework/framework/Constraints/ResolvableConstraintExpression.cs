@@ -5,12 +5,12 @@ namespace NUnit.Framework.Constraints
     /// <summary>
     /// ResolvableConstraintExpression is used to represent a compound
     /// constraint being constructed at a point where the last operator
-    /// may either terminate the expression or may have additional 
-    /// qualifying constraints added to it. 
+    /// may either terminate the expression or may have additional
+    /// qualifying constraints added to it.
     /// 
     /// It is used, for example, for a Property element or for
     /// an Exception element, either of which may be optionally
-    /// followed by constraints that apply to the property or 
+    /// followed by constraints that apply to the property or
     /// exception.
     /// </summary>
     public class ResolvableConstraintExpression : ConstraintExpression, IResolveConstraint

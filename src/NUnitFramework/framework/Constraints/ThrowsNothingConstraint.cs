@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Applies the constraint to an ActualValueDelegate that returns 
-        /// the value to be tested. The default implementation simply evaluates 
-        /// the delegate but derived classes may override it to provide for 
+        /// Applies the constraint to an ActualValueDelegate that returns
+        /// the value to be tested. The default implementation simply evaluates
+        /// the delegate but derived classes may override it to provide for
         /// delayed processing.
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>

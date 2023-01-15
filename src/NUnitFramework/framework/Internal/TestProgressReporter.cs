@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal
 
         /// <summary>
         /// Called when a test has finished. Sends a result summary to the callback.
-        /// to 
+        /// to
         /// </summary>
         /// <param name="result">The result of the test</param>
         public void TestFinished(ITestResult result)
