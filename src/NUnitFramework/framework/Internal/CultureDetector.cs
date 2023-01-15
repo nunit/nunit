@@ -59,25 +59,17 @@ namespace NUnit.Framework.Internal
             string include = cultureAttribute.Include;
             string exclude = cultureAttribute.Exclude;
 
-            //try
-            //{
-                if (include != null && !IsCultureSupported(include))
-                {
-                    reason = $"Only supported under culture {include}";
-                    return false;
-                }
+            if (include != null && !IsCultureSupported(include))
+            {
+                reason = $"Only supported under culture {include}";
+                return false;
+            }
 
-                if (exclude != null && IsCultureSupported(exclude))
-                {
-                    reason = $"Not supported under culture {exclude}";
-                    return false;
-                }
-            //}
-            //catch( ArgumentException ex )
-            //{
-            //    reason = string.Format( "Invalid culture: {0}", ex.ParamName );
-            //    return false;
-            //}
+            if (exclude != null && IsCultureSupported(exclude))
+            {
+                reason = $"Not supported under culture {exclude}";
+                return false;
+            }
 
             return true;
         }
