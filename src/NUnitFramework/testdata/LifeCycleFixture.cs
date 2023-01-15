@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace NUnit.TestData.LifeCycleTests
 {
     /// <summary>
-    /// Base class for all LifeCycle tests: provides default implementation for counting 
+    /// Base class for all LifeCycle tests: provides default implementation for counting
     /// the total number of calls to constructor and setup methods.
     /// </summary>
     public class BaseLifeCycle : IDisposable

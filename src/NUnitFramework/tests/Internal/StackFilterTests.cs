@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        // NOTE: Using individual tests rather than test cases 
+        // NOTE: Using individual tests rather than test cases
         // to make the error messages easier to read.
 
         [Test]

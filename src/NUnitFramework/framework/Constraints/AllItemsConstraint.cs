@@ -21,7 +21,7 @@ namespace NUnit.Framework.Constraints
             DescriptionPrefix = "all items";
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set

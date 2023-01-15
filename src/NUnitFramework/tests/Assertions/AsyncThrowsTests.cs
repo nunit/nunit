@@ -52,7 +52,7 @@ namespace NUnit.Framework.Assertions
         {
             Assert.That(new ThrowsNothingConstraint().ApplyTo(_throwsAsyncTask).Status, Is.EqualTo(ConstraintStatus.Failure));
         }
-        
+
         [Test]
         public void AssertThatThrowsTask()
         {

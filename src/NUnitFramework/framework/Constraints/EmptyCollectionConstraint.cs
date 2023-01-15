@@ -5,7 +5,7 @@ using System.Collections;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// EmptyCollectionConstraint tests whether a collection is empty. 
+    /// EmptyCollectionConstraint tests whether a collection is empty.
     /// </summary>
     public class EmptyCollectionConstraint : CollectionConstraint
     {

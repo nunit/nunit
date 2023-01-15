@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
             _expected = expected;
         }
 
-        /// <summary> 
+        /// <summary>
         /// The display name of this Constraint for use by ToString().
         /// The default value is the name of the constraint with
         /// trailing "Constraint" removed. Derived classes may set
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         public override string Description => "subset of " + MsgUtils.FormatValue(_expected);
 
         /// <summary>
-        /// Test whether the actual collection is a subset of 
+        /// Test whether the actual collection is a subset of
         /// the expected collection provided.
         /// </summary>
         /// <param name="actual"></param>

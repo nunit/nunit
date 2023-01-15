@@ -43,7 +43,7 @@ namespace NUnit.Framework.Attributes
             Test test2 = (Test)fixture.Tests[1];
             Assert.That(test2.Properties["Category"], Contains.Item("Critical") );
         }
-        
+
         [Test]
         public void DerivedCategoryMayBeInherited()
         {

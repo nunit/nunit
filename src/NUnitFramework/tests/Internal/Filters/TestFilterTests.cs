@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Filters
     // Namespace filter
     //    <namespace>xxxxx</namespace>
     //
-    // Category filter 
+    // Category filter
     //    <cat>cat1</cat>
     //    <cat>cat1,cat2,cat3</cat>
     //

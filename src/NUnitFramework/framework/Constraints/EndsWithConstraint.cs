@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="EndsWithConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected string</param>
-        public EndsWithConstraint(string expected) : base(expected) 
+        public EndsWithConstraint(string expected) : base(expected)
         {
             this.descriptionText = "String ending with";
         }

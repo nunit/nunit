@@ -3,7 +3,7 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Represents a constraint that succeeds if all the 
+    /// Represents a constraint that succeeds if all the
     /// members of a collection match a base constraint.
     /// </summary>
     public class AllOperator : CollectionOperator

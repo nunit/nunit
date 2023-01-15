@@ -10,8 +10,8 @@ namespace NUnit.Framework
     using Internal.Builders;
 
     /// <summary>
-    /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/> 
-    /// class makes the method callable from the NUnit test runner. There is a property 
+    /// Adding this attribute to a method within a <seealso cref="TestFixtureAttribute"/>
+    /// class makes the method callable from the NUnit test runner. There is a property
     /// called Description which is optional which you can provide a more detailed test
     /// description. This class cannot be inherited.
     /// </summary>

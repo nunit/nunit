@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// List of comparers used to compare pairs of objects.
         /// </summary>
-        private static readonly EqualMethod[] _comparers = 
+        private static readonly EqualMethod[] _comparers =
         {
             ArraysComparer.Equal,
             DictionariesComparer.Equal,

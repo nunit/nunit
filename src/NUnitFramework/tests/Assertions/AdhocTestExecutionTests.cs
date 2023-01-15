@@ -14,7 +14,7 @@ namespace NUnit.Framework.Assertions
     public class AdhocTestExecutionTests
     {
         // These unit tests demonstrate that the user can call a test directly
-        // and have it execute. Only information from exceptions thrown is 
+        // and have it execute. Only information from exceptions thrown is
         // available in this case, but it appears that a number of users do this.
         // When a user calls a test method directly, without use of NUnit,
         // the TestExecutionContext is null. We provide an AdhocContext in

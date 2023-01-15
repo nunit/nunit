@@ -31,7 +31,7 @@ namespace NUnit.Framework.Assertions
         public void ThrowsAssertionExceptionWithMessage()
         {
             Assert.That(
-                () => Assert.Fail("MESSAGE"), 
+                () => Assert.Fail("MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.EqualTo("MESSAGE"));
         }
 

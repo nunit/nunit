@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(constraintResult.IsSuccess, Is.True);
         }
-        
+
         private class S
         {
             public char C;

@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return new ConstraintResult(this, actual, 
+            return new ConstraintResult(this, actual,
                 actual is double d && double.IsNaN(d) ||
                 actual is float f && float.IsNaN(f));
         }

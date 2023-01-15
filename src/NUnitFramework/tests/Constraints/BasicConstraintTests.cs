@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "null";
             StringRepresentation = "<null>";
         }
-        
+
         static object[] SuccessData = new object[] { null };
 
         static object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
@@ -33,9 +33,9 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "True";
             StringRepresentation = "<true>";
         }
-        
+
         static object[] SuccessData = new object[] { true, 2+2==4 };
-        
+
         static object[] FailureData = new object[] { 
             new object[] { null, "null" }, new object[] { "hello", "\"hello\"" },
             new object[] { false, "False"}, new object[] { 2+2==5, "False" } };
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "NaN";
             StringRepresentation = "<nan>";
         }
-        
+
         static object[] SuccessData = new object[] { double.NaN, float.NaN };
 
         static object[] FailureData = new object[] { 

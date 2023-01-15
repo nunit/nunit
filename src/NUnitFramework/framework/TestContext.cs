@@ -129,7 +129,7 @@ namespace NUnit.Framework
         public int AssertCount => _testExecutionContext.AssertCount;
 
         /// <summary>
-        /// Get the number of times the current Test has been repeated 
+        /// Get the number of times the current Test has been repeated
         /// when using the <see cref="RetryAttribute"/> or <see cref="RepeatAttribute"/>.
         /// </summary>
         public int CurrentRepeatCount => _testExecutionContext.CurrentRepeatCount;

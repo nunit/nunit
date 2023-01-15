@@ -326,7 +326,7 @@ namespace NUnit.Framework.Constraints
 
         public static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
         {
-            // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in 
+            // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in
             // 'MsgUtils.FormatValue()' can be fixed for the below cases
             foreach (var testCase in GetRecursiveContainsTestCases())
                 yield return testCase;

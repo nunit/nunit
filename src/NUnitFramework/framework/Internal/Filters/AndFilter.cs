@@ -7,7 +7,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters
 {
     /// <summary>
-    /// Combines multiple filters so that a test must pass all 
+    /// Combines multiple filters so that a test must pass all
     /// of them in order to pass this filter.
     /// </summary>
     internal class AndFilter : CompositeFilter

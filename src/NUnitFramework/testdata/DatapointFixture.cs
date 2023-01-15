@@ -55,7 +55,7 @@ namespace NUnit.TestData.DatapointFixture
         [Datapoints]
         public IEnumerable<double> Values
         {
-            get 
+            get
             {
                 List<double> list = new List<double>();
                 list.Add(0.0);
@@ -105,7 +105,7 @@ namespace NUnit.TestData.DatapointFixture
             return new[] { 0.0, 1.0, -1.0, double.MaxValue, double.PositiveInfinity };
         }
     }
- 
+
     public class SquareRootTest_Iterator_IEnumerableOfDouble : SquareRootTest
     {
         [Datapoints]

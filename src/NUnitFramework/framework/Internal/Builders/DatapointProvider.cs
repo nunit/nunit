@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal.Builders
     public class DatapointProvider : IParameterDataProvider
     {
         private readonly bool _searchInDeclaringTypes;
-        
+
         /// <summary>
         /// Creates a new DatapointProvider.
         /// </summary>

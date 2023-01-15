@@ -5,7 +5,7 @@ using System.IO;
 namespace NUnit.Common
 {
     /// <summary>
-    /// ExtendedTextWriter extends the TextWriter abstract class 
+    /// ExtendedTextWriter extends the TextWriter abstract class
     /// to support displaying text in color.
     /// </summary>
     public abstract class ExtendedTextWriter : TextWriter

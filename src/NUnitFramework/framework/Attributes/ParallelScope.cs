@@ -6,7 +6,7 @@ using System.ComponentModel;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Specifies the degree to which a test, and its descendants, 
+    /// Specifies the degree to which a test, and its descendants,
     /// may be run in parallel.
     /// </summary>
     [Flags]
@@ -45,14 +45,14 @@ namespace NUnit.Framework
         Children = 256,
 
         /// <summary>
-        /// Descendants of the test down to the level of TestFixtures may be 
+        /// Descendants of the test down to the level of TestFixtures may be
         /// run in parallel with one another. Valid on assemblies and classes
         /// but not on methods.
         /// </summary>
         Fixtures = 512,
 
         /// <summary>
-        /// Mask used to extract all the flags that impact descendants of a 
+        /// Mask used to extract all the flags that impact descendants of a
         /// test and place them in the TestExecutionContext.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]

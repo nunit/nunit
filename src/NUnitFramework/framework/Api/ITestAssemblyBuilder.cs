@@ -10,7 +10,7 @@ namespace NUnit.Framework.Api
 {
     /// <summary>
     /// The ITestAssemblyBuilder interface is implemented by a class
-    /// that is able to build a suite of tests given an assembly or 
+    /// that is able to build a suite of tests given an assembly or
     /// an assembly filename.
     /// </summary>
     public interface ITestAssemblyBuilder

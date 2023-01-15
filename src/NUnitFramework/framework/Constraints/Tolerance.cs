@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// The Tolerance class generalizes the notion of a tolerance
     /// within which an equality test succeeds. Normally, it is
     /// used with numeric types, but it can be used with any
-    /// type that supports taking a difference between two 
+    /// type that supports taking a difference between two
     /// objects and comparing that difference to a value.
     /// </summary>
     [Serializable]
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using 
+        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of days.
         /// </summary>
         public Tolerance Days
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using 
+        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of hours.
         /// </summary>
         public Tolerance Hours
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using 
+        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of minutes.
         /// </summary>
         public Tolerance Minutes
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using 
+        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of seconds.
         /// </summary>
         public Tolerance Seconds
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using 
+        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of milliseconds.
         /// </summary>
         public Tolerance Milliseconds
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using 
+        /// Returns a new tolerance with a <see cref="TimeSpan"/> as the amount, using
         /// the current amount as a number of clock ticks.
         /// </summary>
         public Tolerance Ticks
@@ -205,7 +205,7 @@ namespace NUnit.Framework.Constraints
         #region Helper Methods
 
         /// <summary>
-        /// Tests that the current Tolerance is linear with a 
+        /// Tests that the current Tolerance is linear with a
         /// numeric value, throwing an exception if it is not.
         /// </summary>
         private void CheckLinearAndNumeric()

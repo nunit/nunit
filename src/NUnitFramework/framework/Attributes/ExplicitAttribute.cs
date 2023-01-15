@@ -9,8 +9,8 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks an assembly, test fixture or test method such that it will only run if explicitly 
-    /// executed from the GUI, command line or included within a test filter. 
+    /// Marks an assembly, test fixture or test method such that it will only run if explicitly
+    /// executed from the GUI, command line or included within a test filter.
     /// The test will not be run simply because an enclosing suite is run.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]

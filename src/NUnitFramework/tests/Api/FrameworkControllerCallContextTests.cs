@@ -24,7 +24,7 @@ namespace NUnit.Framework.Api
         [TestCaseSource(nameof(FrameworkActions))]
         public void CallContextIsRestoredAroundFrameworkActions(Action frameworkAction)
         {
-            //This test only has value if the CallContext of nunit.framework.tests is first cleared. 
+            //This test only has value if the CallContext of nunit.framework.tests is first cleared.
             //Otherwise no new call context will be created by the framework action
             CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
             frameworkAction();

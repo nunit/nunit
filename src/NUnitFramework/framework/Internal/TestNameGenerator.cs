@@ -561,7 +561,7 @@ namespace NUnit.Framework.Internal
                     sb.Append('(');
 
                     var parameters = method.GetParameters();
-                    
+
                     for (int i = 0; i < args.Length; i++)
                     {
                         if (i > 0) sb.Append(", ");

@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         }
 
         static object[] SuccessData = new object[] { 42, "Hello" };
-            
+
         static object[] FailureData = new object [] { new object[] { null, "null" } };
 
         [Test]

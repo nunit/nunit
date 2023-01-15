@@ -7,7 +7,7 @@ using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Constraints
 {
-    /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences 
+    /// <summary><see cref="CollectionTally"/> counts (tallies) the number of occurrences
     /// of each object in one or more enumerations.</summary>
     public sealed class CollectionTally
     {

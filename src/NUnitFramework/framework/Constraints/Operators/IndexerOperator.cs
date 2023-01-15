@@ -10,7 +10,7 @@ namespace NUnit.Framework.Constraints
     public class IndexerOperator : PrefixOperator
     {
         private readonly object[] _indexArguments;
-        
+
         /// <summary>
         /// Constructs a IndexerOperator for a particular set of indexer
         /// parameters

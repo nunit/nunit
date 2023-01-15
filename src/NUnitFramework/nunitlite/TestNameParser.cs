@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace NUnit.Common
 {
     /// <summary>
-    /// TestNameParser is used to parse the arguments to the 
+    /// TestNameParser is used to parse the arguments to the
     /// -run option, separating testnames at the correct point.
     /// </summary>
     public static class TestNameParser

@@ -339,7 +339,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssumeThatError()
         {
-            var exception = 
+            var exception =
             Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
