@@ -8,7 +8,7 @@ using NUnit.Framework.Internal.Builders;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Marks a test as using a pairwise join of any supplied argument data. Arguments will be 
+    /// Marks a test as using a pairwise join of any supplied argument data. Arguments will be
     /// combined in such a way that all possible pairs of arguments are used.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]

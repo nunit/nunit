@@ -15,7 +15,7 @@ namespace NUnit.Framework.Internal.Builders
         #region Instance Variables
 
         /// <summary>
-        /// NamespaceDictionary of all test suites we have created to represent 
+        /// NamespaceDictionary of all test suites we have created to represent
         /// namespaces. Used to locate namespace parent suites for fixtures.
         /// </summary>
         readonly Dictionary<string, TestSuite> _namespaceIndex  = new Dictionary<string, TestSuite>();
@@ -125,7 +125,7 @@ namespace NUnit.Framework.Internal.Builders
         private void AddSetUpFixture(TestSuite newSetupFixture, TestSuite containingSuite, string ns)
         {
             // The SetUpFixture must replace the namespace suite
-            // in which it is "contained". 
+            // in which it is "contained".
             //
             // First, add the old suite's children to the new
             // SetUpFixture and clear them from the old suite.

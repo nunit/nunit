@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     public class GreaterThanOrEqualConstraint : ComparisonConstraint
     {
         private string _description;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GreaterThanOrEqualConstraint"/> class.
         /// </summary>

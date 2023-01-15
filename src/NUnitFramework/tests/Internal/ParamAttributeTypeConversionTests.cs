@@ -53,6 +53,6 @@ namespace NUnit.Framework.Internal
             IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, typeof(DateTime));
 
             Assert.That(result, Is.EquivalentTo(expected).And.All.TypeOf<DateTime>());
-        }       
+        }
     }
 }

@@ -98,7 +98,7 @@ namespace NUnit.TestData.TestMethodSignatureFixture
         private void PrivateTestMethod() { }
 
         [Test]
-        public bool TestMethodWithReturnValue_WithoutExpectedResult() 
+        public bool TestMethodWithReturnValue_WithoutExpectedResult()
         {
             return true;
         }

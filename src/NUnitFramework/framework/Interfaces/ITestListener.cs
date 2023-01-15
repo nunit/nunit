@@ -5,8 +5,8 @@
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The ITestListener interface is used internally to receive 
-    /// notifications of significant events while a test is being 
+    /// The ITestListener interface is used internally to receive
+    /// notifications of significant events while a test is being
     /// run. The events are propagated to clients by means of an
     /// AsyncCallback. NUnit extensions may also monitor these events.
     /// </summary>
@@ -17,7 +17,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="test">The test that is starting</param>
         void TestStarted(ITest test);
-            
+
         /// <summary>
         /// Called when a test has finished
         /// </summary>

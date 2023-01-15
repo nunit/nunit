@@ -12,7 +12,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="baseConstraint">The base constraint to be negated.</param>
         public NotConstraint(IConstraint baseConstraint)
-            : base(baseConstraint) 
+            : base(baseConstraint)
         {
             this.DescriptionPrefix = "not";
         }

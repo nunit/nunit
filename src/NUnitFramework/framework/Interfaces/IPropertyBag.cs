@@ -22,14 +22,14 @@ namespace NUnit.Framework.Interfaces
     /// up to the code using the PropertyBag.
     /// 
     /// When working with multi-valued properties, client code
-    /// should use the Add method to add name/value pairs and 
+    /// should use the Add method to add name/value pairs and
     /// indexing to retrieve a list of all values for a given
     /// key. For example:
     /// 
     ///     bag.Add("Tag", "one");
     ///     bag.Add("Tag", "two");
     ///     Assert.That(bag["Tag"],
-    ///       Is.EqualTo(new string[] { "one", "two" })); 
+    ///       Is.EqualTo(new string[] { "one", "two" }));
     /// 
     /// When working with single-valued properties, client code
     /// should use the Set method to set the value and Get to

@@ -99,7 +99,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
@@ -111,7 +111,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
@@ -122,7 +122,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool? condition)
         {
@@ -132,7 +132,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool condition)
         {
@@ -142,7 +142,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
@@ -154,7 +154,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
@@ -166,7 +166,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool? condition)
         {
@@ -176,7 +176,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Asserts that a condition is false. Returns without throwing an exception when inside a multiple assert
         /// block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool condition)
         {

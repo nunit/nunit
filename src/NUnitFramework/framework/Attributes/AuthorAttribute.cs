@@ -8,7 +8,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework
 {
     /// <summary>
-    /// Provides the author of a test or test fixture. 
+    /// Provides the author of a test or test fixture.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true, Inherited=false)]
     public class AuthorAttribute : PropertyAttribute
@@ -17,7 +17,7 @@ namespace NUnit.Framework
         /// Initializes a new instance of the <see cref="AuthorAttribute"/> class.
         /// </summary>
         /// <param name="name">The name of the author.</param>
-        public AuthorAttribute(string name) 
+        public AuthorAttribute(string name)
             : base(PropertyNames.Author, name)
         {
         }

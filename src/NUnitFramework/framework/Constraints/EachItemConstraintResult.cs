@@ -3,7 +3,7 @@
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Provides a <see cref="ConstraintResult"/> for the constraints 
+    /// Provides a <see cref="ConstraintResult"/> for the constraints
     /// that are applied to each item in the collection
     /// </summary>
     internal sealed class EachItemConstraintResult : ConstraintResult

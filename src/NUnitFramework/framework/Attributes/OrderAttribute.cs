@@ -18,7 +18,7 @@ namespace NUnit.Framework
          /// Defines the order that the test will run in
          /// </summary>
          public readonly int Order;
- 
+
          /// <summary>
          /// Defines the order that the test will run in
          /// </summary>
@@ -27,7 +27,7 @@ namespace NUnit.Framework
          {
              Order = order;
          }
- 
+
          /// <summary>
          /// Modifies a test as defined for the specific attribute.
          /// </summary>

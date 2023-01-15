@@ -11,7 +11,7 @@ namespace NUnitLite
 {
     /// <summary>
     /// OutputWriter is an abstract class used to write test
-    /// results to a file in various formats. Specific 
+    /// results to a file in various formats. Specific
     /// OutputWriters are derived from this class.
     /// </summary>
     public abstract class OutputWriter

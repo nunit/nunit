@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
         {
             CheckNames(
                 $"ParameterizedTest({x},{y},\"{s.Replace("\"", "\\\"")}\")",
-                "ParameterizedTest", 
+                "ParameterizedTest",
                 OUTER_CLASS);
         }
 

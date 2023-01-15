@@ -19,7 +19,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -39,7 +39,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(bool condition, Func<string?> getExceptionMessage)
@@ -53,7 +53,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
@@ -73,7 +73,7 @@ namespace NUnit.Framework
 
         /// <summary>
         /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary> 
+        /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(Func<bool> condition, Func<string?> getExceptionMessage)

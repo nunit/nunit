@@ -38,7 +38,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    
+
     public class EqualityTests
     {
         [Test]

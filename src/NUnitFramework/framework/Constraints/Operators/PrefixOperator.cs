@@ -9,8 +9,8 @@ namespace NUnit.Framework.Constraints
     public abstract class PrefixOperator : ConstraintOperator
     {
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>

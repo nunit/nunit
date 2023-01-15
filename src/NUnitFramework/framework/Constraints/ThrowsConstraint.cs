@@ -6,7 +6,7 @@ using NUnit.Framework.Internal;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// ThrowsConstraint is used to test the exception thrown by 
+    /// ThrowsConstraint is used to test the exception thrown by
     /// a delegate by applying a constraint to it.
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint

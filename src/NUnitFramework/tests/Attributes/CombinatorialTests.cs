@@ -60,7 +60,7 @@ namespace NUnit.Framework.Attributes
             [Range(10, 20, 5)] int b)
         {
         }
-        
+
         [Test, Sequential]
         public void RandomTest(
             [Random(32, 212, 5)] int x,

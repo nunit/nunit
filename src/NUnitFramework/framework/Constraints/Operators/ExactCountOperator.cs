@@ -5,7 +5,7 @@ using System;
 namespace NUnit.Framework.Constraints
 {
     /// <summary>
-    /// Represents a constraint that succeeds if the specified 
+    /// Represents a constraint that succeeds if the specified
     /// count of members of a collection match a base constraint.
     /// </summary>
     public class ExactCountOperator : SelfResolvingOperator
@@ -27,8 +27,8 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>

@@ -341,7 +341,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="methodValidator">Method validator used before each method execution.</param>
         /// <returns>A list of SetUpTearDownItems</returns>
         protected List<SetUpTearDownItem> BuildSetUpTearDownList(
-            IMethodInfo[] setUpMethods, 
+            IMethodInfo[] setUpMethods,
             IMethodInfo[] tearDownMethods,
             IMethodValidator methodValidator = null)
         {
@@ -379,8 +379,8 @@ namespace NUnit.Framework.Internal.Execution
         // and then descend through the inheritance hierarchy,
         // adding each method to the appropriate level as we go.
         private static SetUpTearDownItem BuildNode(
-            Type fixtureType, 
-            IList<IMethodInfo> setUpMethods, 
+            Type fixtureType,
+            IList<IMethodInfo> setUpMethods,
             IList<IMethodInfo> tearDownMethods,
             IMethodValidator methodValidator)
         {

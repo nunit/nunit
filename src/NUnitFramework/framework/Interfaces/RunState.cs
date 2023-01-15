@@ -3,17 +3,17 @@
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The RunState enum indicates whether a test can be executed. 
+    /// The RunState enum indicates whether a test can be executed.
     /// </summary>
     public enum RunState
     {
         /// <summary>
         /// The test is not runnable.
         /// </summary>
-        NotRunnable, 
+        NotRunnable,
 
         /// <summary>
-        /// The test is runnable. 
+        /// The test is runnable.
         /// </summary>
         Runnable,
 

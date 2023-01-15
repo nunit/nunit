@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
         #region Overrides
 
         /// <summary>
-        /// Test whether the constraint is satisfied by a given value   
+        /// Test whether the constraint is satisfied by a given value
         /// </summary>
         /// <param name="actual">The value to be tested</param>
         /// <returns>A ConstraintResult</returns>
@@ -127,9 +127,9 @@ namespace NUnit.Framework.Constraints
         }
 
         #endregion
-        
+
         #region Protected Methods
-        
+
         /// <summary>
         /// Provides standard description of what the constraint tests
         /// based on comparison text.
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Constraints
                 
             return sb.ToString();
         }
-        
+
         #endregion
     }
 }

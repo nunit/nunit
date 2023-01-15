@@ -52,7 +52,7 @@ namespace NUnit.Framework.Attributes
         private readonly string eq1;
         private readonly string eq2;
         private readonly string neq;
-        
+
         public ParameterizedTestFixture(string eq1, string eq2, string neq)
         {
             this.eq1 = eq1;

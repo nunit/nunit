@@ -106,7 +106,7 @@ namespace NUnit.Framework.Assertions
                     Assert.That(assertion.Message, Does.Match(assertionMessageRegex[i++]), errmsg);
                     Assert.That(result.Message, Contains.Substring(assertion.Message), errmsg);
 
-                    // NOTE: This test expects the stack trace to contain the name of the method 
+                    // NOTE: This test expects the stack trace to contain the name of the method
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
 

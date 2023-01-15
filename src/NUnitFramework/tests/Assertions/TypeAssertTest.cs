@@ -37,7 +37,7 @@ namespace NUnit.Framework.Assertions
         public void IsInstanceOfFails()
         {
             var expectedMessage =
-                "  Expected: instance of <System.Int32>" + System.Environment.NewLine + 
+                "  Expected: instance of <System.Int32>" + System.Environment.NewLine +
                 "  But was:  <System.String>" + System.Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc123", Is.InstanceOf( typeof(System.Int32) ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Assertions
             int [,] array2 = new int[2,2];
 
             var expectedMessage =
-                "  Expected: assignable from <System.Int32[,]>" + System.Environment.NewLine + 
+                "  Expected: assignable from <System.Int32[,]>" + System.Environment.NewLine +
                 "  But was:  <System.Int32[]>" + System.Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That( array10, Is.AssignableFrom( array2.GetType() ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Assertions
             int [] array2 = new int[2];
 
             var expectedMessage =
-                "  Expected: not assignable from <System.Int32[]>" + System.Environment.NewLine + 
+                "  Expected: not assignable from <System.Int32[]>" + System.Environment.NewLine +
                 "  But was:  <System.Int32[]>" + System.Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That( array10, Is.Not.AssignableFrom( array2.GetType() ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));

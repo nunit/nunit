@@ -76,7 +76,7 @@ namespace NUnit.TestUtilities
                 foreach (string actualEvent in _actualEvents)
                 {
                     if (eventMatcher == null)
-                    { 
+                    {
                         Assert.Fail(
                             "More events than expected were recorded. Current event: {0} (Item {1})",
                             actualEvent,

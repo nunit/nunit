@@ -60,8 +60,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ShouldThrowExceptionIfFromIsLessThanTo()
         {
-            Assert.That( 
-                () => Assert.That( 12, Is.InRange( 10, 5 ) ),  
+            Assert.That(
+                () => Assert.That( 12, Is.InRange( 10, 5 ) ),
                 Throws.ArgumentException );
         }
 
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Constraints
         [TestCase((short)5, 10, (short)7)]
         [TestCase(5, 10.0, 7)]
         [TestCase(5.0, 10, 7.0)]
-        public void MixedRangeTests<TMin, TMax, TVal>(TMin min, TMax max, TVal val) 
+        public void MixedRangeTests<TMin, TMax, TVal>(TMin min, TMax max, TVal val)
             where TMin : IComparable where TMax : IComparable where TVal : IComparable
         {
             Assert.That(val, Is.InRange(min, max));

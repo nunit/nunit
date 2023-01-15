@@ -107,7 +107,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(names, Has.Exactly(2).Items.EqualTo("Charlie"));
         }
-        
+
         [Test]
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {

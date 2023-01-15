@@ -103,7 +103,7 @@ namespace NUnit.Framework.Syntax
         public void ArgumentNullException_ConstraintMatchesThrownArgumentNullException()
         {
             Assert.That(
-                TestDelegates.ThrowsArgumentNullException, 
+                TestDelegates.ThrowsArgumentNullException,
                 Throws.ArgumentNullException);
         }
 

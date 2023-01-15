@@ -24,7 +24,7 @@ namespace NUnit.Framework.Constraints
             var constraint = new SomeItemsConstraint(new EmptyCollectionConstraint());
             Assert.Throws<ArgumentException>(() => constraint.Using((IComparer<string>)Comparer<string>.Default));
         }
-        
+
         [Test]
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {

@@ -56,7 +56,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Exactly(n)
- 
+
         /// <summary>
         /// Returns a ConstraintExpression, which will apply
         /// the following constraint to all members of a collection,
@@ -135,7 +135,7 @@ namespace NUnit.Framework
         #endregion
 
         #region Attribute
-        
+
         /// <summary>
         /// Returns a new AttributeConstraint checking for the
         /// presence of a particular attribute on an object.

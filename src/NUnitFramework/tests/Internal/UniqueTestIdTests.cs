@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal
     {
         private readonly ConcurrentDictionary<string, string> IdHolder = new ConcurrentDictionary<string, string>();
         private static string ID => TestContext.CurrentContext.Test.ID;
-            
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]

@@ -21,8 +21,8 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)

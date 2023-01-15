@@ -7,7 +7,7 @@ using System;
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
-    /// The TestOutput class holds a unit of output from 
+    /// The TestOutput class holds a unit of output from
     /// a test to a specific output stream
     /// </summary>
 	public class TestOutput
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Interfaces
 		}
 
         /// <summary>
-        /// Get the text 
+        /// Get the text
         /// </summary>
 		public string Text { get; }
 

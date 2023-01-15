@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Determines whether the Type or other provider has the 
+        /// Determines whether the Type or other provider has the
         /// expected attribute and if its value matches the
         /// additional constraint specified.
         /// </summary>

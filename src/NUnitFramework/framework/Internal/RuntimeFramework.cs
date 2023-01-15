@@ -385,7 +385,7 @@ namespace NUnit.Framework.Internal
         }
 
         private static bool IsRuntimeTypeName(string name) =>
-            name.ToLowerInvariant() == "net" || 
+            name.ToLowerInvariant() == "net" ||
             Enum.GetNames(typeof(RuntimeType)).Contains(name, StringComparer.OrdinalIgnoreCase);
 
         private static string GetShortName(RuntimeType runtime, Version version)

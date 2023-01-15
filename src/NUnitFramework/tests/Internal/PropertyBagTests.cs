@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
                 TNode node = topNode.ChildNodes[i];
 
                 Assert.That(node.Name, Is.EqualTo("property"));
-                
+
                 props[i] = $"{node.Attributes["name"]}={node.Attributes["value"]}";
             }
 

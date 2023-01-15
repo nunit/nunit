@@ -23,14 +23,14 @@ namespace NUnit.Framework.Constraints
         {
             this.name = name;
 
-            // Prop stacks on anything and allows only 
+            // Prop stacks on anything and allows only
             // prefix operators to stack on it.
             this.left_precedence = this.right_precedence = 1;
         }
 
         /// <summary>
-        /// Reduce produces a constraint from the operator and 
-        /// any arguments. It takes the arguments from the constraint 
+        /// Reduce produces a constraint from the operator and
+        /// any arguments. It takes the arguments from the constraint
         /// stack and pushes the resulting constraint on it.
         /// </summary>
         /// <param name="stack"></param>
