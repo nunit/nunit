@@ -113,16 +113,16 @@ namespace NUnit.Framework
 
         #endregion
 
-            #region Pass
+        #region Pass
 
-            /// <summary>
-            /// Throws a <see cref="SuccessException"/> with the message and arguments
-            /// that are passed in. This allows a test to be cut short, with a result
-            /// of success returned to NUnit.
-            /// </summary>
-            /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-            /// <param name="args">Arguments to be used in formatting the message</param>
-            [DoesNotReturn]
+        /// <summary>
+        /// Throws a <see cref="SuccessException"/> with the message and arguments
+        /// that are passed in. This allows a test to be cut short, with a result
+        /// of success returned to NUnit.
+        /// </summary>
+        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
+        /// <param name="args">Arguments to be used in formatting the message</param>
+        [DoesNotReturn]
         static public void Pass(string? message, params object?[]? args)
         {
             if (message == null) message = string.Empty;
