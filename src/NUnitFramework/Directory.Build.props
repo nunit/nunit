@@ -12,6 +12,7 @@
     <NUnitRuntimeFrameworks>$(OlderNUnitRuntimeFrameworks);$(NewerNunitRuntimeFrameworks)</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
