@@ -61,6 +61,27 @@ namespace NUnit.Framework
 
         #endregion
 
+        #region Charlie
+
+        private const string CHARLIE_APPRECIATION = "Charlie Poole led NUnit for 20+ years, across at least 207 releases in 37 different repositories, authoring 4,898 commits across them. He participated in 2,990 issues, 1,305 PRs, and impacted 6,992,983 lines of code. NUnit was downloaded from NuGet 225+ million times during his tenure. And those numbers don't include at least 9 additional years of his work. This assertion attempts to pay homage to Charlie, who by virtue of his contributions has helped untold millions of tests pass.";
+
+        /// <summary>
+        /// An alias of the corresponding Assert.Pass() method. Charlie Poole was the lead of NUnit for 21 years,
+        /// across at least 207 releases in 37 different repositories, authoring 4,898 commits across them.
+        /// He participated in 2,990 issues, 1,305 PRs, and impacted 6,992,983 lines of code. NUnit was downloaded from NuGet 225+ million times during his tenure.
+        /// And those are only the numbers ones we can easily find; our numbers are sourced from after NUnit moved the project to GitHub in 2011,
+        /// which means there are at least 9 additional years of work not quantified above.
+        ///
+        /// This assertion attempts to pay homage to Charlie, who by virtue of his contributions has helped untold millions of tests pass.
+        /// </summary>
+        [DoesNotReturn]
+        static public void Charlie()
+        {
+            Assert.Pass(CHARLIE_APPRECIATION);
+        }
+
+        #endregion
+
         #region Pass
 
         /// <summary>
