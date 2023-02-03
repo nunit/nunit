@@ -177,6 +177,17 @@ Task("TestNetFramework")
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
         //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+
+        // TODO: Extract
+        var coverletSettings = new CoverletSettings {
+            CollectCoverage = true,
+            CoverletOutputFormat = CoverletOutputFormat.opencover,
+            CoverletOutputDirectory = Directory(@".\coverage-results\"),
+            CoverletOutputName = $"results-{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
+        };
+        
+        Coverlet(dir);
+
         PublishTestResults(runtime);
     });
 
@@ -195,6 +206,17 @@ foreach (var runtime in NetCoreTests)
             var dir = BIN_DIR + runtime + "/";
             RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
             RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+
+             // TODO: Extract
+            var coverletSettings = new CoverletSettings {
+                CollectCoverage = true,
+                CoverletOutputFormat = CoverletOutputFormat.opencover,
+                CoverletOutputDirectory = Directory(@".\coverage-results\"),
+                CoverletOutputName = $"results-netstandard20_{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
+            };
+        
+            Coverlet(dir);
+
             PublishTestResults(runtime);
         });
 
