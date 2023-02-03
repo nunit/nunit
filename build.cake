@@ -1,5 +1,5 @@
 #tool NUnit.ConsoleRunner&version=3.12.0
-#addin nuget:?package=Cake.Coverlet&version=3.0.4
+#addin "nuget:?package=Cake.Coverlet&version=3.0.4"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -135,7 +135,7 @@ Task("NuGetRestore")
     .Description("Restores NuGet Packages")
     .Does(() =>
     {
-        DotNetCoreRestore(SOLUTION_FILE);
+        DotNetRestore(SOLUTION_FILE);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -147,15 +147,15 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
-    new DotNetCoreBuildSettings
+DotNetBuildSettings CreateDotNetBuildSettings() =>
+    new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetCoreVerbosity.Minimal
+        Verbosity = DotNetVerbosity.Minimal
     };
 
 //////////////////////////////////////////////////////////////////////
@@ -186,7 +186,8 @@ Task("TestNetFramework")
             CoverletOutputName = $"results-{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
         };
         
-        Coverlet(dir);
+        var testSettings = new DotNetTestSettings { };
+        DotNetTest(dir, testSettings, coverletSettings);
 
         PublishTestResults(runtime);
     });
@@ -214,8 +215,9 @@ foreach (var runtime in NetCoreTests)
                 CoverletOutputDirectory = Directory(@".\coverage-results\"),
                 CoverletOutputName = $"results-netstandard20_{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
             };
-        
-            Coverlet(dir);
+            
+            var testSettings = new DotNetTestSettings { };
+            DotNetTest(dir, testSettings, coverletSettings);
 
             PublishTestResults(runtime);
         });
@@ -237,30 +239,30 @@ var RootFiles = new FilePath[]
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
 // used by the .NET 4.0 framework. 4.0 tests will not run without them.
-var FrameworkFiles = new FilePath[]
+var FrameworkFiles = new ConvertableFilePath[]
 {
-    "mock-assembly.dll",
-    "mock-assembly.exe",
-    "nunit.framework.dll",
-    "nunit.framework.pdb",
-    "nunit.framework.xml",
-    "nunit.framework.tests.dll",
-    "nunit.testdata.dll",
-    "nunitlite.dll",
-    "nunitlite.pdb",
-    "nunitlite.tests.exe",
-    "nunitlite.tests.dll",
-    "slow-nunit-tests.dll",
-    "nunitlite-runner.exe",
-    "nunitlite-runner.pdb",
-    "nunitlite-runner.dll",
-    "Microsoft.Threading.Tasks.dll",
-    "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
-    "Microsoft.Threading.Tasks.Extensions.dll",
-    "System.IO.dll",
-    "System.Runtime.dll",
-    "System.Threading.Tasks.dll",
-    "System.ValueTuple.dll"
+    File("mock-assembly.dll"),
+    File("mock-assembly.exe"),
+    File("nunit.framework.dll"),
+    File("nunit.framework.pdb"),
+    File("nunit.framework.xml"),
+    File("nunit.framework.tests.dll"),
+    File("nunit.testdata.dll"),
+    File("nunitlite.dll"),
+    File("nunitlite.pdb"),
+    File("nunitlite.tests.exe"),
+    File("nunitlite.tests.dll"),
+    File("slow-nunit-tests.dll"),
+    File("nunitlite-runner.exe"),
+    File("nunitlite-runner.pdb"),
+    File("nunitlite-runner.dll"),
+    File("Microsoft.Threading.Tasks.dll"),
+    File("Microsoft.Threading.Tasks.Extensions.Desktop.dll"),
+    File("Microsoft.Threading.Tasks.Extensions.dll"),
+    File("System.IO.dll"),
+    File("System.Runtime.dll"),
+    File("System.Threading.Tasks.dll"),
+    File("System.ValueTuple.dll")
 };
 
 string CurrentImageDir => $"{IMAGE_DIR}NUnit-{packageVersion}/";
@@ -280,15 +282,15 @@ Task("CreateImage")
         foreach (var runtime in LibraryFrameworks)
         {
             var targetDir = imageBinDir + Directory(runtime);
-            var sourceDir = BIN_DIR + Directory(runtime);
+            var sourceDir = Directory(BIN_DIR) + Directory(runtime);
             CreateDirectory(targetDir);
-            foreach (FilePath file in FrameworkFiles)
+            foreach (ConvertableFilePath file in FrameworkFiles)
             {
-                var sourcePath = sourceDir + "/" + file;
+                var sourcePath = Directory(sourceDir) + File(file);
                 if (FileExists(sourcePath))
                     CopyFileToDirectory(sourcePath, targetDir);
             }
-            var schemaPath = sourceDir + "/Schemas";
+            var schemaPath = sourceDir + Directory("/Schemas");
             if (DirectoryExists(schemaPath))
                 CopyDirectory(sourceDir, targetDir);
         }
