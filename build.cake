@@ -1,5 +1,5 @@
 #tool NUnit.ConsoleRunner&version=3.12.0
-#addin nuget:?package=Cake.Coverlet
+#addin nuget:?package=Cake.Coverlet&version=3.0.4
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
