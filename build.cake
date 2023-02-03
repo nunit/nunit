@@ -48,24 +48,24 @@ var NetCoreTests = new String[]
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
 
-var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
-var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
-var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
-var IMAGE_DIR = PROJECT_DIR + "images/";
+var PROJECT_DIR = Directory(Context.Environment.WorkingDirectory.FullPath);
+var PACKAGE_DIR = Directory(Argument("artifact-dir", PROJECT_DIR.Path + "package"));
+var BIN_DIR = PROJECT_DIR + Directory("bin/") + Directory(configuration);
+var IMAGE_DIR = PROJECT_DIR + Directory("images/");
 
 var SOLUTION_FILE = "./nunit.sln";
 
 // Test Runners
-var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
+var NUNITLITE_RUNNER_DLL = File("nunitlite-runner.dll");
 
 // Test Assemblies
-var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = "nunitlite-runner.exe";
-var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
-var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
+var FRAMEWORK_TESTS = File("nunit.framework.tests.dll");
+var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = File("nunitlite-runner.exe");
+var EXECUTABLE_NUNITLITE_TESTS_EXE = File("nunitlite.tests.exe");
+var EXECUTABLE_NUNITLITE_TESTS_DLL = File("nunitlite.tests.dll");
 
 // Packages
-var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
+var ZIP_PACKAGE = PACKAGE_DIR + File("NUnit.Framework-" + packageVersion + ".zip");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -173,10 +173,7 @@ Task("TestNetFramework")
     .Does(() =>
     {
         var runtime = "net462";
-        var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
-        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
-        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+        var dir = BIN_DIR + Directory(runtime);
 
         // TODO: Extract
         var coverletSettings = new CoverletSettings {
@@ -186,8 +183,14 @@ Task("TestNetFramework")
             CoverletOutputName = $"results-{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
         };
         
-        var testSettings = new DotNetTestSettings { };
-        DotNetTest(dir, testSettings, coverletSettings);
+        var testSettings = new DotNetTestSettings {        };
+        DotNetTest(dir.Path.FullPath, testSettings, coverletSettings);
+
+
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + File("nunit.framework.tests.xml"), runtime, ref ErrorDetail);
+        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+
 
         PublishTestResults(runtime);
     });
@@ -204,11 +207,8 @@ foreach (var runtime in NetCoreTests)
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>
         {
-            var dir = BIN_DIR + runtime + "/";
-            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
-            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+            var dir = BIN_DIR + Directory(runtime);
 
-             // TODO: Extract
             var coverletSettings = new CoverletSettings {
                 CollectCoverage = true,
                 CoverletOutputFormat = CoverletOutputFormat.opencover,
@@ -217,7 +217,13 @@ foreach (var runtime in NetCoreTests)
             };
             
             var testSettings = new DotNetTestSettings { };
-            DotNetTest(dir, testSettings, coverletSettings);
+
+            DotNetTest(dir.Path.FullPath, testSettings, coverletSettings);
+
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+
+             // TODO: Extract
 
             PublishTestResults(runtime);
         });
