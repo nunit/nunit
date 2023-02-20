@@ -120,6 +120,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint(3, "Mundo"));
             Assert.That(dictionary, Does.ContainKey(2).WithValue("Universe"));
             Assert.That(dictionary, Does.Not.ContainKey(1).WithValue("Universe"));
+
         }
 
         [Test]
