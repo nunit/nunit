@@ -50,13 +50,21 @@ namespace NUnit.Framework.Constraints
 
             if (property == null)
             {
-                Type actualType = actual as Type ?? actual.GetType();
+                if (actual is Type actualType)
+                {
+                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                }
 
-                property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
-
-                // TODO: Use an error result here
                 if (property == null)
-                    throw new ArgumentException($"Property {name} was not found on {actualType}.", nameof(name));
+                {
+                    actualType = actual.GetType();
+
+                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+
+                    // TODO: Use an error result here
+                    if (property == null)
+                        throw new ArgumentException($"Property {name} was not found on {actualType}.", nameof(name));
+                }
             }
 
             propValue = property.GetValue(actual, null);

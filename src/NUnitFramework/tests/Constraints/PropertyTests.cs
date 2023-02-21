@@ -69,6 +69,30 @@ namespace NUnit.Framework.Constraints
             object value = null;
             Assert.Throws<ArgumentNullException>(() => TheConstraint.ApplyTo(value));
         }
+
+        [Test]
+        public void TestOnActualTypeInstance()
+        {
+            Type type = typeof(char[]);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(type, Has.Property("Name"), "TActual");
+                Assert.That((object)type, Has.Property("Name"), "GetType");
+            });
+        }
+
+        [Test]
+        public void TestOnActualTypeDefinition()
+        {
+            Type type = typeof(char[]);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(type, Has.Property("Length"), "TActual");
+                Assert.That((object)type, Has.Property("Length"), "GetType");
+            });
+        }
     }
 
     public class PropertyTests : ConstraintTestBase
@@ -184,6 +208,19 @@ namespace NUnit.Framework.Constraints
             Assert.That(result.GetType().Name, Is.EqualTo("PropertyConstraintResult"));
             Assert.IsTrue(textMessageWriter.ToString().Contains("Missing"));
             Assert.IsTrue(textMessageWriter.ToString().Contains("Extra"));
+        }
+
+        [Test]
+        public void TestOnActualType()
+        {
+            Type type = typeof(char);
+
+            Assert.Multiple(() =>
+            {
+                // PropertyContraint
+                Assert.That(type, Has.Property("Namespace").EqualTo("System"), "TActual");
+                Assert.That((object)type, Has.Property("Namespace").EqualTo("System"), "GetType()");
+            });
         }
     }
 }
