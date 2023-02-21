@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a flag indicating whether the InternalTrace is initialized
         /// </summary>
-        public static bool Initialized { get; private set; }
+        public static bool Initialized => traceWriter != null;
 
         /// <summary>
         /// Initialize the internal trace facility using the name of the log
@@ -45,13 +45,12 @@ namespace NUnit.Framework.Internal
                 if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
                 {
                     traceWriter = new InternalTraceWriter(logName);
-                    traceWriter.WriteLine("InternalTrace: Initializing at level {0}", traceLevel);
+                    traceWriter.WriteLine("InternalTrace: Initializing to level {0}", traceLevel);
                 }
 
-                Initialized = true;
             }
             else
-                traceWriter.WriteLine("InternalTrace: Ignoring attempted re-initialization at level {0}", level);
+                traceWriter.WriteLine($"InternalTrace: Ignoring attempted re-initialization from level {traceLevel} to level {level}");
         }
 
         /// <summary>
@@ -68,11 +67,12 @@ namespace NUnit.Framework.Internal
                 if (traceWriter == null && traceLevel > InternalTraceLevel.Off)
                 {
                     traceWriter = new InternalTraceWriter(writer);
-                    traceWriter.WriteLine($"InternalTrace: Initializing at level {traceLevel}");
+                    traceWriter.WriteLine($"InternalTrace: Initializing to level {traceLevel}");
                 }
 
-                Initialized = true;
             }
+            else
+                traceWriter.WriteLine($"InternalTrace: Ignoring attempted re-initialization from level {traceLevel} to level {level}");
         }
 
         /// <summary>
