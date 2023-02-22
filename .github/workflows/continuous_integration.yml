@@ -14,43 +14,45 @@ on:
 
 jobs:
   build-windows:
+    name: Windows Build
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: ⤵️ Checkout Source
+      uses: actions/checkout@v3
 
-    - name: Setup .NET Core SDK 3.1.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 3.1.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '3.1.x'
 
-    - name: Setup .NET Core SDK 5.0.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 5.0.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '5.0.x'
 
-    - name: Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 6.0.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '6.0.x'
 
-    - name: Install dotnet tools
+    - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
-    - name: Build and Test
+    - name: 🔨 Build and Test
       run: dotnet cake --target=Test --test-run-name=Windows --configuration=Release
 
-    - name: Package
+    - name: 📦 Package
       run: dotnet cake --target=Package
 
-    - name: Upload build artifacts
+    - name: 💾 Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
         name: Package
         path: package
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v2
+    - name: 💾 Upload test results
+      uses: actions/upload-artifact@v3
       with:
         name: Test results (Windows)
         path: test-results
@@ -58,37 +60,39 @@ jobs:
       if: ${{ always() }}
 
   build-linux:
+    name: Linux Build
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: ⤵️ Checkout Source
+      uses: actions/checkout@v3
 
-    - name: Setup .NET Core SDK 3.1.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 3.1.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '3.1.x'
 
-    - name: Setup .NET Core SDK 5.0.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 5.0.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '5.0.x'
 
-    - name: Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 6.0.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '6.0.x'
 
-    - name: Install F#
+    - name: 🛠️ Install F#
       run: sudo apt-get install fsharp
 
-    - name: Install dotnet tools
+    - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
-    - name: Build and Test
+    - name: 🔨 Build and Test
       run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v2
+    - name: 💾 Upload test results
+      uses: actions/upload-artifact@v3
       with:
         name: Test results (Linux)
         path: test-results
@@ -96,34 +100,36 @@ jobs:
       if: ${{ always() }}
 
   build-macos:
+    name: MacOS Build
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: ⤵️ Checkout Source
+      uses: actions/checkout@v3
 
-    - name: Setup .NET Core SDK 3.1.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 3.1.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '3.1.x'
 
-    - name: Setup .NET Core SDK 5.0.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 5.0.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '5.0.x'
 
-    - name: Setup .NET Core SDK 6.0.x
-      uses: actions/setup-dotnet@v1
+    - name: 🛠️ Setup .NET Core SDK 6.0.x
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '6.0.x'
 
-    - name: Install dotnet tools
+    - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
-    - name: Build and Test
+    - name: 🔨 Build and Test
       run: dotnet cake --target=Test --test-run-name=Linux --configuration=Release
 
-    - name: Upload test results
-      uses: actions/upload-artifact@v2
+    - name: 💾 Upload test results
+      uses: actions/upload-artifact@v3
       with:
         name: Test results (macOS)
         path: test-results
