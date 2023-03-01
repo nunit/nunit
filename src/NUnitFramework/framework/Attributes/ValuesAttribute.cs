@@ -102,15 +102,16 @@ namespace NUnit.Framework
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
             }
-            if (targetType.IsEnum)
+            Type actualType = targetType.IsByRef ? targetType.GetElementType() : targetType;
+            if (actualType.IsEnum)
             {
                 return Enum.GetValues(targetType);
             }
-            if (targetType == typeof(bool?))
+            if (actualType == typeof(bool?))
             {
                 return new object?[] { null, true, false };
             }
-            if (targetType == typeof(bool))
+            if (actualType == typeof(bool))
             {
                 return new object[] { true, false };
             }
