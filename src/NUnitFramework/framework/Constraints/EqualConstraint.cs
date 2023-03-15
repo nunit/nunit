@@ -373,7 +373,7 @@ namespace NUnit.Framework.Constraints
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
 
-                if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+                if (_tolerance != null && _tolerance.HasVariance)
                 {
                     sb.Append(" +/- ");
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));

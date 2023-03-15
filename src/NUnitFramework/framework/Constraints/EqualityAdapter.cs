@@ -23,6 +23,24 @@ namespace NUnit.Framework.Constraints
         public abstract bool AreEqual(object x, object y);
 
         /// <summary>
+        /// Compares two objects, within a tolerance returning true if they are equal
+        /// </summary>
+        public virtual bool AreEqual(object x, object y, ref Tolerance tolerance)
+        {
+            // For backwards compatibility all existing equality operators can continue
+            // to use the existing AreEqual.  Attempting to use a tolerance when it's
+            // not supported is now thrown to the caller, rather than silently ignored.
+            if (!tolerance.HasVariance)
+            {
+                return AreEqual(x, y);
+            }
+            else
+            {
+                throw new InvalidOperationException("Tolerance is not supported for this comparison");
+            }
+        }
+
+        /// <summary>
         /// Returns true if the two objects can be compared by this adapter.
         /// The base adapter cannot handle IEnumerables except for strings.
         /// </summary>

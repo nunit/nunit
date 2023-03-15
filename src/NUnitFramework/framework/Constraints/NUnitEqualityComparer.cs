@@ -155,14 +155,20 @@ namespace NUnit.Framework.Constraints
                 return false;
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
+
             if (externalComparer != null)
-                return externalComparer.AreEqual(x, y);
+                return externalComparer.AreEqual(x, y, ref tolerance);
 
             foreach (EqualMethod equalMethod in _comparers)
             {
                 bool? result = equalMethod(x, y, ref tolerance, state, this);
                 if (result.HasValue)
                     return result.Value;
+            }
+
+            if (tolerance.HasVariance)
+            {
+                throw new InvalidOperationException("Tolerance is not supported for this comparison");
             }
 
             return x.Equals(y);
