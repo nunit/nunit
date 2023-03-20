@@ -3,7 +3,9 @@
 using System;
 using System.IO;
 using System.Reflection;
+#if NETSTANDARD2_0
 using System.Runtime.Loader;
+#endif
 
 namespace NUnit.Framework.Internal
 {
