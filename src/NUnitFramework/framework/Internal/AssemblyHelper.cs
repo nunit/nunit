@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Loader;
 
 namespace NUnit.Framework.Internal
 {
@@ -101,7 +102,7 @@ namespace NUnit.Framework.Internal
                         .CreateDelegate(typeof(Func<string, Assembly>), defaultContext);
 
                 assemblyLoadContextType.GetRuntimeEvent("Resolving").AddEventHandler(defaultContext,
-                    new Func<object, AssemblyName, Assembly>((context, assemblyName) =>
+                    new Func<AssemblyLoadContext, AssemblyName, Assembly>((context, assemblyName) =>
                     {
                         var dllPath = Path.Combine(AppContext.BaseDirectory, assemblyName.Name + ".dll");
                         if (File.Exists(dllPath)) return loadFromAssemblyPath.Invoke(dllPath);
