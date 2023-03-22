@@ -53,6 +53,9 @@ var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 var NUNITFRAMWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
 var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
+var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
+var NUNITLITEBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite/bin/" + configuration + "/";
+var NUNITLITERUNNERBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite-runner/bin/" + configuration + "/";
 
 var SOLUTION_FILE = "./nunit.sln";
 
@@ -122,10 +125,12 @@ Setup(context =>
 //////////////////////////////////////////////////////////////////////
 
 Task("Clean")
-    .Description("Deletes all files in the BIN directory")
+    .Description("Deletes all files in the BIN directories")
     .Does(() =>
     {
-        CleanDirectory(BIN_DIR);
+        CleanDirectory(NUNITFRAMEWORKBIN);
+        CleanDirectory(NUNITLITEBIN);
+        CleanDirectory(NUNITLITERUNNERBIN);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -260,30 +265,41 @@ Task("CreateImage")
         var imageBinDir = CurrentImageDir + "bin/";
 
         CreateDirectory(imageBinDir);
-        Information("Created directory " + imageBinDir);
-
-        foreach (var runtime in LibraryFrameworks)
+        Information("Created imagedirectory at:" + imageBinDir);
+        var directories = new String[]
         {
-            var targetDir = imageBinDir + Directory(runtime);
-            var sourceDir = BIN_DIR + Directory(runtime);
-            CreateDirectory(targetDir);
-            foreach (FilePath file in FrameworkFiles)
+            NUNITFRAMEWORKBIN,
+            NUNITLITEBIN
+        };
+        foreach (var dir in directories)
+        {
+            foreach (var runtime in LibraryFrameworks)
             {
-                var sourcePath = sourceDir + "/" + file;
-                if (FileExists(sourcePath))
-                    CopyFileToDirectory(sourcePath, targetDir);
+                var targetDir = imageBinDir + Directory(runtime);
+                var sourceDir = dir + Directory(runtime);
+                CreateDirectory(targetDir);
+                Information("Created directory " + targetDir);
+                foreach (FilePath file in FrameworkFiles)
+                {
+                    var sourcePath = sourceDir + "/" + file;
+                    if (FileExists(sourcePath))
+                        CopyFileToDirectory(sourcePath, targetDir);
+                }
+                Information("Files copied from " + sourceDir + " to " + targetDir);
+                var schemaPath = sourceDir + "/Schemas";
+                if (DirectoryExists(schemaPath))
+                    CopyDirectory(sourceDir, targetDir);
             }
-            var schemaPath = sourceDir + "/Schemas";
-            if (DirectoryExists(schemaPath))
-                CopyDirectory(sourceDir, targetDir);
-        }
-
+        }    
+        
         foreach (var dir in NetCoreTests)
         {
             var targetDir = imageBinDir + Directory(dir);
-            var sourceDir = BIN_DIR + Directory(dir);
+            var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
+            Information("Copying " + sourceDir + " to " + targetDir);
             CopyDirectory(sourceDir, targetDir);
-        }
+        } 
+        CopyDirectory(NUNITLITERUNNERBIN + Directory("net462"),imageBinDir+Directory("net462"));
     });
 
 Task("PackageFramework")
