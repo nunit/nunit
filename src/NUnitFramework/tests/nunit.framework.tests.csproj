@@ -23,6 +23,7 @@
     <ProjectReference Include="..\testdata\nunit.testdata.csproj" />
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
     <ProjectReference Include="..\testdata.fsharp\nunit.testdata.fsharp.fsproj" />
+    <ProjectReference Include="..\nunitlite-runner\nunitlite-runner.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
