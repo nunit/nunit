@@ -348,7 +348,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(int min, int max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -374,7 +377,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(uint min, uint max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -400,7 +406,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(long min, long max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + (long)count > min) && (min + (long)count <= max);
             }
         }
 
@@ -426,7 +435,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(ulong min, ulong max, int count)
             {
-                return (uint)count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > int.MaxValue
+                // a complicated comparison is required.
+                return (count >= 0) && (min + (ulong)count > min) && (min + (ulong)count <= max);
             }
         }
 
@@ -452,7 +464,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(short min, short max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -478,7 +493,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(ushort min, ushort max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -556,7 +574,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(byte min, byte max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
@@ -582,7 +603,10 @@ namespace NUnit.Framework
 
             protected override bool CanBeDistinct(sbyte min, sbyte max, int count)
             {
-                return count <= max - min;
+                // To avoid wraparound when min is very large or
+                // the gap between min and max is > MaxValue
+                // a complicated comparison is required.
+                return (min + count > min) && (min + count <= max);
             }
         }
 
