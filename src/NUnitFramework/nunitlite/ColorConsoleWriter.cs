@@ -104,6 +104,13 @@ namespace NUnit.Common
             WriteLine();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            // The base class disposes the writer it's wrapping
+            // In our case the writer is System.Out,
+            // We don't want to dispose of System.Out as it could potentially break other peoples code
+        }
+
         #endregion
     }
 }
