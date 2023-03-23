@@ -33,6 +33,11 @@ namespace NUnit.TestData.RandomAttributeTests
             previousIntValues.Add(x);
         }
 
+        [Test]
+        public void RandomInt_IntRange_DistinctNoWrap([Random(int.MinValue / 2, int.MaxValue / 2 + 1, COUNT, Distinct = true)] int x)
+        {
+            Assert.That(x, Is.InRange(int.MinValue / 2, int.MaxValue / 2 + 1));
+        }
         #endregion
 
         #region Unsigned Int
@@ -56,6 +61,12 @@ namespace NUnit.TestData.RandomAttributeTests
         {
             Assert.That(previousUIntValues, Does.Not.Contain(x));
             previousUIntValues.Add(x);
+        }
+
+        [Test]
+        public void RandomUInt_UIntRange_DistinctNoWrap([Random(uint.MinValue / 2, uint.MaxValue / 2 + 1, COUNT, Distinct = true)] uint x)
+        {
+            Assert.That(x, Is.InRange(uint.MinValue / 2, uint.MaxValue / 2 + 1));
         }
 
         #endregion
@@ -89,6 +100,12 @@ namespace NUnit.TestData.RandomAttributeTests
             previousShortValues.Add(x);
         }
 
+        [Test]
+        public void RandomShort_ShortRange_DistinctNoWrap([Random(short.MinValue / 2, short.MaxValue / 2 + 1, COUNT, Distinct = true)] short x)
+        {
+            Assert.That(x, Is.InRange(short.MinValue / 2, short.MaxValue / 2 + 1));
+        }
+
         #endregion
 
         #region Unsigned Short
@@ -120,6 +137,11 @@ namespace NUnit.TestData.RandomAttributeTests
             previousUShortValues.Add(x);
         }
 
+        [Test]
+        public void RandomUShort_UShortRange_DistinctNoWrap([Random(ushort.MinValue / 2, ushort.MaxValue / 2 + 1, COUNT, Distinct = true)] ushort x)
+        {
+            Assert.That(x, Is.InRange(ushort.MinValue / 2, ushort.MaxValue / 2 + 1));
+        }
         #endregion
 
         #region Long
@@ -145,6 +167,12 @@ namespace NUnit.TestData.RandomAttributeTests
             previousLongValues.Add(x);
         }
 
+        [Test]
+        public void RandomLong_LongRange_DistinctNoWrap([Random(long.MinValue / 2, long.MaxValue / 2 + 1, COUNT, Distinct = true)] long x)
+        {
+            Assert.That(x, Is.InRange(long.MinValue / 2, long.MaxValue / 2 + 1));
+        }
+
         #endregion
 
         #region Unsigned Long
@@ -168,6 +196,12 @@ namespace NUnit.TestData.RandomAttributeTests
         {
             Assert.That(previousULongValues, Does.Not.Contain(x));
             previousULongValues.Add(x);
+        }
+
+        [Test]
+        public void RandomULong_ULongRange_DistinctNoWrap([Random(ulong.MinValue / 2, ulong.MaxValue / 2 + 1, COUNT, Distinct = true)] ulong x)
+        {
+            Assert.That(x, Is.InRange(ulong.MinValue / 2, ulong.MaxValue / 2 + 1));
         }
 
         #endregion
@@ -294,6 +328,12 @@ namespace NUnit.TestData.RandomAttributeTests
         }
 
         [Test]
+        public void RandomByte_ByteRange_DistinctNoWrap([Random((byte)0, (byte)255, COUNT, Distinct = true)] byte x)
+        {
+            Assert.That(x, Is.InRange((byte)0, (byte)255));
+        }
+
+        [Test]
         public void RandomByte_IntRange([Random(7, 47, COUNT)] byte x)
         {
             Assert.That(x, Is.InRange((byte)7, (byte)46));
@@ -304,6 +344,12 @@ namespace NUnit.TestData.RandomAttributeTests
         {
             Assert.That(previousByteValues, Does.Not.Contain(x));
             previousByteValues.Add(x);
+        }
+
+        [Test]
+        public void RandomByte_IntRange_DistinctNoWrap([Random(0, 255, COUNT, Distinct = true)] byte x)
+        {
+            Assert.That(x, Is.InRange((byte)0, (byte)255));
         }
 
         #endregion
@@ -325,6 +371,12 @@ namespace NUnit.TestData.RandomAttributeTests
         }
 
         [Test]
+        public void RandomSByte_SbyteRange_DistinctNoWrap([Random((sbyte)-128, (sbyte)127, COUNT, Distinct = true)] sbyte x)
+        {
+            Assert.That(x, Is.InRange((sbyte)-128, (sbyte)127));
+        }
+
+        [Test]
         public void RandomSByte_IntRange([Random(7, 47, COUNT)] sbyte x)
         {
             Assert.That(x, Is.InRange((sbyte)7, (sbyte)46));
@@ -335,6 +387,12 @@ namespace NUnit.TestData.RandomAttributeTests
         {
             Assert.That(previousSByteValues, Does.Not.Contain(x));
             previousSByteValues.Add(x);
+        }
+
+        [Test]
+        public void RandomSByte_IntRange_DistinctNoWrap([Random(-128, 127, COUNT, Distinct = true)] sbyte x)
+        {
+            Assert.That(x, Is.InRange((sbyte)-128, (sbyte)127));
         }
 
         #endregion
