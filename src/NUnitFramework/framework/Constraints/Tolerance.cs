@@ -21,7 +21,7 @@ namespace NUnit.Framework.Constraints
         private const string NumericToleranceRequired = "A numeric tolerance is required";
 
         /// <summary>
-        /// Returns a default Tolerance object, equivalent to an default matching rules.
+        /// Returns a default Tolerance object, equivalent to a default matching rules.
         /// </summary>
         public static readonly Tolerance Default = new Tolerance(0, ToleranceMode.Unset);
 
