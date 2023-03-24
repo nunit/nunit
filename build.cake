@@ -1,4 +1,5 @@
 #tool NUnit.ConsoleRunner&version=3.12.0
+#addin "nuget:?package=Cake.Coverlet&version=3.0.4"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -47,24 +48,24 @@ var NetCoreTests = new String[]
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
 
-var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
-var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
-var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
-var IMAGE_DIR = PROJECT_DIR + "images/";
+var PROJECT_DIR = Directory(Context.Environment.WorkingDirectory.FullPath);
+var PACKAGE_DIR = Directory(Argument("artifact-dir", PROJECT_DIR.Path + "package"));
+var BIN_DIR = PROJECT_DIR + Directory("bin/") + Directory(configuration);
+var IMAGE_DIR = PROJECT_DIR + Directory("images/");
 
 var SOLUTION_FILE = "./nunit.sln";
 
 // Test Runners
-var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
+var NUNITLITE_RUNNER_DLL = File("nunitlite-runner.dll");
 
 // Test Assemblies
-var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
-var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = "nunitlite-runner.exe";
-var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
-var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
+var FRAMEWORK_TESTS = File("nunit.framework.tests.dll");
+var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = File("nunitlite-runner.exe");
+var EXECUTABLE_NUNITLITE_TESTS_EXE = File("nunitlite.tests.exe");
+var EXECUTABLE_NUNITLITE_TESTS_DLL = File("nunitlite.tests.dll");
 
 // Packages
-var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
+var ZIP_PACKAGE = PACKAGE_DIR + File("NUnit.Framework-" + packageVersion + ".zip");
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -134,7 +135,7 @@ Task("NuGetRestore")
     .Description("Restores NuGet Packages")
     .Does(() =>
     {
-        DotNetCoreRestore(SOLUTION_FILE);
+        DotNetRestore(SOLUTION_FILE);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -146,15 +147,15 @@ Task("Build")
     .IsDependentOn("NuGetRestore")
     .Does(() =>
     {
-        DotNetCoreBuild(SOLUTION_FILE, CreateDotNetCoreBuildSettings());
+        DotNetBuild(SOLUTION_FILE, CreateDotNetBuildSettings());
     });
 
-DotNetCoreBuildSettings CreateDotNetCoreBuildSettings() =>
-    new DotNetCoreBuildSettings
+DotNetBuildSettings CreateDotNetBuildSettings() =>
+    new DotNetBuildSettings
     {
         Configuration = configuration,
         NoRestore = true,
-        Verbosity = DotNetCoreVerbosity.Minimal
+        Verbosity = DotNetVerbosity.Minimal
     };
 
 //////////////////////////////////////////////////////////////////////
@@ -172,10 +173,25 @@ Task("TestNetFramework")
     .Does(() =>
     {
         var runtime = "net462";
-        var dir = BIN_DIR + runtime + "/";
-        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
+        var dir = BIN_DIR + Directory(runtime);
+
+        // TODO: Extract
+        var coverletSettings = new CoverletSettings {
+            CollectCoverage = true,
+            CoverletOutputFormat = CoverletOutputFormat.opencover,
+            CoverletOutputDirectory = Directory(@".\coverage-results\"),
+            CoverletOutputName = $"results-{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
+        };
+        
+        var testSettings = new DotNetTestSettings {        };
+        DotNetTest(dir.Path.FullPath, testSettings, coverletSettings);
+
+
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + File("nunit.framework.tests.xml"), runtime, ref ErrorDetail);
         //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
+
+
         PublishTestResults(runtime);
     });
 
@@ -191,9 +207,24 @@ foreach (var runtime in NetCoreTests)
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>
         {
-            var dir = BIN_DIR + runtime + "/";
+            var dir = BIN_DIR + Directory(runtime);
+
+            var coverletSettings = new CoverletSettings {
+                CollectCoverage = true,
+                CoverletOutputFormat = CoverletOutputFormat.opencover,
+                CoverletOutputDirectory = Directory(@".\coverage-results\"),
+                CoverletOutputName = $"results-netstandard20_{runtime}_{DateTime.UtcNow:dd-MM-yyyy-HH-mm-ss-FFF}"
+            };
+            
+            var testSettings = new DotNetTestSettings { };
+
+            DotNetTest(dir.Path.FullPath, testSettings, coverletSettings);
+
             RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
             RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
+
+             // TODO: Extract
+
             PublishTestResults(runtime);
         });
 
@@ -214,30 +245,30 @@ var RootFiles = new FilePath[]
 // Not all of these are present in every framework
 // The Microsoft and System assemblies are part of the BCL
 // used by the .NET 4.0 framework. 4.0 tests will not run without them.
-var FrameworkFiles = new FilePath[]
+var FrameworkFiles = new ConvertableFilePath[]
 {
-    "mock-assembly.dll",
-    "mock-assembly.exe",
-    "nunit.framework.dll",
-    "nunit.framework.pdb",
-    "nunit.framework.xml",
-    "nunit.framework.tests.dll",
-    "nunit.testdata.dll",
-    "nunitlite.dll",
-    "nunitlite.pdb",
-    "nunitlite.tests.exe",
-    "nunitlite.tests.dll",
-    "slow-nunit-tests.dll",
-    "nunitlite-runner.exe",
-    "nunitlite-runner.pdb",
-    "nunitlite-runner.dll",
-    "Microsoft.Threading.Tasks.dll",
-    "Microsoft.Threading.Tasks.Extensions.Desktop.dll",
-    "Microsoft.Threading.Tasks.Extensions.dll",
-    "System.IO.dll",
-    "System.Runtime.dll",
-    "System.Threading.Tasks.dll",
-    "System.ValueTuple.dll"
+    File("mock-assembly.dll"),
+    File("mock-assembly.exe"),
+    File("nunit.framework.dll"),
+    File("nunit.framework.pdb"),
+    File("nunit.framework.xml"),
+    File("nunit.framework.tests.dll"),
+    File("nunit.testdata.dll"),
+    File("nunitlite.dll"),
+    File("nunitlite.pdb"),
+    File("nunitlite.tests.exe"),
+    File("nunitlite.tests.dll"),
+    File("slow-nunit-tests.dll"),
+    File("nunitlite-runner.exe"),
+    File("nunitlite-runner.pdb"),
+    File("nunitlite-runner.dll"),
+    File("Microsoft.Threading.Tasks.dll"),
+    File("Microsoft.Threading.Tasks.Extensions.Desktop.dll"),
+    File("Microsoft.Threading.Tasks.Extensions.dll"),
+    File("System.IO.dll"),
+    File("System.Runtime.dll"),
+    File("System.Threading.Tasks.dll"),
+    File("System.ValueTuple.dll")
 };
 
 string CurrentImageDir => $"{IMAGE_DIR}NUnit-{packageVersion}/";
@@ -257,15 +288,15 @@ Task("CreateImage")
         foreach (var runtime in LibraryFrameworks)
         {
             var targetDir = imageBinDir + Directory(runtime);
-            var sourceDir = BIN_DIR + Directory(runtime);
+            var sourceDir = Directory(BIN_DIR) + Directory(runtime);
             CreateDirectory(targetDir);
-            foreach (FilePath file in FrameworkFiles)
+            foreach (ConvertableFilePath file in FrameworkFiles)
             {
-                var sourcePath = sourceDir + "/" + file;
+                var sourcePath = Directory(sourceDir) + File(file);
                 if (FileExists(sourcePath))
                     CopyFileToDirectory(sourcePath, targetDir);
             }
-            var schemaPath = sourceDir + "/Schemas";
+            var schemaPath = sourceDir + Directory("/Schemas");
             if (DirectoryExists(schemaPath))
                 CopyDirectory(sourceDir, targetDir);
         }
