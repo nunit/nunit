@@ -9,7 +9,7 @@
     <NUnitLibraryFrameworks>net462;netstandard2.0</NUnitLibraryFrameworks>
     <NUnitRuntimeFrameworks>net462;netcoreapp3.1;net5.0;net6.0;net7.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+    <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 

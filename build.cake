@@ -51,6 +51,11 @@ var PROJECT_DIR = Context.Environment.WorkingDirectory.FullPath + "/";
 var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
+var NUNITFRAMWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
+var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
+var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
+var NUNITLITEBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite/bin/" + configuration + "/";
+var NUNITLITERUNNERBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite-runner/bin/" + configuration + "/";
 
 var SOLUTION_FILE = "./nunit.sln";
 
@@ -120,10 +125,12 @@ Setup(context =>
 //////////////////////////////////////////////////////////////////////
 
 Task("Clean")
-    .Description("Deletes all files in the BIN directory")
+    .Description("Deletes all files in the BIN directories")
     .Does(() =>
     {
-        CleanDirectory(BIN_DIR);
+        CleanDirectory(NUNITFRAMEWORKBIN);
+        CleanDirectory(NUNITLITEBIN);
+        CleanDirectory(NUNITLITERUNNERBIN);
     });
 
 //////////////////////////////////////////////////////////////////////
@@ -172,9 +179,12 @@ Task("TestNetFramework")
     .Does(() =>
     {
         var runtime = "net462";
-        var dir = BIN_DIR + runtime + "/";
+        var dir = NUNITFRAMWORKTESTSBIN + runtime + "/";
+        Information("Run tests for " + runtime + " in " + dir+"using runner");
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
         //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        dir = NUNITLITETESTSBIN + runtime + "/";
+        Information("Run tests for " + runtime + " in " + dir+" for nunitlite.tests");
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
         PublishTestResults(runtime);
     });
@@ -191,8 +201,11 @@ foreach (var runtime in NetCoreTests)
         .OnError(exception => { ErrorDetail.Add(exception.Message); })
         .Does(() =>
         {
-            var dir = BIN_DIR + runtime + "/";
+            var dir = NUNITFRAMWORKTESTSBIN + runtime + "/";
+              Information("Run tests for " + runtime + " in " + dir);
             RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            dir = NUNITLITETESTSBIN + runtime + "/";
+            Information("Run tests for " + runtime + " in " + dir+" for nunitlite.tests");
             RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
             PublishTestResults(runtime);
         });
@@ -252,30 +265,41 @@ Task("CreateImage")
         var imageBinDir = CurrentImageDir + "bin/";
 
         CreateDirectory(imageBinDir);
-        Information("Created directory " + imageBinDir);
-
-        foreach (var runtime in LibraryFrameworks)
+        Information("Created imagedirectory at:" + imageBinDir);
+        var directories = new String[]
         {
-            var targetDir = imageBinDir + Directory(runtime);
-            var sourceDir = BIN_DIR + Directory(runtime);
-            CreateDirectory(targetDir);
-            foreach (FilePath file in FrameworkFiles)
+            NUNITFRAMEWORKBIN,
+            NUNITLITEBIN
+        };
+        foreach (var dir in directories)
+        {
+            foreach (var runtime in LibraryFrameworks)
             {
-                var sourcePath = sourceDir + "/" + file;
-                if (FileExists(sourcePath))
-                    CopyFileToDirectory(sourcePath, targetDir);
+                var targetDir = imageBinDir + Directory(runtime);
+                var sourceDir = dir + Directory(runtime);
+                CreateDirectory(targetDir);
+                Information("Created directory " + targetDir);
+                foreach (FilePath file in FrameworkFiles)
+                {
+                    var sourcePath = sourceDir + "/" + file;
+                    if (FileExists(sourcePath))
+                        CopyFileToDirectory(sourcePath, targetDir);
+                }
+                Information("Files copied from " + sourceDir + " to " + targetDir);
+                var schemaPath = sourceDir + "/Schemas";
+                if (DirectoryExists(schemaPath))
+                    CopyDirectory(sourceDir, targetDir);
             }
-            var schemaPath = sourceDir + "/Schemas";
-            if (DirectoryExists(schemaPath))
-                CopyDirectory(sourceDir, targetDir);
-        }
-
+        }    
+        
         foreach (var dir in NetCoreTests)
         {
             var targetDir = imageBinDir + Directory(dir);
-            var sourceDir = BIN_DIR + Directory(dir);
+            var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
+            Information("Copying " + sourceDir + " to " + targetDir);
             CopyDirectory(sourceDir, targetDir);
-        }
+        } 
+        CopyDirectory(NUNITLITERUNNERBIN + Directory("net462"),imageBinDir+Directory("net462"));
     });
 
 Task("PackageFramework")
@@ -468,7 +492,10 @@ void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string frame
 void RunDotnetCoreTests(FilePath exePath, DirectoryPath workingDir, string arguments, string framework, FilePath resultFile, ref List<string> errorDetail)
 {
     if (!FileExists(exePath))
+    {
+        Information(string.Format("{0}: {1} not found", framework, exePath));
         return;
+    }
 
     int rc = StartProcess(
         "dotnet",
@@ -492,6 +519,7 @@ void PublishTestResults(string framework)
 {
     if (EnvironmentVariable("TF_BUILD", false))
     {
+        Information("Publishing test results to Azure Pipelines");
         var fullTestRunTitle = framework;
         var ciRunName = Argument<string>("test-run-name");
         if (!string.IsNullOrEmpty(ciRunName))

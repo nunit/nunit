@@ -11,8 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0-alpha.4" />
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
     <PackageReference Include="System.ValueTuple" version="4.5.0" />
   </ItemGroup>
@@ -23,6 +23,7 @@
     <ProjectReference Include="..\testdata\nunit.testdata.csproj" />
     <ProjectReference Include="..\mock-assembly\mock-assembly.csproj" />
     <ProjectReference Include="..\testdata.fsharp\nunit.testdata.fsharp.fsproj" />
+    <ProjectReference Include="..\nunitlite-runner\nunitlite-runner.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
