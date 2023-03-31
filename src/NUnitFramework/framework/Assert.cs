@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -359,6 +360,35 @@ namespace NUnit.Framework
             try
             {
                 AsyncToSyncAdapter.Await(testDelegate.Invoke);
+            }
+            finally
+            {
+                context.MultipleAssertLevel--;
+            }
+
+            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
+            {
+                context.CurrentResult.RecordTestCompletion();
+                throw new MultipleAssertException(context.CurrentResult);
+            }
+        }
+
+        /// <summary>
+        /// Wraps code containing a series of assertions, which should all
+        /// be executed, even if they fail. Failed results are saved and
+        /// reported at the end of the code block.
+        /// </summary>
+        /// <param name="testDelegate">An AsyncTestDelegate to be executed in Multiple Assertion mode.</param>
+        public static async Task MultipleAsync(AsyncTestDelegate testDelegate)
+        {
+            TestExecutionContext context = TestExecutionContext.CurrentContext;
+            Guard.OperationValid(context != null, "There is no current test execution context.");
+
+            context.MultipleAssertLevel++;
+
+            try
+            {
+                await testDelegate();
             }
             finally
             {
