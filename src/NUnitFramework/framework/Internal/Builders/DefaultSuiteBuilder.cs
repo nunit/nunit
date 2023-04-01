@@ -111,6 +111,8 @@ namespace NUnit.Framework.Internal.Builders
         {
             TestSuite suite = new ParameterizedFixtureSuite(typeInfo);
 
+            suite.ApplyAttributesToTestSuite(typeInfo.Type);
+
             foreach (var fixture in fixtures)
                 suite.Add(fixture);
 

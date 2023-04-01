@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
@@ -167,6 +168,41 @@ namespace NUnit.Framework.Internal
             return new TestSuite(this, filter);
         }
 
+        /// <summary>
+        /// Recursively apply the attributes on <paramref name="type"/> to this test suite,
+        /// including attributes on nesting types.
+        /// </summary>
+        /// <param name="type">The </param>
+        public void ApplyAttributesToTestSuite(Type type)
+        {
+            foreach (var t in GetNestedTypes(type).Reverse())
+                ApplyAttributesToTestSuite((ICustomAttributeProvider)t);
+        }
+
+        #endregion
+
+        #region Private Methods
+        /// <summary>
+        /// Modify a newly constructed testSuite by applying any of NUnit's common
+        /// attributes, based on a supplied <see cref="ICustomAttributeProvider"/>, which is
+        /// usually the reflection element from which the test was constructed,
+        /// but may not be in some instances. The attributes retrieved are
+        /// saved for use in subsequent operations.
+        /// </summary>
+        private void ApplyAttributesToTestSuite(ICustomAttributeProvider provider)
+        {
+            object[] allAttributes = provider.GetCustomAttributes(inherit: true);
+            IEnumerable<IApplyToTestSuite> applyToTestSuiteAttributes =
+                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTestSuite>();
+
+            ApplyAttributesToTestSuite(applyToTestSuiteAttributes);
+        }
+
+        private void ApplyAttributesToTestSuite(IEnumerable<IApplyToTestSuite> attributes)
+        {
+            foreach (IApplyToTestSuite iApply in attributes)
+                iApply.ApplyToTestSuite(this);
+        }
         #endregion
 
         #region Properties
