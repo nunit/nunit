@@ -23,6 +23,8 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(t1, Is.TypeOf<T1>());
             Assert.That(t2, Is.TypeOf<T2>());
+            Assert.That(t1 is int || t2 is int);
+            Assert.That(t1 is double || t2 is double);
         }
     }
 }
