@@ -325,19 +325,6 @@ namespace NUnit.Framework.Internal
                 ApplyAttributesToTest((ICustomAttributeProvider) t);
         }
 
-        /// <summary>
-        /// Returns all nested types, inner first.
-        /// </summary>
-        private IEnumerable<Type> GetNestedTypes(Type inner)
-        {
-            var current = inner;
-            while (current != null)
-            {
-                yield return current;
-                current = current.DeclaringType;
-            }
-        }
-
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
         {
             foreach (IApplyToTest iApply in attributes)
@@ -392,6 +379,19 @@ namespace NUnit.Framework.Internal
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
+        }
+
+        /// <summary>
+        /// Returns all nested types, inner first.
+        /// </summary>
+        protected IEnumerable<Type> GetNestedTypes(Type inner)
+        {
+            var current = inner;
+            while (current != null)
+            {
+                yield return current;
+                current = current.DeclaringType;
+            }
         }
 
         #endregion

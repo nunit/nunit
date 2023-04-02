@@ -1,10 +1,10 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.TestData;
+using NUnit.TestData.MultipleTestFixturesOrderAttribute;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -19,7 +19,7 @@ namespace NUnit.Framework.Attributes
 
             // This triggers sorting
             TestBuilder.ExecuteWorkItem(work);
-            
+
             Assert.AreEqual(work.Children.Count, 5);
             Assert.AreEqual(work.Children[0].Test.Name, "Y_FirstTest");
             Assert.AreEqual(work.Children[1].Test.Name, "Y_SecondTest");
@@ -69,6 +69,12 @@ namespace NUnit.Framework.Attributes
                 typeof(TestCaseOrderAttributeFixture),
                 typeof(AnotherTestCaseOrderAttributeFixture),
                 typeof(ThirdTestCaseOrderAttributeFixture)
+            },
+            new[]
+            {
+                typeof(NoTestFixtureAttributeOrder2),
+                typeof(MultipleTestFixtureAttributesOrder1),
+                typeof(NoTestFixtureAttributeOrder0)
             }
         };
     }
