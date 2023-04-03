@@ -15,6 +15,8 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             if (equalityComparer.CompareAsCollection && state.TopLevelComparison)
                 return null;
+            if (tolerance != null && tolerance.HasVariance)
+                return null;
 
             Type xType = x.GetType();
             Type yType = y.GetType();

@@ -46,6 +46,20 @@ namespace NUnit.Framework.Constraints
         }
 
         [Test]
+        public void TestToleranceVarianceExact()
+        {
+            var noneTolerance = Tolerance.Exact;
+            Assert.IsFalse(noneTolerance.HasVariance);
+        }
+
+        [Test]
+        public void TestToleranceVarianceDefault()
+        {
+            var noneTolerance = Tolerance.Default;
+            Assert.IsFalse(noneTolerance.HasVariance);
+        }
+
+        [Test]
         public void TestWithinCanOnlyBeUsedOnce()
         {
             Assert.That(() => Is.EqualTo(1.1d).Within(0.5d).Within(0.2d),
@@ -74,6 +88,18 @@ namespace NUnit.Framework.Constraints
             var tolerance = Tolerance.Default; // which is new Tolerance(0, ToleranceMode.Unset)
             Assert.That(() => tolerance.Percent,
                 Throws.TypeOf<InvalidOperationException>().With.Message.Contains("Tolerance amount must be specified"));
+        }
+
+        [Test]
+        public void TestToleranceDefaultIsSameAs()
+        {
+            Assert.That(Tolerance.Default, Is.SameAs(Tolerance.Default));
+        }
+
+        [Test]
+        public void TestToleranceExactIsSameAs()
+        {
+            Assert.That(Tolerance.Exact, Is.SameAs(Tolerance.Exact));
         }
     }
 }

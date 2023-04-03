@@ -257,7 +257,7 @@ namespace NUnit.Framework.Internal
             if (_sameValDiffTypes) {
                 Write(_expectedType);
             }
-            if (tolerance != null && !tolerance.IsUnsetOrDefault)
+            if (tolerance != null && tolerance.HasVariance)
             {
                 Write(" +/- ");
                 Write(MsgUtils.FormatValue(tolerance.Amount));

@@ -21,14 +21,14 @@ namespace NUnit.Framework.Constraints
         private const string NumericToleranceRequired = "A numeric tolerance is required";
 
         /// <summary>
-        /// Returns a default Tolerance object, equivalent to an exact match.
+        /// Returns a default Tolerance object, equivalent to a default matching rules.
         /// </summary>
-        public static Tolerance Default => new Tolerance(0, ToleranceMode.Unset);
+        public static readonly Tolerance Default = new Tolerance(0, ToleranceMode.Unset);
 
         /// <summary>
         /// Returns an empty Tolerance object, equivalent to an exact match.
         /// </summary>
-        public static Tolerance Exact => new Tolerance(0, ToleranceMode.Linear);
+        public static readonly Tolerance Exact = new Tolerance(0, ToleranceMode.Linear);
 
         #endregion
 
@@ -169,10 +169,14 @@ namespace NUnit.Framework.Constraints
         public object Amount { get; }
 
         /// <summary>
-        /// Returns true if the current tolerance has not been set or is using the .
+        /// Returns true if the current tolerance has not been set or is using the default.
         /// </summary>
         public bool IsUnsetOrDefault => Mode == ToleranceMode.Unset;
 
+        /// <summary>
+        /// Returns true if the current tolerance varies from exact and default. Indicating tolerance needs processing.
+        /// </summary>
+        public bool HasVariance => Mode != ToleranceMode.Unset && this != Exact && this != Default;
         #endregion
 
         #region Public Methods

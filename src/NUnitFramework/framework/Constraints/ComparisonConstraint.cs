@@ -145,7 +145,7 @@ namespace NUnit.Framework.Constraints
             StringBuilder sb = new StringBuilder(comparisonText);
             sb.Append(MsgUtils.FormatValue(_expected));
                 
-            if (_tolerance != null && !_tolerance.IsUnsetOrDefault)
+            if (_tolerance != null && _tolerance.HasVariance)
             {
                 sb.Append(" within ");
                 sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
