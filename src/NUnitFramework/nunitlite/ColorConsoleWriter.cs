@@ -43,7 +43,7 @@ namespace NUnit.Common
         /// </summary>
         /// <param name="colorEnabled">Flag indicating whether color should be enabled</param>
         public ColorConsoleWriter(bool colorEnabled)
-            : base(Console.Out)
+            : base(Console.Out, shouldDisposeWriter: false)
         {
             _colorEnabled = colorEnabled;
         }

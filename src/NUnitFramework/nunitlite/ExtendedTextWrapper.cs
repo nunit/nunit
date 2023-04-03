@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -35,10 +35,17 @@ namespace NUnit.Common
     public class ExtendedTextWrapper : ExtendedTextWriter
     {
         private readonly TextWriter _writer;
+        private readonly bool _shouldDisposeWriter = true;
 
         public ExtendedTextWrapper(TextWriter writer)
         {
             _writer = writer;
+        }
+
+        public ExtendedTextWrapper(TextWriter writer, bool shouldDisposeWriter)
+            : this(writer)
+        {
+            _shouldDisposeWriter = shouldDisposeWriter;
         }
 
         #region TextWriter Overrides
@@ -80,7 +87,10 @@ namespace NUnit.Common
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            _writer.Dispose();
+            if (_shouldDisposeWriter)
+            {
+                _writer.Dispose();
+            }
         }
 
         #endregion
