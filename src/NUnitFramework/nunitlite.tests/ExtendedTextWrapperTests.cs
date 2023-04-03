@@ -1,4 +1,4 @@
-﻿// ***********************************************************************
+// ***********************************************************************
 // Copyright (c) 2015 Charlie Poole, Rob Prouse
 //
 // Permission is hereby granted, free of charge, to any person obtaining
@@ -100,6 +100,38 @@ namespace NUnit.Common.Tests
         {
             writer.WriteLabelLine(LABEL, OPTION, ColorStyle.Pass);
             Assert.That(sb.ToString(), Is.EqualTo(LABEL + OPTION + NL));
+        }
+
+        [Test]
+        public void DisposeSkipsStdOut()
+        {
+            var originalStdOut = Console.Out;
+
+            var textWriter = new DisposeCheckerWriter();
+
+            Console.SetOut(textWriter);
+            try
+            {
+                var colorWriter = new ColorConsoleWriter();
+                colorWriter.Dispose();
+
+                Assert.IsFalse(textWriter.IsDisposed);
+            }
+            finally
+            {
+                Console.SetOut(originalStdOut);
+            }
+        }
+
+        class DisposeCheckerWriter : StringWriter
+        {
+            public bool IsDisposed { get; private set; }
+            protected override void Dispose(bool disposing)
+            {
+                IsDisposed = true;
+
+                base.Dispose(disposing);
+            }
         }
     }
 }

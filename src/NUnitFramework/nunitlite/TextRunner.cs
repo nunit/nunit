@@ -110,6 +110,9 @@ namespace NUnitLite
 
         public int Execute(string[] args)
         {
+            TextWriter originalStdOutWriter = null;
+            TextWriter originalStdErrWriter = null;
+
             _options = new NUnitLiteOptions(_testAssembly == null, args);
 
             ExtendedTextWriter outWriter = null;
@@ -118,6 +121,7 @@ namespace NUnitLite
                 var outFile = Path.Combine(_options.WorkDirectory, _options.OutFile);
                 var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
                 outWriter = new ExtendedTextWrapper(textWriter);
+                originalStdOutWriter = Console.Out;
                 Console.SetOut(outWriter);
             }
             else
@@ -125,20 +129,41 @@ namespace NUnitLite
                 outWriter = new ColorConsoleWriter(!_options.NoColor);
             }
 
-            using (outWriter)
+            try
             {
-                TextWriter errWriter = null;
-                if (_options.ErrFile != null)
+                using(outWriter)
                 {
-                    var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
-                    errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
-                    Console.SetError(errWriter);
-                }
+                    TextWriter errWriter = null;
+                    if (_options.ErrFile != null)
+                    {
+                        var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
+                        errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
+                        originalStdErrWriter = Console.Error;
+                        Console.SetError(errWriter);
+                    }
 
-                using (errWriter)
+                    try
+                    {
+                        using (errWriter)
+                        {
+                            _textUI = new TextUI(outWriter, Console.In, _options);
+                            return Execute();
+                        }
+                    }
+                    finally
+                    {
+                        if (originalStdErrWriter != null)
+                        {
+                            Console.SetError(originalStdErrWriter);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (originalStdOutWriter != null)
                 {
-                    _textUI = new TextUI(outWriter, Console.In, _options);
-                    return Execute();
+                    Console.SetOut(originalStdOutWriter);
                 }
             }
         }
