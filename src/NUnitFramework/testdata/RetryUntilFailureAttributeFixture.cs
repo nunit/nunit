@@ -17,5 +17,21 @@ namespace NUnit.TestData
             Assert.IsTrue(_counter != 10);
             _counter++;
         }
+
+        [Test, RetryUntilFailure(20), Ignore("Test should fail when run")]
+        public void HitFailureBeforeMaxRetries()
+        {
+            // Act + Assert
+            Assert.IsTrue(_counter != 10);
+            _counter++;
+        }
+
+        [Test, RetryUntilFailure(5)]
+        public void HitMaxRetriesBeforeFailure()
+        {
+            // Act + Assert
+            Assert.IsTrue(_counter != 10);
+            _counter++;
+        }
     }
 }
