@@ -8,7 +8,13 @@ namespace NUnit.TestData
     [TestFixture]
     public class RetryUntilFailureAttributeFixture
     {
-        private int _counter = 0;
+        private int _counter;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _counter = 0;
+        }
 
         [Test, RetryUntilFailure, Ignore("Test should fail when run")]
         public void RunUntilFailure()
