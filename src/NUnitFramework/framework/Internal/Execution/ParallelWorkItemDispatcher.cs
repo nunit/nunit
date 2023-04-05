@@ -192,24 +192,32 @@ namespace NUnit.Framework.Internal.Execution
                 }
             }
 
-            switch (strategy)
+            // The attribute SingleThreaded may not be applied to the content in time, so here as a workaround, check for the flag again
+            if (work.Context.IsSingleThreaded)
             {
-                default:
-                case ParallelExecutionStrategy.Direct:
-                    work.Execute();
-                    break;
-                case ParallelExecutionStrategy.Parallel:
-                    if (work.TargetApartment == ApartmentState.STA)
-                        ParallelSTAQueue.Enqueue(work);
-                    else
-                        ParallelQueue.Enqueue(work);
-                    break;
-                case ParallelExecutionStrategy.NonParallel:
-                    if (work.TargetApartment == ApartmentState.STA)
-                        NonParallelSTAQueue.Enqueue(work);
-                    else
-                        NonParallelQueue.Enqueue(work);
-                    break;
+                work.Execute();
+            }
+            else
+            {
+                switch (strategy)
+                {
+                    default:
+                    case ParallelExecutionStrategy.Direct:
+                        work.Execute();
+                        break;
+                    case ParallelExecutionStrategy.Parallel:
+                        if (work.TargetApartment == ApartmentState.STA)
+                            ParallelSTAQueue.Enqueue(work);
+                        else
+                            ParallelQueue.Enqueue(work);
+                        break;
+                    case ParallelExecutionStrategy.NonParallel:
+                        if (work.TargetApartment == ApartmentState.STA)
+                            NonParallelSTAQueue.Enqueue(work);
+                        else
+                            NonParallelQueue.Enqueue(work);
+                        break;
+                }
             }
         }
 
