@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.AssertMultipleData;
 using NUnit.TestUtilities;
@@ -72,6 +73,17 @@ namespace NUnit.Framework.Assertions
         {
             ITestResult result = CheckResult(methodName, ResultState.Error, 0);
             Assert.That(result.Message, Contains.Substring($"{invalidAssert} may not be used in a multiple assertion block."));
+        }
+
+        [Test]
+        public async Task AssertMultipleAsyncSucceeds()
+        {
+            await Assert.MultipleAsync(async () =>
+            {
+                await Assert.ThatAsync(() => Task.FromResult(42), Is.EqualTo(42));
+                Assert.That("hello", Is.EqualTo("hello"));
+                await Assert.ThatAsync(() => Task.FromException(new ArgumentNullException()), Throws.ArgumentNullException);
+            });
         }
 
         private ITestResult CheckResult(string methodName, ResultState expectedResultState, int expectedAsserts, params string[] assertionMessageRegex)
