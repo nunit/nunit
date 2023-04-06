@@ -325,6 +325,7 @@ namespace NUnit.Framework
             TestExecutionContext context = TestExecutionContext.CurrentContext;
             Guard.OperationValid(context != null, "There is no current test execution context.");
 
+            var oldCount = context.CurrentResult.AssertionResults.Count;
             context.MultipleAssertLevel++;
 
             try
@@ -339,7 +340,10 @@ namespace NUnit.Framework
             if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
             {
                 context.CurrentResult.RecordTestCompletion();
-                throw new MultipleAssertException(context.CurrentResult);
+                if (context.CurrentResult.AssertionResults.Count > oldCount)
+                {
+                    throw new MultipleAssertException(context.CurrentResult);
+                }
             }
         }
 
@@ -354,6 +358,7 @@ namespace NUnit.Framework
             TestExecutionContext context = TestExecutionContext.CurrentContext;
             Guard.OperationValid(context != null, "There is no current test execution context.");
 
+            var oldCount = context.CurrentResult.AssertionResults.Count;
             context.MultipleAssertLevel++;
 
             try
@@ -368,7 +373,10 @@ namespace NUnit.Framework
             if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
             {
                 context.CurrentResult.RecordTestCompletion();
-                throw new MultipleAssertException(context.CurrentResult);
+                if (context.CurrentResult.AssertionResults.Count > oldCount)
+                {
+                    throw new MultipleAssertException(context.CurrentResult);
+                }
             }
         }
 

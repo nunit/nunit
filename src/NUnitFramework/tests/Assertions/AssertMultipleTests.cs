@@ -151,6 +151,28 @@ namespace NUnit.Framework.Assertions
         }
     }
 
+    [Explicit("Used to verify that further failures do not skip the rest of the execution")]
+    public class MultipleAssertFailureAccumulationDemo
+    {
+        [TearDown]
+        public void TearDown()
+        {
+            Console.WriteLine("Teardown Start, expect to see a Teardown End message");
+            Assert.Multiple(() =>
+            {
+                Assert.That(true);
+            });
+            Console.WriteLine("Teardown End");
+        }
+
+        [Test]
+        public void AssertFailureAccumulationDemo()
+        {
+            Console.WriteLine("Test Start");
+            Assert.That(false);
+        }
+    }
+    
     internal class ComplexNumber
     {
         public ComplexNumber(double realPart, double imaginaryPart)
