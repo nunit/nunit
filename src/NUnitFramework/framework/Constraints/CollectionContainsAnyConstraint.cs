@@ -50,8 +50,6 @@ namespace NUnit.Framework.Constraints
         /// Test whether the actual collection contains an element from
         /// the expected collection provided.
         /// </summary>
-        /// <param name="actual"></param>
-        /// <returns></returns>
         protected override bool Matches(IEnumerable actual)
         {
             CollectionTally tally = Tally(_expected);
