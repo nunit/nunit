@@ -400,7 +400,7 @@ namespace NUnit.Framework
             /// </summary>
             public object? ExpectedResult 
             {
-                get { return (_test as TestMethod)?.ExpectedResult;
+                get { return (_test as TestMethod)?.ExpectedResult; }
             }
 
             #endregion
