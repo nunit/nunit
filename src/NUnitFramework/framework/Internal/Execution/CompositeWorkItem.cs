@@ -4,10 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Interfaces;
-using System.Diagnostics;
 using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
