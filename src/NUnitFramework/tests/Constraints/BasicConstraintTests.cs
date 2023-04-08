@@ -1,10 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Globalization;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
-
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]

@@ -1,12 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#region Using Directives
-
 using System;
-using NUnit.Framework;
-using NUnit.Framework.Constraints;
-
-#endregion
 
 namespace NUnit.Framework.Constraints
 {
