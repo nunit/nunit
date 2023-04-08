@@ -164,5 +164,19 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Tests[0] is ParameterizedFixtureSuite);
             Assert.That(suite.Tests[0].Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
         }
+
+        [Test]
+        public void ParallelizableAttributeOnFixtureSourceIsAppliedToTests()
+        {
+            TestSuite suite = TestBuilder.MakeFixture(typeof(TextFixtureSourceWithParallelizableAttribute));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(suite, Is.TypeOf<ParameterizedFixtureSuite>());
+            Assert.That(suite.TestCaseCount, Is.EqualTo(3));
+            Assert.That(suite.Tests.Count, Is.EqualTo(3));
+
+            Assert.That(suite.Tests[0].Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.All));
+            Assert.That(suite.Tests[1].Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.All));
+            Assert.That(suite.Tests[2].Properties.Get(PropertyNames.ParallelScope), Is.EqualTo(ParallelScope.All));
+        }
     }
 }

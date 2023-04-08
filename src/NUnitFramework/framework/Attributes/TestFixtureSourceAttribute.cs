@@ -107,12 +107,14 @@ namespace NUnit.Framework
             fixtureSuite.ApplyAttributesToTest(typeInfo.Type);
             var assemblyLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type.Assembly);
             var typeLifeCycleAttributeProvider = new AttributeProviderWrapper<FixtureLifeCycleAttribute>(typeInfo.Type);
+            var parallelizableAttributeProvider = new AttributeProviderWrapper<ParallelizableAttribute>(typeInfo.Type);
 
             foreach (ITestFixtureData parms in GetParametersFor(sourceType))
             {
                 TestSuite fixture = _builder.BuildFrom(typeInfo, filter, parms);
                 fixture.ApplyAttributesToTest(assemblyLifeCycleAttributeProvider);
                 fixture.ApplyAttributesToTest(typeLifeCycleAttributeProvider);
+                fixture.ApplyAttributesToTest(parallelizableAttributeProvider);
                 fixtureSuite.Add(fixture);
             }
 
