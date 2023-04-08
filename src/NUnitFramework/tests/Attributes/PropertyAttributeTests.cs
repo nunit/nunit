@@ -8,44 +8,44 @@ using NUnit.TestData.PropertyAttributeTests;
 
 namespace NUnit.Framework.Attributes
 {
-	[TestFixture]
-	public class PropertyAttributeTests
-	{
-		TestSuite fixture;
+    [TestFixture]
+    public class PropertyAttributeTests
+    {
+        TestSuite fixture;
 
-		[SetUp]
-		public void CreateFixture()
-		{
-			fixture = TestBuilder.MakeFixture( typeof( FixtureWithProperties ) );
-		}
+        [SetUp]
+        public void CreateFixture()
+        {
+            fixture = TestBuilder.MakeFixture(typeof(FixtureWithProperties));
+        }
 
-		[Test]
-		public void PropertyWithStringValue()
-		{
-			Test test1 = (Test)fixture.Tests[0];
-			Assert.That( test1.Properties["user"].Contains("Charlie"));
-		}
+        [Test]
+        public void PropertyWithStringValue()
+        {
+            Test test1 = (Test)fixture.Tests[0];
+            Assert.That(test1.Properties["user"].Contains("Charlie"));
+        }
 
-		[Test]
-		public void PropertiesWithNumericValues()
-		{
-			Test test2 = (Test)fixture.Tests[1];
-			Assert.AreEqual( 10.0, test2.Properties.Get("X") );
-			Assert.AreEqual( 17.0, test2.Properties.Get("Y") );
-		}
+        [Test]
+        public void PropertiesWithNumericValues()
+        {
+            Test test2 = (Test)fixture.Tests[1];
+            Assert.AreEqual(10.0, test2.Properties.Get("X"));
+            Assert.AreEqual(17.0, test2.Properties.Get("Y"));
+        }
 
-		[Test]
-		public void PropertyWorksOnFixtures()
-		{
-			Assert.AreEqual( "SomeClass", fixture.Properties.Get("ClassUnderTest") );
-		}
+        [Test]
+        public void PropertyWorksOnFixtures()
+        {
+            Assert.AreEqual("SomeClass", fixture.Properties.Get("ClassUnderTest"));
+        }
 
-		[Test]
-		public void CanDeriveFromPropertyAttribute()
-		{
-			Test test3 = (Test)fixture.Tests[2];
-			Assert.AreEqual( 5, test3.Properties.Get("Priority") );
-		}
+        [Test]
+        public void CanDeriveFromPropertyAttribute()
+        {
+            Test test3 = (Test)fixture.Tests[2];
+            Assert.AreEqual(5, test3.Properties.Get("Priority"));
+        }
 
         [Test]
         public void CustomPropertyAttribute()
