@@ -2,8 +2,6 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
-using NUnit.Compatibility;
 using NUnit.Framework.Api;
 
 namespace NUnit.Framework.Internal

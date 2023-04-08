@@ -2,9 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
-using NUnit.Compatibility;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;

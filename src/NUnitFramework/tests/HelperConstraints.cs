@@ -2,7 +2,6 @@
 
 #nullable enable
 using System;
-using System.Reflection;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 

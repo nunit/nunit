@@ -2,8 +2,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
-using System.Net.Sockets;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions
