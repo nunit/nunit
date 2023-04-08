@@ -165,8 +165,6 @@ namespace NUnit.Framework.Attributes
             Assert.That(suite.Tests[0].Tests.Count, Is.EqualTo(GenericFixtureWithConstructorArgsSource.Source.Length));
         }
 
-
-
         [Test]
         public void ParallelizableAttributeOnFixtureSourceIsAppliedToTests()
         {
