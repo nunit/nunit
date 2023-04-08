@@ -2,7 +2,6 @@
 
 using System;
 using System.Reflection;
-using System.Globalization;
 using NUnit.Common;
 using NUnit.Options;
 using NUnit.Framework;
