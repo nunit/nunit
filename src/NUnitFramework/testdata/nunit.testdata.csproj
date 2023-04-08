@@ -5,10 +5,6 @@
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
     <PackageReference Include="System.Security.Principal.Windows" Version="4.6.0" />
   </ItemGroup>
@@ -16,9 +12,5 @@
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
-
-  <!--<ItemGroup>
-    <ProjectCapability Include="TestContainer" />
-  </ItemGroup>-->
 
 </Project>

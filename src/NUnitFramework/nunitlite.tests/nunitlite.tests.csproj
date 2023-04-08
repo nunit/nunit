@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\Fakes.cs" Link="TestUtilities\Fakes.cs" />
     <Compile Include="..\SchemaTestUtils.cs" Link="TestUtilities\SchemaTestUtils.cs" />
     <Compile Include="..\TestBuilder.cs" Link="TestUtilities\TestBuilder.cs" />
