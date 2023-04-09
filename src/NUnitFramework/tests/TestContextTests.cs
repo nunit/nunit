@@ -100,30 +100,30 @@ namespace NUnit.Framework
         #region Name
 
         [Test]
-            public void ConstructorCanAccessFixtureName()
-            {
-                Assert.That(_name, Is.EqualTo("TestContextTests"));
-            }
+        public void ConstructorCanAccessFixtureName()
+        {
+            Assert.That(_name, Is.EqualTo("TestContextTests"));
+        }
 
-            [Test]
-            public void TestCanAccessItsOwnName()
-            {
-                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
-            }
+        [Test]
+        public void TestCanAccessItsOwnName()
+        {
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCanAccessItsOwnName"));
+        }
 
-            [Test]
-            public void SetUpCanAccessTestName()
-            {
-                Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
-            }
+        [Test]
+        public void SetUpCanAccessTestName()
+        {
+            Assert.That(_setupContext.Test.Name, Is.EqualTo(TestContext.CurrentContext.Test.Name));
+        }
 
-            [TestCase(5)]
-            public void TestCaseCanAccessItsOwnName(int x)
-            {
-                Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
-            }
+        [TestCase(5)]
+        public void TestCaseCanAccessItsOwnName(int x)
+        {
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo("TestCaseCanAccessItsOwnName(5)"));
+        }
 
-            #endregion
+        #endregion
 
         #region FullName
 

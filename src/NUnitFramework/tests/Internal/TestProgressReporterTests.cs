@@ -10,23 +10,23 @@ using NUnit.Compatibility;
 
 namespace NUnit.Framework.Internal
 {
-	public class TestProgressReporterTests
-	{
-		private ReportCollector _listener;
-		private TestProgressReporter _reporter;
+    public class TestProgressReporterTests
+    {
+        private ReportCollector _listener;
+        private TestProgressReporter _reporter;
 
-		[OneTimeSetUp]
-		public void SetupFixture()
-		{
-			_listener = new ReportCollector();
-			_reporter = new TestProgressReporter(_listener);
-		}
+        [OneTimeSetUp]
+        public void SetupFixture()
+        {
+            _listener = new ReportCollector();
+            _reporter = new TestProgressReporter(_listener);
+        }
 
-		[SetUp]
-		public void Setup()
-		{
-			_listener.Reports.Clear();
-		}
+        [SetUp]
+        public void Setup()
+        {
+            _listener.Reports.Clear();
+        }
 
         [Test]
         public void TestStarted_AssemblyEmitsSingleStartSuiteElement()
@@ -75,81 +75,81 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-		public void TestStarted_FixtureEmitsStartSuiteElement()
-		{
-			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute));
-			work.Context.Listener = _reporter;
+        public void TestStarted_FixtureEmitsStartSuiteElement()
+        {
+            var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute));
+            work.Context.Listener = _reporter;
 
-			TestBuilder.ExecuteWorkItem(work);
+            TestBuilder.ExecuteWorkItem(work);
 
-			var startReport = _listener.Reports.FirstOrDefault();
-			Assert.NotNull(startReport);
-			StringAssert.StartsWith("<start-suite", startReport);
+            var startReport = _listener.Reports.FirstOrDefault();
+            Assert.NotNull(startReport);
+            StringAssert.StartsWith("<start-suite", startReport);
             Assert.That(startReport, Contains.Substring("type=\"TestFixture\""));
-		}
+        }
 
-		[Test]
-		public void TestStarted_TestMethodEmitsStartTestElement()
-		{
-			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
-			work.Context.Listener = _reporter;
+        [Test]
+        public void TestStarted_TestMethodEmitsStartTestElement()
+        {
+            var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
+            work.Context.Listener = _reporter;
 
-			TestBuilder.ExecuteWorkItem(work);
+            TestBuilder.ExecuteWorkItem(work);
 
-			var startReport = _listener.Reports.FirstOrDefault();
-			Assert.NotNull(startReport);
-			StringAssert.StartsWith("<start-test", startReport);
-		}
+            var startReport = _listener.Reports.FirstOrDefault();
+            Assert.NotNull(startReport);
+            StringAssert.StartsWith("<start-test", startReport);
+        }
 
-		[Test]
-		public void TestStarted_ReportAttributes()
-		{
-			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
-			work.Context.Listener = _reporter;
+        [Test]
+        public void TestStarted_ReportAttributes()
+        {
+            var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
+            work.Context.Listener = _reporter;
 
-			TestBuilder.ExecuteWorkItem(work);
+            TestBuilder.ExecuteWorkItem(work);
 
-			var startReport = _listener.Reports.FirstOrDefault();
-			Assert.NotNull(startReport);
-			StringAssert.StartsWith("<start-test", startReport);
-			StringAssert.Contains($"id=\"{work.Test.Id}\"", startReport);
-			StringAssert.Contains($"parentId=\"{work.Test.Parent?.Id}\"", startReport);
-			StringAssert.Contains($"name=\"{work.Test.Name}\"", startReport);
-			StringAssert.Contains($"fullname=\"{work.Test.FullName}\"", startReport);
-			StringAssert.Contains($"type=\"{work.Test.TestType}\"", startReport);
-		}
+            var startReport = _listener.Reports.FirstOrDefault();
+            Assert.NotNull(startReport);
+            StringAssert.StartsWith("<start-test", startReport);
+            StringAssert.Contains($"id=\"{work.Test.Id}\"", startReport);
+            StringAssert.Contains($"parentId=\"{work.Test.Parent?.Id}\"", startReport);
+            StringAssert.Contains($"name=\"{work.Test.Name}\"", startReport);
+            StringAssert.Contains($"fullname=\"{work.Test.FullName}\"", startReport);
+            StringAssert.Contains($"type=\"{work.Test.TestType}\"", startReport);
+        }
 
-		[Test]
-		public void TestFinished_AdditionalReportAttributes()
-		{
-			var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
-			work.Context.Listener = _reporter;
+        [Test]
+        public void TestFinished_AdditionalReportAttributes()
+        {
+            var work = TestBuilder.CreateWorkItem(typeof(FixtureWithTestFixtureAttribute), "SomeTest");
+            work.Context.Listener = _reporter;
 
-			TestBuilder.ExecuteWorkItem(work);
+            TestBuilder.ExecuteWorkItem(work);
 
-			var endReport = _listener.Reports.LastOrDefault();
-			Assert.NotNull(endReport);
-			StringAssert.DoesNotStartWith("<start", endReport);
-			StringAssert.Contains($"parentId=\"{work.Test.Parent?.Id}\"", endReport);
-		}
+            var endReport = _listener.Reports.LastOrDefault();
+            Assert.NotNull(endReport);
+            StringAssert.DoesNotStartWith("<start", endReport);
+            StringAssert.Contains($"parentId=\"{work.Test.Parent?.Id}\"", endReport);
+        }
 
-		#region Nested ReportCollector Class
+        #region Nested ReportCollector Class
 
-		private class ReportCollector : System.Web.UI.ICallbackEventHandler
-		{
-			public List<string> Reports { get; } = new List<string>();
+        private class ReportCollector : System.Web.UI.ICallbackEventHandler
+        {
+            public List<string> Reports { get; } = new List<string>();
 
-			public void RaiseCallbackEvent(string report)
-			{
-				Reports.Add(report);
-			}
+            public void RaiseCallbackEvent(string report)
+            {
+                Reports.Add(report);
+            }
 
-			public string GetCallbackResult()
-			{
-				throw new NotImplementedException();
-			}
-		}
+            public string GetCallbackResult()
+            {
+                throw new NotImplementedException();
+            }
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

@@ -313,7 +313,7 @@ namespace NUnit.Options
             if (this.type == OptionValueType.None && maxValueCount > 1)
                 throw new ArgumentException (
                     $"Cannot provide maxValueCount of {maxValueCount} for OptionValueType.None.",
-                        nameof(maxValueCount));
+                    nameof(maxValueCount));
             if (Array.IndexOf (names, "<>") >= 0 &&
                     ((names.Length == 1 && this.type != OptionValueType.None) ||
                      (names.Length > 1 && this.MaxValueCount > 1)))
@@ -386,7 +386,7 @@ namespace NUnit.Options
                 else
                     throw new ArgumentException (
                         $"Conflicting option types: '{type}' vs. '{name[end]}'.",
-                            "prototype");
+                        "prototype");
                 AddSeparators (name, end, seps);
             }
 
@@ -396,7 +396,7 @@ namespace NUnit.Options
             if (count <= 1 && seps.Count != 0)
                 throw new ArgumentException (
                     $"Cannot provide key/value separators for Options taking {count} value(s).",
-                        "prototype");
+                    "prototype");
             if (count > 1) {
                 if (seps.Count == 0)
                     this.separators = new[]{":", "="};
@@ -418,14 +418,14 @@ namespace NUnit.Options
                         if (start != -1)
                             throw new ArgumentException (
                                 $"Ill-formed name/value separator found in \"{name}\".",
-                                    "prototype");
+                                "prototype");
                         start = i+1;
                         break;
                     case '}':
                         if (start == -1)
                             throw new ArgumentException (
                                 $"Ill-formed name/value separator found in \"{name}\".",
-                                    "prototype");
+                                "prototype");
                         seps.Add (name.Substring (start, i-start));
                         start = -1;
                         break;
@@ -438,7 +438,7 @@ namespace NUnit.Options
             if (start != -1)
                 throw new ArgumentException (
                     $"Ill-formed name/value separator found in \"{name}\".",
-                        "prototype");
+                    "prototype");
         }
 
         public void Invoke (OptionContext c)

@@ -32,20 +32,20 @@ namespace NUnit.Framework.Interfaces
         /// Return string representation of the object for debugging
         /// </summary>
         /// <returns></returns>
-		public override string ToString()
-		{
-			return Stream + ": " + Text;
-		}
+        public override string ToString()
+        {
+            return Stream + ": " + Text;
+        }
 
         /// <summary>
         /// Get the text
         /// </summary>
-		public string Text { get; }
+        public string Text { get; }
 
         /// <summary>
         /// Get the output type
         /// </summary>
-		public string Stream { get; }
+        public string Stream { get; }
 
         /// <summary>
         /// Get the name of the test that created the output

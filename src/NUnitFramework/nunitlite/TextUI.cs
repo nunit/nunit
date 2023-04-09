@@ -671,7 +671,7 @@ namespace NUnitLite
             _needsNewLine = !text.EndsWith("\n", StringComparison.Ordinal);
         }
 
-         private static ColorStyle GetColorForResultStatus(string status)
+        private static ColorStyle GetColorForResultStatus(string status)
         {
             switch (status)
             {

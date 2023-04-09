@@ -343,7 +343,7 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<InvalidOperationException>(() =>
                 Assume.That(async () => await ThrowExceptionGenericTask(), Is.EqualTo(1)));
 
-        Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
+            Assert.That(exception.StackTrace, Does.Contain("ThrowExceptionGenericTask"));
         }
 
         private static Task<int> One()
