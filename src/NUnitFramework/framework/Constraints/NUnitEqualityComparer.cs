@@ -189,7 +189,7 @@ namespace NUnit.Framework.Constraints
 
             EqualityAdapter externalComparer = GetExternalComparer(x, y);
             if (externalComparer != null)
-                return externalComparer.AreEqual(x, y);
+                return externalComparer.AreEqual(x, y, ref tolerance);
 
             foreach (IChainComparer comparer in _comparers)
             {
