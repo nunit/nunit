@@ -157,7 +157,7 @@ namespace NUnit.Framework
                         }
 
                         if (this.Category != null)
-                            foreach (string cat in this.Category.Split(new[] { ',' }))
+                            foreach (string cat in this.Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
                         data.Add(parms);

@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
                 StringBuilder sb = new StringBuilder();
 
                 bool firstClassSeen = false;
-                foreach (string nestedClass in name.Split('+'))
+                foreach (string nestedClass in name.Tokenize('+'))
                 {
                     if (firstClassSeen)
                         sb.Append("+");

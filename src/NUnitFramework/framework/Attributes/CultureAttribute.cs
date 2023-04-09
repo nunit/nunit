@@ -86,7 +86,7 @@ namespace NUnit.Framework
 
             if (culture.IndexOf(',') >= 0)
             {
-                if (IsCultureSupported(culture.Split(new char[] { ',' })))
+                if (IsCultureSupported(culture.Split(',')))
                     return true;
             }
             else

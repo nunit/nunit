@@ -216,7 +216,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
 
-                foreach (string cat in value.Split(new char[] { ',' }))
+                foreach (string cat in value.Tokenize(','))
                     Properties.Add(PropertyNames.Category, cat);
             }
         }
