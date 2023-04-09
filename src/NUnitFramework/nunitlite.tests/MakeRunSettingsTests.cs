@@ -19,7 +19,7 @@ namespace NUnitLite.Tests
             new TestCaseData("--test=A.B.C(arg)", "LOAD", new[] { "A.B.C" }),
             new TestCaseData("--test=A.B.C (arg)", "LOAD", new[] { "A.B.C" }),
             new TestCaseData("--test=A.B<type>.C(arg)", "LOAD", new[] { "A.B" })
-       };
+        };
 
         [TestCaseSource(nameof(SettingsData))]
         public void CheckSetting(string option, string key, object value)
