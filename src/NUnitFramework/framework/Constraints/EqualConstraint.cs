@@ -3,9 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
-using NUnit.Framework.Constraints.Comparers;
 
 namespace NUnit.Framework.Constraints
 {

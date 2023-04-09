@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using NUnit.Framework.Internal;
 using NUnit.TestUtilities.Comparers;
 
 namespace NUnit.Framework.Constraints
