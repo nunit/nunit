@@ -2,6 +2,9 @@
 
 #nullable enable
 
+#if DEBUG
+using System;
+#endif
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
