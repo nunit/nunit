@@ -319,7 +319,7 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
 
-        Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
+            Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
         }
 
         [Test]
@@ -329,7 +329,7 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
-        Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
+            Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
         }
 
         private static Task<int> AsyncReturnOne()

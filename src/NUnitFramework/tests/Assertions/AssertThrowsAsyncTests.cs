@@ -68,7 +68,7 @@ namespace NUnit.Framework.Assertions
             // Without cast, delegate is ambiguous before C# 3.0.
             Assert.That(
                 (AsyncTestDelegate)delegate { return AsyncTestDelegates.Delay(5).ContinueWith(t => { throw new ArgumentException(); }, TaskScheduler.Default); },
-                    Throws.Exception.TypeOf<ArgumentException>());
+                Throws.Exception.TypeOf<ArgumentException>());
 
             CheckForSpuriousAssertionResults();
         }
