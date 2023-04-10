@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal
         public static bool IsAsyncOperation(MethodInfo method)
         {
             return AwaitAdapter.IsAwaitable(method.ReturnType)
-                || method.IsDefined(_asyncStateMachineAttributeType, false);
+                || (_asyncStateMachineAttributeType != null && method.IsDefined(_asyncStateMachineAttributeType, false));
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
