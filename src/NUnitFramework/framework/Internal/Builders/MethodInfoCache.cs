@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Builders
@@ -13,28 +12,14 @@ namespace NUnit.Framework.Internal.Builders
     {
         // we would otherwise do a lot of attribute allocations when repeatedly checking the same method for example
         // in case of building TestCaseAttribute-based tests
-#if NET35
-        private static readonly Dictionary<IMethodInfo, TestMethodMetadata> MethodMetadataCache = new Dictionary<IMethodInfo, TestMethodMetadata>();
-#else
         private static readonly ConcurrentDictionary<IMethodInfo, TestMethodMetadata> MethodMetadataCache = new ConcurrentDictionary<IMethodInfo, TestMethodMetadata>();
-#endif
 
         /// <summary>
         /// Returns cached metadata for method instance.
         /// </summary>
         internal static TestMethodMetadata Get(IMethodInfo method)
         {
-#if NET35
-            lock (MethodMetadataCache)
-            {
-                if (!MethodMetadataCache.TryGetValue(method, out var metadata))
-                    MethodMetadataCache.Add(method, metadata = new TestMethodMetadata(method));
-
-                return metadata;
-            }
-#else
             return MethodMetadataCache.GetOrAdd(method, m => new TestMethodMetadata(m));
-#endif
         }
 
         /// <summary>
