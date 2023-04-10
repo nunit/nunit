@@ -93,17 +93,17 @@ namespace NUnit.Framework
         /// </summary>
         private static IEnumerable GenerateData(Type targetType)
         {
-            if (IsNullableEnum(targetType))
+            Type actualType = targetType.IsByRef ? targetType.GetElementType() : targetType;
+            if (IsNullableEnum(actualType))
             {
-                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(targetType));
+                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(actualType));
                 var enumValuesWithNull = new object[enumValues.Length + 1];
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
             }
-            Type actualType = targetType.IsByRef ? targetType.GetElementType() : targetType;
             if (actualType.IsEnum)
             {
-                return Enum.GetValues(targetType);
+                return Enum.GetValues(actualType);
             }
             if (actualType == typeof(bool?))
             {
