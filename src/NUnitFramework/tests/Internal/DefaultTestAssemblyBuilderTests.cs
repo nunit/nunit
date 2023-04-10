@@ -27,7 +27,7 @@ namespace NUnit.Framework.Internal
         {
             using var cultureContext = ThreadCultureContext.Capture();
 
-            CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture(culture);
+            System.Threading.Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(culture);
             Build_CanBuildTests();
         }
 
@@ -58,8 +58,9 @@ namespace NUnit.Framework.Internal
                 if (!_disposed)
                 {
                     _disposed = true;
-                    CultureInfo.CurrentCulture = _culture;
-                    CultureInfo.CurrentUICulture = _uiCulture;
+
+                    System.Threading.Thread.CurrentThread.CurrentCulture = _culture;
+                    System.Threading.Thread.CurrentThread.CurrentUICulture = _culture;
                 }
             }
         }
