@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
@@ -191,10 +192,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private void ApplyAttributesToTestSuite(ICustomAttributeProvider provider)
         {
-            object[] allAttributes = provider.GetCustomAttributes(inherit: true);
-            IEnumerable<IApplyToTestSuite> applyToTestSuiteAttributes =
-                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTestSuite>();
-
+            IApplyToTestSuite[] applyToTestSuiteAttributes = provider.GetAttributes<IApplyToTestSuite>(inherit: true);
             ApplyAttributesToTestSuite(applyToTestSuiteAttributes);
         }
 
