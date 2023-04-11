@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Internal
 {
@@ -279,9 +280,18 @@ namespace NUnit.Framework.Internal
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    _actions = Method == null && TypeInfo != null
-                        ? GetActionsForType(TypeInfo.Type)
-                        : GetCustomAttributes<ITestAction>(false);
+                    if (Method == null && TypeInfo != null)
+                    {
+                        _actions = GetActionsForType(TypeInfo.Type);
+                    }
+                    else if (Method != null)
+                    {
+                        _actions = MethodInfoCache.Get(Method).TestActionAttributes;
+                    }
+                    else
+                    {
+                        _actions = GetCustomAttributes<ITestAction>(false);
+                    }
                 }
 
                 return _actions;
@@ -307,11 +317,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public void ApplyAttributesToTest(ICustomAttributeProvider provider)
         {
-            object[] allAttributes = provider.GetCustomAttributes(inherit: true);
-            IEnumerable<IApplyToTest> applyToTestAttributes =
-                OSPlatformTranslator.Translate(allAttributes).OfType<IApplyToTest>();
-
-            ApplyAttributesToTest(applyToTestAttributes);
+            ApplyAttributesToTest(OSPlatformTranslator.RetrieveAndTranslate(provider));
         }
 
         /// <summary>
@@ -344,6 +350,20 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Mark the test as Invalid (not runnable) specifying a reason and an exception.
+        /// </summary>
+        /// <param name="exception">The exception that was the cause.</param>
+        /// <param name="reason">The reason the test is not runnable</param>
+        public void MakeInvalid(Exception exception, string reason)
+        {
+            Guard.ArgumentNotNull(exception, nameof(exception));
+            Guard.ArgumentNotNullOrEmpty(reason, nameof(reason));
+
+            MakeInvalid(reason + Environment.NewLine + ExceptionHelper.BuildMessage(exception));
+            Properties.Add(PropertyNames.ProviderStackTrace, ExceptionHelper.BuildStackTrace(exception));
+        }
+
+        /// <summary>
         /// Get custom attributes applied to a test
         /// </summary>
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
@@ -357,9 +377,9 @@ namespace NUnit.Framework.Internal
             return Array.Empty<TAttr>();
         }
 
-        #endregion
+#endregion
 
-        #region Protected Methods
+#region Protected Methods
 
         /// <summary>
         /// Add standard attributes and members to a test node.
@@ -394,9 +414,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
         private static ITestAction[] GetActionsForType(Type type)
         {
@@ -415,9 +435,9 @@ namespace NUnit.Framework.Internal
             return actions.ToArray();
         }
 
-        #endregion
+#endregion
 
-        #region IXmlNodeBuilder Members
+#region IXmlNodeBuilder Members
 
         /// <summary>
         /// Returns the XML representation of the test
@@ -438,9 +458,9 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
-        #endregion
+#endregion
 
-        #region IComparable Members
+#region IComparable Members
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
         /// <param name="obj">An object to compare with this instance. </param>
@@ -456,6 +476,6 @@ namespace NUnit.Framework.Internal
             return other == null ? -1 : this.FullName.CompareTo(other.FullName);
         }
 
-        #endregion
+#endregion
     }
 }

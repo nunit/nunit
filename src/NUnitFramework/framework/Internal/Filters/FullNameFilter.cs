@@ -8,8 +8,10 @@ namespace NUnit.Framework.Internal.Filters
     /// <summary>
     /// FullName filter selects tests based on their FullName
     /// </summary>
-    internal class FullNameFilter : ValueMatchFilter
+    internal sealed class FullNameFilter : ValueMatchFilter
     {
+        internal const string XmlElementName = "test";
+
         /// <summary>
         /// Construct a FullNameFilter for a single name
         /// </summary>
@@ -29,6 +31,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName => "test";
+        protected override string ElementName => XmlElementName;
     }
 }

@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal.Filters
     /// PropertyFilter is able to select or exclude tests
     /// based on their properties.
     /// </summary>
-    internal class PropertyFilter : ValueMatchFilter
+    internal sealed class PropertyFilter : ValueMatchFilter
     {
         private readonly string _propertyName;
 

@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal
     /// The MethodWrapper class wraps a MethodInfo so that it may
     /// be used in a platform-independent manner.
     /// </summary>
-    public class MethodWrapper : IMethodInfo
+    public class MethodWrapper : IMethodInfo, IEquatable<MethodWrapper>
     {
         /// <summary>
         /// Construct a MethodWrapper for a Type and a MethodInfo.
@@ -37,12 +37,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the Type from which this method was reflected.
         /// </summary>
-        public ITypeInfo TypeInfo { get; private set; }
+        public ITypeInfo TypeInfo { get; }
 
         /// <summary>
         /// Gets the MethodInfo for this method.
         /// </summary>
-        public MethodInfo MethodInfo { get; private set; }
+        public MethodInfo MethodInfo { get; }
 
         /// <summary>
         /// Gets the name of the method.
@@ -153,5 +153,48 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        /// <inheritdoc />
+        public bool Equals(MethodWrapper? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return MethodInfo.Equals(other.MethodInfo);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((MethodWrapper)obj);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return MethodInfo.GetHashCode();
+        }
     }
 }

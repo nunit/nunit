@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 
@@ -11,10 +10,9 @@ namespace NUnit.Framework.Internal.Filters
     /// Combines multiple filters so that a test must pass one
     /// of them in order to pass this filter.
     /// </summary>
-    internal class OrFilter : CompositeFilter
+    internal sealed class OrFilter : CompositeFilter
     {
-        private readonly bool _matchFullName;
-        private readonly HashSet<string> _fullNames = new();
+        internal const string XmlElementName = "or";
 
         /// <summary>
         /// Constructs an empty OrFilter
@@ -27,22 +25,6 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="filters"></param>
         public OrFilter(params TestFilter[] filters) : base(filters)
         {
-            _matchFullName = filters.Length > 0;
-
-            // Try to reduce inner filters to a hash set of full names
-            // as it's a common case when running using VSTest
-            foreach (var filter in filters)
-            {
-                if (filter is FullNameFilter {IsRegex: false} fullNameFilter)
-                {
-                    _fullNames.Add(fullNameFilter.ExpectedValue);
-                }
-                else
-                {
-                    _matchFullName = false;
-                    break;
-                }
-            }
         }
 
         /// <summary>
@@ -53,15 +35,6 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test, bool negated )
         {
-            // If we are in optimized matching mode don't delegate to child filters
-            if (_matchFullName)
-            {
-                if (negated)
-                    return !Match(test) && !MatchParent(test);
-
-                return Match(test) || MatchParent(test) || MatchDescendant(test);
-            }
-
             if (negated)
             {
                 foreach (var filter in Filters)
@@ -93,11 +66,6 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters match, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            if (_matchFullName)
-            {
-                return _fullNames.Contains(test.FullName);
-            }
-
             return Filters.Any(filter => filter.Match(test));
         }
 
@@ -115,6 +83,6 @@ namespace NUnit.Framework.Internal.Filters
         /// Gets the element name
         /// </summary>
         /// <value>Element name</value>
-        protected override string ElementName => "or";
+        protected override string ElementName => XmlElementName;
     }
 }

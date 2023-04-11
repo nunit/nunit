@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 
 namespace NUnit.Framework.Internal.Commands
@@ -90,7 +91,9 @@ namespace NUnit.Framework.Internal.Commands
             Guard.ArgumentNotAsyncVoid(method.MethodInfo, nameof(method));
             _methodValidator?.Validate(method.MethodInfo);
 
-            if (AsyncToSyncAdapter.IsAsyncOperation(method.MethodInfo))
+            var methodInfo = MethodInfoCache.Get(method);
+
+            if (methodInfo.IsAsyncOperation)
                 AsyncToSyncAdapter.Await(() => InvokeMethod(method, context));
             else
                 InvokeMethod(method, context);

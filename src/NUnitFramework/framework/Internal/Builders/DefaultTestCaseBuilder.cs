@@ -2,6 +2,7 @@
 
 #nullable enable
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -84,23 +85,33 @@ namespace NUnit.Framework.Internal.Builders
         {
             var tests = new List<TestMethod>();
 
-            List<ITestBuilder> builders = new List<ITestBuilder>(
-                method.GetCustomAttributes<ITestBuilder>(false));
-
-            // See if we need to add a CombinatorialAttribute for parameterized data
-            if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
-                && !builders.Any(builder => builder is CombiningStrategyAttribute))
-                builders.Add(new CombinatorialAttribute());
-
-            foreach (var attr in builders)
+            try
             {
-                foreach (var test in attr.BuildFrom(method, parentSuite))
-                    tests.Add(test);
-            }
+                var metadata = MethodInfoCache.Get(method);
 
-            return builders.Count > 0 && method.GetParameters().Length > 0 || tests.Count > 0
-                ? BuildParameterizedMethodSuite(method, tests)
-                : BuildSingleTestMethod(method, parentSuite);
+                List<ITestBuilder> builders = new List<ITestBuilder>(metadata.TestBuilderAttributes);
+
+                // See if we need to add a CombinatorialAttribute for parameterized data
+                if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
+                    && !builders.Any(builder => builder is CombiningStrategyAttribute))
+                    builders.Add(new CombinatorialAttribute());
+
+                foreach (var attr in builders)
+                {
+                    foreach (var test in attr.BuildFrom(method, parentSuite))
+                        tests.Add(test);
+                }
+
+                return builders.Count > 0 && method.GetParameters().Length > 0 || tests.Count > 0
+                    ? BuildParameterizedMethodSuite(method, tests)
+                    : BuildSingleTestMethod(method, parentSuite);
+            }
+            catch (Exception ex)
+            {
+                var testMethod = new TestMethod(method, parentSuite);
+                testMethod.MakeInvalid(ex, "Failure building Test");
+                return testMethod;
+            }
         }
 
         #endregion

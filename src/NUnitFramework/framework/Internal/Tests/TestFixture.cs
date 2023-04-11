@@ -2,6 +2,7 @@
 
 #nullable enable
 
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -45,6 +46,17 @@ namespace NUnit.Framework.Internal
         private TestFixture(TestFixture fixture, ITestFilter filter)
             : base(fixture, filter)
         {
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFixture"/> class that failed to load.
+        /// </summary>
+        /// <param name="fixtureType">Type of the fixture.</param>
+        /// <param name="ex">Exception that was thrown during test discovery.</param>
+        public TestFixture(ITypeInfo fixtureType, Exception ex) : base(fixtureType, null)
+        {
+            MakeInvalid(ex, "Failure building TestFixture");
         }
 
         #endregion
