@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
                 foreach (var o in _missingItems)
                     missingItems.Add(o);
 
-                List<object> extraItems = new List<object>(_extraItems.Count);
+                var extraItems = new List<object>(_extraItems.Count);
                 if (_sorted)
                 {
                     for (int index = _extraItems.Count - 1; index >= 0; index--)
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private readonly ArrayList _missingItems = new ArrayList();
+        private readonly List<object> _missingItems = new List<object>();
 
         private readonly List<object> _extraItems = new List<object>();
 
@@ -65,9 +65,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The expected collection to compare against.</param>
         public CollectionTally(NUnitEqualityComparer comparer, IEnumerable c)
         {
-            this._comparer = comparer;
+            _comparer = comparer;
 
-            _missingItems = ToArrayList(c);
+            _missingItems = ToList(c);
 
             if (c.IsSortable())
             {
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         {
             if (_isSortable && c.IsSortable())
             {
-                var remove = ToArrayList(c);
+                var remove = ToList(c);
                 remove.Sort();
 
                 _sorted = true;
@@ -126,9 +126,9 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static ArrayList ToArrayList(IEnumerable items)
+        private static List<object> ToList(IEnumerable items)
         {
-            var list = items is ICollection ic ? new ArrayList(ic.Count) : new ArrayList();
+            var list = items is ICollection ic ? new List<object>(ic.Count) : new List<object>();
 
             foreach (object o in items)
                 list.Add(o);
