@@ -149,7 +149,7 @@ namespace NUnit.Framework.Constraints
         private static bool IsSpecialComparisonType(Type type)
         {
             if (type.IsGenericType)
-                return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2");
+                return type.FullName.StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal);
 #pragma warning disable CS0618 // 'Numerics' is only marked as obsolete for public use
             else if (Numerics.IsNumericType(type))
 #pragma warning restore CS0618
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Constraints
         {
             foreach (var type in actual.GetType().GetInterfaces())
             {
-                if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1"))
+                if (type.FullName.StartsWith("System.Collections.Generic.IEnumerable`1", StringComparison.Ordinal))
                 {
 #if NET35 || NET40
                     return type.GetGenericArguments()[0];

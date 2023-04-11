@@ -148,7 +148,7 @@ namespace NUnit.Framework.Api
                         if (!string.IsNullOrEmpty(parameters))
                             foreach (string param in parameters.Split(new[] { ';' }))
                             {
-                                int eq = param.IndexOf("=");
+                                int eq = param.IndexOf('=');
 
                                 if (eq > 0 && eq < param.Length - 1)
                                 {
