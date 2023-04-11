@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
@@ -561,6 +562,96 @@ namespace NUnit.Framework.Assertions
         }
 #endregion
 
+#region ContainsAny
+        [Test]
+        public void ContainsAny_IList()
+        {
+            var list = new SimpleObjectList("x", "y", "z");
+            var expected = new SimpleObjectList("x", "y");
+            CollectionAssert.ContainsAny(list, expected);
+        }
+
+        [Test]
+        public void ContainsAny_ICollection()
+        {
+            var collection = new SimpleObjectCollection("x", "y", "z");
+            var expected = new SimpleObjectCollection("x", "y");
+            CollectionAssert.ContainsAny(collection,expected);
+        }
+
+        [Test]
+        public void ContainsAnyFails_ILIst()
+        {
+            var list = new SimpleObjectList("x", "y", "z");
+            var expected = new SimpleObjectList("a", "b", "c");
+
+            var expectedMessage =
+                "  Expected: contains any from < \"a\", \"b\", \"c\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.ContainsAny(list,expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsAnyFails_ICollection()
+        {
+            var collection = new SimpleObjectCollection("x", "y", "z");
+            var expected = new SimpleObjectCollection("a", "b", "c");
+
+            var expectedMessage =
+                "  Expected: contains any from < \"a\", \"b\", \"c\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.ContainsAny(collection,expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsAnyFails_EmptyIList()
+        {
+            var list = new SimpleObjectList();
+            var expected = new SimpleObjectList("x");
+
+            var expectedMessage =
+                "  Expected: contains any from < \"x\" >" + Environment.NewLine +
+                "  But was:  <empty>" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.ContainsAny(list,expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsAnyFails_EmptyICollection()
+        {
+            var ca = new SimpleObjectCollection(Array.Empty<object>());
+            var expected = new SimpleObjectCollection("x");
+
+            var expectedMessage =
+                "  Expected: contains any from < \"x\" >" + Environment.NewLine +
+                "  But was:  <empty>" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.ContainsAny(ca,expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ContainsAnyNull_IList()
+        {
+            Object[] oa = new object[] { 1, 2, 3, null, 4, 5 };
+            Object[] expected = new object[] {null};
+            CollectionAssert.ContainsAny( oa, expected);
+        }
+
+        [Test]
+        public void ContainsAnyNull_ICollection()
+        {
+            var ca = new SimpleObjectCollection(new object[] { 1, 2, 3, null, 4, 5 });
+            var expected = new SimpleObjectCollection(new object[] {null});
+            CollectionAssert.ContainsAny( ca, expected );
+        }
+#endregion
+
 #region DoesNotContain
         [Test]
         public void DoesNotContain()
@@ -624,6 +715,98 @@ namespace NUnit.Framework.Assertions
 
             CollectionAssert.IsSubsetOf(set2,set1);
             Assert.That(set2, Is.SubsetOf(set1));
+        }
+#endregion
+
+#region DoesNotContainAny
+        [Test]
+        public void DoesNotContainAny_IList()
+        {
+            var list = new SimpleObjectList("x", "y", "z");
+            var expected = new SimpleObjectList("a", "b");
+            CollectionAssert.DoesNotContainAny(list, expected);
+        }
+
+        [Test]
+        public void DoesNotContainAny_ICollection()
+        {
+            var collection = new SimpleObjectCollection("x", "y", "z");
+            var expected = new SimpleObjectCollection("a", "b");
+            CollectionAssert.DoesNotContainAny(collection,expected);
+        }
+
+        [Test]
+        public void DoesNotContainAnyFails_ILIst()
+        {
+            var list = new SimpleObjectList("x", "y", "z");
+            var expected = new SimpleObjectList("x", "b", "c");
+
+            var expectedMessage =
+                "  Expected: not contains any from < \"x\", \"b\", \"c\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContainAny(list,expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void DoesNotContainAnyFails_ICollection()
+        {
+            var collection = new SimpleObjectCollection("x", "y", "z");
+            var expected = new SimpleObjectCollection("x", "b", "c");
+
+            var expectedMessage =
+                "  Expected: not contains any from < \"x\", \"b\", \"c\" >" + Environment.NewLine +
+                "  But was:  < \"x\", \"y\", \"z\" >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContainAny(collection,expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void DoesNotContainAny_EmptyIList()
+        {
+            var list = new SimpleObjectList("x");
+            var expected = new SimpleObjectList();
+
+            CollectionAssert.DoesNotContainAny(list, expected);
+        }
+
+        [Test]
+        public void DoesNotContainAny_EmptyICollection()
+        {
+            var ca = new SimpleObjectCollection("x");
+            var expected = new SimpleObjectCollection(Array.Empty<object>());
+
+            CollectionAssert.DoesNotContainAny(ca, expected);
+        }
+
+        [Test]
+        public void DoesNotContainAnyNull_IList()
+        {
+            Object[] oa = new object[] { 1, 2, 3, null, 4, 5 };
+            Object[] expected = new object[] { null };
+
+            var expectedMessage =
+                "  Expected: not contains any from < null >" + Environment.NewLine +
+                "  But was:  < 1, 2, 3, null, 4, 5 >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContainAny(oa, expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void DoesNotContainAnyNull_ICollection()
+        {
+            var ca = new SimpleObjectCollection(new object[] { 1, 2, 3, null, 4, 5 });
+            var expected = new SimpleObjectCollection(new object[] {null});
+
+            var expectedMessage =
+                "  Expected: not contains any from < null >" + Environment.NewLine +
+                "  But was:  < 1, 2, 3, null, 4, 5 >" + Environment.NewLine;
+
+            var ex = Assert.Throws<AssertionException>(() => CollectionAssert.DoesNotContainAny(ca, expected));
+            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 #endregion
 

@@ -702,6 +702,19 @@ namespace NUnit.Framework.Constraints
 
         #endregion
 
+        #region ContainedIn
+
+        /// <summary>
+        /// Returns a constraint that tests whether the actual value
+        /// contains an item of the collection supplied as an argument.
+        /// </summary>
+        public CollectionContainsAnyConstraint ContainedIn(IEnumerable expected)
+        {
+            return (CollectionContainsAnyConstraint)this.Append(new CollectionContainsAnyConstraint(expected));
+        }
+
+        #endregion
+
         #region DictionaryContains
         /// <summary>
         /// Returns a new DictionaryContainsKeyConstraint checking for the
@@ -900,7 +913,6 @@ namespace NUnit.Framework.Constraints
         {
             return this.Append(new IndexerOperator(indexArgs));
         }
-
         #endregion
     }
 }
