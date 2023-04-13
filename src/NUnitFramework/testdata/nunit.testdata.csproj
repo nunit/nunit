@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>NUnit.TestData</RootNamespace>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
