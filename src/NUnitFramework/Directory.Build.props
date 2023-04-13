@@ -24,7 +24,6 @@
 
   <!-- We always want a good debugging experience in tests -->
   <PropertyGroup>
-    <Optimize>false</Optimize>
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
