@@ -282,7 +282,7 @@ namespace NUnit.Framework.Internal
                     // Otherwise we just get the attributes
                     if (Method == null && TypeInfo != null)
                     {
-                        _actions = GetActionsForType(TypeInfo.Type);
+                        _actions = TestMetadataCache.Get(TypeInfo.Type).TestActionAttributes;
                     }
                     else if (Method != null)
                     {
@@ -412,27 +412,6 @@ namespace NUnit.Framework.Internal
                 yield return current;
                 current = current.DeclaringType;
             }
-        }
-
-#endregion
-
-#region Private Methods
-
-        private static ITestAction[] GetActionsForType(Type type)
-        {
-            var actions = new List<ITestAction>();
-
-            if (type != null && type != typeof(object))
-            {
-                actions.AddRange(GetActionsForType(type.BaseType));
-
-                foreach (Type interfaceType in TypeHelper.GetDeclaredInterfaces(type))
-                    actions.AddRange(interfaceType.GetAttributes<ITestAction>(false));
-
-                actions.AddRange(type.GetAttributes<ITestAction>(false));
-            }
-
-            return actions.ToArray();
         }
 
 #endregion
