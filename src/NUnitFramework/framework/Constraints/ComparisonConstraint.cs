@@ -18,6 +18,9 @@ namespace NUnit.Framework.Constraints
         /// The value against which a comparison is to be made
         /// </summary>
         private readonly object _expected;
+        private readonly string _comparisonText;
+
+        private string? _description;
 
         /// <summary>
         /// Tolerance used in making the comparison
@@ -35,15 +38,32 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="ComparisonConstraint"/> class.
         /// </summary>
         /// <param name="expected">The value against which to make a comparison.</param>
-        protected ComparisonConstraint(object expected) : base(expected)
+        /// <param name="comparisonText">The text indicating the type of comparison.</param>
+        protected ComparisonConstraint(object expected, string comparisonText)
+            : base(expected)
         {
             Guard.ArgumentValid(expected != null, "Cannot compare using a null reference.", nameof(_expected));
             _expected = expected;
+            _comparisonText = comparisonText;
         }
 
         #endregion
 
         #region Overrides
+
+        /// <summary>
+        /// The Description of what this constraint tests, for
+        /// use in messages and in the ConstraintResult.
+        /// </summary>
+        public override string Description
+        {
+            get
+            {
+                _description ??= DefaultDescription(_comparisonText);
+
+                return _description;
+            }
+        }
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -137,7 +157,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="comparisonText">Describes the comparison being tested, throws <see cref="ArgumentNullException"/>
         /// if null</param>
         /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
-        protected string DefaultDescription(string comparisonText)
+        private string DefaultDescription(string comparisonText)
         {
             if (comparisonText == null)
                 throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");

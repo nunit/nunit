@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-
 namespace NUnit.Framework.Constraints
 {
     // TODO Needs tests
@@ -14,7 +13,7 @@ namespace NUnit.Framework.Constraints
     public class ContainsConstraint : Constraint
     {
         private readonly object _expected;
-        private Constraint _realConstraint;
+        private Constraint? _realConstraint;
         private bool _ignoreCase;
 
         /// <summary>

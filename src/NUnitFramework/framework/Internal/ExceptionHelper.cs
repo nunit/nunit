@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,14 +100,18 @@ namespace NUnit.Framework.Internal
                 sb.AppendLine();
                 sb.Append(message);
             }
-            else if (data.Value.Count != 0)
+            else
             {
-                sb.AppendLine();
-                sb.Append("Data:");
-                foreach (DictionaryEntry kvp in data.Value)
+                IDictionary dictionary = data.Value!;
+                if (dictionary.Count != 0)
                 {
                     sb.AppendLine();
-                    sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                    sb.Append("Data:");
+                    foreach (DictionaryEntry kvp in dictionary)
+                    {
+                        sb.AppendLine();
+                        sb.AppendFormat("  {0}: {1}", kvp.Key, kvp.Value?.ToString() ?? "<null>");
+                    }
                 }
             }
         }
@@ -120,10 +122,17 @@ namespace NUnit.Framework.Internal
 
             if (exception is ReflectionTypeLoadException reflectionException)
             {
-                result.AddRange(reflectionException.LoaderExceptions);
+                foreach (var innerException in reflectionException.LoaderExceptions)
+                {
+                    if (innerException is not null)
+                        result.Add(exception);
+                }
 
                 foreach (var innerException in reflectionException.LoaderExceptions)
-                    result.AddRange(FlattenExceptionHierarchy(innerException));
+                {
+                    if (innerException is not null)
+                        result.AddRange(FlattenExceptionHierarchy(innerException));
+                }
             }
             if (exception is AggregateException aggregateException)
             {
@@ -149,7 +158,7 @@ namespace NUnit.Framework.Internal
             Guard.ArgumentNotNull(parameterlessDelegate, parameterName);
 
             Guard.ArgumentValid(
-                parameterlessDelegate.GetType().GetMethod("Invoke").GetParameters().Length == 0,
+                parameterlessDelegate.GetType().GetMethod("Invoke")?.GetParameters().Length == 0,
                 $"The actual value must be a parameterless delegate but was {parameterlessDelegate.GetType().Name}.",
                 parameterName);
 

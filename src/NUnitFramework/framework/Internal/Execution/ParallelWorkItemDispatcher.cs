@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal.Execution
 
         private const int WAIT_FOR_FORCED_TERMINATION = 5000;
 
-        private WorkItem _topLevelWorkItem;
+        private WorkItem? _topLevelWorkItem;
         private readonly Stack<WorkItem> _savedWorkItems = new Stack<WorkItem>();
 
         private readonly List<CompositeWorkItem> _activeWorkItems = new List<CompositeWorkItem>();
@@ -26,12 +26,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event raised whenever a shift is starting.
         /// </summary>
-        public event ShiftChangeEventHandler ShiftStarting;
+        public event ShiftChangeEventHandler? ShiftStarting;
 
         /// <summary>
         /// Event raised whenever a shift has ended.
         /// </summary>
-        public event ShiftChangeEventHandler ShiftFinished;
+        public event ShiftChangeEventHandler? ShiftFinished;
 
         #endregion
 
@@ -152,8 +152,11 @@ namespace NUnit.Framework.Internal.Execution
 
             var shift = SelectNextShift();
 
-            ShiftStarting?.Invoke(shift);
-            shift.Start();
+            if (shift is not null)
+            {
+                ShiftStarting?.Invoke(shift);
+                shift.Start();
+            }
         }
 
         // Initial strategy for the top level item is solely determined
@@ -227,6 +230,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void CancelRun(bool force)
         {
+            if (_topLevelWorkItem is null)
+            {
+                throw new InvalidOperationException("Called Cancel without Start");
+            }
+
             foreach (var shift in Shifts)
                 shift.Cancel(force);
 
@@ -258,6 +266,11 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         internal void IsolateQueues(WorkItem work)
         {
+            if (_topLevelWorkItem is null)
+            {
+                throw new InvalidOperationException("Called IsolateQueues without Start");
+            }
+
             log.Info("Saving Queue State for {0}", work.Name);
             lock (_queueLock)
             {
@@ -299,14 +312,15 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Helper Methods
 
-        private void OnWorkItemCompletion(object sender, EventArgs args)
+        private void OnWorkItemCompletion(object? sender, EventArgs args)
         {
-            var work = (CompositeWorkItem)sender;
-
-            lock (_activeWorkItems)
+            if (sender is CompositeWorkItem work)
             {
-                _activeWorkItems.Remove(work);
-                work.Completed -= OnWorkItemCompletion;
+                lock (_activeWorkItems)
+                {
+                    _activeWorkItems.Remove(work);
+                    work.Completed -= OnWorkItemCompletion;
+                }
             }
         }
 
@@ -314,15 +328,13 @@ namespace NUnit.Framework.Internal.Execution
         {
             ShiftFinished?.Invoke(endingShift);
 
-            WorkShift nextShift = null;
-
             while (true)
             {
                 // Shift has ended but all work may not yet be done
-                while (_topLevelWorkItem.State != WorkItemState.Complete)
+                while (_topLevelWorkItem!.State != WorkItemState.Complete)
                 {
                     // This will return null if all queues are empty.
-                    nextShift = SelectNextShift();
+                    WorkShift? nextShift = SelectNextShift();
                     if (nextShift != null)
                     {
                         ShiftStarting?.Invoke(nextShift);
@@ -344,7 +356,7 @@ namespace NUnit.Framework.Internal.Execution
                 shift.ShutDown();
         }
 
-        private WorkShift SelectNextShift()
+        private WorkShift? SelectNextShift()
         {
             foreach (var shift in Shifts)
                 if (shift.HasWork)
@@ -353,6 +365,6 @@ namespace NUnit.Framework.Internal.Execution
             return null;
         }
 
-#endregion
+        #endregion
     }
 }

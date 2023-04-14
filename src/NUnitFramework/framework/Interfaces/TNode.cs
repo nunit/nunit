@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -119,6 +117,11 @@ namespace NUnit.Framework.Interfaces
         {
             var doc = new XmlDocument();
             doc.LoadXml(xmlText);
+            if (doc.FirstChild is null)
+            {
+                throw new ArgumentException("Cannot parse text as Xml");
+            }
+
             return FromXml(doc.FirstChild);
         }
 
@@ -235,8 +238,11 @@ namespace NUnit.Framework.Interfaces
         {
             TNode tNode = new TNode(xmlNode.Name, xmlNode.InnerText);
 
-            foreach (XmlAttribute attr in xmlNode.Attributes)
-                tNode.AddAttribute(attr.Name, attr.Value);
+            if (xmlNode.Attributes is not null)
+            {
+                foreach (XmlAttribute attr in xmlNode.Attributes)
+                    tNode.AddAttribute(attr.Name, attr.Value);
+            }
 
             foreach (XmlNode child in xmlNode.ChildNodes)
                 if (child.NodeType == XmlNodeType.Element)

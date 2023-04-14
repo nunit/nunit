@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         private readonly string name;
         private readonly string fullname;
         private readonly InternalTraceLevel maxLevel;
-        private readonly TextWriter writer;
+        private readonly TextWriter? writer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Logger"/> class.
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Internal
         /// <param name="name">The name.</param>
         /// <param name="level">The log level.</param>
         /// <param name="writer">The writer where logs are sent.</param>
-        public Logger(string name, InternalTraceLevel level, TextWriter writer)
+        public Logger(string name, InternalTraceLevel level, TextWriter? writer)
         {
             this.maxLevel = level;
             this.writer = writer;
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal
         #region Helper Methods
         private void Log(InternalTraceLevel level, string message)
         {
-            if (writer != null && this.maxLevel >= level)
+            if (this.maxLevel >= level)
                 WriteLog(level, message);
         }
 
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
 
         private void WriteLog(InternalTraceLevel level, string message)
         {
-            writer.WriteLine(TRACE_FMT,
+            writer?.WriteLine(TRACE_FMT,
                 DateTime.Now.ToString(TIME_FMT),
                 level == InternalTraceLevel.Verbose ? "Debug" : level.ToString(),
                 System.Threading.Thread.CurrentThread.ManagedThreadId,
@@ -149,6 +149,6 @@ namespace NUnit.Framework.Internal
                 message);
         }
 
-#endregion
+        #endregion
     }
 }

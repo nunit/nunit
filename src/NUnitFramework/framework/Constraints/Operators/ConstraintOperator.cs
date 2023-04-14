@@ -13,8 +13,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class ConstraintOperator
     {
-        private object leftContext;
-        private object rightContext;
+        private object? leftContext;
+        private object? rightContext;
 
         /// <summary>
         /// The precedence value used when the operator
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The syntax element preceding this operator
         /// </summary>
-        public object LeftContext
+        public object? LeftContext
         {
             get => leftContext;
             set => leftContext = value;
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The syntax element following this operator
         /// </summary>
-        public object RightContext
+        public object? RightContext
         {
             get => rightContext;
             set => rightContext = value;

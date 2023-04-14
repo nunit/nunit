@@ -13,6 +13,7 @@ using System.Web.UI;
 using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Api
 {
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Api
         private const string LOG_FILE_FORMAT = "InternalTrace.{0}.{1}.log";
 
         // Preloaded test assembly, if passed in constructor
-        private readonly Assembly _testAssembly;
+        private readonly Assembly? _testAssembly;
 
         #region Constructors
 
@@ -61,7 +62,7 @@ namespace NUnit.Framework.Api
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings)
-            : this(assembly.FullName, idPrefix, settings)
+            : this(assembly.FullName!, idPrefix, settings)
         {
             _testAssembly = assembly;
         }
@@ -80,8 +81,8 @@ namespace NUnit.Framework.Api
         {
             Initialize(assemblyNameOrPath, settings);
 
-            Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType));
-            Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType), new object[] { Builder });
+            Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType, true)!);
+            Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType, true)!, new object[] { Builder });
 
             Test.IdPrefix = idPrefix ?? "";
         }
@@ -97,7 +98,7 @@ namespace NUnit.Framework.Api
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
         public FrameworkController(Assembly assembly, string idPrefix, IDictionary settings, string runnerType, string builderType)
-            : this(assembly.FullName, idPrefix, settings, runnerType, builderType)
+            : this(assembly.FullName!, idPrefix, settings, runnerType, builderType)
         {
             _testAssembly = assembly;
         }
@@ -107,12 +108,13 @@ namespace NUnit.Framework.Api
         // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
         // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
         [SecuritySafeCritical]
+        [MemberNotNull(nameof(AssemblyNameOrPath), nameof(Settings))]
         private void Initialize(string assemblyNameOrPath, IDictionary settings)
         {
             AssemblyNameOrPath = assemblyNameOrPath;
 
             var newSettings = settings as IDictionary<string, object>;
-            Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value);
+            Settings = newSettings ?? settings.Cast<DictionaryEntry>().ToDictionary(de => (string)de.Key, de => de.Value!);
 
             if (Settings.TryGetValue(FrameworkPackageSettings.InternalTraceLevel, out var traceLevelValue))
             {
@@ -157,11 +159,6 @@ namespace NUnit.Framework.Api
         public string AssemblyNameOrPath { get; private set; }
 
         /// <summary>
-        /// Gets the Assembly for which this
-        /// </summary>
-        public Assembly Assembly { get; private set; }
-
-        /// <summary>
         /// Gets a dictionary of settings for the FrameworkController
         /// </summary>
         internal IDictionary<string, object> Settings { get; private set; }
@@ -176,12 +173,14 @@ namespace NUnit.Framework.Api
         /// <returns></returns>
         public string LoadTests()
         {
-            if (_testAssembly != null)
-                Runner.Load(_testAssembly, Settings);
-            else
-                Runner.Load(AssemblyNameOrPath, Settings);
+            ITest loadedTest;
 
-            return Runner.LoadedTest.ToXml(false).OuterXml;
+            if (_testAssembly != null)
+                loadedTest = Runner.Load(_testAssembly, Settings);
+            else
+                loadedTest = Runner.Load(AssemblyNameOrPath, Settings);
+
+            return loadedTest.ToXml(false).OuterXml;
         }
 
         /// <summary>
@@ -334,7 +333,7 @@ namespace NUnit.Framework.Api
             TNode env = new TNode("environment");
             targetNode.ChildNodes.Insert(0, env);
 
-            env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version.ToString());
+            env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version?.ToString() ?? "Unknown");
             env.AddAttribute("clr-version", Environment.Version.ToString());
 #if NETSTANDARD2_0
             env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
@@ -391,11 +390,7 @@ namespace NUnit.Framework.Api
             }
             else if (value != null)
             {
-                setting.AddAttribute("value", value.ToString());
-            }
-            else
-            {
-                setting.AddAttribute("value", null);
+                setting.AddAttribute("value", value.ToString()!);
             }
 
             settingsNode.ChildNodes.Add(setting);
@@ -417,8 +412,8 @@ namespace NUnit.Framework.Api
             {
                 var value = entries[key];
                 var entryNode = new TNode("item");
-                entryNode.AddAttribute("key", key.ToString());
-                entryNode.AddAttribute("value", value?.ToString() ?? "");
+                entryNode.AddAttribute("key", key.ToString()!);
+                entryNode.AddAttribute("value", value?.ToString() ?? string.Empty);
                 settingNode.ChildNodes.Add(entryNode);
             }
         }

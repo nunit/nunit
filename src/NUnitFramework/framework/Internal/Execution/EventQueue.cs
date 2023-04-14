@@ -7,7 +7,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Execution
 {
 
-#region Individual Event Classes
+    #region Individual Event Classes
 
     /// <summary>
     /// NUnit.Core.Event is the abstract base for all stored events.
@@ -216,7 +216,7 @@ namespace NUnit.Framework.Internal.Execution
         ///   </item>
         /// </list>
         /// </returns>
-        public Event Dequeue(bool blockWhenEmpty)
+        public Event? Dequeue(bool blockWhenEmpty)
         {
             SpinWait sw = new SpinWait();
 
@@ -262,8 +262,8 @@ namespace NUnit.Framework.Internal.Execution
 
 
                 // Dequeue our work item
-                Event e;
-                while (!_queue.TryDequeue (out e))
+                Event? e;
+                while (!_queue.TryDequeue(out e))
                 {
                     if (!blockWhenEmpty || _stopped != 0)
                         return null;

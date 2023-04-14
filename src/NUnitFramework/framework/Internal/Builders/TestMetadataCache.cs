@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal.Builders
 
             public ITestAction[] TestActionAttributes { get; }
 
-            private static ITestAction[] GetActionsForType(Type type)
+            private static ITestAction[] GetActionsForType(Type? type)
             {
                 if (type == null || type == typeof(object))
                 {

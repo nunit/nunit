@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -233,8 +231,8 @@ namespace NUnit.Framework.Constraints
             if (baseValueType != typeof(KeyValuePair<,>))
                 return null;
 
-            object? k = valueType.GetProperty("Key").GetValue(value, null);
-            object? v = valueType.GetProperty("Value").GetValue(value, null);
+            object? k = valueType.GetProperty("Key")?.GetValue(value, null);
+            object? v = valueType.GetProperty("Value")?.GetValue(value, null);
 
             return FormatKeyValuePair(k, v);
         }
@@ -246,12 +244,12 @@ namespace NUnit.Framework.Constraints
 
         private static object? GetValueFromTuple(Type type, string propertyName, object obj)
         {
-            return type.GetProperty(propertyName).GetValue(obj, null);
+            return type.GetProperty(propertyName)?.GetValue(obj, null);
         }
 
         private static object? GetValueFromValueTuple(Type type, string propertyName, object obj)
         {
-            return type.GetField(propertyName).GetValue(obj);
+            return type.GetField(propertyName)?.GetValue(obj);
         }
 
         private static string? TryFormatTuple(object? value, Func<Type, bool> isTuple, Func<Type, string, object, object?> getValue)

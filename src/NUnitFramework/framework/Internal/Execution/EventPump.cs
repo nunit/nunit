@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Thread to do the pumping
         /// </summary>
-        private Thread _pumpThread;
+        private Thread? _pumpThread;
 
         /// <summary>
         /// The current state of the event pump
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="eventListener">The EventListener to receive events</param>
         /// <param name="events">The event queue to pull events from</param>
-        public EventPump( ITestListener eventListener, EventQueue events)
+        public EventPump(ITestListener eventListener, EventQueue events)
         {
             _eventListener = eventListener;
             _events = events;
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Gets or sets the name of this EventPump
         /// (used only internally and for testing).
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         #endregion
 
@@ -107,13 +107,13 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            if ( Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Pumping, (int)EventPumpState.Stopped) == (int)EventPumpState.Stopped)  // Ignore if already started
+            if (Interlocked.CompareExchange(ref _pumpState, (int)EventPumpState.Pumping, (int)EventPumpState.Stopped) == (int)EventPumpState.Stopped)  // Ignore if already started
             {
-                _pumpThread = new Thread (PumpThreadProc)
-                    {
+                _pumpThread = new Thread(PumpThreadProc)
+                {
                     Name = "EventPumpThread" + Name,
                     Priority = ThreadPriority.Highest
-                    };
+                };
 
                 _pumpThread.Start();
             }
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Internal.Execution
             if (Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Stopping, (int)EventPumpState.Pumping) == (int)EventPumpState.Pumping)
             {
                 _events.Stop();
-                _pumpThread.Join();
+                _pumpThread?.Join();
             }
         }
         #endregion
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 while (true)
                 {
-                    Event e = _events.Dequeue( PumpState == EventPumpState.Pumping );
+                    Event? e = _events.Dequeue( PumpState == EventPumpState.Pumping );
                     if ( e == null )
                         break;
                     try

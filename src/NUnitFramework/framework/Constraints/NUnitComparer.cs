@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public int Compare(object x, object y)
+        public int Compare(object? x, object? y)
         {
             if (x == null)
                 return y == null ? 0 : -1;
@@ -42,13 +42,13 @@ namespace NUnit.Framework.Constraints
             // We fallback to explicitly exclude CompareTo(object)
             static bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
 
-            MethodInfo method = xType.GetMethod("CompareTo", new[] { yType });
+            MethodInfo? method = xType.GetMethod("CompareTo", new[] { yType });
             if (method != null && !IsIComparable(method))
-                return (int)method.Invoke(x, new[] { y });
+                return (int)method.Invoke(x, new[] { y })!;
 
             method = yType.GetMethod("CompareTo", new[] { xType });
             if (method != null && !IsIComparable(method))
-                return -(int)method.Invoke(y, new[] { x });
+                return -(int)method.Invoke(y, new[] { x })!;
 
             if (x is IComparable xComparable)
                 return xComparable.CompareTo(y);

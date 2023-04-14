@@ -55,11 +55,11 @@ namespace NUnit.Framework.Internal
         /// Writes a string to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write.</param>
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             lock (myLock)
             {
-                base.Write(value);
+                writer.Write(value);
             }
         }
 
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
         /// Writes a string followed by a line terminator to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             lock (myLock)
             {
@@ -85,7 +85,6 @@ namespace NUnit.Framework.Internal
             {
                 writer.Flush();
                 writer.Dispose();
-                writer = null;
             }
 
             base.Dispose(disposing);
@@ -96,7 +95,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override void Flush()
         {
-            writer?.Flush();
+            writer.Flush();
         }
     }
 }

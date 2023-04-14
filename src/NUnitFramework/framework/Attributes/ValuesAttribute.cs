@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using NUnit.Framework.Interfaces;
@@ -93,10 +91,10 @@ namespace NUnit.Framework
         /// </summary>
         private static IEnumerable GenerateData(Type targetType)
         {
-            Type actualType = targetType.IsByRef ? targetType.GetElementType() : targetType;
+            Type actualType = targetType.IsByRef ? targetType.GetElementType()! : targetType;
             if (IsNullableEnum(actualType))
             {
-                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(actualType));
+                var enumValues = Enum.GetValues(Nullable.GetUnderlyingType(actualType)!);
                 var enumValuesWithNull = new object[enumValues.Length + 1];
                 Array.Copy(enumValues, enumValuesWithNull, enumValues.Length);
                 return enumValuesWithNull;
@@ -122,8 +120,8 @@ namespace NUnit.Framework
         /// </summary>
         private static bool IsNullableEnum(Type t)
         {
-            Type u = Nullable.GetUnderlyingType(t);
-            return (u != null) && u.IsEnum;
+            Type? u = Nullable.GetUnderlyingType(t);
+            return u != null && u.IsEnum;
         }
     }
 }

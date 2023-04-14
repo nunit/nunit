@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyConstraint : Constraint
     {
-        private Constraint realConstraint;
+        private Constraint? realConstraint;
 
         /// <summary>
         /// The Description of what this constraint tests, for

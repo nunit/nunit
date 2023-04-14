@@ -140,7 +140,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public static EqualConstraint EqualTo(object expected)
+        public static EqualConstraint EqualTo(object? expected)
         {
             return new EqualConstraint(expected);
         }
@@ -152,7 +152,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests that two references are the same object
         /// </summary>
-        public static SameAsConstraint SameAs(object expected)
+        public static SameAsConstraint SameAs(object? expected)
         {
             return new SameAsConstraint(expected);
         }
@@ -427,11 +427,11 @@ namespace NUnit.Framework
         /// Returns a constraint that tests if an item is equal to any of parameters
         /// </summary>
         /// <param name="expected">Expected values</param>
-        public static AnyOfConstraint AnyOf(params object[] expected)
+        public static AnyOfConstraint AnyOf(params object?[] expected)
         {
             if (expected == null)
             {
-                expected = new object[] { null };
+                expected = new object?[] { null };
             }
 
             return new AnyOfConstraint(expected);

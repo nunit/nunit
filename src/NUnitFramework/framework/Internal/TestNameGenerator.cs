@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
         private readonly string _pattern;
 
         // The list of NameFragments used to generate names
-        private List<NameFragment> _fragments;
+        private List<NameFragment>? _fragments;
 
         /// <summary>
         /// Construct a TestNameGenerator
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
         /// <param name="testMethod">A TestMethod</param>
         /// <param name="args">Arguments to be used</param>
         /// <returns>The display name</returns>
-        public string GetDisplayName(TestMethod testMethod, object[] args)
+        public string GetDisplayName(TestMethod testMethod, object?[]? args)
         {
             if (_fragments == null)
                 _fragments = BuildFragmentList(_pattern);
@@ -178,12 +178,12 @@ namespace NUnit.Framework.Internal
         {
             private const string THREE_DOTS = "...";
 
-            public virtual void AppendTextTo(StringBuilder sb, TestMethod testMethod, object[] args)
+            public virtual void AppendTextTo(StringBuilder sb, TestMethod testMethod, object?[]? args)
             {
                 AppendTextTo(sb, testMethod.Method.MethodInfo, args);
             }
 
-            public abstract void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args);
+            public abstract void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args);
 
             protected static void AppendGenericTypeNames(StringBuilder sb, MethodInfo method)
             {
@@ -197,11 +197,11 @@ namespace NUnit.Framework.Internal
                 sb.Append(">");
             }
 
-            protected static string GetDisplayString(object arg, int stringMax)
+            protected static string GetDisplayString(object? arg, int stringMax)
             {
                 string display = arg == null
                     ? "null"
-                    : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture);
+                    : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
 
                 if (arg is Array {Rank: 1} argArray)
                 {
@@ -224,7 +224,7 @@ namespace NUnit.Framework.Internal
 
                             if (element is Array {Rank: 1} childArray)
                             {
-                                builder.Append(childArray.GetType().GetElementType().Name);
+                                builder.Append(childArray.GetType().GetElementType()!.Name);
                                 builder.Append("[]");
                             }
                             else
@@ -462,12 +462,12 @@ namespace NUnit.Framework.Internal
 
         private sealed class TestIDFragment : NameFragment
         {
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
                 sb.Append("{i}"); // No id available using MethodInfo
             }
 
-            public override void AppendTextTo(StringBuilder sb, TestMethod testMethod, object[] args)
+            public override void AppendTextTo(StringBuilder sb, TestMethod testMethod, object?[]? args)
             {
                 sb.Append(testMethod.Id);
             }
@@ -482,7 +482,7 @@ namespace NUnit.Framework.Internal
                 _text = text;
             }
 
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
                 sb.Append(_text);
             }
@@ -490,7 +490,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class MethodNameFragment : NameFragment
         {
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
                 sb.Append(method.Name);
 
@@ -501,17 +501,17 @@ namespace NUnit.Framework.Internal
 
         private sealed class NamespaceFragment : NameFragment
         {
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                sb.Append(method.DeclaringType.Namespace);
+                sb.Append(method.DeclaringType!.Namespace);
             }
         }
 
         private sealed class MethodFullNameFragment : NameFragment
         {
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                sb.Append(method.DeclaringType.FullName);
+                sb.Append(method.DeclaringType!.FullName);
                 sb.Append('.');
                 sb.Append(method.Name);
 
@@ -522,17 +522,17 @@ namespace NUnit.Framework.Internal
 
         private sealed class ClassNameFragment : NameFragment
         {
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                sb.Append(method.DeclaringType.Name);
+                sb.Append(method.DeclaringType!.Name);
             }
         }
 
         private sealed class ClassFullNameFragment : NameFragment
         {
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                sb.Append(method.DeclaringType.FullName);
+                sb.Append(method.DeclaringType!.FullName);
             }
         }
 
@@ -545,7 +545,7 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] arglist)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? arglist)
             {
                 if (arglist != null)
                 {
@@ -573,9 +573,9 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                if (_index < args.Length)
+                if (args != null && _index < args.Length)
                     sb.Append(GetDisplayString(args[_index], _maxStringLength));
             }
         }
@@ -589,7 +589,7 @@ namespace NUnit.Framework.Internal
                 _maxStringLength = maxStringLength;
             }
 
-            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object[] args)
+            public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
                 if (args != null)
                 {

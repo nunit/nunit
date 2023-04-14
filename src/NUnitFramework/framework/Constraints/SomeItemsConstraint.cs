@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
@@ -13,17 +14,16 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SomeItemsConstraint : PrefixConstraint
     {
-        private readonly EqualConstraint _equalConstraint;
+        private readonly EqualConstraint? _equalConstraint;
 
         /// <summary>
         /// Construct a SomeItemsConstraint on top of an existing constraint
         /// </summary>
         /// <param name="itemConstraint"></param>
         public SomeItemsConstraint(IConstraint itemConstraint)
-            : base(itemConstraint)
+            : base(itemConstraint, "some item")
         {
             _equalConstraint = itemConstraint as EqualConstraint;
-            DescriptionPrefix = "some item";
         }
 
         /// <summary>
@@ -125,6 +125,7 @@ namespace NUnit.Framework.Constraints
             return this;
         }
 
+        [MemberNotNull(nameof(_equalConstraint))]
         private void CheckPrecondition(string argument)
         {
             if (_equalConstraint == null)

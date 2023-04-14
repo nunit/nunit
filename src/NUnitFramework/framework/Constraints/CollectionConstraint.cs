@@ -21,7 +21,7 @@ namespace NUnit.Framework.Constraints
         /// Construct a CollectionConstraint
         /// </summary>
         /// <param name="arg"></param>
-        protected CollectionConstraint(object arg) : base(arg) { }
+        protected CollectionConstraint(object? arg) : base(arg) { }
 
         /// <summary>
         /// Determines whether the specified enumerable is empty.

@@ -43,7 +43,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="constraint">The Constraint to which this result applies.</param>
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
-        public ConstraintResult(IConstraint constraint, object actualValue)
+        public ConstraintResult(IConstraint constraint, object? actualValue)
         {
             _constraint = constraint;
             ActualValue = actualValue;
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="constraint">The Constraint to which this result applies.</param>
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         /// <param name="status">The status of the new ConstraintResult.</param>
-        public ConstraintResult(IConstraint constraint, object actualValue, ConstraintStatus status)
+        public ConstraintResult(IConstraint constraint, object? actualValue, ConstraintStatus status)
             : this(constraint, actualValue)
         {
             Status = status;
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="constraint">The Constraint to which this result applies.</param>
         /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
         /// <param name="isSuccess">If true, applies a status of Success to the result, otherwise Failure.</param>
-        public ConstraintResult(IConstraint constraint, object actualValue, bool isSuccess)
+        public ConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess)
             : this(constraint, actualValue)
         {
             Status = isSuccess ? ConstraintStatus.Success : ConstraintStatus.Failure;
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// The actual value that was passed to the <see cref="Constraint.ApplyTo{TActual}(TActual)"/> method.
         /// </summary>
-        public object ActualValue { get; }
+        public object? ActualValue { get; }
 
         /// <summary>
         /// Gets and sets the ResultStatus for this result.

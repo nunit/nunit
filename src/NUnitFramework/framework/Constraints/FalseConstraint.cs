@@ -7,13 +7,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class FalseConstraint : Constraint
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FalseConstraint"/> class.
-        /// </summary>
-        public FalseConstraint()
-        {
-            this.Description = "False";
-        }
+        /// <inheritdoc/>
+        public override string Description => "False";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

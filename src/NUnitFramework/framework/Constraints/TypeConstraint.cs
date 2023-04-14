@@ -25,7 +25,7 @@ namespace NUnit.Framework.Constraints
 #pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        protected Type actualType;
+        protected Type? actualType;
 #pragma warning restore IDE1006
 
         /// <summary>
@@ -39,6 +39,9 @@ namespace NUnit.Framework.Constraints
             this.expectedType = type;
             this.Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
         }
+
+        /// <inheritdoc/>
+        public override string Description { get; }
 
         /// <summary>
         /// Applies the constraint to an actual value, returning a ConstraintResult.
@@ -60,6 +63,6 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The actual argument</param>
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
-        protected abstract bool Matches(object actual);
+        protected abstract bool Matches(object? actual);
     }
 }

@@ -24,12 +24,12 @@ namespace NUnit.Framework.Constraints
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
-        object[] Arguments { get; }
+        object?[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint
         /// </summary>
-        ConstraintBuilder Builder { get; set; }
+        ConstraintBuilder? Builder { get; set; }
 
         #endregion
 

@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace NUnit.Framework.Internal
@@ -53,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Converts a single value to the <paramref name="targetType"/>, if it is supported.
         /// </summary>
-        public static object? Convert(object? value, Type targetType)
+        public static object Convert(object? value, Type targetType)
         {
             if (TryConvert(value, targetType, out var convertedValue))
                 return convertedValue;
@@ -75,7 +74,7 @@ namespace NUnit.Framework.Internal
         /// <see langword="true"/> if <paramref name="value"/> was converted and <paramref name="convertedValue"/> should be used;
         /// <see langword="false"/> is no conversion was applied and <paramref name="convertedValue"/> should be ignored
         /// </returns>
-        public static bool TryConvert(object? value, Type targetType, out object? convertedValue)
+        public static bool TryConvert(object? value, Type targetType, [NotNullWhen(true)] out object? convertedValue)
         {
             if (targetType.IsInstanceOfType(value))
             {
@@ -116,7 +115,7 @@ namespace NUnit.Framework.Internal
             if (converter.CanConvertFrom(value.GetType()))
             {
                 convertedValue = converter.ConvertFrom(null, CultureInfo.InvariantCulture, value);
-                return true;
+                return convertedValue is not null;
             }
 
             convertedValue = null;

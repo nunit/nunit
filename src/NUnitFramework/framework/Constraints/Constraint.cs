@@ -3,6 +3,7 @@
 using NUnit.Framework.Internal;
 using System;
 using System.Collections;
+using System.Text;
 
 namespace NUnit.Framework.Constraints
 {
@@ -27,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// Construct a constraint with optional arguments
         /// </summary>
         /// <param name="args">Arguments to be saved</param>
-        protected Constraint(params object[] args)
+        protected Constraint(params object?[] args)
         {
             Arguments = args;
 
@@ -55,22 +56,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public virtual string DisplayName => _displayName.Value;
 
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
-        public virtual string Description { get; protected set; }
+        /// <inheritdoc/>
+        public abstract string Description { get; }
 
         /// <summary>
         /// Arguments provided to this Constraint, for use in
         /// formatting the description.
         /// </summary>
-        public object[] Arguments { get; }
+        public object?[] Arguments { get; }
 
         /// <summary>
         /// The ConstraintBuilder holding this constraint
         /// </summary>
-        public ConstraintBuilder Builder { get; set; }
+        public ConstraintBuilder? Builder { get; set; }
 
         #endregion
 
@@ -118,7 +116,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="del">An ActualValueDelegate</param>
         /// <returns>Delegate evaluation result</returns>
-        protected virtual object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+        protected virtual object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
         {
             return del();
         }
@@ -144,12 +142,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected string GetStringRepresentation(IEnumerable arguments)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            StringBuilder sb = new StringBuilder();
 
             sb.Append("<");
             sb.Append(DisplayName.ToLower());
 
-            foreach (object arg in arguments)
+            foreach (object? arg in arguments)
             {
                 sb.Append(" ");
                 sb.Append(Displayable(arg));
@@ -159,7 +157,7 @@ namespace NUnit.Framework.Constraints
 
             return sb.ToString();
 
-            static string Displayable(object o)
+            static string Displayable(object? o)
             {
                 if (o == null) return "null";
                 else if (o is string s) return $"\"{s}\"";
@@ -221,7 +219,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder builder = this.Builder;
+                ConstraintBuilder? builder = this.Builder;
                 if (builder == null)
                 {
                     builder = new ConstraintBuilder();
@@ -248,7 +246,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder builder = this.Builder;
+                ConstraintBuilder? builder = this.Builder;
                 if (builder == null)
                 {
                     builder = new ConstraintBuilder();

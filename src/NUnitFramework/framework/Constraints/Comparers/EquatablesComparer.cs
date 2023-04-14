@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
 using System;
 using System.Reflection;
 
@@ -68,7 +67,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo? equals)
         {
-            return equals != null && (bool)equals.Invoke(first, new[] { second });
+            return equals != null && (bool)equals.Invoke(first, new[] { second })!;
         }
 
         private readonly struct EquatableMethodImpl

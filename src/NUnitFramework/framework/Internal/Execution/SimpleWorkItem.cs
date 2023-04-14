@@ -97,13 +97,14 @@ namespace NUnit.Framework.Internal.Execution
                 // Try to locate the parent fixture. In current implementations, the test method
                 // is either one or two levels below the TestFixture - if this changes,
                 // so should the following code.
-                TestFixture parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
+                TestFixture? parentFixture = Test.Parent as TestFixture ?? Test.Parent?.Parent as TestFixture;
 
                 // In normal operation we should always get the methods from the parent fixture.
                 // However, some of NUnit's own tests can create a TestMethod without a parent
                 // fixture. Most likely, we should stop doing this, but it affects 100s of cases.
-                var setUpMethods = parentFixture?.SetUpMethods ?? Test.TypeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
-                var tearDownMethods = parentFixture?.TearDownMethods ?? Test.TypeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
+                ITypeInfo typeInfo = Test.TypeInfo!;
+                var setUpMethods = parentFixture?.SetUpMethods ?? typeInfo.GetMethodsWithAttribute<SetUpAttribute>(true);
+                var tearDownMethods = parentFixture?.TearDownMethods ?? typeInfo.GetMethodsWithAttribute<TearDownAttribute>(true);
 
                 // Wrap in SetUpTearDownCommands
                 var setUpTearDownList = BuildSetUpTearDownList(setUpMethods, tearDownMethods);
@@ -148,7 +149,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Timeout set on this test
                 if (Test.Properties.ContainsKey(PropertyNames.Timeout))
-                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout);
+                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout)!;
 
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout, _debugger);

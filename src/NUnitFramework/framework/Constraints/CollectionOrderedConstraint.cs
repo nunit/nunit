@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text;
 using NUnit.Framework.Internal;
@@ -20,7 +21,7 @@ namespace NUnit.Framework.Constraints
         // If not ordered, index where ordering breaks
         private int _breakingIndex;
         // If not ordered, value on which ordering breaks
-        private object _breakingValue;
+        private object? _breakingValue;
 
         private enum OrderDirection
         {
@@ -184,7 +185,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override bool Matches(IEnumerable actual)
         {
-            object previous = null;
+            object? previous = null;
             _breakingIndex = 0;
             foreach (object current in actual)
             {
@@ -199,11 +200,11 @@ namespace NUnit.Framework.Constraints
 
                         foreach (var step in _steps)
                         {
-                            string propertyName = step.PropertyName;
+                            string propertyName = step.PropertyName!;
 
-                            object previousValue = ExtractValue(actual, previous, propertyName, _breakingIndex - 1);
+                            object? previousValue = ExtractValue(actual, previous, propertyName, _breakingIndex - 1);
 
-                            object currentValue = ExtractValue(actual, current, propertyName, _breakingIndex);
+                            object? currentValue = ExtractValue(actual, current, propertyName, _breakingIndex);
 
                             int comparisonResult = step.Comparer.Compare(previousValue, currentValue);
 
@@ -263,21 +264,22 @@ namespace NUnit.Framework.Constraints
             return sb.ToString();
         }
 
-        private void CreateNextStep(string propertyName)
+        [MemberNotNull(nameof(_activeStep))]
+        private void CreateNextStep(string? propertyName)
         {
             _activeStep = new OrderingStep(propertyName);
             _steps.Add(_activeStep);
         }
 
-        private object ExtractValue(IEnumerable actual, object item, string propertyName, int index)
+        private object? ExtractValue(IEnumerable actual, object item, string propertyName, int index)
         {
-            PropertyInfo property = item.GetType().GetProperty(propertyName);
+            PropertyInfo? property = item.GetType().GetProperty(propertyName);
             if (property != null)
             {
                 return property.GetValue(item, null);
             }
 
-            FieldInfo field = item.GetType().GetField(propertyName);
+            FieldInfo? field = item.GetType().GetField(propertyName);
             if (field != null)
             {
                 return field.GetValue(item);
@@ -293,19 +295,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private sealed class OrderingStep
         {
-            public OrderingStep(string propertyName)
+            public OrderingStep(string? propertyName)
             {
                 PropertyName = propertyName;
                 Comparer = ComparisonAdapter.Default;
             }
 
-            public string PropertyName { get; set; }
+            public string? PropertyName { get; set; }
 
             public OrderDirection Direction { get; set; }
 
             public ComparisonAdapter Comparer { get; set; }
 
-            public string ComparerName { get; set; }
+            public string? ComparerName { get; set; }
         }
 
         #endregion
@@ -315,7 +317,7 @@ namespace NUnit.Framework.Constraints
         private sealed class CollectionOrderedConstraintResult : ConstraintResult
         {
             private readonly int _breakingIndex;
-            private readonly object _breakingValue;
+            private readonly object? _breakingValue;
 
             /// <summary>
             /// Constructor for success result.
@@ -334,7 +336,7 @@ namespace NUnit.Framework.Constraints
             /// <param name="actualValue">The actual value to which the Constraint was applied.</param>
             /// <param name="breakingIndex">Index at which collection order breaks.</param>
             /// <param name="breakingValue">Value at which collection order breaks.</param>
-            public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue, int breakingIndex, object breakingValue)
+            public CollectionOrderedConstraintResult(IConstraint constraint, IEnumerable actualValue, int breakingIndex, object? breakingValue)
                 : base(constraint, actualValue, ConstraintStatus.Failure)
             {
                 _breakingIndex = breakingIndex;
@@ -345,7 +347,8 @@ namespace NUnit.Framework.Constraints
             {
                 // Choose startIndex in such way that '_breakingIndex' is always visible in message.
                 int startIndex = Math.Max(0, _breakingIndex - MsgUtils.DefaultMaxItems  + 2);
-                var actualValueMessage = MsgUtils.FormatCollection((IEnumerable)ActualValue, startIndex);
+                var enumerable = (IEnumerable?)ActualValue;
+                var actualValueMessage = enumerable is null ? "null" : MsgUtils.FormatCollection(enumerable, startIndex);
                 writer.Write(actualValueMessage);
             }
 

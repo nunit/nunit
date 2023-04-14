@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         private readonly TimeSpan _shutdownTimeout;
         private readonly Queue<ScheduledWork> _queue = new Queue<ScheduledWork>();
         private Status _status;
-        private Stopwatch _timeSinceShutdown;
+        private Stopwatch? _timeSinceShutdown;
 
         public SingleThreadedTestSynchronizationContext(TimeSpan shutdownTimeout)
         {
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// May be called from any thread.
         /// </summary>
-        public override void Post(SendOrPostCallback d, object state)
+        public override void Post(SendOrPostCallback d, object? state)
         {
             Guard.ArgumentNotNull(d, nameof(d));
 
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// May be called from any thread.
         /// </summary>
-        public override void Send(SendOrPostCallback d, object state)
+        public override void Send(SendOrPostCallback d, object? state)
         {
             Guard.ArgumentNotNull(d, nameof(d));
 
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal
                 switch (_status)
                 {
                     case Status.ShuttingDown:
-                        if (_timeSinceShutdown.Elapsed < _shutdownTimeout) break;
+                        if (_timeSinceShutdown!.Elapsed < _shutdownTimeout) break;
                         goto case Status.ShutDown;
 
                     case Status.ShutDown:
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
                     Monitor.Wait(_queue);
                 }
 
-                if (_status == Status.ShuttingDown && _timeSinceShutdown.Elapsed > _shutdownTimeout)
+                if (_status == Status.ShuttingDown && _timeSinceShutdown!.Elapsed > _shutdownTimeout)
                 {
                     _status = Status.ShutDown;
                     throw ErrorAndGetExceptionForShutdownTimeout();

@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="message">The message to be written</param>
         /// <param name="args">Any arguments used in formatting the message</param>
-        public void WriteMessageLine(string message, params object[] args)
+        public void WriteMessageLine(string message, params object?[]? args)
         {
             WriteMessageLine(0, message, args);
         }
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="level">The indentation level of the message</param>
         /// <param name="message">The message to be written</param>
         /// <param name="args">Any arguments used in formatting the message</param>
-        public abstract void WriteMessageLine(int level, string message, params object[] args);
+        public abstract void WriteMessageLine(int level, string message, params object?[]? args);
 
         /// <summary>
         /// Display Expected and Actual lines for a constraint. This
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
-        public abstract void DisplayDifferences(object expected, object actual);
+        public abstract void DisplayDifferences(object? expected, object? actual);
 
         /// <summary>
         /// Display Expected and Actual lines for given values, including
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
         /// <param name="tolerance">The tolerance within which the test was made</param>
-        public abstract void DisplayDifferences(object expected, object actual, Tolerance tolerance);
+        public abstract void DisplayDifferences(object? expected, object? actual, Tolerance? tolerance);
 
         /// <summary>
         /// Display the expected and actual string values on separate lines.
@@ -89,13 +89,13 @@ namespace NUnit.Framework.Constraints
         /// Writes the text for an actual value.
         /// </summary>
         /// <param name="actual">The actual value.</param>
-        public abstract void WriteActualValue(object actual);
+        public abstract void WriteActualValue(object? actual);
 
         /// <summary>
         /// Writes the text for a generalized value.
         /// </summary>
         /// <param name="val">The value.</param>
-        public abstract void WriteValue(object val);
+        public abstract void WriteValue(object? val);
 
         /// <summary>
         /// Writes the text for a collection value,

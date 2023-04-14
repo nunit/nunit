@@ -16,9 +16,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="itemConstraint"></param>
         public NoItemConstraint(IConstraint itemConstraint)
-            : base(itemConstraint)
+            : base(itemConstraint, "no item")
         {
-            DescriptionPrefix = "no item";
         }
 
         /// <summary>

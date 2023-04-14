@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -236,22 +234,25 @@ namespace NUnit.Framework
                 var field = member as FieldInfo;
                 if (field != null)
                     return field.IsStatic
-                        ? (MethodParams == null ? (IEnumerable)field.GetValue(null)
+                        ? (MethodParams == null ? (IEnumerable?)field.GetValue(null)
                                                 : ReturnErrorAsParameter(ParamGivenToField))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var property = member as PropertyInfo;
                 if (property != null)
-                    return property.GetGetMethod(true).IsStatic
-                        ? (MethodParams == null ? (IEnumerable)property.GetValue(null, null)
+                {
+                    MethodInfo? getMethod = property.GetGetMethod(true);
+                    return getMethod?.IsStatic is true
+                        ? (MethodParams == null ? (IEnumerable?)property.GetValue(null, null)
                                                 : ReturnErrorAsParameter(ParamGivenToProperty))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
+                }
 
                 var m = member as MethodInfo;
                 if (m != null)
                     return m.IsStatic
                         ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length
-                            ? (IEnumerable)m.Invoke(null, MethodParams)
+                            ? (IEnumerable?)m.Invoke(null, MethodParams)
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
             }

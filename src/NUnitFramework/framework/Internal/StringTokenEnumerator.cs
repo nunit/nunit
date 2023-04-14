@@ -13,10 +13,11 @@ namespace NUnit.Framework.Internal
     /// </summary>
     internal struct StringTokenEnumerator : IEnumerator<string>, IEnumerable
     {
-        private int _currentStartIndex;
         private readonly string _target;
         private readonly char _separator;
         private readonly bool _returnEmptyTokens;
+        private int _currentStartIndex;
+        private bool _finised;
 
         /// <summary>
         /// Constructs a new enumerator against given target with given separator.
@@ -30,7 +31,8 @@ namespace NUnit.Framework.Internal
             _target = target;
             _separator = separator;
             _returnEmptyTokens = returnEmptyTokens;
-            Current = null;
+            _finised = false;
+            Current = string.Empty;
         }
 
         /// <inheritdoc />
@@ -52,7 +54,7 @@ namespace NUnit.Framework.Internal
                 break;
             }
 
-            return Current != null;
+            return !_finised;
         }
 
         private bool FindNextToken()
@@ -62,7 +64,7 @@ namespace NUnit.Framework.Internal
             if (start > _target.Length)
             {
                 // we've jumped to the end
-                Current = null;
+                _finised = true;
                 return false;
             }
 

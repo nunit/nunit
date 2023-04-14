@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <returns></returns>
-        static public WorkItem CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        static public WorkItem? CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
         {
             return CreateWorkItem(test, filter, new DebuggerProxy(), recursive);
         }
@@ -35,13 +35,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <param name="root"><see langword="true"/> if work item needs to be created unconditionally, if <see langword="false"/> <see langword="null"/> will be returned for tests that don't match the filter.</param>
         /// <returns></returns>
-        internal static WorkItem CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false, bool root = true)
+        internal static WorkItem? CreateWorkItem(ITest test, ITestFilter filter, IDebugger debugger, bool recursive = false, bool root = true)
         {
             // Run filter on leaf nodes only
             // use the presence of leaf nodes as an indicator that parent need to be created
             // Always create a workitem for the root node
-            TestSuite suite = test as TestSuite;
-            if (suite == null)
+            if (test is not TestSuite suite)
             {
                 if (root || filter.Pass(test))
                 {
@@ -50,7 +49,7 @@ namespace NUnit.Framework.Internal.Execution
                 return null;
             }
 
-            CompositeWorkItem work = root ? new CompositeWorkItem(suite, filter): null;
+            CompositeWorkItem? work = root ? new CompositeWorkItem(suite, filter): null;
 
             if (recursive)
             {
@@ -76,7 +75,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
 
                 if (countOrderedItems > 0)
-                    work.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
+                    work!.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
 
             }
             return work;
@@ -93,16 +92,20 @@ namespace NUnit.Framework.Internal.Execution
             /// A signed integer that indicates the relative values of <paramref name="x"/> and <paramref name="y"/>, as shown in the following table.Value Meaning Less than zero<paramref name="x"/> is less than <paramref name="y"/>.Zero<paramref name="x"/> equals <paramref name="y"/>.Greater than zero<paramref name="x"/> is greater than <paramref name="y"/>.
             /// </returns>
             /// <param name="x">The first object to compare.</param><param name="y">The second object to compare.</param>
-            public int Compare(WorkItem x, WorkItem y)
+            public int Compare(WorkItem? x, WorkItem? y)
             {
+                if (x is null && y is null) return 0;
+                if (x is null) return -1;
+                if (y is null) return 1;
+
                 var xKey = int.MaxValue;
                 var yKey = int.MaxValue;
 
-                if (x.Test.Properties.TryGet(PropertyNames.Order, out var xOrders))
-                    xKey = (int)xOrders[0];
+                if (x.Test.Properties.ContainsKey(PropertyNames.Order))
+                    xKey = (int)x.Test.Properties[PropertyNames.Order][0]!;
 
-                if (y.Test.Properties.TryGet(PropertyNames.Order, out var yOrders))
-                    yKey = (int)yOrders[0];
+                if (y.Test.Properties.ContainsKey(PropertyNames.Order))
+                    yKey = (int)y.Test.Properties[PropertyNames.Order][0]!;
 
                 return xKey.CompareTo(yKey);
             }

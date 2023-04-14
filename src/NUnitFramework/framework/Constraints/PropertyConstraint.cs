@@ -13,7 +13,7 @@ namespace NUnit.Framework.Constraints
     public class PropertyConstraint : PrefixConstraint
     {
         private readonly string name;
-        private object propValue;
+        private object? propValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyConstraint"/> class.
@@ -21,10 +21,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="name">The name.</param>
         /// <param name="baseConstraint">The constraint to apply to the property.</param>
         public PropertyConstraint(string name, IConstraint baseConstraint)
-            : base(baseConstraint)
+            : base(baseConstraint, "property " + name)
         {
             this.name = name;
-            this.DescriptionPrefix = "property " + name;
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentNotNull(actual, nameof(actual));
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            PropertyInfo property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
+            PropertyInfo? property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
 
             if (property == null && typeof(TActual).IsInterface)
             {

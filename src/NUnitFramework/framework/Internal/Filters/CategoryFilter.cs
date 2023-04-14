@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -30,7 +29,7 @@ namespace NUnit.Framework.Internal.Filters
                 // Use for-loop to avoid allocating the enumerator
                 for (var i = 0; i < testCategories.Count; ++i)
                 {
-                    if (Match((string) testCategories[i]))
+                    if (Match((string?)testCategories[i]))
                     {
                         return true;
                     }

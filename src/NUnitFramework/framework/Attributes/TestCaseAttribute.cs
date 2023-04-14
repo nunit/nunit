@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -268,6 +266,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets and sets the ignore until date for this test case.
         /// </summary>
+        [DisallowNull]
         public string? Until
         {
             get => Properties.Get(PropertyNames.IgnoreUntilDate) as string;

@@ -34,12 +34,12 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override Encoding Encoding { get; } = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-        private string FormatForListener(object value)
+        private string FormatForListener(object? value)
         {
             return
                 value is null ? string.Empty :
                 value is IFormattable formattable ? formattable.ToString(null, FormatProvider) :
-                value.ToString();
+                value.ToString()!;
         }
 
         private bool TrySendToListener(string text)
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write formatted string
         /// </summary>
-        public override void Write(string format, params object[] arg)
+        public override void Write(string format, params object?[] arg)
         {
             if (!TrySendToListener(String.Format(FormatProvider, format, arg)))
                 _defaultWriter.Write(format, arg);
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write formatted string
         /// </summary>
-        public override void Write(string format, object arg0, object arg1, object arg2)
+        public override void Write(string format, object? arg0, object? arg1, object? arg2)
         {
             if (!TrySendToListener(String.Format(FormatProvider, format, arg0, arg1, arg2)))
                 _defaultWriter.Write(format, arg0, arg1, arg2);
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write formatted string
         /// </summary>
-        public override void Write(string format, object arg0)
+        public override void Write(string format, object? arg0)
         {
             if (!TrySendToListener(String.Format(FormatProvider, format, arg0)))
                 _defaultWriter.Write(format, arg0);
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write an object
         /// </summary>
-        public override void Write(object value)
+        public override void Write(object? value)
         {
             if (value == null || !TrySendToListener(FormatForListener(value)))
                 _defaultWriter.Write(value);
@@ -105,9 +105,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write a string
         /// </summary>
-        public override void Write(string value)
+        public override void Write(string? value)
         {
-            if (!TrySendToListener(value))
+            if (value == null || !TrySendToListener(value))
                 _defaultWriter.Write(value);
         }
 
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write formatted string
         /// </summary>
-        public override void Write(string format, object arg0, object arg1)
+        public override void Write(string format, object? arg0, object? arg1)
         {
             if (!TrySendToListener(String.Format(FormatProvider, format, arg0, arg1)))
                 _defaultWriter.Write(format, arg0, arg1);
@@ -206,9 +206,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write chars
         /// </summary>
-        public override void Write(char[] buffer)
+        public override void Write(char[]? buffer)
         {
-            if (!TrySendToListener(new string(buffer)))
+            if (buffer == null || !TrySendToListener(new string(buffer)))
                 _defaultWriter.Write(buffer);
         }
 
@@ -224,25 +224,25 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write a string with newline
         /// </summary>
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
-            if (!TrySendLineToListener(value))
+            if (value == null || !TrySendLineToListener(value))
                 _defaultWriter.WriteLine(value);
         }
 
         /// <summary>
         /// Write an object with newline
         /// </summary>
-        public override void WriteLine(object value)
+        public override void WriteLine(object? value)
         {
-            if (!TrySendLineToListener(FormatForListener(value)))
+            if (value == null || !TrySendLineToListener(FormatForListener(value)))
                 _defaultWriter.WriteLine(value);
         }
 
         /// <summary>
         /// Write formatted string with newline
         /// </summary>
-        public override void WriteLine(string format, params object[] arg)
+        public override void WriteLine(string format, params object?[] arg)
         {
             if (!TrySendLineToListener(String.Format(FormatProvider, format, arg)))
                 _defaultWriter.WriteLine(format, arg);
@@ -251,7 +251,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write formatted string with newline
         /// </summary>
-        public override void WriteLine(string format, object arg0, object arg1)
+        public override void WriteLine(string format, object? arg0, object? arg1)
         {
             if (!TrySendLineToListener(String.Format(FormatProvider, format, arg0, arg1)))
                 _defaultWriter.WriteLine(format, arg0, arg1);
@@ -260,7 +260,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write formatted string with newline
         /// </summary>
-        public override void WriteLine(string format, object arg0, object arg1, object arg2)
+        public override void WriteLine(string format, object? arg0, object? arg1, object? arg2)
         {
             if (!TrySendLineToListener(String.Format(FormatProvider, format, arg0, arg1, arg2)))
                 _defaultWriter.WriteLine(format, arg0, arg1, arg2);
@@ -278,7 +278,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write a formatted string with newline
         /// </summary>
-        public override void WriteLine(string format, object arg0)
+        public override void WriteLine(string format, object? arg0)
         {
             if (!TrySendLineToListener(String.Format(FormatProvider, format, arg0)))
                 _defaultWriter.WriteLine(format, arg0);
@@ -352,9 +352,9 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Write chars with newline
         /// </summary>
-        public override void WriteLine(char[] buffer)
+        public override void WriteLine(char[]? buffer)
         {
-            if (!TrySendLineToListener(new string(buffer)))
+            if (buffer == null || !TrySendLineToListener(new string(buffer)))
                 _defaultWriter.WriteLine(buffer);
         }
 

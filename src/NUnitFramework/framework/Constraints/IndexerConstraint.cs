@@ -22,12 +22,20 @@ namespace NUnit.Framework.Constraints
         /// <param name="indexerArguments">The argument list for the indexer.</param>
         /// <param name="baseConstraint">The constraint to apply to the indexer.</param>
         public IndexerConstraint(IEnumerable<object> indexerArguments, IConstraint baseConstraint)
-            : base(baseConstraint)
+            : this(indexerArguments.ToArray(), baseConstraint)
         {
-            _arguments = indexerArguments.ToArray();
-            _argumentTypes = _arguments.Select(a => a.GetType()).ToArray();
+        }
 
-            DescriptionPrefix = $"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)}";
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndexerConstraint"/> class.
+        /// </summary>
+        /// <param name="indexerArguments">The argument list for the indexer.</param>
+        /// <param name="baseConstraint">The constraint to apply to the indexer.</param>
+        public IndexerConstraint(object[] indexerArguments, IConstraint baseConstraint)
+            : base(baseConstraint, $"Default indexer accepting arguments {MsgUtils.FormatCollection(indexerArguments)}")
+        {
+            _arguments = indexerArguments;
+            _argumentTypes = _arguments.Select(a => a.GetType()).ToArray();
         }
 
         /// <summary>
@@ -38,7 +46,7 @@ namespace NUnit.Framework.Constraints
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
 
-            object indexedValue;
+            object? indexedValue;
             var actualType = actual as Type ?? actual.GetType();
 
             if (actualType.IsArray)
@@ -48,7 +56,7 @@ namespace NUnit.Framework.Constraints
             }
             else
             {
-                var getMethod = Reflect.GetDefaultIndexer(actualType, _argumentTypes) ?? throw new ArgumentException($"Default indexer accepting arguments {MsgUtils.FormatCollection(_arguments)} was not found on {actualType}.");
+                var getMethod = Reflect.GetDefaultIndexer(actualType, _argumentTypes) ?? throw new ArgumentException($"{DescriptionPrefix} was not found on {actualType}.");
 
                 indexedValue = Reflect.InvokeMethod(getMethod, actual, _arguments);
             }

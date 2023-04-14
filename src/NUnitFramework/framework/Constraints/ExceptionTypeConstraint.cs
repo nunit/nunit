@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
         #region Nested Result Class
         class ExceptionTypeConstraintResult : ConstraintResult
         {
-            private readonly object caughtException;
+            private readonly object? caughtException;
 
-            public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object caughtException, Type type, bool matches)
+            public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object? caughtException, Type? type, bool matches)
                 : base(constraint, type, matches)
             {
                 this.caughtException = caughtException;

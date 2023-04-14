@@ -8,19 +8,19 @@ namespace NUnit.Framework.Internal
 {
     internal static class FSharpAsyncAwaitAdapter
     {
-        private static MethodInfo _startImmediateAsTaskMethod;
+        private static MethodInfo? _startImmediateAsTaskMethod;
 
         public static bool IsAwaitable(Type awaitableType)
         {
             return GetAsyncInfo(awaitableType) != null;
         }
 
-        public static Type GetResultType(Type awaitableType)
+        public static Type? GetResultType(Type awaitableType)
         {
             return GetAsyncInfo(awaitableType)?.ResultType;
         }
 
-        private static AsyncInfo GetAsyncInfo(Type asyncType)
+        private static AsyncInfo? GetAsyncInfo(Type asyncType)
         {
             if (asyncType == null) return null;
 
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal
             public Type ResultType { get; }
         }
 
-        public static AwaitAdapter TryCreate(object awaitable)
+        public static AwaitAdapter? TryCreate(object awaitable)
         {
             if (awaitable == null) return null;
 
@@ -69,8 +69,7 @@ namespace NUnit.Framework.Internal
 
                        if (parameters[0].ParameterType != info.FSharpAsyncTypeDefinition.MakeGenericType(typeArguments[0])) return false;
 
-                       Type someType;
-                       return parameters[1].ParameterType.IsFSharpOption(out someType)
+                       return parameters[1].ParameterType.IsFSharpOption(out Type? someType)
                            && someType.FullName == "System.Threading.CancellationToken";
                    });
             }

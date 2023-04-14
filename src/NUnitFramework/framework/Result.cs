@@ -13,16 +13,16 @@ namespace NUnit.Framework
 
     internal struct Result<T>
     {
-        private readonly T _value;
-        private readonly string _errorMessage;
+        private readonly T? _value;
+        private readonly string? _errorMessage;
 
-        private Result(T value, string errorMessage)
+        private Result(T? value, string? errorMessage)
         {
             _value = value;
             _errorMessage = errorMessage;
         }
 
-        public static Result<T> Success(T value)
+        public static Result<T> Success(T? value)
         {
             return new Result<T>(value, errorMessage: null);
         }
@@ -35,19 +35,19 @@ namespace NUnit.Framework
             return new Result<T>(default(T), message);
         }
 
-        public bool IsSuccess(out T value)
+        public bool IsSuccess(out T? value)
         {
             value = _value;
             return _errorMessage is null;
         }
 
-        public bool IsError(out string message)
+        public bool IsError(out string? message)
         {
             message = _errorMessage;
             return _errorMessage != null;
         }
 
-        public T Value
+        public T? Value
         {
             get
             {

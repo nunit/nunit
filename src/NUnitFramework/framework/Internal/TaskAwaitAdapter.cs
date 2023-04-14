@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal
                 var typeArgument = genericTaskType.GetGenericArguments()[0];
                 return (AwaitAdapter)typeof(GenericAdapter<>)
                      .MakeGenericType(typeArgument)
-                     .GetConstructor(new[] { typeof(Task<>).MakeGenericType(typeArgument) })
+                     .GetConstructor(new[] { typeof(Task<>).MakeGenericType(typeArgument) })!
                      .Invoke(new object[] { task });
             }
 
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
             public override void BlockUntilCompleted() => _awaiter.GetResult();
 
-            public override object GetResult()
+            public override object? GetResult()
             {
                 _awaiter.GetResult(); // Throws exceptions, if any
                 return null;
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
             public override void BlockUntilCompleted() => _awaiter.GetResult();
 
-            public override object GetResult()
+            public override object? GetResult()
             {
                 return _awaiter.GetResult(); // Throws exceptions, if any
             }

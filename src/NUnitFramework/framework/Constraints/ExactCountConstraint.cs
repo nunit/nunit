@@ -14,7 +14,7 @@ namespace NUnit.Framework.Constraints
     public class ExactCountConstraint : Constraint
     {
         private readonly int _expectedCount;
-        private readonly IConstraint _itemConstraint;
+        private readonly IConstraint? _itemConstraint;
 
         /// <summary>
         /// Construct a standalone ExactCountConstraint

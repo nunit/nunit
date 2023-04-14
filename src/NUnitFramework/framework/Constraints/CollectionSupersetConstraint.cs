@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -89,7 +87,7 @@ namespace NUnit.Framework.Constraints
         {
             private readonly List<object>? _missingItems;
 
-            public CollectionSupersetConstraintResult(IConstraint constraint, object actualValue, bool isSuccess, List<object>? missingItems)
+            public CollectionSupersetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? missingItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _missingItems = missingItems;

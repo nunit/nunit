@@ -55,7 +55,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(Stream expected, Stream actual, string message, params object[] args)
+        static public void AreEqual(Stream expected, Stream actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.EqualTo(expected), message, args);
         }
@@ -84,7 +84,7 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(FileInfo expected, FileInfo actual, string message, params object[] args)
+        static public void AreEqual(FileInfo expected, FileInfo actual, string message, params object?[]? args)
         {
             using (FileStream exStream = expected.OpenRead())
             using (FileStream acStream = actual.OpenRead())
@@ -117,7 +117,7 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(string expected, string actual, string message, params object[] args)
+        static public void AreEqual(string expected, string actual, string message, params object?[]? args)
         {
             using (FileStream exStream = File.OpenRead(expected))
             using (FileStream acStream = File.OpenRead(actual))
@@ -153,7 +153,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to be displayed when the two Stream are the same.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(Stream expected, Stream actual, string message, params object[] args)
+        static public void AreNotEqual(Stream expected, Stream actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected), message, args);
         }
@@ -179,7 +179,7 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(FileInfo expected, FileInfo actual, string message, params object[] args)
+        static public void AreNotEqual(FileInfo expected, FileInfo actual, string message, params object?[]? args)
         {
             using (FileStream exStream = expected.OpenRead())
             using (FileStream acStream = actual.OpenRead())
@@ -210,7 +210,7 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(string expected, string actual, string message, params object[] args)
+        static public void AreNotEqual(string expected, string actual, string message, params object?[]? args)
         {
             using (FileStream exStream = File.OpenRead(expected))
             using (FileStream acStream = File.OpenRead(actual))
@@ -244,7 +244,7 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Exists(FileInfo actual, string message, params object[] args)
+        static public void Exists(FileInfo actual, string message, params object?[]? args)
         {
             Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
         }
@@ -269,7 +269,7 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Exists(string actual, string message, params object[] args)
+        static public void Exists(string actual, string message, params object?[]? args)
         {
             Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
         }
@@ -298,7 +298,7 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void DoesNotExist(FileInfo actual, string message, params object[] args)
+        static public void DoesNotExist(FileInfo actual, string message, params object?[]? args)
         {
             Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
         }
@@ -323,7 +323,7 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void DoesNotExist(string actual, string message, params object[] args)
+        static public void DoesNotExist(string actual, string message, params object?[]? args)
         {
             Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
         }

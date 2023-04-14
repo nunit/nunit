@@ -55,8 +55,8 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public bool IsCultureSupported( CultureAttribute cultureAttribute )
         {
-            string include = cultureAttribute.Include;
-            string exclude = cultureAttribute.Exclude;
+            string? include = cultureAttribute.Include;
+            string? exclude = cultureAttribute.Exclude;
 
             if (include != null && !IsCultureSupported(include))
             {
