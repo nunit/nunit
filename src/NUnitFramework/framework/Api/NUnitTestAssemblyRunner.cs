@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Extensions;
 
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -371,9 +372,7 @@ namespace NUnit.Framework.Api
         {
             return Settings.TryGetValue(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
                 ? (int)numberOfTestWorkers
-                : loadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
-                   ? (int)loadedTest.Properties.Get(PropertyNames.LevelOfParallelism)!
-                   : NUnitTestAssemblyRunner.DefaultLevelOfParallelism;
+                : loadedTest.Properties.TryGet(PropertyNames.LevelOfParallelism, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 
 #if NETFRAMEWORK

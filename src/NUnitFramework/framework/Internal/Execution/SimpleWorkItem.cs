@@ -144,12 +144,8 @@ namespace NUnit.Framework.Internal.Execution
                     command = new FixturePerTestCaseCommand(command);
                 }
                 // If a timeout is specified, create a TimeoutCommand
-                // Timeout set at a higher level
-                int timeout = Context.TestCaseTimeout;
-
-                // Timeout set on this test
-                if (Test.Properties.ContainsKey(PropertyNames.Timeout))
-                    timeout = (int)Test.Properties.Get(PropertyNames.Timeout)!;
+                // Get Timeout set on this test or set at a higher level
+                int timeout = Test.Properties.TryGet(PropertyNames.Timeout, Context.TestCaseTimeout);
 
                 if (timeout > 0)
                     command = new TimeoutCommand(command, timeout, _debugger);

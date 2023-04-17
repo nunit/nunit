@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Execution
 {
@@ -98,14 +99,8 @@ namespace NUnit.Framework.Internal.Execution
                 if (x is null) return -1;
                 if (y is null) return 1;
 
-                var xKey = int.MaxValue;
-                var yKey = int.MaxValue;
-
-                if (x.Test.Properties.ContainsKey(PropertyNames.Order))
-                    xKey = (int)x.Test.Properties[PropertyNames.Order][0]!;
-
-                if (y.Test.Properties.ContainsKey(PropertyNames.Order))
-                    yKey = (int)y.Test.Properties[PropertyNames.Order][0]!;
+                var xKey = x.Test.Properties.TryGet(PropertyNames.Order, int.MaxValue);
+                var yKey = y.Test.Properties.TryGet(PropertyNames.Order, int.MaxValue);
 
                 return xKey.CompareTo(yKey);
             }

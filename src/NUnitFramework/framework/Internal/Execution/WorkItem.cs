@@ -10,6 +10,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Execution
 {
     using Commands;
+    using NUnit.Framework.Internal.Extensions;
 
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
@@ -40,9 +41,7 @@ namespace NUnit.Framework.Internal.Execution
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
 
-            ParallelScope = Test.Properties.ContainsKey(PropertyNames.ParallelScope)
-                ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)!
-                : ParallelScope.Default;
+            ParallelScope = Test.Properties.TryGet(PropertyNames.ParallelScope, ParallelScope.Default);
 
             TargetApartment = GetTargetApartment(Test);
 
@@ -517,9 +516,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         static ApartmentState GetTargetApartment(ITest test)
         {
-            var apartment = test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                ? (ApartmentState)test.Properties.Get(PropertyNames.ApartmentState)!
-                : ApartmentState.Unknown;
+            var apartment = test.Properties.TryGet(PropertyNames.ApartmentState, ApartmentState.Unknown);
 
             if (apartment == ApartmentState.Unknown && test.Parent != null)
                 return GetTargetApartment(test.Parent);
