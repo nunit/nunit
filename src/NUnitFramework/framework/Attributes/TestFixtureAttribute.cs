@@ -116,7 +116,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
-                Properties.Set(PropertyNames.TestOf, value.FullName!);
+                Properties.Set(PropertyNames.TestOf, value.FullName());
             }
         }
         private Type? _testOf;

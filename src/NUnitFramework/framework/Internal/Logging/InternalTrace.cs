@@ -89,7 +89,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static Logger GetLogger(Type type)
         {
-            return GetLogger(type.FullName!);
+            return GetLogger(type.FullName());
         }
     }
 }

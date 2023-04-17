@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
 
             if (type.IsGenericType)
             {
-                string name = type.FullName!;
+                string name = type.FullName();
                 int index = name.IndexOf('[');
                 if (index >= 0) name = name.Substring(0, index);
 
@@ -74,10 +74,11 @@ namespace NUnit.Framework.Internal
                 return sb.ToString();
             }
 
-            int lastdot = type.FullName!.LastIndexOf('.');
+            string typeFullName = type.FullName();
+            int lastdot = typeFullName.LastIndexOf('.');
             return lastdot >= 0
-                ? type.FullName.Substring(lastdot + 1)
-                : type.FullName;
+                ? typeFullName.Substring(lastdot + 1)
+                : typeFullName;
         }
 
         /// <summary>
@@ -339,7 +340,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsTupleInternal(Type type, string tupleName)
         {
-            string typeName = type.FullName!;
+            string typeName = type.FullName();
 
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
                 return false;
@@ -382,6 +383,17 @@ namespace NUnit.Framework.Internal
 
             value = default(T);
             return obj == null && default(T) == null;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Type.FullName"/> if available.
+        /// </summary>
+        /// <param name="type">The type to get the <see cref="Type.FullName"/> for.</param>
+        /// <returns><see cref="Type.FullName"/> if available, throws otherwise.</returns>
+        /// <exception cref="InvalidOperationException">If <see cref="Type.FullName"/> returns <see langword="null"/>.</exception>
+        internal static string FullName(this Type type)
+        {
+            return type.FullName ?? throw new InvalidOperationException("No name for type: " + type);
         }
     }
 }

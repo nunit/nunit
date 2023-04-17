@@ -150,7 +150,7 @@ namespace NUnit.Framework.Internal
             if (from == null)
             {
                 // Look for the marker that indicates from was null
-                return to.IsClass || to.FullName!.StartsWith("System.Nullable", StringComparison.Ordinal);
+                return to.IsClass || to.FullName().StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
             if (convertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))

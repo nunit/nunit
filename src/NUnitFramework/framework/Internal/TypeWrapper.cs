@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the FullName of the Type
         /// </summary>
-        public string FullName => Type.FullName!;
+        public string FullName => Type.FullName();
 
         /// <summary>
         /// Gets the assembly in which the type is declared
