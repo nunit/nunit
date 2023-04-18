@@ -512,13 +512,13 @@ namespace NUnit.Framework
             {
                 get
                 {
-                    var list = new List<object>();
-                    foreach(var item in _source[key])
+                    if (_source.TryGet(key, out var values))
                     {
-                        list.Add(item);
+                        foreach(var item in values)
+                        {
+                            yield return item;
+                        }
                     }
-
-                    return list;
                 }
             }
 
@@ -527,7 +527,7 @@ namespace NUnit.Framework
             /// </summary>
             public int Count(string key)
             {
-                return _source[key].Count;
+                return _source.TryGet(key, out var values) ? values.Count : 0;
             }
 
             /// <summary>

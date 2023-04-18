@@ -77,7 +77,15 @@ namespace NUnit.Framework.Interfaces
         bool ContainsKey(string key);
 
         /// <summary>
-        /// Gets or sets the list of values for a particular key
+        /// Tries to retrieve list of values.
+        /// </summary>
+        /// <param name="key">The key for which the values are to be retrieved</param>
+        /// <param name="values">Values, if found</param>
+        /// <returns>true if found</returns>
+        bool TryGet(string key, out IList values);
+
+        /// <summary>
+        /// Gets or sets the list of values for a particular key, initializes new list behind the key if not found.
         /// </summary>
         /// <param name="key">The key for which the values are to be retrieved or set</param>
         IList this[string key] { get; set; }

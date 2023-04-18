@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 
@@ -200,7 +199,7 @@ namespace NUnit.Framework.Internal
             private bool MatchSetUpFixture(Type type)
             {
                 return IsSubNamespace(type.Namespace) &&
-                       type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Any();
+                       type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Length > 0;
             }
 
             private bool IsSubNamespace(string typeNamespace)

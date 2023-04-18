@@ -339,15 +339,16 @@ namespace NUnit.Framework.Api
             _runComplete.Set();
         }
 
-        private int CountTestCases(ITest test, ITestFilter filter)
+        private static int CountTestCases(ITest test, ITestFilter filter)
         {
             if (!test.IsSuite)
                 return filter.Pass(test) ? 1: 0;
 
             int count = 0;
-            foreach (ITest child in test.Tests)
+            var tests = test.Tests;
+            for (var i = 0; i < tests.Count; i++)
             {
-                count += CountTestCases(child, filter);
+                count += CountTestCases(tests[i], filter);
             }
 
             return count;

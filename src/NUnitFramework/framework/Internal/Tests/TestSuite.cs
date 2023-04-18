@@ -222,10 +222,11 @@ namespace NUnit.Framework.Internal
             {
                 int count = 0;
 
-                foreach (Test test in Tests)
+                for (var i = 0; i < Tests.Count; i++)
                 {
-                    count += test.TestCaseCount;
+                    count += Tests[i].TestCaseCount;
                 }
+
                 return count;
             }
         }

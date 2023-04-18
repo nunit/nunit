@@ -111,8 +111,14 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestFilter FromXml(string xmlText)
         {
-            if (string.IsNullOrEmpty(xmlText))
-                xmlText = "<filter />";
+            const string emptyFilterXml1 = "<filter />";
+            const string emptyFilterXml2 = "<filter/>";
+
+            // check for fast cases
+            if (string.IsNullOrEmpty(xmlText) || xmlText.Length < 11 && xmlText is emptyFilterXml1 or emptyFilterXml2)
+            {
+                return Empty;
+            }
 
             TNode topNode = TNode.FromXml(xmlText);
 
@@ -208,7 +214,7 @@ namespace NUnit.Framework.Internal
         /// returns true when called. It never matches explicitly.
         /// </summary>
         [Serializable]
-        private class EmptyFilter : TestFilter
+        private sealed class EmptyFilter : TestFilter
         {
             public override bool Match( ITest test )
             {

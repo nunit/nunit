@@ -37,17 +37,15 @@ namespace NUnit.Framework.Internal.Filters
         public static bool TryOptimize(OrFilter orFilter, [NotNullWhen(true)] out InFilter? optimized)
         {
             // check if we have all filters accessing same field in OR fashion without regex
-            var hashCommonTypeAndNonRegex = orFilter.Filters.Count > 0;
+            var hashCommonTypeAndNonRegex = orFilter.Filters.Length > 0;
             Type? commonType = null;
 
             // eagerly build expected value collection
-            var expectedValues = new List<string?>(orFilter.Filters.Count);
+            var expectedValues = new List<string?>(orFilter.Filters.Length);
 
             // use for for faster traversal without boxed enumerator
-            for (var i = 0; i < orFilter.Filters.Count; i++)
+            foreach (var filter in orFilter.Filters)
             {
-                var filter = orFilter.Filters[i];
-
                 // make sure invariants are valid
                 commonType ??= filter.GetType();
                 hashCommonTypeAndNonRegex &= commonType == filter.GetType();
