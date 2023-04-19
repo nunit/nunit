@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
         [Test] public void Failure_Int_NonZero() => AssertFailure(1);
         [Test] public void Failure_Double_NaN() => AssertFailure(double.NaN);
         [Test] public void Failure_NonDefaultStructWithOverriddenEquals() => AssertFailure(new StructWithStrangeEquals { SomeField = 1, EqualsResult = true });
-        [Test] public void Failure_ImmutableArray_Empty() => AssertFailure(ImmutableArray.Create<int>());
+        [Test] public void Failure_ImmutableArray_Empty() => AssertFailure(ImmutableArray<int>.Empty);
 
         private void AssertSuccess<T>(T actual)
         {
