@@ -20,9 +20,7 @@ namespace NUnit.Framework.Constraints
         [Test] public void Success_Int() => AssertSuccess(default(int));
         [Test] public void Success_NullableInt() => AssertSuccess(default(int?));
         [Test] public void Success_Long() => AssertSuccess(default(long));
-#if !NETFRAMEWORK // the error message is different between class framework and newer .NET runtimes with optimized builds
         [Test] public void Success_DefaultStructWithOverriddenEquals() => AssertSuccess(default(StructWithStrangeEquals));
-#endif
         [Test] public void Success_ImmutableArray() => AssertSuccess(default(ImmutableArray<int>));
 
         [Test] public void Failure_NewObject() => AssertFailure(new object());
