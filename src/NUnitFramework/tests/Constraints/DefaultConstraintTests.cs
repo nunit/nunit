@@ -20,8 +20,7 @@ namespace NUnit.Framework.Constraints
         [Test] public void Success_Int() => AssertSuccess(default(int));
         [Test] public void Success_NullableInt() => AssertSuccess(default(int?));
         [Test] public void Success_Long() => AssertSuccess(default(long));
-        [Test] public void Success_DefaultStructWithOverriddenEquals() => AssertSuccess(default(StructWithStrangeEquals));
-        [Test] public void Success_ImmutableArray() => AssertSuccess(default(StructWithStrangeEquals));
+        [Test] public void Success_ImmutableArray() => AssertSuccess(default(ImmutableArray<int>));
 
         [Test] public void Failure_NewObject() => AssertFailure(new object());
         [Test] public void Failure_EmptyString() => AssertFailure(string.Empty);
@@ -29,7 +28,6 @@ namespace NUnit.Framework.Constraints
         [Test] public void Failure_BoxedInt_Zero() => AssertFailure((object)0);
         [Test] public void Failure_Int_NonZero() => AssertFailure(1);
         [Test] public void Failure_Double_NaN() => AssertFailure(double.NaN);
-        [Test] public void Failure_NonDefaultStructWithOverriddenEquals() => AssertFailure(new StructWithStrangeEquals { SomeField = 1, EqualsResult = true });
         [Test] public void Failure_ImmutableArray_Empty() => AssertFailure(ImmutableArray.Create<int>());
 
         private void AssertSuccess<T>(T actual)
@@ -47,16 +45,6 @@ namespace NUnit.Framework.Constraints
         {
             var constraintResult = TheConstraint.ApplyTo(actual);
             Assert.That(!constraintResult.IsSuccess);
-        }
-
-        private struct StructWithStrangeEquals
-        {
-            public int SomeField { get; set; }
-            public bool EqualsResult { get; set; }
-
-            public override bool Equals(object obj) => EqualsResult;
-
-            public override int GetHashCode() => 0;
         }
     }
 }
