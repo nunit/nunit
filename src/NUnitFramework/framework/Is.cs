@@ -437,6 +437,15 @@ namespace NUnit.Framework
             return new AnyOfConstraint(expected);
         }
 
+        /// <summary>
+        /// Returns a constraint that tests if an item is equal to any of parameters
+        /// </summary>
+        /// <param name="expected">Expected values</param>
+        public static AnyOfConstraint AnyOf(ICollection expected)
+        {
+            return new AnyOfConstraint(expected);
+        }
+
         #endregion
 
     }

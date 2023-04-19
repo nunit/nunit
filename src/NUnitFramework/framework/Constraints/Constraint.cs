@@ -2,6 +2,7 @@
 
 using NUnit.Framework.Internal;
 using System;
+using System.Collections;
 
 namespace NUnit.Framework.Constraints
 {
@@ -139,16 +140,16 @@ namespace NUnit.Framework.Constraints
         }
 
         /// <summary>
-        /// Returns the string representation of this constraint
+        /// Returns the string representation of this constraint and the passed in arguments
         /// </summary>
-        protected virtual string GetStringRepresentation()
+        protected string GetStringRepresentation(IEnumerable arguments)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             sb.Append("<");
             sb.Append(DisplayName.ToLower());
 
-            foreach (object arg in Arguments)
+            foreach (object arg in arguments)
             {
                 sb.Append(" ");
                 sb.Append(Displayable(arg));
@@ -165,6 +166,12 @@ namespace NUnit.Framework.Constraints
                 else return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
             }
         }
+
+        /// <summary>
+        /// Returns the string representation of this constraint
+        /// </summary>
+        protected virtual string GetStringRepresentation()
+            => GetStringRepresentation(Arguments);
 
         #endregion
 
