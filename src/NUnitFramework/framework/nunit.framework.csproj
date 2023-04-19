@@ -4,6 +4,7 @@
     <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
