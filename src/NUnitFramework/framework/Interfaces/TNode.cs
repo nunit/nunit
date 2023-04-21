@@ -4,10 +4,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Xml;
 
 namespace NUnit.Framework.Interfaces
@@ -23,11 +21,6 @@ namespace NUnit.Framework.Interfaces
     [DebuggerDisplay("{OuterXml}")]
     public sealed class TNode
     {
-        private static readonly XmlWriterSettings _xmlWriterSettings = new()
-        {
-            ConformanceLevel = ConformanceLevel.Fragment
-        };
-
         internal List<TNode>? _childNodes;
         internal Dictionary<string, string>? _attributes;
 
@@ -58,7 +51,7 @@ namespace NUnit.Framework.Interfaces
         public TNode(string name, string? value, bool valueIsCDATA)
             : this(name)
         {
-            Value = EscapeInvalidXmlCharacters(value);
+            Value = XmlExtensions.EscapeInvalidXmlCharacters(value);
             ValueIsCDATA = valueIsCDATA;
         }
 
@@ -104,7 +97,7 @@ namespace NUnit.Framework.Interfaces
             get
             {
                 using var stringWriter = new StringWriter();
-                using (var xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
+                using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
                 {
                     WriteTo(xmlWriter);
                 }
@@ -267,7 +260,7 @@ namespace NUnit.Framework.Interfaces
         public void AddAttribute(string name, string value)
         {
             _attributes ??= new Dictionary<string, string>();
-            _attributes.Add(name, EscapeInvalidXmlCharacters(value));
+            _attributes.Add(name, XmlExtensions.EscapeInvalidXmlCharacters(value));
         }
 
         /// <summary>
@@ -312,7 +305,7 @@ namespace NUnit.Framework.Interfaces
 
             if (Value != null)
                 if (ValueIsCDATA)
-                    WriteCDataTo(writer);
+                    writer.WriteCDataSafe(Value);
                 else
                     writer.WriteString(Value);
 
@@ -383,111 +376,6 @@ namespace NUnit.Framework.Interfaces
             return tail != null
                 ? ApplySelection(resultNodes, tail)
                 : resultNodes;
-        }
-
-        [return: NotNullIfNotNull("str")]
-        private static string? EscapeInvalidXmlCharacters(string? str)
-        {
-            if (str == null) return null;
-
-            // quick check when we expect valid input
-            foreach (var c in str)
-            {
-                if (c < 0x20 || c > 0x7F)
-                {
-                    return EscapeInvalidXmlCharactersUnlikely(str);
-                }
-            }
-
-            return str;
-        }
-
-        private static string EscapeInvalidXmlCharactersUnlikely(string str)
-        {
-            StringBuilder? builder = null;
-            for (int i = 0; i < str.Length; i++)
-            {
-                char c = str[i];
-                if(c > 0x20 && c < 0x7F)
-                {
-                    // ASCII characters - break quickly for these
-                    builder?.Append(c);
-                }
-                // From the XML specification: https://www.w3.org/TR/xml/#charsets
-                // Char ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
-                // Any Unicode character, excluding the surrogate blocks, FFFE, and FFFF.
-                else if (!(0x0 <= c && c <= 0x8) &&
-                    c != 0xB &&
-                    c != 0xC &&
-                    !(0xE <= c && c <= 0x1F) &&
-                    !(0x7F <= c && c <= 0x84) &&
-                    !(0x86 <= c && c <= 0x9F) &&
-                    !(0xD800 <= c && c <= 0xDFFF) &&
-                    c != 0xFFFE &&
-                    c != 0xFFFF)
-                {
-                    builder?.Append(c);
-                }
-                // Also check if the char is actually a high/low surrogate pair of two characters.
-                // If it is, then it is a valid XML character (from above based on the surrogate blocks).
-                else if (char.IsHighSurrogate(c) &&
-                    i + 1 != str.Length &&
-                    char.IsLowSurrogate(str[i + 1]))
-                {
-                    if (builder != null)
-                    {
-                        builder.Append(c);
-                        builder.Append(str[i + 1]);
-                    }
-                    i++;
-                }
-                else
-                {
-                    // We keep the builder null so that we don't allocate a string
-                    // when doing this conversion until we encounter a unicode character.
-                    // Then, we allocate the rest of the string and escape the invalid
-                    // character.
-                    if (builder == null)
-                    {
-                        builder = new StringBuilder();
-                        for (int index = 0; index < i; index++)
-                            builder.Append(str[index]);
-                    }
-                    builder.Append(CharToUnicodeSequence(c));
-                }
-            }
-
-            if (builder != null)
-                return builder.ToString();
-            else
-                return str;
-        }
-
-        private static string CharToUnicodeSequence(char symbol)
-        {
-            return $"\\u{(int)symbol:x4}";
-        }
-
-        private void WriteCDataTo(XmlWriter writer)
-        {
-            int start = 0;
-            string text = Value ?? throw new InvalidOperationException();
-
-            while (true)
-            {
-                int illegal = text.IndexOf("]]>", start, StringComparison.Ordinal);
-                if (illegal < 0)
-                    break;
-                writer.WriteCData(text.Substring(start, illegal - start + 2));
-                start = illegal + 2;
-                if (start >= text.Length)
-                    return;
-            }
-
-            if (start > 0)
-                writer.WriteCData(text.Substring(start));
-            else
-                writer.WriteCData(text);
         }
 
         #endregion

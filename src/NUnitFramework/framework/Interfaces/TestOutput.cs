@@ -1,13 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.IO;
+using System.Xml;
+
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
     /// The TestOutput class holds a unit of output from
     /// a test to a specific output stream
     /// </summary>
-	public class TestOutput
-	{
+    public class TestOutput
+    {
         /// <summary>
         /// Construct with text, output destination type and
         /// the name of the test that produced the output.
@@ -18,6 +21,9 @@ namespace NUnit.Framework.Interfaces
         /// <param name="testName">FullName of test that produced the output</param>
         public TestOutput(string text, string stream, string? testId, string? testName)
         {
+            Guard.ArgumentNotNull(text, nameof(text));
+            Guard.ArgumentNotNull(stream, nameof(stream));
+
             Text = text;
             Stream = stream;
             TestId = testId;
@@ -58,16 +64,28 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         public string ToXml()
         {
-            TNode tnode = new TNode("test-output", Text, true);
+            using var stringWriter = new StringWriter();
+            using (var writer = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
+            {
+                ToXml(writer);
+            }
+            return stringWriter.ToString();
+        }
 
-            tnode.AddAttribute("stream", Stream);
+        internal void ToXml(XmlWriter writer)
+        {
+            writer.WriteStartElement("test-output");
+            writer.WriteAttributeString("stream", Stream);
+
             if (TestId != null)
-                tnode.AddAttribute("testid", TestId);
+                writer.WriteAttributeString("testid", TestId);
 
             if (TestName != null)
-                tnode.AddAttribute("testname", TestName);
+                writer.WriteAttributeStringSafe("testname", TestName);
 
-            return tnode.OuterXml;
+            writer.WriteCDataSafe(Text);
+
+            writer.WriteEndElement();
         }
     }
 }
