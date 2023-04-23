@@ -3,6 +3,7 @@
 using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData.AssertMultipleData;
 using NUnit.TestUtilities;
 using AM = NUnit.TestData.AssertMultipleData.AssertMultipleFixture;
@@ -130,6 +131,30 @@ namespace NUnit.Framework.Assertions
             }
 
             return result;
+        }
+
+        [Test]
+        public void AssertMultiple_OnlyThrowsForCurrentScope()
+        {
+            try
+            {
+                // Place one failure in the context
+                Assert.That(false);
+            }
+            catch { }
+
+            var currentResult = TestExecutionContext.CurrentContext.CurrentResult;
+            var previousFailureCount = currentResult.AssertionResults.Count;
+            Assume.That(previousFailureCount, Is.GreaterThan(0));
+
+            Assert.Multiple(() => { });
+
+            // The assert multiple shouldn't've triggered a failure
+            Assert.That(currentResult.AssertionResults.Count, Is.EqualTo(previousFailureCount));
+
+            // If we get this far, the test is good so we should clean up the context from the intentional failure above
+            currentResult.SetResult(null, null, null);
+            currentResult.AssertionResults.Clear();
         }
     }
 
