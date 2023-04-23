@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -35,6 +34,8 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test, bool negated )
         {
+            // Use foreach-loop against array instead of LINQ for best performance
+
             if (negated)
             {
                 foreach (var filter in Filters)
@@ -66,7 +67,16 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters match, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            return Filters.Any(filter => filter.Match(test));
+            // Use foreach-loop against array instead of LINQ for best performance
+            foreach (var filter in Filters)
+            {
+                if (filter.Match(test))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -76,7 +86,16 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters explicit match, otherwise false</returns>
         public override bool IsExplicitMatch( ITest test )
         {
-            return Filters.Any(filter => filter.IsExplicitMatch(test));
+            // Use foreach-loop against array instead of LINQ for best performance
+            foreach (var filter in Filters)
+            {
+                if (filter.IsExplicitMatch(test))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

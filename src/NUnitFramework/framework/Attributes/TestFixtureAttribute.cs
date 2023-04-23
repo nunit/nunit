@@ -192,8 +192,7 @@ namespace NUnit.Framework
             get
             {
                 //return Properties.Get(PropertyNames.Category) as string;
-                var catList = Properties[PropertyNames.Category];
-                if (catList == null)
+                if (!Properties.TryGet(PropertyNames.Category, out var catList))
                     return null;
 
                 switch (catList.Count)

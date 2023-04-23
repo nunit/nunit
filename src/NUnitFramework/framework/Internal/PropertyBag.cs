@@ -84,6 +84,17 @@ namespace NUnit.Framework.Internal
         }
 
         /// <summary>
+        /// Tries to retrieve list of values.
+        /// </summary>
+        /// <param name="key">The key for which the values are to be retrieved</param>
+        /// <param name="values">Values, if found</param>
+        /// <returns>true if found</returns>
+        public bool TryGet(string key, out IList values)
+        {
+            return inner.TryGetValue(key, out values);
+        }
+
+        /// <summary>
         /// Gets a collection containing all the keys in the property set
         /// </summary>
         /// <value></value>
@@ -131,14 +142,15 @@ namespace NUnit.Framework.Internal
         {
             TNode properties = parentNode.AddElement("properties");
 
-            foreach (string key in Keys)
+            // enumerating dictionary directly with struct enumerator which is fastest
+            foreach (var pair in inner)
             {
-                foreach (object value in this[key])
+                foreach (var value in pair.Value)
                 {
                     TNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
-                    prop.AddAttribute("name", key);
+                    prop.AddAttribute("name", pair.Key);
                     prop.AddAttribute("value", value.ToString());
                 }
             }

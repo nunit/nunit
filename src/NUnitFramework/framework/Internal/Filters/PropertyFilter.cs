@@ -1,8 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System.Collections;
-using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -32,9 +30,19 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="test">The test to be matched</param>
         public override bool Match(ITest test)
         {
-            IList values = test.Properties[_propertyName];
+            if (test.Properties.TryGet(_propertyName, out var values))
+            {
+                // Use for-loop to avoid allocating the enumerator
+                for (var i = 0; i < values.Count; ++i)
+                {
+                    if (Match((string) values[i]))
+                    {
+                        return true;
+                    }
+                }
+            }
 
-            return values.Cast<string>().Any(Match);
+            return false;
         }
 
         /// <summary>

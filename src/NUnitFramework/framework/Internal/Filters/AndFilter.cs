@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System.Linq;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -31,10 +30,30 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test, bool negated )
         {
-            if (negated)
-                return Filters.Any(f => f.Pass(test, negated));
+            // Use foreach-loop against array instead of LINQ for best performance
 
-            return Filters.All(f => f.Pass(test, negated));
+            if (negated)
+            {
+                foreach (var filter in Filters)
+                {
+                    if (filter.Pass(test, negated))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            foreach (var filter in Filters)
+            {
+                if (!filter.Pass(test, negated))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -44,7 +63,16 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters match, otherwise false</returns>
         public override bool Match( ITest test )
         {
-            return Filters.All(filter => filter.Match(test));
+            // Use foreach-loop against array instead of LINQ for best performance
+            foreach (var filter in Filters)
+            {
+                if (!filter.Match(test))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -54,9 +82,14 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if all the component filters explicit match, otherwise false</returns>
         public override bool IsExplicitMatch( ITest test )
         {
-            foreach( TestFilter filter in Filters )
-                if ( !filter.IsExplicitMatch( test ) )
+            // Use foreach-loop against array instead of LINQ for best performance
+            foreach (var filter in Filters)
+            {
+                if (!filter.IsExplicitMatch(test))
+                {
                     return false;
+                }
+            }
 
             return true;
         }

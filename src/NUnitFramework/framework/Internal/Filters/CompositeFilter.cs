@@ -1,8 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 #nullable enable
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Filters
@@ -17,7 +16,7 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         public CompositeFilter()
         {
-            Filters = new List<TestFilter>();
+            Filters = Array.Empty<TestFilter>();
         }
 
         /// <summary>
@@ -26,13 +25,13 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="filters"></param>
         public CompositeFilter( params TestFilter[] filters )
         {
-            Filters = new ReadOnlyCollection<TestFilter>(filters);
+            Filters = filters;
         }
 
         /// <summary>
         /// Return a list of the composing filters.
         /// </summary>
-        public IList<TestFilter> Filters { get; }
+        public TestFilter[] Filters { get; }
 
         /// <summary>
         /// Checks whether the CompositeFilter is matched by a test.
