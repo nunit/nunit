@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections.Generic;
 
 namespace NUnit.Framework.Constraints
 {
@@ -31,6 +32,32 @@ namespace NUnit.Framework.Constraints
             Func<string, string, bool> comparer = (expected, actual) => actual.Contains(expected);
             var anyOf = new AnyOfConstraint(new[] { "A", "B", "C" }).Using(comparer);
             Assert.That(anyOf.ApplyTo("1. A").Status, Is.EqualTo(ConstraintStatus.Success));
+        }
+
+        [Test]
+        public void ValidMemberInParams()
+        {
+            Assert.That(42, Is.AnyOf(0, -1, 42, 100));
+        }
+
+        [Test]
+        public void ValidMemberInArray()
+        {
+            var array = new[] { 0, -1, 42, 100 };
+            Assert.That(42, Is.AnyOf(array));
+        }
+
+        [Test]
+        public void ValidMemberInList()
+        {
+            var list = new List<int>() { 0, -1, 42, 100 };
+            Assert.That(42, Is.AnyOf(list));
+        }
+
+        [Test]
+        public void MissingMember()
+        {
+            Assert.That(42, Is.Not.AnyOf(0, -1, 100));
         }
     }
 }
