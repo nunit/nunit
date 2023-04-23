@@ -222,9 +222,11 @@ namespace NUnit.Framework.Internal
             {
                 int count = 0;
 
-                for (var i = 0; i < Tests.Count; i++)
+                // Use for-loop to avoid allocating the enumerator
+                var testsToCheck = Tests;
+                for (var i = 0; i < testsToCheck.Count; i++)
                 {
-                    count += Tests[i].TestCaseCount;
+                    count += testsToCheck[i].TestCaseCount;
                 }
 
                 return count;
@@ -293,8 +295,15 @@ namespace NUnit.Framework.Internal
 
 
             if (recursive)
-                foreach (Test test in this.Tests)
+            {
+                // Use for-loop to avoid allocating the enumerator
+                var testsToAdd = Tests;
+                for (var i = 0; i < testsToAdd.Count; i++)
+                {
+                    var test = testsToAdd[i];
                     test.AddToXml(thisNode, recursive);
+                }
+            }
 
             return thisNode;
         }

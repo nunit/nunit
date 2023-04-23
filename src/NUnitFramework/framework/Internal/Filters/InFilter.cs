@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal.Filters
             // eagerly build expected value collection
             var expectedValues = new List<string?>(orFilter.Filters.Length);
 
-            // use for for faster traversal without boxed enumerator
+            // Use foreach-loop against array instead of LINQ for best performance
             foreach (var filter in orFilter.Filters)
             {
                 // make sure invariants are valid
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal.Filters
                     NamespaceFilter _ => test => test.TypeInfo?.Namespace,
                     TestNameFilter _ => test => test.Name,
                     _ => throw new InvalidOperationException("Invalid filter, logic wrong")
-                }; 
+                };
                 string xmlElementName = orFilter.Filters[0] switch
                 {
                     ClassNameFilter _ => ClassNameFilter.XmlElementName,

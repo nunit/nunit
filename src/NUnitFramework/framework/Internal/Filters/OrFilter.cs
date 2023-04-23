@@ -34,6 +34,8 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters pass, otherwise false</returns>
         public override bool Pass( ITest test, bool negated )
         {
+            // Use foreach-loop against array instead of LINQ for best performance
+
             if (negated)
             {
                 foreach (var filter in Filters)
@@ -65,6 +67,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters match, otherwise false</returns>
         public override bool Match( ITest test )
         {
+            // Use foreach-loop against array instead of LINQ for best performance
             foreach (var filter in Filters)
             {
                 if (filter.Match(test))
@@ -83,6 +86,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True if any of the component filters explicit match, otherwise false</returns>
         public override bool IsExplicitMatch( ITest test )
         {
+            // Use foreach-loop against array instead of LINQ for best performance
             foreach (var filter in Filters)
             {
                 if (filter.IsExplicitMatch(test))

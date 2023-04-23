@@ -111,11 +111,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestFilter FromXml(string xmlText)
         {
-            const string emptyFilterXml1 = "<filter />";
-            const string emptyFilterXml2 = "<filter/>";
+            const string emptyFilterXmlWithSpace = "<filter />";
+            const string emptyFilterWithoutSpace = "<filter/>";
 
             // check for fast cases
-            if (string.IsNullOrEmpty(xmlText) || xmlText.Length < 11 && xmlText is emptyFilterXml1 or emptyFilterXml2)
+            if (string.IsNullOrEmpty(xmlText) || xmlText.Length < 11 && xmlText is emptyFilterXmlWithSpace or emptyFilterWithoutSpace)
             {
                 return Empty;
             }

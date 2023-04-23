@@ -27,6 +27,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             if (test.Properties.TryGet(PropertyNames.Category, out var testCategories))
             {
+                // Use for-loop to avoid allocating the enumerator
                 for (var i = 0; i < testCategories.Count; ++i)
                 {
                     if (Match((string) testCategories[i]))

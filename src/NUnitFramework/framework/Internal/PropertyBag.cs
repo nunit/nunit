@@ -142,6 +142,7 @@ namespace NUnit.Framework.Internal
         {
             TNode properties = parentNode.AddElement("properties");
 
+            // enumerating dictionary directly with struct enumerator which is fastest
             foreach (var pair in inner)
             {
                 foreach (var value in pair.Value)

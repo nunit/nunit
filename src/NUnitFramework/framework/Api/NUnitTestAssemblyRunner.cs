@@ -344,6 +344,7 @@ namespace NUnit.Framework.Api
             if (!test.IsSuite)
                 return filter.Pass(test) ? 1: 0;
 
+            // Use for-loop to avoid allocating the enumerator
             int count = 0;
             var tests = test.Tests;
             for (var i = 0; i < tests.Count; i++)
