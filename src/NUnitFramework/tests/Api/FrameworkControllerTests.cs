@@ -74,7 +74,7 @@ namespace NUnit.Framework.Api
 
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             // in parallel, an additional node is added with number of test workers
-            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(3));
+            Assert.That(inserted.ChildNodes, Has.Count.EqualTo(3));
             Assert.That(inserted.ChildNodes[0].Attributes["name"], Is.EqualTo("key1"));
             Assert.That(inserted.ChildNodes[0].Attributes["value"], Is.EqualTo("value1"));
 
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Api
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
 
             // in parallel, an additional node is added with number of test workers
-            Assert.That(inserted.ChildNodes.Count, Is.EqualTo(3));
+            Assert.That(inserted.ChildNodes, Has.Count.EqualTo(3));
         }
 
         [TestCaseSource(nameof(SettingsData))]
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Api
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             var settingNode = inserted.FirstChild;
 
-            Assert.That(settingNode.ChildNodes.Count, Is.EqualTo(2));
+            Assert.That(settingNode.ChildNodes, Has.Count.EqualTo(2));
         }
 
         [TestCaseSource(nameof(SettingsData))]
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Api
             var inserted = FrameworkController.InsertSettingsElement(outerNode, testSettings);
             var settingNode = inserted.FirstChild;
 
-            Assert.That(settingNode.ChildNodes.Count, Is.EqualTo(2));
+            Assert.That(settingNode.ChildNodes, Has.Count.EqualTo(2));
             Assert.That(settingNode.Attributes["value"], Is.EqualTo($"[key1, value1], [key2, {value}]"));
         }
 
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Api
             Assert.That(key2Node.Attributes["value"], Is.EqualTo(value));
         }
 
-        public static IEnumerable SettingsData()
+        private static IEnumerable SettingsData()
         {
             yield return new TestCaseData("value");
             yield return new TestCaseData("");
@@ -224,7 +224,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Load result should not have child tests");
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME).IgnoreCase);
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Load result should not have child tests");
         }
 
         [Test]
@@ -255,7 +255,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Load result should not have child tests");
         }
 
         [Test]
@@ -269,7 +269,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["runstate"], Is.EqualTo("NotRunnable"));
             // Minimal check here to allow for platform differences
             Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Load result should not have child tests");
         }
 
         #endregion
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockTestFixture.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Not.Empty, "Explore result should have child tests");
         }
 
         [TestCaseSource(nameof(EmptyFilters))]
@@ -304,7 +304,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["name"], Is.EqualTo(EXPECTED_NAME));
             Assert.That(result.Attributes["runstate"], Is.EqualTo("Runnable"));
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo(MockAssembly.Tests.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Explore result should have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Not.Empty, "Explore result should have child tests");
         }
 
         [TestCase(FIXTURE_CAT_FILTER)]
@@ -345,7 +345,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Result should not have child tests");
         }
 
         [Test]
@@ -362,7 +362,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
             Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Result should not have child tests");
         }
 
 #endregion
@@ -427,7 +427,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["warnings"], Is.EqualTo(MockAssembly.Warnings.ToString()));
             Assert.That(result.Attributes["skipped"], Is.EqualTo(MockAssembly.Skipped.ToString()));
             Assert.That(result.Attributes["inconclusive"], Is.EqualTo(MockAssembly.Inconclusive.ToString()));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.GreaterThan(0), "Run result should have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Not.Empty, "Run result should have child tests");
         }
 
         [Test]
@@ -452,7 +452,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
             Assert.That(GetSkipReason(result), Contains.Substring(MISSING_NAME));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Load result should not have child tests");
         }
 
         [Test]
@@ -469,7 +469,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.Attributes["testcasecount"], Is.EqualTo("0"));
             // Minimal check here to allow for platform differences
             Assert.That(GetSkipReason(result), Contains.Substring(BAD_FILE));
-            Assert.That(result.SelectNodes("test-suite").Count, Is.EqualTo(0), "Load result should not have child tests");
+            Assert.That(result.SelectNodes("test-suite"), Is.Empty, "Load result should not have child tests");
         }
 
 #endregion

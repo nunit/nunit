@@ -66,8 +66,8 @@ namespace NUnit.Framework.Attributes
         {
             var usageAttrib = Attribute.GetCustomAttribute(typeof(SetUpFixtureAttribute), typeof(AttributeUsageAttribute)) as AttributeUsageAttribute;
 
-            Assert.NotNull(usageAttrib);
-            Assert.False(usageAttrib.Inherited);
+            Assert.That(usageAttrib, Is.Not.Null);
+            Assert.That(usageAttrib.Inherited, Is.False);
         }
 
         private static class StaticSetupClass

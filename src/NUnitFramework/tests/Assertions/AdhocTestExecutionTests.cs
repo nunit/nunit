@@ -92,7 +92,7 @@ namespace NUnit.Framework.Assertions
 
             static public void TestValidContext()
             {
-                Assert.NotNull(TestExecutionContext.CurrentContext);
+                Assert.That(TestExecutionContext.CurrentContext, Is.Not.Null);
                 Assert.That(TestExecutionContext.CurrentContext, Is.TypeOf<TestExecutionContext.AdhocContext>());
             }
 

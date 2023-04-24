@@ -99,8 +99,11 @@ namespace NUnit.Framework.Attributes
         {
             test.MakeInvalid("UNCHANGED");
             new IgnoreAttribute("BECAUSE").ApplyToTest(test);
-            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(test.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("UNCHANGED"));
+            });
         }
 
         [Test]
@@ -373,10 +376,12 @@ namespace NUnit.Framework.Attributes
             var invalidPlatform = "FakePlatform";
             new PlatformAttribute(invalidPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith("Invalid platform name"));
-            Assert.That(test.Properties.Get(PropertyNames.SkipReason),
-                Does.Contain(invalidPlatform));
+            string skipReason = (string)test.Properties.Get(PropertyNames.SkipReason);
+            Assert.Multiple(() =>
+            {
+                Assert.That(skipReason, Does.StartWith("Invalid platform name"));
+                Assert.That(skipReason, Does.Contain(invalidPlatform));
+            });
         }
 
         string GetMyPlatform()
@@ -472,9 +477,12 @@ namespace NUnit.Framework.Attributes
         public void RequiresThreadAttributeMaySetApartmentState()
         {
             new RequiresThreadAttribute(ApartmentState.STA).ApplyToTest(test);
-            Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
-            Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
-                Is.EqualTo(ApartmentState.STA));
+            Assert.Multiple(() =>
+            {
+                Assert.That(test.Properties.Get(PropertyNames.RequiresThread), Is.EqualTo(true));
+                Assert.That(test.Properties.Get(PropertyNames.ApartmentState),
+                    Is.EqualTo(ApartmentState.STA));
+            });
         }
 
         #endregion
@@ -500,12 +508,14 @@ namespace NUnit.Framework.Attributes
 
         #region SetCultureAttribute
 
+        [Test]
         public void SetCultureAttributeSetsSetCultureProperty()
         {
             new SetCultureAttribute("fr-FR").ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.SetCulture), Is.EqualTo("fr-FR"));
         }
 
+        [Test]
         public void SetCultureAttributeSetsSetCulturePropertyOnNonRunnableTest()
         {
             test.RunState = RunState.NotRunnable;
@@ -517,12 +527,14 @@ namespace NUnit.Framework.Attributes
 
         #region SetUICultureAttribute
 
+        [Test]
         public void SetUICultureAttributeSetsSetUICultureProperty()
         {
             new SetUICultureAttribute("fr-FR").ApplyToTest(test);
             Assert.That(test.Properties.Get(PropertyNames.SetUICulture), Is.EqualTo("fr-FR"));
         }
 
+        [Test]
         public void SetUICultureAttributeSetsSetUICulturePropertyOnNonRunnableTest()
         {
             test.RunState = RunState.NotRunnable;

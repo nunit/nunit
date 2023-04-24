@@ -20,10 +20,13 @@ namespace NUnit.Framework.Attributes
             // This triggers sorting
             TestBuilder.ExecuteWorkItem(work);
 
-            Assert.AreEqual(work.Children.Count, 5);
-            Assert.AreEqual(work.Children[0].Test.Name, "Y_FirstTest");
-            Assert.AreEqual(work.Children[1].Test.Name, "Y_SecondTest");
-            Assert.AreEqual(work.Children[2].Test.Name, "Z_ThirdTest");
+            Assert.That(work.Children, Has.Count.EqualTo(5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(work.Children[0].Test.Name, Is.EqualTo("Y_FirstTest"));
+                Assert.That(work.Children[1].Test.Name, Is.EqualTo("Y_SecondTest"));
+                Assert.That(work.Children[2].Test.Name, Is.EqualTo("Z_ThirdTest"));
+            });
         }
 
         [Test]
@@ -36,13 +39,13 @@ namespace NUnit.Framework.Attributes
 
             var fixtureWorkItems = work.Children;
 
-            Assert.AreEqual(candidateTypes.Length, fixtureWorkItems.Count);
+            Assert.That(fixtureWorkItems, Has.Count.EqualTo(candidateTypes.Length));
             for (var i = 1; i < fixtureWorkItems.Count; i++)
             {
                 var previousTestOrder = GetOrderAttributeValue(fixtureWorkItems[i - 1]);
                 var currentTestOrder = GetOrderAttributeValue(fixtureWorkItems[i]);
 
-                Assert.IsTrue(previousTestOrder < currentTestOrder);
+                Assert.That(previousTestOrder, Is.LessThan(currentTestOrder));
             }
         }
 

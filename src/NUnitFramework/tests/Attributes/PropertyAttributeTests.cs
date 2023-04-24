@@ -28,41 +28,41 @@ namespace NUnit.Framework.Attributes
         public void PropertiesWithNumericValues()
         {
             Test test2 = (Test)fixture.Tests[1];
-            Assert.AreEqual(10.0, test2.Properties.Get("X"));
-            Assert.AreEqual(17.0, test2.Properties.Get("Y"));
+            Assert.That(test2.Properties.Get("X"), Is.EqualTo(10.0));
+            Assert.That(test2.Properties.Get("Y"), Is.EqualTo(17.0));
         }
 
         [Test]
         public void PropertyWorksOnFixtures()
         {
-            Assert.AreEqual("SomeClass", fixture.Properties.Get("ClassUnderTest"));
+            Assert.That(fixture.Properties.Get("ClassUnderTest"), Is.EqualTo("SomeClass"));
         }
 
         [Test]
         public void CanDeriveFromPropertyAttribute()
         {
             Test test3 = (Test)fixture.Tests[2];
-            Assert.AreEqual(5, test3.Properties.Get("Priority"));
+            Assert.That(test3.Properties.Get("Priority"), Is.EqualTo(5));
         }
 
         [Test]
         public void CustomPropertyAttribute()
         {
             Test test4 = (Test)fixture.Tests[3];
-            Assert.IsNotNull(test4.Properties.Get("CustomProperty"));
+            Assert.That(test4.Properties.Get("CustomProperty"), Is.Not.Null);
         }
 
         [Test]
         public void ManyProperties()
         {
             Test test5 = (Test)fixture.Tests[4];
-            Assert.AreEqual(6, test5.Properties.Keys.Count);
-            Assert.AreEqual("A", test5.Properties.Get("A"));
-            Assert.AreEqual("B", test5.Properties.Get("B"));
-            Assert.AreEqual("C", test5.Properties.Get("C"));
-            Assert.AreEqual("D", test5.Properties.Get("D"));
-            Assert.AreEqual("E", test5.Properties.Get("E"));
-            Assert.AreEqual("F", test5.Properties.Get("F"));
+            Assert.That(test5.Properties.Keys, Has.Count.EqualTo(6));
+            Assert.That(test5.Properties.Get("A"), Is.EqualTo("A"));
+            Assert.That(test5.Properties.Get("B"), Is.EqualTo("B"));
+            Assert.That(test5.Properties.Get("C"), Is.EqualTo("C"));
+            Assert.That(test5.Properties.Get("D"), Is.EqualTo("D"));
+            Assert.That(test5.Properties.Get("E"), Is.EqualTo("E"));
+            Assert.That(test5.Properties.Get("F"), Is.EqualTo("F"));
         }
     }
 }

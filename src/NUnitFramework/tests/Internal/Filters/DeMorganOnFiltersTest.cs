@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Filters {
                     disagreements.Add(test.FullName);
             }
             var message = CaseErrorMessage("Pass", andFilter, orFilter);
-            Assert.IsEmpty(disagreements, message);
+            Assert.That(disagreements, Is.Empty, message);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Internal.Filters {
                     disagreements.Add(test.FullName);
             }
             var message = CaseErrorMessage("Match", andFilter, orFilter);
-            Assert.IsEmpty(disagreements, message);
+            Assert.That(disagreements, Is.Empty, message);
         }
     }
 }

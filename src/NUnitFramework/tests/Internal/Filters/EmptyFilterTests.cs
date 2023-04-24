@@ -39,9 +39,9 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchesNothingExplicitly()
         {
-            Assert.False(TestFilter.Empty.IsExplicitMatch(_dummyFixture));
-            Assert.False(TestFilter.Empty.IsExplicitMatch(_anotherFixture));
-            Assert.False(TestFilter.Empty.IsExplicitMatch(_yetAnotherFixture));
+            Assert.That(TestFilter.Empty.IsExplicitMatch(_dummyFixture), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(_anotherFixture), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(_yetAnotherFixture), Is.False);
         }
     }
 }

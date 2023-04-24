@@ -1,0 +1,15 @@
+# Exception to default Analyzer rules
+
+[*.cs]
+
+# Field is never used.
+# NUnit heavily relies on System.Reflection
+dotnet_diagnostic.CS0169.severity = silent
+
+# NUnit2007: The actual value should not be a constant
+# To verify proper behaviour of tests, we need known numbers.
+# Unlike other code we do not compare results of calculations with a known outcome.
+dotnet_diagnostic.NUnit2007.severity = silent
+
+# NUnit2009: The same value has been provided as both the actual and the expected argument
+dotnet_diagnostic.NUnit2009.severity = silent

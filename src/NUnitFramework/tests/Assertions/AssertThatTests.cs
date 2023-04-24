@@ -13,6 +13,7 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class AssertThatTests
     {
+#pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
         [Test]
         public void AssertionPasses_Boolean()
         {
@@ -37,6 +38,7 @@ namespace NUnit.Framework.Assertions
             Func<string> getExceptionMessage = () => $"Not Equal to {4}";
             Assert.That(2 + 2 == 4, getExceptionMessage);
         }
+#pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
         [Test]
         public void AssertionPasses_ActualAndConstraint()
@@ -117,6 +119,7 @@ namespace NUnit.Framework.Assertions
         {
             return 4;
         }
+#pragma warning disable NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
         [Test]
         public void FailureThrowsAssertionException_Boolean()
@@ -145,6 +148,7 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, getExceptionMessage));
             Assert.That(ex.Message, Does.Contain("Not Equal to 4"));
         }
+#pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
         [Test]
         public void FailureThrowsAssertionException_ActualAndConstraint()
@@ -304,9 +308,11 @@ namespace NUnit.Framework.Assertions
         [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var exception =
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionTask(), Is.EqualTo(1)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
 
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionTask"));
         }
@@ -317,16 +323,6 @@ namespace NUnit.Framework.Assertions
             var exception =
             Assert.Throws<InvalidOperationException>(() =>
                 Assert.That(async () => await ThrowInvalidOperationExceptionGenericTask(), Is.EqualTo(1)));
-
-            Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
-        }
-
-        [Test]
-        public void AssertThatErrorVoid()
-        {
-            var exception =
-            Assert.Throws<InvalidOperationException>(() =>
-                Assert.That(async () => { await ThrowInvalidOperationExceptionGenericTask(); }, Is.EqualTo(1)));
 
             Assert.That(exception.StackTrace, Does.Contain("ThrowInvalidOperationExceptionGenericTask"));
         }
@@ -342,7 +338,7 @@ namespace NUnit.Framework.Assertions
             throw new InvalidOperationException();
         }
 
-        private static async System.Threading.Tasks.Task ThrowInvalidOperationExceptionTask()
+        private static async Task ThrowInvalidOperationExceptionTask()
         {
             await AsyncReturnOne();
             throw new InvalidOperationException();

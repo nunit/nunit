@@ -37,7 +37,7 @@ namespace NUnit.Framework
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            Assert.NotNull(runner.Load(ASSEMBLY_PATH, options), "Assembly not loaded");
+            Assert.That(runner.Load(ASSEMBLY_PATH, options), Is.Not.Null, "Assembly not loaded");
             Assert.That(runner.LoadedTest.RunState, Is.EqualTo(RunState.Runnable));
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
@@ -128,7 +128,7 @@ namespace NUnit.Framework
         [Test]
         public void CorrectNumberOfEventsReceived()
         {
-            Assert.That(ActionAttributeFixture.Events.Count, Is.EqualTo(
+            Assert.That(ActionAttributeFixture.Events, Has.Count.EqualTo(
                 NumTestCaseEvents + 2 * (NumParameterizedTestActions + NumTestFixtureActions + NumSetUpFixtureActions + NumAssemblyActions)));
         }
 
@@ -169,8 +169,11 @@ namespace NUnit.Framework
             for (int i = 0; i < numActions; i++)
                 CheckBeforeAfterActionPair(index - i - 1, index + i + 1, testName, ExpectedTestCaseActions[i]);
 
-            Assert.That(ActionAttributeFixture.Events[index - numActions - 1], Does.Not.StartWith(testName), "Extra ActionAttribute Before");
-            Assert.That(ActionAttributeFixture.Events[index + numActions + 1], Does.Not.StartWith(testName), "Extra ActionAttribute After");
+            Assert.Multiple(() =>
+            {
+                Assert.That(ActionAttributeFixture.Events[index - numActions - 1], Does.Not.StartWith(testName), "Extra ActionAttribute Before");
+                Assert.That(ActionAttributeFixture.Events[index + numActions + 1], Does.Not.StartWith(testName), "Extra ActionAttribute After");
+            });
         }
 
         private void CheckBeforeAfterActionPair(int index1, int index2, string testName, string tag)
@@ -178,8 +181,11 @@ namespace NUnit.Framework
             var event1 = ActionAttributeFixture.Events[index1];
             var event2 = ActionAttributeFixture.Events[index2];
 
-            Assert.That(event1, Does.StartWith(testName + "." + tag + ".Before"));
-            Assert.That(event2, Does.StartWith(testName + "." + tag + ".After"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(event1, Does.StartWith(testName + "." + tag + ".Before"));
+                Assert.That(event2, Does.StartWith(testName + "." + tag + ".After"));
+            });
 
             int index = event1.LastIndexOf('.');
             var target1 = event1.Substring(index); // Target is last in string

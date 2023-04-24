@@ -78,8 +78,8 @@ namespace NUnit.Framework.Internal.Filters
 
         private bool AssertAndGetEquality(ITest test, MatchFunction calledFunction)
         {
-            Assert.AreSame(_expectedTest, test);
-            Assert.AreEqual(_expectedFunctionToBeCalled, calledFunction);
+            Assert.That(test, Is.SameAs(_expectedTest));
+            Assert.That(calledFunction, Is.EqualTo(_expectedFunctionToBeCalled));
             NumberOfMatchCalls += 1;
             return _matchFunctionResult;
         }

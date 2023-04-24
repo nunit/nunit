@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void Complex_PassesEquality()
         {
-            Assert.AreEqual(new System.Numerics.Complex(1, 100), new System.Numerics.Complex(1, 100));
+            Assert.That(new System.Numerics.Complex(1, 100), Is.EqualTo(new System.Numerics.Complex(1, 100)));
         }
 
         #region StringEquality
@@ -56,6 +56,13 @@ namespace NUnit.Framework.Constraints
             var result = constraint.ApplyTo("re\u0301sume\u0301");
 
             Assert.That(result.IsSuccess, Is.False);
+        }
+
+        [Test]
+        public void Bug524CharIntWithoutOverload()
+        {
+            char c = '\u0000';
+            Assert.That(c, Is.EqualTo(0));
         }
 
         #endregion
@@ -355,52 +362,45 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void CanMatchDictionaries_SameOrder()
             {
-                Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}});
+                Assert.That(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}}, Is.EqualTo(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}}));
             }
 
             [Test]
             public void CanMatchDictionaries_Failure()
             {
                 Assert.Throws<AssertionException>(
-                    () => Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                          new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}}));
+                    () => Assert.That(new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}}, Is.EqualTo(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}})));
             }
 
             [Test]
             public void CanMatchDictionaries_DifferentOrder()
             {
-                Assert.AreEqual(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
+                Assert.That(new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}}, Is.EqualTo(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}}));
             }
 
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Hashtable {{0, 0}, {1, 1}, {2, 2}});
+                Assert.That(new Hashtable {{0, 0}, {1, 1}, {2, 2}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}}));
             }
 
             [Test]
             public void CanMatchHashtables_Failure()
             {
                 Assert.Throws<AssertionException>(
-                    () => Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                          new Hashtable {{0, 0}, {1, 5}, {2, 2}}));
+                    () => Assert.That(new Hashtable {{0, 0}, {1, 5}, {2, 2}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}})));
             }
 
             [Test]
             public void CanMatchHashtables_DifferentOrder()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Hashtable {{0, 0}, {2, 2}, {1, 1}});
+                Assert.That(new Hashtable {{0, 0}, {2, 2}, {1, 1}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}}));
             }
 
             [Test]
             public void CanMatchHashtableWithDictionary()
             {
-                Assert.AreEqual(new Hashtable {{0, 0}, {1, 1}, {2, 2}},
-                                new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}});
+                Assert.That(new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}}));
             }
         }
 
@@ -590,7 +590,9 @@ namespace NUnit.Framework.Constraints
             [Test]
             public void CanCompareUncomparableTypes()
             {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
                 Assert.That(2 + 2, Is.Not.EqualTo("4"));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
                 var comparer = new ConvertibleComparer();
                 Assert.That(2 + 2, Is.EqualTo("4").Using(comparer));
             }
@@ -784,8 +786,10 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SameValueDifferentTypeExactMessageMatch()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(0, new System.IntPtr(0)));
-            Assert.AreEqual(ex.Message, "  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL);
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            Assert.That("  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL, Is.EqualTo(ex.Message));
         }
 
         class Dummy
@@ -841,25 +845,27 @@ namespace NUnit.Framework.Constraints
             var dc1 = new DummyGenericClass<Dummy>(d1);
             var dc2 = new DummyGenericClass<Dummy1>(d2);
 
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(dc1, dc2));
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(dc2, Is.EqualTo(dc1)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             var expectedMsg =
                 "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
                 "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
 
-            Assert.AreEqual(expectedMsg, ex.Message);
+            Assert.That(ex.Message, Is.EqualTo(expectedMsg));
         }
 
         [Test]
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(Is.Zero, Is.Zero));
-            Assert.AreEqual(ex.Message, "  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL);
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Is.Zero, Is.EqualTo(Is.Zero)));
+            Assert.That("  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL, Is.EqualTo(ex.Message));
         }
 
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, actual));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
         }
     }

@@ -154,13 +154,13 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void NullableSimpleFormalParametersWithArgument([Values(1)] int? a)
         {
-            Assert.AreEqual(1, a);
+            Assert.That(a, Is.EqualTo(1));
         }
 
         [Test]
         public void NullableSimpleFormalParametersWithNullArgument([Values(null)] int? a)
         {
-            Assert.IsNull(a);
+            Assert.That(a, Is.Null);
         }
 
 

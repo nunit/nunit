@@ -27,8 +27,11 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestCurrentFixtureInitialization()
         {
-            Assert.That(_initializedOnce, Is.Not.Null);
-            Assert.That(_initializedEveryTime, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_initializedOnce, Is.Not.Null);
+                Assert.That(_initializedEveryTime, Is.Not.Null);
+            });
 
             _initializedEveryTime = null;
         }

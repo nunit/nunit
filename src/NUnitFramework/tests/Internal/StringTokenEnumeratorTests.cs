@@ -11,25 +11,25 @@ namespace NUnit.Framework.Internal
         public void Empty()
         {
             var tokens = Enumerate("", ',');
-            Assert.AreEqual(0, tokens.Count);
+            Assert.That(tokens, Is.Empty);
         }
 
         [Test]
         public void Whitespace()
         {
             var tokens = Enumerate("  ", ',');
-            Assert.AreEqual(1, tokens.Count);
-            Assert.AreEqual("  ", tokens[0]);
+            Assert.That(tokens, Has.Count.EqualTo(1));
+            Assert.That(tokens[0], Is.EqualTo("  "));
         }
 
         [Test]
         public void Tokens()
         {
             var tokens = Enumerate("a,b,c", ',');
-            Assert.AreEqual(3, tokens.Count);
-            Assert.AreEqual("a", tokens[0]);
-            Assert.AreEqual("b", tokens[1]);
-            Assert.AreEqual("c", tokens[2]);
+            Assert.That(tokens, Has.Count.EqualTo(3));
+            Assert.That(tokens[0], Is.EqualTo("a"));
+            Assert.That(tokens[1], Is.EqualTo("b"));
+            Assert.That(tokens[2], Is.EqualTo("c"));
         }
 
         [TestCase("aaa,,cccdd", ',', false)]

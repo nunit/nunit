@@ -78,7 +78,7 @@ namespace NUnit.Framework
         public void TestCanAccessWorkDirectory()
         {
             string workDirectory = TestContext.CurrentContext.WorkDirectory;
-            Assert.NotNull(workDirectory);
+            Assert.That(workDirectory, Is.Not.Null);
             Assert.That(Directory.Exists(workDirectory), $"Directory {workDirectory} does not exist");
         }
 
@@ -225,7 +225,7 @@ namespace NUnit.Framework
 
             // These are counted as asserts
             Assert.That(context.AssertCount, Is.EqualTo(0));
-            Assert.AreEqual(4, 2 + 2);
+            Assert.That(2 + 2, Is.EqualTo(4));
             Warn.Unless(2 + 2, Is.EqualTo(4));
 
             // This one is counted below
@@ -307,13 +307,16 @@ namespace NUnit.Framework
         {
             var fixture = new TestTestContextInOneTimeTearDown();
             TestBuilder.RunTestFixture(fixture);
-            Assert.That(fixture.PassCount, Is.EqualTo(2));
-            Assert.That(fixture.FailCount, Is.EqualTo(1));
-            Assert.That(fixture.WarningCount, Is.EqualTo(0));
-            Assert.That(fixture.SkipCount, Is.EqualTo(3));
-            Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
-            Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
-            Assert.That(fixture.StackTrace, Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(fixture.PassCount, Is.EqualTo(2));
+                Assert.That(fixture.FailCount, Is.EqualTo(1));
+                Assert.That(fixture.WarningCount, Is.EqualTo(0));
+                Assert.That(fixture.SkipCount, Is.EqualTo(3));
+                Assert.That(fixture.InconclusiveCount, Is.EqualTo(4));
+                Assert.That(fixture.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+                Assert.That(fixture.StackTrace, Is.Null);
+            });
         }
 
         #endregion
@@ -325,7 +328,7 @@ namespace NUnit.Framework
         {
             var expected = TestContext.Out;
             await YieldAsync();
-            Assert.AreEqual(expected, TestContext.Out);
+            Assert.That(TestContext.Out, Is.EqualTo(expected));
         }
 
         [Test]
@@ -344,7 +347,7 @@ namespace NUnit.Framework
             {
                 isTestContextOutAvailable = TestContext.Out != null;
             }).Wait();
-            Assert.True(isTestContextOutAvailable);
+            Assert.That(isTestContextOutAvailable, Is.True);
         }
 
         private async Task YieldAsync()

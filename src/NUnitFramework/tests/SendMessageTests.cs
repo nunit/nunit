@@ -22,6 +22,7 @@ namespace NUnit.Framework
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Output, Is.EqualTo(""));
 
+            Assert.That(_testMessage, Is.Not.Null);
             Assert.That(_testMessage.Destination, Is.EqualTo(SOME_DESTINATION));
             Assert.That(_testMessage.Message, Is.EqualTo(SOME_MESSAGE));
             Assert.That(_testMessage.TestId, Is.EqualTo(result.Test.Id));
@@ -29,24 +30,24 @@ namespace NUnit.Framework
 
         #region ITestListener Implementation
 
-        public void TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
         }
 
-        public void TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
         }
 
         TestOutput _testOutput;
 
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
             _testOutput = output;
         }
 
         TestMessage _testMessage;
 
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
             _testMessage = message;
         }

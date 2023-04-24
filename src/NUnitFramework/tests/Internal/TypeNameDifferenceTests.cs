@@ -365,7 +365,7 @@ namespace NUnit.Framework.Internal
         {
             var notGeneric = new DifferingNamespace1.Dummy(1);
 
-            Assert.False(_differenceGetter.IsTypeGeneric(notGeneric.GetType()));
+            Assert.That(_differenceGetter.IsTypeGeneric(notGeneric.GetType()), Is.False);
 
             var generic = new DifferingNamespace1.DummyGeneric<DifferingNamespace1.Dummy>(new DifferingNamespace1.Dummy(1));
 
@@ -381,7 +381,7 @@ namespace NUnit.Framework.Internal
 
             var actual = _differenceGetter.GetGenericTypeName(generic);
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -401,7 +401,7 @@ namespace NUnit.Framework.Internal
                 "KeyValuePair`2",
                 new List<string>() { "String", "Int32" });
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         private void TestShortenTypeNames(object objA, object objB, string shortenedA, string shortenedB)
@@ -409,8 +409,8 @@ namespace NUnit.Framework.Internal
 
             _differenceGetter.ShortenTypeNames(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
-            Assert.AreEqual(shortenedA, actualA);
-            Assert.AreEqual(shortenedB, actualB);
+            Assert.That(actualA, Is.EqualTo(shortenedA));
+            Assert.That(actualB, Is.EqualTo(shortenedB));
         }
 
         [Test]
@@ -428,8 +428,8 @@ namespace NUnit.Framework.Internal
 
             _differenceGetter.GetShortenedGenericTypes(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
-            Assert.AreEqual(shortenedA, actualA);
-            Assert.AreEqual(shortenedB, actualB);
+            Assert.That(actualA, Is.EqualTo(shortenedA));
+            Assert.That(actualB, Is.EqualTo(shortenedB));
         }
 
         [Test]
@@ -452,7 +452,7 @@ namespace NUnit.Framework.Internal
         {
             string actual = _differenceGetter.FullyShortenTypeName(type);
 
-            Assert.AreEqual(expectedOutput, actual);
+            Assert.That(actual, Is.EqualTo(expectedOutput));
         }
 
         [Test]

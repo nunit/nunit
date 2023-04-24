@@ -44,8 +44,8 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResult_Identification()
         {
-            Assert.AreEqual(_test.Name, _testResult.Name);
-            Assert.AreEqual(_test.FullName, _testResult.FullName);
+            Assert.That(_testResult.Name, Is.EqualTo(_test.Name));
+            Assert.That(_testResult.FullName, Is.EqualTo(_test.FullName));
         }
 
         [Test]
@@ -59,9 +59,9 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResult_Duration()
         {
-            Assert.AreEqual(EXPECTED_START, _testResult.StartTime);
-            Assert.AreEqual(EXPECTED_END, _testResult.EndTime);
-            Assert.AreEqual(EXPECTED_DURATION, _testResult.Duration);
+            Assert.That(_testResult.StartTime, Is.EqualTo(EXPECTED_START));
+            Assert.That(_testResult.EndTime, Is.EqualTo(EXPECTED_END));
+            Assert.That(_testResult.Duration, Is.EqualTo(EXPECTED_DURATION));
         }
 
         [Test]
@@ -76,8 +76,8 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResult_Identification()
         {
-            Assert.AreEqual(_suite.Name, _suiteResult.Name);
-            Assert.AreEqual(_suite.FullName, _suiteResult.FullName);
+            Assert.That(_suiteResult.Name, Is.EqualTo(_suite.Name));
+            Assert.That(_suiteResult.FullName, Is.EqualTo(_suite.FullName));
         }
 
         [Test]
@@ -91,9 +91,9 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResult_Duration()
         {
-            Assert.AreEqual(EXPECTED_START, _suiteResult.StartTime);
-            Assert.AreEqual(EXPECTED_END, _suiteResult.EndTime);
-            Assert.AreEqual(EXPECTED_DURATION, _suiteResult.Duration);
+            Assert.That(_suiteResult.StartTime, Is.EqualTo(EXPECTED_START));
+            Assert.That(_suiteResult.EndTime, Is.EqualTo(EXPECTED_END));
+            Assert.That(_suiteResult.Duration, Is.EqualTo(EXPECTED_DURATION));
         }
 
         [Test]
@@ -110,10 +110,13 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.NotNull(testNode.Attributes["id"]);
-            Assert.AreEqual("test-case", testNode.Name);
-            Assert.AreEqual(_testResult.Name, testNode.Attributes["name"]);
-            Assert.AreEqual(_testResult.FullName, testNode.Attributes["fullname"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testNode.Attributes["id"], Is.Not.Null);
+                Assert.That(testNode.Name, Is.EqualTo("test-case"));
+                Assert.That(testNode.Attributes["name"], Is.EqualTo(_testResult.Name));
+                Assert.That(testNode.Attributes["fullname"], Is.EqualTo(_testResult.FullName));
+            });
         }
 
         [Test]
@@ -121,9 +124,12 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual(TEST_DESCRIPTION, testNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"]);
-            Assert.AreEqual(TEST_CATEGORY, testNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"]);
-            Assert.AreEqual(TEST_PRIORITY, testNode.SelectSingleNode("properties/property[@name='Priority']").Attributes["value"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"], Is.EqualTo(TEST_DESCRIPTION));
+                Assert.That(testNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"], Is.EqualTo(TEST_CATEGORY));
+                Assert.That(testNode.SelectSingleNode("properties/property[@name='Priority']").Attributes["value"], Is.EqualTo(TEST_PRIORITY));
+            });
         }
 
         [Test]
@@ -131,7 +137,7 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual(0, testNode.SelectNodes("test-case").Count);
+            Assert.That(testNode.SelectNodes("test-case"), Is.Empty);
         }
 
         [Test]
@@ -139,9 +145,12 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual(EXPECTED_START.ToString("o"), testNode.Attributes["start-time"]);
-            Assert.AreEqual(EXPECTED_END.ToString("o"), testNode.Attributes["end-time"]);
-            Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture), testNode.Attributes["duration"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testNode.Attributes["start-time"], Is.EqualTo(EXPECTED_START.ToString("o")));
+                Assert.That(testNode.Attributes["end-time"], Is.EqualTo(EXPECTED_END.ToString("o")));
+                Assert.That(testNode.Attributes["duration"], Is.EqualTo(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture)));
+            });
         }
 
         [Test]
@@ -149,10 +158,13 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.NotNull(suiteNode.Attributes["id"]);
-            Assert.AreEqual("test-suite", suiteNode.Name);
-            Assert.AreEqual(_suiteResult.Name, suiteNode.Attributes["name"]);
-            Assert.AreEqual(_suiteResult.FullName, suiteNode.Attributes["fullname"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["id"], Is.Not.Null);
+                Assert.That(suiteNode.Name, Is.EqualTo("test-suite"));
+                Assert.That(suiteNode.Attributes["name"], Is.EqualTo(_suiteResult.Name));
+                Assert.That(suiteNode.Attributes["fullname"], Is.EqualTo(_suiteResult.FullName));
+            });
         }
 
         [Test]
@@ -160,9 +172,12 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual(SUITE_DESCRIPTION, suiteNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"]);
-            Assert.AreEqual(SUITE_CATEGORY, suiteNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"]);
-            Assert.AreEqual(SUITE_LEVEL.ToString(), suiteNode.SelectSingleNode("properties/property[@name='Level']").Attributes["value"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"], Is.EqualTo(SUITE_DESCRIPTION));
+                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"], Is.EqualTo(SUITE_CATEGORY));
+                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Level']").Attributes["value"], Is.EqualTo(SUITE_LEVEL.ToString()));
+            });
         }
 
         [Test]
@@ -170,7 +185,7 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual(_suiteResult.Children.Count(), suiteNode.SelectNodes("test-case").Count);
+            Assert.That(suiteNode.SelectNodes("test-case"), Has.Count.EqualTo(_suiteResult.Children.Count()));
         }
 
         [Test]
@@ -178,9 +193,12 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual(EXPECTED_START.ToString("o"), suiteNode.Attributes["start-time"]);
-            Assert.AreEqual(EXPECTED_END.ToString("o"), suiteNode.Attributes["end-time"]);
-            Assert.AreEqual(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture), suiteNode.Attributes["duration"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["start-time"], Is.EqualTo(EXPECTED_START.ToString("o")));
+                Assert.That(suiteNode.Attributes["end-time"], Is.EqualTo(EXPECTED_END.ToString("o")));
+                Assert.That(suiteNode.Attributes["duration"], Is.EqualTo(EXPECTED_DURATION.ToString("0.000000", CultureInfo.InvariantCulture)));
+            });
         }
     }
 }

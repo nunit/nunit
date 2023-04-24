@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
             ICollection set1 = new SimpleObjectCollection("x", "y", "z");
             ICollection set2 = new SimpleObjectCollection("x", "y", "x");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess, Is.False);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Constraints
             ICollection set1 = new SimpleObjectCollection("x", "y", "x");
             ICollection set2 = new SimpleObjectCollection("x", "y", "z");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess, Is.False);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
             ICollection set1 = new SimpleObjectCollection("x", "y");
             ICollection set2 = new SimpleObjectCollection("x", "x", "y");
 
-            Assert.False(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess);
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2).IsSuccess, Is.False);
         }
 
         [Test]
@@ -176,8 +176,7 @@ namespace NUnit.Framework.Constraints
             IEnumerable<string> set1 = new List<string>() { "one" };
             IEnumerable<string> set2 = new List<string>() { "two" };
 
-            Assert.IsInstanceOf(typeof(CollectionEquivalentConstraintResult),
-                new CollectionEquivalentConstraint(set1).ApplyTo(set2));
+            Assert.That(new CollectionEquivalentConstraint(set1).ApplyTo(set2), Is.InstanceOf(typeof(CollectionEquivalentConstraintResult)));
         }
 
         /// <summary>
@@ -205,7 +204,7 @@ namespace NUnit.Framework.Constraints
                 "  But was:  < \"three\", \"one\" >" + Environment.NewLine +
                 "  Missing (1): < \"two\" >" + Environment.NewLine +
                 "  Extra (1): < \"three\" >" + Environment.NewLine;
-            Assert.AreEqual(expectedMsg, writer.ToString());
+            Assert.That(writer.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -245,7 +244,7 @@ namespace NUnit.Framework.Constraints
 
             var constraint = new CollectionEquivalentConstraint(hash);
             var constraintResult = constraint.ApplyTo(array);
-            Assert.False(constraintResult.IsSuccess);
+            Assert.That(constraintResult.IsSuccess, Is.False);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);

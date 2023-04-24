@@ -33,7 +33,9 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: same as 2" + Environment.NewLine +
                 "  But was:  2" + Environment.NewLine;
+#pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.AreSame(index, index));
+#pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

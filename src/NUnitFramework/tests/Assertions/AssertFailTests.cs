@@ -69,8 +69,11 @@ namespace NUnit.Framework.Assertions
 
             Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
-            Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
-            Assert.That(assertion.Message, Is.EqualTo("MESSAGE"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
+                Assert.That(assertion.Message, Is.EqualTo("MESSAGE"));
+            });
         }
 
         [Test]
@@ -85,8 +88,11 @@ namespace NUnit.Framework.Assertions
 
             Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
-            Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
-            Assert.That(assertion.Message, Is.EqualTo("MESSAGE: 2+2=4"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
+                Assert.That(assertion.Message, Is.EqualTo("MESSAGE: 2+2=4"));
+            });
         }
 
         [Test]
@@ -96,18 +102,18 @@ namespace NUnit.Framework.Assertions
                 typeof(AssertFailFixture),
                 nameof(AssertFailFixture.HandleAssertionException));
 
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(1));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("Custom message"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(1));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("Custom message"));
+            });
         }
 
         [Test]
         public void AssertCatchMakesTestPass()
         {
-            Assert.Catch(() =>
-            {
-                Assert.Fail("This should not be seen");
-            });
+            Assert.Catch(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
@@ -116,13 +122,10 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertThrowsMakesTestPass()
         {
-            Assert.Throws<AssertionException>(() =>
-            {
-                Assert.Fail("This should not be seen");
-            });
+            Assert.Throws<AssertionException>(() => Assert.Fail("This should not be seen"));
 
             // Ensure that no spurious info was recorded from the assertion
-            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults.Count, Is.EqualTo(0));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentResult.AssertionResults, Is.Empty);
         }
     }
 }

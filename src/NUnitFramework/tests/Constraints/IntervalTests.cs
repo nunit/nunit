@@ -11,10 +11,10 @@ namespace NUnit.Framework.Tests.Constraints
         public void IsNonZeroInterval()
         {
             var interval = new Interval(1);
-            Assert.IsTrue(interval.IsNotZero);
+            Assert.That(interval.IsNotZero, Is.True);
 
             interval =  new Interval(0);
-            Assert.IsFalse(interval.IsNotZero);
+            Assert.That(interval.IsNotZero, Is.False);
         }
     }
 }

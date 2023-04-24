@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal
         public void RandomULongWithMaximum()
         {
             ulong val = _randomizer.NextULong(1066UL);
-            Assert.That(val < 1066UL, "Out of range");
+            Assert.That(val, Is.LessThan(1066UL), "Out of range");
         }
 
         [Test]
@@ -427,13 +427,14 @@ namespace NUnit.Framework.Internal
         public void RandomBoolWithProbabilityZeroIsAlwaysFalse()
         {
             for (int i = 0; i < 10; i++)
-                Assert.False(_randomizer.NextBool(0.0));
+                Assert.That(_randomizer.NextBool(0.0), Is.False);
         }
 
+        [Test]
         public void RandomBoolWithProbabilityOneIsAlwaysTrue()
         {
             for (int i = 0; i < 10; i++)
-                Assert.True(_randomizer.NextBool(1.0));
+                Assert.That(_randomizer.NextBool(1.0), Is.True);
         }
 
         #endregion
@@ -534,32 +535,6 @@ namespace NUnit.Framework.Internal
         public void RandomFloatsInRangeAreUnique()
         {
             UniqueValues.Check(() => _randomizer.NextFloat(0.5f, 1.5f), 10, 100);
-        }
-
-        /// <summary>
-        /// Return an array of random floats between 0.0 and 1.0.
-        /// </summary>
-        public float[] GetFloats(int count)
-        {
-            float[] floats = new float[count];
-
-            for (int index = 0; index < count; index++)
-                floats[index] = _randomizer.NextFloat();
-
-            return floats;
-        }
-
-        /// <summary>
-        /// Return an array of random floats with values in a specified range.
-        /// </summary>
-        public float[] GetFloats(float min, float max, int count)
-        {
-            float[] floats = new float[count];
-
-            for (int index = 0; index < count; index++)
-                floats[index] = _randomizer.NextFloat(min, max);
-
-            return floats;
         }
 
         #endregion
@@ -747,13 +722,13 @@ namespace NUnit.Framework.Internal
             }
 
             static readonly MethodInfo testMethod1 =
-                typeof(Repeatability).GetMethod("TestMethod1", BindingFlags.NonPublic | BindingFlags.Static);
+                typeof(Repeatability).GetMethod(nameof(TestMethod1), BindingFlags.NonPublic | BindingFlags.Static);
             private static void TestMethod1(int x, int y)
             {
             }
 
             static readonly MethodInfo testMethod2 =
-                typeof(Repeatability).GetMethod("TestMethod2", BindingFlags.NonPublic | BindingFlags.Static);
+                typeof(Repeatability).GetMethod(nameof(TestMethod2), BindingFlags.NonPublic | BindingFlags.Static);
             private static void TestMethod2(int x, int y)
             {
             }

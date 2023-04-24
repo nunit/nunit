@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<ClassNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<ClassNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter, Is.TypeOf<MethodNameFilter>());
             Assert.That(filter.Match(_dummyFixture.Tests[0]));
             Assert.That(filter.Match(_anotherFixture.Tests[0]));
-            Assert.False(filter.Match(_fixtureWithMultipleTests.Tests[0]));
+            Assert.That(filter.Match(_fixtureWithMultipleTests.Tests[0]), Is.False);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<TestNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<TestNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<FullNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<FullNameFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
             Assert.That(filter.Match(_specialFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -223,7 +223,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<CategoryFilter>());
             Assert.That(filter.Match(_specialFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -252,8 +252,8 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<PropertyFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
-            Assert.False(filter.Match(_yetAnotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
+            Assert.That(filter.Match(_yetAnotherFixture), Is.False);
         }
 
         [Test]
@@ -271,8 +271,8 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<PropertyFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
-            Assert.False(filter.Match(_yetAnotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
+            Assert.That(filter.Match(_yetAnotherFixture), Is.False);
         }
 
         [Test]
@@ -294,7 +294,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<IdFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]

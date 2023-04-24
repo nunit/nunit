@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Internal
 {
@@ -16,7 +16,10 @@ namespace NUnit.Framework.Internal
             this.t2 = t2;
         }
 
+        // TODO: NUnit.Analyzers doesn't handle generics
+#pragma warning disable NUnit1001 // The individual arguments provided by a TestCaseAttribute must match the type of the corresponding parameter of the method
         [TestCase(5, 7)]
+#pragma warning restore NUnit1001 // The individual arguments provided by a TestCaseAttribute must match the type of the corresponding parameter of the method
         public void TestMyArgTypes(T1 t1, T2 t2)
         {
             Assert.That(t1, Is.TypeOf<T1>());

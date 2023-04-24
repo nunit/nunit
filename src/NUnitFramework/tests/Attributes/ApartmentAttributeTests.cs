@@ -139,7 +139,7 @@ namespace NUnit.Framework.Attributes
             [TestCase(2)]
             public void TestCasesShouldInheritApartmentFromFixture(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA), "TestCase" + n);
             }
         }
 
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Attributes
             [Apartment(ApartmentState.MTA)]
             public void TestCasesShouldRespectTheirApartment(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA), "TestCase" + n);
             }
         }
 
@@ -185,7 +185,7 @@ namespace NUnit.Framework.Attributes
             [TestCase(2)]
             public void TestCasesShouldInheritApartmentFromFixture(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.STA), "TestCase" + n);
             }
         }
 
@@ -209,7 +209,7 @@ namespace NUnit.Framework.Attributes
             [Apartment(ApartmentState.MTA)]
             public void TestCasesShouldRespectTheirApartment(int n)
             {
-                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA));
+                Assert.That(Thread.CurrentThread.GetApartmentState(), Is.EqualTo(ApartmentState.MTA), "TestCase" + n);
             }
         }
     }

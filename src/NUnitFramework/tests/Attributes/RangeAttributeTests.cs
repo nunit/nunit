@@ -15,7 +15,7 @@ namespace NUnit.Framework.Attributes
     {
         #region Shared specs
 
-        public static IEnumerable<Type> TestedParameterTypes() => new[]
+        private static IEnumerable<Type> TestedParameterTypes() => new[]
         {
             typeof(sbyte),
             typeof(byte),

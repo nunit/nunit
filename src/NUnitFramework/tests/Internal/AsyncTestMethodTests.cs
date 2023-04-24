@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        [TestCaseSource("TestCases")]
+        [TestCaseSource(nameof(TestCases))]
         public void RunTests(IMethodInfo method, ResultState resultState, int assertionCount)
         {
             var test = _builder.BuildFrom(method);

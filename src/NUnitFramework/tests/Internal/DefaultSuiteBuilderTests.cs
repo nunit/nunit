@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal
         {
             var suite = new DefaultSuiteBuilder().BuildFrom(new TypeWrapper(typeof(ImpliedFixture))) as TestFixture;
 
-            Assert.NotNull(suite, "No test fixture was built");
+            Assert.That(suite, Is.Not.Null, "No test fixture was built");
             Assert.That(suite.Name, Is.EqualTo(nameof(ImpliedFixture)));
         }
     }

@@ -31,14 +31,14 @@ namespace NUnit.Framework.Internal
         {
             if ( detector.IsCultureSupported( culture ) )
                 Assert.Fail($"Should not match \"{culture}\"");
-            Assert.AreEqual( "Only supported under culture " + culture, detector.Reason );
+            Assert.That( detector.Reason, Is.EqualTo("Only supported under culture " + culture));
         }
 
         private void ExpectFailure( CultureAttribute attr, string msg )
         {
             if ( detector.IsCultureSupported( attr ) )
                 Assert.Fail($"Should not match attribute with Include=\"{attr.Include}\",Exclude=\"{attr.Exclude}\"");
-            Assert.AreEqual( msg, detector.Reason );
+            Assert.That( detector.Reason, Is.EqualTo(msg));
         }
 
         [Test]
@@ -91,37 +91,37 @@ namespace NUnit.Framework.Internal
         [Test,SetCulture("fr-FR")]
         public void LoadWithFrenchCulture()
         {
-            Assert.AreEqual( "fr-FR", CultureInfo.CurrentCulture.Name, "Culture not set correctly" );
+            Assert.That( CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-FR"), "Culture not set correctly" );
             TestSuite fixture = TestBuilder.MakeFixture( typeof( FixtureWithCultureAttribute ) );
-            Assert.AreEqual( RunState.Runnable, fixture.RunState, "Fixture" );
+            Assert.That( fixture.RunState, Is.EqualTo(RunState.Runnable), "Fixture" );
             foreach( Test test in fixture.Tests )
             {
                 RunState expected = test.Name == "FrenchTest" ? RunState.Runnable : RunState.Skipped;
-                Assert.AreEqual( expected, test.RunState, test.Name );
+                Assert.That( test.RunState, Is.EqualTo(expected), test.Name );
             }
         }
 
         [Test,SetCulture("fr-CA")]
         public void LoadWithFrenchCanadianCulture()
         {
-            Assert.AreEqual( "fr-CA", CultureInfo.CurrentCulture.Name, "Culture not set correctly" );
+            Assert.That( CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-CA"), "Culture not set correctly" );
             TestSuite fixture = TestBuilder.MakeFixture( typeof( FixtureWithCultureAttribute ) );
-            Assert.AreEqual( RunState.Runnable, fixture.RunState, "Fixture" );
+            Assert.That( fixture.RunState, Is.EqualTo(RunState.Runnable), "Fixture" );
             foreach( Test test in fixture.Tests )
             {
                 RunState expected = test.Name.StartsWith( "French" ) ? RunState.Runnable : RunState.Skipped;
-                Assert.AreEqual( expected, test.RunState, test.Name );
+                Assert.That( test.RunState, Is.EqualTo(expected), test.Name );
             }
         }
 
         [Test,SetCulture("ru-RU")]
         public void LoadWithRussianCulture()
         {
-            Assert.AreEqual( "ru-RU", CultureInfo.CurrentCulture.Name, "Culture not set correctly" );
+            Assert.That( CultureInfo.CurrentCulture.Name, Is.EqualTo("ru-RU"), "Culture not set correctly" );
             TestSuite fixture = TestBuilder.MakeFixture( typeof( FixtureWithCultureAttribute ) );
-            Assert.AreEqual( RunState.Skipped, fixture.RunState, "Fixture" );
+            Assert.That( fixture.RunState, Is.EqualTo(RunState.Skipped), "Fixture" );
             foreach( Test test in fixture.Tests )
-                Assert.AreEqual( RunState.Skipped, test.RunState, test.Name );
+                Assert.That( test.RunState, Is.EqualTo(RunState.Skipped), test.Name );
         }
 
         [TestFixture, SetCulture("en-GB")]
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Internal
             [Test]
             public void CanSetCultureOnFixture()
             {
-                Assert.AreEqual( "en-GB", CultureInfo.CurrentCulture.Name );
+                Assert.That( CultureInfo.CurrentCulture.Name, Is.EqualTo("en-GB"));
             }
         }
     }

@@ -2,7 +2,9 @@
 
 using System;
 using System.Diagnostics;
+#if NETFRAMEWORK
 using System.Reflection;
+#endif
 using System.Threading;
 using System.Globalization;
 using System.IO;
@@ -93,7 +95,7 @@ namespace NUnit.Framework.Internal
         {
             var context = TestExecutionContext.CurrentContext;
             await YieldAsync();
-            Assert.AreSame(context, TestExecutionContext.CurrentContext);
+            Assert.That(TestExecutionContext.CurrentContext, Is.SameAs(context));
         }
 
         [Test]
@@ -102,9 +104,9 @@ namespace NUnit.Framework.Internal
             var expected = TestExecutionContext.CurrentContext;
             var parallelResult = await WhenAllAsync(YieldAndReturnContext(), YieldAndReturnContext());
 
-            Assert.AreSame(expected, TestExecutionContext.CurrentContext);
-            Assert.AreSame(expected, parallelResult[0]);
-            Assert.AreSame(expected, parallelResult[1]);
+            Assert.That(TestExecutionContext.CurrentContext, Is.SameAs(expected));
+            Assert.That(parallelResult[0], Is.SameAs(expected));
+            Assert.That(parallelResult[1], Is.SameAs(expected));
         }
 
         [Test]
@@ -227,7 +229,7 @@ namespace NUnit.Framework.Internal
         [TestCase(123, "abc")]
         public void TestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
         }
 
         [Test]
@@ -278,9 +280,9 @@ namespace NUnit.Framework.Internal
         [TestCase(123, "abc")]
         public async Task AsyncTestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
             await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {123, "abc"}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
         }
 
         [Test]
@@ -718,17 +720,17 @@ namespace NUnit.Framework.Internal
                 CultureInfo otherCulture =
                     new CultureInfo(originalCulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
                 context.CurrentCulture = otherCulture;
-                Assert.AreEqual(otherCulture, CultureInfo.CurrentCulture, "Culture was not set");
-                Assert.AreEqual(otherCulture, context.CurrentCulture, "Culture not in new context");
-                Assert.AreEqual(_setupContext.CurrentCulture, originalCulture, "Original context should not change");
+                Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(otherCulture), "Culture was not set");
+                Assert.That(context.CurrentCulture, Is.EqualTo(otherCulture), "Culture not in new context");
+                Assert.That(originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.AreEqual(CultureInfo.CurrentCulture, originalCulture, "Culture was not restored");
-            Assert.AreEqual(_setupContext.CurrentCulture, originalCulture, "Culture not in final context");
+            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture was not restored");
+            Assert.That(originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Culture not in final context");
         }
 
         [Test]
@@ -741,17 +743,17 @@ namespace NUnit.Framework.Internal
                 CultureInfo otherCulture =
                     new CultureInfo(originalUICulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
                 context.CurrentUICulture = otherCulture;
-                Assert.AreEqual(otherCulture, CultureInfo.CurrentUICulture, "UICulture was not set");
-                Assert.AreEqual(otherCulture, context.CurrentUICulture, "UICulture not in new context");
-                Assert.AreEqual(_setupContext.CurrentUICulture, originalUICulture, "Original context should not change");
+                Assert.That(CultureInfo.CurrentUICulture, Is.EqualTo(otherCulture), "UICulture was not set");
+                Assert.That(context.CurrentUICulture, Is.EqualTo(otherCulture), "UICulture not in new context");
+                Assert.That(originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.AreEqual(CultureInfo.CurrentUICulture, originalUICulture, "UICulture was not restored");
-            Assert.AreEqual(_setupContext.CurrentUICulture, originalUICulture, "UICulture not in final context");
+            Assert.That(originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture was not restored");
+            Assert.That(originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "UICulture not in final context");
         }
 
 #endregion
@@ -785,17 +787,17 @@ namespace NUnit.Framework.Internal
             {
                 GenericIdentity identity = new GenericIdentity("foo");
                 context.CurrentPrincipal = new GenericPrincipal(identity, Array.Empty<string>());
-                Assert.AreEqual("foo", Thread.CurrentPrincipal.Identity.Name, "Principal was not set");
-                Assert.AreEqual("foo", context.CurrentPrincipal.Identity.Name, "Principal not in new context");
-                Assert.AreEqual(_setupContext.CurrentPrincipal, originalPrincipal, "Original context should not change");
+                Assert.That(Thread.CurrentPrincipal.Identity.Name, Is.EqualTo("foo"), "Principal was not set");
+                Assert.That(context.CurrentPrincipal.Identity.Name, Is.EqualTo("foo"), "Principal not in new context");
+                Assert.That(originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.AreEqual(Thread.CurrentPrincipal, originalPrincipal, "Principal was not restored");
-            Assert.AreEqual(_setupContext.CurrentPrincipal, originalPrincipal, "Principal not in final context");
+            Assert.That(originalPrincipal, Is.EqualTo(Thread.CurrentPrincipal), "Principal was not restored");
+            Assert.That(originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Principal not in final context");
         }
 
 #endregion
@@ -833,7 +835,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void SingleThreadedDefaultsToFalse()
         {
-            Assert.False(new TestExecutionContext().IsSingleThreaded);
+            Assert.That(new TestExecutionContext().IsSingleThreaded, Is.False);
         }
 
         [Test]
@@ -841,7 +843,7 @@ namespace NUnit.Framework.Internal
         {
             var parent = new TestExecutionContext();
             parent.IsSingleThreaded = true;
-            Assert.True(new TestExecutionContext(parent).IsSingleThreaded);
+            Assert.That(new TestExecutionContext(parent).IsSingleThreaded, Is.True);
         }
 
 #endregion
@@ -899,7 +901,7 @@ namespace NUnit.Framework.Internal
 
             var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
 
-            Assert.NotNull(obj);
+            Assert.That(obj, Is.Not.Null);
         }
 
         [Serializable]

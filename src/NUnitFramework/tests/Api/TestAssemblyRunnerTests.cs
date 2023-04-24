@@ -3,7 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+#if THREAD_ABORT
 using System.Text;
+#endif
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -226,7 +228,7 @@ namespace NUnit.Framework.Api
 
         private void CheckForDuplicates(ITest test, Dictionary<string, bool> dict)
         {
-            Assert.False(dict.ContainsKey(test.Id), "Duplicate key: {0}", test.Id);
+            Assert.That(dict.ContainsKey(test.Id), Is.False, "Duplicate key: {0}", test.Id);
             dict.Add(test.Id, true);
 
             foreach (var child in test.Tests)
@@ -264,7 +266,7 @@ namespace NUnit.Framework.Api
             var runnerFixture = _runner.LoadedTest.Tests[0].Tests[0].Tests[0].Tests[0];
             var explorerFixture = explorer.Tests[0].Tests[0].Tests[0].Tests[0];
 
-            Assert.That(explorerFixture.Properties.Keys.Count, Is.EqualTo(runnerFixture.Properties.Keys.Count));
+            Assert.That(explorerFixture.Properties.Keys, Has.Count.EqualTo(runnerFixture.Properties.Keys.Count));
             Assert.That(explorerFixture.Properties.Get(PropertyNames.Category),
                 Is.EqualTo(explorerFixture.Properties.Get(PropertyNames.Category)));
             Assert.That(explorerFixture.Properties.Get(PropertyNames.Description),
@@ -396,7 +398,7 @@ namespace NUnit.Framework.Api
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
-            Assert.NotNull(_runner.Result, "No result returned");
+            Assert.That(_runner.Result, Is.Not.Null, "No result returned");
             Assert.That(_runner.Result.Test.IsSuite);
             Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.Runnable));
@@ -439,7 +441,7 @@ namespace NUnit.Framework.Api
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
-            Assert.NotNull(_runner.Result, "No result returned");
+            Assert.That(_runner.Result, Is.Not.Null, "No result returned");
             Assert.That(_runner.Result.Test.IsSuite);
             Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -456,7 +458,7 @@ namespace NUnit.Framework.Api
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
-            Assert.NotNull(_runner.Result, "No result returned");
+            Assert.That(_runner.Result, Is.Not.Null, "No result returned");
             Assert.That(_runner.Result.Test.IsSuite);
             Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
             Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
@@ -504,8 +506,8 @@ namespace NUnit.Framework.Api
             // Use Assert.Multiple so we can see everything that went wrong at one time
             Assert.Multiple(() =>
             {
-                Assert.True(completionWasSignaled, "Runner never signaled completion");
-                Assert.True(_runner.IsTestComplete, "Test is not recorded as complete");
+                Assert.That(completionWasSignaled, Is.True, "Runner never signaled completion");
+                Assert.That(_runner.IsTestComplete, Is.True, "Test is not recorded as complete");
 
                 if (_activeTests.Count > 0)
                 {
@@ -574,7 +576,7 @@ namespace NUnit.Framework.Api
         /// Called when a test produces output for immediate display
         /// </summary>
         /// <param name="output">A TestOutput object containing the text to display</param>
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
             _testOutputCount++;
         }
@@ -583,9 +585,8 @@ namespace NUnit.Framework.Api
         /// Called when a test produces message to be sent to listeners
         /// </summary>
         /// <param name="message">A TestMessage object containing the text to send</param>
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
-
         }
 
         #endregion

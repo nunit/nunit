@@ -14,7 +14,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(assembly, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(assembly, typeof(AssemblyCompanyAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.GreaterThanOrEqualTo(1));
+            Assert.That(attr, Is.Not.Empty);
         }
 
         [Test]
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(type, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(type, typeof(CategoryAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(type, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(type, typeof(CategoryAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(type, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(type, typeof(CategoryAttribute), false);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(0));
+            Assert.That(attr, Is.Empty);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(method, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(method, typeof(AuthorAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(property, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(property, typeof(DatapointSourceAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Compatibility
             Assert.That(field, Is.Not.Null);
             var attr = AttributeHelper.GetCustomAttributes(field, typeof(DatapointAttribute), true);
             Assert.That(attr, Is.Not.Null);
-            Assert.That(attr.Length, Is.EqualTo(1));
+            Assert.That(attr, Has.Length.EqualTo(1));
         }
 
         [Test]
@@ -92,12 +92,12 @@ namespace NUnit.Framework.Compatibility
             Assert.That(method, Is.Not.Null);
             ParameterInfo[] param = method.GetParameters();
             Assert.That(param, Is.Not.Null);
-            Assert.That(param.Length, Is.EqualTo(2));
+            Assert.That(param, Has.Length.EqualTo(2));
             foreach (var p in param)
             {
                 var attr = AttributeHelper.GetCustomAttributes(p, typeof(RandomAttribute), true);
                 Assert.That(attr, Is.Not.Null);
-                Assert.That(attr.Length, Is.EqualTo(1));
+                Assert.That(attr, Has.Length.EqualTo(1));
             }
         }
 

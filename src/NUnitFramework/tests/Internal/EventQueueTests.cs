@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal.Execution
             for (int index = 0; index < events.Length; index++)
             {
                 Event e = q.Dequeue(false);
-                Assert.AreEqual(events[index].GetType(), e.GetType(), $"Event {index}");
+                Assert.That(e.GetType(), Is.EqualTo(events[index].GetType()), $"Event {index}");
             }
         }
 
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
         public void DequeueEmpty()
         {
             EventQueue q = new EventQueue();
-            Assert.IsNull(q.Dequeue(false));
+            Assert.That(q.Dequeue(false), Is.Null);
         }
 
         [TestFixture]
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal.Execution
                 this.q = new EventQueue();
                 this.receivedEvents = 0;
                 this.RunProducerConsumer();
-                Assert.AreEqual(events.Length + 1, this.receivedEvents);
+                Assert.That(this.receivedEvents, Is.EqualTo(events.Length + 1));
             }
 
             protected override void Producer()
@@ -228,7 +228,7 @@ namespace NUnit.Framework.Internal.Execution
                     consumerThread.Start();
                     this.Producer();
                     bool consumerStopped = consumerThread.Join(1000);
-                    Assert.IsTrue(consumerStopped);
+                    Assert.That(consumerStopped, Is.True);
                 }
                 finally
                 {
@@ -237,7 +237,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
                 }
 
-                Assert.IsNull(this.myConsumerException);
+                Assert.That(this.myConsumerException, Is.Null);
             }
 
             protected abstract void Producer();

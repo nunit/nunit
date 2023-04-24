@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)4)]
         public void EqualItems(object x, object y)
         {
-            Assert.That(comparer.Compare(x, y) == 0);
+            Assert.That(comparer.Compare(x, y), Is.EqualTo(0));
         }
 
         [TestCase(4, 2)]
@@ -48,8 +48,11 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)2)]
         public void UnequalItems(object greater, object lesser)
         {
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
 
         [Test]
@@ -58,8 +61,11 @@ namespace NUnit.Framework.Constraints
             var greater = new ClassWithIComparable(42);
             var lesser = new ClassWithIComparable(-42);
 
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
 
         [Test]
@@ -68,8 +74,11 @@ namespace NUnit.Framework.Constraints
             var greater = new ClassWithIComparableOfT(42);
             var lesser = new ClassWithIComparableOfT(-42);
 
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
 
         [Test]
@@ -78,8 +87,11 @@ namespace NUnit.Framework.Constraints
             int greater = 42;
             var lesser = new ClassWithIComparableOfT(-42);
 
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
 
         [Test]
@@ -88,8 +100,11 @@ namespace NUnit.Framework.Constraints
             var greater = new ClassWithIComparableOfT(42);
             int lesser = -42;
 
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
 
         [Test]
@@ -98,8 +113,11 @@ namespace NUnit.Framework.Constraints
             short greater = 42;
             var lesser = new ClassWithIComparableOfT(-42);
 
-            Assert.That(comparer.Compare(greater, lesser) > 0);
-            Assert.That(comparer.Compare(lesser, greater) < 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+            });
         }
 
         #region Comparison Test Classes

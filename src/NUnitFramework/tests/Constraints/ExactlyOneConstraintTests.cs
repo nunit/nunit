@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ExactlyOneItemMustMatchButNoneInCollection()
         {
-            Assert.IsFalse(Has.One.EqualTo("item").ApplyTo(testCollectionLen0).IsSuccess);
+            Assert.That(Has.One.EqualTo("item").ApplyTo(testCollectionLen0).IsSuccess, Is.False);
         }
 
         [Test]

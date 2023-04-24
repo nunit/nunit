@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(_dummyFixture.Id));
 
-            Assert.False(filter.IsEmpty);
+            Assert.That(filter.IsEmpty, Is.False);
         }
 
         [Test]
@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal.Filters
             var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(_dummyFixture.Id));
 
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter.Pass(_dummyFixture));
             Assert.That(filter.Pass(_dummyFixture.Tests[0]));
 
-            Assert.False(filter.Pass(_anotherFixture));
+            Assert.That(filter.Pass(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -43,9 +43,9 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter.IsExplicitMatch(_topLevelSuite));
             Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+            Assert.That(filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
 
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace NUnit.Framework.Internal.Filters
                 new NotFilter(
                     new IdFilter(_dummyFixture.Id)));
 
-            Assert.False(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+            Assert.That(filter.IsExplicitMatch(_topLevelSuite), Is.False);
+            Assert.That(filter.IsExplicitMatch(_dummyFixture), Is.False);
+            Assert.That(filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
 
             Assert.That(filter.Match(_anotherFixture), "4");
         }
@@ -103,14 +103,14 @@ namespace NUnit.Framework.Internal.Filters
             foreach (var inputBool in inputBooleans)
             {
                 var strictFilter = new MockTestFilter(_dummyFixture, matchFunction, inputBool);
-                Assert.AreEqual(inputBool, ExecuteMatchFunction(strictFilter, matchFunction));
+                Assert.That(ExecuteMatchFunction(strictFilter, matchFunction), Is.EqualTo(inputBool));
 
                 filters.Add(strictFilter);
             }
 
             var filter = new AndFilter(filters.ToArray());
             bool calculatedResult = ExecuteMatchFunction(filter, matchFunction);
-            Assert.AreEqual(expectedResult, calculatedResult);
+            Assert.That(calculatedResult, Is.EqualTo(expectedResult));
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal.Filters
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
             Assert.That(filter.Match(_dummyFixture));
-            Assert.False(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(_anotherFixture), Is.False);
         }
     }
 }

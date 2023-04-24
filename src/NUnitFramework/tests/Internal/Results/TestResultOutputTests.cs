@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Results
             _result.OutWriter.WriteLine(SOME_TEXT);
 
             var outputNode = _result.ToXml(false).SelectSingleNode("output");
-            Assert.NotNull(outputNode, "No output node found in XML");
+            Assert.That(outputNode, Is.Not.Null, "No output node found in XML");
             Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL));
         }
 
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Internal.Results
             _result.OutWriter.WriteLine("Last line!");
 
             var outputNode = _result.ToXml(false).SelectSingleNode("output");
-            Assert.NotNull(outputNode, "No output node found in XML");
+            Assert.That(outputNode, Is.Not.Null, "No output node found in XML");
             Assert.That(outputNode.Value, Is.EqualTo(SOME_TEXT + NL +
                 "More text written in segments." + NL + "Last line!" + NL));
         }

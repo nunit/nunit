@@ -22,10 +22,10 @@ namespace NUnit.Framework.Internal
         [Test]
         public void IndexGetsListOfValues()
         {
-            Assert.That(bag["Answer"].Count, Is.EqualTo(1));
+            Assert.That(bag["Answer"], Has.Count.EqualTo(1));
             Assert.That(bag["Answer"], Contains.Item(42));
 
-            Assert.That(bag["Tag"].Count, Is.EqualTo(2));
+            Assert.That(bag["Tag"], Has.Count.EqualTo(2));
             Assert.That(bag["Tag"], Contains.Item("bug"));
             Assert.That(bag["Tag"], Contains.Item("easy"));
         }
@@ -33,14 +33,14 @@ namespace NUnit.Framework.Internal
         [Test]
         public void IndexGetsEmptyListIfNameIsNotPresent()
         {
-            Assert.That(bag["Level"].Count, Is.EqualTo(0));
+            Assert.That(bag["Level"], Is.Empty);
         }
 
         [Test]
         public void IndexSetsListOfValues()
         {
             bag["Zip"] = new[] {"junk", "more junk"};
-            Assert.That(bag["Zip"].Count, Is.EqualTo(2));
+            Assert.That(bag["Zip"], Has.Count.EqualTo(2));
             Assert.That(bag["Zip"], Contains.Item("junk"));
             Assert.That(bag["Zip"], Contains.Item("more junk"));
         }
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AllKeysAreListed()
         {
-            Assert.That(bag.Keys.Count, Is.EqualTo(2));
+            Assert.That(bag.Keys, Has.Count.EqualTo(2));
             Assert.That(bag.Keys, Has.Member("Answer"));
             Assert.That(bag.Keys, Has.Member("Tag"));
         }
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
         {
             Assert.That(bag.ContainsKey("Answer"));
             Assert.That(bag.ContainsKey("Tag"));
-            Assert.False(bag.ContainsKey("Target"));
+            Assert.That(bag.ContainsKey("Target"), Is.False);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Internal
         public void SetAddsNewSingleValue()
         {
             bag.Set("Zip", "ZAP");
-            Assert.That(bag["Zip"].Count, Is.EqualTo(1));
+            Assert.That(bag["Zip"], Has.Count.EqualTo(1));
             Assert.That(bag["Zip"], Has.Member("ZAP"));
             Assert.That(bag.Get("Zip"), Is.EqualTo("ZAP"));
         }
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Internal
         public void SetReplacesOldValues()
         {
             bag.Set("Tag", "ZAPPED");
-            Assert.That(bag["Tag"].Count, Is.EqualTo(1));
+            Assert.That(bag["Tag"], Has.Count.EqualTo(1));
             Assert.That(bag.Get("Tag"), Is.EqualTo("ZAPPED"));
         }
 
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal
         public void TestNullPropertyValueIsntAdded()
         {
             Assert.Throws<ArgumentNullException>(() => bag.Add("dontAddMe", null));
-            Assert.IsFalse(bag.ContainsKey("dontAddMe"));
+            Assert.That(bag.ContainsKey("dontAddMe"), Is.False);
         }
     }
 }

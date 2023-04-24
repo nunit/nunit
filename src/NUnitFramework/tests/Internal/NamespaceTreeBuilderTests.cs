@@ -23,7 +23,7 @@ namespace NUnit.Framework.Internal.Builders
         public void InitialTreeState()
         {
             Assert.That(_builder.RootSuite, Is.SameAs(_testAssembly));
-            Assert.That(_builder.RootSuite.Tests.Count, Is.Zero);
+            Assert.That(_builder.RootSuite.Tests, Is.Empty);
         }
 
         [Test]

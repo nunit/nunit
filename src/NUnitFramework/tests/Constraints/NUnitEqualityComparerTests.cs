@@ -56,8 +56,8 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)2)]
         public void UnequalItems(object greater, object lesser)
         {
-            Assert.False(comparer.AreEqual(greater, lesser, ref tolerance));
-            Assert.False(comparer.AreEqual(lesser, greater, ref tolerance));
+            Assert.That(comparer.AreEqual(greater, lesser, ref tolerance), Is.False);
+            Assert.That(comparer.AreEqual(lesser, greater, ref tolerance), Is.False);
         }
 
         [TestCase(double.PositiveInfinity, double.PositiveInfinity)]
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
             object[] array = new object[1];
             array[0] = array;
 
-            Assert.True(comparer.AreEqual(array, array, ref tolerance));
+            Assert.That(comparer.AreEqual(array, array, ref tolerance), Is.True);
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Constraints
             IEquatableWithoutEqualsOverridden x = new IEquatableWithoutEqualsOverridden(1);
             IEquatableWithoutEqualsOverridden y = new IEquatableWithoutEqualsOverridden(1);
 
-            Assert.IsTrue(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Constraints
 
             // y.Equals(x) is what gets actually called
             // TODO: This should work both ways
-            Assert.IsTrue(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
 
             // y.Equals(x) is what gets actually called
             // TODO: This should work both ways
-            Assert.IsTrue(comparer.AreEqual(y, x, ref tolerance));
+            Assert.That(comparer.AreEqual(y, x, ref tolerance), Is.True);
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Constraints
             IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
             IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(1);
 
-            Assert.IsTrue(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Constraints
             IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
             IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(2);
 
-            Assert.IsFalse(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.False);
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
         {
             NeverEqualIEquatable z = new NeverEqualIEquatable();
 
-            Assert.IsTrue(comparer.AreEqual(z, z, ref tolerance));
+            Assert.That(comparer.AreEqual(z, z, ref tolerance), Is.True);
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
             NeverEqualIEquatableWithOverriddenAlwaysTrueEquals x = new NeverEqualIEquatableWithOverriddenAlwaysTrueEquals();
             NeverEqualIEquatableWithOverriddenAlwaysTrueEquals y = new NeverEqualIEquatableWithOverriddenAlwaysTrueEquals();
 
-            Assert.IsFalse(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.False);
         }
 
         [Test]
@@ -284,7 +284,7 @@ namespace NUnit.Framework.Constraints
         public void IEnumeratorIsDisposed()
         {
             var enumeration = new EnumerableWithDisposeChecks<int>(new[] { 0, 1, 2, 3 });
-            Assert.True(comparer.AreEqual(enumeration, enumeration, ref tolerance));
+            Assert.That(comparer.AreEqual(enumeration, enumeration, ref tolerance), Is.True);
             Assert.That(enumeration.EnumeratorsDisposed);
         }
 
@@ -295,8 +295,7 @@ namespace NUnit.Framework.Constraints
             var tolerance = Tolerance.Default;
             var equality = equalityComparer.AreEqual(x, y, ref tolerance);
 
-            Assert.IsFalse(equality);
-            Assert.Contains(x, y);
+            Assert.That(equality, Is.False);
             Assert.That(y, Contains.Item(x));
             Assert.That(y, Does.Contain(x));
         }
@@ -321,10 +320,10 @@ namespace NUnit.Framework.Constraints
             var x = new[] { equalInstance1, equalInstance1 };
             var y = new[] { equalInstance2, equalInstance2 };
 
-            Assert.True(equalityComparer.AreEqual(x, y, ref tolerance));
+            Assert.That(equalityComparer.AreEqual(x, y, ref tolerance), Is.True);
         }
 
-        public static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
+        private static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
         {
             // Separate from 'GetRecursiveContainsTestCases' until a stackoverflow issue in
             // 'MsgUtils.FormatValue()' can be fixed for the below cases
@@ -340,7 +339,7 @@ namespace NUnit.Framework.Constraints
             yield return new TestCaseData(dictItem, dict);
         }
 
-        public static IEnumerable<TestCaseData> GetRecursiveContainsTestCases()
+        private static IEnumerable<TestCaseData> GetRecursiveContainsTestCases()
         {
             var enumerable = new SelfContainer();
             var enumerableContainer = new[] { new SelfContainer(), enumerable };

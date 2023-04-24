@@ -25,19 +25,19 @@ namespace NUnit.Framework
         [Test]
         public void Initially_ValuesAreNull()
         {
-            Assert.Null(_parameters["ABC"]);
+            Assert.That(_parameters["ABC"], Is.Null);
         }
 
         [Test]
         public void Initially_ExistsIsFalse()
         {
-            Assert.False(_parameters.Exists("ABC"));
+            Assert.That(_parameters.Exists("ABC"), Is.False);
         }
 
         [Test]
         public void Initially_NamesAreEmpty()
         {
-            Assert.That(_parameters.Names.Count, Is.EqualTo(0));
+            Assert.That(_parameters.Names, Is.Empty);
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace NUnit.Framework.Attributes
         public void ShouldPassAfter3Retries()
         {
             retryOnlyCount++;
-            Assert.True(retryOnlyCount >= 2);
+            Assert.That(retryOnlyCount, Is.GreaterThanOrEqualTo(2));
         }
 
         public class HelperMethodForTimeoutsClass
@@ -109,9 +109,12 @@ namespace NUnit.Framework.Attributes
             var workItem = TestBuilder.CreateWorkItem(testCase);
             var result = TestBuilder.ExecuteWorkItem(workItem);
 
-            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
-            Assert.AreEqual(FailureSite.Test, result.ResultState.Site);
-            Assert.AreEqual("Invalid", result.ResultState.Label);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.ResultState.Label, Is.EqualTo("Invalid"));
+            });
         }
 
         [Test]
@@ -121,16 +124,19 @@ namespace NUnit.Framework.Attributes
             var workItem = TestBuilder.CreateWorkItem(testCase);
             var result = TestBuilder.ExecuteWorkItem(workItem);
 
-            Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
-            Assert.AreEqual(FailureSite.Test, result.ResultState.Site);
-            Assert.AreEqual("Invalid", result.ResultState.Label);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
+                Assert.That(result.ResultState.Label, Is.EqualTo("Invalid"));
+            });
         }
 
         [Repeat(1), Retry(1)]
-        public void TestMethodForRepeatAndRetryExpectedFail() { }
+        private void TestMethodForRepeatAndRetryExpectedFail() { }
 
         [Repeat(1), CustomRepeater]
-        public void TestMethodForRepeatAndCustomRepeatExpectedFail() { }
+        private void TestMethodForRepeatAndCustomRepeatExpectedFail() { }
 
         #region TestCustomAttribute
 
@@ -151,7 +157,7 @@ namespace NUnit.Framework.Attributes
         public virtual void ShouldBeOveridden()
         {
             RepeatCount++;
-            Assert.True(RepeatCount >= 1);
+            Assert.That(RepeatCount, Is.GreaterThanOrEqualTo(1));
         }
     }
 
@@ -162,7 +168,7 @@ namespace NUnit.Framework.Attributes
         public override void ShouldBeOveridden()
         {
             RepeatCount++;
-            Assert.True(RepeatCount >= 2);
+            Assert.That(RepeatCount, Is.GreaterThanOrEqualTo(2));
         }
     }
 
@@ -173,7 +179,7 @@ namespace NUnit.Framework.Attributes
         public override void ShouldBeOveridden()
         {
             RepeatCount++;
-            Assert.True(RepeatCount == 1);
+            Assert.That(RepeatCount, Is.EqualTo(1));
         }
     }
 }

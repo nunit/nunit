@@ -21,57 +21,57 @@ namespace NUnit.Framework.Attributes
         [Test, SetUICulture("fr-FR")]
         public void SetUICultureOnlyToFrench()
         {
-            Assert.AreEqual(CultureInfo.CurrentCulture, originalCulture, "Culture should not change");
-            Assert.AreEqual("fr-FR", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-FR"), "UICulture not set correctly");
         }
 
         [Test, SetUICulture("fr-CA")]
         public void SetUICultureOnlyToFrenchCanadian()
         {
-            Assert.AreEqual(CultureInfo.CurrentCulture, originalCulture, "Culture should not change");
-            Assert.AreEqual("fr-CA", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-CA"), "UICulture not set correctly");
         }
 
         [Test, SetUICulture("ru-RU")]
         public void SetUICultureOnlyToRussian()
         {
-            Assert.AreEqual(CultureInfo.CurrentCulture, originalCulture, "Culture should not change");
-            Assert.AreEqual("ru-RU", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("ru-RU"), "UICulture not set correctly");
         }
 
         [Test, SetCulture("fr-FR"), SetUICulture("fr-FR")]
         public void SetBothCulturesToFrench()
         {
-            Assert.AreEqual("fr-FR", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-            Assert.AreEqual("fr-FR", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-FR"), "Culture not set correctly");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-FR"), "UICulture not set correctly");
         }
 
         [Test, SetCulture("fr-CA"), SetUICulture("fr-CA")]
         public void SetBothCulturesToFrenchCanadian()
         {
-            Assert.AreEqual("fr-CA", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-            Assert.AreEqual("fr-CA", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-CA"), "Culture not set correctly");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-CA"), "UICulture not set correctly");
         }
 
         [Test, SetCulture("ru-RU"), SetUICulture("ru-RU")]
         public void SetBothCulturesToRussian()
         {
-            Assert.AreEqual("ru-RU", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-            Assert.AreEqual("ru-RU", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("ru-RU"), "Culture not set correctly");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("ru-RU"), "UICulture not set correctly");
         }
 
         [Test, SetCulture("fr-FR"), SetUICulture("fr-CA")]
         public void SetMixedCulturesToFrenchAndUIFrenchCanadian()
         {
-            Assert.AreEqual("fr-FR", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-            Assert.AreEqual("fr-CA", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-FR"), "Culture not set correctly");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-CA"), "UICulture not set correctly");
         }
 
         [Test, SetCulture("ru-RU"), SetUICulture("en-US")]
         public void SetMixedCulturesToRussianAndUIEnglishUS()
         {
-            Assert.AreEqual("ru-RU", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-            Assert.AreEqual("en-US", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("ru-RU"), "Culture not set correctly");
+            Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("en-US"), "UICulture not set correctly");
         }
 
         [TestFixture, SetCulture("ru-RU"), SetUICulture("ru-RU")]
@@ -80,15 +80,15 @@ namespace NUnit.Framework.Attributes
             [Test]
             public void InheritedRussian()
             {
-                Assert.AreEqual("ru-RU", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-                Assert.AreEqual("ru-RU", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+                Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("ru-RU"), "Culture not set correctly");
+                Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("ru-RU"), "UICulture not set correctly");
             }
 
             [Test, SetUICulture("fr-FR")]
             public void InheritedRussianWithUIFrench()
             {
-                Assert.AreEqual("ru-RU", CultureInfo.CurrentCulture.Name, "Culture not set correctly");
-                Assert.AreEqual("fr-FR", CultureInfo.CurrentUICulture.Name, "UICulture not set correctly");
+                Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("ru-RU"), "Culture not set correctly");
+                Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-FR"), "UICulture not set correctly");
             }
         }
 

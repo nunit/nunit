@@ -32,13 +32,13 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResult_AssertionResults()
         {
-            Assert.AreEqual(_expectedAssertions, _testResult.AssertionResults);
+            Assert.That(_testResult.AssertionResults, Is.EqualTo(_expectedAssertions));
         }
 
         [Test]
         public void SuiteResult_AssertionResults()
         {
-            Assert.IsEmpty(_suiteResult.AssertionResults);
+            Assert.That(_suiteResult.AssertionResults, Is.Empty);
         }
 
         [Test]
@@ -48,35 +48,35 @@ namespace NUnit.Framework.Internal.Results
 
             if (_expectedAssertions.Count == 0)
             {
-                Assert.Null(assertionResults, "No <assertions> element expected");
+                Assert.That(assertionResults, Is.Null, "No <assertions> element expected");
                 return;
             }
 
-            Assert.NotNull(assertionResults, "Expected <assertions> element");
+            Assert.That(assertionResults, Is.Not.Null, "Expected <assertions> element");
 
             var assertionNodes = assertionResults.SelectNodes("assertion");
-            Assert.NotNull(assertionNodes, "Empty <assertions> element");
+            Assert.That(assertionNodes, Is.Not.Null, "Empty <assertions> element");
 
-            Assert.AreEqual(_expectedAssertions.Count, assertionNodes.Count, "Wrong number of <assertion> elements");
+            Assert.That(assertionNodes, Has.Count.EqualTo(_expectedAssertions.Count), "Wrong number of <assertion> elements");
 
             for (int index = 0; index < _expectedAssertions.Count; index++)
             {
                 AssertionResult expectedAssertion = _expectedAssertions[index];
                 TNode assertionNode = assertionNodes[index];
 
-                Assert.AreEqual(expectedAssertion.Status.ToString(), assertionNode.Attributes["result"]);
+                Assert.That(assertionNode.Attributes["result"], Is.EqualTo(expectedAssertion.Status.ToString()));
 
                 if (expectedAssertion.Message != null)
                 {
                     TNode messageNode = assertionNode.SelectSingleNode("message");
-                    Assert.NotNull(messageNode);
+                    Assert.That(messageNode, Is.Not.Null);
                     Assert.That(messageNode.Value, Is.EqualTo(expectedAssertion.Message));
                 }
 
                 if (expectedAssertion.StackTrace != null)
                 {
                     TNode stackNode = assertionNode.SelectSingleNode("stack-trace");
-                    Assert.NotNull(stackNode);
+                    Assert.That(stackNode, Is.Not.Null);
                     Assert.That(stackNode.Value, Is.EqualTo(expectedAssertion.StackTrace));
                 }
             }
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal.Results
         public void SuiteResultXml_AssertionResults()
         {
             TNode suiteNode = _suiteResult.ToXml(true);
-            Assert.Null(suiteNode.SelectSingleNode("assertions"));
+            Assert.That(suiteNode.SelectSingleNode("assertions"), Is.Null);
         }
     }
 }

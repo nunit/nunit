@@ -152,7 +152,9 @@ namespace NUnit.Framework.Assertions
                 TextMessageWriter.Pfx_Expected + "1" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, 2, 3 >" + NL;
 
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

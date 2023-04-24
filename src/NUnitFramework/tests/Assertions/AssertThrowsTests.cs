@@ -27,9 +27,9 @@ namespace NUnit.Framework.Assertions
             });
             Console.WriteLine(4);
 
-            var NL = Environment.NewLine;
+            var nl = Environment.NewLine;
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output,
-                Is.EqualTo($"1{NL}2{NL}3{NL}4{NL}"));
+                Is.EqualTo($"1{nl}2{nl}3{nl}4{nl}"));
         }
 
         [Test]
@@ -41,9 +41,9 @@ namespace NUnit.Framework.Assertions
                 Throws.Exception);
             Console.WriteLine(4);
 
-            var NL = Environment.NewLine;
+            var nl = Environment.NewLine;
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.Output,
-                Is.EqualTo($"1{NL}2{NL}3{NL}4{NL}"));
+                Is.EqualTo($"1{nl}2{nl}3{nl}4{nl}"));
         }
 
         [Test]
@@ -64,19 +64,19 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ThrowsSucceedsWithLambda()
         {
-            Assert.Throws(typeof(ArgumentException), () => { throw new ArgumentException(); });
+            Assert.Throws(typeof(ArgumentException), () => throw new ArgumentException());
         }
 
         [Test]
         public void GenericThrowsSucceedsWithLambda()
         {
-            Assert.Throws<ArgumentException>(() => { throw new ArgumentException(); });
+            Assert.Throws<ArgumentException>(() => throw new ArgumentException());
         }
 
         [Test]
         public void ThrowsConstraintSucceedsWithLambda()
         {
-            Assert.That(() => { throw new ArgumentException(); },
+            Assert.That(() => throw new ArgumentException(),
                 Throws.Exception.TypeOf<ArgumentException>());
         }
 
@@ -87,9 +87,11 @@ namespace NUnit.Framework.Assertions
                 delegate { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-
+            Assert.Multiple(() =>
+            {
+                Assert.That(ex.Message, Does.StartWith("myMessage"));
+                Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            });
             CheckForSpuriousAssertionResults();
         }
 
@@ -100,9 +102,11 @@ namespace NUnit.Framework.Assertions
                 delegate { throw new ArgumentException("myMessage", "myParam"); } ) as ArgumentException;
 
             Assert.IsNotNull(ex, "No ArgumentException thrown");
-            Assert.That(ex.Message, Does.StartWith("myMessage"));
-            Assert.That(ex.ParamName, Is.EqualTo("myParam"));
-
+            Assert.Multiple(() =>
+            {
+                Assert.That(ex.Message, Does.StartWith("myMessage"));
+                Assert.That(ex.ParamName, Is.EqualTo("myParam"));
+            });
             CheckForSpuriousAssertionResults();
         }
 
@@ -169,7 +173,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ThrowsConstraintWrappingAssertFail()
         {
-            Assert.That(() => { Assert.Fail(); },
+            Assert.That(() => Assert.Fail(),
                 Throws.Exception.TypeOf<AssertionException>());
 
             CheckForSpuriousAssertionResults();
@@ -195,7 +199,7 @@ namespace NUnit.Framework.Assertions
         private static void CheckForSpuriousAssertionResults()
         {
             var result = TestExecutionContext.CurrentContext.CurrentResult;
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(0),
+            Assert.That(result.AssertionResults, Is.Empty,
                 "Spurious result left by Assert.Fail()");
         }
 
