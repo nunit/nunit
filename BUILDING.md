@@ -64,18 +64,6 @@ You should then be able to run the unit tests directly from within your developm
 
 Unfortunately, there are currently some known issues with building and running tests locally.
 
-#### Tests will not from the command line using `dotnet test` ([#3867](https://github.com/nunit/nunit/issues/3867))
-
-The NUnit solution contains [NUnit Lite Runner](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Runner.html), a lightweight test runner. It is similar to NUnit console but with fewer features and without the overhead of a full NUnit installation. 
-
-If you navigate to one of the build outputs under the `bin` directory, you will see that it contains `nunitlite-runner.exe`
-
-For example, the following command `./nunitlite-runner nunit.framework.tests.dll` (bash on Linux) will run all tests in the nunit.framework.tests.dll.
-
-NUnit Lite Runner accepts a number of [command line arguments](https://docs.nunit.org/articles/nunit/running-tests/NUnitLite-Options.html). 
-
-For example, the following command `./nunitlite-runner nunit.framework.tests.dll --where "class == NUnit.Framework.Assertions.AssertEqualsTests"` (bash on Linux) will run all tests in the NUnit.Framework.Assertions.AssertEqualsTests TextFixture in the nunit.framework.tests.dll.
-
 #### Tests will not run within Rider or Visual Studio ([#3008](https://github.com/nunit/nunit/issues/3008))
 
 You can run NUnit Lite in a similar way to above, but from the development IDE after a successful build. 
