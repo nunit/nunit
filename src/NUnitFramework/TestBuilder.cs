@@ -165,15 +165,29 @@ namespace NUnit.TestUtilities
 
         public static ITestResult ExecuteWorkItem(WorkItem work)
         {
-            work.Execute();
+            var savedContext = TestExecutionContext.CurrentContext;
 
-            // TODO: Replace with an event - but not while method is static
-            while (work.State != WorkItemState.Complete)
+            try
             {
-                Thread.Sleep(1);
+                return ExecuteUntilComplete(work);
+            }
+            finally
+            {
+                savedContext.EstablishExecutionEnvironment();
             }
 
-            return work.Result;
+            static ITestResult ExecuteUntilComplete(WorkItem work)
+            {
+                work.Execute();
+
+                // TODO: Replace with an event - but not while method is static
+                while (work.State != WorkItemState.Complete)
+                {
+                    Thread.Sleep(1);
+                }
+
+                return work.Result;
+            }
         }
 
         #endregion
