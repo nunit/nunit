@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void IsNotEmpty()
         {
-            Assert.False(_filter.IsEmpty);
+            Assert.That(_filter.IsEmpty, Is.False);
         }
 
         [Test]

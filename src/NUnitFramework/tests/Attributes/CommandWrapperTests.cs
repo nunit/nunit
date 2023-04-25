@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Interfaces;
@@ -13,42 +13,54 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CorrectExceptionThrown()
         {
-            var result = TestBuilder.RunTestCase(this, "ThrowsCorrectException");
+            var result = TestBuilder.RunTestCase(this, nameof(ThrowsCorrectException));
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         [ExpectedException(typeof(NullReferenceException))]
         public void ThrowsCorrectException()
         {
             throw new NullReferenceException();
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
         [Test]
         public void NoExceptionThrown()
         {
-            var result = TestBuilder.RunTestCase(this, "ThrowsNoException");
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but no exception was thrown"));
+            var result = TestBuilder.RunTestCase(this, nameof(ThrowsNoException));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but no exception was thrown"));
+            });
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         [ExpectedException(typeof(NullReferenceException))]
         public void ThrowsNoException()
         {
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
         [Test]
         public void WrongExceptionThrown()
         {
-            var result = TestBuilder.RunTestCase(this, "ThrowsWrongException");
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but got Exception"));
+            var result = TestBuilder.RunTestCase(this, nameof(ThrowsWrongException));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("Expected NullReferenceException but got Exception"));
+            });
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         [ExpectedException(typeof(NullReferenceException))]
         public void ThrowsWrongException()
         {
             throw new Exception();
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
         /// <summary>
         /// Extremely simple ExpectedException implementation for use in the test

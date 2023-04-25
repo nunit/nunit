@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal.Execution
 
             if (alive > 0)
                 foreach (var worker in workers)
-                    Assert.False(worker.IsAlive, "Worker thread {0} did not stop", worker.Name);
+                    Assert.That(worker.IsAlive, Is.False, "Worker thread {0} did not stop", worker.Name);
         }
 
         [Test]

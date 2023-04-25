@@ -70,17 +70,17 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestEquality()
         {
-            Assert.AreEqual(eq1, eq2);
+            Assert.That(eq2, Is.EqualTo(eq1));
             if (eq1 != null && eq2 != null)
-                Assert.AreEqual(eq1.GetHashCode(), eq2.GetHashCode());
+                Assert.That(eq2.GetHashCode(), Is.EqualTo(eq1.GetHashCode()));
         }
 
         [Test]
         public void TestInequality()
         {
-            Assert.AreNotEqual(eq1, neq);
+            Assert.That(neq, Is.Not.EqualTo(eq1));
             if (eq1 != null && neq != null)
-                Assert.AreNotEqual(eq1.GetHashCode(), neq.GetHashCode());
+                Assert.That(neq.GetHashCode(), Is.Not.EqualTo(eq1.GetHashCode()));
         }
     }
 
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void SuiteHasCorrectNumberOfInstances()
         {
-            Assert.That(fixture.Tests.Count, Is.EqualTo(2));
+            Assert.That(fixture.Tests, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -152,14 +152,14 @@ namespace NUnit.Framework.Attributes
         public void CanSpecifyCategory()
         {
             Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithSingleCategory));
-            Assert.AreEqual("XYZ", fixture.Properties.Get(PropertyNames.Category));
+            Assert.That(fixture.Properties.Get(PropertyNames.Category), Is.EqualTo("XYZ"));
         }
 
         [Test]
         public void CanSpecifyMultipleCategories()
         {
             Test fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.TestFixtureWithMultipleCategories));
-            Assert.AreEqual(new[] { "X", "Y", "Z" }, fixture.Properties[PropertyNames.Category]);
+            Assert.That(fixture.Properties[PropertyNames.Category], Is.EqualTo(new[] { "X", "Y", "Z" }));
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MakeSureTypeIsInSystemNamespace()
         {
-            Assert.AreEqual("System", _someType.Namespace);
+            Assert.That(_someType.Namespace, Is.EqualTo("System"));
         }
     }
 }

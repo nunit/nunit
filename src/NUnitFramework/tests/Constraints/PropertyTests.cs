@@ -64,6 +64,7 @@ namespace NUnit.Framework.Constraints
             new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
 
+        [Test]
         public void NullDataThrowsArgumentNullException()
         {
             object value = null;
@@ -89,7 +90,10 @@ namespace NUnit.Framework.Constraints
 
             Assert.Multiple(() =>
             {
+                // TODO: NUnit.Analyzer doesn't know the special case where actual is a type.
+#pragma warning disable NUnit2022 // Missing property required for constraint
                 Assert.That(type, Has.Property("Length"), "TActual");
+#pragma warning restore NUnit2022 // Missing property required for constraint
                 Assert.That((object)type, Has.Property("Length"), "GetType");
             });
         }
@@ -206,8 +210,8 @@ namespace NUnit.Framework.Constraints
             //Verify message contains "Equivalent Constraint" message too.
             Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(result.GetType().Name, Is.EqualTo("PropertyConstraintResult"));
-            Assert.IsTrue(textMessageWriter.ToString().Contains("Missing"));
-            Assert.IsTrue(textMessageWriter.ToString().Contains("Extra"));
+            Assert.That(textMessageWriter.ToString(), Does.Contain("Missing"));
+            Assert.That(textMessageWriter.ToString(), Does.Contain("Extra"));
         }
 
         [Test]

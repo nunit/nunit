@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
 using System.Collections.Generic;
@@ -48,20 +48,6 @@ namespace NUnit.TestUtilities
             foreach (object o1 in actual)
                 if (!list.Contains(o1))
                     list.Add(o1);
-
-            return list.Count;
-        }
-
-        private static int CountUniqueValues<T>(ActualValueDelegate<T> del, int count)
-        {
-            var list = new List<T>();
-
-            while (count-- > 0)
-            {
-                T item = del();
-                if (!list.Contains(item))
-                    list.Add(item);
-            }
 
             return list.Count;
         }

@@ -20,13 +20,13 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(StaticProperty))]
         public void SourceCanBeStaticProperty(string source)
         {
-            Assert.AreEqual("StaticProperty", source);
+            Assert.That(source, Is.EqualTo("StaticProperty"));
         }
 
         [Test, TestCaseSource(nameof(InheritedStaticProperty))]
         public void TestSourceCanBeInheritedStaticProperty(bool source)
         {
-            Assert.AreEqual(true, source);
+            Assert.That(source, Is.EqualTo(true));
         }
 
         static IEnumerable StaticProperty =>
@@ -39,13 +39,13 @@ namespace NUnit.Framework.Attributes
         public void SourceUsingInstancePropertyIsNotRunnable()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithInstancePropertyAsSource));
-            Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
+            Assert.That(ResultState.NotRunnable, Is.EqualTo(result.Children.ToArray()[0].ResultState));
         }
 
         [Test, TestCaseSource(nameof(StaticMethod))]
         public void SourceCanBeStaticMethod(string source)
         {
-            Assert.AreEqual("StaticMethod", source);
+            Assert.That(source, Is.EqualTo("StaticMethod"));
         }
 
         static IEnumerable StaticMethod()
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Attributes
         public void SourceUsingInstanceMethodIsNotRunnable()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithInstanceMethodAsSource));
-            Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
+            Assert.That(ResultState.NotRunnable, Is.EqualTo(result.Children.ToArray()[0].ResultState));
         }
 
         IEnumerable InstanceMethod()
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(StaticField))]
         public void SourceCanBeStaticField(string source)
         {
-            Assert.AreEqual("StaticField", source);
+            Assert.That(source, Is.EqualTo("StaticField"));
         }
 
         static object[] StaticField =
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Attributes
         public void SourceUsingInstanceFieldIsNotRunnable()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithInstanceFieldAsSource));
-            Assert.AreEqual(result.Children.ToArray()[0].ResultState, ResultState.NotRunnable);
+            Assert.That(ResultState.NotRunnable, Is.EqualTo(result.Children.ToArray()[0].ResultState));
         }
 
         #endregion
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(typeof(DataSourceClass))]
         public void SourceCanBeInstanceOfIEnumerable(string source)
         {
-            Assert.AreEqual("DataSourceClass", source);
+            Assert.That(source, Is.EqualTo("DataSourceClass"));
         }
 
         class DataSourceClass : IEnumerable
@@ -108,19 +108,19 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(MyData))]
         public void SourceMayReturnArgumentsAsObjectArray(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [TestCaseSource(nameof(MyData))]
         public void TestAttributeIsOptional(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [Test, TestCaseSource(nameof(MyIntData))]
         public void SourceMayReturnArgumentsAsIntArray(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [Test, TestCaseSource(nameof(MyArrayData))]
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(EvenNumbers))]
         public void SourceMayReturnSinglePrimitiveArgumentAlone(int n)
         {
-            Assert.AreEqual(0, n % 2);
+            Assert.That(n % 2, Is.EqualTo(0));
         }
 
         [Test, TestCaseSource(nameof(Params))]
@@ -147,32 +147,32 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 2, 6)]
         public void TestMayUseMultipleSourceAttributes(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [Test, TestCaseSource(nameof(FourArgs))]
         public void TestWithFourArguments(int n, int d, int q, int r)
         {
-            Assert.AreEqual(q, n / d);
-            Assert.AreEqual(r, n % d);
+            Assert.That(n / d, Is.EqualTo(q));
+            Assert.That(n % d, Is.EqualTo(r));
         }
 
         [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheData))]
         public void SourceMayBeInAnotherClass(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
-        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), "HereIsTheDataWithParameters", new object[] { 100, 4, 25 })]
+        [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheDataWithParameters), new object[] { 100, 4, 25 })]
         public void SourceInAnotherClassPassingSomeDataToConstructor(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [Test, Category("Top"), TestCaseSource(nameof(StaticMethodDataWithParameters), new object[] { 8000, 8, 1000 })]
         public void SourceCanBeStaticMethodPassingSomeDataToConstructor(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [Test]
@@ -180,12 +180,12 @@ namespace NUnit.Framework.Attributes
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingParamsToField)).Tests[0];
-            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
-            Assert.AreEqual("You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Message, Is.EqualTo("You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
                             "please revise the 3rd parameter passed to the TestCaseSourceAttribute and either remove " +
-                            "it or specify a method.", result.Message);
+                            "it or specify a method."));
         }
 
         [Test]
@@ -193,12 +193,12 @@ namespace NUnit.Framework.Attributes
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingParamsToProperty)).Tests[0];
-            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
-            Assert.AreEqual("You have specified a data source property but also given a set of parameters. " +
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Message, Is.EqualTo("You have specified a data source property but also given a set of parameters. " +
                             "Properties cannot take parameters, please revise the 3rd parameter passed to the " +
-                            "TestCaseSource attribute and either remove it or specify a method.", result.Message);
+                            "TestCaseSource attribute and either remove it or specify a method."));
         }
 
         [Test]
@@ -206,12 +206,12 @@ namespace NUnit.Framework.Attributes
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam)).Tests[0];
-            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
-            Assert.AreEqual("You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Message, Is.EqualTo("You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
                             ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
-                            "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again.", result.Message);
+                            "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again."));
         }
 
         [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), nameof(DivideDataProviderWithReturnValue.TestCases))]
@@ -225,8 +225,8 @@ namespace NUnit.Framework.Attributes
         {
             var result = TestBuilder.RunParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodCallsIgnore)).Children.ToArray()[0];
-            Assert.AreEqual(ResultState.Ignored, result.ResultState);
-            Assert.AreEqual("Ignore this", result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
+            Assert.That(result.Message, Is.EqualTo("Ignore this"));
         }
 
         [Test]
@@ -294,16 +294,16 @@ namespace NUnit.Framework.Attributes
         {
             var testMethod = (TestMethod)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithSourceThrowingException)).Tests[0];
-            Assert.AreEqual(RunState.NotRunnable, testMethod.RunState);
+            Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.AreEqual(ResultState.NotRunnable, result.ResultState);
-            Assert.AreEqual("System.Exception : my message", result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Message, Is.EqualTo("System.Exception : my message"));
         }
 
         [TestCaseSource(nameof(exception_source)), Explicit("Used for GUI tests")]
         public void HandlesExceptionInTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
-            Assert.AreEqual(lhs, rhs);
+            Assert.That(rhs, Is.EqualTo(lhs));
         }
 
 
@@ -319,8 +319,8 @@ namespace NUnit.Framework.Attributes
         {
             TestSuite suiteToTest = TestBuilder.MakeParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithNonExistingSource));
             
-            Assert.That(suiteToTest.Tests.Count == 1);
-            Assert.AreEqual(RunState.NotRunnable, suiteToTest.Tests[0].RunState);
+            Assert.That(suiteToTest.Tests, Has.Count.EqualTo(1));
+            Assert.That(suiteToTest.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
         static object[] testCases =
@@ -347,7 +347,7 @@ namespace NUnit.Framework.Attributes
 
         #region Test name tests
 
-        public static IEnumerable<TestCaseData> IndividualInstanceNameTestDataSource()
+        private static IEnumerable<TestCaseData> IndividualInstanceNameTestDataSource()
         {
             var suite = (ParameterizedMethodSuite)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture),
@@ -413,7 +413,7 @@ namespace NUnit.Framework.Attributes
             new[] { 12, 6, 2 }
         };
 
-        public static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
+        private static IEnumerable StaticMethodDataWithParameters(int inject1, int inject2, int inject3)
         {
             yield return new object[] { inject1, inject2, inject3 };
         }

@@ -1,0 +1,28 @@
+[*.cs]
+
+# These are classic assertion tests and
+# should not be converted to the constraint model
+dotnet_diagnostic.NUnit2001.severity = none
+dotnet_diagnostic.NUnit2002.severity = none
+dotnet_diagnostic.NUnit2003.severity = none
+dotnet_diagnostic.NUnit2004.severity = none
+dotnet_diagnostic.NUnit2005.severity = none
+dotnet_diagnostic.NUnit2006.severity = none
+dotnet_diagnostic.NUnit2015.severity = none
+dotnet_diagnostic.NUnit2016.severity = none
+dotnet_diagnostic.NUnit2017.severity = none
+dotnet_diagnostic.NUnit2018.severity = none
+dotnet_diagnostic.NUnit2019.severity = none
+dotnet_diagnostic.NUnit2027.severity = none
+dotnet_diagnostic.NUnit2028.severity = none
+dotnet_diagnostic.NUnit2029.severity = none
+dotnet_diagnostic.NUnit2030.severity = none
+dotnet_diagnostic.NUnit2031.severity = none
+dotnet_diagnostic.NUnit2032.severity = none
+dotnet_diagnostic.NUnit2033.severity = none
+dotnet_diagnostic.NUnit2034.severity = none
+dotnet_diagnostic.NUnit2035.severity = none
+dotnet_diagnostic.NUnit2036.severity = none
+dotnet_diagnostic.NUnit2037.severity = none
+dotnet_diagnostic.NUnit2038.severity = none
+dotnet_diagnostic.NUnit2039.severity = none

@@ -23,8 +23,11 @@ namespace NUnit.Framework.Internal
 
             ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithInnerException));
 
-            Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual(expectedMessage, result.Message);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Is.EqualTo(expectedMessage));
+            });
         }
 
         [Test]
@@ -37,8 +40,11 @@ namespace NUnit.Framework.Internal
 
             ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithNestedInnerException));
 
-            Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual(expectedMessage, result.Message);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Is.EqualTo(expectedMessage));
+            });
         }
 
         [Test]
@@ -51,9 +57,12 @@ namespace NUnit.Framework.Internal
 
             ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithAggregateException));
 
-            Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
-            Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
+                Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+            });
         }
 
         [Test]
@@ -66,9 +75,12 @@ namespace NUnit.Framework.Internal
 
             ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithAggregateExceptionContainingNestedInnerException));
 
-            Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
-            Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Does.StartWith(expectedStartOfMessage));
+                Assert.That(result.Message, Does.EndWith(expectedEndOfMessage));
+            });
         }
 
         [Test]
@@ -76,9 +88,12 @@ namespace NUnit.Framework.Internal
         {
             ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsWithBadStackTrace));
 
-            Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.ExceptionWithBadStackTrace : thrown by me", result.Message);
-            Assert.AreEqual("InvalidOperationException was thrown by the Exception.StackTrace property.", result.StackTrace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Is.EqualTo("NUnit.TestData.UnexpectedExceptionFixture.ExceptionWithBadStackTrace : thrown by me"));
+                Assert.That(result.StackTrace, Is.EqualTo("InvalidOperationException was thrown by the Exception.StackTrace property."));
+            });
         }
 
         [Test]
@@ -86,8 +101,11 @@ namespace NUnit.Framework.Internal
         {
             ITestResult result = RunDataTestCase(nameof(UnexpectedExceptionFixture.ThrowsCustomException));
 
-            Assert.AreEqual(ResultState.Error, result.ResultState);
-            Assert.AreEqual("NUnit.TestData.UnexpectedExceptionFixture.CustomException : message", result.Message);
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Error));
+                Assert.That(result.Message, Is.EqualTo("NUnit.TestData.UnexpectedExceptionFixture.CustomException : message"));
+            });
         }
 
         [Test]
@@ -175,9 +193,11 @@ namespace NUnit.Framework.Internal
                 + "RecursivelyThrowingException was thrown by the Exception.StackTrace property."));
         }
 
+#pragma warning disable NUnit1028 // The non-test method is public
         public void DummyMethod()
         {
         }
+#pragma warning restore NUnit1028 // The non-test method is public
 
 #pragma warning disable SYSLIB0032
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]

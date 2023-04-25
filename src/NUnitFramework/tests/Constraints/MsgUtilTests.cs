@@ -86,7 +86,7 @@ namespace NUnit.Framework.Constraints
         public static void FormatValue_DoubleIsWrittenToSeventeenDigits()
         {
             string s = MsgUtils.FormatValue(0.33333333333333333333333333333333333333333333d);
-            Assert.That(s.Length, Is.EqualTo(20)); // add 3 for leading 0, decimal and trailing d
+            Assert.That(s, Has.Length.EqualTo(20)); // add 3 for leading 0, decimal and trailing d
         }
 
         [Test]

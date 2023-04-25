@@ -25,8 +25,8 @@ namespace NUnit.Framework.Internal
         private static void CanConstructFrom(Type fixtureType, string expectedName)
         {
             TestSuite fixture = TestBuilder.MakeFixture(fixtureType);
-            Assert.AreEqual(expectedName, fixture.Name);
-            Assert.AreEqual(fixtureType.FullName, fixture.FullName);
+            Assert.That(fixture.Name, Is.EqualTo(expectedName));
+            Assert.That(fixture.FullName, Is.EqualTo(fixtureType.FullName));
         }
 
         private static Type GetTestDataType(string typeName)
@@ -54,6 +54,7 @@ namespace NUnit.Framework.Internal
             CanConstructFrom(typeof(OuterClass.NestedTestFixture.DoublyNestedTestFixture), "OuterClass+NestedTestFixture+DoublyNestedTestFixture");
         }
 
+        [Test]
         public void ConstructFromTypeWithoutTestFixtureAttributeContainingTest()
         {
             CanConstructFrom(typeof(FixtureWithoutTestFixtureAttributeContainingTest));
@@ -107,7 +108,7 @@ namespace NUnit.Framework.Internal
         public void CapturesArgumentsForConstructorWithMultipleArgsSupplied()
         {
             var fixture = TestBuilder.MakeFixture(typeof(FixtureWithMultipleArgsSupplied));
-            Assert.True(fixture.HasChildren);
+            Assert.That(fixture.HasChildren, Is.True);
 
             var expectedArgumentSeries = new[]
             {
@@ -143,40 +144,39 @@ namespace NUnit.Framework.Internal
         public void FixtureUsingIgnoreAttributeIsIgnored()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreAttribute));
-            Assert.AreEqual(RunState.Ignored, suite.RunState);
-            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("testing ignore a fixture"));
         }
 
         [Test]
         public void FixtureWithNestedIgnoreAttributeIsIgnored() {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreAttribute.SubFixture));
-            Assert.AreEqual(RunState.Ignored, suite.RunState);
-            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("testing ignore a fixture"));
         }
 
         [Test]
         public void FixtureUsingIgnorePropertyIsIgnored()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreProperty));
-            Assert.AreEqual(RunState.Ignored, suite.RunState);
-            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("testing ignore a fixture"));
         }
 
         [Test]
         public void FixtureUsingIgnoreReasonPropertyIsIgnored()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreReasonProperty));
-            Assert.AreEqual(RunState.Ignored, suite.RunState);
-            Assert.AreEqual("testing ignore a fixture", suite.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Ignored));
+            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("testing ignore a fixture"));
         }
 
         [Test]
         public void FixtureWithParallelizableOnOneTimeSetUpIsInvalid()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureWithParallelizableOnOneTimeSetUp));
-            Assert.AreEqual(RunState.NotRunnable, suite.RunState);
-            Assert.AreEqual("ParallelizableAttribute is only allowed on test methods and fixtures",
-                suite.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
+            Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("ParallelizableAttribute is only allowed on test methods and fixtures"));
         }
 
         //		[Test]
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(DoubleDerivedClassWithTwoInheritedAttributes));
             Assert.That(suite, Is.TypeOf(typeof(TestFixture)));
-            Assert.That(suite.Tests.Count, Is.EqualTo(0));
+            Assert.That(suite.Tests, Is.Empty);
         }
 
         [Test]
@@ -248,7 +248,7 @@ namespace NUnit.Framework.Internal
             // GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureWithProperArgsProvided`1"));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(2));
+            Assert.That(suite.Tests, Has.Count.EqualTo(2));
         }
 
 //        [Test]
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Internal
             // GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithArgsProvided`1"));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
-            Assert.That(suite.Tests.Count, Is.EqualTo(2));
+            Assert.That(suite.Tests, Has.Count.EqualTo(2));
         }
 
         #region SetUp Signature

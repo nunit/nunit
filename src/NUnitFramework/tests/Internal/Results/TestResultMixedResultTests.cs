@@ -33,18 +33,21 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultIsFailure()
         {
-            Assert.AreEqual(ResultState.ChildFailure, _suiteResult.ResultState);
-            Assert.AreEqual(TestStatus.Failed, _suiteResult.ResultState.Status);
-            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, _suiteResult.Message);
-            Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-            Assert.Null(_suiteResult.StackTrace, "There should be no stacktrace");
-            Assert.AreEqual(5, _suiteResult.TotalCount);
-            Assert.AreEqual(2, _suiteResult.PassCount);
-            Assert.AreEqual(1, _suiteResult.FailCount);
-            Assert.AreEqual(1, _suiteResult.WarningCount);
-            Assert.AreEqual(0, _suiteResult.SkipCount);
-            Assert.AreEqual(1, _suiteResult.InconclusiveCount);
-            Assert.AreEqual(6, _suiteResult.AssertCount);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(_suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(_suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+                Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                Assert.That(_suiteResult.StackTrace, Is.Null, "There should be no stacktrace");
+                Assert.That(_suiteResult.TotalCount, Is.EqualTo(5));
+                Assert.That(_suiteResult.PassCount, Is.EqualTo(2));
+                Assert.That(_suiteResult.FailCount, Is.EqualTo(1));
+                Assert.That(_suiteResult.WarningCount, Is.EqualTo(1));
+                Assert.That(_suiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(_suiteResult.InconclusiveCount, Is.EqualTo(1));
+                Assert.That(_suiteResult.AssertCount, Is.EqualTo(6));
+            });
         }
 
         [Test]
@@ -52,23 +55,27 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
+            Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Failed"));
             TNode failureNode = suiteNode.SelectSingleNode("failure");
-            Assert.NotNull(failureNode, "No failure element found");
+            Assert.That(failureNode, Is.Not.Null, "No failure element found");
 
             TNode messageNode = failureNode.SelectSingleNode("message");
-            Assert.NotNull(messageNode, "No message element found");
-            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, messageNode.Value);
+            Assert.That(messageNode, Is.Not.Null, "No message element found");
+            Assert.That(messageNode.Value, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
 
             TNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
-            Assert.Null(stacktraceNode, "There should be no stacktrace");
-            Assert.AreEqual("5", suiteNode.Attributes["total"]);
-            Assert.AreEqual("2", suiteNode.Attributes["passed"]);
-            Assert.AreEqual("1", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("1", suiteNode.Attributes["warnings"]);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
-            Assert.AreEqual("1", suiteNode.Attributes["inconclusive"]);
-            Assert.AreEqual("6", suiteNode.Attributes["asserts"]);
+            Assert.That(stacktraceNode, Is.Null, "There should be no stacktrace");
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["total"], Is.EqualTo("5"));
+                Assert.That(suiteNode.Attributes["passed"], Is.EqualTo("2"));
+                Assert.That(suiteNode.Attributes["failed"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["warnings"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["skipped"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["inconclusive"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["asserts"], Is.EqualTo("6"));
+            });
         }
     }
 }

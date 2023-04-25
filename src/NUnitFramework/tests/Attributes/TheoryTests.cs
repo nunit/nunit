@@ -66,8 +66,8 @@ namespace NUnit.Framework.Attributes
         [Theory]
         public void NullDatapointIsOK(object o)
         {
-            Assert.Null(o);
-            Assert.Null(nullObj); // to avoid a warning
+            Assert.That(o, Is.Null);
+            Assert.That(nullObj, Is.Null); // to avoid a warning
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Attributes
         [Theory]
         public void ArrayWithDatapointsAttributeIsUsed(string s)
         {
-            Assert.That(s.StartsWith("xyz"));
+            Assert.That(s, Does.StartWith("xyz"));
         }
 
         private static void SquareRootTest(double d)
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Attributes
             Assume.That(d > 0);
             double root = Math.Sqrt(d);
             Assert.That(root * root, Is.EqualTo(d).Within(0.000001));
-            Assert.That(root > 0);
+            Assert.That(root, Is.GreaterThan(0));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Attributes
 
                 double sqrt = Math.Sqrt(num);
 
-                Assert.That(sqrt >= 0.0);
+                Assert.That(sqrt, Is.GreaterThanOrEqualTo(0.0));
                 Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
             }
         }
@@ -291,7 +291,7 @@ namespace NUnit.Framework.Attributes
 
                     double sqrt = Math.Sqrt(num);
 
-                    Assert.That(sqrt >= 0.0);
+                    Assert.That(sqrt, Is.GreaterThanOrEqualTo(0.0));
                     Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
                 }
             }

@@ -39,7 +39,7 @@ namespace NUnit.Framework.Assertions
                 "TwoWarningsAndFailure");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(3));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
             Assert.That(result.Message, Contains.Substring("First warning"));
             Assert.That(result.Message, Contains.Substring("Second warning"));
             Assert.That(result.Message, Contains.Substring("This fails"));
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Assertions
                 "TwoWarningsAndIgnore");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(3));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
             Assert.That(result.Message, Contains.Substring("First warning"));
             Assert.That(result.Message, Contains.Substring("Second warning"));
             Assert.That(result.Message, Contains.Substring("Ignore this"));
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Assertions
                 "TwoWarningsAndInconclusive");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(3));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
             Assert.That(result.Message, Contains.Substring("First warning"));
             Assert.That(result.Message, Contains.Substring("Second warning"));
             Assert.That(result.Message, Contains.Substring("This is inconclusive"));

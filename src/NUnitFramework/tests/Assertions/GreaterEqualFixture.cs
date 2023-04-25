@@ -155,9 +155,8 @@ namespace NUnit.Framework.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.GreaterOrEqual(7, 99));
 
             var msg = ex.Message;
-
-            StringAssert.Contains( TextMessageWriter.Pfx_Expected + "greater than or equal to 99", msg);
-            StringAssert.Contains( TextMessageWriter.Pfx_Actual + "7", msg);
+            Assert.That(msg, Contains.Substring(TextMessageWriter.Pfx_Expected + "greater than or equal to 99"));
+            Assert.That(msg, Contains.Substring(TextMessageWriter.Pfx_Actual + "7"));
         }
     }
 }

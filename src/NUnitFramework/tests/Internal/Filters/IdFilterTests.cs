@@ -15,14 +15,14 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void IsNotEmpty()
         {
-            Assert.False(_filter.IsEmpty);
+            Assert.That(_filter.IsEmpty, Is.False);
         }
 
         [Test]
         public void MatchTest()
         {
             Assert.That(_filter.Match(_dummyFixture));
-            Assert.False(_filter.Match(_anotherFixture));
+            Assert.That(_filter.Match(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(_filter.Pass(_dummyFixture));
             Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
 
-            Assert.False(_filter.Pass(_anotherFixture));
+            Assert.That(_filter.Pass(_anotherFixture), Is.False);
         }
 
         [Test]
@@ -40,9 +40,9 @@ namespace NUnit.Framework.Internal.Filters
         {
             Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
             Assert.That(_filter.IsExplicitMatch(_dummyFixture));
-            Assert.False(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+            Assert.That(_filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
 
-            Assert.False(_filter.IsExplicitMatch(_anotherFixture));
+            Assert.That(_filter.IsExplicitMatch(_anotherFixture), Is.False);
         }
     }
 }

@@ -3,12 +3,16 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+#if THREAD_ABORT
 using System.Linq;
+#endif
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
+#if THREAD_ABORT
 using NUnit.TestData;
+#endif
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Attributes
@@ -374,7 +378,7 @@ namespace NUnit.Framework.Attributes
             var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, new SampleTests(), detachedDebugger);
 
             // then
-            Assert.That(_testRanToCompletion == false, () => "Test ran to completion");
+            Assert.That(_testRanToCompletion, Is.False, () => "Test ran to completion");
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));

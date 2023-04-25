@@ -11,17 +11,17 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new IdFilter("Id-1"), new IdFilter("Id-2"));
 
-            Assert.True(InFilter.TryOptimize(filter, out var optimized));
+            Assert.That(InFilter.TryOptimize(filter, out var optimized), Is.True);
 
-            Assert.NotNull(optimized);
-            Assert.False(optimized.IsEmpty);
+            Assert.That(optimized, Is.Not.Null);
+            Assert.That(optimized.IsEmpty, Is.False);
 
-            Assert.True(optimized.Match(new TestDummy { Id = "Id-1" }));
-            Assert.True(optimized.Match(new TestDummy { Id = "Id-2" }));
+            Assert.That(optimized.Match(new TestDummy { Id = "Id-1" }), Is.True);
+            Assert.That(optimized.Match(new TestDummy { Id = "Id-2" }), Is.True);
 
-            Assert.False(optimized.Match(new TestDummy { Id = "id-1" }));
-            Assert.False(optimized.Match(new TestDummy { Id = "Id-" }));
-            Assert.False(optimized.Match(new TestDummy { Id = "" }));
+            Assert.That(optimized.Match(new TestDummy { Id = "id-1" }), Is.False);
+            Assert.That(optimized.Match(new TestDummy { Id = "Id-" }), Is.False);
+            Assert.That(optimized.Match(new TestDummy { Id = "" }), Is.False);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(filter.Match(_dummyFixture));
             Assert.That(filter.Match(_anotherFixture));
 
-            Assert.False(InFilter.TryOptimize(filter, out _));
+            Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new TestFilter[] {});
 
-            Assert.False(InFilter.TryOptimize(filter, out _));
+            Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
 
         [Test]
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, true), new FullNameFilter(ANOTHER_CLASS_REGEX, true));
 
-            Assert.False(InFilter.TryOptimize(filter, out _));
+            Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new FullNameFilter(DUMMY_CLASS_REGEX, true), new FullNameFilter("Dummy", false));
 
-            Assert.False(InFilter.TryOptimize(filter, out _));
+            Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
         
         [Test]
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Internal.Filters
             foreach (var orFilter in orFilters)
             {
                 InFilter.TryOptimize(orFilter, out var inFilter);
-                Assert.NotNull(inFilter);
+                Assert.That(inFilter, Is.Not.Null);
 
                 var orFilterXml = orFilter.ToXml(true).OuterXml;
                 var inFilterXml = inFilter.ToXml(true).OuterXml;

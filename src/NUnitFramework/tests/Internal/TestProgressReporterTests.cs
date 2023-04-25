@@ -35,7 +35,7 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var startReport = _listener.Reports.FirstOrDefault();
-            Assert.NotNull(startReport);
+            Assert.That(startReport, Is.Not.Null);
             Assert.That(startReport, Does.StartWith("<start-suite"));
             Assert.That(startReport, Contains.Substring("type=\"Assembly\""));
 
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var startReport = _listener.Reports.FirstOrDefault();
-            Assert.NotNull(startReport);
+            Assert.That(startReport, Is.Not.Null);
             Assert.That(startReport, Does.StartWith("<start-suite"));
             Assert.That(startReport, Contains.Substring($"framework-version=\"{typeof(TestProgressReporter).Assembly.GetName().Version}\""));
         }
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var endReport = _listener.Reports.LastOrDefault();
-            Assert.NotNull(endReport);
+            Assert.That(endReport, Is.Not.Null);
             Assert.That(endReport, Does.StartWith("<test-suite"));
             Assert.That(endReport, Contains.Substring("type=\"Assembly\""));
 
@@ -81,8 +81,8 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var startReport = _listener.Reports.FirstOrDefault();
-            Assert.NotNull(startReport);
-            StringAssert.StartsWith("<start-suite", startReport);
+            Assert.That(startReport, Is.Not.Null);
+            Assert.That(startReport, Does.StartWith("<start-suite"));
             Assert.That(startReport, Contains.Substring("type=\"TestFixture\""));
         }
 
@@ -95,8 +95,8 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var startReport = _listener.Reports.FirstOrDefault();
-            Assert.NotNull(startReport);
-            StringAssert.StartsWith("<start-test", startReport);
+            Assert.That(startReport, Is.Not.Null);
+            Assert.That(startReport, Does.StartWith("<start-test"));
         }
 
         [Test]
@@ -108,13 +108,13 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var startReport = _listener.Reports.FirstOrDefault();
-            Assert.NotNull(startReport);
-            StringAssert.StartsWith("<start-test", startReport);
-            StringAssert.Contains($"id=\"{work.Test.Id}\"", startReport);
-            StringAssert.Contains($"parentId=\"{work.Test.Parent?.Id}\"", startReport);
-            StringAssert.Contains($"name=\"{work.Test.Name}\"", startReport);
-            StringAssert.Contains($"fullname=\"{work.Test.FullName}\"", startReport);
-            StringAssert.Contains($"type=\"{work.Test.TestType}\"", startReport);
+            Assert.That(startReport, Is.Not.Null);
+            Assert.That(startReport, Does.StartWith("<start-test"));
+            Assert.That(startReport, Contains.Substring($"id=\"{work.Test.Id}\""));
+            Assert.That(startReport, Contains.Substring($"parentId=\"{work.Test.Parent?.Id}\""));
+            Assert.That(startReport, Contains.Substring($"name=\"{work.Test.Name}\""));
+            Assert.That(startReport, Contains.Substring($"fullname=\"{work.Test.FullName}\""));
+            Assert.That(startReport, Contains.Substring($"type=\"{work.Test.TestType}\""));
         }
 
         [Test]
@@ -126,9 +126,9 @@ namespace NUnit.Framework.Internal
             TestBuilder.ExecuteWorkItem(work);
 
             var endReport = _listener.Reports.LastOrDefault();
-            Assert.NotNull(endReport);
-            StringAssert.DoesNotStartWith("<start", endReport);
-            StringAssert.Contains($"parentId=\"{work.Test.Parent?.Id}\"", endReport);
+            Assert.That(endReport, Is.Not.Null);
+            Assert.That(endReport, Does.Not.StartWith("<start"));
+            Assert.That(endReport, Contains.Substring($"parentId=\"{work.Test.Parent?.Id}\""));
         }
 
         #region Nested ReportCollector Class

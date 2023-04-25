@@ -147,7 +147,7 @@ namespace NUnit.Framework.Attributes
             ITestResult result = TestBuilder.RunTest(fixture);
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            Assert.AreEqual(3, RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter);
+            Assert.That(RepeatingLifeCycleFixtureInstancePerTestCase.RepeatCounter, Is.EqualTo(3));
             BaseLifeCycle.VerifyInstancePerTestCase(3);
         }
 

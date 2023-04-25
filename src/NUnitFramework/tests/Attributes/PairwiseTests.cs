@@ -22,7 +22,7 @@ namespace NUnit.Framework.Attributes
             [OneTimeTearDown]
             public void OneTimeTearDown()
             {
-                Assert.That(pairsTested.Count, Is.EqualTo(16));
+                Assert.That(pairsTested, Has.Count.EqualTo(16));
             }
 
             [Test, Pairwise]
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Attributes
                 for (int j = 0; j < i; j++)
                     expectedPairs += dimensions[i] * dimensions[j];
 
-            Assert.That(pairs.Count, Is.EqualTo(expectedPairs), "Number of pairs is incorrect");
+            Assert.That(pairs, Has.Count.EqualTo(expectedPairs), "Number of pairs is incorrect");
             Assert.That(cases, Is.AtMost(bestSoFar), "Regression: Number of test cases exceeded target previously reached");
 #if DEBUG
             //Assert.That(cases, Is.AtMost(targetCases), "Number of test cases exceeded target");

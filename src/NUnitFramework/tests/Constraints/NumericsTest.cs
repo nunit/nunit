@@ -26,14 +26,14 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanMatchWithoutToleranceMode(object value)
         {
-            Assert.IsTrue(Numerics.AreEqual(value, value, ref zeroTolerance));
+            Assert.That(Numerics.AreEqual(value, value, ref zeroTolerance), Is.True);
         }
 
         // Separate test case because you can't use decimal in an attribute (24.1.3)
         [Test]
         public void CanMatchDecimalWithoutToleranceMode()
         {
-            Assert.IsTrue(Numerics.AreEqual(123m, 123m, ref zeroTolerance));
+            Assert.That(Numerics.AreEqual(123m, 123m, ref zeroTolerance), Is.True);
         }
 
         [TestCase((int)9500)]
@@ -51,15 +51,15 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanMatchIntegralsWithPercentage(object value)
         {
-            Assert.IsTrue(Numerics.AreEqual(10000, value, ref tenPercent));
+            Assert.That(Numerics.AreEqual(10000, value, ref tenPercent), Is.True);
         }
 
         [Test]
         public void CanMatchDecimalWithPercentage()
         {
-            Assert.IsTrue(Numerics.AreEqual(10000m, 9500m, ref tenPercent));
-            Assert.IsTrue(Numerics.AreEqual(10000m, 10000m, ref tenPercent));
-            Assert.IsTrue(Numerics.AreEqual(10000m, 10500m, ref tenPercent));
+            Assert.That(Numerics.AreEqual(10000m, 9500m, ref tenPercent), Is.True);
+            Assert.That(Numerics.AreEqual(10000m, 10000m, ref tenPercent), Is.True);
+            Assert.That(Numerics.AreEqual(10000m, 10500m, ref tenPercent), Is.True);
         }
 
         [Test]
@@ -165,25 +165,25 @@ namespace NUnit.Framework.Constraints
         [TestCase((ulong)11500)]
         public void FailsOnIntegralsOutsideOfPercentage(object value)
         {
-            Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000, value, ref tenPercent)));
+            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000, value, ref tenPercent), Is.True));
         }
 
         [Test]
         public void FailsOnDecimalBelowPercentage()
         {
-            Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000m, 8500m, ref tenPercent)));
+            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 8500m, ref tenPercent), Is.True));
         }
 
         [Test]
         public void FailsOnDecimalAbovePercentage()
         {
-            Assert.Throws<AssertionException>(() => Assert.IsTrue(Numerics.AreEqual(10000m, 11500m, ref tenPercent)));
+            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 11500m, ref tenPercent), Is.True));
         }
 
         [Test]
         public void FailsOnDecimalIsPartOfIsFixedPointNumericMethod()
         {
-            Assert.IsFalse(Numerics.IsFixedPointNumeric(1000m));
+            Assert.That(Numerics.IsFixedPointNumeric(1000m), Is.False);
         }
     }
 }

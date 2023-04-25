@@ -26,17 +26,17 @@ namespace NUnit.Framework.Internal
         [Test]
         public void PropertyBagAdapter_Get_CanAccessKeysFromSourceIPropertyBag()
         {
-            Assert.AreEqual("val1", _adapter.Get("key"));
-            Assert.AreEqual(42, _adapter.Get("meaningOfLife"));
-            Assert.AreEqual(null, _adapter.Get("nonExistantKey"));
+            Assert.That(_adapter.Get("key"), Is.EqualTo("val1"));
+            Assert.That(_adapter.Get("meaningOfLife"), Is.EqualTo(42));
+            Assert.That(_adapter.Get("nonExistantKey"), Is.EqualTo(null));
         }
 
         [Test]
         public void PropertyBagAdapter_ContainsKeys()
         {
-            Assert.IsTrue(_adapter.ContainsKey("key"));
-            Assert.IsTrue(_adapter.ContainsKey("meaningOfLife"));
-            Assert.IsFalse(_adapter.ContainsKey("nonExistantKey"));
+            Assert.That(_adapter.ContainsKey("key"), Is.True);
+            Assert.That(_adapter.ContainsKey("meaningOfLife"), Is.True);
+            Assert.That(_adapter.ContainsKey("nonExistantKey"), Is.False);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
             var enumerable = _adapter["key"];
 
             var asList = new List<object>(enumerable);
-            Assert.AreEqual(2, asList.Count);
+            Assert.That(asList, Has.Count.EqualTo(2));
             CollectionAssert.Contains(asList, "val1");
             CollectionAssert.Contains(asList, "val2");
         }
@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void PropertyBagAdapter_Count()
         {
-            Assert.AreEqual(2, _adapter.Count("key"));
+            Assert.That(_adapter.Count("key"), Is.EqualTo(2));
         }
 
         [Test]
@@ -70,10 +70,10 @@ namespace NUnit.Framework.Internal
         {
             _source.Add("newKey", "newVal");
 
-            Assert.IsTrue(_adapter.ContainsKey("newKey"));
-            Assert.AreEqual("newVal", _adapter.Get("newKey"));
+            Assert.That(_adapter.ContainsKey("newKey"), Is.True);
+            Assert.That(_adapter.Get("newKey"), Is.EqualTo("newVal"));
             CollectionAssert.AreEquivalent(new[] { "newVal" }, _adapter["newKey"]);
-            Assert.AreEqual(1, _adapter.Count("newKey"));
+            Assert.That(_adapter.Count("newKey"), Is.EqualTo(1));
             CollectionAssert.AreEquivalent(new[] { "key", "meaningOfLife", "newKey" }, _adapter.Keys);
         }
     }

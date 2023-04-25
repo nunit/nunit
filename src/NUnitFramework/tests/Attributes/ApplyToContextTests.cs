@@ -21,7 +21,7 @@ namespace NUnit.Framework.Attributes
         {
             var attr = new SingleThreadedAttribute();
             attr.ApplyToContext(_context);
-            Assert.True(_context.IsSingleThreaded);
+            Assert.That(_context.IsSingleThreaded, Is.True);
         }
 
         [Test]

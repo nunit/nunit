@@ -20,7 +20,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 4, 3)]
         public void IntegerDivisionWithResultPassedToTest(int n, int d, int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [TestCase(12, 3, ExpectedResult = 4)]
@@ -80,19 +80,19 @@ namespace NUnit.Framework.Attributes
         {
             var test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), methodName).Tests[0];
-            Assert.AreEqual(expectedState, test.RunState);
+            Assert.That(test.RunState, Is.EqualTo(expectedState));
         }
 
         [TestCase("12-October-1942")]
         public void CanConvertStringToDateTime(DateTime dt)
         {
-            Assert.AreEqual(1942, dt.Year);
+            Assert.That(dt.Year, Is.EqualTo(1942));
         }
 
         [TestCase("1942-10-12")]
         public void CanConvertIso8601DateStringToDateTime(DateTime dt)
         {
-            Assert.AreEqual(new DateTime(1942,10,12), dt);
+            Assert.That(dt, Is.EqualTo(new DateTime(1942,10,12)));
         }
 
         [TestCase("1942-10-12", ExpectedResult = "1942-10-12")]
@@ -104,9 +104,9 @@ namespace NUnit.Framework.Attributes
         [TestCase("4:44:15")]
         public void CanConvertStringToTimeSpan(TimeSpan ts)
         {
-            Assert.AreEqual(4, ts.Hours);
-            Assert.AreEqual(44, ts.Minutes);
-            Assert.AreEqual(15, ts.Seconds);
+            Assert.That(ts.Hours, Is.EqualTo(4));
+            Assert.That(ts.Minutes, Is.EqualTo(44));
+            Assert.That(ts.Seconds, Is.EqualTo(15));
         }
 
         [TestCase("4:44:15", ExpectedResult = "4:44:15")]
@@ -118,16 +118,16 @@ namespace NUnit.Framework.Attributes
         [TestCase("2018-10-09 15:15:00+02:30")]
         public void CanConvertStringToDateTimeOffset(DateTimeOffset offset)
         {
-            Assert.AreEqual(2018, offset.Year);
-            Assert.AreEqual(10, offset.Month);
-            Assert.AreEqual(9, offset.Day);
+            Assert.That(offset.Year, Is.EqualTo(2018));
+            Assert.That(offset.Month, Is.EqualTo(10));
+            Assert.That(offset.Day, Is.EqualTo(9));
 
-            Assert.AreEqual(15, offset.Hour);
-            Assert.AreEqual(15, offset.Minute);
-            Assert.AreEqual(0, offset.Second);
+            Assert.That(offset.Hour, Is.EqualTo(15));
+            Assert.That(offset.Minute, Is.EqualTo(15));
+            Assert.That(offset.Second, Is.EqualTo(0));
 
-            Assert.AreEqual(2, offset.Offset.Hours);
-            Assert.AreEqual(30, offset.Offset.Minutes);
+            Assert.That(offset.Offset.Hours, Is.EqualTo(2));
+            Assert.That(offset.Offset.Minutes, Is.EqualTo(30));
         }
 
         [TestCase("2018-10-09 15:15:00+02:30", ExpectedResult = "2018-10-09 15:15:00+02:30")]
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(null)]
         public void CanPassNullAsFirstArgument(object a)
         {
-            Assert.IsNull(a);
+            Assert.That(a, Is.Null);
         }
 
         [TestCase(new object[] { 1, "two", 3.0 })]
@@ -151,22 +151,22 @@ namespace NUnit.Framework.Attributes
         [TestCase(new object[] { "a", "b" })]
         public void CanPassArrayAsArgument(object[] array)
         {
-            Assert.AreEqual("a", array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase("a", "b")]
         public void ArgumentsAreCoalescedInObjectArray(object[] array)
         {
-            Assert.AreEqual("a", array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase(1, "b")]
         public void ArgumentsOfDifferentTypeAreCoalescedInObjectArray(object[] array)
         {
-            Assert.AreEqual(1, array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo(1));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase(new object[] { null })]
@@ -184,39 +184,39 @@ namespace NUnit.Framework.Attributes
         [TestCase("a", "b")]
         public void HandlesParamsArrayAsSoleArgument(params string[] array)
         {
-            Assert.AreEqual("a", array[0]);
-            Assert.AreEqual("b", array[1]);
+            Assert.That(array[0], Is.EqualTo("a"));
+            Assert.That(array[1], Is.EqualTo("b"));
         }
 
         [TestCase("a")]
         public void HandlesParamsArrayWithOneItemAsSoleArgument(params string[] array)
         {
-            Assert.AreEqual("a", array[0]);
+            Assert.That(array[0], Is.EqualTo("a"));
         }
 
         [TestCase("a", "b", "c", "d")]
         public void HandlesParamsArrayAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
-            Assert.AreEqual("c", array[0]);
-            Assert.AreEqual("d", array[1]);
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array[0], Is.EqualTo("c"));
+            Assert.That(array[1], Is.EqualTo("d"));
         }
 
         [TestCase("a", "b")]
         public void HandlesParamsArrayWithNoItemsAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
-            Assert.AreEqual(0, array.Length);
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array, Is.Empty);
         }
 
         [TestCase("a", "b", "c")]
         public void HandlesParamsArrayWithOneItemAsLastArgument(string s1, string s2, params object[] array)
         {
-            Assert.AreEqual("a", s1);
-            Assert.AreEqual("b", s2);
-            Assert.AreEqual("c", array[0]);
+            Assert.That(s1, Is.EqualTo("a"));
+            Assert.That(s2, Is.EqualTo("b"));
+            Assert.That(array[0], Is.EqualTo("c"));
         }
 
         [TestCase("x", ExpectedResult = new []{"x", "b", "c"})]
@@ -235,18 +235,20 @@ namespace NUnit.Framework.Attributes
             return new[] {s1, s2};
         }
 
+#pragma warning disable NUnit1004 // The TestCaseAttribute provided too many arguments
         [TestCase("a", "b", Explicit = true)]
         public void ShouldNotRunAndShouldNotFailInConsoleRunner()
         {
             Assert.Fail();
         }
+#pragma warning restore NUnit1004 // The TestCaseAttribute provided too many arguments
 
         [Test]
         public void CanSpecifyDescription()
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasDescriptionSpecified)).Tests[0];
-            Assert.AreEqual("My Description", test.Properties.Get(PropertyNames.Description));
+            Assert.That(test.Properties.Get(PropertyNames.Description), Is.EqualTo("My Description"));
         }
 
         [Test]
@@ -254,8 +256,8 @@ namespace NUnit.Framework.Attributes
         {
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasTestNameSpecified_FixedText)).Tests[0];
-            Assert.AreEqual("XYZ", test.Name);
-            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ", test.FullName);
+            Assert.That(test.Name, Is.EqualTo("XYZ"));
+            Assert.That(test.FullName, Is.EqualTo("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture.XYZ"));
         }
 
         [Test]
@@ -264,8 +266,8 @@ namespace NUnit.Framework.Attributes
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasTestNameSpecified_WithMethodName)).Tests[0];
             var expectedName = "MethodHasTestNameSpecified_WithMethodName+XYZ";
-            Assert.AreEqual(expectedName, test.Name);
-            Assert.AreEqual("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture." + expectedName, test.FullName);
+            Assert.That(test.Name, Is.EqualTo(expectedName));
+            Assert.That(test.FullName, Is.EqualTo("NUnit.TestData.TestCaseAttributeFixture.TestCaseAttributeFixture." + expectedName));
         }
 
         [Test]
@@ -274,7 +276,7 @@ namespace NUnit.Framework.Attributes
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasSingleCategory)).Tests[0];
             IList categories = test.Properties["Category"];
-            Assert.AreEqual(new[] { "XYZ" }, categories);
+            Assert.That(categories, Is.EqualTo(new[] { "XYZ" }));
         }
 
         [Test]
@@ -283,7 +285,7 @@ namespace NUnit.Framework.Attributes
             Test test = (Test)TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseAttributeFixture), nameof(TestCaseAttributeFixture.MethodHasMultipleCategories)).Tests[0];
             IList categories = test.Properties["Category"];
-            Assert.AreEqual(new[] { "X", "Y", "Z" }, categories);
+            Assert.That(categories, Is.EqualTo(new[] { "X", "Y", "Z" }));
         }
 
         [Test]
@@ -531,7 +533,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(12, 4, 3)]
         public void NullableIntegerDivisionWithResultPassedToTest(int? n, int? d, int? q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         [TestCase(12, 3, ExpectedResult = 4)]
@@ -630,7 +632,7 @@ namespace NUnit.Framework.Attributes
         public void CanConvertStringToNullableDateTime(DateTime? dt)
         {
             Assert.That(dt.HasValue);
-            Assert.AreEqual(1942, dt.Value.Year);
+            Assert.That(dt.Value.Year, Is.EqualTo(1942));
         }
 
         [TestCase(null)]
@@ -643,9 +645,9 @@ namespace NUnit.Framework.Attributes
         public void CanConvertStringToNullableTimeSpan(TimeSpan? ts)
         {
             Assert.That(ts.HasValue);
-            Assert.AreEqual(4, ts.Value.Hours);
-            Assert.AreEqual(44, ts.Value.Minutes);
-            Assert.AreEqual(15, ts.Value.Seconds);
+            Assert.That(ts.Value.Hours, Is.EqualTo(4));
+            Assert.That(ts.Value.Minutes, Is.EqualTo(44));
+            Assert.That(ts.Value.Seconds, Is.EqualTo(15));
         }
 
         [TestCase(null)]
@@ -657,13 +659,13 @@ namespace NUnit.Framework.Attributes
         [TestCase(1)]
         public void NullableSimpleFormalParametersWithArgument(int? a)
         {
-            Assert.AreEqual(1, a);
+            Assert.That(a, Is.EqualTo(1));
         }
 
         [TestCase(null)]
         public void NullableSimpleFormalParametersWithNullArgument(int? a)
         {
-            Assert.IsNull(a);
+            Assert.That(a, Is.Null);
         }
 
         [TestCase(null, ExpectedResult = null)]

@@ -91,9 +91,12 @@ namespace NUnit.Framework.Assertions
         {
             ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
 
-            Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
-            Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "AssertCount");
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(expectedResultState), "ResultState");
+                Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "AssertCount");
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(assertionMessageRegex.Length), "Number of AssertionResults");
+            });
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
@@ -122,11 +125,8 @@ namespace NUnit.Framework.Assertions
                     // NOTE: This test expects the stack trace to contain the name of the method
                     // that actually caused the failure. To ensure it is not optimized away, we
                     // compile the testdata assembly with optimizations disabled.
-
-                    PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
-                    {
-                        Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg);
-                    });
+                    PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(
+                        () => Assert.That(assertion.StackTrace, Is.Not.Null.And.Contains(methodName), errmsg));
                 }
             }
 

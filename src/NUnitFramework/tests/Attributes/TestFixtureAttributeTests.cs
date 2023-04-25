@@ -14,24 +14,33 @@ namespace NUnit.Framework.Attributes
         public void ConstructWithoutArguments()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute();
-            Assert.That(attr.Arguments.Length == 0);
-            Assert.That(attr.TypeArgs.Length == 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments, Is.Empty);
+                Assert.That(attr.TypeArgs, Is.Empty);
+            });
         }
 
         [Test]
         public void ConstructWithFixtureArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(fixtureArgs);
-            Assert.That(attr.Arguments, Is.EqualTo( fixtureArgs ) );
-            Assert.That(attr.TypeArgs.Length == 0 );
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments, Is.EqualTo(fixtureArgs));
+                Assert.That(attr.TypeArgs, Is.Empty);
+            });
         }
 
         [Test]
         public void ConstructWithJustTypeArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(typeArgs);
-            Assert.That(attr.Arguments.Length == 2);
-            Assert.That(attr.TypeArgs.Length == 0);
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments, Has.Length.EqualTo(2));
+                Assert.That(attr.TypeArgs, Is.Empty);
+            });
         }
 
         [Test]
@@ -39,8 +48,11 @@ namespace NUnit.Framework.Attributes
         {
             TestFixtureAttribute attr = new TestFixtureAttribute();
             attr.TypeArgs = typeArgs;
-            Assert.That(attr.Arguments.Length == 0);
-            Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments, Is.Empty);
+                Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
+            });
         }
 
         [Test]
@@ -48,16 +60,22 @@ namespace NUnit.Framework.Attributes
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(fixtureArgs);
             attr.TypeArgs = typeArgs;
-            Assert.That(attr.Arguments, Is.EqualTo(fixtureArgs));
-            Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments, Is.EqualTo(fixtureArgs));
+                Assert.That(attr.TypeArgs, Is.EqualTo(typeArgs));
+            });
         }
 
         [Test]
         public void ConstructWithCombinedArgs()
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(combinedArgs);
-            Assert.That(attr.Arguments, Is.EqualTo(combinedArgs));
-            Assert.That(attr.TypeArgs.Length, Is.EqualTo(0));
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments, Is.EqualTo(combinedArgs));
+                Assert.That(attr.TypeArgs, Is.Empty);
+            });
         }
 
         [Test]
@@ -65,8 +83,11 @@ namespace NUnit.Framework.Attributes
         {
             TestFixtureAttribute attr = new TestFixtureAttribute(null);
             Assert.That(attr.Arguments, Is.Not.Null);
-            Assert.That(attr.Arguments[0], Is.Null);
-            Assert.That(attr.TypeArgs, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(attr.Arguments[0], Is.Null);
+                Assert.That(attr.TypeArgs, Is.Not.Null);
+            });
         }
     }
 }

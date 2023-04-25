@@ -13,16 +13,16 @@ namespace NUnit.TestUtilities
         #region IsRunnable
         public static void IsRunnable(Test test)
         {
-            Assert.AreEqual(RunState.Runnable, test.RunState);
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         public static void IsRunnable(Type type)
         {
             TestSuite suite = TestBuilder.MakeFixture(type);
-            Assert.NotNull(suite, "Unable to construct fixture");
-            Assert.AreEqual(RunState.Runnable, suite.RunState);
+            Assert.That(suite, Is.Not.Null, "Unable to construct fixture");
+            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             ITestResult result = TestBuilder.RunTest(suite, null);
-            Assert.AreEqual(ResultState.Success, result.ResultState);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
 
         public static void IsRunnable(Type type, string name)
@@ -45,7 +45,7 @@ namespace NUnit.TestUtilities
         #region IsNotRunnable
         public static void IsNotRunnable(Test test)
         {
-            Assert.AreEqual(RunState.NotRunnable, test.RunState);
+            Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
             //ITestResult result = TestBuilder.RunTest(test, null);
             //Assert.AreEqual(TestStatus.Failed, result.ResultState.Status);
             //Assert.AreEqual("Invalid", result.ResultState.Label);
@@ -54,7 +54,7 @@ namespace NUnit.TestUtilities
         public static void IsNotRunnable(Type type)
         {
             TestSuite fixture = TestBuilder.MakeFixture(type);
-            Assert.NotNull(fixture, "Unable to construct fixture");
+            Assert.That(fixture, Is.Not.Null, "Unable to construct fixture");
             IsNotRunnable(fixture);
         }
 

@@ -236,7 +236,7 @@ namespace NUnit.Framework.Assertions
         private static void CheckForSpuriousAssertionResults()
         {
             var result = TestExecutionContext.CurrentContext.CurrentResult;
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(0),
+            Assert.That(result.AssertionResults, Is.Empty,
                 "Spurious result left by Assert.Fail()");
         }
 

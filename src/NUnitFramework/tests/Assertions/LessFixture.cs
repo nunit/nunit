@@ -139,8 +139,9 @@ namespace NUnit.Framework.Assertions
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.Less(9, 4));
 
-            StringAssert.Contains( TextMessageWriter.Pfx_Expected + "less than 4", ex.Message );
-            StringAssert.Contains( TextMessageWriter.Pfx_Actual + "9", ex.Message );
+            var msg = ex.Message;
+            Assert.That(msg, Contains.Substring(TextMessageWriter.Pfx_Expected + "less than 4"));
+            Assert.That(msg, Contains.Substring(TextMessageWriter.Pfx_Actual + "9"));
         }
     }
 }

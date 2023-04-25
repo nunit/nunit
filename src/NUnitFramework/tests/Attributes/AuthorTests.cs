@@ -19,21 +19,21 @@ namespace NUnit.Framework.Attributes
         public void ReflectionTest()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.Method));
-            Assert.AreEqual(RunState.Runnable, testCase.RunState);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [Test]
         public void Author()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.Method));
-            Assert.AreEqual("Rob Prouse", testCase.Properties.Get(PropertyNames.Author));
+            Assert.That(testCase.Properties.Get(PropertyNames.Author), Is.EqualTo("Rob Prouse"));
         }
 
         [Test]
         public void NoAuthor()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.NoAuthorMethod));
-            Assert.IsNull(testCase.Properties.Get(PropertyNames.Author));
+            Assert.That(testCase.Properties.Get(PropertyNames.Author), Is.Null);
         }
 
         [Test]
@@ -44,30 +44,30 @@ namespace NUnit.Framework.Attributes
 
             var mockFixtureSuite = (TestSuite)suite.Tests[0];
 
-            Assert.AreEqual("Rob Prouse", mockFixtureSuite.Properties.Get(PropertyNames.Author));
+            Assert.That(mockFixtureSuite.Properties.Get(PropertyNames.Author), Is.EqualTo("Rob Prouse"));
         }
 
         [Test]
         public void SeparateAuthorAttribute()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.SeparateAuthorMethod));
-            Assert.AreEqual("Rob Prouse", testCase.Properties.Get(PropertyNames.Author));
+            Assert.That(testCase.Properties.Get(PropertyNames.Author), Is.EqualTo("Rob Prouse"));
         }
 
         [Test]
         public void SeparateAuthorWithEmailAttribute()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(AuthorFixture.SeparateAuthorWithEmailMethod));
-            Assert.AreEqual("Rob Prouse <rob@prouse.org>", testCase.Properties.Get(PropertyNames.Author));
+            Assert.That(testCase.Properties.Get(PropertyNames.Author), Is.EqualTo("Rob Prouse <rob@prouse.org>"));
         }
 
         [Test]
         public void AuthorOnTestCase()
         {
             TestSuite parameterizedMethodSuite = TestBuilder.MakeParameterizedMethodSuite(FixtureType, nameof(AuthorFixture.TestCaseWithAuthor));
-            Assert.AreEqual("Rob Prouse", parameterizedMethodSuite.Properties.Get(PropertyNames.Author));
+            Assert.That(parameterizedMethodSuite.Properties.Get(PropertyNames.Author), Is.EqualTo("Rob Prouse"));
             var testCase = (Test)parameterizedMethodSuite.Tests[0];
-            Assert.AreEqual("Charlie Poole", testCase.Properties.Get(PropertyNames.Author));
+            Assert.That(testCase.Properties.Get(PropertyNames.Author), Is.EqualTo("Charlie Poole"));
         }
 
         #region Multiple Authors

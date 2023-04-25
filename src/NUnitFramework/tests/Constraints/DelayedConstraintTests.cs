@@ -75,7 +75,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource(nameof(FailureDelegates))]
         public void FailsWithBadDelegates(ActualValueDelegate<object> del)
         {
-            Assert.IsFalse(TheConstraint.ApplyTo(del).IsSuccess);
+            Assert.That(TheConstraint.ApplyTo(del).IsSuccess, Is.False);
         }
 
         [Test]
@@ -109,7 +109,12 @@ namespace NUnit.Framework.Constraints
         public void CanTestContentsOfList()
         {
             SetValuesAfterDelay(1);
+
+            // https://github.com/nunit/nunit.analyzers/issues/431
+            // It was decided to keep to analyzer warning
+#pragma warning disable NUnit2044 // Non-delegate actual parameter
             Assert.That(list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+#pragma warning restore NUnit2044 // Non-delegate actual parameter
         }
 
         [Test]
@@ -226,7 +231,7 @@ namespace NUnit.Framework.Constraints
         public void PreservesOriginalResultAdditionalLines()
         {
             var exception = Assert.Throws<AssertionException>(
-                () => Assert.That(new[] { 1, 2 }, Is.EquivalentTo(new[] { 2, 3 }).After(1)));
+                () => Assert.That(() => new[] { 1, 2 }, Is.EquivalentTo(new[] { 2, 3 }).After(1)));
 
             var expectedMessage =
                 "  Expected: equivalent to < 2, 3 > after 1 millisecond delay" + Environment.NewLine +
@@ -238,8 +243,6 @@ namespace NUnit.Framework.Constraints
         }
 
         private static int setValuesDelay;
-
-        private static void MethodReturningVoid() { }
 
         private static object MethodReturningValue() { return boolValue; }
 

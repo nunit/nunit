@@ -117,7 +117,7 @@ namespace NUnit.Framework.Attributes
 
         public class FixtureClass { }
 
-        public void DummyMethod() { }
+        private void DummyMethod() { }
 
         [TestCase(1)]
         public void DummyTestCase(int i) { }

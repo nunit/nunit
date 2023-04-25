@@ -22,7 +22,7 @@ namespace NUnit.Framework.Attributes
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType, new object[] { propValue }) as PropertyAttribute;
-            Assert.NotNull(attr, "{0} is not a PropertyAttribute", attrType.Name);
+            Assert.That(attr, Is.Not.Null, "{0} is not a PropertyAttribute", attrType.Name);
             Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
         }
 
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Attributes
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType) as PropertyAttribute;
-            Assert.NotNull(attr, "{0} is not a PropertyAttribute", attrType.Name);
+            Assert.That(attr, Is.Not.Null, "{0} is not a PropertyAttribute", attrType.Name);
             Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
         }
     }

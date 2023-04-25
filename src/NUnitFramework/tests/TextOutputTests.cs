@@ -41,7 +41,7 @@ namespace NUnit.Framework
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Output, Is.EqualTo(""));
 
-            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
             Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT));
             Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
         }
@@ -57,7 +57,7 @@ namespace NUnit.Framework
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Output, Is.EqualTo(""));
 
-            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
             Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
             Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
         }
@@ -84,7 +84,7 @@ namespace NUnit.Framework
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Output, Is.EqualTo(""));
 
-            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
             Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
             Assert.That(_testOutput.Stream, Is.EqualTo("Error"));
         }
@@ -100,7 +100,7 @@ namespace NUnit.Framework
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
             Assert.That(result.Output, Is.EqualTo(""));
 
-            Assert.NotNull(_testOutput, "No output received");
+            Assert.That(_testOutput, Is.Not.Null, "No output received");
             Assert.That(_testOutput.Text, Is.EqualTo(ERROR_TEXT + Environment.NewLine));
             Assert.That(_testOutput.Stream, Is.EqualTo("Progress"));
         }
@@ -128,22 +128,22 @@ namespace NUnit.Framework
 
         #region ITestListener Implementation
 
-        public void TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
         }
 
-        public void TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
         }
 
         TestOutput _testOutput;
 
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
             _testOutput = output;
         }
 
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
             
         }

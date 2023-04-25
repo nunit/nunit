@@ -56,31 +56,41 @@ namespace NUnit.Framework.Internal
         public void NamespaceSetUpFixtureReplacesNamespaceNodeInTree()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
-            IDictionary<string, object> options = new Dictionary<string, object>();
-            options["LOAD"] = new[] { nameSpace };
+            IDictionary<string, object> options = new Dictionary<string, object>
+            {
+                ["LOAD"] = new[] { nameSpace }
+            };
             ITest suite = builder.Build(ASSEMBLY_PATH, options);
 
-            Assert.IsNotNull(suite);
-
-            Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
-            Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
+            Assert.That(suite, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.FullName, Is.EqualTo(ASSEMBLY_PATH));
+                Assert.That(suite.Tests, Has.Count.EqualTo(1), "Error in top level test count");
+            });
 
             string[] nameSpaceBits = ("[default namespace]." + nameSpace).Split('.');
             for (int i = 0; i < nameSpaceBits.Length; i++)
             {
                 suite = suite.Tests[0] as TestSuite;
-                Assert.AreEqual(nameSpaceBits[i], suite.Name);
-                Assert.AreEqual(1, suite.Tests.Count);
-                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(suite.Name, Is.EqualTo(nameSpaceBits[i]));
+                    Assert.That(suite.Tests, Has.Count.EqualTo(1));
+                    Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                });
             }
 
             Assert.That(suite, Is.InstanceOf<SetUpFixture>());
 
             suite = suite.Tests[0] as TestSuite;
-            Assert.AreEqual("SomeFixture", suite.Name);
-            Assert.AreEqual(1, suite.Tests.Count);
-            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.Name, Is.EqualTo("SomeFixture"));
+                Assert.That(suite.Tests, Has.Count.EqualTo(1));
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+            });
         }
 
         /// <summary>
@@ -97,38 +107,48 @@ namespace NUnit.Framework.Internal
             Assert.That(setupFixture, Is.TypeOf<SetUpFixture>());
 
             var testFixture = TestFinder.Find("SomeFixture", (SetUpFixture)setupFixture, false);
-            Assert.NotNull(testFixture);
-            Assert.AreEqual(1, testFixture.Tests.Count);
+            Assert.That(testFixture, Is.Not.Null);
+            Assert.That(testFixture.Tests, Has.Count.EqualTo(1));
         }
 
         [Test]
         public void InvalidAssemblySetUpFixtureIsLoadedCorrectly()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace6";
-            IDictionary<string, object> options = new Dictionary<string, object>();
-            options["LOAD"] = new[] { nameSpace };
+            IDictionary<string, object> options = new Dictionary<string, object>
+            {
+                ["LOAD"] = new[] { nameSpace }
+            };
             ITest suite = builder.Build(ASSEMBLY_PATH, options);
 
-            Assert.IsNotNull(suite);
-
-            Assert.AreEqual(ASSEMBLY_PATH, suite.FullName);
-            Assert.AreEqual(1, suite.Tests.Count, "Error in top level test count");
-            Assert.AreEqual(RunState.Runnable, suite.RunState);
+            Assert.That(suite, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.FullName, Is.EqualTo(ASSEMBLY_PATH));
+                Assert.That(suite.Tests, Has.Count.EqualTo(1), "Error in top level test count");
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+            });
 
             string[] nameSpaceBits = ("[default namespace]." + nameSpace).Split('.');
             for (int i = 0; i < nameSpaceBits.Length; i++)
             {
                 suite = suite.Tests[0] as TestSuite;
-                Assert.AreEqual(nameSpaceBits[i], suite.Name);
-                Assert.AreEqual(1, suite.Tests.Count);
-                Assert.That(suite.RunState, Is.EqualTo(i < nameSpaceBits.Length - 1 ? RunState.Runnable : RunState.NotRunnable));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(suite.Name, Is.EqualTo(nameSpaceBits[i]));
+                    Assert.That(suite.Tests, Has.Count.EqualTo(1));
+                    Assert.That(suite.RunState, Is.EqualTo(i < nameSpaceBits.Length - 1 ? RunState.Runnable : RunState.NotRunnable));
+                });
             }
 
             suite = suite.Tests[0] as TestSuite;
-            Assert.AreEqual("SomeFixture", suite.Name);
-            Assert.AreEqual(1, suite.Tests.Count);
-            Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+            Assert.Multiple(() =>
+            {
+                Assert.That(suite.Name, Is.EqualTo("SomeFixture"));
+                Assert.That(suite.Tests, Has.Count.EqualTo(1));
+                Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(suite.Tests[0].RunState, Is.EqualTo(RunState.Runnable));
+            });
         }
 
         #endregion
@@ -281,11 +301,14 @@ namespace NUnit.Framework.Internal
         public void AssemblySetupFixtureWrapsExecutionOfTest()
         {
             ITestResult result = RunTests(null, new Filters.FullNameFilter("SomeFixture"));
-            Assert.AreEqual(1, result.PassCount);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
-            TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
-                                                     "NoNamespaceTest",
-                                                     "Assembly.OneTimeTearDown");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.PassCount, Is.EqualTo(1));
+                Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            });
+            SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
+                                       "NoNamespaceTest",
+                                       "Assembly.OneTimeTearDown");
         }
         #endregion NoNamespaceSetupFixture
     }

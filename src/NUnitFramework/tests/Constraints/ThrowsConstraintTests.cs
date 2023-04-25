@@ -85,7 +85,13 @@ namespace NUnit.Framework.Constraints
 
     public abstract class ThrowsConstraintTestBase : ConstraintTestBaseNoData
     {
-        [Test, TestCaseSource("SuccessData")]
+        private const string Message = ": Must be implemented in derived class";
+
+        static object[] SuccessData => throw new NotImplementedException(nameof(SuccessData) + Message);
+
+        static object[] FailureData => throw new NotImplementedException(nameof(FailureData) + Message);
+
+        [Test, TestCaseSource(nameof(SuccessData))]
         public void SucceedsWithGoodValues(object value)
         {
             var constraintResult = TheConstraint.ApplyTo(value);
@@ -97,18 +103,18 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        [Test, TestCaseSource("FailureData"), SetUICulture("en-US")]
+        [Test, TestCaseSource(nameof(FailureData)), SetUICulture("en-US")]
         public void FailsWithBadValues(object badValue, string message)
         {
-            string NL = Environment.NewLine;
+            string nl = Environment.NewLine;
 
             var constraintResult = TheConstraint.ApplyTo(badValue);
-            Assert.IsFalse(constraintResult.IsSuccess);
+            Assert.That(constraintResult.IsSuccess, Is.False);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
             Assert.That(writer.ToString(), Does.StartWith(
-                TextMessageWriter.Pfx_Expected + ExpectedDescription + NL +
+                TextMessageWriter.Pfx_Expected + ExpectedDescription + nl +
                 TextMessageWriter.Pfx_Actual + message));
         }
     }

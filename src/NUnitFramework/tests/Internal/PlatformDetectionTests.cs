@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
                 else if ( didPass && !shouldPass )
                     Assert.Fail( "False positive on {0}", testPlatform );
                 else if ( !shouldPass && !didPass )
-                    Assert.AreEqual( "Only supported on " + testPlatform, helper.Reason );
+                    Assert.That( helper.Reason, Is.EqualTo("Only supported on " + testPlatform));
             }
         }
 
@@ -355,27 +355,27 @@ namespace NUnit.Framework.Internal
         [Test]
         public void DetectExactVersion()
         {
-            Assert.IsTrue( winXPHelper.IsPlatformSupported( "net-1.1.4322" ) );
-            Assert.IsTrue( winXPHelper.IsPlatformSupported( "net-1.1.4322.0" ) );
-            Assert.IsFalse( winXPHelper.IsPlatformSupported( "net-1.1.4323.0" ) );
-            Assert.IsFalse( winXPHelper.IsPlatformSupported( "net-1.1.4322.1" ) );
+            Assert.That( winXPHelper.IsPlatformSupported( "net-1.1.4322" ), Is.True);
+            Assert.That( winXPHelper.IsPlatformSupported( "net-1.1.4322.0" ), Is.True);
+            Assert.That( winXPHelper.IsPlatformSupported( "net-1.1.4323.0" ), Is.False);
+            Assert.That( winXPHelper.IsPlatformSupported( "net-1.1.4322.1" ), Is.False);
         }
 
         [Test]
         public void ArrayOfPlatforms()
         {
             string[] platforms = new[] { "NT4", "Win2K", "WinXP" };
-            Assert.IsTrue( winXPHelper.IsPlatformSupported( platforms ) );
-            Assert.IsFalse( win95Helper.IsPlatformSupported( platforms ) );
+            Assert.That( winXPHelper.IsPlatformSupported( platforms ), Is.True);
+            Assert.That( win95Helper.IsPlatformSupported( platforms ), Is.False);
         }
 
         [Test]
         public void PlatformAttribute_Include()
         {
             PlatformAttribute attr = new PlatformAttribute( "Win2K,WinXP,NT4" );
-            Assert.IsTrue( winXPHelper.IsPlatformSupported( attr ) );
-            Assert.IsFalse( win95Helper.IsPlatformSupported( attr ) );
-            Assert.AreEqual("Only supported on Win2K,WinXP,NT4", win95Helper.Reason);
+            Assert.That( winXPHelper.IsPlatformSupported( attr ), Is.True);
+            Assert.That( win95Helper.IsPlatformSupported( attr ), Is.False);
+            Assert.That(win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
         }
 
         [Test]
@@ -383,9 +383,9 @@ namespace NUnit.Framework.Internal
         {
             PlatformAttribute attr = new PlatformAttribute();
             attr.Exclude = "Win2K,WinXP,NT4";
-            Assert.IsFalse( winXPHelper.IsPlatformSupported( attr ) );
-            Assert.AreEqual( "Not supported on Win2K,WinXP,NT4", winXPHelper.Reason );
-            Assert.IsTrue( win95Helper.IsPlatformSupported( attr ) );
+            Assert.That( winXPHelper.IsPlatformSupported( attr ), Is.False);
+            Assert.That( winXPHelper.Reason, Is.EqualTo("Not supported on Win2K,WinXP,NT4"));
+            Assert.That( win95Helper.IsPlatformSupported( attr ), Is.True);
         }
 
         [Test]
@@ -393,14 +393,14 @@ namespace NUnit.Framework.Internal
         {
             PlatformAttribute attr = new PlatformAttribute( "Win2K,WinXP,NT4" );
             attr.Exclude = "Mono";
-            Assert.IsFalse( win95Helper.IsPlatformSupported( attr ) );
-            Assert.AreEqual( "Only supported on Win2K,WinXP,NT4", win95Helper.Reason );
-            Assert.IsTrue( winXPHelper.IsPlatformSupported( attr ) );
+            Assert.That( win95Helper.IsPlatformSupported( attr ), Is.False);
+            Assert.That( win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
+            Assert.That( winXPHelper.IsPlatformSupported( attr ), Is.True);
             attr.Exclude = "Net";
-            Assert.IsFalse( win95Helper.IsPlatformSupported( attr ) );
-            Assert.AreEqual( "Only supported on Win2K,WinXP,NT4", win95Helper.Reason );
-            Assert.IsFalse( winXPHelper.IsPlatformSupported( attr ) );
-            Assert.AreEqual( "Not supported on Net", winXPHelper.Reason );
+            Assert.That( win95Helper.IsPlatformSupported( attr ), Is.False);
+            Assert.That( win95Helper.Reason, Is.EqualTo("Only supported on Win2K,WinXP,NT4"));
+            Assert.That( winXPHelper.IsPlatformSupported( attr ), Is.False);
+            Assert.That( winXPHelper.Reason, Is.EqualTo("Not supported on Net"));
         }
 
         [Test]
@@ -423,7 +423,7 @@ namespace NUnit.Framework.Internal
             // do not cause an error and return consistent results.
             bool is32BitProcess = helper.IsPlatformSupported(attr32);
             bool is64BitProcess = helper.IsPlatformSupported(attr64);
-            Assert.False(is32BitProcess & is64BitProcess, "Process cannot be both 32 and 64 bit");
+            Assert.That(is32BitProcess & is64BitProcess, Is.False, "Process cannot be both 32 and 64 bit");
             Assert.That(is64BitProcess, Is.EqualTo(Environment.Is64BitProcess));
         }
 

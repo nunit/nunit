@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
         public void FailsWithBadValues(object badActualValue, string actualMessage, string extraMessage)
         {
             var constraintResult = TheConstraint.ApplyTo(badActualValue);
-            Assert.IsFalse(constraintResult.IsSuccess);
+            Assert.That(constraintResult.IsSuccess, Is.False);
 
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);

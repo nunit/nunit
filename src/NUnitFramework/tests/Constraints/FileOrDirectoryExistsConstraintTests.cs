@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
             using (var tf = new TestFile(RESOURCE_FILE))
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
-                Assert.That(constraint.ApplyTo(tf.File.FullName).Status == ConstraintStatus.Failure);
+                Assert.That(constraint.ApplyTo(tf.File.FullName).Status, Is.EqualTo(ConstraintStatus.Failure));
             }
         }
 
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Constraints
         public void FailsWhenIgnoreDirectoriesIsTrueWithDirectoryString()
         {
             var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
-            Assert.That(constraint.ApplyTo(_goodDir.ToString()).Status == ConstraintStatus.Failure);
+            Assert.That(constraint.ApplyTo(_goodDir.ToString()).Status, Is.EqualTo(ConstraintStatus.Failure));
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         public void FailsWhenDirectoryInfoDoesNotExist()
         {
             var actual = new DirectoryInfo(BAD_DIRECTORY);
-            Assert.That(_constraint.ApplyTo(actual).Status == ConstraintStatus.Failure);
+            Assert.That(_constraint.ApplyTo(actual).Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(actual, Does.Not.Exist);
         }
 
@@ -112,21 +112,21 @@ namespace NUnit.Framework.Constraints
         public void FailsWhenFileInfoDoesNotExist()
         {
             var actual = new FileInfo(BAD_FILE);
-            Assert.That(_constraint.ApplyTo(actual).Status == ConstraintStatus.Failure);
+            Assert.That(_constraint.ApplyTo(actual).Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(actual, Does.Not.Exist);
         }
 
         [Test]
         public void FailsWhenFileStringDoesNotExist()
         {
-            Assert.That(_constraint.ApplyTo(BAD_FILE).Status == ConstraintStatus.Failure);
+            Assert.That(_constraint.ApplyTo(BAD_FILE).Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(BAD_FILE, Does.Not.Exist);
         }
 
         [Test]
         public void FailsWhenDirectoryStringDoesNotExist()
         {
-            Assert.That(_constraint.ApplyTo(BAD_DIRECTORY).Status == ConstraintStatus.Failure);
+            Assert.That(_constraint.ApplyTo(BAD_DIRECTORY).Status, Is.EqualTo(ConstraintStatus.Failure));
             Assert.That(BAD_DIRECTORY, Does.Not.Exist);
         }
 

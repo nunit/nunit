@@ -23,34 +23,34 @@ namespace NUnit.Framework.Constraints
         public void TestToleranceDefault()
         {
             var defaultTolerance = Tolerance.Default;
-            Assert.IsTrue(defaultTolerance.IsUnsetOrDefault);
+            Assert.That(defaultTolerance.IsUnsetOrDefault, Is.True);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.IsTrue(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ));
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ), Is.True);
         }
 
         [Test, DefaultFloatingPointTolerance(0.5)]
         public void TestToleranceExact()
         {
             var noneTolerance = Tolerance.Exact;
-            Assert.IsFalse(noneTolerance.IsUnsetOrDefault);
+            Assert.That(noneTolerance.IsUnsetOrDefault, Is.False);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.IsFalse(comparer.AreEqual(2.0d, 2.1d, ref noneTolerance));
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref noneTolerance), Is.False);
         }
 
         [Test]
         public void TestToleranceVarianceExact()
         {
             var noneTolerance = Tolerance.Exact;
-            Assert.IsFalse(noneTolerance.HasVariance);
+            Assert.That(noneTolerance.HasVariance, Is.False);
         }
 
         [Test]
         public void TestToleranceVarianceDefault()
         {
             var noneTolerance = Tolerance.Default;
-            Assert.IsFalse(noneTolerance.HasVariance);
+            Assert.That(noneTolerance.HasVariance, Is.False);
         }
 
         [Test]

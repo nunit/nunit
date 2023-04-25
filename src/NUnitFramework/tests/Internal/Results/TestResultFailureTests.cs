@@ -113,27 +113,33 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResultIsFailure()
         {
-            Assert.AreEqual(ResultState.Failure, _testResult.ResultState);
-            Assert.AreEqual(TestStatus.Failed, _testResult.ResultState.Status);
-            Assert.AreEqual(_failureReason, _testResult.Message);
-            Assert.AreEqual(_stackTrace, _testResult.StackTrace);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testResult.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(_testResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(_testResult.Message, Is.EqualTo(_failureReason));
+                Assert.That(_testResult.StackTrace, Is.EqualTo(_stackTrace));
+            });
         }
 
         [Test]
         public void SuiteResultIsFailure()
         {
-            Assert.AreEqual(ResultState.ChildFailure, _suiteResult.ResultState);
-            Assert.AreEqual(TestStatus.Failed, _suiteResult.ResultState.Status);
-            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, _suiteResult.Message);
-            Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-            Assert.That(_suiteResult.StackTrace, Is.Null);
-            Assert.AreEqual(1, _suiteResult.TotalCount);
-            Assert.AreEqual(0, _suiteResult.PassCount);
-            Assert.AreEqual(1, _suiteResult.FailCount);
-            Assert.AreEqual(0, _suiteResult.WarningCount);
-            Assert.AreEqual(0, _suiteResult.SkipCount);
-            Assert.AreEqual(0, _suiteResult.InconclusiveCount);
-            Assert.AreEqual(3, _suiteResult.AssertCount);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(_suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(_suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+                Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                Assert.That(_suiteResult.StackTrace, Is.Null);
+                Assert.That(_suiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(_suiteResult.PassCount, Is.EqualTo(0));
+                Assert.That(_suiteResult.FailCount, Is.EqualTo(1));
+                Assert.That(_suiteResult.WarningCount, Is.EqualTo(0));
+                Assert.That(_suiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(_suiteResult.InconclusiveCount, Is.EqualTo(0));
+                Assert.That(_suiteResult.AssertCount, Is.EqualTo(3));
+            });
         }
 
         [Test]
@@ -141,9 +147,12 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode testNode = _testResult.ToXml(true);
 
-            Assert.AreEqual("Failed", testNode.Attributes["result"]);
-            Assert.AreEqual(null, testNode.Attributes["label"]);
-            Assert.AreEqual(null, testNode.Attributes["site"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testNode.Attributes["result"], Is.EqualTo("Failed"));
+                Assert.That(testNode.Attributes["label"], Is.EqualTo(null));
+                Assert.That(testNode.Attributes["site"], Is.EqualTo(null));
+            });
 
             var failureNode = _xmlFailureNodeValidation(testNode);
             _xmlMessageNodeValidation(failureNode);
@@ -170,26 +179,31 @@ namespace NUnit.Framework.Internal.Results
         {
             TNode suiteNode = _suiteResult.ToXml(true);
 
-            Assert.AreEqual("Failed", suiteNode.Attributes["result"]);
-            Assert.AreEqual(null, suiteNode.Attributes["label"]);
-            Assert.AreEqual("Child", suiteNode.Attributes["site"]);
-
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Failed"));
+                Assert.That(suiteNode.Attributes["label"], Is.EqualTo(null));
+                Assert.That(suiteNode.Attributes["site"], Is.EqualTo("Child"));
+            });
             TNode failureNode = suiteNode.SelectSingleNode("failure");
-            Assert.NotNull(failureNode, "No <failure> element found");
+            Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
 
             TNode messageNode = failureNode.SelectSingleNode("message");
-            Assert.NotNull(messageNode, "No <message> element found");
-            Assert.AreEqual(TestResult.CHILD_ERRORS_MESSAGE, messageNode.Value);
+            Assert.That(messageNode, Is.Not.Null, "No <message> element found");
+            Assert.That(messageNode.Value, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
 
             TNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
-            Assert.Null(stacktraceNode, "Unexpected <stack-trace> element found");
+            Assert.That(stacktraceNode, Is.Null, "Unexpected <stack-trace> element found");
 
-            Assert.AreEqual("0", suiteNode.Attributes["passed"]);
-            Assert.AreEqual("1", suiteNode.Attributes["failed"]);
-            Assert.AreEqual("0", suiteNode.Attributes["warnings"]);
-            Assert.AreEqual("0", suiteNode.Attributes["skipped"]);
-            Assert.AreEqual("0", suiteNode.Attributes["inconclusive"]);
-            Assert.AreEqual("3", suiteNode.Attributes["asserts"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(suiteNode.Attributes["passed"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["failed"], Is.EqualTo("1"));
+                Assert.That(suiteNode.Attributes["warnings"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["skipped"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["inconclusive"], Is.EqualTo("0"));
+                Assert.That(suiteNode.Attributes["asserts"], Is.EqualTo("3"));
+            });
         }
 
         protected static TNode FailureNodeExistsAndIsNotNull(TNode testNode)

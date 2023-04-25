@@ -17,7 +17,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeStaticProperty(
             [ValueSource(nameof(StaticProperty))] string source)
         {
-            Assert.AreEqual("StaticProperty", source);
+            Assert.That(source, Is.EqualTo("StaticProperty"));
         }
 
         static IEnumerable StaticProperty
@@ -32,20 +32,22 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeInheritedStaticProperty(
             [ValueSource(nameof(InheritedStaticProperty))] bool source)
         {
-            Assert.AreEqual(true, source);
+            Assert.That(source, Is.EqualTo(true));
         }
 
         [Test]
         public void ValueSourceMayNotBeInstanceProperty()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceProperty");
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceProperty));
             Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
-        public void MethodWithValueSourceInstanceProperty(
+        private void MethodWithValueSourceInstanceProperty(
+#pragma warning disable NUnit1022 // The specified source is not static
             [ValueSource(nameof(InstanceProperty))] string source)
+#pragma warning restore NUnit1022 // The specified source is not static
         {
-            Assert.AreEqual("InstanceProperty", source);
+            Assert.Fail("This is not a valid test case: " + source);
         }
 
         IEnumerable InstanceProperty => new object[] { "InstanceProperty" };
@@ -54,7 +56,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeStaticMethod(
             [ValueSource(nameof(StaticMethod))] string source)
         {
-            Assert.AreEqual("StaticMethod", source);
+            Assert.That(source, Is.EqualTo("StaticMethod"));
         }
 
         static IEnumerable StaticMethod()
@@ -65,14 +67,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ValueSourceMayNotBeInstanceMethod()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceMethod");
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceMethod));
             Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
-        public void MethodWithValueSourceInstanceMethod(
+        private void MethodWithValueSourceInstanceMethod(
+#pragma warning disable NUnit1022 // The specified source is not static
             [ValueSource(nameof(InstanceMethod))] string source)
+#pragma warning restore NUnit1022 // The specified source is not static
         {
-            Assert.AreEqual("InstanceMethod", source);
+            Assert.Fail("This is not a valid test case: " + source);
         }
 
         IEnumerable InstanceMethod()
@@ -84,7 +88,7 @@ namespace NUnit.Framework.Attributes
         public void ValueSourceCanBeStaticField(
             [ValueSource(nameof(StaticField))] string source)
         {
-            Assert.AreEqual("StaticField", source);
+            Assert.That(source, Is.EqualTo("StaticField"));
         }
 
         internal static object[] StaticField = { "StaticField" };
@@ -92,14 +96,16 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void ValueSourceMayNotBeInstanceField()
         {
-            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), "MethodWithValueSourceInstanceField");
+            var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceField));
             Assert.That(result.Children.ToArray ()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
-        public void MethodWithValueSourceInstanceField(
+        private void MethodWithValueSourceInstanceField(
+#pragma warning disable NUnit1022 // The specified source is not static
             [ValueSource(nameof(InstanceField))] string source)
+#pragma warning restore NUnit1022 // The specified source is not static
         {
-            Assert.AreEqual("InstanceField", source);
+            Assert.Fail("This is not a valid test case: " + source);
         }
 
         internal object[] InstanceField = { "InstanceField" };
@@ -110,7 +116,7 @@ namespace NUnit.Framework.Attributes
             [ValueSource(nameof(Denominators))] int d,
             [ValueSource(nameof(Quotients))] int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         internal static int[] Numerators = new[] { 12, 12, 12 };
@@ -123,7 +129,7 @@ namespace NUnit.Framework.Attributes
             [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Denominators))] int d,
             [ValueSource(typeof(DivideDataProvider), nameof(DivideDataProvider.Quotients))] int q)
         {
-            Assert.AreEqual(q, n / d);
+            Assert.That(n / d, Is.EqualTo(q));
         }
 
         private class DivideDataProvider
@@ -160,9 +166,9 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        public static string NullSource = null;
+        private static readonly string NullSource;
 
-        public static IEnumerable<int> NullDataSourceProvider()
+        private static IEnumerable<int> NullDataSourceProvider()
         {
             return null;
         }
@@ -176,7 +182,9 @@ namespace NUnit.Framework.Attributes
             [ValueSource(typeof(ValueProvider), nameof(ValueProvider.ForeignNullResultProvider))] string nullDataSourceProvider,
             [ValueSource(typeof(object), sourceName: null)] string typeNotImplementingIEnumerableAndNullSourceName,
             [ValueSource(nameof(NullDataSourceProperty))] int nullDataSourceProperty,
+#pragma warning disable NUnit1025 // The ValueSource argument does not specify an existing member
             [ValueSource("SomeNonExistingMemberSource")] int nonExistingMember)
+#pragma warning restore NUnit1025 // The ValueSource argument does not specify an existing member
         {
             Assert.Fail();
         }

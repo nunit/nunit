@@ -110,7 +110,7 @@ namespace NUnit.Framework.Internal
 
         private void CheckXmlForTest(Test test, TNode topNode, bool recursive)
         {
-            Assert.NotNull(topNode);
+            Assert.That(topNode, Is.Not.Null);
 
             //if (test is TestSuite)
             //{
@@ -128,12 +128,12 @@ namespace NUnit.Framework.Internal
             Assert.That(topNode.Attributes["fullname"], Is.EqualTo(test.FullName));
             if (test.TypeInfo != null)
             {
-                Assert.NotNull(test.ClassName);
+                Assert.That(test.ClassName, Is.Not.Null);
                 Assert.That(topNode.Attributes["classname"], Is.EqualTo(test.ClassName));
             }
             if (test is TestMethod)
             {
-                Assert.NotNull(test.MethodName);
+                Assert.That(test.MethodName, Is.Not.Null);
                 Assert.That(topNode.Attributes["methodname"], Is.EqualTo(test.MethodName));
             }
             Assert.That(topNode.Attributes["runstate"], Is.EqualTo(test.RunState.ToString()));
@@ -146,7 +146,7 @@ namespace NUnit.Framework.Internal
                         expectedProps.Add(key + "=" + value);
 
                 TNode propsNode = topNode.SelectSingleNode("properties");
-                Assert.NotNull(propsNode);
+                Assert.That(propsNode, Is.Not.Null);
 
                 var actualProps = new List<string>();
                 foreach (TNode node in propsNode.ChildNodes)
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal
                     {
                         string xpathQuery = $"{child.XmlElementName}[@id={child.Id}]";
                         TNode childNode = topNode.SelectSingleNode(xpathQuery);
-                        Assert.NotNull(childNode, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
+                        Assert.That(childNode, Is.Not.Null, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 
                         CheckXmlForTest(child, childNode, recursive);
                     }

@@ -11,15 +11,15 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ConstraintSuccess()
         {
-            Assert.IsTrue(new DelayedConstraint(new EqualConstraint(1), 100)
-                          .ApplyTo(async () => await One()).IsSuccess);
+            Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
+                          .ApplyTo(async () => await One()).IsSuccess, Is.True);
         }
 
         [Test]
         public void ConstraintFailure()
         {
-            Assert.IsFalse(new DelayedConstraint(new EqualConstraint(2), 100)
-                           .ApplyTo(async () => await One()).IsSuccess);
+            Assert.That(new DelayedConstraint(new EqualConstraint(2), 100)
+                           .ApplyTo(async () => await One()).IsSuccess, Is.False);
         }
 
         [Test]
@@ -32,15 +32,15 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void ConstraintVoidDelegateFailureAsDelegateIsNotCalled()
         {
-            Assert.IsFalse(new DelayedConstraint(new EqualConstraint(1), 100)
-                           .ApplyTo(new TestDelegate(async () => { await One(); })).IsSuccess);
+            Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
+                           .ApplyTo(new TestDelegate(async () => { await One(); })).IsSuccess, Is.False);
         }
 
         [Test]
         public void ConstraintVoidDelegateExceptionIsFailureAsDelegateIsNotCalled()
         {
-            Assert.IsFalse(new DelayedConstraint(new EqualConstraint(1), 100)
-                           .ApplyTo(new TestDelegate(async () => { await Throw(); })).IsSuccess);
+            Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
+                           .ApplyTo(new TestDelegate(async () => { await Throw(); })).IsSuccess, Is.False);
         }
 
         [Test]
@@ -68,8 +68,10 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void SyntaxVoidDelegateExceptionIsFailureAsCodeIsNotCalled()
         {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             Assert.Throws<AssertionException>(() =>
                 Assert.That(new TestDelegate(async () => await Throw()), Is.EqualTo(1).After(100)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
         }
 
         private static async Task<int> One()
@@ -77,7 +79,7 @@ namespace NUnit.Framework.Constraints
             return await Task.Run(() => 1);
         }
 
-        private static async Task Throw()
+        private static async Task<int> Throw()
         {
             await One();
             throw new InvalidOperationException();

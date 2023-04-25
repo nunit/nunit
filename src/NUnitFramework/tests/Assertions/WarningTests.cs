@@ -59,9 +59,12 @@ namespace NUnit.Framework.Assertions
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.AssertCount, Is.EqualTo(1), "Incorrect AssertCount");
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(0), "There should be no AssertionResults");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(result.AssertCount, Is.EqualTo(1), "Incorrect AssertCount");
+                Assert.That(result.AssertionResults, Is.Empty, "There should be no AssertionResults");
+            });
         }
 
         [TestCase(nameof(WarningFixture.WarnUnless_Fails_Boolean), null)]
@@ -110,20 +113,31 @@ namespace NUnit.Framework.Assertions
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
 
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
-            Assert.That(result.AssertCount, Is.EqualTo(1), "Incorrect AssertCount");
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(1), "Incorrect number of AssertionResults");
-            Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Warning));
-            Assert.That(result.AssertionResults[0].Message, Is.Not.Null, "Assertion Message should not be null");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+                Assert.That(result.AssertCount, Is.EqualTo(1), "Incorrect AssertCount");
+            });
+
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Incorrect number of AssertionResults");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Warning));
+                Assert.That(result.AssertionResults[0].Message, Is.Not.Null, "Assertion Message should not be null");
+                Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
+                Assert.That(result.AssertionResults[0].StackTrace.Split(new[] { '\n' }), Has.Length.LessThan(3));
+            });
+
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
-            Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
-            Assert.That(result.AssertionResults[0].StackTrace.Split(new[] { '\n' }).Length, Is.LessThan(3));
 
             if (expectedMessage != null)
             {
-                Assert.That(result.Message, Does.Contain(expectedMessage));
-                Assert.That(result.AssertionResults[0].Message, Does.Contain(expectedMessage));
+                Assert.Multiple(() =>
+                {
+                    Assert.That(result.Message, Does.Contain(expectedMessage));
+                    Assert.That(result.AssertionResults[0].Message, Does.Contain(expectedMessage));
+                });
             }
         }
 
@@ -143,9 +157,12 @@ namespace NUnit.Framework.Assertions
         {
             var result = TestBuilder.RunTestCase(fixtureType, methodName);
 
-            Assert.That(result.ResultState, Is.EqualTo(expectedWarnings == 0 ? ResultState.Success : ResultState.Warning));
-            Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "Incorrect AssertCount");
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(expectedWarnings), $"There should be {expectedWarnings} AssertionResults");
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(expectedWarnings == 0 ? ResultState.Success : ResultState.Warning));
+                Assert.That(result.AssertCount, Is.EqualTo(expectedAsserts), "Incorrect AssertCount");
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(expectedWarnings), $"There should be {expectedWarnings} AssertionResults");
+            });
         }
 
         [Test]

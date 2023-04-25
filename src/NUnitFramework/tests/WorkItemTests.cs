@@ -95,7 +95,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(wrapped.TargetApartment, Is.EqualTo(expected));
         }
 
-        public static IEnumerable<TestCaseData> GetTargetApartmentTestData()
+        private static IEnumerable<TestCaseData> GetTargetApartmentTestData()
         {
             yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.Unknown), ApartmentState.Unknown);
             yield return new TestCaseData(CreateFakeTests(ApartmentState.Unknown, ApartmentState.Unknown, ApartmentState.STA), ApartmentState.STA);

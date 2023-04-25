@@ -30,16 +30,16 @@ namespace NUnit.Framework.Internal.Results
         protected static void ReasonNodeExpectedValidation(TNode testNode, string reasonMessage)
         {
             TNode reason = testNode.SelectSingleNode("reason");
-            Assert.NotNull(reason);
-            Assert.NotNull(reason.SelectSingleNode("message"));
-            Assert.AreEqual(reasonMessage, reason.SelectSingleNode("message").Value);
-            Assert.Null(reason.SelectSingleNode("stack-trace"));
+            Assert.That(reason, Is.Not.Null);
+            Assert.That(reason.SelectSingleNode("message"), Is.Not.Null);
+            Assert.That(reason.SelectSingleNode("message").Value, Is.EqualTo(reasonMessage));
+            Assert.That(reason.SelectSingleNode("stack-trace"), Is.Null);
         }
 
         protected static void NoReasonNodeExpectedValidation(TNode testNode)
         {
             TNode reason = testNode.SelectSingleNode("reason");
-            Assert.IsNull(reason, "This test expects no reason element to be present in the XML representation.");
+            Assert.That(reason, Is.Null, "This test expects no reason element to be present in the XML representation.");
         }
 
         #region Nested DummySuite
