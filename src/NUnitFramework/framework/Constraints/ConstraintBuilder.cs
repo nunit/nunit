@@ -122,7 +122,7 @@ namespace NUnit.Framework.Constraints
 
         private readonly ConstraintStack constraints;
 
-        private object lastPushed;
+        private object? lastPushed;
 
         #endregion
 

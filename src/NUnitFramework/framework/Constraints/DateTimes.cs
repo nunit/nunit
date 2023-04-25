@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     {
         #region DateTimes Difference
 
-        internal static object Difference(object x, object y)
+        internal static object Difference(object? x, object? y)
         {
             if (x is DateTime xDateTime && y is DateTime yDateTime)
                 return (xDateTime - yDateTime).Duration();

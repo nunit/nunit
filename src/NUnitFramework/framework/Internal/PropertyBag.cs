@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal
@@ -89,7 +88,7 @@ namespace NUnit.Framework.Internal
         /// <param name="key">The key for which the values are to be retrieved</param>
         /// <param name="values">Values, if found</param>
         /// <returns>true if found</returns>
-        public bool TryGet(string key, out IList values)
+        public bool TryGet(string key, [NotNullWhen(true)] out IList? values)
         {
             return inner.TryGetValue(key, out values);
         }
@@ -151,7 +150,7 @@ namespace NUnit.Framework.Internal
 
                     // TODO: Format as string
                     prop.AddAttribute("name", pair.Key);
-                    prop.AddAttribute("value", value.ToString());
+                    prop.AddAttribute("value", value.ToString()!);
                 }
             }
 

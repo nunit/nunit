@@ -65,12 +65,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Comparison objects used in comparisons for some constraints.
         /// </summary>
-        private List<EqualityAdapter> _externalComparers;
+        private List<EqualityAdapter>? _externalComparers;
 
         /// <summary>
         /// List of points at which a failure occurred.
         /// </summary>
-        private List<FailurePoint> _failurePoints;
+        private List<FailurePoint>? _failurePoints;
 
         #endregion
 
@@ -116,7 +116,7 @@ namespace NUnit.Framework.Constraints
         /// This generally means that the caller may only make use of
         /// objects it has placed on the list at a particular depth.
         /// </summary>
-        public IList<FailurePoint> FailurePoints => _failurePoints;
+        public IList<FailurePoint> FailurePoints => _failurePoints ??= new();
 
         /// <summary>
         /// Flags the comparer to include <see cref="DateTimeOffset.Offset"/>
@@ -133,12 +133,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Compares two objects for equality within a tolerance.
         /// </summary>
-        public bool AreEqual(object x, object y, ref Tolerance tolerance)
+        public bool AreEqual(object? x, object? y, ref Tolerance tolerance)
         {
             return AreEqual(x, y, ref tolerance, new ComparisonState(true));
         }
 
-        internal bool AreEqual(object x, object y, ref Tolerance tolerance, ComparisonState state)
+        internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
             this._failurePoints = new List<FailurePoint>();
 
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Constraints
             if (state.DidCompare(x, y))
                 return false;
 
-            EqualityAdapter externalComparer = GetExternalComparer(x, y);
+            EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 
             if (externalComparer != null)
                 return externalComparer.AreEqual(x, y, ref tolerance);
@@ -178,7 +178,7 @@ namespace NUnit.Framework.Constraints
 
         #region Helper Methods
 
-        private EqualityAdapter GetExternalComparer(object x, object y)
+        private EqualityAdapter? GetExternalComparer(object x, object y)
         {
             if (_externalComparers != null)
             {
@@ -208,12 +208,12 @@ namespace NUnit.Framework.Constraints
             /// <summary>
             /// The expected value
             /// </summary>
-            public object ExpectedValue;
+            public object? ExpectedValue;
 
             /// <summary>
             /// The actual value
             /// </summary>
-            public object ActualValue;
+            public object? ActualValue;
 
             /// <summary>
             /// Indicates whether the expected value is valid

@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a numeric type</returns>
-        public static bool IsNumericType(Object obj)
+        public static bool IsNumericType(object? obj)
         {
             return IsFloatingPointNumeric(obj) || IsFixedPointNumeric(obj);
         }
@@ -33,13 +33,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a floating point numeric type</returns>
-        public static bool IsFloatingPointNumeric(Object obj)
+        public static bool IsFloatingPointNumeric(object? obj)
         {
             if (null != obj)
             {
-                if (obj is System.Double) return true;
-                if (obj is System.Single) return true;
-                if (obj is System.Decimal) return true;
+                if (obj is double) return true;
+                if (obj is float) return true;
+                if (obj is decimal) return true;
             }
             return false;
         }
@@ -62,19 +62,19 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="obj">The object to check</param>
         /// <returns>true if the object is a fixed point numeric type</returns>
-        public static bool IsFixedPointNumeric(Object obj)
+        public static bool IsFixedPointNumeric(object? obj)
         {
             if (null != obj)
             {
-                if (obj is System.Byte) return true;
-                if (obj is System.SByte) return true;
-                if (obj is System.Int32) return true;
-                if (obj is System.UInt32) return true;
-                if (obj is System.Int64) return true;
-                if (obj is System.UInt64) return true;
-                if (obj is System.Int16) return true;
-                if (obj is System.UInt16) return true;
-                if (obj is System.Char) return true;
+                if (obj is byte) return true;
+                if (obj is sbyte) return true;
+                if (obj is int) return true;
+                if (obj is uint) return true;
+                if (obj is long) return true;
+                if (obj is ulong) return true;
+                if (obj is short) return true;
+                if (obj is ushort) return true;
+                if (obj is char) return true;
             }
             return false;
         }
@@ -424,7 +424,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actual">The actual value</param>
         /// <param name="toleranceMode">Tolerance mode to specify difference representation</param>
         /// <returns>The difference between the values</returns>
-        internal static object Difference(object expected, object actual, ToleranceMode toleranceMode)
+        internal static object Difference(object? expected, object? actual, ToleranceMode toleranceMode)
         {
             switch (toleranceMode)
             {
@@ -437,7 +437,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static object Difference(object expected, object actual, bool isAbsolute)
+        private static object Difference(object? expected, object? actual, bool isAbsolute)
         {
             // In case the difference cannot be calculated return NaN to prevent unhandled runtime exceptions
             if (!IsNumericType(expected) || !IsNumericType(actual))

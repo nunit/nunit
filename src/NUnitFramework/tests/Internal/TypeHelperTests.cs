@@ -59,5 +59,29 @@ namespace NUnit.Framework.Internal
         }
 
         #endregion
+
+        #region FullName
+
+        [Test]
+        public void TestValidFullName()
+        {
+            Type type = typeof(TypeHelperTests);
+            Assert.That(type.FullName(), Is.EqualTo(type.FullName));
+        }
+
+        [Test]
+        public void TestInvalidFullName()
+        {
+            Type type = typeof(Generic<>).GetGenericArguments()[0];
+            Assert.That(type.FullName, Is.Null);
+            Assert.That(() => type.FullName(), Throws.InvalidOperationException);
+        }
+
+        private class Generic<T>
+        {
+            public Type TypeParameter => typeof(T);
+        }
+
+        #endregion
     }
 }

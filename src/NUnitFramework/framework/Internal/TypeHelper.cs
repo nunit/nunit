@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -32,7 +30,7 @@ namespace NUnit.Framework.Internal
 
             if (type.IsGenericType)
             {
-                string name = type.FullName!;
+                string name = type.FullName();
                 int index = name.IndexOf('[');
                 if (index >= 0) name = name.Substring(0, index);
 
@@ -76,10 +74,11 @@ namespace NUnit.Framework.Internal
                 return sb.ToString();
             }
 
-            int lastdot = type.FullName.LastIndexOf('.');
+            string typeFullName = type.FullName();
+            int lastdot = typeFullName.LastIndexOf('.');
             return lastdot >= 0
-                ? type.FullName.Substring(lastdot + 1)
-                : type.FullName;
+                ? typeFullName.Substring(lastdot + 1)
+                : typeFullName;
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace NUnit.Framework.Internal
                 if (i > 0) sb.Append(",");
 
                 object? arg = arglist[i];
-                string? display = arg == null ? "null" : arg.ToString();
+                string display = arg?.ToString() ?? "null";
 
                 if (arg is double || arg is float)
                 {
@@ -304,7 +303,7 @@ namespace NUnit.Framework.Internal
         {
             List<Type> interfaces = new List<Type>(type.GetInterfaces());
 
-            if (type.BaseType == typeof(object))
+            if (type.BaseType is null || type.BaseType == typeof(object))
                 return interfaces.ToArray();
 
             List<Type> baseInterfaces = new List<Type>(type.BaseType.GetInterfaces());
@@ -341,7 +340,7 @@ namespace NUnit.Framework.Internal
 
         private static bool IsTupleInternal(Type type, string tupleName)
         {
-            string typeName = type.FullName!;
+            string typeName = type.FullName();
 
             if (typeName.EndsWith("[]", StringComparison.Ordinal))
                 return false;
@@ -364,9 +363,7 @@ namespace NUnit.Framework.Internal
         /// <param name="obj">The object to cast.</param>
         internal static bool CanCast<T>(object obj)
         {
-            // Workaround for https://github.com/dotnet/roslyn/issues/34757, fixed in VS 16.5
-            //                                           ↓
-            return obj is T || (obj == null && default(T)! == null);
+            return obj is T || (obj == null && default(T) == null);
         }
 
         /// <summary>
@@ -376,7 +373,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="obj">The object to cast.</param>
         /// <param name="value">The value of the object, if the cast succeeded.</param>
-        internal static bool TryCast<T>(object obj, [MaybeNull] out T value)
+        internal static bool TryCast<T>(object? obj, [NotNullWhen(true)] out T? value)
         {
             if (obj is T tObj)
             {
@@ -384,12 +381,19 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
-            // Workaround for https://github.com/dotnet/roslyn/issues/36039, fixed in VS 16.5
-            //                ↓
-            value = default(T)!;
-            // Workaround for https://github.com/dotnet/roslyn/issues/34757, fixed in VS 16.5
-            //                              ↓
-            return obj == null && default(T)! == null;
+            value = default(T);
+            return obj == null && default(T) == null;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="Type.FullName"/> if available.
+        /// </summary>
+        /// <param name="type">The type to get the <see cref="Type.FullName"/> for.</param>
+        /// <returns><see cref="Type.FullName"/> if available, throws otherwise.</returns>
+        /// <exception cref="InvalidOperationException">If <see cref="Type.FullName"/> returns <see langword="null"/>.</exception>
+        internal static string FullName(this Type type)
+        {
+            return type.FullName ?? throw new InvalidOperationException("No name for type: " + type);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class DisposableAction : IDisposable
         {
-            private Action action;
+            private Action? action;
 
             public DisposableAction(Action action)
             {

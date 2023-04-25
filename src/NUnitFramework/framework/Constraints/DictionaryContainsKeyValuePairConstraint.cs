@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public override string Description => "dictionary containing entry " + MsgUtils.FormatValue(_expected);
 
-        private bool Matches(object actual)
+        private bool Matches(object? actual)
         {
             if (actual == null)
                 throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
@@ -55,8 +55,8 @@ namespace NUnit.Framework.Constraints
             // and look it up by iterating using IEnumerable
             if (actual.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
             {
-                var expected = new KeyValuePair<object, object>(_expected.Key, _expected.Value);
-                var enumerable = actual as IEnumerable;
+                var expected = new KeyValuePair<object, object?>(_expected.Key, _expected.Value);
+                var enumerable = (IEnumerable)actual;
 
                 foreach (var item in enumerable)
                     if (ItemsEqual(item, expected))

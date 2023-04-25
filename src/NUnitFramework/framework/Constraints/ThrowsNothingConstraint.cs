@@ -11,9 +11,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ThrowsNothingConstraint : Constraint
     {
-        // TODO: This constraint needs tests
-        private Exception caughtException;
-
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
@@ -28,7 +25,7 @@ namespace NUnit.Framework.Constraints
         {
             var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
+            Exception? caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
             return new ConstraintResult(this, caughtException, caughtException == null);
         }

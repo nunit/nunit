@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal
 {
     internal static class AsyncToSyncAdapter
     {
-        private static readonly Type _asyncStateMachineAttributeType = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute, System.Runtime", false);
+        private static readonly Type? _asyncStateMachineAttributeType = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute, System.Runtime", false);
 
         public static bool IsAsyncOperation(MethodInfo method)
         {
@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal
             return IsAsyncOperation(@delegate.GetMethodInfo());
         }
 
-        public static object Await(Func<object> invoke)
+        public static object? Await(Func<object?> invoke)
         {
             Guard.ArgumentNotNull(invoke, nameof(invoke));
 
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static IDisposable InitializeExecutionEnvironment()
+        private static IDisposable? InitializeExecutionEnvironment()
         {
             if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
         }
 
         [SecuritySafeCritical]
-        private static void SetSynchronizationContext(SynchronizationContext syncContext)
+        private static void SetSynchronizationContext(SynchronizationContext? syncContext)
         {
             SynchronizationContext.SetSynchronizationContext(syncContext);
         }

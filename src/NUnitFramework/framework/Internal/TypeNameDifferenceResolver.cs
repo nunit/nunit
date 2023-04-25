@@ -118,8 +118,8 @@ namespace NUnit.Framework.Internal
         /// <param name="actualTypeShortened">The shortened actual <see cref="Type"/> name.</param>
         public void ShortenTypeNames(Type expectedType, Type actualType, out string expectedTypeShortened, out string actualTypeShortened)
         {
-            string[] expectedOriginalType = expectedType.FullName.Split('.');
-            string[] actualOriginalType = actualType.FullName.Split('.');
+            string[] expectedOriginalType = expectedType.FullName().Split('.');
+            string[] actualOriginalType = actualType.FullName().Split('.');
 
             bool diffDetected = false;
             int actualStart = 0, expectStart = 0;
@@ -169,7 +169,7 @@ namespace NUnit.Framework.Internal
             if (IsTypeGeneric(type))
             {
                 Type generic = type.GetGenericTypeDefinition();
-                return generic.FullName;
+                return generic.FullName();
             }
             else
             {

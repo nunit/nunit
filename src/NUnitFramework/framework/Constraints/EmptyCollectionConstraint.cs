@@ -9,10 +9,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class EmptyCollectionConstraint : CollectionConstraint
     {
-        /// <summary>
-        /// The Description of what this constraint tests, for
-        /// use in messages and in the ConstraintResult.
-        /// </summary>
+        /// <inheritdoc/>
         public override string Description => "<empty>";
 
         /// <summary>

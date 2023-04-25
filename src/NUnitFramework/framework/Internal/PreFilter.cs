@@ -117,8 +117,8 @@ namespace NUnit.Framework.Internal
         {
             private FilterElementType ElementType = FilterElementType.Unknown;
             public string Text;
-            public string ClassName;
-            public string MethodName;
+            public string? ClassName;
+            public string? MethodName;
 
             public FilterElement(string text)
             {
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Internal
 
             private bool MatchNamespaceElement(Type type)
             {
-                return type.FullName.StartsWith(Text + ".");
+                return type.FullName?.StartsWith(Text + ".") is true;
             }
 
             private bool MatchMethodElement(Type type)
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Internal
                        type.GetCustomAttributes(typeof(SetUpFixtureAttribute), true).Length > 0;
             }
 
-            private bool IsSubNamespace(string typeNamespace)
+            private bool IsSubNamespace(string? typeNamespace)
             {
                 if (string.IsNullOrEmpty(typeNamespace))
                     return true;

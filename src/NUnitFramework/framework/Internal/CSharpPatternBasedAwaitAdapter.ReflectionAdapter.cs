@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Reflection;
@@ -9,12 +9,12 @@ namespace NUnit.Framework.Internal
     {
         private sealed class ReflectionAdapter : DefaultBlockingAwaitAdapter
         {
-            private readonly object _awaiter;
+            private readonly object? _awaiter;
             private readonly Func<bool> _awaiterIsCompleted;
             private readonly Action<Action> _awaiterOnCompleted;
             private readonly MethodInfo _getResultMethod;
 
-            public ReflectionAdapter(object awaiter, MethodInfo isCompletedGetter, MethodInfo onCompletedMethod, MethodInfo getResultMethod)
+            public ReflectionAdapter(object? awaiter, MethodInfo isCompletedGetter, MethodInfo onCompletedMethod, MethodInfo getResultMethod)
             {
                 _awaiter = awaiter;
                 _awaiterIsCompleted = (Func<bool>)isCompletedGetter.CreateDelegate(typeof(Func<bool>), awaiter);
@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
 
             public override void OnCompleted(Action action) => _awaiterOnCompleted.Invoke(action);
 
-            public override object GetResult() => _getResultMethod.InvokeWithTransparentExceptions(_awaiter);
+            public override object? GetResult() => _getResultMethod.InvokeWithTransparentExceptions(_awaiter);
         }
     }
 }

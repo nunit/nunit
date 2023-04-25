@@ -189,7 +189,7 @@ namespace NUnit.Framework.Constraints
         ///<param name="pollingIntervalInMilliseconds">The time interval used for polling, in milliseconds</param>
         ///<exception cref="InvalidOperationException">If the value of <paramref name="delayInMilliseconds"/> is less than 0</exception>
         public DelayedConstraint(IConstraint baseConstraint, int delayInMilliseconds, int pollingIntervalInMilliseconds)
-            : base(baseConstraint)
+            : base(baseConstraint, string.Empty)
         {
             if (delayInMilliseconds < 0)
                 throw new ArgumentException("Cannot check a condition in the past", nameof(delayInMilliseconds));
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Constraints
         }
 
         private DelayedConstraint(IConstraint baseConstraint, Interval delayInterval, Interval pollingInterval)
-            : base(baseConstraint)
+            : base(baseConstraint, string.Empty)
         {
             DelayInterval = delayInterval;
             PollingInterval = pollingInterval;
@@ -250,7 +250,7 @@ namespace NUnit.Framework.Constraints
             long now = Stopwatch.GetTimestamp();
             long delayEnd = TimestampOffset(now, DelayInterval.AsTimeSpan);
 
-            object actual;
+            object? actual;
             if (PollingInterval.IsNotZero)
             {
                 long nextPoll = TimestampOffset(now, PollingInterval.AsTimeSpan);
@@ -320,7 +320,7 @@ namespace NUnit.Framework.Constraints
             return new DelegatingConstraintResult(this, BaseConstraint.ApplyTo(actual));
         }
 
-        private static object InvokeDelegate<T>(ActualValueDelegate<T> del)
+        private static object? InvokeDelegate<T>(ActualValueDelegate<T> del)
         {
             if (AsyncToSyncAdapter.IsAsyncOperation(del))
                 return AsyncToSyncAdapter.Await(() => del.Invoke());

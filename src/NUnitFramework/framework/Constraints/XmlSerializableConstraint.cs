@@ -12,8 +12,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class XmlSerializableConstraint : Constraint
     {
-        private XmlSerializer serializer;
-
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
@@ -35,7 +33,7 @@ namespace NUnit.Framework.Constraints
 
             try
             {
-                serializer = new XmlSerializer(actual.GetType());
+                var serializer = new XmlSerializer(actual.GetType());
 
                 serializer.Serialize(stream, actual);
 

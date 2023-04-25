@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System.Collections.Generic;
 
 namespace NUnit.Framework.Internal.Builders
@@ -98,7 +96,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if( ns  == "" ) return _globalInsertionPoint;
 
-            if (_namespaceIndex.TryGetValue(ns, out TestSuite suiteToReturn))
+            if (_namespaceIndex.TryGetValue(ns, out TestSuite? suiteToReturn))
                 return suiteToReturn;
 
             TestSuite suite;

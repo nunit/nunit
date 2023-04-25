@@ -34,7 +34,7 @@ namespace NUnit.Framework.Internal
 
         private static T[] GetFiltered(object[] attributes)
         {
-            List<T> filtered = null;
+            List<T>? filtered = null;
             foreach (var attribute in attributes)
             {
                 if (attribute is T t)

@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
 using System;
 using NUnit.Framework.Internal;
 
@@ -16,9 +15,9 @@ namespace NUnit.Framework.Constraints.Comparers
             return TypeHelper.IsTuple(type);
         }
 
-        private static object GetValue(Type type, string propertyName, object obj)
+        private static object? GetValue(Type type, string propertyName, object obj)
         {
-            return type.GetProperty(propertyName).GetValue(obj, null);
+            return type.GetProperty(propertyName)?.GetValue(obj, null);
         }
 
         public static bool? Equal(object x, object y, ref Tolerance tolerance, ComparisonState state, NUnitEqualityComparer equalityComparer)

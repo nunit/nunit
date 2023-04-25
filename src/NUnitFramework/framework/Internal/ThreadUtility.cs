@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Threading;
 
@@ -50,7 +48,7 @@ namespace NUnit.Framework.Internal
                 _timer.Change(milliseconds, Timeout.Infinite);
             }
 
-            private void Callback(object _)
+            private void Callback(object? _)
             {
                 _timer.Dispose();
                 _threadPoolWork.Invoke(_state);
@@ -128,9 +126,9 @@ namespace NUnit.Framework.Internal
             Delay(ThreadAbortedCheckDelay, CheckOnAbortingThread, new CheckOnAbortingThreadState(thread, nativeId));
         }
 
-        private static void CheckOnAbortingThread(object state)
+        private static void CheckOnAbortingThread(object? state)
         {
-            var context = (CheckOnAbortingThreadState)state;
+            var context = (CheckOnAbortingThreadState)state!;
 
             switch (context.Thread.ThreadState)
             {

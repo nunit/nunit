@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public override string ToString()
         {
-            return builder.Resolve().ToString();
+            return builder.Resolve().ToString()!;
         }
 
         #endregion
@@ -406,7 +406,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests two items for equality
         /// </summary>
-        public EqualConstraint EqualTo(object expected)
+        public EqualConstraint EqualTo(object? expected)
         {
             return (EqualConstraint)this.Append(new EqualConstraint(expected));
         }
@@ -418,7 +418,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a constraint that tests that two references are the same object
         /// </summary>
-        public SameAsConstraint SameAs(object expected)
+        public SameAsConstraint SameAs(object? expected)
         {
             return (SameAsConstraint)this.Append(new SameAsConstraint(expected));
         }
@@ -877,11 +877,11 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests if an item is equal to any of parameters
         /// </summary>
         /// <param name="expected">Expected values</param>
-        public AnyOfConstraint AnyOf(params object[] expected)
+        public AnyOfConstraint AnyOf(params object?[] expected)
         {
             if (expected == null)
             {
-                expected = new object[] { null };
+                expected = new object?[] { null };
             }
 
             return (AnyOfConstraint)this.Append(new AnyOfConstraint(expected));

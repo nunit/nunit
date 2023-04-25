@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-
 namespace NUnit.Framework.Constraints
 {
     /// <summary>Provides a <see cref="ConstraintResult"/> for the <see cref="CollectionEquivalentConstraint"/>.</summary>
@@ -17,7 +16,7 @@ namespace NUnit.Framework.Constraints
         public CollectionEquivalentConstraintResult(
             CollectionEquivalentConstraint constraint,
             CollectionTally.CollectionTallyResult tallyResult,
-            object actual,
+            object? actual,
             bool isSuccess)
             : base(constraint, actual, isSuccess)
         {

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Security;
 using NUnit.Framework.Internal.Abstractions;
+using NUnit.Framework.Internal.Extensions;
 
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -30,11 +31,11 @@ namespace NUnit.Framework.Api
         private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
 
         // Saved Console.Out and Console.Error
-        private TextWriter _savedOut;
-        private TextWriter _savedErr;
+        private TextWriter? _savedOut;
+        private TextWriter? _savedErr;
 
         // Event Pump
-        private EventPump _pump;
+        private EventPump? _pump;
 
 #region Constructors
 
@@ -59,12 +60,12 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// The tree of tests that was loaded by the builder
         /// </summary>
-        public ITest LoadedTest { get; private set; }
+        public ITest? LoadedTest { get; private set; }
 
         /// <summary>
         /// The test result, if a run has completed
         /// </summary>
-        public ITestResult Result => TopLevelWorkItem?.Result;
+        public ITestResult? Result => TopLevelWorkItem?.Result;
 
         /// <summary>
         /// Indicates whether a test is loaded
@@ -84,17 +85,17 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Our settings, specified when loading the assembly
         /// </summary>
-        private IDictionary<string, object> Settings { get; set; }
+        private IDictionary<string, object> Settings { get; set; } = null!; /* Cheating */
 
         /// <summary>
         /// The top level WorkItem created for the assembly as a whole
         /// </summary>
-        private WorkItem TopLevelWorkItem { get; set; }
+        private WorkItem? TopLevelWorkItem { get; set; }
 
         /// <summary>
         /// The TestExecutionContext for the top level WorkItem
         /// </summary>
-        private TestExecutionContext Context { get; set; }
+        private TestExecutionContext? Context { get; set; }
 
 #endregion
 
@@ -115,7 +116,7 @@ namespace NUnit.Framework.Api
                 Randomizer.InitialSeed = (int)randomSeedValue;
             }
 
-            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assemblyNameOrPath, settings));
+            LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assemblyNameOrPath, settings));
             return LoadedTest;
 
         }
@@ -135,7 +136,7 @@ namespace NUnit.Framework.Api
                 Randomizer.InitialSeed = (int)randomSeed;
             }
 
-            WrapInNUnitCallContext(() => LoadedTest = _builder.Build(assembly, settings));
+            LoadedTest = WrapInNUnitCallContext(() => _builder.Build(assembly, settings));
             return LoadedTest;
         }
 
@@ -179,7 +180,7 @@ namespace NUnit.Framework.Api
         {
             RunAsync(listener, filter);
             WaitForCompletion(Timeout.Infinite);
-            return Result;
+            return Result!;
         }
 
         /// <summary>
@@ -199,13 +200,19 @@ namespace NUnit.Framework.Api
 
             _runComplete.Reset();
 
-            CreateTestExecutionContext(listener);
+            var context = CreateTestExecutionContext(LoadedTest, listener);
 
             TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, new DebuggerProxy(), true);
-            TopLevelWorkItem.InitializeContext(Context);
+            if (TopLevelWorkItem == null)
+                throw new InvalidOperationException("Loaded test didn't result in a WorkItem");
+
+            TopLevelWorkItem.InitializeContext(context);
             TopLevelWorkItem.Completed += OnRunCompleted;
 
-            WrapInNUnitCallContext(() => StartRun(listener));
+            // Needs to be set for StopRun
+            Context = context;
+
+            WrapInNUnitCallContext(() => StartRun(context, TopLevelWorkItem, listener));
         }
 
         /// <summary>
@@ -224,7 +231,7 @@ namespace NUnit.Framework.Api
         /// <param name="force">If true, kill any tests that are currently running</param>
         public void StopRun(bool force)
         {
-            if (IsTestRunning)
+            if (IsTestRunning && Context != null)
             {
                 Context.ExecutionStatus = force
                     ? TestExecutionStatus.AbortRequested
@@ -241,7 +248,7 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Initiate the test run.
         /// </summary>
-        private void StartRun(ITestListener listener)
+        private void StartRun(TestExecutionContext context, WorkItem topLevelWorkItem, ITestListener listener)
         {
             // Save Console.Out and Error for later restoration
             _savedOut = Console.Out;
@@ -255,7 +262,7 @@ namespace NUnit.Framework.Api
                 !(bool)synchronousEvents)
             {
                 QueuingEventListener queue = new QueuingEventListener();
-                Context.Listener = queue;
+                context.Listener = queue;
 
                 _pump = new EventPump(listener, queue.Events);
                 _pump.Start();
@@ -271,13 +278,13 @@ namespace NUnit.Framework.Api
                 }
                 catch (SecurityException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission must be granted in order to launch the debugger.");
+                    topLevelWorkItem.MarkNotRunnable("System.Security.Permissions.UIPermission must be granted in order to launch the debugger.");
                     return;
                 }
                 //System.Diagnostics.Debugger.Launch() not implemented on mono
                 catch (NotImplementedException)
                 {
-                    TopLevelWorkItem.MarkNotRunnable("This platform does not support launching the debugger.");
+                    topLevelWorkItem.MarkNotRunnable("This platform does not support launching the debugger.");
                     return;
                 }
             }
@@ -288,53 +295,59 @@ namespace NUnit.Framework.Api
                 PauseBeforeRun();
 #endif
 
-            Context.Dispatcher.Start(TopLevelWorkItem);
+            context.Dispatcher.Start(topLevelWorkItem);
         }
 
         /// <summary>
         /// Create the initial TestExecutionContext used to run tests
         /// </summary>
+        /// <param name="loadedTest">The test loaded.</param>
         /// <param name="listener">The ITestListener specified in the RunAsync call</param>
-        private void CreateTestExecutionContext(ITestListener listener)
+        private TestExecutionContext CreateTestExecutionContext(ITest loadedTest, ITestListener listener)
         {
-            Context = new TestExecutionContext();
+            var context = new TestExecutionContext();
 
             // Apply package settings to the context
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultTimeout, out var timeout))
-                Context.TestCaseTimeout = (int)timeout;
+                context.TestCaseTimeout = (int)timeout;
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultCulture, out var culture))
-                Context.CurrentCulture = new CultureInfo((string)culture, false);
+                context.CurrentCulture = new CultureInfo((string)culture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.DefaultUICulture, out var uiCulture))
-                Context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
+                context.CurrentUICulture = new CultureInfo((string)uiCulture, false);
             if (Settings.TryGetValue(FrameworkPackageSettings.StopOnError, out var stopOnError))
-                Context.StopOnError = (bool)stopOnError;
+                context.StopOnError = (bool)stopOnError;
 
             // Apply attributes to the context
 
             // Set the listener - overriding runners may replace this
-            Context.Listener = listener;
+            context.Listener = listener;
 
-            int levelOfParallelism = GetLevelOfParallelism();
+            int levelOfParallelism = GetLevelOfParallelism(loadedTest);
 
             if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
                 (bool)runOnMainThread)
-                Context.Dispatcher = new MainThreadWorkItemDispatcher();
+                context.Dispatcher = new MainThreadWorkItemDispatcher();
             else if (levelOfParallelism > 0)
-                Context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+                context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
             else
-                Context.Dispatcher = new SimpleWorkItemDispatcher();
+                context.Dispatcher = new SimpleWorkItemDispatcher();
+
+            return context;
         }
 
         /// <summary>
         /// Handle the Completed event for the top level work item
         /// </summary>
-        private void OnRunCompleted(object sender, EventArgs e)
+        private void OnRunCompleted(object? sender, EventArgs e)
         {
             if (_pump != null)
                 _pump.Dispose();
 
-            Console.SetOut(_savedOut);
-            Console.SetError(_savedErr);
+            if (_savedOut != null)
+                Console.SetOut(_savedOut);
+
+            if (_savedErr != null)
+                Console.SetError(_savedErr);
 
             _runComplete.Set();
         }
@@ -355,13 +368,11 @@ namespace NUnit.Framework.Api
             return count;
         }
 
-        private int GetLevelOfParallelism()
+        private int GetLevelOfParallelism(ITest loadedTest)
         {
             return Settings.TryGetValue(FrameworkPackageSettings.NumberOfTestWorkers, out var numberOfTestWorkers)
                 ? (int)numberOfTestWorkers
-                : LoadedTest.Properties.ContainsKey(PropertyNames.LevelOfParallelism)
-                   ? (int)LoadedTest.Properties.Get(PropertyNames.LevelOfParallelism)
-                   : NUnitTestAssemblyRunner.DefaultLevelOfParallelism;
+                : loadedTest.Properties.TryGet(PropertyNames.LevelOfParallelism, NUnitTestAssemblyRunner.DefaultLevelOfParallelism);
         }
 
 #if NETFRAMEWORK
@@ -405,7 +416,29 @@ namespace NUnit.Framework.Api
             action();
 #endif
         }
+
+#if NETFRAMEWORK
+        /// <summary>
+        /// Executes the function within an <see cref="NUnitCallContext" />
+        /// which ensures the <see cref="System.Runtime.Remoting.Messaging.CallContext"/> is cleaned up
+        /// suitably at the end of the test run. This method only has an effect running
+        /// the full .NET Framework.
+        /// </summary>
+#else
+        /// <summary>
+        /// This method is a no-op in .NET Standard builds.
+        /// </summary>
+#endif
+        protected T WrapInNUnitCallContext<T>(Func<T> function)
+        {
+#if NETFRAMEWORK
+            using (new NUnitCallContext())
+                return function();
+#else
+            return function();
+#endif
+        }
     }
 
-#endregion
+    #endregion
 }

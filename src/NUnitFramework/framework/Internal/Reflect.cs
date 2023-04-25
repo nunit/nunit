@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -152,7 +150,7 @@ namespace NUnit.Framework.Internal
             if (from == null)
             {
                 // Look for the marker that indicates from was null
-                return to.IsClass || to.FullName.StartsWith("System.Nullable", StringComparison.Ordinal);
+                return to.IsClass || to.FullName().StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
             if (convertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
@@ -280,7 +278,7 @@ namespace NUnit.Framework.Internal
                 && ReferenceEquals(type.GetGenericTypeDefinition(), typeof(Nullable<>));
         }
 
-        internal static IEnumerable<Type> TypeAndBaseTypes(this Type type)
+        internal static IEnumerable<Type> TypeAndBaseTypes(this Type? type)
         {
             for (; type != null; type = type.BaseType)
             {

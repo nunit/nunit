@@ -47,7 +47,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event that fires when the shift has ended
         /// </summary>
-        public event ShiftChangeEventHandler EndOfShift;
+        public event ShiftChangeEventHandler? EndOfShift;
 
         /// <summary>
         /// The Name of this shift

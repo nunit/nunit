@@ -15,7 +15,7 @@ namespace NUnit.Framework
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
-        public static string GetStackTraceWithoutThrowing(this Exception exception)
+        public static string? GetStackTraceWithoutThrowing(this Exception exception)
         {
             if (exception is null) throw new ArgumentNullException(nameof(exception));
 

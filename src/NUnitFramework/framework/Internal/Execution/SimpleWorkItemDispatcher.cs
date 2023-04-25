@@ -14,10 +14,10 @@ namespace NUnit.Framework.Internal.Execution
     public class SimpleWorkItemDispatcher : IWorkItemDispatcher
     {
         // The first WorkItem to be dispatched, assumed to be top-level item
-        private WorkItem _topLevelWorkItem;
+        private WorkItem? _topLevelWorkItem;
 
         // Thread used to run and cancel tests
-        private Thread _runnerThread;
+        private Thread? _runnerThread;
 
         #region IWorkItemDispatcher Members
 
@@ -32,7 +32,6 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start(WorkItem topLevelWorkItem)
         {
-            _topLevelWorkItem = topLevelWorkItem;
             _runnerThread = new Thread(RunnerThreadProc);
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
@@ -47,7 +46,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
             }
 
-            _runnerThread.Start();
+            _runnerThread.Start(topLevelWorkItem);
         }
 
         /// <summary>
@@ -60,8 +59,9 @@ namespace NUnit.Framework.Internal.Execution
             work?.Execute();
         }
 
-        private void RunnerThreadProc()
+        private void RunnerThreadProc(object? obj)
         {
+            _topLevelWorkItem = (WorkItem)obj!;
             _topLevelWorkItem.Execute();
         }
 

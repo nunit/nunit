@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -84,7 +82,7 @@ namespace NUnit.Framework.Constraints
         {
             private readonly List<object>? _extraItems;
 
-            public CollectionSubsetConstraintResult(IConstraint constraint, object actualValue, bool isSuccess, List<object>? extraItems)
+            public CollectionSubsetConstraintResult(IConstraint constraint, object? actualValue, bool isSuccess, List<object>? extraItems)
                 : base(constraint, actualValue, isSuccess)
             {
                 _extraItems = extraItems;

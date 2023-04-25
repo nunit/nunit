@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using System.IO;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {
-    #region PathConstraint
     /// <summary>
     /// PathConstraint serves as the abstract base of constraints
     /// that operate on paths and provides several helper methods.
@@ -23,7 +23,6 @@ namespace NUnit.Framework.Constraints
         protected PathConstraint(string expected)
             : base(expected)
         {
-            this.expected = expected;
             this.caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
         }
 
@@ -92,7 +91,7 @@ namespace NUnit.Framework.Constraints
                 }
             }
 
-            return leadingSeparators + String.Join(Path.DirectorySeparatorChar.ToString(), parts, 0, count);
+            return leadingSeparators + string.Join(Path.DirectorySeparatorChar.ToString(), parts, 0, count);
         }
 
         /// <summary>
@@ -121,5 +120,4 @@ namespace NUnit.Framework.Constraints
 
         #endregion
     }
-    #endregion
 }

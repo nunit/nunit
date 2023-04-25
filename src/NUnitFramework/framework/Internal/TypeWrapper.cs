@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Linq;
 using System.Reflection;
@@ -53,7 +51,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets the FullName of the Type
         /// </summary>
-        public string FullName => Type.FullName!;
+        public string FullName => Type.FullName();
 
         /// <summary>
         /// Gets the assembly in which the type is declared

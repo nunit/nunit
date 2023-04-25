@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -56,7 +54,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
-            log.Debug("Loading {0} in AppDomain {1}", assembly.FullName, AppDomain.CurrentDomain.FriendlyName);
+            log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
 
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
             string suiteName = assemblyPath.Equals("<Unknown>")
@@ -100,15 +98,15 @@ namespace NUnit.Framework.Api
 
             try
             {
-                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object defaultTestNamePattern))
-                    TestNameGenerator.DefaultTestNamePattern = defaultTestNamePattern as string;
+                if (options.TryGetValue(FrameworkPackageSettings.DefaultTestNamePattern, out object? defaultTestNamePattern))
+                    TestNameGenerator.DefaultTestNamePattern = (string)defaultTestNamePattern;
 
-                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object workDirectory))
+                if (options.TryGetValue(FrameworkPackageSettings.WorkDirectory, out object? workDirectory))
                     TestContext.DefaultWorkDirectory = workDirectory as string;
                 else
                     TestContext.DefaultWorkDirectory = Directory.GetCurrentDirectory();
 
-                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object testParametersObject) &&
+                if (options.TryGetValue(FrameworkPackageSettings.TestParametersDictionary, out object? testParametersObject) &&
                     testParametersObject is Dictionary<string, string> testParametersDictionary)
                 {
                     foreach (var parameter in testParametersDictionary)
@@ -141,7 +139,7 @@ namespace NUnit.Framework.Api
                 }
 
                 var filter = new PreFilter();
-                if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object load))
+                if (options.TryGetValue(FrameworkPackageSettings.LOAD, out object? load))
                 {
                     foreach (string filterText in (IList)load)
                         filter.Add(filterText);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.IO;
 //using System.Runtime.Remoting.Messaging;
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Writes a string
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void Write(string value)
+        public override void Write(string? value)
         {
             var context = TestExecutionContext.CurrentContext;
 
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Writes a string followed by a line terminator
         /// </summary>
         /// <param name="value">The string to write</param>
-        public override void WriteLine(string value)
+        public override void WriteLine(string? value)
         {
             var context = TestExecutionContext.CurrentContext;
 

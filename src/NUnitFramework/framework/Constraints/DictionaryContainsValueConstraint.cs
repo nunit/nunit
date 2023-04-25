@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// Construct a DictionaryContainsValueConstraint
         /// </summary>
         /// <param name="expected"></param>
-        public DictionaryContainsValueConstraint(object expected)
+        public DictionaryContainsValueConstraint(object? expected)
             : base(expected)
         {
             Expected = expected;
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Gets the expected object
         /// </summary>
-        protected object Expected { get; }
+        protected object? Expected { get; }
 
         /// <summary>
         /// Test whether the expected value is contained in the dictionary
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Constraints
         {
             var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
 
-            foreach (object obj in dictionary.Values)
+            foreach (object? obj in dictionary.Values)
                 if (ItemsEqual(obj, Expected))
                     return true;
 

@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="actualValue">The actual value to which the Constraint was applied</param>
         /// <param name="nonMatchingItem">Actual item that does not match expected condition</param>
         /// <param name="nonMatchingIndex">Non matching item index</param>
-        public EachItemConstraintResult(IConstraint constraint, object actualValue, object nonMatchingItem, int nonMatchingIndex)
+        public EachItemConstraintResult(IConstraint constraint, object? actualValue, object nonMatchingItem, int nonMatchingIndex)
             : base(constraint, actualValue, false)
         {
             _nonMatchingItem = nonMatchingItem;

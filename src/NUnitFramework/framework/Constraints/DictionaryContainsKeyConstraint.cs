@@ -65,8 +65,11 @@ namespace NUnit.Framework.Constraints
             return constraint;
         }
 
-        private bool Matches(object actual)
+        private bool Matches(object? actual)
         {
+            if (actual == null)
+                throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
+
             if (_isDeprecatedMode)
             {
                 var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
@@ -79,7 +82,7 @@ namespace NUnit.Framework.Constraints
 
             var method = GetContainsKeyMethod(actual);
             if (method != null)
-                return (bool)method.Invoke(actual, new[] { Expected });
+                return (bool)method.Invoke(actual, new[] { Expected })!;
 
             throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a ContainsKey or Contains(TKey) method.");
         }
@@ -101,9 +104,8 @@ namespace NUnit.Framework.Constraints
             return Matches(collection);
         }
 
-        private static MethodInfo GetContainsKeyMethod(object keyedItemContainer)
+        private static MethodInfo? GetContainsKeyMethod(object keyedItemContainer)
         {
-            if (keyedItemContainer == null) throw new ArgumentNullException(nameof(keyedItemContainer));
             var instanceType = keyedItemContainer.GetType();
 
             var method = FindContainsKeyMethod(instanceType)
@@ -116,7 +118,7 @@ namespace NUnit.Framework.Constraints
             return method;
         }
 
-        private static MethodInfo FindContainsKeyMethod(Type type)
+        private static MethodInfo? FindContainsKeyMethod(Type type)
         {
             var methods = type.GetMethods(BindingFlags.Instance | BindingFlags.Public);
             var method = methods.FirstOrDefault(m =>
@@ -152,11 +154,9 @@ namespace NUnit.Framework.Constraints
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
         {
-            for (; ; )
+            for (Type? baseType = type.BaseType; baseType != null; baseType = baseType.BaseType)
             {
-                type = type.BaseType;
-                if (type == null) break;
-                yield return type;
+                yield return baseType;
             }
         }
     }

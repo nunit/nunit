@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 namespace NUnit.Framework.Interfaces
 {
     /// <summary>
@@ -18,7 +16,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="stream">Name of the stream or channel to which the text should be written</param>
         /// <param name="testId">Id of the test that produced the output</param>
         /// <param name="testName">FullName of test that produced the output</param>
-        public TestOutput(string text, string stream, string testId, string testName)
+        public TestOutput(string text, string stream, string? testId, string? testName)
         {
             Text = text;
             Stream = stream;
@@ -48,12 +46,12 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Get the name of the test that created the output
         /// </summary>
-        public string TestName { get; }
+        public string? TestName { get; }
 
         /// <summary>
         /// Get the id of the test that created the output
         /// </summary>
-        public string TestId { get; }
+        public string? TestId { get; }
 
         /// <summary>
         /// Convert the TestOutput object to an XML string

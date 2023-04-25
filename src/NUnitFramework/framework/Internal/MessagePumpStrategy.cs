@@ -1,8 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Security;
 using System.Threading;
@@ -55,7 +54,7 @@ namespace NUnit.Framework.Internal
 
                 if (_instance is null)
                 {
-                    var applicationType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true);
+                    var applicationType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Forms.Application", throwOnError: true)!;
 
                     var applicationRun = (Action)applicationType
                         .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
@@ -71,7 +70,7 @@ namespace NUnit.Framework.Internal
                 return _instance;
             }
 
-            private static bool IsApplicable(SynchronizationContext context)
+            private static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
             {
                 return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
             }
@@ -91,7 +90,7 @@ namespace NUnit.Framework.Internal
                 // shutting it down. Otherwise Application.Exit is a no-op and we would then proceed to do
                 // Application.Run and never return.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, _applicationExit),
+                    _ => ContinueOnSameSynchronizationContext(awaiter, _applicationExit),
                     state: awaiter);
 
                 try
@@ -120,11 +119,13 @@ namespace NUnit.Framework.Internal
 
             public static MessagePumpStrategy? GetIfApplicable()
             {
-                if (!IsApplicable(SynchronizationContext.Current)) return null;
+                SynchronizationContext? context = SynchronizationContext.Current;
+
+                if (!IsApplicable(context)) return null;
 
                 if (_instance is null)
                 {
-                    var dispatcherType = SynchronizationContext.Current.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
+                    var dispatcherType = context.GetType().Assembly.GetType("System.Windows.Threading.Dispatcher", throwOnError: true)!;
 
                     var dispatcherRun = (Action)dispatcherType
                         .GetMethod("Run", BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly, null, Type.EmptyTypes, null)!
@@ -140,7 +141,7 @@ namespace NUnit.Framework.Internal
                 return _instance;
             }
 
-            private static bool IsApplicable(SynchronizationContext? context)
+            private static bool IsApplicable([NotNullWhen(true)] SynchronizationContext? context)
             {
                 return context?.GetType().FullName == "System.Windows.Threading.DispatcherSynchronizationContext";
             }
@@ -159,7 +160,7 @@ namespace NUnit.Framework.Internal
                 // shutting it down. Otherwise Dispatcher.ExitAllFrames is a no-op and we would then proceed to do
                 // Dispatcher.Run and never return.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, _dispatcherExitAllFrames),
+                    _ => ContinueOnSameSynchronizationContext(awaiter, _dispatcherExitAllFrames),
                     state: awaiter);
 
                 _dispatcherRun.Invoke();
@@ -182,7 +183,7 @@ namespace NUnit.Framework.Internal
                 // and it completed after the IsCompleted check, it will wait until the message loop runs *before*
                 // shutting it down. Otherwise context.ShutDown will throw.
                 context.Post(
-                    state => ContinueOnSameSynchronizationContext((AwaitAdapter)state, context.ShutDown),
+                    _ => ContinueOnSameSynchronizationContext(awaiter, context.ShutDown),
                     state: awaiter);
 
                 context.Run();
@@ -198,10 +199,10 @@ namespace NUnit.Framework.Internal
 
             awaiter.OnCompleted(() =>
             {
-                if (SynchronizationContext.Current == context)
+                if (context is null || SynchronizationContext.Current == context)
                     continuation.Invoke();
                 else
-                    context.Post(state => ((Action)state).Invoke(), state: continuation);
+                    context.Post(_ => continuation.Invoke(), state: continuation);
             });
         }
     }

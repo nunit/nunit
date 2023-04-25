@@ -10,18 +10,18 @@ namespace NUnit.Framework.Internal
     {
         public static void DoIsolated(Action action)
         {
-            DoIsolated(state => ((Action)state).Invoke(), state: action);
+            DoIsolated(_ => action.Invoke(), state: null);
         }
 
         public static T DoIsolated<T>(Func<T> func)
         {
-            var returnValue = default(T);
+            T? returnValue = default(T);
             DoIsolated(_ => returnValue = func.Invoke(), state: null);
-            return returnValue;
+            return returnValue!;
         }
 
         [SecuritySafeCritical]
-        public static void DoIsolated(ContextCallback callback, object state)
+        public static void DoIsolated(ContextCallback callback, object? state)
         {
             var previousState = SandboxedThreadState.Capture();
             try
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
                 var executionContext = ExecutionContext.Capture()
                     ?? throw new InvalidOperationException("Execution context flow must not be suppressed.");
 
-                using ((object)executionContext as IDisposable)
+                using (executionContext as IDisposable)
                 {
                     ExecutionContext.Run(executionContext, callback, state);
                 }

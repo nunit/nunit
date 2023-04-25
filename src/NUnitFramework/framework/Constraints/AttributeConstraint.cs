@@ -1,4 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System;
 using NUnit.Compatibility;
 
@@ -12,7 +13,6 @@ namespace NUnit.Framework.Constraints
     public class AttributeConstraint : PrefixConstraint
     {
         private readonly Type expectedType;
-        private Attribute attrFound;
 
         /// <summary>
         /// Constructs an AttributeConstraint for a specified attribute
@@ -21,10 +21,9 @@ namespace NUnit.Framework.Constraints
         /// <param name="type"></param>
         /// <param name="baseConstraint"></param>
         public AttributeConstraint(Type type, IConstraint baseConstraint)
-            : base(baseConstraint)
+            : base(baseConstraint, "attribute " + type.FullName)
         {
             this.expectedType = type;
-            this.DescriptionPrefix = "attribute " + expectedType.FullName;
 
             if (!typeof(Attribute).IsAssignableFrom(expectedType))
                 throw new ArgumentException($"Type {expectedType} is not an attribute", nameof(type));
@@ -42,7 +41,7 @@ namespace NUnit.Framework.Constraints
             if (attrs.Length == 0)
                 throw new ArgumentException($"Attribute {expectedType} was not found", nameof(actual));
 
-            attrFound = attrs[0];
+            Attribute attrFound = attrs[0];
             return BaseConstraint.ApplyTo(attrFound);
         }
 

@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Logger log = InternalTrace.GetLogger("TestWorker");
 
-        private Thread _workerThread;
+        private Thread? _workerThread;
 
         private int _workItemCount = 0;
 
@@ -31,12 +31,12 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event signaled immediately before executing a WorkItem
         /// </summary>
-        public event TestWorkerEventHandler Busy;
+        public event TestWorkerEventHandler? Busy;
 
         /// <summary>
         /// Event signaled immediately after executing a WorkItem
         /// </summary>
-        public event TestWorkerEventHandler Idle;
+        public event TestWorkerEventHandler? Idle;
 
         #endregion
 
@@ -72,14 +72,14 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Indicates whether the worker thread is running
         /// </summary>
-        public bool IsAlive => _workerThread.IsAlive;
+        public bool IsAlive => _workerThread?.IsAlive is true;
 
         #endregion
 
         /// <summary>
         /// Our ThreadProc, which pulls and runs tests in a loop
         /// </summary>
-        private WorkItem _currentWorkItem;
+        private WorkItem? _currentWorkItem;
 
         private void TestWorkerThreadProc()
         {
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (_currentWorkItem == null)
                         break;
 
-                    log.Info("{0} executing {1}", _workerThread.Name, _currentWorkItem.Name);
+                    log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);
 
                     _currentWorkItem.TestWorker = this;
 
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Internal.Execution
                     // TODO: If we had a separate NonParallelTestWorker, it
                     // could simply create the isolated queue without any
                     // worrying about competing workers.
-                    Busy(this, _currentWorkItem);
+                    Busy?.Invoke(this, _currentWorkItem);
 
                     // Because we execute the current item AFTER the queue state
                     // is saved, its children end up in the new queue set.
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Internal.Execution
                     // This call may result in the queues being restored. There
                     // is a potential race condition here. We should not restore
                     // the queues unless all child items have finished.
-                    Idle(this, _currentWorkItem);
+                    Idle?.Invoke(this, _currentWorkItem);
 
                     ++_workItemCount;
                 }
@@ -129,8 +129,10 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc));
-            _workerThread.Name = Name;
+            _workerThread = new Thread(new ThreadStart(TestWorkerThreadProc))
+            {
+                Name = Name
+            };
 
             try
             {

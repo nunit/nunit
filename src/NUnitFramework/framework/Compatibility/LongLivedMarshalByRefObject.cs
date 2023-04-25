@@ -16,7 +16,7 @@ namespace NUnit.Compatibility
         [SecurityCritical]  // Override of security critical method must be security critical itself
         public override object InitializeLifetimeService()
         {
-            return null;
+            return null!;
         }
     }
 }

@@ -1,12 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace NUnit.Framework.Internal
 {
     partial class ValueGenerator
     {
         private sealed class UInt32ValueGenerator : ValueGenerator<uint>
         {
-            public override bool TryCreateStep(object value, out ValueGenerator.Step step)
+            public override bool TryCreateStep(object value, [NotNullWhen(true)] out ValueGenerator.Step? step)
             {
                 if (value is uint uValue)
                 {

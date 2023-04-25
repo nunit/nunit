@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
 #pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        protected string expected;
+        protected readonly string expected;
 #pragma warning restore IDE1006
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
 #pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        protected string descriptionText;
+        protected string descriptionText = string.Empty;
 #pragma warning restore IDE1006
 
         /// <summary>
@@ -56,7 +56,10 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Constructs a StringConstraint without an expected value
         /// </summary>
-        protected StringConstraint() { }
+        protected StringConstraint()
+        {
+            this.expected = string.Empty;
+        }
 
         /// <summary>
         /// Constructs a StringConstraint given an expected value

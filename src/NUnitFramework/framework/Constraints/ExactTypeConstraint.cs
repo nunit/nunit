@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="actual">The actual argument</param>
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
-        protected override bool Matches(object actual)
+        protected override bool Matches(object? actual)
         {
             return actual != null && actual.GetType() == expectedType;
         }

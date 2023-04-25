@@ -60,7 +60,7 @@ namespace NUnit.Framework
         /// <param name="expectedType">System.Type that all objects in collection must be instances of</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AllItemsAreInstancesOfType (IEnumerable collection, Type expectedType, string message, params object[] args)
+        public static void AllItemsAreInstancesOfType (IEnumerable collection, Type expectedType, string message, params object?[]? args)
         {
             Assert.That(collection, Is.All.InstanceOf(expectedType), message, args);
         }
@@ -83,7 +83,7 @@ namespace NUnit.Framework
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AllItemsAreNotNull (IEnumerable collection, string message, params object[] args)
+        public static void AllItemsAreNotNull (IEnumerable collection, string message, params object?[]? args)
         {
             Assert.That(collection, Is.All.Not.Null, message, args);
         }
@@ -108,7 +108,7 @@ namespace NUnit.Framework
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AllItemsAreUnique (IEnumerable collection, string message, params object[] args)
+        public static void AllItemsAreUnique (IEnumerable collection, string message, params object?[]? args)
         {
             Assert.That(collection, Is.Unique, message, args);
         }
@@ -148,7 +148,7 @@ namespace NUnit.Framework
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args)
+        public static void AreEqual (IEnumerable expected, IEnumerable actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.EqualTo(expected).AsCollection, message, args);
         }
@@ -163,7 +163,7 @@ namespace NUnit.Framework
         /// <param name="comparer">The IComparer to use in comparing objects from each IEnumerable</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object[] args)
+        public static void AreEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object?[]? args)
         {
             Assert.That(actual, Is.EqualTo(expected).Using(comparer), message, args);
         }
@@ -188,7 +188,7 @@ namespace NUnit.Framework
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args)
+        public static void AreEquivalent (IEnumerable expected, IEnumerable actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.EquivalentTo(expected), message, args);
         }
@@ -225,7 +225,7 @@ namespace NUnit.Framework
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message, params object[] args)
+        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected).AsCollection, message, args);
         }
@@ -239,7 +239,7 @@ namespace NUnit.Framework
         /// <param name="comparer">The IComparer to use in comparing objects from each IEnumerable</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object[] args)
+        public static void AreNotEqual (IEnumerable expected, IEnumerable actual, IComparer comparer, string message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected).Using(comparer), message, args);
         }
@@ -264,7 +264,7 @@ namespace NUnit.Framework
         /// <param name="actual">The second IEnumerable of objects to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreNotEquivalent (IEnumerable expected, IEnumerable actual, string message, params object[] args)
+        public static void AreNotEquivalent (IEnumerable expected, IEnumerable actual, string message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.EquivalentTo(expected), message, args);
         }
@@ -288,7 +288,7 @@ namespace NUnit.Framework
         /// <param name="actual">Object to be found within collection</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Contains (IEnumerable collection, Object actual, string message, params object[] args)
+        public static void Contains (IEnumerable collection, Object actual, string message, params object?[]? args)
         {
             Assert.That(collection, Has.Member(actual), message, args);
         }
@@ -313,7 +313,7 @@ namespace NUnit.Framework
         /// <param name="actual">Object that cannot exist within collection</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void DoesNotContain (IEnumerable collection, Object actual, string message, params object[] args)
+        public static void DoesNotContain (IEnumerable collection, Object actual, string message, params object?[]? args)
         {
             Assert.That(collection, Has.No.Member(actual), message, args);
         }
@@ -338,7 +338,7 @@ namespace NUnit.Framework
         /// <param name="superset">The IEnumerable superset to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
+        public static void IsNotSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object?[]? args)
         {
             Assert.That(subset, Is.Not.SubsetOf(superset), message, args);
         }
@@ -363,7 +363,7 @@ namespace NUnit.Framework
         /// <param name="superset">The IEnumerable superset to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object[] args)
+        public static void IsSubsetOf (IEnumerable subset, IEnumerable superset, string message, params object?[]? args)
         {
             Assert.That(subset, Is.SubsetOf(superset), message, args);
         }
@@ -389,7 +389,7 @@ namespace NUnit.Framework
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsNotSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object[] args)
+        public static void IsNotSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object?[]? args)
         {
             Assert.That(superset, Is.Not.SupersetOf(subset), message, args);
         }
@@ -414,7 +414,7 @@ namespace NUnit.Framework
         /// <param name="subset">The IEnumerable subset to be considered</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object[] args)
+        public static void IsSupersetOf(IEnumerable superset, IEnumerable subset, string message, params object?[]? args)
         {
             Assert.That(superset, Is.SupersetOf(subset), message, args);
         }
@@ -428,7 +428,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         /// <param name="message">The message to be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsEmpty(IEnumerable collection, string message, params object[] args)
+        public static void IsEmpty(IEnumerable collection, string message, params object?[]? args)
         {
             Assert.That(collection, new EmptyCollectionConstraint(), message, args);
         }
@@ -450,7 +450,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         /// <param name="message">The message to be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsNotEmpty(IEnumerable collection, string message, params object[] args)
+        public static void IsNotEmpty(IEnumerable collection, string message, params object?[]? args)
         {
             Assert.That(collection, new NotConstraint(new EmptyCollectionConstraint()), message, args);
         }
@@ -472,7 +472,7 @@ namespace NUnit.Framework
         /// <param name="collection">An array, list or other collection implementing IEnumerable</param>
         /// <param name="message">The message to be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsOrdered(IEnumerable collection, string message, params object[] args)
+        public static void IsOrdered(IEnumerable collection, string message, params object?[]? args)
         {
             Assert.That(collection, Is.Ordered, message, args);
         }
@@ -493,7 +493,7 @@ namespace NUnit.Framework
         /// <param name="comparer">A custom comparer to perform the comparisons</param>
         /// <param name="message">The message to be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void IsOrdered(IEnumerable collection, IComparer comparer, string message, params object[] args)
+        public static void IsOrdered(IEnumerable collection, IComparer comparer, string message, params object?[]? args)
         {
             Assert.That(collection, Is.Ordered.Using(comparer), message, args);
         }

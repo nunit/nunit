@@ -7,13 +7,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class TrueConstraint : Constraint
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TrueConstraint"/> class.
-        /// </summary>
-        public TrueConstraint()
-        {
-            Description = "True";
-        }
+        /// <inheritdoc/>
+        public override string Description => "True";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 namespace NUnit.Framework.Constraints
 {
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Constraints
         /// </returns>
         public override string ToString()
         {
-            return constraint.ToString();
+            return constraint.ToString()!;
         }
 
         #region IResolveConstraint Members

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Reflection;
 using System.Collections;
@@ -100,20 +98,20 @@ namespace NUnit.Framework.Internal.Builders
                         if (field != null)
                         {
                             instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
-                            foreach (object data in (IEnumerable)field.GetValue(instance))
+                            foreach (object data in (IEnumerable)field.GetValue(instance)!)
                                 datapoints.Add(data);
                         }
                         else if (property != null)
                         {
-                            MethodInfo getMethod = property.GetGetMethod(true);
-                            instance = getMethod.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
-                            foreach (object data in (IEnumerable)property.GetValue(instance, null))
+                            MethodInfo? getMethod = property.GetGetMethod(true);
+                            instance = getMethod?.IsStatic is true ? null : ProviderCache.GetInstanceOf(owningType);
+                            foreach (object data in (IEnumerable)property.GetValue(instance, null)!)
                                 datapoints.Add(data);
                         }
                         else if (method != null)
                         {
                             instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
-                            foreach (object data in (IEnumerable)method.Invoke(instance, Array.Empty<Type>()))
+                            foreach (object data in (IEnumerable)method.Invoke(instance, Array.Empty<Type>())!)
                                 datapoints.Add(data);
                         }
                     }

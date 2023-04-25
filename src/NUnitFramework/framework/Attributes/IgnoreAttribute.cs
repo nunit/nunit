@@ -1,8 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -40,6 +39,7 @@ namespace NUnit.Framework
         /// property set which will appear in the test results.
         /// </remarks>
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception>
+        [DisallowNull]
         public string? Until
         {
             get => _until;

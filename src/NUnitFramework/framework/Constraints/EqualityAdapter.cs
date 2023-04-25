@@ -44,8 +44,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public virtual bool CanCompare(object x, object y)
         {
-            return (x is string || !(x is IEnumerable)) &&
-                   (y is string || !(y is IEnumerable));
+            return (x is string || x is not IEnumerable) &&
+                   (y is string || y is not IEnumerable);
         }
 
         #region Nested IComparer Adapter
@@ -159,11 +159,15 @@ namespace NUnit.Framework.Constraints
 
             protected void CastOrThrow(object x, object y, out T xValue, out T yValue)
             {
-                if (!TypeHelper.TryCast(x, out xValue))
+                if (!TypeHelper.TryCast(x, out T? xValueOrNull))
                     throw new ArgumentException($"Cannot compare {x?.ToString() ?? "null"}");
 
-                if (!TypeHelper.TryCast(y, out yValue))
+                if (!TypeHelper.TryCast(y, out T? yValueOrNull))
                     throw new ArgumentException($"Cannot compare {y?.ToString() ?? "null"}");
+
+                // The are now verified to be not null.
+                xValue = xValueOrNull;
+                yValue = yValueOrNull;
             }
         }
 

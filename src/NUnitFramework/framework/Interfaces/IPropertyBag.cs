@@ -1,9 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Interfaces
 {
@@ -82,7 +81,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="key">The key for which the values are to be retrieved</param>
         /// <param name="values">Values, if found</param>
         /// <returns>true if found</returns>
-        bool TryGet(string key, out IList values);
+        bool TryGet(string key, [NotNullWhen(true)] out IList? values);
 
         /// <summary>
         /// Gets or sets the list of values for a particular key, initializes new list behind the key if not found.

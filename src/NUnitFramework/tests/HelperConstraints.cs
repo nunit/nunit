@@ -23,7 +23,9 @@ namespace NUnit.Framework
                 _milliseconds = milliseconds;
             }
 
-            protected override object GetTestObject<TActual>(ActualValueDelegate<TActual> del)
+            public override string Description => "Has Maximum Time";
+
+            protected override object? GetTestObject<TActual>(ActualValueDelegate<TActual> del)
             {
                 return del;
             }

@@ -18,7 +18,7 @@ namespace NUnit.Framework.Constraints
     {
         private readonly string name;
 
-        Type actualType;
+        Type? actualType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyExistsConstraint"/> class.
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
             actualType = typeof(TActual);
-            PropertyInfo property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+            PropertyInfo? property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
 
             if (property == null && typeof(TActual).IsInterface)
             {

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -118,7 +116,7 @@ namespace NUnit.Framework
             {
                 Guard.ArgumentNotNull(value, nameof(value));
                 _testOf = value;
-                Properties.Set(PropertyNames.TestOf, value.FullName!);
+                Properties.Set(PropertyNames.TestOf, value.FullName());
             }
         }
         private Type? _testOf;

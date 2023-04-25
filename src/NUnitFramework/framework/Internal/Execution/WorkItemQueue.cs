@@ -2,6 +2,7 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 namespace NUnit.Framework.Internal.Execution
@@ -96,6 +97,7 @@ namespace NUnit.Framework.Internal.Execution
             InitializeQueues();
         }
 
+        [MemberNotNull(nameof(_innerQueues))]
         private void InitializeQueues()
         {
             ConcurrentQueue<WorkItem>[] newQueues = new ConcurrentQueue<WorkItem>[PRIORITY_LEVELS];
@@ -107,7 +109,7 @@ namespace NUnit.Framework.Internal.Execution
             _addId = _removeId = 0;
         }
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets the name of the work item queue.
@@ -159,9 +161,9 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         /// <summary>
         /// Enqueue a WorkItem to be processed
@@ -204,7 +206,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Dequeue a WorkItem for processing
         /// </summary>
         /// <returns>A WorkItem or null if the queue has stopped</returns>
-        public WorkItem Dequeue()
+        public WorkItem? Dequeue()
         {
             SpinWait sw = new SpinWait();
 
@@ -252,7 +254,7 @@ namespace NUnit.Framework.Internal.Execution
 
 
                 // Dequeue our work item
-                WorkItem work = null;
+                WorkItem? work = null;
                 while (work == null)
                     foreach (var q in _innerQueues)
                         if (q.TryDequeue(out work))
@@ -341,9 +343,9 @@ namespace NUnit.Framework.Internal.Execution
             _removeId += state.RemoveId;
         }
 
-#endregion
+        #endregion
 
-#region Internal Methods for Testing
+        #region Internal Methods for Testing
 
         internal string DumpContents()
         {
@@ -379,6 +381,6 @@ namespace NUnit.Framework.Internal.Execution
             return sb.ToString();
         }
 
-#endregion
+        #endregion
     }
 }

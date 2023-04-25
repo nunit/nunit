@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -82,7 +80,7 @@ namespace NUnit.Framework
                 test.Properties.Set(PropertyNames.Author, Author);
 
             if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
-                test.Properties.Set(PropertyNames.TestOf, TestOf.FullName!);
+                test.Properties.Set(PropertyNames.TestOf, TestOf.FullName());
 
             if (_hasExpectedResult && test.Method.GetParameters().Length > 0)
                 test.MakeInvalid("The 'TestAttribute.ExpectedResult' property may not be used on parameterized methods.");

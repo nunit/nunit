@@ -55,7 +55,7 @@ namespace NUnit.Framework
                 if (datetime > DateTimeOffset.UtcNow)
                 {
                     RunState = RunState.Ignored;
-                    string reason = (string)Properties.Get(PropertyNames.SkipReason);
+                    string? reason = (string?)Properties.Get(PropertyNames.SkipReason);
                     Properties.AddIgnoreUntilReason(datetime, reason);
                 }
                 else

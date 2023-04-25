@@ -10,6 +10,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Execution
 {
     using Commands;
+    using NUnit.Framework.Internal.Extensions;
 
     /// <summary>
     /// A WorkItem may be an individual test case, a fixture or
@@ -40,13 +41,17 @@ namespace NUnit.Framework.Internal.Execution
             Result = test.MakeTestResult();
             State = WorkItemState.Ready;
 
-            ParallelScope = Test.Properties.ContainsKey(PropertyNames.ParallelScope)
-                ? (ParallelScope)Test.Properties.Get(PropertyNames.ParallelScope)
-                : ParallelScope.Default;
+            ParallelScope = Test.Properties.TryGet(PropertyNames.ParallelScope, ParallelScope.Default);
 
             TargetApartment = GetTargetApartment(Test);
 
             State = WorkItemState.Ready;
+
+            // Yes, this is cheating.
+            // The code relies on InitializeContext being called.
+            // An most code simply assumes it is not null.
+            // Converting the property to nullable causes too much headache
+            Context = null!;
         }
 
         /// <summary>
@@ -58,10 +63,11 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="wrappedItem">The WorkItem being wrapped</param>
         public WorkItem(WorkItem wrappedItem)
         {
-            // Use the same Test, Result, Actions, Context, ParallelScope
+            // Use the same Test, Result, Filter, Actions, Context, ParallelScope
             // and TargetApartment as the item being wrapped.
             Test = wrappedItem.Test;
             Result = wrappedItem.Result;
+            Filter = wrappedItem.Filter;
             Context = wrappedItem.Context;
             ParallelScope = wrappedItem.ParallelScope;
             TestWorker = wrappedItem.TestWorker;
@@ -96,7 +102,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// Event triggered when the item is complete
         /// </summary>
-        public event EventHandler Completed;
+        public event EventHandler? Completed;
 
         /// <summary>
         /// Gets the current state of the WorkItem
@@ -126,7 +132,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <summary>
         /// The worker executing this item.
         /// </summary>
-        public TestWorker TestWorker { get; internal set; }
+        public TestWorker? TestWorker { get; internal set; }
 
         private ParallelExecutionStrategy? _executionStrategy;
 
@@ -173,6 +179,8 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
+            Guard.OperationValid(Context != null, "Context must be set by InitializeContext");
+
             // A supplementary thread is required in two conditions...
             //
             // 1. If the test used the RequiresThreadAttribute. This
@@ -342,14 +350,14 @@ namespace NUnit.Framework.Internal.Execution
         protected List<SetUpTearDownItem> BuildSetUpTearDownList(
             IMethodInfo[] setUpMethods,
             IMethodInfo[] tearDownMethods,
-            IMethodValidator methodValidator = null)
+            IMethodValidator? methodValidator = null)
         {
             Guard.ArgumentNotNull(setUpMethods, nameof(setUpMethods));
             Guard.ArgumentNotNull(tearDownMethods, nameof(tearDownMethods));
 
             var list = new List<SetUpTearDownItem>();
 
-            Type fixtureType = Test.TypeInfo?.Type;
+            Type? fixtureType = Test.TypeInfo?.Type;
             if (fixtureType == null)
                 return list;
 
@@ -381,7 +389,7 @@ namespace NUnit.Framework.Internal.Execution
             Type fixtureType,
             IList<IMethodInfo> setUpMethods,
             IList<IMethodInfo> tearDownMethods,
-            IMethodValidator methodValidator)
+            IMethodValidator? methodValidator)
         {
             // Create lists of methods for this level only.
             // Note that FindAll can't be used because it's not
@@ -419,14 +427,14 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-        private Thread thread;
+        private Thread? thread;
 
         private void RunOnSeparateThread(ApartmentState apartment)
         {
             thread = new Thread(() =>
             {
-                thread.CurrentCulture = Context.CurrentCulture;
-                thread.CurrentUICulture = Context.CurrentUICulture;
+                Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
+                Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
 #if THREAD_ABORT
                 lock (threadLock)
                     nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
@@ -508,9 +516,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         static ApartmentState GetTargetApartment(ITest test)
         {
-            var apartment = test.Properties.ContainsKey(PropertyNames.ApartmentState)
-                ? (ApartmentState)test.Properties.Get(PropertyNames.ApartmentState)
-                : ApartmentState.Unknown;
+            var apartment = test.Properties.TryGet(PropertyNames.ApartmentState, ApartmentState.Unknown);
 
             if (apartment == ApartmentState.Unknown && test.Parent != null)
                 return GetTargetApartment(test.Parent);

@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
 using System.Collections;
 
 namespace NUnit.Framework.Constraints.Comparers
@@ -48,7 +47,7 @@ namespace NUnit.Framework.Constraints.Comparers
                 _tolerance = tolerance;
             }
 
-            public new bool Equals(object x, object y)
+            public new bool Equals(object? x, object? y)
             {
                 return _comparer.AreEqual(x, y, ref _tolerance);
             }

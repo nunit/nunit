@@ -2,6 +2,7 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal
 {
@@ -110,6 +111,16 @@ namespace NUnit.Framework.Internal
         {
             Assert.Throws<ArgumentNullException>(() => bag.Add("dontAddMe", null));
             Assert.That(bag.ContainsKey("dontAddMe"), Is.False);
+        }
+
+        [Test]
+        public void TestTryGet()
+        {
+            Assert.That(bag.TryGet("Answer", 37), Is.EqualTo(42));
+            Assert.That(bag.TryGet("WrongAnswer", 37), Is.EqualTo(37));
+
+            Assert.That(bag.TryGet("Tag", "none"), Is.EqualTo("bug"));
+            Assert.That(bag.TryGet("Target", "netstandard"), Is.EqualTo("netstandard"));
         }
     }
 }

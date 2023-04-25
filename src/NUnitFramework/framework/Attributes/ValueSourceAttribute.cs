@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections;
 using System.Reflection;
@@ -98,7 +96,7 @@ namespace NUnit.Framework
             if (field != null)
             {
                 if (field.IsStatic)
-                    return (IEnumerable)field.GetValue(null);
+                    return (IEnumerable?)field.GetValue(null);
 
                 throw CreateSourceNameException();
             }
@@ -106,8 +104,9 @@ namespace NUnit.Framework
             var property = member as PropertyInfo;
             if (property != null)
             {
-                if (property.GetGetMethod(true).IsStatic)
-                    return (IEnumerable)property.GetValue(null, null);
+                MethodInfo? getMethod = property.GetGetMethod(true);
+                if (getMethod?.IsStatic is true)
+                    return (IEnumerable?)property.GetValue(null, null);
 
                 throw CreateSourceNameException();
             }
@@ -116,7 +115,7 @@ namespace NUnit.Framework
             if (m != null)
             {
                 if (m.IsStatic)
-                    return (IEnumerable)m.Invoke(null, null);
+                    return (IEnumerable?)m.Invoke(null, null);
 
                 throw CreateSourceNameException();
             }

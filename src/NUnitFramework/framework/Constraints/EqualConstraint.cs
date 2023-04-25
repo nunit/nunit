@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace NUnit.Framework.Constraints
 {
@@ -16,7 +17,7 @@ namespace NUnit.Framework.Constraints
     {
         #region Static and Instance Fields
 
-        private readonly object _expected;
+        private readonly object? _expected;
 
         private Tolerance _tolerance = Tolerance.Default;
 
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="EqualConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected value.</param>
-        public EqualConstraint(object expected)
+        public EqualConstraint(object? expected)
             : base(expected)
         {
             AdjustArgumentIfNeeded(ref expected);
@@ -368,7 +369,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder(MsgUtils.FormatValue(_expected));
+                var sb = new StringBuilder(MsgUtils.FormatValue(_expected));
 
                 if (_tolerance != null && _tolerance.HasVariance)
                 {
@@ -399,13 +400,14 @@ namespace NUnit.Framework.Constraints
             if (arg != null)
             {
                 Type argType = arg.GetType();
-                Type genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
+                Type? genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
-                if (genericTypeDefinition == typeof(ArraySegment<>) && argType.GetProperty("Array").GetValue(arg, null) == null)
+                if (genericTypeDefinition == typeof(ArraySegment<>) &&
+                    argType.GetProperty("Array")?.GetValue(arg, null) == null)
                 {
                     var elementType = argType.GetGenericArguments()[0];
                     var array = Array.CreateInstance(elementType, 0);
-                    var ctor = argType.GetConstructor(new[] { array.GetType() });
+                    var ctor = argType.GetConstructor(new[] { array.GetType() })!;
                     arg = (T)ctor.Invoke(new object[] { array });
                 }
             }

@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -108,7 +106,7 @@ namespace NUnit.Framework.Internal
                 MethodInfo? getDisplayNameMethod = monoRuntimeType!.GetMethod(
                     "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
                 if (getDisplayNameMethod != null)
-                    currentFramework.DisplayName = (string)getDisplayNameMethod.Invoke(null, Array.Empty<object>());
+                    currentFramework.DisplayName = (string?)getDisplayNameMethod.Invoke(null, Array.Empty<object>()) ?? "Mono";
             }
             return currentFramework;
         });

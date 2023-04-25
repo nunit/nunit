@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint
     {
-        private Exception caughtException;
+        private Exception? caughtException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThrowsConstraint"/> class,
@@ -19,12 +19,12 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         /// <param name="baseConstraint">A constraint to apply to the caught exception.</param>
         public ThrowsConstraint(IConstraint baseConstraint)
-            : base(baseConstraint) { }
+            : base(baseConstraint, string.Empty) { }
 
         /// <summary>
         /// Get the actual exception thrown - used by Assert.Throws.
         /// </summary>
-        public Exception ActualException => caughtException;
+        public Exception? ActualException => caughtException;
 
         #region Constraint Overrides
 
@@ -46,12 +46,15 @@ namespace NUnit.Framework.Constraints
 
             caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            return new ThrowsConstraintResult(
-                this,
-                caughtException,
-                caughtException != null
-                    ? BaseConstraint.ApplyTo(caughtException)
-                    : null);
+            if (caughtException != null)
+            {
+                return new ThrowsConstraintResult(
+                    this,
+                    caughtException,
+                    BaseConstraint.ApplyTo(caughtException));
+
+            }
+            return new ThrowsConstraintResult(this);
         }
 
         /// <summary>
@@ -71,14 +74,20 @@ namespace NUnit.Framework.Constraints
 
         private sealed class ThrowsConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult baseResult;
+            private readonly ConstraintResult? baseResult;
+
+            public ThrowsConstraintResult(ThrowsConstraint constraint)
+                : base(constraint, null)
+            {
+                Status = ConstraintStatus.Failure;
+            }
 
             public ThrowsConstraintResult(ThrowsConstraint constraint,
                 Exception caughtException,
                 ConstraintResult baseResult)
                 : base(constraint, caughtException)
             {
-                if (caughtException != null && baseResult.IsSuccess)
+                if (baseResult.IsSuccess)
                     Status = ConstraintStatus.Success;
                 else
                     Status = ConstraintStatus.Failure;
@@ -94,7 +103,7 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (ActualValue == null)
+                if (baseResult == null)
                     writer.Write("no exception thrown");
                 else
                     baseResult.WriteActualValueTo(writer);

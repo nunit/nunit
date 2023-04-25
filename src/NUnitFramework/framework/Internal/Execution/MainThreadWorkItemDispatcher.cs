@@ -12,7 +12,6 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class MainThreadWorkItemDispatcher : IWorkItemDispatcher
     {
-
         #region IWorkItemDispatcher Members
 
         /// <summary>

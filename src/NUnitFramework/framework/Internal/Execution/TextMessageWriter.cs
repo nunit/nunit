@@ -42,7 +42,7 @@ namespace NUnit.Framework.Internal
         #region Instance Fields
         private int maxLineLength = DEFAULT_LINE_LENGTH;
         private bool _sameValDiffTypes = false;
-        private string _expectedType, _actualType;
+        private string? _expectedType, _actualType;
         #endregion
 
         #region Constructors
@@ -57,9 +57,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="userMessage"></param>
         /// <param name="args"></param>
-        public TextMessageWriter(string userMessage, params object[] args)
+        public TextMessageWriter(string? userMessage, params object?[]? args)
         {
-            if ( userMessage != null && userMessage != string.Empty)
+            if (userMessage != null && userMessage != string.Empty)
                 this.WriteMessageLine(userMessage, args);
         }
         #endregion
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
         /// <param name="level">The indentation level of the message</param>
         /// <param name="message">The message to be written</param>
         /// <param name="args">Any arguments used in formatting the message</param>
-        public override void WriteMessageLine(int level, string message, params object[] args)
+        public override void WriteMessageLine(int level, string? message, params object?[]? args)
         {
             if (message != null)
             {
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
-        public override void DisplayDifferences(object expected, object actual)
+        public override void DisplayDifferences(object? expected, object? actual)
         {
             DisplayDifferences(expected, actual,null);
         }
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Internal
         /// <param name="expected">The expected value</param>
         /// <param name="actual">The actual value causing the failure</param>
         /// <param name="tolerance">The tolerance within which the test was made</param>
-        public override void DisplayDifferences(object expected, object actual, Tolerance tolerance)
+        public override void DisplayDifferences(object? expected, object? actual, Tolerance? tolerance)
         {
             if (expected != null && actual != null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual))
             {
@@ -204,7 +204,7 @@ namespace NUnit.Framework.Internal
         /// Writes the text for an actual value.
         /// </summary>
         /// <param name="actual">The actual value.</param>
-        public override void WriteActualValue(object actual)
+        public override void WriteActualValue(object? actual)
         {
             WriteValue(actual);
         }
@@ -213,7 +213,7 @@ namespace NUnit.Framework.Internal
         /// Writes the text for a generalized value.
         /// </summary>
         /// <param name="val">The value.</param>
-        public override void WriteValue(object val)
+        public override void WriteValue(object? val)
         {
             Write(MsgUtils.FormatValue(val));
         }
@@ -249,7 +249,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="expected">The expected value</param>
         /// <param name="tolerance">The tolerance within which the test was made</param>
-        private void WriteExpectedLine(object expected, Tolerance tolerance)
+        private void WriteExpectedLine(object? expected, Tolerance? tolerance)
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Internal
         /// Write the generic 'Actual' line for a given value
         /// </summary>
         /// <param name="actual">The actual value causing a failure</param>
-        private void WriteActualLine(object actual)
+        private void WriteActualLine(object? actual)
         {
             Write(Pfx_Actual);
             WriteActualValue(actual);
@@ -299,7 +299,7 @@ namespace NUnit.Framework.Internal
             WriteLine();
         }
 
-        private void WriteDifferenceLine(object expected, object actual, Tolerance tolerance)
+        private void WriteDifferenceLine(object? expected, object? actual, Tolerance tolerance)
         {
             // It only makes sense to display absolute/percent difference
             if (tolerance.Mode != ToleranceMode.Linear && tolerance.Mode != ToleranceMode.Percent)

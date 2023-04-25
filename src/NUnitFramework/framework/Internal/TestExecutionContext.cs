@@ -13,6 +13,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Execution;
+using System.Diagnostics.CodeAnalysis;
 
 #if NETFRAMEWORK
 using System.Runtime.Remoting.Messaging;
@@ -42,7 +43,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Link to a prior saved context
         /// </summary>
-        private readonly TestExecutionContext _priorContext;
+        private readonly TestExecutionContext? _priorContext;
 
         /// <summary>
         /// Indicates that a stop has been requested
@@ -59,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         private int _assertCount;
 
-        private Randomizer _randomGenerator;
+        private Randomizer? _randomGenerator;
 
         /// <summary>
         /// The current test result
@@ -68,9 +69,13 @@ namespace NUnit.Framework.Internal
 
         private SandboxedThreadState _sandboxedThreadState;
 
-#endregion
+        #endregion
 
-#region Constructors
+        #region Constructors
+
+        // TODO: Fix design where properties are not set at unknown times.
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestExecutionContext"/> class.
@@ -97,6 +102,7 @@ namespace NUnit.Framework.Internal
             _priorContext = other;
 
             CurrentTest = other.CurrentTest;
+            
             CurrentResult = other.CurrentResult;
             TestObject = other.TestObject;
             _listener = other._listener;
@@ -114,10 +120,11 @@ namespace NUnit.Framework.Internal
             ParallelScope = other.ParallelScope;
             IsSingleThreaded = other.IsSingleThreaded;
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-#endregion
+        #endregion
 
-#region CurrentContext Instance
+        #region CurrentContext Instance
 
         // NOTE: We use different implementations for various platforms.
 
@@ -170,9 +177,9 @@ namespace NUnit.Framework.Internal
         }
 #endif
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
         /// <summary>
         /// Gets or sets the current test
@@ -224,7 +231,7 @@ namespace NUnit.Framework.Internal
         /// The current test object - that is the user fixture
         /// object on which tests are being executed.
         /// </summary>
-        public object TestObject { get; set; }
+        public object? TestObject { get; set; }
 
         /// <summary>
         /// Get or set indicator that run should stop on the first error
@@ -286,7 +293,7 @@ namespace NUnit.Framework.Internal
         /// The worker that spawned the context.
         /// For builds without the parallel feature, it is null.
         /// </summary>
-        public TestWorker TestWorker {get; internal set;}
+        public TestWorker? TestWorker {get; internal set;}
 
         /// <summary>
         /// Gets the RandomGenerator specific to this Test
@@ -355,7 +362,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets or sets the current <see cref="IPrincipal"/> for the Thread.
         /// </summary>
-        public IPrincipal CurrentPrincipal
+        public IPrincipal? CurrentPrincipal
         {
             get => _sandboxedThreadState.Principal;
             set
@@ -381,15 +388,16 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public int CurrentRepeatCount { get; set; }
 
-#endregion
+        #endregion
 
-#region Instance Methods
+        #region Instance Methods
 
         /// <summary>
         /// Record any changes in the environment made by
         /// the test code in the execution context so it
         /// will be passed on to lower level tests.
         /// </summary>
+        [MemberNotNull(nameof(_sandboxedThreadState))]
         public void UpdateContextFromEnvironment()
         {
             _sandboxedThreadState = SandboxedThreadState.Capture();
@@ -471,7 +479,7 @@ namespace NUnit.Framework.Internal
         [SecurityCritical]  // Override of security critical method must be security critical itself
         public override object InitializeLifetimeService()
         {
-            return null;
+            return null!;
         }
 
 #endregion
@@ -511,7 +519,7 @@ namespace NUnit.Framework.Internal
             /// </summary>
             public void Dispose()
             {
-                _originalContext.OutWriter.Write(CurrentContext.CurrentResult.Output);
+                _originalContext.OutWriter?.Write(CurrentContext.CurrentResult?.Output);
                 CurrentContext = _originalContext;
             }
         }
@@ -534,7 +542,7 @@ namespace NUnit.Framework.Internal
             public AdhocContext()
             {
                 var type = GetType();
-                var method = type.GetMethod(nameof(AdhocTestMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+                var method = type.GetMethod(nameof(AdhocTestMethod), BindingFlags.NonPublic | BindingFlags.Instance)!;
 
                 CurrentTest = new TestMethod(new MethodWrapper(type, method));
                 CurrentResult = CurrentTest.MakeTestResult();

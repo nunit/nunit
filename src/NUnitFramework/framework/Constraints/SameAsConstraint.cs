@@ -8,13 +8,13 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SameAsConstraint : Constraint
     {
-        private readonly object expected;
+        private readonly object? expected;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SameAsConstraint"/> class.
         /// </summary>
         /// <param name="expected">The expected object.</param>
-        public SameAsConstraint(object expected) : base(expected)
+        public SameAsConstraint(object? expected) : base(expected)
         {
             this.expected = expected;
         }

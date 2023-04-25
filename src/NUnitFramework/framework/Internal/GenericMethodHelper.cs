@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace NUnit.Framework.Internal
@@ -51,7 +52,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="argList">The arguments to the method</param>
         /// <param name="typeArguments">If successful, an array of type arguments.</param>
-        public bool TryGetTypeArguments(object[] argList, out Type[] typeArguments)
+        public bool TryGetTypeArguments(object?[] argList, [NotNullWhen(true)] out Type[]? typeArguments)
         {
             Guard.ArgumentValid(argList.Length == ParmTypes.Length, "Supplied arguments do not match required method parameters", nameof(argList));
 
@@ -87,13 +88,13 @@ namespace NUnit.Framework.Internal
             }
             else if (parmType.ContainsGenericParameters)
             {
-                var genericArgTypes = parmType.IsArray
-                    ? new[] { parmType.GetElementType() }
+                Type[] genericArgTypes = parmType.IsArray
+                    ? new[] { parmType.GetElementType()! }
                     : parmType.GetGenericArguments();
 
                 if (argType.HasElementType)
                 {
-                    ApplyArgType(genericArgTypes[0], argType.GetElementType());
+                    ApplyArgType(genericArgTypes[0], argType.GetElementType()!);
                 }
                 else if (argType.IsGenericType && IsAssignableToGenericType(argType, parmType))
                 {
@@ -140,7 +141,7 @@ namespace NUnit.Framework.Internal
                     return true;
             }
 
-            Type baseType = givenType.BaseType;
+            Type? baseType = givenType.BaseType;
             if (baseType == null)
                 return false;
 

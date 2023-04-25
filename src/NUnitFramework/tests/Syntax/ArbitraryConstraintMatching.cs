@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -56,6 +56,8 @@ namespace NUnit.Framework.Syntax
 
         class CustomConstraint : Constraint
         {
+            public override string Description => throw new NotImplementedException();
+
             public override ConstraintResult ApplyTo<TActual>(TActual actual)
             {
                 throw new NotImplementedException();

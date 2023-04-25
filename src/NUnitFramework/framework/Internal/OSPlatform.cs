@@ -348,8 +348,8 @@ namespace NUnit.Framework.Internal
             bool isMacOSX = false;
             if (UnameSafe(buf) == 0)
             {
-                string os = Marshal.PtrToStringAnsi(buf);
-                isMacOSX = os.Equals("Darwin");
+                string? os = Marshal.PtrToStringAnsi(buf);
+                isMacOSX = string.Equals(os, "Darwin");
             }
             Marshal.FreeHGlobal(buf);
             return isMacOSX;

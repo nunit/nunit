@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -467,7 +465,7 @@ namespace NUnit.Framework.Internal
         public object NextEnum(Type type)
         {
             Array enums = Enum.GetValues(type);
-            return enums.GetValue(Next(0, enums.Length));
+            return enums.GetValue(Next(0, enums.Length))!;
         }
 
         /// <summary>
