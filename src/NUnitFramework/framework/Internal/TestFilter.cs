@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Filters;
 
@@ -128,7 +127,7 @@ namespace NUnit.Framework.Internal
             int count = topNode.ChildNodes.Count;
 
             TestFilter filter = count == 0
-                ? TestFilter.Empty
+                ? Empty
                 : count == 1
                     ? FromXml(topNode.FirstChild)
                     : FromXml(topNode);
@@ -143,7 +142,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(node, nameof(node));
 
-            bool isRegex = node.Attributes["re"] == "1";
+            static bool IsRegex(TNode node) => node.Attributes["re"] == "1";
 
             switch (node.Name)
             {
@@ -152,16 +151,8 @@ namespace NUnit.Framework.Internal
                     return new AndFilter(GetChildNodeFilters(node));
 
                 case "or":
-                    List<TestFilter> orChildFilters = new List<TestFilter>();
-
-                    foreach (var childNode in node.ChildNodes)
-                    {
-                        var filter = FromXml(childNode);
-                        orChildFilters.Add(filter);
-                    }
-
-                    var orFilter = new OrFilter(orChildFilters.ToArray());
-                    if (InFilter.TryOptimize(orFilter, out InFilter? optimized))
+                    var orFilter = new OrFilter(GetChildNodeFilters(node));
+                    if (InFilter.TryOptimize(orFilter, out var optimized))
                     {
                         return optimized;
                     }
@@ -174,27 +165,27 @@ namespace NUnit.Framework.Internal
                     return new IdFilter(NodeValue(node));
 
                 case "test":
-                    return new FullNameFilter(NodeValue(node), isRegex);
+                    return new FullNameFilter(NodeValue(node), IsRegex(node));
 
                 case "name":
-                    return new TestNameFilter(NodeValue(node), isRegex);
+                    return new TestNameFilter(NodeValue(node), IsRegex(node));
 
                 case "method":
-                    return new MethodNameFilter(NodeValue(node), isRegex);
+                    return new MethodNameFilter(NodeValue(node), IsRegex(node));
 
                 case "class":
-                    return new ClassNameFilter(NodeValue(node), isRegex);
+                    return new ClassNameFilter(NodeValue(node), IsRegex(node));
 
                 case "namespace":
-                    return new NamespaceFilter(NodeValue(node), isRegex);
+                    return new NamespaceFilter(NodeValue(node), IsRegex(node));
 
                 case "cat":
-                    return new CategoryFilter(NodeValue(node), isRegex);
+                    return new CategoryFilter(NodeValue(node), IsRegex(node));
 
                 case "prop":
                     string? name = node.Attributes["name"];
                     if (name != null)
-                        return new PropertyFilter(name, NodeValue(node), isRegex);
+                        return new PropertyFilter(name, NodeValue(node), IsRegex(node));
                     break;
             }
 
@@ -208,10 +199,11 @@ namespace NUnit.Framework.Internal
 
         private static TestFilter[] GetChildNodeFilters(TNode node)
         {
-            var childFilters = new TestFilter[node.ChildNodes.Count];
-            int i = 0;
-            foreach (var childNode in node.ChildNodes)
-                childFilters[i++] = FromXml(childNode);
+            var count = node.ChildNodes.Count;
+            var childFilters = new TestFilter[count];
+
+            for (var i = 0; i < count; i++)
+                childFilters[i] = FromXml(node.ChildNodes[i]);
 
             return childFilters;
         }

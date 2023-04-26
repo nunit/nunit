@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
             {
                 var node = result.ToXml(false);
                 var parent = GetParent(result.Test);
-                node.Attributes.Add("parentId", parent != null ? parent.Id : string.Empty);
+                node.AddAttribute("parentId", parent != null ? parent.Id : string.Empty);
                 handler.RaiseCallbackEvent(node.OuterXml);
             }
             catch (Exception ex)

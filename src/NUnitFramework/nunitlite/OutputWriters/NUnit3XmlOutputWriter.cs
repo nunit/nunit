@@ -62,9 +62,9 @@ namespace NUnitLite
 
             TNode testRun = MakeTestRunElement(result);
 
-            testRun.ChildNodes.Add(MakeCommandLineElement());
-            testRun.ChildNodes.Add(MakeTestFilterElement(filter));
-            testRun.ChildNodes.Add(resultNode);
+            testRun.AddChildNode(MakeCommandLineElement());
+            testRun.AddChildNode(MakeTestFilterElement(filter));
+            testRun.AddChildNode(resultNode);
 
             testRun.WriteTo(xmlWriter);
         }

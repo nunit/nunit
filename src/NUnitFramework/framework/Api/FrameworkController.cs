@@ -331,7 +331,7 @@ namespace NUnit.Framework.Api
         public static TNode InsertEnvironmentElement(TNode targetNode)
         {
             TNode env = new TNode("environment");
-            targetNode.ChildNodes.Insert(0, env);
+            targetNode.InsertChildNode(0, env);
 
             env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version?.ToString() ?? "Unknown");
             env.AddAttribute("clr-version", Environment.Version.ToString());
@@ -366,7 +366,7 @@ namespace NUnit.Framework.Api
         public static TNode InsertSettingsElement(TNode targetNode, IDictionary<string, object> settings)
         {
             TNode settingsNode = new TNode("settings");
-            targetNode.ChildNodes.Insert(0, settingsNode);
+            targetNode.InsertChildNode(0, settingsNode);
 
             foreach (string key in settings.Keys)
                 AddSetting(settingsNode, key, settings[key]);
@@ -393,7 +393,7 @@ namespace NUnit.Framework.Api
                 setting.AddAttribute("value", value.ToString()!);
             }
 
-            settingsNode.ChildNodes.Add(setting);
+            settingsNode.AddChildNode(setting);
         }
 
         private static void AddBackwardsCompatibleDictionaryEntries(TNode settingsNode, IDictionary entries)
@@ -414,7 +414,7 @@ namespace NUnit.Framework.Api
                 var entryNode = new TNode("item");
                 entryNode.AddAttribute("key", key.ToString()!);
                 entryNode.AddAttribute("value", value?.ToString() ?? string.Empty);
-                settingNode.ChildNodes.Add(entryNode);
+                settingNode.AddChildNode(entryNode);
             }
         }
 

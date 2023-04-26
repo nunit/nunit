@@ -1,7 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 
@@ -15,8 +20,17 @@ namespace NUnit.Framework.Interfaces
     /// </summary>
     // ReSharper disable once InconsistentNaming
     // Disregarding naming convention for back-compat
-    public class TNode
+    [DebuggerDisplay("{OuterXml}")]
+    public sealed class TNode
     {
+        private static readonly XmlWriterSettings _xmlWriterSettings = new()
+        {
+            ConformanceLevel = ConformanceLevel.Fragment
+        };
+
+        internal List<TNode>? _childNodes;
+        internal Dictionary<string, string>? _attributes;
+
         #region Constructors
 
         /// <summary>
@@ -26,8 +40,6 @@ namespace NUnit.Framework.Interfaces
         public TNode(string name)
         {
             Name = name;
-            Attributes = new AttributeDictionary();
-            ChildNodes = new NodeList();
         }
 
         /// <summary>
@@ -67,22 +79,22 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets a flag indicating whether the value should be output using CDATA.
         /// </summary>
-        public bool ValueIsCDATA { get; }
+        public bool ValueIsCDATA { get; set; }
 
         /// <summary>
         /// Gets the dictionary of attributes
         /// </summary>
-        public AttributeDictionary Attributes { get; }
+        public AttributeDictionary Attributes => new AttributeDictionary(this);
 
         /// <summary>
         /// Gets a list of child nodes
         /// </summary>
-        public NodeList ChildNodes { get; }
+        public NodeList ChildNodes => new NodeList(this);
 
         /// <summary>
         /// Gets the first ChildNode
         /// </summary>
-        public TNode? FirstChild => ChildNodes.Count == 0 ? null : ChildNodes[0];
+        public TNode? FirstChild => _childNodes?.Count == 0 ? null : ChildNodes[0];
 
         /// <summary>
         /// Gets the XML representation of this node.
@@ -91,11 +103,8 @@ namespace NUnit.Framework.Interfaces
         {
             get
             {
-                var stringWriter = new System.IO.StringWriter();
-                var settings = new XmlWriterSettings();
-                settings.ConformanceLevel = ConformanceLevel.Fragment;
-
-                using (XmlWriter xmlWriter = XmlWriter.Create(stringWriter, settings))
+                using var stringWriter = new StringWriter();
+                using (var xmlWriter = XmlWriter.Create(stringWriter, _xmlWriterSettings))
                 {
                     WriteTo(xmlWriter);
                 }
@@ -115,14 +124,75 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A TNode</returns>
         public static TNode FromXml(string xmlText)
         {
-            var doc = new XmlDocument();
-            doc.LoadXml(xmlText);
-            if (doc.FirstChild is null)
+            using var stringReader = new StringReader(xmlText);
+            using var reader = XmlReader.Create(stringReader);
+
+            // go to starting point
+            reader.MoveToContent();
+
+            TNode? root = null;
+            TNode? current = null;
+            var parents = new Stack<TNode>();
+
+            while (!reader.EOF)
             {
-                throw new ArgumentException("Cannot parse text as Xml");
+                if (reader.NodeType == XmlNodeType.Element)
+                {
+                    // keep track of previous which will be promoted to parent stack if reader depth changes
+                    var previous = current;
+                    current = new TNode(reader.Name, reader.Value);
+
+                    if (root == null)
+                    {
+                        // initialize root
+                        root = current;
+                        parents.Push(root);
+                    }
+                    else
+                    {
+                        if (reader.Depth > parents.Count)
+                        {
+                            parents.Push(previous!);
+                        }
+
+                        if (reader.Depth < parents.Count)
+                        {
+                            parents.Pop();
+                        }
+
+                        var parent = parents.Peek();
+                        parent.AddChildNode(current);
+                    }
+
+                    var attributeCount = reader.AttributeCount;
+                    if (attributeCount > 0)
+                    {
+                        for (var i = 0; i < attributeCount; i++)
+                        {
+                            reader.MoveToNextAttribute();
+                            current.AddAttribute(reader.Name, reader.Value);
+                        }
+                    }
+                }
+                else if (reader.NodeType == XmlNodeType.Text)
+                {
+                    current!.Value = reader.Value;
+                }
+                else if (reader.NodeType == XmlNodeType.CDATA)
+                {
+                    current!.Value = reader.Value;
+                    current.ValueIsCDATA = true;
+                }
+
+                reader.Read();
             }
 
-            return FromXml(doc.FirstChild);
+            if (root == null)
+            {
+                throw new ArgumentException("Could not extract root element from " + xmlText);
+            }
+
+            return root;
         }
 
         #endregion
@@ -137,7 +207,7 @@ namespace NUnit.Framework.Interfaces
         public TNode AddElement(string name)
         {
             TNode childResult = new TNode(name);
-            ChildNodes.Add(childResult);
+            AddChildNode(childResult);
             return childResult;
         }
 
@@ -150,7 +220,7 @@ namespace NUnit.Framework.Interfaces
         public TNode AddElement(string name, string value)
         {
             TNode childResult = new TNode(name, value);
-            ChildNodes.Add(childResult);
+            AddChildNode(childResult);
             return childResult;
         }
 
@@ -164,8 +234,29 @@ namespace NUnit.Framework.Interfaces
         public TNode AddElementWithCDATA(string name, string value)
         {
             TNode childResult = new TNode(name, value, true);
-            ChildNodes.Add(childResult);
+            AddChildNode(childResult);
             return childResult;
+        }
+
+        /// <summary>
+        /// Adds a child node to this node.
+        /// </summary>
+        /// <param name="node">The child node to add.</param>
+        public void AddChildNode(TNode node)
+        {
+            _childNodes ??= new List<TNode>();
+            _childNodes.Add(node);
+        }
+
+        /// <summary>
+        /// Inserts a child nodeat the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index at which <paramref name="node" /> should be inserted.</param>
+        /// <param name="node">The node to insert.</param>
+        public void InsertChildNode(int index, TNode node)
+        {
+            _childNodes ??= new List<TNode>();
+            _childNodes.Insert(index, node);
         }
 
         /// <summary>
@@ -175,7 +266,8 @@ namespace NUnit.Framework.Interfaces
         /// <param name="value">The value of the attribute.</param>
         public void AddAttribute(string name, string value)
         {
-            Attributes.Add(name, EscapeInvalidXmlCharacters(value));
+            _attributes ??= new Dictionary<string, string>();
+            _attributes.Add(name, EscapeInvalidXmlCharacters(value));
         }
 
         /// <summary>
@@ -187,7 +279,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns></returns>
         public TNode? SelectSingleNode(string xpath)
         {
-            NodeList nodes = SelectNodes(xpath);
+            List<TNode> nodes = SelectNodes(xpath);
 
             return nodes.Count > 0
                 ? nodes[0] as TNode
@@ -199,9 +291,9 @@ namespace NUnit.Framework.Interfaces
         /// specification. The format of the specification is
         /// limited to what is needed by NUnit and its tests.
         /// </summary>
-        public NodeList SelectNodes(string xpath)
+        public List<TNode> SelectNodes(string xpath)
         {
-            NodeList nodeList = new NodeList();
+            var nodeList = new List<TNode>();
             nodeList.Add(this);
 
             return ApplySelection(nodeList, xpath);
@@ -215,8 +307,8 @@ namespace NUnit.Framework.Interfaces
         {
             writer.WriteStartElement(Name);
 
-            foreach (string name in Attributes.Keys)
-                writer.WriteAttributeString(name, Attributes[name]);
+            foreach (var pair in Attributes)
+                writer.WriteAttributeString(pair.Key, pair.Value);
 
             if (Value != null)
                 if (ValueIsCDATA)
@@ -224,8 +316,11 @@ namespace NUnit.Framework.Interfaces
                 else
                     writer.WriteString(Value);
 
-            foreach (TNode node in ChildNodes)
-                node.WriteTo(writer);
+            var count = ChildNodes.Count;
+            for (var i = 0; i < count; i++)
+            {
+                ChildNodes[i].WriteTo(writer);
+            }
 
             writer.WriteEndElement();
         }
@@ -246,12 +341,12 @@ namespace NUnit.Framework.Interfaces
 
             foreach (XmlNode child in xmlNode.ChildNodes)
                 if (child.NodeType == XmlNodeType.Element)
-                    tNode.ChildNodes.Add(FromXml(child));
+                    tNode.AddChildNode(FromXml(child));
 
             return tNode;
         }
 
-        private static NodeList ApplySelection(NodeList nodeList, string xpath)
+        private static List<TNode> ApplySelection(List<TNode> nodeList, string xpath)
         {
             Guard.ArgumentNotNullOrEmpty(xpath, nameof(xpath));
             if (xpath[0] == '/')
@@ -269,13 +364,21 @@ namespace NUnit.Framework.Interfaces
                 tail = xpath.Substring(slash + 1);
             }
 
-            NodeList resultNodes = new NodeList();
+            List<TNode> resultNodes = new List<TNode>();
             NodeFilter filter = new NodeFilter(head);
 
-            foreach(TNode node in nodeList)
-                foreach (TNode childNode in node.ChildNodes)
+            var nodeListCount = nodeList.Count;
+            for (var i = 0; i < nodeListCount; i++)
+            {
+                var node = nodeList[i];
+                var childNodesCount = node.ChildNodes.Count;
+                for (var j = 0; j < childNodesCount; j++)
+                {
+                    var childNode = node.ChildNodes[j];
                     if (filter.Pass(childNode))
                         resultNodes.Add(childNode);
+                }
+            }
 
             return tail != null
                 ? ApplySelection(resultNodes, tail)
@@ -287,6 +390,20 @@ namespace NUnit.Framework.Interfaces
         {
             if (str == null) return null;
 
+            // quick check when we expect valid input
+            foreach (var c in str)
+            {
+                if (c < 0x20 || c > 0x7F)
+                {
+                    return EscapeInvalidXmlCharactersUnlikely(str);
+                }
+            }
+
+            return str;
+        }
+
+        private static string EscapeInvalidXmlCharactersUnlikely(string str)
+        {
             StringBuilder? builder = null;
             for (int i = 0; i < str.Length; i++)
             {
@@ -377,11 +494,13 @@ namespace NUnit.Framework.Interfaces
 
         #region Nested NodeFilter class
 
-        class NodeFilter
+        private sealed class NodeFilter
         {
             private readonly string _nodeName;
             private readonly string? _propName;
             private readonly string? _propValue;
+
+            private static readonly char[] TrimChars = { ' ', '"', '\'' };
 
             public NodeFilter(string xpath)
             {
@@ -401,7 +520,7 @@ namespace NUnit.Framework.Interfaces
                         throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _propName = filter.Substring(1, equals - 1).Trim();
-                    _propValue = filter.Substring(equals + 1).Trim(new char[] { ' ', '"', '\'' });
+                    _propValue = filter.Substring(equals + 1).Trim(TrimChars);
                 }
             }
 
@@ -423,21 +542,102 @@ namespace NUnit.Framework.Interfaces
     /// <summary>
     /// Class used to represent a list of XmlResults
     /// </summary>
-    public class NodeList : System.Collections.Generic.List<TNode>
+    public readonly struct NodeList : IEnumerable<TNode>
     {
+        private static readonly List<TNode> _emptyList = new();
+
+        private readonly TNode _parent;
+
+        internal NodeList(TNode parent)
+        {
+            _parent = parent;
+        }
+
+        /// <summary>
+        /// Gets or sets the element at the specified index.
+        /// </summary>
+        public TNode this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                if (_parent._childNodes is null || (uint) index >= (uint) _parent._childNodes.Count)
+                    ThrowArgumentOutOfRangeException(index);
+
+                return _parent._childNodes![index];
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ThrowArgumentOutOfRangeException(int index)
+        {
+            throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valida values");
+        }
+
+        /// <summary>
+        /// Gets the number of elements contained in the collection.
+        /// </summary>
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _parent._childNodes?.Count ?? 0;
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public List<TNode>.Enumerator GetEnumerator() => _parent._childNodes?.GetEnumerator() ?? _emptyList.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        IEnumerator<TNode> IEnumerable<TNode>.GetEnumerator() => GetEnumerator();
     }
 
     /// <summary>
     /// Class used to represent the attributes of a node
     /// </summary>
-    public class AttributeDictionary : System.Collections.Generic.Dictionary<string, string>
+    public readonly struct AttributeDictionary
     {
+        private static readonly Dictionary<string, string> _emptyDictionary = new();
+
+        private readonly TNode _parent;
+
+        internal AttributeDictionary(TNode parent)
+        {
+            _parent = parent;
+        }
+
         /// <summary>
         /// Gets or sets the value associated with the specified key.
         /// Overridden to return null if attribute is not found.
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns>Value of the attribute or null</returns>
-        public new string? this[string key] => TryGetValue(key, out var value) ? value : null;
+        public string? this[string key]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                string? value = null;
+                _parent._attributes?.TryGetValue(key, out value);
+                return value;
+            }
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Dictionary<string,string>.Enumerator GetEnumerator() => _parent._attributes?.GetEnumerator() ?? _emptyDictionary.GetEnumerator();
+
+        /// <summary>
+        /// Gets the number of key/value pairs contained in the <see cref="T:System.Collections.Generic.Dictionary`2" />.
+        /// </summary>
+        public int Count
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _parent._attributes?.Count ?? 0;
+        }
     }
 }
