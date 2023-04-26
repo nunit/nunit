@@ -3,6 +3,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
@@ -20,8 +21,12 @@ namespace NUnit.Framework
         /// <param name="name">The name of the argument</param>
         public static void ArgumentNotNull([NotNull] object? value, string name)
         {
-            if (value == null)
-                throw new ArgumentNullException(name, "Argument " + name + " must not be null");
+            if (value is null)
+                ThrowArgumentNullException(name);
+
+            [DoesNotReturn]
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void ThrowArgumentNullException(string name) => throw new ArgumentNullException(name, "Argument " + name + " must not be null");
         }
 
         /// <summary>
@@ -34,8 +39,13 @@ namespace NUnit.Framework
             ArgumentNotNull(value, name);
 
             if (value == string.Empty)
-                throw new ArgumentException("Argument " + name +" must not be the empty string", name);
+                ThrowArgumentNotNullOrEmpty(name);
+
+            [DoesNotReturn]
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void ThrowArgumentNotNullOrEmpty(string name) => throw new ArgumentException("Argument " + name + " must not be the empty string", name);
         }
+
 
         /// <summary>
         /// Throws an ArgumentOutOfRangeException if the specified condition is not met.
@@ -46,7 +56,11 @@ namespace NUnit.Framework
         public static void ArgumentInRange([DoesNotReturnIf(false)] bool condition, string message, string paramName)
         {
             if (!condition)
-                throw new ArgumentOutOfRangeException(paramName, message);
+                ThrowArgumentOutOfRangeException(message, paramName);
+
+            [DoesNotReturn]
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void ThrowArgumentOutOfRangeException(string message, string paramName) => throw new ArgumentOutOfRangeException(paramName, message);
         }
 
         /// <summary>
@@ -58,8 +72,13 @@ namespace NUnit.Framework
         public static void ArgumentValid([DoesNotReturnIf(false)] bool condition, string message, string paramName)
         {
             if (!condition)
-                throw new ArgumentException(message, paramName);
+                ThrowArgumentException(message, paramName);
+
+            [DoesNotReturn]
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void ThrowArgumentException(string message, string paramName) => throw new ArgumentException(message, paramName);
         }
+
 
         /// <summary>
         /// Throws an InvalidOperationException if the specified condition is not met.
@@ -69,7 +88,11 @@ namespace NUnit.Framework
         public static void OperationValid([DoesNotReturnIf(false)] bool condition, string message)
         {
             if (!condition)
-                throw new InvalidOperationException(message);
+                ThrowInvalidOperationException(message);
+
+            [DoesNotReturn]
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void ThrowInvalidOperationException(string message) => throw new InvalidOperationException(message);
         }
 
         /// <summary>
@@ -88,7 +111,11 @@ namespace NUnit.Framework
             if (method.ReturnType != typeof(void)) return;
             if (!AsyncToSyncAdapter.IsAsyncOperation(method)) return;
 
-            throw new ArgumentException("Async void methods are not supported. Please use 'async Task' instead.", paramName);
+            ThrowArgumentNotAsyncVoid(paramName);
+
+            [DoesNotReturn]
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            static void ThrowArgumentNotAsyncVoid(string paramName) => throw new ArgumentException("Async void methods are not supported. Please use 'async Task' instead.", paramName);
         }
     }
 }
