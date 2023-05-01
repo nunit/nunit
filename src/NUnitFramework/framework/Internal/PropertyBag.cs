@@ -144,13 +144,16 @@ namespace NUnit.Framework.Internal
             // enumerating dictionary directly with struct enumerator which is fastest
             foreach (var pair in inner)
             {
-                foreach (var value in pair.Value)
+                // Use for-loop to avoid allocating the enumerator
+                var list = pair.Value;
+                var propertyCount = list.Count;
+                for (var i = 0; i < propertyCount; i++)
                 {
                     TNode prop = properties.AddElement("property");
 
                     // TODO: Format as string
                     prop.AddAttribute("name", pair.Key);
-                    prop.AddAttribute("value", value.ToString()!);
+                    prop.AddAttribute("value", list[i]!.ToString()!);
                 }
             }
 
