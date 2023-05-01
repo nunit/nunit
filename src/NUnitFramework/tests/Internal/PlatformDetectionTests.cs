@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal
         public void DetectWindows11()
         {
             CheckOSPlatforms(
-                new OSPlatform(PlatformID.Win32NT, new Version(11, 0), OSPlatform.ProductType.WorkStation),
+                new OSPlatform(PlatformID.Win32NT, new Version(10, 22000), OSPlatform.ProductType.WorkStation),
                 "Win11,Windows11,Win32NT,Win32,Win");
         }
 

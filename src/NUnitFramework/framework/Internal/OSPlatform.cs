@@ -478,12 +478,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is Windows 10
         /// </summary>
-        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.WorkStation;
+        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor<22000 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 11
         /// </summary>
-        public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 11 && Product == ProductType.WorkStation;
+        public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor>=22000 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows Server. This is named Windows
