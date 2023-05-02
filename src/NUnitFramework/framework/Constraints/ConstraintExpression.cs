@@ -877,7 +877,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that tests if an item is equal to any of parameters
         /// </summary>
         /// <param name="expected">Expected values</param>
-        public AnyOfConstraint AnyOf(params object?[] expected)
+        public AnyOfConstraint AnyOf(params object?[]? expected)
         {
             if (expected == null)
             {

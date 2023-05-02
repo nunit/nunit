@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Create a TestFilter instance from an XML representation.
         /// </summary>
-        public static TestFilter FromXml(string xmlText)
+        public static TestFilter FromXml(string? xmlText)
         {
             const string emptyFilterXmlWithSpace = "<filter />";
             const string emptyFilterWithoutSpace = "<filter/>";

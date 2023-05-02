@@ -276,7 +276,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="actual">Object to be found within collection</param>
-        public static void Contains (IEnumerable collection, Object actual)
+        public static void Contains (IEnumerable collection, object? actual)
         {
             Contains(collection, actual, string.Empty, null);
         }
@@ -288,7 +288,7 @@ namespace NUnit.Framework
         /// <param name="actual">Object to be found within collection</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Contains (IEnumerable collection, Object actual, string message, params object?[]? args)
+        public static void Contains (IEnumerable collection, object? actual, string message, params object?[]? args)
         {
             Assert.That(collection, Has.Member(actual), message, args);
         }

@@ -38,7 +38,7 @@ namespace NUnit.Framework
         /// Returns a new <see cref="SomeItemsConstraint"/> checking for the
         /// presence of a particular object in the collection.
         /// </summary>
-        public static SomeItemsConstraint Contain(object expected) =>
+        public static SomeItemsConstraint Contain(object? expected) =>
             new SomeItemsConstraint(new EqualConstraint(expected));
 
         /// <summary>

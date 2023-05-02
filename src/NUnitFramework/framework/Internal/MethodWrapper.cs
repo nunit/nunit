@@ -27,7 +27,9 @@ namespace NUnit.Framework.Internal
         public MethodWrapper(Type type, string methodName)
         {
             TypeInfo = new TypeWrapper(type);
-            MethodInfo = type.GetMethod(methodName)!;
+            MethodInfo = type.GetMethod(methodName,
+                    BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static) ??
+                throw new ArgumentException($"Method {type}.{methodName} not found");
         }
 
         #region IMethod Implementation

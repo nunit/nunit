@@ -157,7 +157,7 @@ namespace NUnit.Framework.Constraints
                 return TypeHelper.CanCast<T>(x) && TypeHelper.CanCast<T>(y);
             }
 
-            protected void CastOrThrow(object x, object y, out T xValue, out T yValue)
+            protected void CastOrThrow(object? x, object? y, out T xValue, out T yValue)
             {
                 if (!TypeHelper.TryCast(x, out T? xValueOrNull))
                     throw new ArgumentException($"Cannot compare {x?.ToString() ?? "null"}");

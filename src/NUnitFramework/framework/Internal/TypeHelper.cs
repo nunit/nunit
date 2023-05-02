@@ -361,7 +361,7 @@ namespace NUnit.Framework.Internal
         /// can be <see langword="null"/>, the cast succeeds just like the C# language feature.
         /// </summary>
         /// <param name="obj">The object to cast.</param>
-        internal static bool CanCast<T>(object obj)
+        internal static bool CanCast<T>(object? obj)
         {
             return obj is T || (obj == null && default(T) == null);
         }

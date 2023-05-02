@@ -45,14 +45,14 @@ namespace NUnit.Framework.Api
         /// <param name="assemblyNameOrPath">The AssemblyName or path to the test assembly</param>
         /// <param name="idPrefix">A prefix used for all test ids created under this controller.</param>
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
-        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings)
+        public FrameworkController(string assemblyNameOrPath, string? idPrefix, IDictionary settings)
         {
             Initialize(assemblyNameOrPath, settings);
 
             this.Builder = new DefaultTestAssemblyBuilder();
             this.Runner = new NUnitTestAssemblyRunner(this.Builder);
 
-            Test.IdPrefix = idPrefix;
+            Test.IdPrefix = idPrefix ?? string.Empty;
         }
 
         /// <summary>
@@ -77,14 +77,14 @@ namespace NUnit.Framework.Api
         /// <param name="settings">A Dictionary of settings to use in loading and running the tests</param>
         /// <param name="runnerType">The Type of the test runner</param>
         /// <param name="builderType">The Type of the test builder</param>
-        public FrameworkController(string assemblyNameOrPath, string idPrefix, IDictionary settings, string runnerType, string builderType)
+        public FrameworkController(string assemblyNameOrPath, string? idPrefix, IDictionary settings, string runnerType, string builderType)
         {
             Initialize(assemblyNameOrPath, settings);
 
             Builder = (ITestAssemblyBuilder)Reflect.Construct(Type.GetType(builderType, true)!);
             Runner = (ITestAssemblyRunner)Reflect.Construct(Type.GetType(runnerType, true)!, new object[] { Builder });
 
-            Test.IdPrefix = idPrefix ?? "";
+            Test.IdPrefix = idPrefix ?? string.Empty;
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="filter">A string containing the XML representation of the filter to use</param>
         /// <returns>The XML result of exploring the tests</returns>
-        public string ExploreTests(string filter)
+        public string ExploreTests(string? filter)
         {
             TNode result = Runner.ExploreTests(TestFilter.FromXml(filter)).ToXml(true);
             return InsertChildElements(result).OuterXml;
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="filter">A string containing the XML representation of the filter to use</param>
         /// <returns>The XML result of the test run</returns>
-        public string RunTests(string filter)
+        public string RunTests(string? filter)
         {
             TNode result = Runner.Run(TestListener.NULL, TestFilter.FromXml(filter)).ToXml(true);
             return InsertChildElements(result).OuterXml;
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Api
         /// </summary>
         /// <param name="filter">A string containing the XML representation of the filter to use</param>
         /// <returns>The number of tests</returns>
-        public int CountTests(string filter)
+        public int CountTests(string? filter)
         {
             return Runner.CountTestCases(TestFilter.FromXml(filter));
         }
@@ -280,12 +280,12 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(LoadTests());
         }
 
-        private void ExploreTests(ICallbackEventHandler handler, string filter)
+        private void ExploreTests(ICallbackEventHandler handler, string? filter)
         {
             handler.RaiseCallbackEvent(ExploreTests(filter));
         }
 
-        private void RunTests(ICallbackEventHandler handler, string filter)
+        private void RunTests(ICallbackEventHandler handler, string? filter)
         {
             TNode result = Runner.Run(new TestProgressReporter(handler), TestFilter.FromXml(filter)).ToXml(true);
 
@@ -295,7 +295,7 @@ namespace NUnit.Framework.Api
             handler.RaiseCallbackEvent(result.OuterXml);
         }
 
-        private void RunAsync(ICallbackEventHandler handler, string filter)
+        private void RunAsync(ICallbackEventHandler handler, string? filter)
         {
             Runner.RunAsync(new TestProgressReporter(handler), TestFilter.FromXml(filter));
         }
@@ -305,7 +305,7 @@ namespace NUnit.Framework.Api
             StopRun(force);
         }
 
-        private void CountTests(ICallbackEventHandler handler, string filter)
+        private void CountTests(ICallbackEventHandler handler, string? filter)
         {
             handler.RaiseCallbackEvent(CountTests(filter).ToString());
         }
@@ -467,7 +467,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">The controller for which this action is being performed.</param>
             /// <param name="filter">Filter used to control which tests are included (NYI)</param>
             /// <param name="handler">The callback handler.</param>
-            public ExploreTestsAction(FrameworkController controller, string filter, object handler)
+            public ExploreTestsAction(FrameworkController controller, string? filter, object handler)
             {
                 controller.ExploreTests((ICallbackEventHandler)handler, filter);
             }
@@ -489,7 +489,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite whose cases are to be counted</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public CountTestsAction(FrameworkController controller, string filter, object handler)
+            public CountTestsAction(FrameworkController controller, string? filter, object handler)
             {
                 controller.CountTests((ICallbackEventHandler)handler, filter);
             }
@@ -510,7 +510,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunTestsAction(FrameworkController controller, string filter, object handler)
+            public RunTestsAction(FrameworkController controller, string? filter, object handler)
             {
                 controller.RunTests((ICallbackEventHandler)handler, filter);
             }
@@ -531,7 +531,7 @@ namespace NUnit.Framework.Api
             /// <param name="controller">A FrameworkController holding the TestSuite to run</param>
             /// <param name="filter">A string containing the XML representation of the filter to use</param>
             /// <param name="handler">A callback handler used to report results</param>
-            public RunAsyncAction(FrameworkController controller, string filter, object handler)
+            public RunAsyncAction(FrameworkController controller, string? filter, object handler)
             {
                 controller.RunAsync((ICallbackEventHandler)handler, filter);
             }

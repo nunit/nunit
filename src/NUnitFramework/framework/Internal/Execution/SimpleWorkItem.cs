@@ -74,7 +74,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Creates a test command for use in running this test.
         /// </summary>
         /// <returns>A TestCommand</returns>
-        private TestCommand MakeTestCommand()
+        internal TestCommand MakeTestCommand()
         {
             if (Test.RunState == RunState.Runnable ||
                 Test.RunState == RunState.Explicit && Filter.IsExplicitMatch(Test))

@@ -86,7 +86,7 @@ namespace NUnit.Framework
         /// <param name="actual">A directory containing the actual value</param>
         /// <param name="message">The message to display if directories are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(DirectoryInfo expected, DirectoryInfo actual, string message, params object?[]? args)
+        static public void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual, string message, params object?[]? args)
         {
             Assert.AreNotEqual(expected, actual, message, args);
         }
@@ -97,7 +97,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A directory containing the value that is expected</param>
         /// <param name="actual">A directory containing the actual value</param>
-        static public void AreNotEqual(DirectoryInfo expected, DirectoryInfo actual)
+        static public void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
