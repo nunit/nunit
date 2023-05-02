@@ -4,14 +4,16 @@ using System;
 using System.IO;
 using System.Reflection;
 
+#nullable enable
+
 namespace NUnit.TestUtilities
 {
     public class TestFile : IDisposable
     {
-        private bool _disposedValue = false;
-        private readonly string _resourceName;
+        private readonly string? _resourceName;
         private readonly FileInfo _fileInfo;
         private readonly long _fileLength;
+        private bool _disposedValue = false;
 
         public TestFile(string resourceName)
             : this(Path.GetTempFileName(), resourceName, false)
@@ -40,13 +42,13 @@ namespace NUnit.TestUtilities
             }
 
             // HACK! Only way I can figure out to avoid having two copies of TestFile
-            _resourceName = GetType().Assembly.GetName().Name.Contains("nunitlite")
+            _resourceName = GetType().Assembly.GetName().Name!.Contains("nunitlite")
                 ? "NUnitLite.Tests." + contentSource
                 : "NUnit.Framework." + contentSource;
             _fileLength = 0L;
 
             Assembly a = typeof(TestFile).Assembly;
-            using (Stream s = a.GetManifestResourceStream(_resourceName))
+            using (Stream? s = a.GetManifestResourceStream(_resourceName))
             {
                 if (s == null)
                     throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
@@ -74,7 +76,7 @@ namespace NUnit.TestUtilities
                 return -1L;
 
             Assembly a = typeof(TestFile).Assembly;
-            using (Stream s = a.GetManifestResourceStream(_resourceName))
+            using (Stream? s = a.GetManifestResourceStream(_resourceName))
             {
                 if (s == null)
                     throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");

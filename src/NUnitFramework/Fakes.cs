@@ -3,7 +3,8 @@
 using System;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-using BF = System.Reflection.BindingFlags;
+
+#nullable enable
 
 namespace NUnit.TestUtilities
 {
@@ -72,7 +73,7 @@ namespace NUnit.TestUtilities
             : this(obj.GetType(), name) { }
 
         public FakeTestMethod(Type type, string name)
-            : base(new MethodWrapper(type, type.GetMethod(name, BF.Public | BF.NonPublic | BF.Static | BF.Instance))) { }
+            : base(new MethodWrapper(type, name)) { }
     }
 
     #endregion
@@ -84,7 +85,7 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class FakeWorkItem : WorkItem
     {
-        public event System.EventHandler Executed;
+        public event EventHandler? Executed;
 
         public FakeWorkItem(Test test)
             : this(test, new TestExecutionContext()) { }
