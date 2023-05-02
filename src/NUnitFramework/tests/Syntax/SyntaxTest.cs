@@ -6,9 +6,9 @@ namespace NUnit.Framework.Syntax
 {
     public abstract class SyntaxTest
     {
-        protected string ParseTree;
-        protected IResolveConstraint StaticSyntax;
-        protected IResolveConstraint BuilderSyntax;
+        protected string? ParseTree;
+        protected IResolveConstraint? StaticSyntax;
+        protected IResolveConstraint? BuilderSyntax;
 
         protected ConstraintExpression Builder()
         {
@@ -18,6 +18,8 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void SupportedByStaticSyntax()
         {
+            Assert.That(ParseTree, Is.Not.Null);
+            Assert.That(StaticSyntax, Is.Not.Null);
             Assert.That(
                 StaticSyntax.Resolve().ToString(),
                 Is.EqualTo(ParseTree).NoClip);
@@ -26,6 +28,8 @@ namespace NUnit.Framework.Syntax
         [Test]
         public void SupportedByConstraintBuilder()
         {
+            Assert.That(ParseTree, Is.Not.Null);
+            Assert.That(BuilderSyntax, Is.Not.Null);
             Assert.That(
                 BuilderSyntax.Resolve().ToString(),
                 Is.EqualTo(ParseTree).NoClip);

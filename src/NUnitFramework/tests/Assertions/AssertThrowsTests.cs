@@ -116,6 +116,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() =>
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
 
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Is.EqualTo(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine));
@@ -129,6 +130,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() =>
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
 
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine ));
@@ -142,6 +144,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() =>
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
 
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.Exception: my message" + Environment.NewLine ));
@@ -155,6 +158,7 @@ namespace NUnit.Framework.Assertions
             var ex = CatchException(() =>
                 Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
 
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: myMessage"));
@@ -203,7 +207,7 @@ namespace NUnit.Framework.Assertions
                 "Spurious result left by Assert.Fail()");
         }
 
-        private Exception CatchException(TestDelegate del)
+        private Exception? CatchException(TestDelegate del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {

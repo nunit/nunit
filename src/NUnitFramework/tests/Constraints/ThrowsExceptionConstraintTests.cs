@@ -10,10 +10,11 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class ThrowsExceptionConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new ThrowsExceptionConstraint();
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new ThrowsExceptionConstraint();
             ExpectedDescription = "an exception to be thrown";
             StringRepresentation = "<throwsexception>";
         }
@@ -30,14 +31,16 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        private static object[] SuccessData = new object[]
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[]
         {
             new TestDelegate( TestDelegates.ThrowsArgumentException )
         };
-        private static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public static void CatchesAsyncException()
@@ -64,10 +67,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void CatchesSyncTaskOfTException()
         {
-            Assert.That<Task<int>>(() =>
-            {
-                throw new Exception();
-            }, Throws.Exception);
+            Assert.That<Task<int>>(() => throw new Exception(), Throws.Exception);
         }
     }
 }

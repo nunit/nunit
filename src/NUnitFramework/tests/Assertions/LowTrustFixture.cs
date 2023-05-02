@@ -26,38 +26,25 @@ namespace NUnit.Framework.Assertions
         [OneTimeTearDown]
         public void DisposeSandBox()
         {
-            if (_sandBox != null)
-            {
-                _sandBox.Dispose();
-                _sandBox = null;
-            }
+            _sandBox.Dispose();
         }
 
         [Test]
         public void AssertEqualityInLowTrustSandBox()
         {
-            _sandBox.Run(() =>
-            {
-                Assert.That(1, Is.EqualTo(1));
-            });
+            _sandBox.Run(() => Assert.That(1, Is.EqualTo(1)));
         }
 
         [Test]
         public void AssertEqualityWithToleranceInLowTrustSandBox()
         {
-            _sandBox.Run(() =>
-            {
-                Assert.That(10.5, Is.EqualTo(10.5));
-            });
+            _sandBox.Run(() => Assert.That(10.5, Is.EqualTo(10.5)));
         }
 
         [Test]
         public void AssertThrowsInLowTrustSandBox()
         {
-            _sandBox.Run(() =>
-            {
-                Assert.Throws<SecurityException>(() => new SecurityPermission(SecurityPermissionFlag.Infrastructure).Demand());
-            });
+            _sandBox.Run(() => Assert.Throws<SecurityException>(() => new SecurityPermission(SecurityPermissionFlag.Infrastructure).Demand()));
         }
     }
 
@@ -66,7 +53,7 @@ namespace NUnit.Framework.Assertions
     /// </summary>
     public class TestSandBox : IDisposable
     {
-        private AppDomain _appDomain;
+        private readonly AppDomain _appDomain;
 
 #region Constructor(s)
 
@@ -84,7 +71,7 @@ namespace NUnit.Framework.Assertions
         /// <param name="permissions">Optional <see cref="TestSandBox"/> permission set. By default a minimal trust
         /// permission set is used.</param>
         /// <param name="fullTrustAssemblies">Strong named assemblies that will have full trust in the sandbox.</param>
-        public TestSandBox(PermissionSet permissions, params Assembly[] fullTrustAssemblies)
+        public TestSandBox(PermissionSet? permissions, params Assembly[] fullTrustAssemblies)
         {
             var setup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
 
@@ -101,7 +88,7 @@ namespace NUnit.Framework.Assertions
             }
 
             _appDomain = AppDomain.CreateDomain(
-                "TestSandBox" + DateTime.Now.Ticks, null, setup,
+                "TestSandBox" + DateTime.Now.Ticks, null!, setup,
                 permissions ?? GetLowTrustPermissionSet(),
                 strongNames.ToArray());
         }
@@ -132,11 +119,7 @@ namespace NUnit.Framework.Assertions
         /// <param name="disposing">Indicates whether this method is called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (_appDomain != null)
-            {
-                AppDomain.Unload(_appDomain);
-                _appDomain = null;
-            }
+            AppDomain.Unload(_appDomain);
         }
 
 #endregion
@@ -157,23 +140,19 @@ namespace NUnit.Framework.Assertions
 
 #region Run methods
 
-        public T Run<T>(Func<T> func)
-        {
-            return (T)Run(func.Method);
-        }
-
         public void Run(Action action)
         {
             Run(action.Method);
         }
-        public object Run(MethodInfo method, params object[] parameters)
+        public object? Run(MethodInfo method, params object[] parameters)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
             if (_appDomain == null) throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);
-            var methodRunnerProxy = (MethodRunner)_appDomain.CreateInstanceAndUnwrap(
-                methodRunnerType.Assembly.FullName, methodRunnerType.FullName);
+            var methodRunnerProxy = (MethodRunner?)_appDomain.CreateInstanceAndUnwrap(
+                methodRunnerType.Assembly.FullName!, methodRunnerType.FullName!);
+            Assert.That(methodRunnerProxy, Is.Not.Null);
 
             try
             {
@@ -182,7 +161,7 @@ namespace NUnit.Framework.Assertions
             catch (Exception e)
             {
                 throw e is TargetInvocationException
-                    ? e.InnerException
+                    ? e.InnerException!
                     : e;
             }
         }
@@ -195,7 +174,7 @@ namespace NUnit.Framework.Assertions
         {
             AssemblyName assemblyName = assembly.GetName();
 
-            byte[] publicKey = assembly.GetName().GetPublicKey();
+            byte[]? publicKey = assembly.GetName().GetPublicKey();
             if (publicKey == null || publicKey.Length == 0)
             {
                 throw new InvalidOperationException("Assembly is not strongly named");
@@ -211,11 +190,11 @@ namespace NUnit.Framework.Assertions
         [Serializable]
         internal class MethodRunner : MarshalByRefObject
         {
-            public object Run(MethodInfo method, params object[] parameters)
+            public object? Run(MethodInfo method, params object[] parameters)
             {
                 var instance = method.IsStatic
                     ? null
-                    : Activator.CreateInstance(method.ReflectedType);
+                    : Activator.CreateInstance(method.ReflectedType!);
                 try
                 {
                     return method.Invoke(instance, parameters);

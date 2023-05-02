@@ -5,17 +5,22 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AssignableFromConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new AssignableFromConstraint(typeof(D1));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AssignableFromConstraint(typeof(D1));
             ExpectedDescription = $"assignable from <{typeof(D1)}>";
             StringRepresentation = $"<assignablefrom {typeof(D1)}>";
         }
 
-        private static object[] SuccessData = new object[] { new D1(), new B() };
-        private static object[] FailureData = new object[] { 
-            new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" ) };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { new D1(), new B() };
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" )
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
         private class B { }
 

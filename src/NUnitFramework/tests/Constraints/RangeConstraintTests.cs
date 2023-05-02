@@ -9,18 +9,19 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class RangeConstraintTest : ConstraintTestBase
     {
-        private RangeConstraint rangeConstraint;
+        private readonly RangeConstraint rangeConstraint = new RangeConstraint(5, 42);
+
+        protected override Constraint TheConstraint => rangeConstraint;
 
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = rangeConstraint = new RangeConstraint(5, 42);
             ExpectedDescription = "in range (5,42)";
             StringRepresentation = "<range 5 42>";
         }
 
-        private static object[] SuccessData = new object[] { 5, 23, 42 };
-        private static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
+        private static readonly object[] SuccessData = new object[] { 5, 23, 42 };
+        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
 
         [TestCase(null)]
         [TestCase("xxx")]

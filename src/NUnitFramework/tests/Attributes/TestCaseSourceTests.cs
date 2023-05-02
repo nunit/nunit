@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("StaticField"));
         }
 
-        private static object[] StaticField =
+        private static readonly object[] StaticField =
             { new object[] { "StaticField" } };
 
         [Test]
@@ -126,7 +126,11 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(MyArrayData))]
         public void SourceMayReturnArrayForArray(int[] array)
         {
-            Assert.That(true);
+            Assert.Multiple(() =>
+            {
+                Assert.That(array, Is.Not.Null);
+                Assert.That(true);
+            });
         }
 
         [Test, TestCaseSource(nameof(EvenNumbers))]
@@ -153,8 +157,11 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(FourArgs))]
         public void TestWithFourArguments(int n, int d, int q, int r)
         {
-            Assert.That(n / d, Is.EqualTo(q));
-            Assert.That(n % d, Is.EqualTo(r));
+            Assert.Multiple(() =>
+            {
+                Assert.That(n / d, Is.EqualTo(q));
+                Assert.That(n % d, Is.EqualTo(r));
+            });
         }
 
         [Test, Category("Top"), TestCaseSource(typeof(DivideDataProvider), nameof(DivideDataProvider.HereIsTheData))]
@@ -182,10 +189,13 @@ namespace NUnit.Framework.Attributes
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingParamsToField)).Tests[0];
             Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Is.EqualTo("You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
-                            "please revise the 3rd parameter passed to the TestCaseSourceAttribute and either remove " +
-                            "it or specify a method."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("You have specified a data source field but also given a set of parameters. Fields cannot take parameters, " +
+                                "please revise the 3rd parameter passed to the TestCaseSourceAttribute and either remove " +
+                                "it or specify a method."));
+            });
         }
 
         [Test]
@@ -195,10 +205,13 @@ namespace NUnit.Framework.Attributes
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingParamsToProperty)).Tests[0];
             Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Is.EqualTo("You have specified a data source property but also given a set of parameters. " +
-                            "Properties cannot take parameters, please revise the 3rd parameter passed to the " +
-                            "TestCaseSource attribute and either remove it or specify a method."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("You have specified a data source property but also given a set of parameters. " +
+                                "Properties cannot take parameters, please revise the 3rd parameter passed to the " +
+                                "TestCaseSource attribute and either remove it or specify a method."));
+            });
         }
 
         [Test]
@@ -208,10 +221,13 @@ namespace NUnit.Framework.Attributes
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.SourceInAnotherClassPassingSomeDataToConstructorWrongNumberParam)).Tests[0];
             Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Is.EqualTo("You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
-                            ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
-                            "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again."));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("You have given the wrong number of arguments to the method in the TestCaseSourceAttribute" +
+                                ", please check the number of parameters passed in the object is correct in the 3rd parameter for the " +
+                                "TestCaseSourceAttribute and this matches the number of parameters in the target method and try again."));
+            });
         }
 
         [Test, TestCaseSource(typeof(DivideDataProviderWithReturnValue), nameof(DivideDataProviderWithReturnValue.TestCases))]
@@ -225,8 +241,11 @@ namespace NUnit.Framework.Attributes
         {
             var result = TestBuilder.RunParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodCallsIgnore)).Children.ToArray()[0];
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
-            Assert.That(result.Message, Is.EqualTo("Ignore this"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
+                Assert.That(result.Message, Is.EqualTo("Ignore this"));
+            });
         }
 
         [Test]
@@ -234,12 +253,14 @@ namespace NUnit.Framework.Attributes
         {
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithIgnoredTestCases));
+            Test? testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+
+            testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.Multiple(() =>
             {
-                Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(1)", suite, false);
-                Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
-
-                testCase = TestFinder.Find("MethodWithIgnoredTestCases(2)", suite, false);
                 Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
                 Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Don't Run Me!"));
             });
@@ -253,23 +274,33 @@ namespace NUnit.Framework.Attributes
 
             DateTimeOffset untilDate = DateTimeOffset.Parse("4242-01-01 00:00:00", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
 
-            Test testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
-            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo($"Ignoring until {untilDate.ToString("u")}. Ignore Me Until The Future"));
-            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
-
+            Test? testCase = TestFinder.Find("MethodWithIgnoredTestCases(3)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+                Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo($"Ignoring until {untilDate:u}. Ignore Me Until The Future"));
+                Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
+            });
             untilDate = DateTimeOffset.Parse("1492-01-01", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
 
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(4)", suite, false);
-            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
-
+            Assert.That(testCase, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
+            });
             untilDate = DateTimeOffset.Parse("4242-01-01 12:42:33Z", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal);
 
             testCase = TestFinder.Find("MethodWithIgnoredTestCases(5)", suite, false);
-            Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
-            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo($"Ignoring until {untilDate.ToString("u")}. Ignore Me Until The Future"));
-            Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
+            Assert.That(testCase, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCase.RunState, Is.EqualTo(RunState.Ignored));
+                Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo($"Ignoring until {untilDate:u}. Ignore Me Until The Future"));
+                Assert.That(testCase.Properties.Get(PropertyNames.IgnoreUntilDate), Is.EqualTo(untilDate.ToString("u")));
+            });
         }
 
         [Test]
@@ -278,15 +309,21 @@ namespace NUnit.Framework.Attributes
             TestSuite suite = TestBuilder.MakeParameterizedMethodSuite(
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithExplicitTestCases));
 
-            Test testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", suite, false);
+            Test? testCase = TestFinder.Find("MethodWithExplicitTestCases(1)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
 
             testCase = TestFinder.Find("MethodWithExplicitTestCases(2)", suite, false);
+            Assert.That(testCase, Is.Not.Null);
             Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
 
             testCase = TestFinder.Find("MethodWithExplicitTestCases(3)", suite, false);
-            Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
-            Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
+            Assert.That(testCase, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCase.RunState, Is.EqualTo(RunState.Explicit));
+                Assert.That(testCase.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("Connection failing"));
+            });
         }
 
         [Test]
@@ -296,11 +333,14 @@ namespace NUnit.Framework.Attributes
                 typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithSourceThrowingException)).Tests[0];
             Assert.That(testMethod.RunState, Is.EqualTo(RunState.NotRunnable));
             ITestResult result = TestBuilder.RunTest(testMethod, null);
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
-            Assert.That(result.Message, Is.EqualTo("System.Exception : my message"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable));
+                Assert.That(result.Message, Is.EqualTo("System.Exception : my message"));
+            });
         }
 
-        [TestCaseSource(nameof(exception_source)), Explicit("Used for GUI tests")]
+        [TestCaseSource(nameof(ExceptionSource)), Explicit("Used for GUI tests")]
         public void HandlesExceptionInTestCaseSource_GuiDisplay(string lhs, string rhs)
         {
             Assert.That(rhs, Is.EqualTo(lhs));
@@ -323,7 +363,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(suiteToTest.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
-        private static object[] testCases =
+        private static readonly object[] testCases =
         {
             new TestCaseData(
                 new[] { "A" },
@@ -333,8 +373,11 @@ namespace NUnit.Framework.Attributes
         [Test, TestCaseSource(nameof(testCases))]
         public void MethodTakingTwoStringArrays(string[] a, string[] b)
         {
-            Assert.That(a, Is.TypeOf(typeof(string[])));
-            Assert.That(b, Is.TypeOf(typeof(string[])));
+            Assert.Multiple(() =>
+            {
+                Assert.That(a, Is.TypeOf(typeof(string[])));
+                Assert.That(b, Is.TypeOf(typeof(string[])));
+            });
         }
 
         [TestCaseSource(nameof(SingleMemberArrayAsArgument))]
@@ -343,7 +386,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(args.Length == 1 && args[0] == "1");
         }
 
-        private static string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
+        private static readonly string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
 
         #region Test name tests
 
@@ -355,7 +398,8 @@ namespace NUnit.Framework.Attributes
 
             foreach (var test in suite.Tests)
             {
-                var expectedName = (string)test.Properties.Get("ExpectedTestName");
+                var expectedName = (string?)test.Properties.Get("ExpectedTestName");
+                Assert.That(expectedName, Is.Not.Null);
 
                 yield return new TestCaseData(test, expectedName)
                     .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests
@@ -396,15 +440,15 @@ namespace NUnit.Framework.Attributes
         }
 
         #region Sources used by the tests
-        private static object[] MyData = new object[] {
+        private static readonly object[] MyData = new object[] {
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
             new object[] { 12, 6, 2 } };
-        private static object[] MyIntData = new object[] {
+        private static readonly object[] MyIntData = new object[] {
             new[] { 12, 3, 4 },
             new[] { 12, 4, 3 },
             new[] { 12, 6, 2 } };
-        private static object[] MyArrayData = new object[]
+        private static readonly object[] MyArrayData = new object[]
         {
             new[] { 12 },
             new[] { 12, 4 },
@@ -416,24 +460,20 @@ namespace NUnit.Framework.Attributes
             yield return new object[] { inject1, inject2, inject3 };
         }
 
-        private static object[] FourArgs = new object[] {
+        private static readonly object[] FourArgs = new object[] {
             new TestCaseData( 12, 3, 4, 0 ),
             new TestCaseData( 12, 4, 3, 0 ),
             new TestCaseData( 12, 5, 2, 2 ) };
-        private static int[] EvenNumbers = new[] { 2, 4, 6, 8 };
-        private static object[] MoreData = new object[] {
+        private static readonly int[] EvenNumbers = new[] { 2, 4, 6, 8 };
+        private static readonly object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },
             new object[] { 12, 2, 6 } };
-        private static object[] Params = new object[] {
+        private static readonly object[] Params = new object[] {
             new TestCaseData(24, 3).Returns(8),
             new TestCaseData(24, 2).Returns(12) };
 
         private class DivideDataProvider
         {
-#pragma warning disable 0169    // x is never assigned
-            private static object[] myObject;
-#pragma warning restore 0169
-
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {
                 yield return new object[] { inject1, inject2, inject3 };
@@ -458,7 +498,7 @@ namespace NUnit.Framework.Attributes
                 };
         }
 
-        private static IEnumerable exception_source
+        private static IEnumerable ExceptionSource
         {
             get
             {

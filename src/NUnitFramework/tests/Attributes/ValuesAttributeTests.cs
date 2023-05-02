@@ -123,7 +123,8 @@ namespace NUnit.Framework.Attributes
 
         private void CheckValues(string methodName, params object[] expected)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo? method = GetType().GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.That(method, Is.Not.Null);
             ParameterInfo param = method.GetParameters()[0];
 
             var attr = param.GetAttributes<ValuesAttribute>(false).Single();
@@ -166,7 +167,7 @@ namespace NUnit.Framework.Attributes
 
         [Test]
         public void MethodWithArrayArguments([Values(
-            new object[] { 1, "text", null },
+            new object?[] { 1, "text", null },
             new object[0],
             new object[] { 1, new[] { 2, 3 }, 4 },
             new object[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })] object o)

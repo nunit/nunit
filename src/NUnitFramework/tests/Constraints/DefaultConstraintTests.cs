@@ -7,16 +7,17 @@ namespace NUnit.Framework.Constraints
 {
     public class DefaultConstraintTests : ConstraintTestBaseNoData
     {
+        protected override Constraint TheConstraint { get; } = new DefaultConstraint();
+
         public DefaultConstraintTests()
         {
-            TheConstraint = new DefaultConstraint();
             ExpectedDescription = "default";
             StringRepresentation = "<default>";
         }
 
         // Cannot use parametrized tests here, as we can't allow boxing to happen.
 
-        [Test] public void Success_Null() => AssertSuccess<string>(null);
+        [Test] public void Success_Null() => AssertSuccess<string?>(null);
         [Test] public void Success_Int() => AssertSuccess(default(int));
         [Test] public void Success_NullableInt() => AssertSuccess(default(int?));
         [Test] public void Success_Long() => AssertSuccess(default(long));

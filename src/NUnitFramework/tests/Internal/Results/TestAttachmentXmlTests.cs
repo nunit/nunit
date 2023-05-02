@@ -43,7 +43,9 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file2.txt", null));
             var xml = _result.ToXml(false);
 
-            var attachmentNodeList = xml.SelectSingleNode(AttachmentsXName).SelectNodes(AttachmentXName);
+            TNode? attachmentsNode = xml.SelectSingleNode(AttachmentsXName);
+            Assert.That(attachmentsNode, Is.Not.Null);
+            var attachmentNodeList = attachmentsNode.SelectNodes(AttachmentXName);
             Assert.That(attachmentNodeList, Has.Count.EqualTo(2));
 
             var filePathsNodes = attachmentNodeList.Select(n => n.SelectSingleNode(FilepathXName)).ToList();
@@ -66,7 +68,10 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file.txt", "description"));
             var xml = _result.ToXml(false);
 
-            var descriptionNode = xml.SelectSingleNode(AttachmentsXName).SelectSingleNode(AttachmentXName).SelectSingleNode(DescriptionXName);
+            TNode? attachmentNode = xml.SelectSingleNode(AttachmentsXName)?.SelectSingleNode(AttachmentXName);
+            Assert.That(attachmentNode, Is.Not.Null);
+
+            var descriptionNode = attachmentNode.SelectSingleNode(DescriptionXName);
             Assert.That(descriptionNode, Has.Property(nameof(TNode.ValueIsCDATA)).True);
             Assert.That(descriptionNode, Has.Property(nameof(TNode.Value)).EqualTo("description"));
         }
@@ -77,7 +82,8 @@ namespace NUnit.Framework.Internal.Results
             _result.AddTestAttachment(new TestAttachment("file.txt", null));
             var xml = _result.ToXml(false);
 
-            var attachmentNode = xml.SelectSingleNode(AttachmentsXName).SelectSingleNode(AttachmentXName);
+            TNode? attachmentNode = xml.SelectSingleNode(AttachmentsXName)?.SelectSingleNode(AttachmentXName);
+            Assert.That(attachmentNode, Is.Not.Null);
             Assert.That(attachmentNode.ChildNodes, Has.Exactly(0).Property(nameof(TNode.Name)).EqualTo(DescriptionXName));
         }
 

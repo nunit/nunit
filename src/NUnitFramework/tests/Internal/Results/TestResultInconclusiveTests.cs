@@ -35,10 +35,10 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultInconclusiveTests : TestResultTests
     {
-        protected string _inconclusiveReason;
+        private readonly string? _inconclusiveReason;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
-        protected TestResultInconclusiveTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultInconclusiveTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
         {
             _inconclusiveReason = ignoreReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;

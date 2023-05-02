@@ -86,7 +86,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void IsNullFails()
         {
-            String s1 = "S1";
+            string s1 = "S1";
             var expectedMessage =
                 "  Expected: null" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void IsNotNull()
         {
-            String s1 = "S1";
+            string s1 = "S1";
             Assert.IsNotNull(s1);
         }
 
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( (string)null ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.IsEmpty( default(string) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

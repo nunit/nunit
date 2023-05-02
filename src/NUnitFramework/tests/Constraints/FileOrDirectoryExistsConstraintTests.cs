@@ -140,21 +140,21 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailsWhenFileInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((FileInfo)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo(default(FileInfo)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenDirectoryInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((DirectoryInfo)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo(default(DirectoryInfo)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenStringIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo((string)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo(default(string)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 

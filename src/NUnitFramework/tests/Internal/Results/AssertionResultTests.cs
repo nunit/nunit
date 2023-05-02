@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResultXml_AssertionResults()
         {
-            TNode assertionResults = _testResult.ToXml(true).SelectSingleNode("assertions");
+            TNode? assertionResults = _testResult.ToXml(true).SelectSingleNode("assertions");
 
             if (_expectedAssertions.Count == 0)
             {
@@ -68,14 +68,14 @@ namespace NUnit.Framework.Internal.Results
 
                 if (expectedAssertion.Message != null)
                 {
-                    TNode messageNode = assertionNode.SelectSingleNode("message");
+                    TNode? messageNode = assertionNode.SelectSingleNode("message");
                     Assert.That(messageNode, Is.Not.Null);
                     Assert.That(messageNode.Value, Is.EqualTo(expectedAssertion.Message));
                 }
 
                 if (expectedAssertion.StackTrace != null)
                 {
-                    TNode stackNode = assertionNode.SelectSingleNode("stack-trace");
+                    TNode? stackNode = assertionNode.SelectSingleNode("stack-trace");
                     Assert.That(stackNode, Is.Not.Null);
                     Assert.That(stackNode.Value, Is.EqualTo(expectedAssertion.StackTrace));
                 }

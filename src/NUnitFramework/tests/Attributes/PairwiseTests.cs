@@ -81,8 +81,8 @@ namespace NUnit.Framework.Attributes
                 for (int i = 1; i < features; i++)
                     for (int j = 0; j < i; j++)
                     {
-                        string a = parms.Arguments[i] as string;
-                        string b = parms.Arguments[j] as string;
+                        string? a = parms.Arguments[i] as string;
+                        string? b = parms.Arguments[j] as string;
                         pairs[a + b] = null;
                     }
 
@@ -101,6 +101,6 @@ namespace NUnit.Framework.Attributes
 #endif
         }
 
-        private class PairCounter : System.Collections.Generic.Dictionary<string, object> { }
+        private class PairCounter : System.Collections.Generic.Dictionary<string, object?> { }
     }
 }

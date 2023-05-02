@@ -10,14 +10,14 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void BuildMessageThrowsForNullException()
         {
-            Assert.That(() => ExceptionHelper.BuildMessage(null), Throws.ArgumentNullException.With.Property("ParamName").EqualTo("exception"));
+            Assert.That(() => ExceptionHelper.BuildMessage(null!), Throws.ArgumentNullException.With.Property("ParamName").EqualTo("exception"));
         }
 
         [Test]
         public static void RecordExceptionThrowsForNullDelegate()
         {
             Assert.That(
-                () => ExceptionHelper.RecordException(null, "someParamName"),
+                () => ExceptionHelper.RecordException(null!, "someParamName"),
                 Throws.ArgumentNullException.With.Property("ParamName").EqualTo("someParamName"));
         }
 
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void RecordExceptionThrowsProperExceptionForDelegatesThatHaveOneMoreParameterThanTheBoundMethod()
         {
-            var methodInfo = typeof(Foo).GetMethod(nameof(Foo.DummyInstanceMethod));
+            var methodInfo = typeof(Foo).GetMethod(nameof(Foo.DummyInstanceMethod))!;
             var delegateThatParameterizesTheInstance = (Action<Foo>)methodInfo.CreateDelegate(typeof(Action<Foo>));
 
             Assert.That(
@@ -56,12 +56,12 @@ namespace NUnit.Framework.Internal
 
         private sealed class Foo
         {
-            public Foo(Exception exceptionToThrow)
+            public Foo(Exception? exceptionToThrow)
             {
                 ExceptionToThrow = exceptionToThrow;
             }
 
-            public Exception ExceptionToThrow { get; }
+            public Exception? ExceptionToThrow { get; }
 
             public void DummyInstanceMethod()
             {

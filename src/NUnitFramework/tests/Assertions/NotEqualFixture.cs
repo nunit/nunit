@@ -77,17 +77,17 @@ namespace NUnit.Framework.Assertions
             short s10 = 35;
             ushort us11 = 35;
 
-            System.Byte b12 = 35;
-            System.SByte sb13 = 35;
-            System.Decimal d14 = 35;
-            System.Double d15 = 35;
-            System.Single s16 = 35;
-            System.Int32 i17 = 35;
-            System.UInt32 ui18 = 35;
-            System.Int64 i19 = 35;
-            System.UInt64 ui20 = 35;
-            System.Int16 i21 = 35;
-            System.UInt16 i22 = 35;
+            byte b12 = 35;
+            sbyte sb13 = 35;
+            decimal d14 = 35;
+            double d15 = 35;
+            float s16 = 35;
+            int i17 = 35;
+            uint ui18 = 35;
+            long i19 = 35;
+            ulong ui20 = 35;
+            short i21 = 35;
+            ushort i22 = 35;
 
             Assert.AreNotEqual(23, b1);
             Assert.AreNotEqual(23, sb2);

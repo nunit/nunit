@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal.Results
             foreach (var result in TestResults)
             {
                 Assert.That(
-                    () => method.Invoke(result, null),
+                    () => method.Invoke(result, null!),
                     Throws.ArgumentNullException.With.Property("ParamName").EqualTo("ex"));
             }
         }

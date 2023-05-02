@@ -126,9 +126,9 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.Multiple(() =>
             {
-                Assert.That(testNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"], Is.EqualTo(TEST_DESCRIPTION));
-                Assert.That(testNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"], Is.EqualTo(TEST_CATEGORY));
-                Assert.That(testNode.SelectSingleNode("properties/property[@name='Priority']").Attributes["value"], Is.EqualTo(TEST_PRIORITY));
+                Assert.That(testNode.SelectSingleNode("properties/property[@name='Description']")?.Attributes["value"], Is.EqualTo(TEST_DESCRIPTION));
+                Assert.That(testNode.SelectSingleNode("properties/property[@name='Category']")?.Attributes["value"], Is.EqualTo(TEST_CATEGORY));
+                Assert.That(testNode.SelectSingleNode("properties/property[@name='Priority']")?.Attributes["value"], Is.EqualTo(TEST_PRIORITY));
             });
         }
 
@@ -174,9 +174,9 @@ namespace NUnit.Framework.Internal.Results
 
             Assert.Multiple(() =>
             {
-                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Description']").Attributes["value"], Is.EqualTo(SUITE_DESCRIPTION));
-                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Category']").Attributes["value"], Is.EqualTo(SUITE_CATEGORY));
-                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Level']").Attributes["value"], Is.EqualTo(SUITE_LEVEL.ToString()));
+                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Description']")?.Attributes["value"], Is.EqualTo(SUITE_DESCRIPTION));
+                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Category']")?.Attributes["value"], Is.EqualTo(SUITE_CATEGORY));
+                Assert.That(suiteNode.SelectSingleNode("properties/property[@name='Level']")?.Attributes["value"], Is.EqualTo(SUITE_LEVEL.ToString()));
             });
         }
 

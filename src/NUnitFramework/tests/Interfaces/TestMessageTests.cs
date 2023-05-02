@@ -30,13 +30,13 @@ namespace NUnit.Framework.Tests.Interfaces
         [Test]
         public void TextParameterCannotBeNull()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => { new TestMessage("destination", null, "testId"); });
+            Assert.Throws(typeof(ArgumentNullException), () => new TestMessage("destination", null!, "testId"));
         }
 
         [Test]
         public void DestinationParameterCannotBeNull()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => { new TestMessage(null, "text", "testId"); });
+            Assert.Throws(typeof(ArgumentNullException), () => new TestMessage(null!, "text", "testId"));
         }
     }
 }

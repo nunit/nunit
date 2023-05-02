@@ -13,19 +13,22 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class UniqueItemsConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new UniqueItemsConstraint();
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new UniqueItemsConstraint();
             StringRepresentation = "<uniqueitems>";
             ExpectedDescription = "all items unique";
         }
 
-        private static object[] SuccessData = new object[] { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
-        private static object[] FailureData = new object[] { new object[] {
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
+        private static readonly object[] FailureData = new object[] { new object[] {
             new[] { 1, 3, 17, 3, 34 },
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test, SetCulture("")]
         [TestCaseSource(nameof(IgnoreCaseData))]
@@ -121,7 +124,7 @@ namespace NUnit.Framework.Constraints
             }, HelperConstraints.HasMaxTime(100));
         }
 
-        private static IEnumerable<int> RANGE_SLOWPATH = Enumerable.Range(0, 750);
+        private static readonly IEnumerable<int> RANGE_SLOWPATH = Enumerable.Range(0, 750);
         private static readonly TestCaseData[] SlowpathData =
         {
             new TestCaseData(RANGE_SLOWPATH.Select(o => o.ToString()).Cast<object>())
@@ -186,6 +189,7 @@ namespace NUnit.Framework.Constraints
 
             var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
 
+            Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.False);
         }
 
@@ -197,6 +201,7 @@ namespace NUnit.Framework.Constraints
 
             var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
 
+            Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);
         }
 
@@ -295,7 +300,7 @@ namespace NUnit.Framework.Constraints
         {
             public int A { get; set; }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj is TestReferenceType_OverridesEquals other)
                     return other.A == this.A;

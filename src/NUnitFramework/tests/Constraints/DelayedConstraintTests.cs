@@ -24,12 +24,13 @@ namespace NUnit.Framework.Constraints
 
         private static bool boolValue;
         private static List<int> list;
-        private static string statusString;
+        private static string? statusString;
+
+        protected override Constraint TheConstraint { get; } = new DelayedConstraint(new EqualConstraint(true), 500);
 
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new DelayedConstraint(new EqualConstraint(true), 500);
             ExpectedDescription = "True after 500 milliseconds delay";
             StringRepresentation = "<after 500 <equal True>>";
 
@@ -39,16 +40,21 @@ namespace NUnit.Framework.Constraints
             //SetValueTrueAfterDelay(300);
         }
 
-        private static object[] SuccessData = new object[] { true };
-        private static object[] FailureData = new object[] {
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { true };
+        private static readonly object[] FailureData = new object[]
+        {
             new TestCaseData( false, "False" ),
             new TestCaseData( 0, "0" ),
-            new TestCaseData( null, "null" ) };
+            new TestCaseData( null, "null" )
+        };
+#pragma warning restore IDE0052 // Remove unread private members
+
         private static readonly ActualValueDelegate DelegateReturningValue;
         private static readonly ActualValueDelegate DelegateReturningFalse;
         private static readonly ActualValueDelegate DelegateReturningZero;
-        private static ActualValueDelegate<object>[] SuccessDelegates;
-        private static ActualValueDelegate<object>[] FailureDelegates;
+        private static readonly ActualValueDelegate<object>[] SuccessDelegates;
+        private static readonly ActualValueDelegate<object>[] FailureDelegates;
 
         // Initialize static fields that are sensitive to order of initialization.
         // Most compilers would probably initialize these in lexical order but it
@@ -263,7 +269,7 @@ namespace NUnit.Framework.Constraints
             statusString = "Finished";
         }
 
-        private void SetValuesAfterDelay(int delayInMilliSeconds)
+        private static void SetValuesAfterDelay(int delayInMilliSeconds)
         {
             setValuesDelay = delayInMilliSeconds;
             Thread thread = new Thread(MethodSetsValues);

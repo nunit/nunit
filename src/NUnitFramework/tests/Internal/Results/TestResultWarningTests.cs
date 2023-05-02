@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Results
                 Assert.That(testNode.Attributes["site"], Is.EqualTo(null));
             });
 
-            TNode reason = testNode.SelectSingleNode("reason");
+            TNode? reason = testNode.SelectSingleNode("reason");
             Assert.That(reason, Is.Not.Null);
             Assert.That(reason.SelectSingleNode("message"), Is.Not.Null);
             Assert.That(reason.SelectSingleNode("message").Value, Is.EqualTo("Warning message"));

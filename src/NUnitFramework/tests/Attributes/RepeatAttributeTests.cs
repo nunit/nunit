@@ -69,7 +69,8 @@ namespace NUnit.Framework.Attributes
         public void CategoryWorksWithRepeatedTest()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
-            Test test = suite.Tests[0] as Test;
+            Test? test = suite.Tests[0] as Test;
+            Assert.That(test, Is.Not.Null);
             System.Collections.IList categories = test.Properties["Category"];
             Assert.That(categories, Is.Not.Null);
             Assert.That(categories, Has.Count.EqualTo(1));

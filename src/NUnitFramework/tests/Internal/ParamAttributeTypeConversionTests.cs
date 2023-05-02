@@ -11,13 +11,13 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void NullDataArgumentShouldThrowArgumentNullException()
         {
-            Assert.That(() => ParamAttributeTypeConversions.ConvertData(null, typeof(object)), Throws.ArgumentNullException);
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(null!, typeof(object)), Throws.ArgumentNullException);
         }
 
         [Test]
         public static void NullTypeArgumentShouldThrowArgumentNullException()
         {
-            Assert.That(() => ParamAttributeTypeConversions.ConvertData(Array.Empty<object>(), null), Throws.ArgumentNullException);
+            Assert.That(() => ParamAttributeTypeConversions.ConvertData(Array.Empty<object>(), null!), Throws.ArgumentNullException);
         }
 
         [TestCase(typeof(short))]

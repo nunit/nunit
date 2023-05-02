@@ -21,7 +21,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void AllItemsAreNotNullFails()
         {
-            object[] c = new object[] { 1, "hello", null, 3 };
+            object?[] c = new object?[] { 1, "hello", null, 3 };
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +

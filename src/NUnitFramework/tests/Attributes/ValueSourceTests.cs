@@ -160,20 +160,20 @@ namespace NUnit.Framework.Attributes
                 return dataList;
             }
 
-            public static IEnumerable<int> ForeignNullResultProvider()
+            public static IEnumerable<int>? ForeignNullResultProvider()
             {
                 return null;
             }
         }
 
-        private static readonly string NullSource;
+        private static readonly string? NullSource;
 
-        private static IEnumerable<int> NullDataSourceProvider()
+        private static IEnumerable<int>? NullDataSourceProvider()
         {
             return null;
         }
 
-        public static IEnumerable<int> NullDataSourceProperty => null;
+        public static IEnumerable<int>? NullDataSourceProperty => null;
 
         [Test, Explicit("Null or nonexistent data sources definitions should not prevent other tests from run #1121")]
         public void ValueSourceMayNotBeNull(
@@ -207,7 +207,7 @@ namespace NUnit.Framework.Attributes
         {
         }
 
-        private static object[] ComplexArrayBasedTestInput = new[]
+        private static readonly object[] ComplexArrayBasedTestInput = new[]
         {
             new[] { 1, "text", new object() },
             Array.Empty<object>(),

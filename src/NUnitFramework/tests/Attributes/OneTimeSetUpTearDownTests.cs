@@ -370,7 +370,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestThatChangesPersistUsingSameThread()
         {
-            Assert.That(Thread.CurrentPrincipal.Identity.Name, Is.EqualTo("foo"));
+            Assert.That(Thread.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"));
             Assert.That(Thread.CurrentThread.CurrentCulture.Name, Is.EqualTo("en-GB"));
             Assert.That(Thread.CurrentThread.CurrentUICulture.Name, Is.EqualTo("en-GB"));
         }
@@ -378,7 +378,7 @@ namespace NUnit.Framework.Attributes
         [Test, RequiresThread]
         public void TestThatChangesPersistUsingSeparateThread()
         {
-            Assert.That(Thread.CurrentPrincipal.Identity.Name, Is.EqualTo("foo"));
+            Assert.That(Thread.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"));
             Assert.That(Thread.CurrentThread.CurrentCulture.Name, Is.EqualTo("en-GB"), "#CurrentCulture");
             Assert.That(Thread.CurrentThread.CurrentUICulture.Name, Is.EqualTo("en-GB"), "#CurrentUICulture");
         }

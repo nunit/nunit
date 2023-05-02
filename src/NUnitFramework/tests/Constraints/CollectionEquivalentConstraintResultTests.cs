@@ -133,8 +133,7 @@ namespace NUnit.Framework.Constraints
 
             Assert.Throws<ArgumentNullException>(() =>
             {
-                #pragma warning disable CS0219
-                CollectionEquivalentConstraintResult cr = new CollectionEquivalentConstraintResult(_constraint, null, actualList, false);
+                _ = new CollectionEquivalentConstraintResult(_constraint, null!, actualList, false);
             });
         }
     }

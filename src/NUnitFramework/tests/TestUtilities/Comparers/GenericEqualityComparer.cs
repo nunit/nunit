@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
 
@@ -12,7 +12,7 @@ namespace NUnit.TestUtilities.Comparers
     {
         public bool WasCalled;
 
-        bool IEqualityComparer<T>.Equals(T x, T y)
+        bool IEqualityComparer<T>.Equals(T? x, T? y)
         {
             WasCalled = true;
             return Comparer<T>.Default.Compare(x, y) == 0;
@@ -20,7 +20,7 @@ namespace NUnit.TestUtilities.Comparers
 
         int IEqualityComparer<T>.GetHashCode(T x)
         {
-            return x.GetHashCode();
+            return x is null ? 0 : x.GetHashCode();
         }
     }
 }

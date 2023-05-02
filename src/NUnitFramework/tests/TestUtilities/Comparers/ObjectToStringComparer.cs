@@ -12,12 +12,22 @@ namespace NUnit.TestUtilities.Comparers
     {
         public bool WasCalled { get; private set; }
 
-        int IComparer.Compare(object x, object y)
+        int IComparer.Compare(object? x, object? y)
         {
             WasCalled = true;
 
-            string xAsString = x.ToString();
-            string yAsString = y.ToString();
+            string? xAsString = x?.ToString();
+            string? yAsString = y?.ToString();
+            if (xAsString is null)
+            {
+                if (yAsString is null)
+                    return 0;
+                else
+                    return -1;
+            }
+            else if (yAsString is null)
+                return 1;
+
             if (int.TryParse(xAsString, out int intX) && int.TryParse(yAsString, out int intY))
             {
                 return intX.CompareTo(intY);
@@ -33,7 +43,7 @@ namespace NUnit.TestUtilities.Comparers
 
         public bool WasCalled { get; private set; }
 
-        public new bool Equals(object x, object y)
+        public new bool Equals(object? x, object? y)
         {
             WasCalled = true;
             return _comparer.Compare(x, y) == 0;
@@ -41,7 +51,7 @@ namespace NUnit.TestUtilities.Comparers
 
         public int GetHashCode(object obj)
         {
-            return obj.ToString().GetHashCode();
+            return obj.ToString()!.GetHashCode();
         }
     }
 
@@ -56,7 +66,7 @@ namespace NUnit.TestUtilities.Comparers
         {
             _value = value;
         }
-        public override string ToString()
+        public override string? ToString()
         {
             return _value.ToString();
         }

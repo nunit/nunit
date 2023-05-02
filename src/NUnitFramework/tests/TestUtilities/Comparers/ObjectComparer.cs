@@ -13,7 +13,7 @@ namespace NUnit.TestUtilities.Comparers
         public bool WasCalled = false;
         public static readonly IComparer Default = new ObjectComparer();
 
-        int IComparer.Compare(object x, object y)
+        int IComparer.Compare(object? x, object? y)
         {
             WasCalled = true;
             return Comparer.Default.Compare(x, y);

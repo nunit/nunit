@@ -13,22 +13,23 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class CollectionSupersetConstraintTests : ConstraintTestBaseNoData
     {
+        protected override Constraint TheConstraint { get; } = new CollectionSupersetConstraint(new[] { 1, 2, 3, 4, 5 });
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new CollectionSupersetConstraint(new[] { 1, 2, 3, 4, 5 });
             StringRepresentation = "<supersetof System.Int32[]>";
             ExpectedDescription = "superset of < 1, 2, 3, 4, 5 >";
         }
 
-        private static object[] SuccessData = new object[]
+        private static readonly object[] SuccessData = new object[]
         {
             new[] { 1, 2, 3, 4, 5, 6 }
             , new[] { 1, 2, 3, 4, 5 }
             , new[] { 1, 2, 2, 2, 3, 4, 5, 3 }
             , new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
         };
-        private static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
             , new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }

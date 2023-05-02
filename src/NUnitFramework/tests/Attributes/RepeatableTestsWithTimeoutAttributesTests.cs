@@ -46,9 +46,9 @@ namespace NUnit.Framework.Attributes
             // order by checking which commands are run when. As the retry command comes first, the
             // timeout will be reset each time it runs
             var test = TestBuilder.MakeTestFromMethod(typeof(HelperMethodForTimeoutsClass), nameof(HelperMethodForTimeoutsClass.ShouldPassAfter3RetriesAndTimeoutIsResetEachTime));
-            SimpleWorkItem work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-            var method = typeof(SimpleWorkItem).GetMethod("MakeTestCommand", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            TestCommand command = (TestCommand)method.Invoke(work, null);
+            SimpleWorkItem? work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+            Assert.That(work, Is.Not.Null);
+            TestCommand command = work.MakeTestCommand();
 
             Assert.That(command, Is.TypeOf(typeof(RetryAttribute.RetryCommand)));
             RetryAttribute.RetryCommand retryCommand = (RetryAttribute.RetryCommand)command;
@@ -75,9 +75,9 @@ namespace NUnit.Framework.Attributes
             // order by checking which commands are run when. As the repeat command comes first, the
             // timeout will be reset each time it runs
             var test = TestBuilder.MakeTestFromMethod(typeof(HelperMethodForTimeoutsClass), nameof(HelperMethodForTimeoutsClass.ShouldPassAfter2RepeatsAndTimeoutIsResetEachTime));
-            SimpleWorkItem work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
-            var method = typeof(SimpleWorkItem).GetMethod("MakeTestCommand", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            TestCommand command = (TestCommand)method.Invoke(work, null);
+            SimpleWorkItem? work = TestBuilder.CreateWorkItem(test) as SimpleWorkItem;
+            Assert.That(work, Is.Not.Null);
+            TestCommand command = work.MakeTestCommand();
 
             Assert.That(command, Is.TypeOf(typeof(RepeatAttribute.RepeatedTestCommand)));
             RepeatAttribute.RepeatedTestCommand repeatedCommand = (RepeatAttribute.RepeatedTestCommand)command;
@@ -99,7 +99,9 @@ namespace NUnit.Framework.Attributes
 
         private TestCommand GetInnerCommand(DelegatingTestCommand command)
         {
-            return (TestCommand)command.GetType().GetField("innerCommand", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(command);
+            FieldInfo? innerCommand = command.GetType().GetField("innerCommand", BindingFlags.NonPublic | BindingFlags.Instance);
+            Assert.That(innerCommand, Is.Not.Null);
+            return (TestCommand)innerCommand.GetValue(command)!;
         }
 
         [Test]
@@ -142,7 +144,7 @@ namespace NUnit.Framework.Attributes
 
         internal class CustomRepeater : Attribute, IRepeatTest
         {
-            public TestCommand Wrap(TestCommand command) { return null; }
+            public TestCommand Wrap(TestCommand command) { return command; }
         }
 
         #endregion

@@ -61,7 +61,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
 
-        [Datapoint] private readonly object nullObj = null;
+        [Datapoint] private readonly object? nullObj = null;
 
         [Theory]
         public void NullDatapointIsOK(object o)
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Datapoints]
-        private string[] vals = new string[] { "xyz1", "xyz2", "xyz3" };
+        private readonly string[] vals = new string[] { "xyz1", "xyz2", "xyz3" };
 
         [Theory]
         public void ArrayWithDatapointsAttributeIsUsed(string s)

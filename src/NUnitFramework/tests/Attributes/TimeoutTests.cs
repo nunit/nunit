@@ -20,16 +20,6 @@ namespace NUnit.Framework.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-        private static bool _testRanToCompletion;
-        private static Action _testAction;
-        private static StubDebugger _debugger;
-
-        [TearDown]
-        public void ResetTestCompletionFlag()
-        {
-            _testRanToCompletion = false;
-        }
-
         private const string FailureMessage = "The test has failed";
         private const string IgnoreMessage = "The test was ignored";
         private const string InconclusiveMessage = "The test was inconclusive";
@@ -115,24 +105,34 @@ namespace NUnit.Framework.Attributes
             Assert.That(result.Message, Is.EqualTo(message));
         }
 
-        private class SampleTests
+        private sealed class SampleTests
         {
             private const int TimeExceedingTimeout = 500;
 
             public const int Timeout = 50;
+            private readonly Action _testAction;
+            private readonly StubDebugger _debugger;
+
+            public SampleTests(Action testAction, StubDebugger debugger)
+            {
+                _testAction = testAction;
+                _debugger = debugger;
+            }
+
+            public bool TestRanToCompletion { get; private set; }
 
             [Timeout(Timeout)]
             public void TestThatTimesOut()
             {
                 Thread.Sleep(TimeExceedingTimeout);
-                _testRanToCompletion = true;
+                TestRanToCompletion = true;
             }
 
             [Timeout(Timeout)]
             public void TestThatTimesOutAndInvokesAction()
             {
                 Thread.Sleep(TimeExceedingTimeout);
-                _testRanToCompletion = true;
+                TestRanToCompletion = true;
                 _testAction.Invoke();
             }
 
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Attributes
             public void TestThatInvokesActionImmediately()
             {
                 _testAction.Invoke();
-                _testRanToCompletion = true;
+                TestRanToCompletion = true;
             }
 
             [Timeout(Timeout)]
@@ -148,7 +148,7 @@ namespace NUnit.Framework.Attributes
             {
                 _debugger.IsAttached = true;
                 Thread.Sleep(TimeExceedingTimeout);
-                _testRanToCompletion = true;
+                TestRanToCompletion = true;
             }
         }
 
@@ -171,15 +171,14 @@ namespace NUnit.Framework.Attributes
             [Values] bool isDebuggerAttached)
         {
             // given
-            _testAction = test.Action;
-
             var testThatCompletesWithoutTimeout =
                 TestBuilder.MakeTestCase(typeof(SampleTests), nameof(SampleTests.TestThatInvokesActionImmediately));
 
             var debugger = new StubDebugger { IsAttached = isDebuggerAttached };
+            var sampleTests = new SampleTests(test.Action, debugger);
 
             // when
-            var result = TestBuilder.RunTest(testThatCompletesWithoutTimeout, new SampleTests(), debugger);
+            var result = TestBuilder.RunTest(testThatCompletesWithoutTimeout, sampleTests, debugger);
 
             // then
             test.Assertion.Invoke(result);
@@ -190,18 +189,17 @@ namespace NUnit.Framework.Attributes
         public void TestThatTimesOutIsRanToCompletionAndItsResultIsPropagatedWhenDebuggerIsAttached(TestAction test)
         {
             // given
-            _testAction = test.Action;
-
             var testThatTimesOut =
                 TestBuilder.MakeTestCase(typeof(SampleTests), nameof(SampleTests.TestThatTimesOutAndInvokesAction));
 
             var attachedDebugger = new StubDebugger { IsAttached = true };
+            var sampleTests = new SampleTests(test.Action, attachedDebugger);
 
             // when
-            var result = TestBuilder.RunTest(testThatTimesOut, new SampleTests(), attachedDebugger);
+            var result = TestBuilder.RunTest(testThatTimesOut, sampleTests, attachedDebugger);
 
             // then
-            Assert.That(_testRanToCompletion, () => "Test did not run to completion");
+            Assert.That(sampleTests.TestRanToCompletion, "Test did not run to completion");
 
             test.Assertion.Invoke(result);
         }
@@ -213,13 +211,14 @@ namespace NUnit.Framework.Attributes
             var testThatAttachesDebuggerAndTimesOut =
                 TestBuilder.MakeTestCase(typeof(SampleTests), nameof(SampleTests.TestThatAttachesDebuggerAndTimesOut));
 
-            _debugger = new StubDebugger { IsAttached = false };
+            var debugger = new StubDebugger { IsAttached = false };
+            var sampleTests = new SampleTests(() => { }, debugger);
 
             // when
-            var result = TestBuilder.RunTest(testThatAttachesDebuggerAndTimesOut, new SampleTests(), _debugger);
+            var result = TestBuilder.RunTest(testThatAttachesDebuggerAndTimesOut, sampleTests, debugger);
 
             // then
-            Assert.That(_testRanToCompletion, () => "Test did not run to completion");
+            Assert.That(sampleTests.TestRanToCompletion, "Test did not run to completion");
         }
 
 #if THREAD_ABORT
@@ -240,7 +239,8 @@ namespace NUnit.Framework.Attributes
         {
             TimeoutFixture fixture = new TimeoutFixture();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod testMethod = (TestMethod)TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
+            TestMethod? testMethod = (TestMethod?)TestFinder.Find("InfiniteLoopWith50msTimeout", suite, false);
+            Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
@@ -254,7 +254,8 @@ namespace NUnit.Framework.Attributes
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInSetUp();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod testMethod = (TestMethod)TestFinder.Find("Test1", suite, false);
+            TestMethod? testMethod = (TestMethod?)TestFinder.Find("Test1", suite, false);
+            Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
@@ -268,7 +269,8 @@ namespace NUnit.Framework.Attributes
         {
             TimeoutFixture fixture = new TimeoutFixtureWithTimeoutInTearDown();
             TestSuite suite = TestBuilder.MakeFixture(fixture);
-            TestMethod testMethod = (TestMethod)TestFinder.Find("Test1", suite, false);
+            TestMethod? testMethod = (TestMethod?)TestFinder.Find("Test1", suite, false);
+            Assert.That(testMethod, Is.Not.Null);
             ITestResult result = TestBuilder.RunTest(testMethod, fixture);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
@@ -285,7 +287,8 @@ namespace NUnit.Framework.Attributes
             Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
             Assert.That(suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
             Assert.That(suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-            ITestResult result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
+            ITestResult? result = TestFinder.Find("Test2WithInfiniteLoop", suiteResult, false);
+            Assert.That(result, Is.Not.Null);
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
             Assert.That(result.ResultState.Label, Is.EqualTo(result.Message));
@@ -301,11 +304,13 @@ namespace NUnit.Framework.Attributes
 
             var detachedDebugger = new StubDebugger { IsAttached = false };
 
+            var sampleTests = new SampleTests(() => { }, detachedDebugger);
+
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, new SampleTests(), detachedDebugger);
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, sampleTests, detachedDebugger);
 
             // then
-            Assert.That(_testRanToCompletion == false, () => "Test ran to completion");
+            Assert.That(sampleTests.TestRanToCompletion, Is.False, "Test ran to completion");
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
@@ -342,7 +347,8 @@ namespace NUnit.Framework.Attributes
             {
                 TimeoutTestCaseFixture fixture = new TimeoutTestCaseFixture();
                 TestSuite suite = TestBuilder.MakeFixture(fixture);
-                ParameterizedMethodSuite methodSuite = (ParameterizedMethodSuite)TestFinder.Find("TestTimeOutTestCase", suite, false);
+                ParameterizedMethodSuite? methodSuite = (ParameterizedMethodSuite?)TestFinder.Find("TestTimeOutTestCase", suite, false);
+                Assert.That(methodSuite, Is.Not.Null);
                 ITestResult result = TestBuilder.RunTest(methodSuite, fixture);
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure), "Suite result");
                 Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.Success), "First test");
@@ -373,12 +379,13 @@ namespace NUnit.Framework.Attributes
                 TestBuilder.MakeTestCase(typeof(SampleTests), nameof(SampleTests.TestThatTimesOut));
 
             var detachedDebugger = new StubDebugger { IsAttached = false };
+            var sampleTests = new SampleTests(() => { }, detachedDebugger);
 
             // when
-            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, new SampleTests(), detachedDebugger);
+            var result = TestBuilder.RunTest(testThatTimesOutButOtherwisePasses, sampleTests, detachedDebugger);
 
             // then
-            Assert.That(_testRanToCompletion, Is.False, () => "Test ran to completion");
+            Assert.That(sampleTests.TestRanToCompletion, Is.False, () => "Test ran to completion");
 
             Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));

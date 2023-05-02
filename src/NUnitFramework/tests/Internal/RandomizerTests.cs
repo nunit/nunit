@@ -722,13 +722,13 @@ namespace NUnit.Framework.Internal
             }
 
             private static readonly MethodInfo testMethod1 =
-                typeof(Repeatability).GetMethod(nameof(TestMethod1), BindingFlags.NonPublic | BindingFlags.Static);
+                typeof(Repeatability).GetMethod(nameof(TestMethod1), BindingFlags.NonPublic | BindingFlags.Static)!;
             private static void TestMethod1(int x, int y)
             {
             }
 
             private static readonly MethodInfo testMethod2 =
-                typeof(Repeatability).GetMethod(nameof(TestMethod2), BindingFlags.NonPublic | BindingFlags.Static);
+                typeof(Repeatability).GetMethod(nameof(TestMethod2), BindingFlags.NonPublic | BindingFlags.Static)!;
             private static void TestMethod2(int x, int y)
             {
             }

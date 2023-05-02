@@ -80,7 +80,7 @@ namespace NUnit.Framework.Syntax
     {
         protected bool Flag;
         protected int Num;
-        protected object Ob1, Ob2, Ob3;
+        protected object? Ob1, Ob2, Ob3;
         protected List<object> List;
         protected string Greeting;
 

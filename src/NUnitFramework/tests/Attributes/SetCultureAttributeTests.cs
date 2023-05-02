@@ -39,6 +39,13 @@ namespace NUnit.Framework.Attributes
             Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("ru-RU"), "UICulture not set correctly");
         }
 
+        [Test, SetCulture("fr-FR")]
+        public void SetCultureOnlyToFrench()
+        {
+            Assert.That(originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture should not change");
+            Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-FR"), "Culture not set correctly");
+        }
+
         [Test, SetCulture("fr-FR"), SetUICulture("fr-FR")]
         public void SetBothCulturesToFrench()
         {

@@ -5,19 +5,23 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class ExactTypeConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new ExactTypeConstraint(typeof(D1));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new ExactTypeConstraint(typeof(D1));
             ExpectedDescription = $"<{typeof(D1)}>";
             StringRepresentation = $"<typeof {typeof(D1)}>";
         }
 
-        private static object[] SuccessData = new object[] { new D1() };
-        private static object[] FailureData = new object[] { 
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { new D1() };
+        private static readonly object[] FailureData = new object[]
+        { 
             new TestCaseData( new B(), "<" + typeof(B).FullName + ">" ),
             new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" )
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
         private class B { }
 

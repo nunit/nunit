@@ -48,11 +48,11 @@ namespace NUnit.TestUtilities.Collections
             Contents = new List<object>(source);
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is IEnumerable<object>)
+            if (obj is IEnumerable<object> enumerable)
             {
-                List<object> other = new List<object>((IEnumerable<object>)obj);
+                List<object> other = new List<object>(enumerable);
 
                 return other[0].Equals(Contents[0]);
             }
@@ -65,9 +65,9 @@ namespace NUnit.TestUtilities.Collections
             return base.GetHashCode();
         }
 
-        public bool Equals(SimpleEnumerableWithIEquatable other)
+        public bool Equals(SimpleEnumerableWithIEquatable? other)
         {
-            return Contents[0] == other.Contents[0];
+            return other is not null && Contents[0] == other.Contents[0];
         }
 
         IEnumerator<object> IEnumerable<object>.GetEnumerator()
@@ -83,7 +83,7 @@ namespace NUnit.TestUtilities.Collections
 
     internal class SimpleIEquatableObj : IEquatable<SimpleIEquatableObj>
     {
-        public bool Equals(SimpleIEquatableObj other)
+        public bool Equals(SimpleIEquatableObj? other)
         {
             return true;
         }

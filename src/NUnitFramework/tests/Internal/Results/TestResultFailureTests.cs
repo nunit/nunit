@@ -82,14 +82,14 @@ namespace NUnit.Framework.Internal.Results
         protected const string NonWhitespaceFailureMessage = "message";
         protected const string NonWhitespaceFailureStackTrace = "stack_trace";
 
-        protected string _failureReason;
-        protected string _stackTrace;
+        private readonly string? _failureReason;
+        private readonly string? _stackTrace;
         private readonly Func<TNode, TNode> _xmlFailureNodeValidation;
         private readonly Action<TNode> _xmlMessageNodeValidation;
         private readonly Action<TNode> _xmlStackTraceNodeValidation;
 
-        protected TestResultFailureTests(string failureReason,
-            string stackTrace,
+        protected TestResultFailureTests(string? failureReason,
+            string? stackTrace,
             Func<TNode, TNode> xmlFailureNodeValidation,
             Action<TNode> xmlMessageNodeValidation,
             Action<TNode> xmlStackTraceNodeValidation)
@@ -164,11 +164,11 @@ namespace NUnit.Framework.Internal.Results
         {
             _testResult.SetResult(ResultState.Failure, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00");
             TNode testNode = _testResult.ToXml(true);
-            TNode failureNode = testNode.SelectSingleNode("failure");
+            TNode? failureNode = testNode.SelectSingleNode("failure");
 
             Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
 
-            TNode messageNode = failureNode.SelectSingleNode("message");
+            TNode? messageNode = failureNode.SelectSingleNode("message");
 
             Assert.That(messageNode, Is.Not.Null, "No <message> element found");
             Assert.That(messageNode.Value, Is.EqualTo("Invalid Characters: \\u0001\\u0008\\u000b\\u001f\\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00"));
@@ -185,14 +185,14 @@ namespace NUnit.Framework.Internal.Results
                 Assert.That(suiteNode.Attributes["label"], Is.EqualTo(null));
                 Assert.That(suiteNode.Attributes["site"], Is.EqualTo("Child"));
             });
-            TNode failureNode = suiteNode.SelectSingleNode("failure");
+            TNode? failureNode = suiteNode.SelectSingleNode("failure");
             Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
 
-            TNode messageNode = failureNode.SelectSingleNode("message");
+            TNode? messageNode = failureNode.SelectSingleNode("message");
             Assert.That(messageNode, Is.Not.Null, "No <message> element found");
             Assert.That(messageNode.Value, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
 
-            TNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
+            TNode? stacktraceNode = failureNode.SelectSingleNode("stacktrace");
             Assert.That(stacktraceNode, Is.Null, "Unexpected <stack-trace> element found");
 
             Assert.Multiple(() =>
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal.Results
 
         protected static TNode FailureNodeExistsAndIsNotNull(TNode testNode)
         {
-            TNode failureNode = testNode.SelectSingleNode("failure");
+            TNode? failureNode = testNode.SelectSingleNode("failure");
             Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
 
             return failureNode;
@@ -216,26 +216,26 @@ namespace NUnit.Framework.Internal.Results
 
         protected static void MessageNodeDoesNotExist(TNode failureNode)
         {
-            TNode messageNode = failureNode.SelectSingleNode("message");
+            TNode? messageNode = failureNode.SelectSingleNode("message");
             Assert.That(messageNode, Is.Null, "<message> element found but no such node was expected");
         }
 
         protected static void MessageNodeExistsAndValueAsExpected(TNode failureNode, string expectedFailureMessage)
         {
-            TNode messageNode = failureNode.SelectSingleNode("message");
+            TNode? messageNode = failureNode.SelectSingleNode("message");
             Assert.That(messageNode, Is.Not.Null, "No <message> element found");
             Assert.That(messageNode.Value, Is.EqualTo(expectedFailureMessage));
         }
 
         protected static void StackTraceNodeDoesNotExist(TNode failureNode)
         {
-            TNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
+            TNode? stacktraceNode = failureNode.SelectSingleNode("stack-trace");
             Assert.That(stacktraceNode, Is.Null, "<stack-trace> element found but was not expected");
         }
 
         protected static void StackTraceNodeExistsAndValueAsExpected(TNode failureNode, string expectedStackTrace)
         {
-            TNode stacktraceNode = failureNode.SelectSingleNode("stack-trace");
+            TNode? stacktraceNode = failureNode.SelectSingleNode("stack-trace");
             Assert.That(stacktraceNode, Is.Not.Null, "No <stack-trace> element found");
             Assert.That(stacktraceNode.Value, Is.EqualTo(expectedStackTrace));
         }

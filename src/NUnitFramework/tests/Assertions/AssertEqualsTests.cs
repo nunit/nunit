@@ -581,7 +581,7 @@ namespace NUnit.Framework.Assertions
             _x = x;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is not ThrowsIfToStringIsCalled other)
                 return false;
@@ -597,7 +597,7 @@ namespace NUnit.Framework.Assertions
         public override string ToString()
         {
             Assert.Fail("Should not call ToString() if Assert does not fail");
-            return base.ToString();
+            return base.ToString()!;
         }
     }
 }

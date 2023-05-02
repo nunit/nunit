@@ -90,7 +90,8 @@ namespace NUnit.Framework.Attributes
 
             foreach (var testFixture in suite.Tests)
             {
-                var expectedName = (string)testFixture.Properties.Get("ExpectedTestName");
+                var expectedName = (string?)testFixture.Properties.Get("ExpectedTestName");
+                Assert.That(expectedName, Is.Not.Null);
 
                 yield return new TestCaseData((TestFixture)testFixture, expectedName)
                     .SetArgDisplayNames(expectedName); // SetArgDisplayNames (here) is purely cosmetic for the purposes of these tests

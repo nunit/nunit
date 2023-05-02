@@ -27,7 +27,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Test(ExpectedResult = null)]
-        public object ResultCanBeNull()
+        public object? ResultCanBeNull()
         {
             return null;
         }

@@ -376,7 +376,8 @@ namespace NUnit.Framework.Attributes
             var invalidPlatform = "FakePlatform";
             new PlatformAttribute(invalidPlatform).ApplyToTest(test);
             Assert.That(test.RunState, Is.EqualTo(RunState.NotRunnable));
-            string skipReason = (string)test.Properties.Get(PropertyNames.SkipReason);
+            string? skipReason = (string?)test.Properties.Get(PropertyNames.SkipReason);
+            Assert.That(skipReason, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(skipReason, Does.StartWith("Invalid platform name"));

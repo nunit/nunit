@@ -73,16 +73,16 @@ namespace NUnit.Framework.Internal
 
         private IEnumerable<IMethodInfo> Success
         {
-            get { yield return Method("SuccessfulAsyncMethod"); }
+            get { yield return Method(nameof(AsyncSetupTearDownFixture.SuccessfulAsyncMethod)); }
         }
         private IEnumerable<IMethodInfo> Failure
         {
-            get { yield return Method("FailingAsyncMethod"); }
+            get { yield return Method(nameof(AsyncSetupTearDownFixture.FailingAsyncMethod)); }
         }
 
         private IMethodInfo Method(string methodName)
         {
-            return new MethodWrapper(_testObject.GetType(), _testObject.GetType().GetMethod(methodName));
+            return new MethodWrapper(_testObject.GetType(), methodName);
         }
     }
 }

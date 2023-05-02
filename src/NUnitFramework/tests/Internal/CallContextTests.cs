@@ -91,7 +91,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void ShouldRestoreCurrentPrincipalAfterTestRun()
         {
-            IPrincipal principal = Thread.CurrentPrincipal;
+            IPrincipal? principal = Thread.CurrentPrincipal;
 
             TestBuilder.RunTestFixture( typeof( FixtureThatChangesTheCurrentPrincipal ) );
 
@@ -122,7 +122,7 @@ namespace NUnit.Framework.Internal
     [Serializable]
     public class MyPrincipal : IPrincipal
     {
-        public IIdentity Identity =>
+        public IIdentity? Identity =>
             // TODO:  Add MyPrincipal.Identity getter implementation
             null;
 

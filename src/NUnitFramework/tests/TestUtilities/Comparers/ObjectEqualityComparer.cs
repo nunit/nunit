@@ -12,7 +12,7 @@ namespace NUnit.TestUtilities.Comparers
     {
         public bool Called;
 
-        bool IEqualityComparer.Equals(object x, object y)
+        bool IEqualityComparer.Equals(object? x, object? y)
         {
             Called = true;
             return Comparer.Default.Compare(x, y) == 0;

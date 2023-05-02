@@ -5,17 +5,22 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AttributeExistsConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new AttributeExistsConstraint(typeof(TestFixtureAttribute));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AttributeExistsConstraint(typeof(TestFixtureAttribute));
             ExpectedDescription = "type with attribute <NUnit.Framework.TestFixtureAttribute>";
             StringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
         }
 
-        private static object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
-        private static object[] FailureData = new object[] { 
-            new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" ) };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
+        private static readonly object[] FailureData = new object[]
+        { 
+            new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" )
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NonAttributeThrowsException()

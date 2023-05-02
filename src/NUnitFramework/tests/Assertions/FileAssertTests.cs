@@ -20,8 +20,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqualPassesWhenBothAreNull()
         {
-            FileStream expected = null;
-            FileStream actual = null;
+            FileStream? expected = null;
+            FileStream? actual = null;
             FileAssert.AreEqual(expected, actual);
         }
 
@@ -254,8 +254,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqualFailsWhenBothAreNull()
         {
-            FileStream expected = null;
-            FileStream actual = null;
+            FileStream? expected = null;
+            FileStream? actual = null;
             var expectedMessage =
                 "  Expected: not equal to null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
@@ -360,14 +360,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ExistsFailsWhenFileInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.Exists((FileInfo)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.Exists(default(FileInfo)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or FileInfo"));
         }
 
         [Test]
         public void ExistsFailsWhenStringIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.Exists((string)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.Exists(default(string)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or FileInfo"));
         }
 
@@ -417,14 +417,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DoesNotExistFailsWhenFileInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.DoesNotExist((FileInfo)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.DoesNotExist(default(FileInfo)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or FileInfo"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.DoesNotExist((string)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => FileAssert.DoesNotExist(default(string)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or FileInfo"));
         }
 

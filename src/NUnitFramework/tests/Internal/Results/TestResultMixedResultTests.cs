@@ -56,14 +56,14 @@ namespace NUnit.Framework.Internal.Results
             TNode suiteNode = _suiteResult.ToXml(true);
 
             Assert.That(suiteNode.Attributes["result"], Is.EqualTo("Failed"));
-            TNode failureNode = suiteNode.SelectSingleNode("failure");
+            TNode? failureNode = suiteNode.SelectSingleNode("failure");
             Assert.That(failureNode, Is.Not.Null, "No failure element found");
 
-            TNode messageNode = failureNode.SelectSingleNode("message");
+            TNode? messageNode = failureNode.SelectSingleNode("message");
             Assert.That(messageNode, Is.Not.Null, "No message element found");
             Assert.That(messageNode.Value, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
 
-            TNode stacktraceNode = failureNode.SelectSingleNode("stacktrace");
+            TNode? stacktraceNode = failureNode.SelectSingleNode("stacktrace");
             Assert.That(stacktraceNode, Is.Null, "There should be no stacktrace");
 
             Assert.Multiple(() =>

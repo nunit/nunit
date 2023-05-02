@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
         public static void FormatValue_ContextualCustomFormatterNotInvokedForNull()
         {
             // If this factory is actually called with null, it will throw
-            TestContext.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString() : next(val));
+            TestContext.AddFormatter(next => val => (val.GetType() == typeof(CustomFormattableType)) ? val.ToString()! : next(val));
 
             Assert.That(MsgUtils.FormatValue(null), Is.EqualTo("null"));
         }

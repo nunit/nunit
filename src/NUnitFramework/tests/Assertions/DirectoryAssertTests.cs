@@ -137,14 +137,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ExistsFailsWhenDirectoryInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists((DirectoryInfo)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists(default(DirectoryInfo)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void ExistsFailsWhenStringIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists((string)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.Exists(default(string)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
@@ -188,14 +188,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void DoesNotExistFailsWhenDirectoryInfoIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist((DirectoryInfo)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist(default(DirectoryInfo)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringIsNull()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist((string)null));
+            var ex = Assert.Throws<ArgumentNullException>(() => DirectoryAssert.DoesNotExist(default(string)!));
             Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string or DirectoryInfo"));
         }
 

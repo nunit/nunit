@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class SetUpFixtureTests
     {
-        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(NUnit.TestData.SetupFixture.Namespace1.SomeFixture).Assembly);
+        private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(TestData.SetupFixture.Namespace1.SomeFixture).Assembly);
         private ITestAssemblyBuilder builder;
         private ITestAssemblyRunner runner;
 
@@ -26,12 +26,12 @@ namespace NUnit.Framework.Internal
         }
         #endregion SetUp
 
-        private ITestResult RunTests(string nameSpace)
+        private ITestResult? RunTests(string nameSpace)
         {
             return RunTests(nameSpace, TestFilter.Empty);
         }
 
-        private ITestResult RunTests(string nameSpace, TestFilter filter)
+        private ITestResult? RunTests(string? nameSpace, TestFilter filter)
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
             if (nameSpace != null)
@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal
         /// Tests that the TestSuiteBuilder correctly interprets a SetupFixture class as a 'virtual namespace' into which
         /// all its sibling classes are inserted.
         /// </summary>
-        [NUnit.Framework.Test]
+        [Test]
         public void NamespaceSetUpFixtureReplacesNamespaceNodeInTree()
         {
             string nameSpace = "NUnit.TestData.SetupFixture.Namespace1";
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
             {
                 ["LOAD"] = new[] { nameSpace }
             };
-            ITest suite = builder.Build(ASSEMBLY_PATH, options);
+            ITest? suite = builder.Build(ASSEMBLY_PATH, options);
 
             Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>
@@ -72,6 +72,7 @@ namespace NUnit.Framework.Internal
             for (int i = 0; i < nameSpaceBits.Length; i++)
             {
                 suite = suite.Tests[0] as TestSuite;
+                Assert.That(suite, Is.Not.Null);
                 Assert.Multiple(() =>
                 {
                     Assert.That(suite.Name, Is.EqualTo(nameSpaceBits[i]));
@@ -83,6 +84,7 @@ namespace NUnit.Framework.Internal
             Assert.That(suite, Is.InstanceOf<SetUpFixture>());
 
             suite = suite.Tests[0] as TestSuite;
+            Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(suite.Name, Is.EqualTo("SomeFixture"));
@@ -118,7 +120,7 @@ namespace NUnit.Framework.Internal
             {
                 ["LOAD"] = new[] { nameSpace }
             };
-            ITest suite = builder.Build(ASSEMBLY_PATH, options);
+            ITest? suite = builder.Build(ASSEMBLY_PATH, options);
 
             Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>
@@ -132,6 +134,7 @@ namespace NUnit.Framework.Internal
             for (int i = 0; i < nameSpaceBits.Length; i++)
             {
                 suite = suite.Tests[0] as TestSuite;
+                Assert.That(suite, Is.Not.Null);
                 Assert.Multiple(() =>
                 {
                     Assert.That(suite.Name, Is.EqualTo(nameSpaceBits[i]));
@@ -141,6 +144,7 @@ namespace NUnit.Framework.Internal
             }
 
             suite = suite.Tests[0] as TestSuite;
+            Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(suite.Name, Is.EqualTo("SomeFixture"));
@@ -153,10 +157,12 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Simple
-        [NUnit.Framework.Test]
+        [Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfSingleTest()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace1").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace1");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
                                                      "NS1.OneTimeSetup",
                                                      "NS1.Fixture.SetUp",
@@ -168,10 +174,12 @@ namespace NUnit.Framework.Internal
                                                      "Assembly.OneTimeTearDown");
         }
 
-        [NUnit.Framework.Test]
+        [Test]
         public void MethodNameSetUpFixtureWrapsExecutionOfSingleTest()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace3.SubNamespace.SomeFixture.Test").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace3.SubNamespace.SomeFixture.Test");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
                                                      "NS3.OneTimeSetUp",
                                                      "NS3.SubNamespace.OneTimeSetUp",
@@ -190,7 +198,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void NamespaceSetUpMethodsMayBeStatic()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace5").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace5");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
                                                      "NS5.OneTimeSetUp",
                                                      "NS5.Fixture.SetUp",
@@ -205,7 +215,9 @@ namespace NUnit.Framework.Internal
         [Test]
         public void NamespaceSetUpFixtureMayBeStatic()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.StaticFixture").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.StaticFixture");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
                                                      "StaticFixture.OneTimeSetUp",
                                                      "StaticFixture.Fixture.SetUp",
@@ -219,10 +231,12 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region TwoTestFixtures
-        [NUnit.Framework.Test]
+        [Test]
         public void NamespaceSetUpFixtureWrapsExecutionOfTwoTests()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace2").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace2");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
 
             // There are two fixtures but we can't be sure of the order of execution so they use the same events
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
@@ -243,10 +257,12 @@ namespace NUnit.Framework.Internal
         #endregion TwoTestFixtures
 
         #region SubNamespace
-        [NUnit.Framework.Test]
+        [Test]
         public void NamespaceSetUpFixtureWrapsNestedNamespaceSetUpFixture()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace3").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace3");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.Verify("Assembly.OneTimeSetUp",
                                                      "NS3.OneTimeSetUp",
                                                      "NS3.Fixture.SetUp",
@@ -267,10 +283,12 @@ namespace NUnit.Framework.Internal
         #endregion SubNamespace
 
         #region TwoSetUpFixtures
-        [NUnit.Framework.Test]
+        [Test]
         public void WithTwoSetUpFixturesBothAreUsed()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace4").ResultState.Status, Is.EqualTo(TestStatus.Passed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace4");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Passed));
             TestUtilities.SimpleEventRecorder.ExpectEvents("Assembly.OneTimeSetUp")
                                              .AndThen("NS4.OneTimeSetUp1", "NS4.OneTimeSetUp2")
                                              .AndThen("NS4.Fixture.SetUp")
@@ -289,17 +307,20 @@ namespace NUnit.Framework.Internal
         [Test]
         public void InvalidSetUpFixtureTest()
         {
-            Assert.That(RunTests("NUnit.TestData.SetupFixture.Namespace6").ResultState.Status, Is.EqualTo(TestStatus.Failed));
+            ITestResult? testResult = RunTests("NUnit.TestData.SetupFixture.Namespace6");
+            Assert.That(testResult, Is.Not.Null);
+            Assert.That(testResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
             TestUtilities.SimpleEventRecorder.Verify(Array.Empty<string>());
         }
 
         #endregion
 
         #region NoNamespaceSetupFixture
-        [NUnit.Framework.Test]
+        [Test]
         public void AssemblySetupFixtureWrapsExecutionOfTest()
         {
-            ITestResult result = RunTests(null, new Filters.FullNameFilter("SomeFixture"));
+            ITestResult? result = RunTests(null, new Filters.FullNameFilter("SomeFixture"));
+            Assert.That(result, Is.Not.Null);
             Assert.Multiple(() =>
             {
                 Assert.That(result.PassCount, Is.EqualTo(1));

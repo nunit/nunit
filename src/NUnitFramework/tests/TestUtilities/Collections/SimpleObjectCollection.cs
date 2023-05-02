@@ -12,16 +12,16 @@ namespace NUnit.TestUtilities.Collections
     /// </summary>
     internal class SimpleObjectCollection : ICollection
     {
-        private readonly List<object> contents = new List<object>();
+        private readonly List<object?> contents;
 
-        public SimpleObjectCollection(IEnumerable<object> source)
+        public SimpleObjectCollection(IEnumerable<object?> source)
         {
-            this.contents = new List<object>(source);
+            this.contents = new List<object?>(source);
         }
 
-        public SimpleObjectCollection(params object[] source)
+        public SimpleObjectCollection(params object?[] source)
         {
-            this.contents = new List<object>(source);
+            this.contents = new List<object?>(source);
         }
 
         #region ICollection Members

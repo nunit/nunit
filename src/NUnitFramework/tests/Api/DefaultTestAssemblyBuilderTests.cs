@@ -54,7 +54,7 @@ namespace NUnit.Framework.Api
             Assert.That(result.IsSuite);
             Assert.That(result, Is.TypeOf<TestAssembly>());
             Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
-            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason));
+            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable), (string)result.Properties.Get(PropertyNames.SkipReason)!);
 
             return result.TestCaseCount;
         }

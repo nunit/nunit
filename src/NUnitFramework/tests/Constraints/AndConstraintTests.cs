@@ -10,17 +10,20 @@ namespace NUnit.Framework.Constraints
     {
         private TextMessageWriter messageWriter;
 
+        protected override Constraint TheConstraint { get; } = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
             ExpectedDescription = "greater than 40 and less than 50";
             StringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
             messageWriter = new TextMessageWriter();
         }
 
-        private static object[] SuccessData = new object[] { 42 };
-        private static object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 42 };
+        private static readonly object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void CanCombineTestsWithAndOperator()

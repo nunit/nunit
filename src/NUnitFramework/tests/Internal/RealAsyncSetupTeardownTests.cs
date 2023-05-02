@@ -7,8 +7,8 @@ namespace NUnit.Framework.Internal
 #pragma warning disable 1998
     public class RealAsyncSetupTeardownTests
     {
-        private object _initializedOnce;
-        private object _initializedEveryTime;
+        private object? _initializedOnce;
+        private object? _initializedEveryTime;
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()

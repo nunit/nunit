@@ -15,8 +15,6 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestFixtureTests
     {
-        private static readonly string dataAssembly = "nunit.testdata";
-
         private static void CanConstructFrom(Type fixtureType)
         {
             CanConstructFrom(fixtureType, fixtureType.Name);
@@ -27,13 +25,6 @@ namespace NUnit.Framework.Internal
             TestSuite fixture = TestBuilder.MakeFixture(fixtureType);
             Assert.That(fixture.Name, Is.EqualTo(expectedName));
             Assert.That(fixture.FullName, Is.EqualTo(fixtureType.FullName));
-        }
-
-        private static Type GetTestDataType(string typeName)
-        {
-            string qualifiedName = $"{typeName},{dataAssembly}";
-            Type type = Type.GetType(qualifiedName);
-            return type;
         }
 
         [Test]
@@ -270,14 +261,13 @@ namespace NUnit.Framework.Internal
 
             Test fixture = (Test)suite.Tests[0];
             Assert.That(fixture.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That((string)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
+            Assert.That((string?)fixture.Properties.Get(PropertyNames.SkipReason), Does.StartWith("Fixture type contains generic parameters"));
         }
 
         [Test]
         public void CannotRunGenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided<>));
-            // GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithNoArgsProvided`1"));
             TestAssert.IsNotRunnable((Test)suite.Tests[0]);
         }
 
@@ -285,7 +275,6 @@ namespace NUnit.Framework.Internal
         public void CanRunGenericFixtureDerivedFromAbstractFixtureWithArgsProvided()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(GenericFixtureDerivedFromAbstractFixtureWithArgsProvided<>));
-            // GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureDerivedFromAbstractFixtureWithArgsProvided`1"));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Runnable));
             Assert.That(suite is ParameterizedFixtureSuite);
             Assert.That(suite.Tests, Has.Count.EqualTo(2));
@@ -462,7 +451,7 @@ namespace NUnit.Framework.Internal
             {
                 Assert.That(test, Is.Not.Null, "ITest is null on a " + _location);
                 Assert.That(test.Fixture, Is.Not.Null, "ITest.Fixture is null on a " + _location);
-                Assert.That(test.Fixture.GetType(), Is.EqualTo(test.TypeInfo.Type), "ITest.Fixture is not the correct type on a " + _location);
+                Assert.That(test.Fixture.GetType(), Is.EqualTo(test.TypeInfo?.Type), "ITest.Fixture is not the correct type on a " + _location);
             }
         }
 

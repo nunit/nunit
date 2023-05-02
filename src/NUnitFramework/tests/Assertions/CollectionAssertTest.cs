@@ -123,14 +123,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void UniqueFailure_ElementTypeIsObject_NUnitEqualityIsUsed()
         {
-            var collection = new List<object> { 42, null, 42f };
+            var collection = new List<object?> { 42, null, 42f };
             Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
         }
 
         [Test]
         public void UniqueFailure_ElementTypeIsInterface_NUnitEqualityIsUsed()
         {
-            var collection = new List<IConvertible> { 42, null, 42f };
+            var collection = new List<IConvertible?> { 42, null, 42f };
             Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
         }
 
@@ -548,14 +548,14 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ContainsNull_IList()
         {
-            Object[] oa = new object[] { 1, 2, 3, null, 4, 5 };
+            object?[] oa = new object?[] { 1, 2, 3, null, 4, 5 };
             CollectionAssert.Contains( oa, null );
         }
 
         [Test]
         public void ContainsNull_ICollection()
         {
-            var ca = new SimpleObjectCollection(new object[] { 1, 2, 3, null, 4, 5 });
+            var ca = new SimpleObjectCollection(new object?[] { 1, 2, 3, null, 4, 5 });
             CollectionAssert.Contains( ca, null );
         }
 #endregion

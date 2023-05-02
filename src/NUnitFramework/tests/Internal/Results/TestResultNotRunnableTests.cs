@@ -53,7 +53,7 @@ namespace NUnit.Framework.Internal.Results
                 Assert.That(testNode.Attributes["site"], Is.EqualTo(null));
             });
 
-            TNode failure = testNode.SelectSingleNode("failure");
+            TNode? failure = testNode.SelectSingleNode("failure");
             Assert.That(failure, Is.Not.Null);
             Assert.That(failure.SelectSingleNode("message"), Is.Not.Null);
             Assert.That(failure.SelectSingleNode("message").Value, Is.EqualTo("bad test"));

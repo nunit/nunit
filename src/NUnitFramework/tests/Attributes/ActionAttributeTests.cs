@@ -22,7 +22,7 @@ namespace NUnit.Framework
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(ActionAttributeFixture).Assembly);
         private static readonly string ASSEMBLY_NAME = System.IO.Path.GetFileName(ASSEMBLY_PATH);
 
-        private ITestResult _result = null;
+        private ITestResult _result;
         private int _numEvents = -1;
 
         [OneTimeSetUp]
@@ -37,8 +37,10 @@ namespace NUnit.Framework
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            Assert.That(runner.Load(ASSEMBLY_PATH, options), Is.Not.Null, "Assembly not loaded");
-            Assert.That(runner.LoadedTest.RunState, Is.EqualTo(RunState.Runnable));
+            ITest test = runner.Load(ASSEMBLY_PATH, options);
+            Assert.That(test, Is.Not.Null, "Assembly not loaded");
+            Assert.That(runner.LoadedTest, Is.SameAs(test));
+            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
 

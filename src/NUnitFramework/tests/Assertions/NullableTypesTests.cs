@@ -1,7 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-
 namespace NUnit.Framework.Assertions
 {
     [TestFixture, Category("Generics")]
@@ -72,7 +70,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void CanTestForNaN()
         {
-            double? anNaN = Double.NaN;
+            double? anNaN = double.NaN;
             Assert.IsNaN(anNaN);
             Assert.That(anNaN, Is.NaN);
         }
@@ -198,10 +196,12 @@ namespace NUnit.Framework.Assertions
             //Assert.That(3.0, Is.LessThan(decimal5));
         }
 
-        private struct MyStruct
+        private readonly struct MyStruct
         {
-            private int i;
-            private string s;
+#pragma warning disable IDE0052 // Remove unread private members
+            private readonly int i;
+            private readonly string s;
+#pragma warning restore IDE0052 // Remove unread private members
 
             public MyStruct(int i, string s)
             {
@@ -215,8 +215,8 @@ namespace NUnit.Framework.Assertions
         {
             MyStruct struct1 = new MyStruct(5, "Hello");
             MyStruct struct2 = new MyStruct(5, "Hello");
-            Nullable<MyStruct> one = new MyStruct(5, "Hello");
-            Nullable<MyStruct> two = new MyStruct(5, "Hello");
+            MyStruct? one = new MyStruct(5, "Hello");
+            MyStruct? two = new MyStruct(5, "Hello");
 
             Assert.AreEqual(struct1, struct2); // Control
             Assert.AreEqual(one, two);
