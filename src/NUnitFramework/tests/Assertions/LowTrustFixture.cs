@@ -51,7 +51,7 @@ namespace NUnit.Framework.Assertions
     /// <summary>
     /// A facade for an <see cref="AppDomain"/> with partial trust privileges.
     /// </summary>
-    public class TestSandBox : IDisposable
+    public sealed class TestSandBox : IDisposable
     {
         private readonly AppDomain _appDomain;
 
@@ -111,13 +111,14 @@ namespace NUnit.Framework.Assertions
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
         /// Unloads the <see cref="AppDomain"/>.
         /// </summary>
         /// <param name="disposing">Indicates whether this method is called from <see cref="Dispose()"/>.</param>
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             AppDomain.Unload(_appDomain);
         }
