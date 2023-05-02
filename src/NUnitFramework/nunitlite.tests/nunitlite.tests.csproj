@@ -25,4 +25,8 @@
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
+  </ItemGroup>
+
 </Project>

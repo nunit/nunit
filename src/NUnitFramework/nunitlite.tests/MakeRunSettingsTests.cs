@@ -27,7 +27,7 @@ namespace NUnitLite.Tests
             var settings = TextRunner.MakeRunSettings(options);
 
             Assert.That(settings.ContainsKey(key));
-            Assert.AreEqual(value, settings[key]);
+            Assert.That(settings[key], Is.EqualTo(value));
         }
     }
 }
