@@ -13,9 +13,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<attributeexists NUnit.Framework.TestFixtureAttribute>";
         }
 
-        static object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
-
-        static object[] FailureData = new object[] { 
+        private static object[] SuccessData = new object[] { typeof(AttributeExistsConstraintTests) };
+        private static object[] FailureData = new object[] { 
             new TestCaseData( typeof(D2), "<" + typeof(D2).FullName + ">" ) };
 
         [Test]
@@ -40,10 +39,10 @@ namespace NUnit.Framework.Constraints
                 Has.Attribute(typeof(DescriptionAttribute)).Property("Properties").Property("Keys").Contains("Description"));
         }
 
-        class B { }
+        private class B { }
 
-        class D1 : B { }
+        private class D1 : B { }
 
-        class D2 : D1 { }
+        private class D2 : D1 { }
     }
 }

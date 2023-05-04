@@ -9,7 +9,7 @@ namespace NUnit.Framework.Internal
 
     namespace DifferingNamespace1
     {
-        class Dummy
+        internal class Dummy
         {
             internal readonly int value;
 
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        class DummyGeneric<T>
+        internal class DummyGeneric<T>
         {
             public DummyGeneric(T obj)
             { }
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Internal
 
     namespace DifferingNamespace2
     {
-        class Dummy
+        internal class Dummy
         {
             internal readonly int value;
 
@@ -51,42 +51,42 @@ namespace NUnit.Framework.Internal
 
     namespace A
     {
-        class GenA<T>
+        internal class GenA<T>
         { }
 
-        class GenB<T>
+        internal class GenB<T>
         { }
 
-        class GenC<T, R>
+        internal class GenC<T, R>
         { }
 
         namespace B
         {
-            class GenX<T>
+            internal class GenX<T>
             { }
 
-            class GenY<T>
+            internal class GenY<T>
             { }
         }
     }
 
     namespace B
     {
-        class GenA<T>
+        internal class GenA<T>
         { }
 
-        class GenB<T>
+        internal class GenB<T>
         { }
 
-        class GenC<T, R>
+        internal class GenC<T, R>
         { }
 
         namespace B
         {
-            class GenX<T>
+            internal class GenX<T>
             { }
 
-            class GenY<T>
+            internal class GenY<T>
             { }
         }
     }
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
     {
         #region Mock types
 
-        class Dummy
+        private class Dummy
         {
             internal readonly int value;
 
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        class Dummy1
+        private class Dummy1
         {
             internal readonly int value;
 
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        class DummyGenericClass<T>
+        private class DummyGenericClass<T>
         {
             private readonly object _obj;
 
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        TypeNameDifferenceResolver _differenceGetter;
+        private TypeNameDifferenceResolver _differenceGetter;
 
         [SetUp]
         public void TestSetup()

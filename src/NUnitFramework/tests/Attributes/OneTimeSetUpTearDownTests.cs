@@ -353,7 +353,7 @@ namespace NUnit.Framework.Attributes
     }
 
     [TestFixture]
-    class ChangesMadeInFixtureSetUp
+    internal class ChangesMadeInFixtureSetUp
     {
         [OneTimeSetUp]
         public void OneTimeSetUp()

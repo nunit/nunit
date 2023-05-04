@@ -8,74 +8,74 @@ namespace NUnit.Framework.Internal
 {
     public class GenericMethodHelperTests
     {
-        static TestCaseData[] TypeArgData = new[] {
-            new TestCaseData("MethodWithOneTypeAndOneParameter",
+        private static TestCaseData[] TypeArgData = new[] {
+            new TestCaseData(nameof(MethodWithOneTypeAndOneParameter),
                 ArgList(42),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+            new TestCaseData(nameof(MethodWithOneTypeAndTwoParameters),
                 ArgList(42, 99),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+            new TestCaseData(nameof(MethodWithOneTypeAndTwoParameters),
                 ArgList(42.0, 99.0),
                 TypeArgs<double>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+            new TestCaseData(nameof(MethodWithOneTypeAndTwoParameters),
                 ArgList(42, 99.0),
                 TypeArgs<double>()),
-            new TestCaseData("MethodWithOneTypeAndTwoParameters",
+            new TestCaseData(nameof(MethodWithOneTypeAndTwoParameters),
                 ArgList(42.0, 99),
                 TypeArgs<double>()),
-            new TestCaseData("MethodWithOneTypeAndThreeParameters",
+            new TestCaseData(nameof(MethodWithOneTypeAndThreeParameters),
                 ArgList(42, -1, 7),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithTwoTypesAndTwoParameters",
+            new TestCaseData(nameof(MethodWithTwoTypesAndTwoParameters),
                 ArgList(42, "Answer"),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithTwoTypesAndTwoParameters_Reversed",
+            new TestCaseData(nameof(MethodWithTwoTypesAndTwoParameters_Reversed),
                 ArgList("Answer", 42),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithTwoTypesAndThreeParameters",
+            new TestCaseData(nameof(MethodWithTwoTypesAndThreeParameters),
                 ArgList(42, "Answer", 42),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithTwoTypesAndFourParameters",
+            new TestCaseData(nameof(MethodWithTwoTypesAndFourParameters),
                 ArgList("Question", 1, "Answer", 42),
                 TypeArgs<int,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order123",
+            new TestCaseData(nameof(MethodWithThreeTypes_Order123),
                 ArgList(42, 42.0, "forty-two"),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order132",
+            new TestCaseData(nameof(MethodWithThreeTypes_Order132),
                 ArgList(42, "forty-two", 42.0),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order321",
+            new TestCaseData(nameof(MethodWithThreeTypes_Order321),
                 ArgList("forty-two", 42.0, 42),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithThreeTypes_Order213",
+            new TestCaseData(nameof(MethodWithThreeTypes_Order213),
                 ArgList(42.0, 42, "forty-two"),
                 TypeArgs<int,double,string>()),
-            new TestCaseData("MethodWithOneTypeAndOneParameter",
+            new TestCaseData(nameof(MethodWithOneTypeAndOneParameter),
                 ArgList(new[] { 1, 2, 3 }),
                 TypeArgs<int[]>()),
-            new TestCaseData("MethodWithGenericListOfType",
+            new TestCaseData(nameof(MethodWithGenericListOfType),
                 ArgList(new List<int>()),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericListOfType",
+            new TestCaseData(nameof(MethodWithGenericListOfType),
                 ArgList(new LinkedList<int>()),
                 null),
-            new TestCaseData("MethodWithGenericListOfLists",
+            new TestCaseData(nameof(MethodWithGenericListOfLists),
                 ArgList(new List<List<int>>()),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericEnumerableOfType",
+            new TestCaseData(nameof(MethodWithGenericEnumerableOfType),
                 ArgList(new List<int>(new[] { 1, 2, 3 })),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericEnumerableOfType",
+            new TestCaseData(nameof(MethodWithGenericEnumerableOfType),
                 ArgList(new[] { 1, 2, 3 }),
                 TypeArgs<int>()),
-            new TestCaseData("MethodWithGenericEnumerableOfTypeAsSecondArg",
+            new TestCaseData(nameof(MethodWithGenericEnumerableOfTypeAsSecondArg),
                 ArgList("X", new int[] { } ),
                 TypeArgs<string,int>()),
-            new TestCaseData("MethodTakingDictionary",
+            new TestCaseData(nameof(MethodTakingDictionary),
                 ArgList(new Dictionary<string, object>()),
                 TypeArgs<string,object>()),
-            new TestCaseData("MethodWithNestedTypes",
+            new TestCaseData(nameof(MethodWithNestedTypes),
                 ArgList(new List<Dictionary<string, int>>(), new Dictionary<int, List<string[]>>() ),
                 TypeArgs<string,int,string[]>()),
             new TestCaseData(nameof(MethodWithOneTypeUsedDirectlyAndAsAnArray),
@@ -100,29 +100,42 @@ namespace NUnit.Framework.Internal
         private static Type[] TypeArgs<T1, T2>() { return new[] { typeof(T1), typeof(T2) }; }
         private static Type[] TypeArgs<T1, T2, T3>() { return new[] { typeof(T1), typeof(T2), typeof(T3) }; }
 
-        void MethodWithOneTypeAndOneParameter<T>(T x) { }
-        void MethodWithOneTypeAndTwoParameters<T>(T x, T y) { }
-        void MethodWithOneTypeAndThreeParameters<T>(T x, T y, T z) { }
+        private void MethodWithOneTypeAndOneParameter<T>(T x) { }
 
-        void MethodWithTwoTypesAndTwoParameters<T, U>(T x, U y) { }
-        void MethodWithTwoTypesAndTwoParameters_Reversed<T, U>(U x, T y) { }
-        void MethodWithTwoTypesAndThreeParameters<T, U>(T x, U y, T z) { }
-        void MethodWithTwoTypesAndFourParameters<T, U>(U q, T x, U y, T z) { }
+        private void MethodWithOneTypeAndTwoParameters<T>(T x, T y) { }
 
-        void MethodWithThreeTypes_Order123<T, U, V>(T x, U y, V z) { }
-        void MethodWithThreeTypes_Order132<T, U, V>(T x, V y, U z) { }
-        void MethodWithThreeTypes_Order321<T, U, V>(V x, U y, T z) { }
-        void MethodWithThreeTypes_Order213<T, U, V>(U x, T y, V z) { }
+        private void MethodWithOneTypeAndThreeParameters<T>(T x, T y, T z) { }
 
-        void MethodWithGenericListOfType<T>(List<T> c) { }
-        void MethodWithGenericListOfLists<T>(List<List<T>> c) { }
-        void MethodWithGenericEnumerableOfType<T>(IEnumerable<T> c) { }
-        void MethodWithGenericEnumerableOfTypeAsSecondArg<T, U>(T x, IEnumerable<U> c) { }
+        private void MethodWithTwoTypesAndTwoParameters<T, U>(T x, U y) { }
 
-        void MethodTakingDictionary<T, U>(Dictionary<T, U> d) { }
-        void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) { }
+        private void MethodWithTwoTypesAndTwoParameters_Reversed<T, U>(U x, T y) { }
 
-        void MethodWithOneTypeUsedDirectlyAndAsAnArray<T>(T value, T[] array) { }
-        void MethodWithOneTypeUsedAsAnArrayAndDirectly<T>(T[] array, T value) { }
+        private void MethodWithTwoTypesAndThreeParameters<T, U>(T x, U y, T z) { }
+
+        private void MethodWithTwoTypesAndFourParameters<T, U>(U q, T x, U y, T z) { }
+
+        private void MethodWithThreeTypes_Order123<T, U, V>(T x, U y, V z) { }
+
+        private void MethodWithThreeTypes_Order132<T, U, V>(T x, V y, U z) { }
+
+        private void MethodWithThreeTypes_Order321<T, U, V>(V x, U y, T z) { }
+
+        private void MethodWithThreeTypes_Order213<T, U, V>(U x, T y, V z) { }
+
+        private void MethodWithGenericListOfType<T>(List<T> c) { }
+
+        private void MethodWithGenericListOfLists<T>(List<List<T>> c) { }
+
+        private void MethodWithGenericEnumerableOfType<T>(IEnumerable<T> c) { }
+
+        private void MethodWithGenericEnumerableOfTypeAsSecondArg<T, U>(T x, IEnumerable<U> c) { }
+
+        private void MethodTakingDictionary<T, U>(Dictionary<T, U> d) { }
+
+        private void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) { }
+
+        private void MethodWithOneTypeUsedDirectlyAndAsAnArray<T>(T value, T[] array) { }
+
+        private void MethodWithOneTypeUsedAsAnArrayAndDirectly<T>(T[] array, T value) { }
     }
 }

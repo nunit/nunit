@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class CallContextTests
     {
-        const string CONTEXT_DATA = "MyContextData";
+        private const string CONTEXT_DATA = "MyContextData";
 //		IPrincipal savedPrincipal;
 
 //		[SetUp]

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    class SomeItemsConstraintTests
+    internal class SomeItemsConstraintTests
     {
         [Test]
         public void EqualConstraintUsingDoesNotThrow()

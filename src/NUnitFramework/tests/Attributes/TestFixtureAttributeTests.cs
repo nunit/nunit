@@ -6,9 +6,9 @@ namespace NUnit.Framework.Attributes
 {
     public class TestFixtureAttributeTests
     {
-        static readonly object[] fixtureArgs = { 10, 20, "Charlie" };
-        static readonly Type[] typeArgs = { typeof(int), typeof(string) };
-        static readonly object[] combinedArgs = { typeof(int), typeof(string), 10, 20, "Charlie" };
+        private static readonly object[] fixtureArgs = { 10, 20, "Charlie" };
+        private static readonly Type[] typeArgs = { typeof(int), typeof(string) };
+        private static readonly object[] combinedArgs = { typeof(int), typeof(string), 10, 20, "Charlie" };
 
         [Test]
         public void ConstructWithoutArguments()

@@ -13,9 +13,9 @@ namespace NUnit.Framework.Attributes
     [TestFixture(null, null, null)]
     public class NullableParameterizedTestFixture
     {
-        int? _one;
-        int? _two;
-        int? _expected;
+        private int? _one;
+        private int? _two;
+        private int? _expected;
 
         public NullableParameterizedTestFixture(int? one, int? two, int? expected)
         {
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Attributes
 
     public class ParameterizedTestFixtureNamingTests
     {
-        TestSuite fixture;
+        private TestSuite fixture;
 
         [SetUp]
         public void MakeFixture()

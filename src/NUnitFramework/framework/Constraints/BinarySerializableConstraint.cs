@@ -13,7 +13,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class BinarySerializableConstraint : Constraint
     {
-        readonly BinaryFormatter serializer = new BinaryFormatter();
+        private readonly BinaryFormatter serializer = new BinaryFormatter();
 
         /// <summary>
         /// The Description of what this constraint tests, for

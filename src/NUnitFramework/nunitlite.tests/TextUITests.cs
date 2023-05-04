@@ -228,7 +228,7 @@ namespace NUnitLite.Tests
         }
 
 #pragma warning disable 414
-        static readonly TestCaseData[] ImmediateOutputData = new[] {
+        private static readonly TestCaseData[] ImmediateOutputData = new[] {
             new TestCaseData("Off",
                 new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
                 "OUTPUT\n"),

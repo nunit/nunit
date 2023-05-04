@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class ConstraintExpressionTests
     {
-        static readonly Func<int, int, bool> myIntComparer = (x, y) => x == y;
+        private static readonly Func<int, int, bool> myIntComparer = (x, y) => x == y;
 
         [Test]
         public void ConstraintExpressionMemberAnd()

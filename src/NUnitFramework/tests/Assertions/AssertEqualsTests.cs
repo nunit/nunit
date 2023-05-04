@@ -553,7 +553,7 @@ namespace NUnit.Framework.Assertions
 
         private sealed class IntEquatable : IEquatable<int>
         {
-            readonly int _i;
+            private readonly int _i;
 
             public IntEquatable(int i)
             {
@@ -574,7 +574,7 @@ namespace NUnit.Framework.Assertions
     /// </summary>
     internal sealed class ThrowsIfToStringIsCalled
     {
-        readonly int _x;
+        private readonly int _x;
 
         public ThrowsIfToStringIsCalled(int x)
         {

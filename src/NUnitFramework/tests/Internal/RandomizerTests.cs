@@ -721,13 +721,13 @@ namespace NUnit.Framework.Internal
                 Assert.That(r1, Is.Not.SameAs(r2));
             }
 
-            static readonly MethodInfo testMethod1 =
+            private static readonly MethodInfo testMethod1 =
                 typeof(Repeatability).GetMethod(nameof(TestMethod1), BindingFlags.NonPublic | BindingFlags.Static);
             private static void TestMethod1(int x, int y)
             {
             }
 
-            static readonly MethodInfo testMethod2 =
+            private static readonly MethodInfo testMethod2 =
                 typeof(Repeatability).GetMethod(nameof(TestMethod2), BindingFlags.NonPublic | BindingFlags.Static);
             private static void TestMethod2(int x, int y)
             {

@@ -119,7 +119,7 @@ namespace NUnit.Framework.Internal.Execution
             Workers.Add(worker);
         }
 
-        bool _firstStart = true;
+        private bool _firstStart = true;
 
         /// <summary>
         /// Start or restart processing for the shift

@@ -15,9 +15,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<substring \"hello\">";
         }
 
-        static object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
-
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { "hello", "hello there", "I said hello", "say hello to fred" };
+        private static object[] FailureData = new object[] {
             new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "HELLO", "\"HELLO\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
@@ -118,9 +117,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<substring \"hello\">";
         }
 
-        static object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
-
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { "Hello", "HellO there", "I said HELLO", "say hello to fred" };
+        private static object[] FailureData = new object[] {
             new TestCaseData( "goodbye", "\"goodbye\"" ),
             new TestCaseData( "What the hell?", "\"What the hell?\"" ),
             new TestCaseData( string.Empty, "<string.Empty>" ),

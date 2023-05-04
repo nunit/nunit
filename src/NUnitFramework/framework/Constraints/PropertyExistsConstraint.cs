@@ -17,8 +17,7 @@ namespace NUnit.Framework.Constraints
     public class PropertyExistsConstraint : Constraint
     {
         private readonly string name;
-
-        Type? actualType;
+        private Type? actualType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyExistsConstraint"/> class.

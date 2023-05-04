@@ -18,10 +18,9 @@ namespace NUnit.Framework.Internal.Builders
     {
         #region Messages
 
-        const string NO_TYPE_ARGS_MSG =
+        private const string NO_TYPE_ARGS_MSG =
             "Fixture type contains generic parameters. You must either provide Type arguments or specify constructor arguments that allow NUnit to deduce the Type arguments.";
-
-        const string PARALLEL_NOT_ALLOWED_MSG =
+        private const string PARALLEL_NOT_ALLOWED_MSG =
             "ParallelizableAttribute is only allowed on test methods and fixtures";
 
         #endregion

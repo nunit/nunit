@@ -20,8 +20,7 @@ namespace NUnit.Framework.Internal.Execution
     public class SimpleWorkItem : WorkItem
     {
         private readonly IDebugger _debugger;
-
-        readonly TestMethod _testMethod;
+        private readonly TestMethod _testMethod;
 
         /// <summary>
         /// Construct a simple work item for a test.

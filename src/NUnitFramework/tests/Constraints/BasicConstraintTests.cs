@@ -13,9 +13,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<null>";
         }
 
-        static object[] SuccessData = new object[] { null };
-
-        static object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
+        private static object[] SuccessData = new object[] { null };
+        private static object[] FailureData = new object[] { new object[] { "hello", "\"hello\"" } };
     }
 
     [TestFixture]
@@ -29,9 +28,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<true>";
         }
 
-        static object[] SuccessData = new object[] { true, 2+2==4 };
-
-        static object[] FailureData = new object[] { 
+        private static object[] SuccessData = new object[] { true, 2+2==4 };
+        private static object[] FailureData = new object[] { 
             new object[] { null, "null" }, new object[] { "hello", "\"hello\"" },
             new object[] { false, "False"}, new object[] { 2+2==5, "False" } };
     }
@@ -47,9 +45,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<false>";
         }
 
-        static object[] SuccessData = new object[] { false, 2 + 2 == 5 };
-
-        static object[] FailureData = new object[] { 
+        private static object[] SuccessData = new object[] { false, 2 + 2 == 5 };
+        private static object[] FailureData = new object[] { 
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( true, "True" ),
@@ -67,9 +64,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<nan>";
         }
 
-        static object[] SuccessData = new object[] { double.NaN, float.NaN };
-
-        static object[] FailureData = new object[] { 
+        private static object[] SuccessData = new object[] { double.NaN, float.NaN };
+        private static object[] FailureData = new object[] { 
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( 42, "42" ), 

@@ -9,8 +9,8 @@ namespace NUnit.Framework.Syntax
     [TestFixture]
     public class ArbitraryConstraintMatching
     {
-        readonly Constraint custom = new CustomConstraint();
-        readonly Constraint another = new AnotherConstraint();
+        private readonly Constraint custom = new CustomConstraint();
+        private readonly Constraint another = new AnotherConstraint();
 
         [Test]
         public void CanMatchCustomConstraint()
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Syntax
             Assert.That(42, constraint);
         }
 
-        bool IsEven(int num)
+        private bool IsEven(int num)
         {
             return (num & 1) == 0;
         }
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Syntax
             Assert.That(42, constraint);
         }
 
-        class CustomConstraint : Constraint
+        private class CustomConstraint : Constraint
         {
             public override string Description => throw new NotImplementedException();
 
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Syntax
             }
         }
 
-        class AnotherConstraint : CustomConstraint
+        private class AnotherConstraint : CustomConstraint
         {
         }
 

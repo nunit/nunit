@@ -8,9 +8,9 @@ namespace NUnit.Framework.Internal
     public class RuntimeFrameworkTests
     {
 #if NETCOREAPP
-        static readonly RuntimeType currentRuntime = RuntimeType.NetCore;
+        private static readonly RuntimeType currentRuntime = RuntimeType.NetCore;
 #else
-        static readonly RuntimeType currentRuntime =
+        private static readonly RuntimeType currentRuntime =
             Type.GetType("Mono.Runtime", false) != null
                 ? RuntimeType.Mono
                 : RuntimeType.NetFramework;

@@ -9,7 +9,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class PropertyAttributeTests
     {
-        TestSuite fixture;
+        private TestSuite fixture;
 
         [SetUp]
         public void CreateFixture()

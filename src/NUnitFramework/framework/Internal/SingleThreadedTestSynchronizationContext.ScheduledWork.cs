@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace NUnit.Framework.Internal
 {
-    partial class SingleThreadedTestSynchronizationContext
+    internal partial class SingleThreadedTestSynchronizationContext
     {
         private struct ScheduledWork
         {

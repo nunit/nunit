@@ -28,9 +28,9 @@ namespace NUnit.Framework.Constraints
     {
         private const string Message = ": Must be implemented in derived class";
 
-        static object[] SuccessData => throw new NotImplementedException(nameof(SuccessData) + Message);
+        private static object[] SuccessData => throw new NotImplementedException(nameof(SuccessData) + Message);
 
-        static object[] FailureData => throw new NotImplementedException(nameof(FailureData) + Message);
+        private static object[] FailureData => throw new NotImplementedException(nameof(FailureData) + Message);
 
         [Test, TestCaseSource(nameof(SuccessData))]
         public void SucceedsWithGoodValues(object value)

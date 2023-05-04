@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
 
         // Set whenever we fail to support a list of platforms
 
-        const string CommonOSPlatforms =
+        private const string CommonOSPlatforms =
             "Win,Win32,Win32S,Win32NT,Win32Windows,Win95,Win98,WinMe,NT3,NT4,NT5,NT6," +
             "Win2008Server,Win2008ServerR2,Win2012Server,Win2012ServerR2," +
             "Win2K,WinXP,Win2003Server,Vista,Win7,Windows7,Win8,Windows8,"+

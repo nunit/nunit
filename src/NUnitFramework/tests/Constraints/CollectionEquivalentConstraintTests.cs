@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
 {
     public class CollectionEquivalentConstraintTests
     {
-        const int SIZE = 10000; // For large collection tests
+        private const int SIZE = 10000; // For large collection tests
 
         [Test]
         public void EqualCollectionsAreEquivalent()
@@ -287,8 +287,8 @@ namespace NUnit.Framework.Constraints
 
         // The following tests are each running in 14ms to 46ms on my machine. Based on that,
         // warn at 100ms and fail at 500ms
-        const int LARGE_COLLECTION_WARN_TIME = 100;
-        const int LARGE_COLLECTION_FAIL_TIME = 500;
+        private const int LARGE_COLLECTION_WARN_TIME = 100;
+        private const int LARGE_COLLECTION_FAIL_TIME = 500;
 
         [Test(Description = "Issue #2799 - CollectionAssert.AreEquivalent is extremely slow")]
         [Timeout(LARGE_COLLECTION_FAIL_TIME)]

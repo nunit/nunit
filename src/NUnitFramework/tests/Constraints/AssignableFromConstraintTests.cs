@@ -13,15 +13,14 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = $"<assignablefrom {typeof(D1)}>";
         }
 
-        static object[] SuccessData = new object[] { new D1(), new B() };
-
-        static object[] FailureData = new object[] { 
+        private static object[] SuccessData = new object[] { new D1(), new B() };
+        private static object[] FailureData = new object[] { 
             new TestCaseData( new D2(), "<" + typeof(D2).FullName + ">" ) };
 
-        class B { }
+        private class B { }
 
-        class D1 : B { }
+        private class D1 : B { }
 
-        class D2 : D1 { }
+        private class D2 : D1 { }
     }
 }

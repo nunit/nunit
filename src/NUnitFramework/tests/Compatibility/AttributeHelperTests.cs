@@ -102,7 +102,7 @@ namespace NUnit.Framework.Compatibility
         }
 
         [Category("A Category")]
-        class A
+        private class A
         {
             [Author("John Doe")]
             public int Add([Random(1)]int x, [Random(1)]int y)
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Compatibility
             public int Field = 1;
         }
 
-        class B : A
+        private class B : A
         {
         }
     }

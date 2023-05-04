@@ -10,7 +10,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Api
 {
     // https://github.com/nunit/nunit/issues/2614
-    class FrameworkControllerCallContextTests
+    internal class FrameworkControllerCallContextTests
     {
         private object _origExecutionContext;
         private const string MockAssemblyFile = "mock-assembly.dll";

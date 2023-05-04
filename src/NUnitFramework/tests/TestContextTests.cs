@@ -59,7 +59,7 @@ namespace NUnit.Framework
             Assert.That(testDirectory, Is.EqualTo(_testDirectory));
         }
 
-        static IEnumerable<string> TestDirectorySource()
+        private static IEnumerable<string> TestDirectorySource()
         {
             yield return TestContext.CurrentContext.TestDirectory;
         }
@@ -88,7 +88,7 @@ namespace NUnit.Framework
             Assert.That(workDirectory, Is.EqualTo(_workDirectory));
         }
 
-        static IEnumerable<string> WorkDirectorySource()
+        private static IEnumerable<string> WorkDirectorySource()
         {
             yield return TestContext.CurrentContext.WorkDirectory;
         }

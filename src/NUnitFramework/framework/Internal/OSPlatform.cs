@@ -185,7 +185,7 @@ namespace NUnit.Framework.Internal
         }
 #else
         [StructLayout(LayoutKind.Sequential)]
-        struct OSVERSIONINFOEX
+        private struct OSVERSIONINFOEX
         {
 #pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
             public uint dwOSVersionInfoSize;
@@ -318,7 +318,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool IsMacOSX => Platform == MacOSXPlatformID;
 
-        static int UnameSafe(IntPtr buf)
+        private static int UnameSafe(IntPtr buf)
         {
             try
             {
@@ -332,11 +332,12 @@ namespace NUnit.Framework.Internal
         }
 
         [DllImport("libc")]
+        private
 #pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
         static extern int uname(IntPtr buf);
 #pragma warning restore IDE1006
 
-        static bool CheckIfIsMacOSX(PlatformID platform)
+        private static bool CheckIfIsMacOSX(PlatformID platform)
         {
             if (platform == PlatformID.MacOSX)
                 return true;

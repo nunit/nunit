@@ -200,8 +200,8 @@ namespace NUnit.Framework.Assertions
 
         private struct MyStruct
         {
-            int i;
-            string s;
+            private int i;
+            private string s;
 
             public MyStruct(int i, string s)
             {

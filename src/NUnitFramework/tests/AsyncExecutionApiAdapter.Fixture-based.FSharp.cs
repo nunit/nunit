@@ -2,7 +2,7 @@
 
 namespace NUnit.Framework
 {
-    partial class AsyncExecutionApiAdapter
+    public partial class AsyncExecutionApiAdapter
     {
         private sealed class FSharpTaskReturningTestMethodAdapter : AsyncExecutionApiAdapter
         {

@@ -146,8 +146,8 @@ using System.Text.RegularExpressions;
 namespace NUnit.Options
 {
     public class OptionValueCollection : IList, IList<string> {
-        readonly List<string> values = new List<string>();
-        readonly OptionContext c;
+        private readonly List<string> values = new List<string>();
+        private readonly OptionContext c;
 
         internal OptionValueCollection (OptionContext c)
         {
@@ -276,12 +276,12 @@ namespace NUnit.Options
     }
 
     public abstract class Option {
-        readonly string prototype;
-        readonly string description;
-        readonly string[] names;
-        readonly OptionValueType type;
-        readonly int count;
-        string[] separators;
+        private readonly string prototype;
+        private readonly string description;
+        private readonly string[] names;
+        private readonly OptionValueType type;
+        private readonly int count;
+        private string[] separators;
 
         protected Option (string prototype, string description)
             : this (prototype, description, 1)
@@ -364,7 +364,7 @@ namespace NUnit.Options
         internal string[] Names => names;
         internal string[] ValueSeparators => separators;
 
-        static readonly char[] NameTerminator = new[]{'=', ':'};
+        private static readonly char[] NameTerminator = new[]{'=', ':'};
 
         private OptionValueType ParsePrototype ()
         {
@@ -496,7 +496,7 @@ namespace NUnit.Options
 
     public class OptionSet : KeyedCollection<string, Option>
     {
-        string Localizer(string msg)
+        private string Localizer(string msg)
         {
             return msg;
         }
@@ -565,8 +565,8 @@ namespace NUnit.Options
             return this;
         }
 
-        sealed class ActionOption : Option {
-            readonly Action<OptionValueCollection> action;
+        private sealed class ActionOption : Option {
+            private readonly Action<OptionValueCollection> action;
 
             public ActionOption (string prototype, string description, int count, Action<OptionValueCollection> action)
                 : base (prototype, description, count)
@@ -612,8 +612,8 @@ namespace NUnit.Options
             return this;
         }
 
-        sealed class ActionOption<T> : Option {
-            readonly Action<T> action;
+        private sealed class ActionOption<T> : Option {
+            private readonly Action<T> action;
 
             public ActionOption (string prototype, string description, Action<T> action)
                 : base (prototype, description, 1)
@@ -629,8 +629,8 @@ namespace NUnit.Options
             }
         }
 
-        sealed class ActionOption<TKey, TValue> : Option {
-            readonly OptionAction<TKey, TValue> action;
+        private sealed class ActionOption<TKey, TValue> : Option {
+            private readonly OptionAction<TKey, TValue> action;
 
             public ActionOption (string prototype, string description, OptionAction<TKey, TValue> action)
                 : base (prototype, description, 2)
@@ -873,7 +873,7 @@ namespace NUnit.Options
             }
         }
 
-        bool WriteOptionPrototype (TextWriter o, Option p, ref int written)
+        private bool WriteOptionPrototype (TextWriter o, Option p, ref int written)
         {
             string[] names = p.Names;
 
@@ -916,7 +916,7 @@ namespace NUnit.Options
             return true;
         }
 
-        static int GetNextOptionIndex (string[] names, int i)
+        private static int GetNextOptionIndex (string[] names, int i)
         {
             while (i < names.Length && names [i] == "<>") {
                 ++i;
@@ -924,7 +924,7 @@ namespace NUnit.Options
             return i;
         }
 
-        static void Write (TextWriter o, ref int n, string s)
+        private static void Write (TextWriter o, ref int n, string s)
         {
             n += s.Length;
             o.Write (s);

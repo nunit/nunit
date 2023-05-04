@@ -9,7 +9,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class RangeConstraintTest : ConstraintTestBase
     {
-        RangeConstraint rangeConstraint;
+        private RangeConstraint rangeConstraint;
 
         [SetUp]
         public void SetUp()
@@ -19,9 +19,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<range 5 42>";
         }
 
-        static object[] SuccessData = new object[] { 5, 23, 42 };
-
-        static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
+        private static object[] SuccessData = new object[] { 5, 23, 42 };
+        private static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { 43, "43" } };
 
         [TestCase(null)]
         [TestCase("xxx")]

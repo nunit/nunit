@@ -63,7 +63,7 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         }
     }
 
-    class CustomException : Exception
+    internal class CustomException : Exception
     {
         #pragma warning disable 414
         private CustomType custom;
@@ -76,7 +76,7 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         }
     }
 
-    class CustomType
+    internal class CustomType
     {
     }
 

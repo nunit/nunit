@@ -75,7 +75,7 @@ namespace NUnit.Framework.Assertions
         }
 #endif
 
-        static class AdhocTests
+        private static class AdhocTests
         {
             private static readonly MethodInfo[] _methods =
                 typeof(AdhocTests).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);

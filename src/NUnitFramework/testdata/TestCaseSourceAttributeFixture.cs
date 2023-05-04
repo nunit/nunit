@@ -80,7 +80,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             Assert.AreEqual("InstanceProperty", source);
         }
 
-        IEnumerable InstanceProperty =>
+        private IEnumerable InstanceProperty =>
             new object[]
             {
                 new object[] { "InstanceProperty" }
@@ -92,7 +92,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             Assert.AreEqual("InstanceMethod", source);
         }
 
-        IEnumerable InstanceMethod()
+        private IEnumerable InstanceMethod()
         {
             return new object[] { new object[] { "InstanceMethod" } };
         }
@@ -104,7 +104,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         }
 
 #pragma warning disable 414
-        object[] InstanceField = { new object[] { "InstanceField" } };
+        private object[] InstanceField = { new object[] { "InstanceField" } };
 #pragma warning restore 414
 
         #endregion
@@ -139,7 +139,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         {
         }
 
-        static IEnumerable ExceptionSource
+        private static IEnumerable ExceptionSource
         {
             get
             {
@@ -150,10 +150,10 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        class DivideDataProvider
+        private class DivideDataProvider
         {
 #pragma warning disable 0169, 0649    // x is never assigned
-            static object[] myObject;
+            private static object[] myObject;
             public static string MyField;
 #pragma warning restore 0169, 0649
             public static int MyProperty { get; set; }
@@ -171,7 +171,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        static object[] ComplexArrayBasedTestInput = new[]
+        private static object[] ComplexArrayBasedTestInput = new[]
         {
             new[] { 1, "text", new object() },
             Array.Empty<object>(),
@@ -180,7 +180,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             new object[] { new byte[,] { { 1, 2 }, { 2, 3 } } }
         };
 
-        static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
+        private static IEnumerable<TestCaseData> ComplexArrayBasedTestInputTestCases()
         {
             foreach (var argumentValue in ComplexArrayBasedTestInput)
                 yield return new TestCaseData(args: new[] { argumentValue });

@@ -25,15 +25,12 @@ namespace NUnit.Framework.Internal
         private TestExecutionContext _fixtureContext;
         private TestExecutionContext _setupContext;
         private ResultState _fixtureResult;
-
-        string originalDirectory;
-
-        CultureInfo originalCulture;
-        CultureInfo originalUICulture;
-        IPrincipal originalPrincipal;
-
-        readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
-        readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
+        private string originalDirectory;
+        private CultureInfo originalCulture;
+        private CultureInfo originalUICulture;
+        private IPrincipal originalPrincipal;
+        private readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
+        private readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
 
         [OneTimeSetUp]
         public void OneTimeSetUp()

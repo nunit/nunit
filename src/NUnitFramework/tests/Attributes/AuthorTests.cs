@@ -13,7 +13,7 @@ namespace NUnit.Framework.Attributes
     [TestOf(typeof(AuthorAttribute))]
     public class AuthorTests
     {
-        static readonly Type FixtureType = typeof(AuthorFixture);
+        private static readonly Type FixtureType = typeof(AuthorFixture);
 
         [Test]
         public void ReflectionTest()

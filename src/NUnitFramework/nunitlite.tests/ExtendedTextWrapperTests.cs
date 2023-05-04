@@ -101,7 +101,7 @@ namespace NUnit.Common.Tests
             }
         }
 
-        class DisposeCheckerWriter : StringWriter
+        private class DisposeCheckerWriter : StringWriter
         {
             public bool IsDisposed { get; private set; }
             protected override void Dispose(bool disposing)

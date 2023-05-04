@@ -29,7 +29,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo(true));
         }
 
-        static IEnumerable StaticProperty =>
+        private static IEnumerable StaticProperty =>
             new object[]
             {
                 new object[] { "StaticProperty" }
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("StaticMethod"));
         }
 
-        static IEnumerable StaticMethod()
+        private static IEnumerable StaticMethod()
         {
             return new object[] { new object[] { "StaticMethod" } };
         }
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(ResultState.NotRunnable, Is.EqualTo(result.Children.ToArray()[0].ResultState));
         }
 
-        IEnumerable InstanceMethod()
+        private IEnumerable InstanceMethod()
         {
             return new object[] { new object[] { "InstanceMethod" } };
         }
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("StaticField"));
         }
 
-        static object[] StaticField =
+        private static object[] StaticField =
             { new object[] { "StaticField" } };
 
         [Test]
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("DataSourceClass"));
         }
 
-        class DataSourceClass : IEnumerable
+        private class DataSourceClass : IEnumerable
         {
             public DataSourceClass()
             {
@@ -323,7 +323,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(suiteToTest.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
-        static object[] testCases =
+        private static object[] testCases =
         {
             new TestCaseData(
                 new[] { "A" },
@@ -343,7 +343,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(args.Length == 1 && args[0] == "1");
         }
 
-        static string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
+        private static string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
 
         #region Test name tests
 
@@ -396,17 +396,15 @@ namespace NUnit.Framework.Attributes
         }
 
         #region Sources used by the tests
-        static object[] MyData = new object[] {
+        private static object[] MyData = new object[] {
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
             new object[] { 12, 6, 2 } };
-
-        static object[] MyIntData = new object[] {
+        private static object[] MyIntData = new object[] {
             new[] { 12, 3, 4 },
             new[] { 12, 4, 3 },
             new[] { 12, 6, 2 } };
-
-        static object[] MyArrayData = new object[]
+        private static object[] MyArrayData = new object[]
         {
             new[] { 12 },
             new[] { 12, 4 },
@@ -418,18 +416,15 @@ namespace NUnit.Framework.Attributes
             yield return new object[] { inject1, inject2, inject3 };
         }
 
-        static object[] FourArgs = new object[] {
+        private static object[] FourArgs = new object[] {
             new TestCaseData( 12, 3, 4, 0 ),
             new TestCaseData( 12, 4, 3, 0 ),
             new TestCaseData( 12, 5, 2, 2 ) };
-
-        static int[] EvenNumbers = new[] { 2, 4, 6, 8 };
-
-        static object[] MoreData = new object[] {
+        private static int[] EvenNumbers = new[] { 2, 4, 6, 8 };
+        private static object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },
             new object[] { 12, 2, 6 } };
-
-        static object[] Params = new object[] {
+        private static object[] Params = new object[] {
             new TestCaseData(24, 3).Returns(8),
             new TestCaseData(24, 2).Returns(12) };
 

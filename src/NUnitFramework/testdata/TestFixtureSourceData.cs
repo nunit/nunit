@@ -55,7 +55,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         public StaticField_SameClass(string arg) : base(arg, "StaticFieldInClass") { }
 
 #pragma warning disable 414
-        static object[] StaticField = new object[] { "StaticFieldInClass" };
+        private static object[] StaticField = new object[] { "StaticFieldInClass" };
 #pragma warning restore 414
     }
 
@@ -83,7 +83,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public StaticMethod_SameClass(string arg) : base(arg, "StaticMethodInClass") { }
 
-        static object[] StaticMethod()
+        private static object[] StaticMethod()
         {
             return new object[] { new object[] { "StaticMethodInClass" } };
         }
@@ -95,7 +95,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         public InstanceField_SameClass(string arg) : base(arg, "InstanceFieldInClass") { }
 
 #pragma warning disable 414
-        object[] InstanceField = new object[] { "InstanceFieldInClass" };
+        private object[] InstanceField = new object[] { "InstanceFieldInClass" };
 #pragma warning restore 414
     }
 
@@ -104,7 +104,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public InstanceProperty_SameClass(string arg) : base(arg, "InstancePropertyInClass") { }
 
-        object[] InstanceProperty =>
+        private object[] InstanceProperty =>
             new object[]
             {
                 new object[] { "InstancePropertyInClass" }
@@ -116,7 +116,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public InstanceMethod_SameClass(string arg) : base(arg, "InstanceMethodInClass") { }
 
-        object[] InstanceMethod()
+        private object[] InstanceMethod()
         {
             return new object[] { new object[] { "InstanceMethodInClass" } };
         }
@@ -151,7 +151,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public SourceReturnsObjectArray(int x, int y, int z) : base(x, y, z) { }
 
-        static IEnumerable MyData()
+        private static IEnumerable MyData()
         {
             yield return new object[] { 12, 4, 3 };
             yield return new object[] { 12, 3, 4 };
@@ -164,7 +164,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public SourceReturnsFixtureParameters(int x, int y, int z) : base(x, y, z) { }
 
-        static IEnumerable MyData()
+        private static IEnumerable MyData()
         {
             yield return new TestFixtureParameters(12, 4, 3);
             yield return new TestFixtureParameters(12, 3, 4);
@@ -178,7 +178,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public ExtraTestFixtureAttributeIsIgnored(int x, int y, int z) : base(x, y, z) { }
 
-        static IEnumerable MyData()
+        private static IEnumerable MyData()
         {
             yield return new object[] { 12, 4, 3 };
             yield return new object[] { 12, 3, 4 };
@@ -194,7 +194,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public TestFixtureMayUseMultipleSourceAttributes(int n, int d, int q) : base(n, d, q) { }
 
-        static IEnumerable MyData()
+        private static IEnumerable MyData()
         {
             yield return new object[] { 12, 4, 3 };
             yield return new object[] { 12, 3, 4 };
@@ -202,7 +202,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
 
 #pragma warning disable 414
-        static object[] MoreData = new object[] {
+        private static object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },
             new object[] { 12, 2, 6 } };
 #pragma warning restore 414
@@ -213,7 +213,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public IndividualInstancesMayBeIgnored(string arg) : base(arg, "IgnoredData") { }
 
-        static IEnumerable IgnoredData()
+        private static IEnumerable IgnoredData()
         {
             yield return new TestFixtureData("GoodData");
             yield return new TestFixtureData("IgnoredData").Ignore("There must be a reason");
@@ -226,7 +226,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     {
         public IndividualInstancesMayBeExplicit(string arg) : base(arg, "ExplicitData") { }
 
-        static IEnumerable ExplicitData()
+        private static IEnumerable ExplicitData()
         {
             yield return new TestFixtureData("GoodData");
             yield return new TestFixtureData("ExplicitData").Explicit("Runs long");
@@ -401,7 +401,7 @@ namespace NUnit.TestData.TestFixtureSourceData
 
     #region Source Data Classes
 
-    class SourceData_IEnumerable : IEnumerable
+    internal class SourceData_IEnumerable : IEnumerable
     {
         public SourceData_IEnumerable()
         {
@@ -413,7 +413,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    class SourceData
+    internal class SourceData
     {
         public static object[] InheritedStaticProperty =>
             new object[]
@@ -422,16 +422,16 @@ namespace NUnit.TestData.TestFixtureSourceData
             };
 
 #pragma warning disable 414
-        static object[] StaticField = new object[] { "StaticField" };
+        private static object[] StaticField = new object[] { "StaticField" };
 #pragma warning restore 414
 
-        static object[] StaticProperty =>
+        private static object[] StaticProperty =>
             new object[]
             {
                 new object[] { "StaticProperty" }
             };
 
-        static object[] StaticMethod()
+        private static object[] StaticMethod()
         {
             return new object[] { new object[] { "StaticMethod" } };
         }
@@ -492,7 +492,7 @@ public class NoNamespaceTestFixtureSourceWithTwoValues
     }
 
 #pragma warning disable 414
-    static object[] MyData = { 1, 2 };
+    private static object[] MyData = { 1, 2 };
 #pragma warning restore 414
 }
 
@@ -507,7 +507,7 @@ public class NoNamespaceTestFixtureSourceWithSingleValue
     }
 
 #pragma warning disable 414
-    static object[] MyData = { 1 };
+    private static object[] MyData = { 1 };
 #pragma warning restore 414
 }
 
@@ -517,7 +517,7 @@ public class TextFixtureSourceWithParallelizableAttribute
 {
     public TextFixtureSourceWithParallelizableAttribute(string arg) { }
 
-    static IEnumerable Data()
+    private static IEnumerable Data()
     {
         yield return new TestFixtureData("a");
         yield return new TestFixtureData("b");

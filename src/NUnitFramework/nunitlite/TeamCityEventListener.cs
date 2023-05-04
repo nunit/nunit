@@ -13,7 +13,7 @@ namespace NUnitLite
     /// </summary>
     public class TeamCityEventListener : ITestListener
     {
-        readonly TextWriter _outWriter;
+        private readonly TextWriter _outWriter;
 
         /// <summary>
         /// Default constructor using Console.Out

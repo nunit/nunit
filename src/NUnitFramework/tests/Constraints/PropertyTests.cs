@@ -57,9 +57,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<propertyexists Length>";
         }
 
-        static object[] SuccessData = new object[] { Array.Empty<int>(), "hello", typeof(Array) };
-
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { Array.Empty<int>(), "hello", typeof(Array) };
+        private static object[] FailureData = new object[] {
             new TestCaseData( 42, "<System.Int32>" ),
             new TestCaseData( new List<int>(), "<System.Collections.Generic.List`1[System.Int32]>" ),
             new TestCaseData( typeof(Int32), "<System.Int32>" ) };
@@ -109,9 +108,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<property Length <equal 5>>";
         }
 
-        static object[] SuccessData = new object[] { new int[5], "hello" };
-
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { new int[5], "hello" };
+        private static object[] FailureData = new object[] {
             new TestCaseData( new int[3], "3" ),
             new TestCaseData( "goodbye", "7" ) };
 

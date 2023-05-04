@@ -21,15 +21,14 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "superset of < 1, 2, 3, 4, 5 >";
         }
 
-        static object[] SuccessData = new object[]
+        private static object[] SuccessData = new object[]
         {
             new[] { 1, 2, 3, 4, 5, 6 }
             , new[] { 1, 2, 3, 4, 5 }
             , new[] { 1, 2, 2, 2, 3, 4, 5, 3 }
             , new[] { 1, 2, 2, 2, 3, 4, 5, 7 }
         };
-
-        static object[] FailureData = new object[]
+        private static object[] FailureData = new object[]
         {
             new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >", "< 2, 4, 5 >" }
             , new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 3, 4 >" }

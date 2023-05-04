@@ -10,7 +10,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class ApplyToTestTests
     {
-        Test test;
+        private Test test;
 
         [SetUp]
         public void SetUp()
@@ -384,7 +384,7 @@ namespace NUnit.Framework.Attributes
             });
         }
 
-        string GetMyPlatform()
+        private string GetMyPlatform()
         {
             if (System.IO.Path.DirectorySeparatorChar == '/')
             {

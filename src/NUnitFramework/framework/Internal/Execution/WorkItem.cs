@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem : IDisposable
     {
-        static readonly Logger log = InternalTrace.GetLogger("WorkItem");
+        private static readonly Logger log = InternalTrace.GetLogger("WorkItem");
 
         #region Construction and Initialization
 
@@ -514,7 +514,7 @@ namespace NUnit.Framework.Internal.Execution
         /// Recursively walks up the test hierarchy to see if the
         /// <see cref="ApartmentState"/> has been set on any of the parent tests.
         /// </summary>
-        static ApartmentState GetTargetApartment(ITest test)
+        private static ApartmentState GetTargetApartment(ITest test)
         {
             var apartment = test.Properties.TryGet(PropertyNames.ApartmentState, ApartmentState.Unknown);
 

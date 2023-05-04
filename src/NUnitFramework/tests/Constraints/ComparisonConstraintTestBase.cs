@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
 
     #region Comparison Test Classes
 
-    class ClassWithIComparable : IComparable
+    internal class ClassWithIComparable : IComparable
     {
         private readonly int val;
 
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Constraints
         }
     }
 
-    class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
+    internal class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
     {
         private readonly int val;
 

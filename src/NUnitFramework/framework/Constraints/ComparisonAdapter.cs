@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public abstract int Compare(object? expected, object? actual);
 
-        class DefaultComparisonAdapter : ComparerAdapter
+        private class DefaultComparisonAdapter : ComparerAdapter
         {
             /// <summary>
             /// Construct a default ComparisonAdapter
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
             public DefaultComparisonAdapter() : base( NUnitComparer.Default ) { }
         }
 
-        class ComparerAdapter : ComparisonAdapter
+        private class ComparerAdapter : ComparisonAdapter
         {
             private readonly IComparer comparer;
 
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Constraints
         /// allows use of an <see cref="IComparer{T}"/> or <see cref="Comparison{T}"/>
         /// to actually perform the comparison.
         /// </summary>
-        class ComparerAdapter<T> : ComparisonAdapter
+        private class ComparerAdapter<T> : ComparisonAdapter
         {
             private readonly IComparer<T> comparer;
 
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class ComparisonAdapterForComparison<T> : ComparisonAdapter
+        private class ComparisonAdapterForComparison<T> : ComparisonAdapter
         {
             private readonly Comparison<T> comparison;
 

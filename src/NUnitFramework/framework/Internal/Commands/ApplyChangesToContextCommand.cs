@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal.Commands
     /// action is needed after the test runs, since the prior
     /// context will be restored automatically.
     /// </summary>
-    class ApplyChangesToContextCommand : BeforeTestCommand
+    internal class ApplyChangesToContextCommand : BeforeTestCommand
     {
         public ApplyChangesToContextCommand(TestCommand innerCommand, IApplyToContext change)
             : base(innerCommand)

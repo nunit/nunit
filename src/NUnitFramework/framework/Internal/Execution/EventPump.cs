@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventPump : IDisposable
     {
-        static readonly Logger log = InternalTrace.GetLogger("EventPump");
+        private static readonly Logger log = InternalTrace.GetLogger("EventPump");
 
         #region Instance Variables
 

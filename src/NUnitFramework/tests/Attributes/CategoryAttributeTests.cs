@@ -13,7 +13,7 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class CategoryAttributeTests
     {
-        TestSuite fixture;
+        private TestSuite fixture;
 
         [SetUp]
         public void CreateFixture()

@@ -9,7 +9,7 @@ namespace NUnit.Framework.Attributes
 {
     public class TheoryTests
     {
-        static readonly Type fixtureType = typeof(TheoryFixture);
+        private static readonly Type fixtureType = typeof(TheoryFixture);
 
         [Test]
         public void TheoryWithNoArgumentsIsTreatedAsTest()
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(test.TestCaseCount, Is.EqualTo(6));
         }
 
-        [Datapoint] readonly object nullObj = null;
+        [Datapoint] private readonly object nullObj = null;
 
         [Theory]
         public void NullDatapointIsOK(object o)
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Attributes
         }
 
         [Datapoints]
-        string[] vals = new string[] { "xyz1", "xyz2", "xyz3" };
+        private string[] vals = new string[] { "xyz1", "xyz2", "xyz3" };
 
         [Theory]
         public void ArrayWithDatapointsAttributeIsUsed(string s)
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Attributes
 
         public class NestedTheoryThatSearchesInDeclaringTypes
         {
-            static readonly Type nestedType = typeof(TheoryFixture.NestedWhileSearchingInDeclaringType);
+            private static readonly Type nestedType = typeof(TheoryFixture.NestedWhileSearchingInDeclaringType);
 
             [Test]
             public void WithNoArgumentsIsTreatedAsTest()

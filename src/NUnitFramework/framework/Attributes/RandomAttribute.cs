@@ -197,7 +197,7 @@ namespace NUnit.Framework
 
         #region RandomDataSource
 
-        abstract class RandomDataSource : IParameterDataSource
+        private abstract class RandomDataSource : IParameterDataSource
         {
             protected RandomDataSource(Type dataType) => DataType = dataType;
 
@@ -207,7 +207,7 @@ namespace NUnit.Framework
             public abstract IEnumerable GetData(IParameterInfo parameter);
         }
 
-        abstract class RandomDataSource<T> : RandomDataSource
+        private abstract class RandomDataSource<T> : RandomDataSource
         {
             [AllowNull, MaybeNull]
             private readonly T _min;
@@ -285,9 +285,9 @@ namespace NUnit.Framework
 
         #region RandomDataConverter
 
-        class RandomDataConverter : RandomDataSource
+        private class RandomDataConverter : RandomDataSource
         {
-            readonly IParameterDataSource _source;
+            private readonly IParameterDataSource _source;
 
             public RandomDataConverter(RandomDataSource source) : base(source.DataType)
             {
@@ -326,7 +326,7 @@ namespace NUnit.Framework
 
         #region IntDataSource
 
-        class IntDataSource : RandomDataSource<int>
+        private class IntDataSource : RandomDataSource<int>
         {
             public IntDataSource(int count) : base(count) { }
 
@@ -355,7 +355,7 @@ namespace NUnit.Framework
 
         #region UIntDataSource
 
-        class UIntDataSource : RandomDataSource<uint>
+        private class UIntDataSource : RandomDataSource<uint>
         {
             public UIntDataSource(int count) : base(count) { }
 
@@ -384,7 +384,7 @@ namespace NUnit.Framework
 
         #region LongDataSource
 
-        class LongDataSource : RandomDataSource<long>
+        private class LongDataSource : RandomDataSource<long>
         {
             public LongDataSource(int count) : base(count) { }
 
@@ -413,7 +413,7 @@ namespace NUnit.Framework
 
         #region ULongDataSource
 
-        class ULongDataSource : RandomDataSource<ulong>
+        private class ULongDataSource : RandomDataSource<ulong>
         {
             public ULongDataSource(int count) : base(count) { }
 
@@ -442,7 +442,7 @@ namespace NUnit.Framework
 
         #region ShortDataSource
 
-        class ShortDataSource : RandomDataSource<short>
+        private class ShortDataSource : RandomDataSource<short>
         {
             public ShortDataSource(int count) : base(count) { }
 
@@ -471,7 +471,7 @@ namespace NUnit.Framework
 
         #region UShortDataSource
 
-        class UShortDataSource : RandomDataSource<ushort>
+        private class UShortDataSource : RandomDataSource<ushort>
         {
             public UShortDataSource(int count) : base(count) { }
 
@@ -500,7 +500,7 @@ namespace NUnit.Framework
 
         #region DoubleDataSource
 
-        class DoubleDataSource : RandomDataSource<double>
+        private class DoubleDataSource : RandomDataSource<double>
         {
             public DoubleDataSource(int count) : base(count) { }
 
@@ -526,7 +526,7 @@ namespace NUnit.Framework
 
         #region FloatDataSource
 
-        class FloatDataSource : RandomDataSource<float>
+        private class FloatDataSource : RandomDataSource<float>
         {
             public FloatDataSource(int count) : base(count) { }
 
@@ -552,7 +552,7 @@ namespace NUnit.Framework
 
         #region ByteDataSource
 
-        class ByteDataSource : RandomDataSource<byte>
+        private class ByteDataSource : RandomDataSource<byte>
         {
             public ByteDataSource(int count) : base(count) { }
 
@@ -581,7 +581,7 @@ namespace NUnit.Framework
 
         #region SByteDataSource
 
-        class SByteDataSource : RandomDataSource<sbyte>
+        private class SByteDataSource : RandomDataSource<sbyte>
         {
             public SByteDataSource(int count) : base(count) { }
 
@@ -610,7 +610,7 @@ namespace NUnit.Framework
 
         #region EnumDataSource
 
-        class EnumDataSource : RandomDataSource
+        private class EnumDataSource : RandomDataSource
         {
             private readonly int _count;
 
@@ -657,7 +657,7 @@ namespace NUnit.Framework
 
         #region DecimalDataSource
 
-        class DecimalDataSource : RandomDataSource<decimal>
+        private class DecimalDataSource : RandomDataSource<decimal>
         {
             public DecimalDataSource(int count) : base(count) { }
 
@@ -681,7 +681,7 @@ namespace NUnit.Framework
 
         #region GuidDataSource
 
-        class GuidDataSource : RandomDataSource<Guid>
+        private class GuidDataSource : RandomDataSource<Guid>
         {
             public GuidDataSource(int count) : base(count) { }
 

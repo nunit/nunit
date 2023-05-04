@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
-        class ComparerAdapter : EqualityAdapter
+        private class ComparerAdapter : EqualityAdapter
         {
             private readonly IComparer comparer;
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
             return new EqualityComparerAdapter(comparer);
         }
 
-        class EqualityComparerAdapter : EqualityAdapter
+        private class EqualityComparerAdapter : EqualityAdapter
         {
             private readonly IEqualityComparer comparer;
 
@@ -146,7 +146,7 @@ namespace NUnit.Framework.Constraints
 
         #region Nested GenericEqualityAdapter<T>
 
-        abstract class GenericEqualityAdapter<T> : EqualityAdapter
+        private abstract class GenericEqualityAdapter<T> : EqualityAdapter
         {
             /// <summary>
             /// Returns true if the two objects can be compared by this adapter.
@@ -183,7 +183,7 @@ namespace NUnit.Framework.Constraints
             return new EqualityComparerAdapter<T>(comparer);
         }
 
-        class EqualityComparerAdapter<T> : GenericEqualityAdapter<T>
+        private class EqualityComparerAdapter<T> : GenericEqualityAdapter<T>
         {
             private readonly IEqualityComparer<T> comparer;
 
@@ -214,7 +214,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// <see cref="EqualityAdapter"/> that wraps an <see cref="IComparer"/>.
         /// </summary>
-        class ComparerAdapter<T> : GenericEqualityAdapter<T>
+        private class ComparerAdapter<T> : GenericEqualityAdapter<T>
         {
             private readonly IComparer<T> comparer;
 
@@ -242,7 +242,7 @@ namespace NUnit.Framework.Constraints
             return new ComparisonAdapter<T>(comparer);
         }
 
-        class ComparisonAdapter<T> : GenericEqualityAdapter<T>
+        private class ComparisonAdapter<T> : GenericEqualityAdapter<T>
         {
             private readonly Comparison<T> comparer;
 

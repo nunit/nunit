@@ -20,7 +20,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("StaticProperty"));
         }
 
-        static IEnumerable StaticProperty
+        private static IEnumerable StaticProperty
         {
             get
             {
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Attributes
             Assert.Fail("This is not a valid test case: " + source);
         }
 
-        IEnumerable InstanceProperty => new object[] { "InstanceProperty" };
+        private IEnumerable InstanceProperty => new object[] { "InstanceProperty" };
 
         [Test]
         public void ValueSourceCanBeStaticMethod(
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("StaticMethod"));
         }
 
-        static IEnumerable StaticMethod()
+        private static IEnumerable StaticMethod()
         {
             return new object[] { "StaticMethod" };
         }
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
             Assert.Fail("This is not a valid test case: " + source);
         }
 
-        IEnumerable InstanceMethod()
+        private IEnumerable InstanceMethod()
         {
             return new object[] { "InstanceMethod" };
         }
@@ -207,7 +207,7 @@ namespace NUnit.Framework.Attributes
         {
         }
 
-        static object[] ComplexArrayBasedTestInput = new[]
+        private static object[] ComplexArrayBasedTestInput = new[]
         {
             new[] { 1, "text", new object() },
             Array.Empty<object>(),

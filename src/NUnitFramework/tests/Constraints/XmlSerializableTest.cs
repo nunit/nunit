@@ -16,9 +16,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<xmlserializable>";
         }
 
-        static object[] SuccessData = new object[] { 1, "a", new List<string>() };
-
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { 1, "a", new List<string>() };
+        private static object[] FailureData = new object[] {
             new TestCaseData( new Dictionary<string, string>(), "<System.Collections.Generic.Dictionary`2[System.String,System.String]>" ),
             new TestCaseData( new InternalClass(), "<" + typeof(InternalClass).FullName + ">" ),
             new TestCaseData( new InternalWithSerializableAttributeClass(), "<" + typeof(InternalWithSerializableAttributeClass).FullName + ">" )

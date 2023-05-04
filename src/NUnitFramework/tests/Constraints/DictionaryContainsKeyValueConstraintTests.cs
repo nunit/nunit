@@ -111,7 +111,7 @@ namespace NUnit.Framework.Constraints
             Assert.That(act, Throws.ArgumentException.With.Message.Contains("Expected: IDictionary But was: null"));
         }
 
-        class TestDictionary : IDictionary<int, string>
+        private class TestDictionary : IDictionary<int, string>
         {
             private readonly Dictionary<int, string> _internalDictionary = new Dictionary<int, string>();
 

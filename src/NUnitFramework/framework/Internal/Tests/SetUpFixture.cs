@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
             CheckSetUpTearDownMethods(OneTimeTearDownMethods);
         }
 
-        static string GetName(ITypeInfo type)
+        private static string GetName(ITypeInfo type)
         {
             var name = type.Namespace ?? "[default namespace]";
             var index = name.LastIndexOf('.');

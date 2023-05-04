@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        class AndConstraintResult : ConstraintResult
+        private class AndConstraintResult : ConstraintResult
         {
             private readonly ConstraintResult leftResult;
             private readonly ConstraintResult rightResult;
