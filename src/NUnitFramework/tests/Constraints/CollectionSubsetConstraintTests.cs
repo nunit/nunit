@@ -21,8 +21,8 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "subset of < 1, 2, 3, 4, 5 >";
         }
 
-        static object[] SuccessData = new object[] { new[] { 1, 3, 5 }, new[] { 1, 2, 3, 4, 5 } };
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { new[] { 1, 3, 5 }, new[] { 1, 2, 3, 4, 5 } };
+        private static object[] FailureData = new object[] {
             new object[] { new[] { 1, 3, 7 }, "< 1, 3, 7 >" , "< 7 >"},
             new object[] { new[] { 1, 2, 2, 2, 5 }, "< 1, 2, 2, 2, 5 >", "< 2, 2 >" } };
 

@@ -310,7 +310,7 @@ namespace NUnit.Framework
 
         #region
 
-        class UnsupportedDefaultType
+        private class UnsupportedDefaultType
         {
         }
 

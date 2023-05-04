@@ -51,7 +51,7 @@ namespace NUnit.Framework.Internal.Execution
             Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-        Thread _thread;
+        private Thread _thread;
 
         private void StartExecution()
         {
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
 
 
         // Use static for simplicity
-        static class DummyFixture
+        private static class DummyFixture
         {
             public static readonly int Delay = 0;
 
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal.Execution
             yield return new TestCaseData(CreateFakeTests(ApartmentState.MTA, ApartmentState.STA, ApartmentState.Unknown), ApartmentState.STA);
         }
 
-        static ITest CreateFakeTests(ApartmentState assemblyApartment, ApartmentState fixtureApartment, ApartmentState methodApartment) =>
+        private static ITest CreateFakeTests(ApartmentState assemblyApartment, ApartmentState fixtureApartment, ApartmentState methodApartment) =>
             new FakeTest("Method", methodApartment)
             {
                 Parent = new FakeTest("Fixture", fixtureApartment)
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Internal.Execution
                 }
             };
 
-        class FakeTest : Test
+        private class FakeTest : Test
         {
             public FakeTest(string name, ApartmentState apartmentState) : base(name)
             {
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal.Execution
             public override TestResult MakeTestResult() => new FakeTestResult(this);
         }
 
-        class FakeTestResult : TestResult
+        private class FakeTestResult : TestResult
         {
             public FakeTestResult(ITest test) : base(test)
             {
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Internal.Execution
             public override IEnumerable<ITestResult> Children => null;
         }
 
-        class FakeWorkItem : WorkItem
+        private class FakeWorkItem : WorkItem
         {
             public FakeWorkItem(WorkItem wrappedItem) : base(wrappedItem)
             {

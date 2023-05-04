@@ -11,7 +11,7 @@ namespace NUnit.TestData.TheoryFixture
         [Datapoint]
         private int i0 = 0;
         [Datapoint]
-        static int i1 = 1;
+        private static int i1 = 1;
 #pragma warning restore 414
         [Datapoint]
         public int I100 = 100;

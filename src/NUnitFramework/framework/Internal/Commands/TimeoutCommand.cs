@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal.Commands
         private readonly int _timeout;
         private readonly IDebugger _debugger;
 #if THREAD_ABORT
-        Timer? _commandTimer;
+        private Timer? _commandTimer;
         private bool _commandTimedOut;
 #endif
 

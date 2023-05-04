@@ -7,7 +7,7 @@ using System.Text;
 namespace NUnit.Framework.Tests.Interfaces
 {
     [TestFixture]
-    class TestMessageTests
+    internal class TestMessageTests
     {
         [TestCase("destination", "text", "testId")]
         [TestCase("destination", "text", null)]

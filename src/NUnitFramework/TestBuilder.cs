@@ -199,7 +199,7 @@ namespace NUnit.TestUtilities
         /// It is needed particularly when running suites, since
         /// the child items require a dispatcher in the context.
         /// </summary>
-        class SuperSimpleDispatcher : IWorkItemDispatcher
+        private class SuperSimpleDispatcher : IWorkItemDispatcher
         {
             public int LevelOfParallelism => 0;
 

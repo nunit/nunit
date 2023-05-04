@@ -13,7 +13,7 @@ namespace NUnit.Framework.Constraints
     public static class MsgUtilTests
     {
         #region FormatValue
-        class CustomFormattableType { }
+        private class CustomFormattableType { }
 
         [Test]
         public static void FormatValue_ContextualCustomFormatterInvoked_FactoryArg()

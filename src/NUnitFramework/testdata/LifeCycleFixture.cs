@@ -285,7 +285,7 @@ namespace NUnit.TestData.LifeCycleTests
     [Parallelizable(ParallelScope.All)]
     public class ParallelLifeCycleFixtureInstancePerTestCase : BaseLifeCycle
     {
-        int _setupCount = 0;
+        private int _setupCount = 0;
 
         [SetUp]
         public void SetUp()

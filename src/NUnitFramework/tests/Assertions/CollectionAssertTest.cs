@@ -148,9 +148,8 @@ namespace NUnit.Framework.Assertions
             Assert.Throws<AssertionException>(() => CollectionAssert.AllItemsAreUnique(collection));
         }
 
-        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10_000);
-
-        static readonly IEnumerable[] PerformanceData =
+        private static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10_000);
+        private static readonly IEnumerable[] PerformanceData =
         {
             RANGE,
             new List<int>(RANGE),
@@ -276,7 +275,7 @@ namespace NUnit.Framework.Assertions
             CollectionAssert.AreEqual(set1, set2);
         }
 
-        IEnumerable CountToThree()
+        private IEnumerable CountToThree()
         {
             yield return 1;
             yield return 2;

@@ -5,7 +5,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework
 {
-    partial class AsyncExecutionApiAdapter
+    public partial class AsyncExecutionApiAdapter
     {
         private abstract class ConstraintApiAdapter : AsyncExecutionApiAdapter
         {

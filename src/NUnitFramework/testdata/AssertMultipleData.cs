@@ -430,7 +430,7 @@ namespace NUnit.TestData.AssertMultipleData
         }
     }
 
-    class ComplexNumber
+    internal class ComplexNumber
     {
         public ComplexNumber(double realPart, double imaginaryPart)
         {

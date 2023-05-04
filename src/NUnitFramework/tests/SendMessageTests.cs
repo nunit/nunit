@@ -38,14 +38,14 @@ namespace NUnit.Framework
         {
         }
 
-        TestOutput _testOutput;
+        private TestOutput _testOutput;
 
         void ITestListener.TestOutput(TestOutput output)
         {
             _testOutput = output;
         }
 
-        TestMessage _testMessage;
+        private TestMessage _testMessage;
 
         void ITestListener.SendMessage(TestMessage message)
         {

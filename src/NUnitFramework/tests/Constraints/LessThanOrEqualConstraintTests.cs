@@ -13,9 +13,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<lessthanorequal 5>";
         }
 
-        static object[] SuccessData = new object[] { 4, 5 };
-
-        static object[] FailureData = new object[] { new object[] { 6, "6" } };
+        private static object[] SuccessData = new object[] { 4, 5 };
+        private static object[] FailureData = new object[] { new object[] { 6, "6" } };
 
         [Test]
         public void CanCompareIComparables()

@@ -2,7 +2,7 @@
 
 namespace NUnit.Framework.Internal
 {
-    partial class ValueGenerator
+    internal partial class ValueGenerator
     {
         private sealed class DefaultValueGenerator<T> : ValueGenerator<T>
         {

@@ -10,7 +10,7 @@ namespace NUnit.TestUtilities.Collections
     /// SimpleObjectCollection is used in testing to ensure that only
     /// methods of the ICollection interface are accessible.
     /// </summary>
-    class SimpleObjectCollection : ICollection
+    internal class SimpleObjectCollection : ICollection
     {
         private readonly List<object> contents = new List<object>();
 

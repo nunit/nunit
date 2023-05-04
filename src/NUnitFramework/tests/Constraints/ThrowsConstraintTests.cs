@@ -18,12 +18,11 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<throws <typeof System.ArgumentException>>";
         }
 
-        static readonly object[] SuccessData =
+        private static readonly object[] SuccessData =
         {
             new TestDelegate( TestDelegates.ThrowsArgumentException )
         };
-
-        static readonly object[] FailureData =
+        private static readonly object[] FailureData =
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Environment.NewLine ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
@@ -43,13 +42,12 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<throws <instanceof NUnit.TestUtilities.TestDelegates+BaseException>>";
         }
 
-        static object[] SuccessData = new object[]
+        private static object[] SuccessData = new object[]
         {
             new TestDelegate( TestDelegates.ThrowsBaseException ),
             new TestDelegate( TestDelegates.ThrowsDerivedException )
         };
-
-        static object[] FailureData = new object[]
+        private static object[] FailureData = new object[]
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsArgumentException ), "<System.ArgumentException: myMessage" ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
@@ -70,12 +68,11 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = @"<throws <and <typeof System.ArgumentException> <property ParamName <equal ""myParam"">>>>";
         }
 
-        static readonly object[] SuccessData =
+        private static readonly object[] SuccessData =
         {
             new TestDelegate( TestDelegates.ThrowsArgumentException )
         };
-
-        static readonly object[] FailureData =
+        private static readonly object[] FailureData =
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNullReferenceException ), "<System.NullReferenceException: my message" + Environment.NewLine ),
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
@@ -87,9 +84,9 @@ namespace NUnit.Framework.Constraints
     {
         private const string Message = ": Must be implemented in derived class";
 
-        static object[] SuccessData => throw new NotImplementedException(nameof(SuccessData) + Message);
+        private static object[] SuccessData => throw new NotImplementedException(nameof(SuccessData) + Message);
 
-        static object[] FailureData => throw new NotImplementedException(nameof(FailureData) + Message);
+        private static object[] FailureData => throw new NotImplementedException(nameof(FailureData) + Message);
 
         [Test, TestCaseSource(nameof(SuccessData))]
         public void SucceedsWithGoodValues(object value)

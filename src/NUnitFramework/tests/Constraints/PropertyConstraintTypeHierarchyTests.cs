@@ -24,8 +24,9 @@ namespace NUnit.Framework.Constraints
             Assert.That(actualExist.IsSuccess, Is.True);
         }
 
-        class Base { }
-        class Derived : Base
+        private class Base { }
+
+        private class Derived : Base
         {
             public int SomeProperty { get; set; } = 42;
         }

@@ -8,7 +8,7 @@ using NUnit.TestData.TestFixtureTests;
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
-    class TestMethodTests
+    internal class TestMethodTests
     {
         private DefaultTestCaseBuilder _builder;
 

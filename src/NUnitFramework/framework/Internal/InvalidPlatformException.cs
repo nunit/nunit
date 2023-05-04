@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal
     /// to a test is not recognized.
     /// </summary>
     [Serializable]
-    class InvalidPlatformException : ArgumentException
+    internal class InvalidPlatformException : ArgumentException
     {
         /// <summary>
         /// Instantiates a new instance of the <see cref="InvalidPlatformException"/> class.

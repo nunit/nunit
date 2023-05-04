@@ -13,9 +13,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<or <equal 42> <equal 99>>";
         }
 
-        static object[] SuccessData = new object[] { 99, 42 };
-
-        static object[] FailureData = new object[] { new object[] { 37, "37" } };
+        private static object[] SuccessData = new object[] { 99, 42 };
+        private static object[] FailureData = new object[] { new object[] { 37, "37" } };
 
         [Test]
         public void CanCombineTestsWithOrOperator()

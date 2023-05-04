@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
 
         #region Nested Result Class
 
-        class ThrowsExceptionConstraintResult : ConstraintResult
+        private class ThrowsExceptionConstraintResult : ConstraintResult
         {
             public ThrowsExceptionConstraintResult(ThrowsExceptionConstraint constraint, Exception? caughtException)
                 : base(constraint, caughtException, caughtException != null) { }

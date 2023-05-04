@@ -32,7 +32,7 @@ namespace NUnit.Framework.Constraints
         }
 
         #region Nested Result Class
-        class ExceptionTypeConstraintResult : ConstraintResult
+        private class ExceptionTypeConstraintResult : ConstraintResult
         {
             private readonly object? caughtException;
 

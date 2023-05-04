@@ -8,7 +8,7 @@ using NUnit.TestUtilities;
 namespace NUnit.Framework.Internal
 {
     [TestFixture]
-    class GenericTestMethodTests
+    internal class GenericTestMethodTests
     {
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
         [TestCase(5, 2, "ABC")]

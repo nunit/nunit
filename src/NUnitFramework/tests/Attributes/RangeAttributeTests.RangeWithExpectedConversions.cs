@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace NUnit.Framework.Attributes
 {
-    partial class RangeAttributeTests
+    public partial class RangeAttributeTests
     {
         public sealed class RangeWithExpectedConversions
         {

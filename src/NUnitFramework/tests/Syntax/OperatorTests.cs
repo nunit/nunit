@@ -267,20 +267,20 @@ namespace NUnit.Framework.Syntax
 
     public class OperatorPrecedenceTests
     {
-        class A
+        private class A
         {
-            B B => new B();
+            private B B => new B();
 
-            string X => "X in A";
+            private string X => "X in A";
 
-            string Y => "Y in A";
+            private string Y => "Y in A";
         }
 
-        class B
+        private class B
         {
-            string X => "X in B";
+            private string X => "X in B";
 
-            string Y => "Y in B";
+            private string Y => "Y in B";
         }
 
         [Test]

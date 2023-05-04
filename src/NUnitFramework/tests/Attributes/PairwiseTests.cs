@@ -101,6 +101,6 @@ namespace NUnit.Framework.Attributes
 #endif
         }
 
-        class PairCounter : System.Collections.Generic.Dictionary<string, object> { }
+        private class PairCounter : System.Collections.Generic.Dictionary<string, object> { }
     }
 }

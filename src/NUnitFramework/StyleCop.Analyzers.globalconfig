@@ -344,7 +344,7 @@ dotnet_diagnostic.SA1314.severity = none
 dotnet_diagnostic.SA1316.severity = none
 
 # Access modifier should be declared
-dotnet_diagnostic.SA1400.severity = none
+dotnet_diagnostic.SA1400.severity = warning
 
 # Fields should be private
 # Replaced with Fugro Rule: FA0006 which allows 'public readonly'

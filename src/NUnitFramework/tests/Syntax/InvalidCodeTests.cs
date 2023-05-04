@@ -8,7 +8,7 @@ namespace NUnit.Framework.Syntax
     [TestFixture]
     public class InvalidCodeTests
     {
-        static readonly string template1 =
+        private static readonly string template1 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -39,7 +39,7 @@ class SomeClass
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile but it did");
         }
 
-        static readonly string template2 =
+        private static readonly string template2 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;

@@ -17,13 +17,12 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<predicate>";
         }
 
-        static object[] SuccessData = new object[]
+        private static object[] SuccessData = new object[]
         {
             0,
             -5
         };
-
-        static object[] FailureData = new object[]
+        private static object[] FailureData = new object[]
         {
             new TestCaseData(123, "123")
         };

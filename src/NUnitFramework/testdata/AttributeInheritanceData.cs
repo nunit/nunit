@@ -8,7 +8,7 @@ namespace NUnit.TestData.AttributeInheritanceData
     // Sample Test from a post by Scott Bellware
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false)]
-    class ConcernAttribute : TestFixtureAttribute
+    internal class ConcernAttribute : TestFixtureAttribute
     {
 #pragma warning disable 414
         private Type typeOfConcern;
@@ -21,7 +21,7 @@ namespace NUnit.TestData.AttributeInheritanceData
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple=false)]
-    class SpecAttribute : TestAttribute
+    internal class SpecAttribute : TestAttribute
     {
     }
 
@@ -37,5 +37,5 @@ namespace NUnit.TestData.AttributeInheritanceData
         }
     }
 
-    class ClassUnderTest { }
+    internal class ClassUnderTest { }
 }

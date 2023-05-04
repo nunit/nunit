@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<empty>";
         }
 
-        static object[] SuccessData = new object[]
+        private static object[] SuccessData = new object[]
         {
             string.Empty,
             Array.Empty<object>(),
@@ -148,12 +148,11 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<emptystring>";
         }
 
-        static object[] SuccessData = new object[]
+        private static object[] SuccessData = new object[]
         {
             string.Empty
         };
-
-        static object[] FailureData = new object[]
+        private static object[] FailureData = new object[]
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
             new TestCaseData( null, "null")

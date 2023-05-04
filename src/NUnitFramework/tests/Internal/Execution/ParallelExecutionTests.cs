@@ -123,7 +123,7 @@ namespace NUnit.Framework.Internal.Execution
 
         #region Test Data
 
-        static IEnumerable<TestFixtureData> GetParallelSuites()
+        private static IEnumerable<TestFixtureData> GetParallelSuites()
         {
             yield return new TestFixtureData(
                 Suite("fake-assembly.dll")

@@ -39,18 +39,16 @@ namespace NUnit.Framework.Constraints
             //SetValueTrueAfterDelay(300);
         }
 
-        static object[] SuccessData = new object[] { true };
-        static object[] FailureData = new object[] {
+        private static object[] SuccessData = new object[] { true };
+        private static object[] FailureData = new object[] {
             new TestCaseData( false, "False" ),
             new TestCaseData( 0, "0" ),
             new TestCaseData( null, "null" ) };
-
-        static readonly ActualValueDelegate DelegateReturningValue;
-        static readonly ActualValueDelegate DelegateReturningFalse;
-        static readonly ActualValueDelegate DelegateReturningZero;
-
-        static ActualValueDelegate<object>[] SuccessDelegates;
-        static ActualValueDelegate<object>[] FailureDelegates;
+        private static readonly ActualValueDelegate DelegateReturningValue;
+        private static readonly ActualValueDelegate DelegateReturningFalse;
+        private static readonly ActualValueDelegate DelegateReturningZero;
+        private static ActualValueDelegate<object>[] SuccessDelegates;
+        private static ActualValueDelegate<object>[] FailureDelegates;
 
         // Initialize static fields that are sensitive to order of initialization.
         // Most compilers would probably initialize these in lexical order but it

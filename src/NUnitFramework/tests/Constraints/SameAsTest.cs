@@ -16,9 +16,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<sameas System.Object>";
         }
 
-        static object[] SuccessData = new object[] { obj1 };
-
-        static object[] FailureData = new object[] { 
+        private static object[] SuccessData = new object[] { obj1 };
+        private static object[] FailureData = new object[] { 
             new TestCaseData( obj2, "<System.Object>" ),
             new TestCaseData( 3, "3" ),
             new TestCaseData( "Hello", "\"Hello\"" ) };

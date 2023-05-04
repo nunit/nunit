@@ -19,9 +19,8 @@ namespace NUnit.Framework.Constraints
             messageWriter = new TextMessageWriter();
         }
 
-        static object[] SuccessData = new object[] { 42 };
-
-        static object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
+        private static object[] SuccessData = new object[] { 42 };
+        private static object[] FailureData = new object[] { new object[] { 37, "37" }, new object[] { 53, "53" } };
 
         [Test]
         public void CanCombineTestsWithAndOperator()

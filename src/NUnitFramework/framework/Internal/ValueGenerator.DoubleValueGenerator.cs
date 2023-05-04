@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NUnit.Framework.Internal
 {
-    partial class ValueGenerator
+    internal partial class ValueGenerator
     {
         private sealed class DoubleValueGenerator : ValueGenerator<double>
         {

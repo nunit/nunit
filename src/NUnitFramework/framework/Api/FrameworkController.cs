@@ -205,7 +205,7 @@ namespace NUnit.Framework.Api
             return InsertChildElements(result).OuterXml;
         }
 
-        class ActionCallback : ICallbackEventHandler
+        private class ActionCallback : ICallbackEventHandler
         {
             private readonly Action<string> _callback;
 

@@ -20,9 +20,8 @@ namespace NUnit.Framework.Constraints
             StringRepresentation = "<equal 4>";
         }
 
-        static object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
-
-        static object[] FailureData = new object[]
+        private static object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
+        private static object[] FailureData = new object[]
             {
                 new TestCaseData(5, "5"),
                 new TestCaseData(null, "null"),
@@ -792,7 +791,7 @@ namespace NUnit.Framework.Constraints
             Assert.That("  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL, Is.EqualTo(ex.Message));
         }
 
-        class Dummy
+        private class Dummy
         {
             internal readonly int value;
 
@@ -807,7 +806,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class Dummy1
+        private class Dummy1
         {
             internal readonly int value;
 
@@ -822,7 +821,7 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class DummyGenericClass<T>
+        private class DummyGenericClass<T>
         {
             private readonly object _obj;
 
@@ -870,7 +869,7 @@ namespace NUnit.Framework.Constraints
         }
     }
     namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
-        class ReallyLongClassNameShouldBeHere {
+        internal class ReallyLongClassNameShouldBeHere {
             public override bool Equals(object obj)
             {
                 if (obj == null || GetType() != obj.GetType())
@@ -893,7 +892,7 @@ namespace NUnit.Framework.Constraints
     }
     namespace ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
     {
-        class ReallyLongClassNameShouldBeHere {
+        internal class ReallyLongClassNameShouldBeHere {
             public override bool Equals(object obj)
             {
                 if (obj == null || GetType() != obj.GetType())
@@ -915,8 +914,8 @@ namespace NUnit.Framework.Constraints
 
     }
     namespace ExampleTest {
-        class BaseTest {
-            readonly int _value;
+        internal class BaseTest {
+            private readonly int _value;
             public BaseTest()
             {
                 _value = 0;
@@ -944,12 +943,12 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        class ClassA : BaseTest {
+        internal class ClassA : BaseTest {
             public ClassA(int x) : base(x) { }
 
         }
 
-        class ClassB : BaseTest
+        internal class ClassB : BaseTest
         {
              public ClassB(int x) : base(x) { }
         }

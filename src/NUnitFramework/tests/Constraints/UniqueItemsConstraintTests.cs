@@ -21,8 +21,8 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "all items unique";
         }
 
-        static object[] SuccessData = new object[] { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
-        static object[] FailureData = new object[] { new object[] {
+        private static object[] SuccessData = new object[] { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
+        private static object[] FailureData = new object[] { new object[] {
             new[] { 1, 3, 17, 3, 34 },
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
@@ -51,10 +51,8 @@ namespace NUnit.Framework.Constraints
             new object[] {new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 }},
             new object[] {new[] { "x", null, "x" }, new[] { "x" }}
         };
-
-        static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
-
-        static readonly TestCaseData[] PerformanceData_FastPath =
+        private static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
+        private static readonly TestCaseData[] PerformanceData_FastPath =
         {
             // Generic container
             new TestCaseData(RANGE, false),
@@ -89,7 +87,8 @@ namespace NUnit.Framework.Constraints
                 ArgDisplayNames = new[] { "IEnumerable<TestReferenceType>", "true" }
             },
         };
-        static TestCaseData[] PerformanceData_FastPath_MixedTypes
+
+        private static TestCaseData[] PerformanceData_FastPath_MixedTypes
         {
             get
             {

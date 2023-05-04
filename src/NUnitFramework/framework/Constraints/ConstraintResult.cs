@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ConstraintResult
     {
-        readonly IConstraint _constraint;
+        private readonly IConstraint _constraint;
 
         #region Constructors
 

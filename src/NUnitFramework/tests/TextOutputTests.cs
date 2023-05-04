@@ -136,7 +136,7 @@ namespace NUnit.Framework
         {
         }
 
-        TestOutput _testOutput;
+        private TestOutput _testOutput;
 
         void ITestListener.TestOutput(TestOutput output)
         {

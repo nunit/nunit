@@ -34,7 +34,7 @@ namespace NUnit.Framework.Attributes
             }
         }
 
-        class MethodNames : IEnumerable
+        private class MethodNames : IEnumerable
         {
             public IEnumerator GetEnumerator()
             {

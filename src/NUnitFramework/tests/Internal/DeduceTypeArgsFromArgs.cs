@@ -7,8 +7,8 @@ namespace NUnit.Framework.Internal
     [TestFixture(42, 100.0)]
     public class DeduceTypeArgsFromArgs<T1, T2>
     {
-        T1 t1;
-        T2 t2;
+        private T1 t1;
+        private T2 t2;
 
         public DeduceTypeArgsFromArgs(T1 t1, T2 t2)
         {

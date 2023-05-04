@@ -7,7 +7,7 @@ using NUnit.TestUtilities;
 
 namespace NUnit.Framework
 {
-    partial class AsyncExecutionApiAdapter
+    public partial class AsyncExecutionApiAdapter
     {
         private static void ExecuteFixture(Type fixtureType, AsyncTestDelegate asyncUserCode)
         {

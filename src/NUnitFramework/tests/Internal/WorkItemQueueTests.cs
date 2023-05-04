@@ -125,8 +125,8 @@ namespace NUnit.Framework.Internal.Execution
             VerifyQueueContents(names);
         }
 
-        const int HIGH_PRIORITY = 0;
-        const int NORMAL_PRIORITY = 1;
+        private const int HIGH_PRIORITY = 0;
+        private const int NORMAL_PRIORITY = 1;
 
         [Test]
         public void PriorityIsHonored()

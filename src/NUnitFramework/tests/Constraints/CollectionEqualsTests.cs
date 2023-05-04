@@ -11,7 +11,7 @@ using NUnit.TestUtilities.Collections;
 namespace NUnit.Framework.Constraints
 {
     [TestFixture]
-    class CollectionEqualsTests
+    internal class CollectionEqualsTests
     {
         [Test]
         public void CanMatchTwoCollections()

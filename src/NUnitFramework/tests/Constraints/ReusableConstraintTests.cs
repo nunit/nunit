@@ -6,7 +6,7 @@ namespace NUnit.Framework.Constraints
     public class ReusableConstraintTests
     {
         [Datapoints]
-        static readonly ReusableConstraint[] constraints = new ReusableConstraint[] {
+        private static readonly ReusableConstraint[] constraints = new ReusableConstraint[] {
             Is.Not.Empty,
             Is.Not.Null,
             Has.Length.GreaterThan(3),

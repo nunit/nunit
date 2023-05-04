@@ -30,12 +30,11 @@ namespace NUnit.Framework.Constraints
             }
         }
 
-        static object[] SuccessData = new object[]
+        private static object[] SuccessData = new object[]
         {
             new TestDelegate( TestDelegates.ThrowsArgumentException )
         };
-
-        static object[] FailureData = new object[]
+        private static object[] FailureData = new object[]
         {
             new TestCaseData( new TestDelegate( TestDelegates.ThrowsNothing ), "no exception thrown" ),
         };
