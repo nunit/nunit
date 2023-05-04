@@ -41,4 +41,25 @@ namespace NUnit.TestData
         {
         }
     }
+
+    public class NotRunnableGenericData
+    {
+        [Test]
+        public void TestWithGeneric_ReturningVoid_ThatIsUnRunnable<T>()
+        {
+        }
+
+        [TestCase(ExpectedResult = default)]
+        public T TestWithGeneric_ReturningGenericType_ThatIsUnRunnable<T>()
+        {
+            return default;
+        }
+
+        [TestCase(1)]
+        public void TestWithGeneric_PassingInGenericParameter_ThatIsRunnable<T>(T parameter)
+        {
+            Assert.That(parameter, Is.EqualTo(1));
+
+        }
+    }
 }

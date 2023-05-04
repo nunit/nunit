@@ -156,6 +156,24 @@ namespace NUnit.Framework.Internal
             Assert.That(invalid, Is.EqualTo(2), "Invalid count");
         }
 
+        [Test]
+        public void TestCase_MissingGenericArgumentAreNotRunnable()
+        {
+            //Need to use full fixture, since targeting one test at the time crashed during buildup and not in the framework
+            ITestResult result = TestBuilder.RunTestFixture(typeof(NotRunnableGenericData));
+            Assert.That(result.PassCount, Is.EqualTo(1), "PassCount");
+            Assert.That(result.TotalCount, Is.EqualTo(3), "TotalCount");
+
+            var voidTest = result.Children.Single(c => c.Name == nameof(NotRunnableGenericData.TestWithGeneric_ReturningVoid_ThatIsUnRunnable) + "<T>");
+            Assert.That(voidTest.ResultState, Is.EqualTo(ResultState.NotRunnable));
+
+            var returnTest = result.Children.Single(c => c.Name == nameof(NotRunnableGenericData.TestWithGeneric_ReturningGenericType_ThatIsUnRunnable));
+            Assert.That(returnTest.Children.First().ResultState, Is.EqualTo(ResultState.NotRunnable));
+
+            var validTest = result.Children.Single(c => c.Name == nameof(NotRunnableGenericData.TestWithGeneric_PassingInGenericParameter_ThatIsRunnable));
+            Assert.That(validTest.ResultState, Is.EqualTo(ResultState.Success));
+        }
+
         private static readonly object[] Source = new object[] {
             new object[] { 5, 2, "ABC" },
             new object[] { 5.0, 2.0, "ABC" },
