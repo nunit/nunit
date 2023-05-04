@@ -200,7 +200,7 @@ namespace NUnit.Options
 
         private void AssertValid (int index)
         {
-            if (c.Option == null)
+            if (c.Option is null)
                 throw new InvalidOperationException ("OptionContext.Option is null.");
             if (index >= c.Option.MaxValueCount)
                 throw new ArgumentOutOfRangeException (nameof(index));
@@ -290,7 +290,7 @@ namespace NUnit.Options
 
         protected Option (string prototype, string description, int maxValueCount)
         {
-            if (prototype == null)
+            if (prototype is null)
                 throw new ArgumentNullException (nameof(prototype));
             if (prototype.Length == 0)
                 throw new ArgumentException ("Cannot be the empty string.", nameof(prototype));
@@ -332,7 +332,7 @@ namespace NUnit.Options
 
         public string[] GetValueSeparators ()
         {
-            if (separators == null)
+            if (separators is null)
                 return new string [0];
             return (string[]) separators.Clone ();
         }
@@ -348,7 +348,7 @@ namespace NUnit.Options
             TypeConverter conv = TypeDescriptor.GetConverter (targetType);
             T t = default (T);
             try {
-                if (value != null)
+                if (value is not null)
                     t = (T) conv.ConvertFromString (value);
             }
             catch (Exception e) {
@@ -508,9 +508,9 @@ namespace NUnit.Options
 
         protected override string GetKeyForItem (Option item)
         {
-            if (item == null)
+            if (item is null)
                 throw new ArgumentNullException (nameof(item));
-            if (item.Names != null && item.Names.Length > 0)
+            if (item.Names is not null && item.Names.Length > 0)
                 return item.Names [0];
             // This should never happen, as it's invalid for Option to be
             // constructed w/o any names.
@@ -542,7 +542,7 @@ namespace NUnit.Options
 
         private void AddImpl (Option option)
         {
-            if (option == null)
+            if (option is null)
                 throw new ArgumentNullException (nameof(option));
             List<string> added = new List<string> (option.Names.Length);
             try {
@@ -571,7 +571,7 @@ namespace NUnit.Options
             public ActionOption (string prototype, string description, int count, Action<OptionValueCollection> action)
                 : base (prototype, description, count)
             {
-                if (action == null)
+                if (action is null)
                     throw new ArgumentNullException (nameof(action));
                 this.action = action;
             }
@@ -589,7 +589,7 @@ namespace NUnit.Options
 
         public OptionSet Add (string prototype, string description, Action<string> action)
         {
-            if (action == null)
+            if (action is null)
                 throw new ArgumentNullException (nameof(action));
             Option p = new ActionOption (prototype, description, 1,
                     delegate (OptionValueCollection v) { action (v [0]); });
@@ -604,7 +604,7 @@ namespace NUnit.Options
 
         public OptionSet Add (string prototype, string description, OptionAction<string, string> action)
         {
-            if (action == null)
+            if (action is null)
                 throw new ArgumentNullException (nameof(action));
             Option p = new ActionOption (prototype, description, 2,
                     delegate (OptionValueCollection v) {action (v [0], v [1]);});
@@ -618,7 +618,7 @@ namespace NUnit.Options
             public ActionOption (string prototype, string description, Action<T> action)
                 : base (prototype, description, 1)
             {
-                if (action == null)
+                if (action is null)
                     throw new ArgumentNullException (nameof(action));
                 this.action = action;
             }
@@ -635,7 +635,7 @@ namespace NUnit.Options
             public ActionOption (string prototype, string description, OptionAction<TKey, TValue> action)
                 : base (prototype, description, 2)
             {
-                if (action == null)
+                if (action is null)
                     throw new ArgumentNullException (nameof(action));
                 this.action = action;
             }
@@ -700,7 +700,7 @@ namespace NUnit.Options
 
         private static bool Unprocessed (ICollection<string> extra, Option def, OptionContext c, string argument)
         {
-            if (def == null) {
+            if (def is null) {
                 extra.Add (argument);
                 return false;
             }
@@ -715,7 +715,7 @@ namespace NUnit.Options
 
         protected bool GetOptionParts (string argument, out string flag, out string name, out string sep, out string value)
         {
-            if (argument == null)
+            if (argument is null)
                 throw new ArgumentNullException (nameof(argument));
 
             flag = name = sep = value = null;
@@ -734,7 +734,7 @@ namespace NUnit.Options
 
         protected virtual bool Parse (string argument, OptionContext c)
         {
-            if (c.Option != null) {
+            if (c.Option is not null) {
                 ParseValue (argument, c);
                 return true;
             }
@@ -772,8 +772,8 @@ namespace NUnit.Options
 
         private void ParseValue (string option, OptionContext c)
         {
-            if (option != null)
-                foreach (string o in c.Option.ValueSeparators != null
+            if (option is not null)
+                foreach (string o in c.Option.ValueSeparators is not null
                         ? option.Split (c.Option.ValueSeparators, StringSplitOptions.None)
                         : new[]{option}) {
                     c.OptionValues.Add (o);
@@ -903,7 +903,7 @@ namespace NUnit.Options
                     Write (o, ref written, Localizer ("["));
                 }
                 Write (o, ref written, Localizer ("=" + GetArgumentName (0, p.MaxValueCount, p.Description)));
-                string sep = p.ValueSeparators != null && p.ValueSeparators.Length > 0
+                string sep = p.ValueSeparators is not null && p.ValueSeparators.Length > 0
                     ? p.ValueSeparators [0]
                     : " ";
                 for (int c = 1; c < p.MaxValueCount; ++c) {
@@ -932,7 +932,7 @@ namespace NUnit.Options
 
         private static string GetArgumentName (int index, int maxIndex, string description)
         {
-            if (description == null)
+            if (description is null)
                 return maxIndex == 1 ? "VALUE" : "VALUE" + (index + 1);
             string[] nameStart;
             if (maxIndex == 1)
@@ -956,7 +956,7 @@ namespace NUnit.Options
 
         private static string GetDescription (string description)
         {
-            if (description == null)
+            if (description is null)
                 return string.Empty;
             StringBuilder sb = new StringBuilder (description.Length);
             int start = -1;

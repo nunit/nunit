@@ -298,7 +298,7 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     FeatureTuple? tuple = GetNextTuple();
 
-                    if ( tuple == null )
+                    if ( tuple is null )
                     {
                         break;
                     }

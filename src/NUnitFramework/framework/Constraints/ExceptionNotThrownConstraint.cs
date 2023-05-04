@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             var exception = actual as Exception;
-            return new ConstraintResult(this, exception, exception == null);
+            return new ConstraintResult(this, exception, exception is null);
         }
     }
 }

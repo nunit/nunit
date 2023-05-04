@@ -126,12 +126,12 @@ namespace NUnit.Framework.Constraints
         /// <returns>The formatted text</returns>
         public static string FormatValue(object? val)
         {
-            if (val == null)
+            if (val is null)
                 return Fmt_Null;
 
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null)
+            if (context is not null)
                 return context.CurrentValueFormatter(val);
             else
                 return DefaultValueFormatter(val);
@@ -220,7 +220,7 @@ namespace NUnit.Framework.Constraints
 
         private static string? TryFormatKeyValuePair(object? value)
         {
-            if (value == null)
+            if (value is null)
                 return null;
 
             Type valueType = value.GetType();
@@ -254,7 +254,7 @@ namespace NUnit.Framework.Constraints
 
         private static string? TryFormatTuple(object? value, Func<Type, bool> isTuple, Func<Type, string, object, object?> getValue)
         {
-            if (value == null)
+            if (value is null)
                 return null;
 
             Type valueType = value.GetType();
@@ -385,7 +385,7 @@ namespace NUnit.Framework.Constraints
         [return: NotNullIfNotNull("s")]
         public static string? EscapeControlChars(string? s)
         {
-            if (s != null)
+            if (s is not null)
             {
                 StringBuilder sb = new StringBuilder();
 
@@ -454,7 +454,7 @@ namespace NUnit.Framework.Constraints
         [return: NotNullIfNotNull("s")]
         public static string? EscapeNullCharacters(string? s)
         {
-            if (s != null)
+            if (s is not null)
             {
                 StringBuilder sb = new StringBuilder();
 

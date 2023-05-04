@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         protected ComparisonConstraint(object expected, string comparisonText)
             : base(expected)
         {
-            Guard.ArgumentValid(expected != null, "Cannot compare using a null reference.", nameof(_expected));
+            Guard.ArgumentValid(expected is not null, "Cannot compare using a null reference.", nameof(_expected));
             _expected = expected;
             _comparisonText = comparisonText;
         }
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            Guard.ArgumentValid(actual != null, "Cannot compare to a null reference.", nameof(actual));
+            Guard.ArgumentValid(actual is not null, "Cannot compare to a null reference.", nameof(actual));
 
             return new ConstraintResult(this, actual, PerformComparison(_comparer, actual, _expected, _tolerance));
         }
@@ -159,13 +159,13 @@ namespace NUnit.Framework.Constraints
         /// <exception cref="ArgumentNullException">Is thrown when null passed to a method</exception>
         private string DefaultDescription(string comparisonText)
         {
-            if (comparisonText == null)
+            if (comparisonText is null)
                 throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
             
             StringBuilder sb = new StringBuilder(comparisonText);
             sb.Append(MsgUtils.FormatValue(_expected));
                 
-            if (_tolerance != null && _tolerance.HasVariance)
+            if (_tolerance is not null && _tolerance.HasVariance)
             {
                 sb.Append(" within ");
                 sb.Append(MsgUtils.FormatValue(_tolerance.Amount));

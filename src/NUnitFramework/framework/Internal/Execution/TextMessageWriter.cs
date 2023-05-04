@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         /// <param name="args"></param>
         public TextMessageWriter(string? userMessage, params object?[]? args)
         {
-            if (userMessage != null && userMessage != string.Empty)
+            if (userMessage is not null && userMessage != string.Empty)
                 this.WriteMessageLine(userMessage, args);
         }
         #endregion
@@ -86,11 +86,11 @@ namespace NUnit.Framework.Internal
         /// <param name="args">Any arguments used in formatting the message</param>
         public override void WriteMessageLine(int level, string? message, params object?[]? args)
         {
-            if (message != null)
+            if (message is not null)
             {
                 while (level-- >= 0) Write("  ");
 
-                if (args != null && args.Length > 0)
+                if (args is not null && args.Length > 0)
                     message = string.Format(message, args);
 
                 WriteLine(MsgUtils.EscapeNullCharacters(message));
@@ -147,14 +147,14 @@ namespace NUnit.Framework.Internal
         /// <param name="tolerance">The tolerance within which the test was made</param>
         public override void DisplayDifferences(object? expected, object? actual, Tolerance? tolerance)
         {
-            if (expected != null && actual != null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual))
+            if (expected is not null && actual is not null && expected.GetType() != actual.GetType() && MsgUtils.FormatValue(expected) == MsgUtils.FormatValue(actual))
             {
                 _sameValDiffTypes = true;
                 ResolveTypeNameDifference(expected, actual, out _expectedType, out _actualType);
             }
             WriteExpectedLine(expected, tolerance);
             WriteActualLine(actual);
-            if (tolerance != null)
+            if (tolerance is not null)
             {
                 WriteDifferenceLine(expected, actual, tolerance);
             }
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal
             if (_sameValDiffTypes) {
                 Write(_expectedType);
             }
-            if (tolerance != null && tolerance.HasVariance)
+            if (tolerance is not null && tolerance.HasVariance)
             {
                 Write(" +/- ");
                 Write(MsgUtils.FormatValue(tolerance.Amount));

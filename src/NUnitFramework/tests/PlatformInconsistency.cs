@@ -42,8 +42,8 @@ namespace NUnit.Framework
                 if (RuntimeFramework.CurrentFramework.Runtime != _runtimeType) return false;
 
                 var version = GetCurrentVersion();
-                if (_minVersion != null && version < _minVersion) return false;
-                if (_maxVersion != null && version > _maxVersion) return false;
+                if (_minVersion is not null && version < _minVersion) return false;
+                if (_maxVersion is not null && version > _maxVersion) return false;
 
                 return true;
             }

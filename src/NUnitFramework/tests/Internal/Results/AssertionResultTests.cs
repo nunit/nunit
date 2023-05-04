@@ -66,14 +66,14 @@ namespace NUnit.Framework.Internal.Results
 
                 Assert.That(assertionNode.Attributes["result"], Is.EqualTo(expectedAssertion.Status.ToString()));
 
-                if (expectedAssertion.Message != null)
+                if (expectedAssertion.Message is not null)
                 {
                     TNode? messageNode = assertionNode.SelectSingleNode("message");
                     Assert.That(messageNode, Is.Not.Null);
                     Assert.That(messageNode.Value, Is.EqualTo(expectedAssertion.Message));
                 }
 
-                if (expectedAssertion.StackTrace != null)
+                if (expectedAssertion.StackTrace is not null)
                 {
                     TNode? stackNode = assertionNode.SelectSingleNode("stack-trace");
                     Assert.That(stackNode, Is.Not.Null);

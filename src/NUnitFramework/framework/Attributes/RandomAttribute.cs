@@ -138,7 +138,7 @@ namespace NUnit.Framework
 
             Type parmType = parameter.ParameterType;
 
-            if (_source == null)
+            if (_source is null)
             {
                 if (parmType == typeof(int))
                     _source = new IntDataSource(_count);

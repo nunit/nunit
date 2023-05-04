@@ -128,7 +128,7 @@ namespace NUnit.Framework.Constraints
         [MemberNotNull(nameof(_equalConstraint))]
         private void CheckPrecondition(string argument)
         {
-            if (_equalConstraint == null)
+            if (_equalConstraint is null)
             {
                 var message = "Using may only be used with constraints that check the equality of the items";
                 throw new ArgumentException(message, argument);

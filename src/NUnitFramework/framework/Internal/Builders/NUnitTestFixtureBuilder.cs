@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal.Builders
             if (typeInfo.ContainsGenericParameters)
             {
                 Type[]? typeArgs = testFixtureData.TypeArgs;
-                if (typeArgs == null || typeArgs.Length == 0)
+                if (typeArgs is null || typeArgs.Length == 0)
                 {
                     int cnt = 0;
                     foreach (object? o in arguments)
@@ -109,20 +109,20 @@ namespace NUnit.Framework.Internal.Builders
 
             string name = fixture.Name;
 
-            if (testFixtureData.TestName != null)
+            if (testFixtureData.TestName is not null)
             {
                 fixture.Name = testFixtureData.TestName;
             }
             else
             {
                 var argDisplayNames = (testFixtureData as TestParameters)?.ArgDisplayNames;
-                if (argDisplayNames != null)
+                if (argDisplayNames is not null)
                 {
                     fixture.Name = typeInfo.GetDisplayName();
                     if (argDisplayNames.Length != 0)
                         fixture.Name += '(' + string.Join(", ", argDisplayNames) + ')';
                 }
-                else if (arguments != null && arguments.Length > 0)
+                else if (arguments is not null && arguments.Length > 0)
                 {
                     fixture.Name = typeInfo.GetDisplayName(arguments);
                 }
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Internal.Builders
             if (fixture.Name != name) // name was changed
             {
                 string? nspace = typeInfo.Namespace;
-                fixture.FullName = nspace != null && nspace != ""
+                fixture.FullName = nspace is not null && nspace != ""
                     ? nspace + "." + fixture.Name
                     : fixture.Name;
             }
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     Test? test = BuildTestCase(method, fixture);
 
-                    if (test != null)
+                    if (test is not null)
                         fixture.Add(test);
                     else // it's not a test, check for disallowed attributes
                         if (method.MethodInfo.HasAttribute<ParallelizableAttribute>(false))

@@ -18,7 +18,7 @@ namespace NUnit.Framework.Tests.Interfaces
 
             expected.AppendFormat(" destination=\"{0}\"", destination);
 
-            if (testId != null)
+            if (testId is not null)
             {
                 expected.AppendFormat(" testid=\"{0}\"", testId);
             }

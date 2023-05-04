@@ -125,7 +125,7 @@ namespace NUnitLite
 
         private static string Escape(string input)
         {
-            return input != null
+            return input is not null
                 ? input.Replace("|", "||")
                        .Replace("'", "|'")
                        .Replace("\n", "|n")

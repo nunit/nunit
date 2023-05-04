@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
 
             caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            if (caughtException != null)
+            if (caughtException is not null)
             {
                 return new ThrowsConstraintResult(
                     this,
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (baseResult == null)
+                if (baseResult is null)
                     writer.Write("no exception thrown");
                 else
                     baseResult.WriteActualValueTo(writer);

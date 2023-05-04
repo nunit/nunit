@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
             {
                 var baseType = Type.BaseType;
 
-                return baseType != null
+                return baseType is not null
                     ? new TypeWrapper(baseType)
                     : null;
             }
@@ -190,7 +190,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public bool HasConstructor(Type[] argTypes)
         {
-            return GetConstructor(argTypes) != null;
+            return GetConstructor(argTypes) is not null;
         }
 
         /// <summary>

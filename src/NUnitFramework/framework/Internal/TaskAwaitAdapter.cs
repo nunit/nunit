@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal
                 .TypeAndBaseTypes()
                 .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Task<>));
 
-            if (genericTaskType != null)
+            if (genericTaskType is not null)
             {
                 var typeArgument = genericTaskType.GetGenericArguments()[0];
                 return (AwaitAdapter)typeof(GenericAdapter<>)

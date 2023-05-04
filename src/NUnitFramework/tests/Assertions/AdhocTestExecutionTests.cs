@@ -45,7 +45,7 @@ namespace NUnit.Framework.Assertions
             }
 
             // Throw any exception we got only after context is restored
-            if (testException != null)
+            if (testException is not null)
                 throw testException;
         }
 

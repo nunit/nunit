@@ -48,7 +48,7 @@ namespace NUnit.Common
 
         public override string ToString()
         {
-            if (Text == null)
+            if (Text is null)
                 return Kind.ToString();
             return $"{Kind}:{Text}";
         }
@@ -94,7 +94,7 @@ namespace NUnit.Common
 
         public Tokenizer(string input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             _input = input;
@@ -105,7 +105,7 @@ namespace NUnit.Common
         {
             get
             {
-                if (_lookahead == null)
+                if (_lookahead is null)
                     _lookahead = GetNextToken();
 
                 return _lookahead;

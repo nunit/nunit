@@ -20,7 +20,7 @@ namespace NUnit.Framework.Internal.Commands
         /// </summary>
         public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
+            Guard.OperationValid(AfterTest is not null, "AfterTest was not set by the derived class constructor");
 
             RunTestMethodInThreadAbortSafeZone(context, () =>
             {

@@ -45,8 +45,8 @@ namespace NUnit.Framework.Internal
                 //If exception thrown, assume no valid installation
             }
 
-            bool isMonoTouch = monoTouchType != null;
-            bool isMono = monoRuntimeType != null;
+            bool isMonoTouch = monoTouchType is not null;
+            bool isMono = monoRuntimeType is not null;
             bool isNetCore = !isMono && !isMonoTouch && IsNetCore();
 
             RuntimeType runtime = isMonoTouch
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
                 major = 3;
                 minor = 5;
             }
-            else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") != null)
+            else if (major == 4 && Type.GetType("System.Reflection.AssemblyMetadataAttribute") is not null)
             {
                 minor = 5;
             }
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Internal
             {
                 MethodInfo? getDisplayNameMethod = monoRuntimeType!.GetMethod(
                     "GetDisplayName", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.ExactBinding);
-                if (getDisplayNameMethod != null)
+                if (getDisplayNameMethod is not null)
                     currentFramework.DisplayName = (string?)getDisplayNameMethod.Invoke(null, Array.Empty<object>()) ?? "Mono";
             }
             return currentFramework;
@@ -346,7 +346,7 @@ namespace NUnit.Framework.Internal
             // Mono versions will throw a TypeLoadException when attempting to run the internal method, so we wrap it in a try/catch
             // block to stop any inlining in release builds and check whether the type exists
             Type? runtimeInfoType = Type.GetType("System.Runtime.InteropServices.RuntimeInformation,System.Runtime.InteropServices.RuntimeInformation", false);
-            if (runtimeInfoType != null)
+            if (runtimeInfoType is not null)
             {
                 try
                 {

@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         public static object Construct(Type type)
         {
             ConstructorInfo? ctor = type.GetConstructor(Array.Empty<Type>());
-            if (ctor == null)
+            if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a default constructor");
 
             return ctor.Invoke(null);
@@ -73,11 +73,11 @@ namespace NUnit.Framework.Internal
         /// <returns>An instance of the Type</returns>
         public static object Construct(Type type, object?[]? arguments)
         {
-            if (arguments == null) return Construct(type);
+            if (arguments is null) return Construct(type);
 
             Type?[] argTypes = GetTypeArray(arguments);
             ConstructorInfo? ctor = GetConstructors(type, argTypes).FirstOrDefault();
-            if (ctor == null)
+            if (ctor is null)
                 throw new InvalidTestFixtureException(type.FullName + " does not have a suitable constructor");
 
             return ctor.Invoke(arguments);
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Internal
                 return true;
 
             // Look for the marker that indicates from was null
-            if (from == null)
+            if (from is null)
             {
                 // Look for the marker that indicates from was null
                 return to.IsClass || to.FullName().StartsWith("System.Nullable", StringComparison.Ordinal);
@@ -245,20 +245,20 @@ namespace NUnit.Framework.Internal
                 // If we're searching for both public and nonpublic properties, search for only public first
                 // because chances are if there is a public property, it would be very surprising to detect the private shadowing property.
 
-                for (var publicSearchType = type; publicSearchType != null; publicSearchType = publicSearchType.BaseType)
+                for (var publicSearchType = type; publicSearchType is not null; publicSearchType = publicSearchType.BaseType)
                 {
                     var property = publicSearchType.GetProperty(name, (bindingFlags | BindingFlags.DeclaredOnly) & ~BindingFlags.NonPublic);
-                    if (property != null) return property;
+                    if (property is not null) return property;
                 }
 
                 // There is no public property, so may as well not ask to include them during the second search.
                 bindingFlags &= ~BindingFlags.Public;
             }
 
-            for (var searchType = type; searchType != null; searchType = searchType.BaseType)
+            for (var searchType = type; searchType is not null; searchType = searchType.BaseType)
             {
                 var property = searchType.GetProperty(name, bindingFlags | BindingFlags.DeclaredOnly);
-                if (property != null) return property;
+                if (property is not null) return property;
             }
 
             return null;
@@ -280,7 +280,7 @@ namespace NUnit.Framework.Internal
 
         internal static IEnumerable<Type> TypeAndBaseTypes(this Type? type)
         {
-            for (; type != null; type = type.BaseType)
+            for (; type is not null; type = type.BaseType)
             {
                 yield return type;
             }
@@ -312,7 +312,7 @@ namespace NUnit.Framework.Internal
                        return true;
                    });
 
-                if (method != null) return method;
+                if (method is not null) return method;
             }
 
             return null;
@@ -320,7 +320,7 @@ namespace NUnit.Framework.Internal
 
         internal static PropertyInfo? GetPublicInstanceProperty(this Type type, string name, Type[] indexParameterTypes)
         {
-            for (var currentType = type; currentType != null; currentType = currentType.BaseType)
+            for (var currentType = type; currentType is not null; currentType = currentType.BaseType)
             {
                 var property = currentType
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
@@ -337,7 +337,7 @@ namespace NUnit.Framework.Internal
                          return true;
                      });
 
-                if (property != null) return property;
+                if (property is not null) return property;
             }
 
             return null;
@@ -440,7 +440,11 @@ namespace NUnit.Framework.Internal
             {
                 members = currentType.GetMember(name, flags);
             }
-            while (members.Length == 0 && (currentType = currentType.BaseType) != null);
+            while (members.Length == 0 &&
+#pragma warning disable CSIsNull002 // Use `is not null` for non-null checks
+                  // https://github.com/dotnet/roslyn/issues/59152
+                  (currentType = currentType.BaseType) != null);
+#pragma warning restore CSIsNull002 // Use `is not null` for non-null checks
             return members;
         }
     }

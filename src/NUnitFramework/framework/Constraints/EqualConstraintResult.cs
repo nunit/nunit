@@ -71,7 +71,7 @@ namespace NUnit.Framework.Constraints
                 DisplayEnumerableDifferences(writer, expectedEnumerable, actualEnumerable, depth);
             else if (expected is Stream expectedStream && actual is Stream actualStream)
                 DisplayStreamDifferences(writer, expectedStream, actualStream, depth);
-            else if (tolerance != null)
+            else if (tolerance is not null)
                 writer.DisplayDifferences(expected, actual, tolerance);
             else
                 writer.DisplayDifferences(expected, actual);
@@ -186,7 +186,7 @@ namespace NUnit.Framework.Constraints
 
             bool useOneIndex = expectedRank == actualRank;
 
-            if (expectedArray != null && actualArray != null)
+            if (expectedArray is not null && actualArray is not null)
                 for (int r = 1; r < expectedRank && useOneIndex; r++)
                     if (expectedArray.GetLength(r) != actualArray.GetLength(r))
                         useOneIndex = false;

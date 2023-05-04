@@ -80,7 +80,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using(IComparer comparer)
         {
-            if (_activeStep.ComparerName != null)
+            if (_activeStep.ComparerName is not null)
                 throw new InvalidOperationException("Only one Using modifier may be used");
             _activeStep.Comparer = ComparisonAdapter.For(comparer);
             _activeStep.ComparerName = comparer.GetType().FullName;
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using<T>(IComparer<T> comparer)
         {
-            if (_activeStep.ComparerName != null)
+            if (_activeStep.ComparerName is not null)
                 throw new InvalidOperationException("Only one Using modifier may be used");
             _activeStep.Comparer = ComparisonAdapter.For(comparer);
             _activeStep.ComparerName = comparer.GetType().FullName;
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint Using<T>(Comparison<T> comparer)
         {
-            if (_activeStep.ComparerName != null)
+            if (_activeStep.ComparerName is not null)
                 throw new InvalidOperationException("Only one Using modifier may be used");
             _activeStep.Comparer = ComparisonAdapter.For(comparer);
             _activeStep.ComparerName = comparer.GetType().FullName;
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public CollectionOrderedConstraint By(string propertyName)
         {
-            if (_activeStep.PropertyName == null)
+            if (_activeStep.PropertyName is null)
                 _activeStep.PropertyName = propertyName;
             else
                 CreateNextStep(propertyName);
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Constraints
                 {
                     if (index++ != 0) description += " then";
 
-                    if (step.PropertyName != null)
+                    if (step.PropertyName is not null)
                         description += " by " + MsgUtils.FormatValue(step.PropertyName);
 
                     if (step.Direction == OrderDirection.Descending)
@@ -191,11 +191,11 @@ namespace NUnit.Framework.Constraints
             {
                 _breakingValue = current;
 
-                if (previous != null)
+                if (previous is not null)
                 {
-                    if (_steps[0].PropertyName != null)
+                    if (_steps[0].PropertyName is not null)
                     {
-                        if (current == null)
+                        if (current is null)
                             throw new ArgumentNullException(nameof(actual), $"Null value at index {_breakingIndex}");
 
                         foreach (var step in _steps)
@@ -251,11 +251,11 @@ namespace NUnit.Framework.Constraints
                 // For now, just using the first step
                 // TODO: Revise format and tests that depend on it
                 var step = _steps[0];
-                if (step.PropertyName != null)
+                if (step.PropertyName is not null)
                     sb.Append("by " + step.PropertyName);
                 if (step.Direction == OrderDirection.Descending)
                     sb.Append(" descending");
-                if (step.ComparerName != null)
+                if (step.ComparerName is not null)
                     sb.Append(" " + step.ComparerName);
             }
 
@@ -274,13 +274,13 @@ namespace NUnit.Framework.Constraints
         private object? ExtractValue(IEnumerable actual, object item, string propertyName, int index)
         {
             PropertyInfo? property = item.GetType().GetProperty(propertyName);
-            if (property != null)
+            if (property is not null)
             {
                 return property.GetValue(item, null);
             }
 
             FieldInfo? field = item.GetType().GetField(propertyName);
-            if (field != null)
+            if (field is not null)
             {
                 return field.GetValue(item);
             }

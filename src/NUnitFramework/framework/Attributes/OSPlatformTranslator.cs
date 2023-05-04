@@ -47,7 +47,7 @@ namespace NUnit.Framework
 
                     static void Add(HashSet<string> set, string? platforms)
                     {
-                        if (platforms != null)
+                        if (platforms is not null)
                         {
                             set.UnionWith(platforms.Split(','));
                         }

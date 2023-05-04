@@ -71,7 +71,7 @@ namespace NUnit.Framework.Interfaces
 
             writer.WriteAttributeString("destination", Destination);
 
-            if (TestId != null)
+            if (TestId is not null)
                 writer.WriteAttributeString("testid", TestId);
 
             writer.WriteCDataSafe(Message);

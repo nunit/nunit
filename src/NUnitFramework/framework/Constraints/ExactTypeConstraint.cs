@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True if the constraint succeeds, otherwise false.</returns>
         protected override bool Matches(object? actual)
         {
-            return actual != null && actual.GetType() == expectedType;
+            return actual is not null && actual.GetType() == expectedType;
         }
     }
 }

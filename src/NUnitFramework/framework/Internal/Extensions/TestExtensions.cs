@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal.Extensions
     {
         public static bool HasLifeCycle(this ITest? test, LifeCycle lifeCycle)
         {
-            while (test != null)
+            while (test is not null)
             {
                 if (test is TestFixture fixture)
                     return fixture.LifeCycle == lifeCycle;

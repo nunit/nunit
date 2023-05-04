@@ -131,15 +131,15 @@ namespace NUnit.Framework.Internal
             {
                 ITypeInfo? typeInfo = TypeInfo;
 
-                if (Method != null)
+                if (Method is not null)
                 {
-                    if (_declaringTypeInfo == null)
+                    if (_declaringTypeInfo is null)
                         _declaringTypeInfo = new TypeWrapper(Method.MethodInfo.DeclaringType!);
 
                     typeInfo = _declaringTypeInfo;
                 }
 
-                if (typeInfo == null)
+                if (typeInfo is null)
                     return null;
 
                 return typeInfo.IsGenericType
@@ -274,15 +274,15 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (_actions == null)
+                if (_actions is null)
                 {
                     // For fixtures, we use special rules to get actions
                     // Otherwise we just get the attributes
-                    if (Method == null && TypeInfo != null)
+                    if (Method is null && TypeInfo is not null)
                     {
                         _actions = TestMetadataCache.Get(TypeInfo.Type).TestActionAttributes;
                     }
-                    else if (Method != null)
+                    else if (Method is not null)
                     {
                         _actions = MethodInfoCache.Get(Method).TestActionAttributes;
                     }
@@ -366,10 +366,10 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public virtual TAttr[] GetCustomAttributes<TAttr>(bool inherit) where TAttr : class
         {
-            if (Method != null)
+            if (Method is not null)
                 return Method.GetCustomAttributes<TAttr>(inherit);
 
-            if (TypeInfo != null)
+            if (TypeInfo is not null)
                 return TypeInfo.GetCustomAttributes<TAttr>(inherit);
 
             return Array.Empty<TAttr>();
@@ -389,9 +389,9 @@ namespace NUnit.Framework.Internal
             thisNode.AddAttribute("id", this.Id);
             thisNode.AddAttribute("name", this.Name);
             thisNode.AddAttribute("fullname", this.FullName);
-            if (this.MethodName != null)
+            if (this.MethodName is not null)
                 thisNode.AddAttribute("methodname", this.MethodName);
-            if (this.ClassName != null)
+            if (this.ClassName is not null)
                 thisNode.AddAttribute("classname", this.ClassName);
             thisNode.AddAttribute("runstate", this.RunState.ToString());
 
@@ -405,7 +405,7 @@ namespace NUnit.Framework.Internal
         protected IEnumerable<Type> GetNestedTypes(Type inner)
         {
             var current = inner;
-            while (current != null)
+            while (current is not null)
             {
                 yield return current;
                 current = current.DeclaringType;
@@ -450,7 +450,7 @@ namespace NUnit.Framework.Internal
         /// <param name="other">An object to compare with this instance.</param>
         public int CompareTo(Test? other)
         {
-            return other == null ? -1 : this.FullName.CompareTo(other.FullName);
+            return other is null ? -1 : this.FullName.CompareTo(other.FullName);
         }
 
 #endregion

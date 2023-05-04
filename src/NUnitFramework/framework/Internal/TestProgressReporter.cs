@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal
                 writer.WriteStartElement(isSuite ? "start-suite" : "start-test");
 
                 writer.WriteAttributeString("id", test.Id);
-                writer.WriteAttributeString("parentId", parent != null ? parent.Id : string.Empty);
+                writer.WriteAttributeString("parentId", parent is not null ? parent.Id : string.Empty);
                 writer.WriteAttributeStringSafe("name", test.Name);
                 writer.WriteAttributeStringSafe("fullname", test.FullName);
                 writer.WriteAttributeStringSafe("type", test.TestType);
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Internal
         {
             var node = result.ToXml(false);
             var parent = GetParent(result.Test);
-            node.AddAttribute("parentId", parent != null ? parent.Id : string.Empty);
+            node.AddAttribute("parentId", parent is not null ? parent.Id : string.Empty);
 
             using var stringWriter = new StringWriter(GetStringBuilder());
             using (var xmlWriter = XmlWriter.Create(stringWriter, XmlExtensions.FragmentWriterSettings))
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Internal
             {
                 var parent = test?.Parent;
 
-                if (parent == null)
+                if (parent is null)
                 {
                     return null;
                 }

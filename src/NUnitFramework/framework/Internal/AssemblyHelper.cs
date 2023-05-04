@@ -95,7 +95,7 @@ namespace NUnit.Framework.Internal
             private static ReflectionAssemblyLoader? TryInitialize()
             {
                 var assemblyLoadContextType = Type.GetType("System.Runtime.Loader.AssemblyLoadContext", throwOnError: false);
-                if (assemblyLoadContextType == null) return null;
+                if (assemblyLoadContextType is null) return null;
 
                 var defaultContext = assemblyLoadContextType.GetRuntimeProperty("Default")!.GetValue(null);
 
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal
                 || ext.Equals(".exe", StringComparison.OrdinalIgnoreCase))
             {
                 var fromLoader = ReflectionAssemblyLoader.TryGet()?.LoadFromAssemblyPath(Path.GetFullPath(name));
-                if (fromLoader != null) return fromLoader;
+                if (fromLoader is not null) return fromLoader;
 
                 name = Path.GetFileNameWithoutExtension(name);
             }

@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             IFixtureBuilder[] attrs = Array.Empty<IFixtureBuilder>();
 
-            while (typeInfo != null && !typeInfo.IsType(typeof(object)))
+            while (typeInfo is not null && !typeInfo.IsType(typeof(object)))
             {
                 attrs = typeInfo.GetCustomAttributes<IFixtureBuilder>(false);
 
@@ -172,7 +172,7 @@ namespace NUnit.Framework.Internal.Builders
             // Only TestFixtureAttribute can be used without arguments
             var temp = attr as TestFixtureAttribute;
 
-            return temp == null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
+            return temp is null || temp.Arguments.Length > 0 || temp.TypeArgs.Length > 0;
         }
 
         #endregion

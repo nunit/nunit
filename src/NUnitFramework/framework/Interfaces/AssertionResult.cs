@@ -40,7 +40,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="other">An object to compare with this object.</param>
         public bool Equals(AssertionResult? other)
         {
-            return other != null &&
+            return other is not null &&
                 Status == other.Status &&
                 Message == other.Message &&
                 StackTrace == other.StackTrace;

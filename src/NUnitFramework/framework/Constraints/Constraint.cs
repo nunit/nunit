@@ -134,7 +134,7 @@ namespace NUnit.Framework.Constraints
         {
             string rep = GetStringRepresentation();
 
-            return this.Builder == null ? rep : $"<unresolved {rep}>";
+            return this.Builder is null ? rep : $"<unresolved {rep}>";
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Constraints
 
             static string Displayable(object? o)
             {
-                if (o == null) return "null";
+                if (o is null) return "null";
                 else if (o is string s) return $"\"{s}\"";
                 else return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}", o);
             }
@@ -220,7 +220,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 ConstraintBuilder? builder = this.Builder;
-                if (builder == null)
+                if (builder is null)
                 {
                     builder = new ConstraintBuilder();
                     builder.Append(this);
@@ -247,7 +247,7 @@ namespace NUnit.Framework.Constraints
             get
             {
                 ConstraintBuilder? builder = this.Builder;
-                if (builder == null)
+                if (builder is null)
                 {
                     builder = new ConstraintBuilder();
                     builder.Append(this);
@@ -271,7 +271,7 @@ namespace NUnit.Framework.Constraints
         public DelayedConstraint.WithRawDelayInterval After(int delay)
         {
             return new DelayedConstraint.WithRawDelayInterval(new DelayedConstraint(
-                Builder == null ? this : Builder.Resolve(),
+                Builder is null ? this : Builder.Resolve(),
                 delay));
         }
 
@@ -285,7 +285,7 @@ namespace NUnit.Framework.Constraints
         public DelayedConstraint After(int delayInMilliseconds, int pollingInterval)
         {
             return new DelayedConstraint(
-                Builder == null ? this : Builder.Resolve(),
+                Builder is null ? this : Builder.Resolve(),
                 delayInMilliseconds,
                 pollingInterval);
         }
@@ -300,7 +300,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         IConstraint IResolveConstraint.Resolve()
         {
-            return Builder == null ? this : Builder.Resolve();
+            return Builder is null ? this : Builder.Resolve();
         }
 
         #endregion

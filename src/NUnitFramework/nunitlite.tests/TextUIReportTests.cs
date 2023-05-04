@@ -137,7 +137,7 @@ namespace NUnitLite.Tests
 
             string line;
             var lines = new List<string>();
-            while ((line = rdr.ReadLine()) != null)
+            while ((line = rdr.ReadLine()) is not null)
             {
                 if ( !line.Contains("InvokeStub_") )
                 {

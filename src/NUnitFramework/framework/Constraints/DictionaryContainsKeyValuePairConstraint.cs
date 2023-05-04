@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
 
         private bool Matches(object? actual)
         {
-            if (actual == null)
+            if (actual is null)
                 throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
 
             if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))

@@ -56,7 +56,7 @@ namespace NUnitLite
             TNode resultNode = result.ToXml(true);
 
             // Insert elements as first child in reverse order
-            if (runSettings != null) // Some platforms don't have settings
+            if (runSettings is not null) // Some platforms don't have settings
                 FrameworkController.InsertSettingsElement(resultNode, runSettings);
             FrameworkController.InsertEnvironmentElement(resultNode);
 
@@ -110,7 +110,7 @@ namespace NUnitLite
         private static TNode MakeTestFilterElement(TestFilter filter)
         {
             TNode result = new TNode("filter");
-            if (filter != null && !filter.IsEmpty)
+            if (filter is not null && !filter.IsEmpty)
                 filter.AddToXml(result, true);
             return result;
         }

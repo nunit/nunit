@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal
         /// <returns>The display name</returns>
         public string GetDisplayName(TestMethod testMethod, object?[]? args)
         {
-            if (_fragments == null)
+            if (_fragments is null)
                 _fragments = BuildFragmentList(_pattern);
 
             var result = new StringBuilder();
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Internal
 
             protected static string GetDisplayString(object? arg, int stringMax)
             {
-                string display = arg == null
+                string display = arg is null
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
 
@@ -547,7 +547,7 @@ namespace NUnit.Framework.Internal
 
             public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? arglist)
             {
-                if (arglist != null)
+                if (arglist is not null)
                 {
                     sb.Append('(');
 
@@ -575,7 +575,7 @@ namespace NUnit.Framework.Internal
 
             public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                if (args != null && _index < args.Length)
+                if (args is not null && _index < args.Length)
                     sb.Append(GetDisplayString(args[_index], _maxStringLength));
             }
         }
@@ -591,7 +591,7 @@ namespace NUnit.Framework.Internal
 
             public override void AppendTextTo(StringBuilder sb, MethodInfo method, object?[]? args)
             {
-                if (args != null)
+                if (args is not null)
                 {
                     sb.Append('(');
 

@@ -107,7 +107,7 @@ namespace NUnit.Framework.Attributes
 
                     if (caughtType == _expectedType)
                         context.CurrentResult.SetResult(ResultState.Success);
-                    else if (caughtType != null)
+                    else if (caughtType is not null)
                         context.CurrentResult.SetResult(ResultState.Failure,
                             $"Expected {_expectedType.Name} but got {caughtType.Name}");
                     else

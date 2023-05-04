@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             string? containingNamespace = null;
 
-            if (test.TypeInfo != null)
+            if (test.TypeInfo is not null)
             {
                 containingNamespace = test.TypeInfo.Namespace;
             }

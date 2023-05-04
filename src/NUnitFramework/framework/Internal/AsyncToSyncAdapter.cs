@@ -14,7 +14,7 @@ namespace NUnit.Framework.Internal
         public static bool IsAsyncOperation(MethodInfo method)
         {
             return AwaitAdapter.IsAwaitable(method.ReturnType)
-                || (_asyncStateMachineAttributeType != null && method.IsDefined(_asyncStateMachineAttributeType, false));
+                || (_asyncStateMachineAttributeType is not null && method.IsDefined(_asyncStateMachineAttributeType, false));
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
             if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
             {
                 var context = SynchronizationContext.Current;
-                if (context == null || context.GetType() == typeof(SynchronizationContext))
+                if (context is null || context.GetType() == typeof(SynchronizationContext))
                 {
                     var singleThreadedContext = new SingleThreadedTestSynchronizationContext(
                         shutdownTimeout: TimeSpan.FromSeconds(10));

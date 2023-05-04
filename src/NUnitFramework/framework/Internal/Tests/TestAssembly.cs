@@ -67,7 +67,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override TAttr[] GetCustomAttributes<TAttr>(bool inherit)
         {
-            return Assembly != null
+            return Assembly is not null
                 ? Assembly.GetAttributes<TAttr>()
                 : Array.Empty<TAttr>();
         }

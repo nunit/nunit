@@ -55,11 +55,11 @@ namespace NUnitLite
             string build = "";
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
-            if (copyrightAttr != null)
+            if (copyrightAttr is not null)
                 copyright = copyrightAttr.Copyright;
 
             var configAttr = executingAssembly.GetCustomAttribute<AssemblyConfigurationAttribute>();
-            if (configAttr != null)
+            if (configAttr is not null)
                 build = $"({configAttr.Configuration})";
 
             WriteHeader($"NUnitLite {version.ToString(3)} {build}");
@@ -267,7 +267,7 @@ namespace NUnitLite
 
         public void TestOutput(TestOutput output)
         {
-            if (_displayBeforeOutput && output.TestName != null)
+            if (_displayBeforeOutput && output.TestName is not null)
                 WriteLabelLine(output.TestName);
 
             WriteOutput(output.Stream == "Error" ? ColorStyle.Error : ColorStyle.Output, output.Text);
@@ -280,7 +280,7 @@ namespace NUnitLite
         public void WaitForUser(string message)
         {
             // Ignore if we don't have a TextReader
-            if (_reader != null)
+            if (_reader is not null)
             {
                 Writer.WriteLine(ColorStyle.Label, message);
                 _reader.ReadLine();

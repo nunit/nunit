@@ -37,7 +37,7 @@ namespace NUnit.Framework.Internal
         {
             // Needed to give proper fullname to test in a parameterized fixture.
             // Without this, the arguments to the fixture are not included.
-            if (parentSuite != null)
+            if (parentSuite is not null)
                 FullName = parentSuite.FullName + "." + Name;
         }
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in executing the test method, or empty array if none are provided.
         /// </summary>
-        public override object?[] Arguments => parms == null ? TestParameters.NoArguments : parms.Arguments;
+        public override object?[] Arguments => parms is null ? TestParameters.NoArguments : parms.Arguments;
 
         /// <summary>
         /// Overridden to return a TestCaseResult.

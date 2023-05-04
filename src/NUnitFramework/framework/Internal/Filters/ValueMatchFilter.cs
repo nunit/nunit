@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <summary>
         /// Indicates whether the value is a regular expression
         /// </summary>
-        public bool IsRegex => _regex != null;
+        public bool IsRegex => _regex is not null;
 
         /// <summary>
         /// Construct a ValueMatchFilter for a single value.
@@ -44,10 +44,10 @@ namespace NUnit.Framework.Internal.Filters
         /// <returns>True for a match, false otherwise.</returns>
         protected bool Match(string? input)
         {
-            if (_regex == null)
+            if (_regex is null)
                 return ExpectedValue == input;
             else
-                return input != null && _regex.IsMatch(input);
+                return input is not null && _regex.IsMatch(input);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal.Filters
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode result = parentNode.AddElement(ElementName, ExpectedValue);
-            if (_regex != null)
+            if (_regex is not null)
                 result.AddAttribute("re", "1");
             return result;
         }

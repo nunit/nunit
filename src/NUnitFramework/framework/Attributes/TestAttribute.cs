@@ -73,13 +73,13 @@ namespace NUnit.Framework
         {
             Guard.ArgumentValid(test.Method is object, "This attribute must only be applied to tests that have an associated method.", nameof(test));
 
-            if (!test.Properties.ContainsKey(PropertyNames.Description) && Description != null)
+            if (!test.Properties.ContainsKey(PropertyNames.Description) && Description is not null)
                 test.Properties.Set(PropertyNames.Description, Description);
 
-            if (!test.Properties.ContainsKey(PropertyNames.Author) && Author != null)
+            if (!test.Properties.ContainsKey(PropertyNames.Author) && Author is not null)
                 test.Properties.Set(PropertyNames.Author, Author);
 
-            if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf != null)
+            if (!test.Properties.ContainsKey(PropertyNames.TestOf) && TestOf is not null)
                 test.Properties.Set(PropertyNames.TestOf, TestOf.FullName());
 
             if (_hasExpectedResult && test.Method.GetParameters().Length > 0)

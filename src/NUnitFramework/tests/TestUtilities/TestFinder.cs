@@ -1,4 +1,4 @@
-// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -21,7 +21,7 @@ namespace NUnit.TestUtilities
                     if (child is TestSuite childSuite)
                     {
                         Test? grandchild = Find(name, childSuite, true);
-                        if (grandchild != null)
+                        if (grandchild is not null)
                             return grandchild;
                     }
                 }
@@ -42,7 +42,7 @@ namespace NUnit.TestUtilities
                     if (recursive && childResult.HasChildren)
                     {
                         ITestResult? r = Find(name, childResult, true);
-                        if (r != null)
+                        if (r is not null)
                             return r;
                     }
                 }

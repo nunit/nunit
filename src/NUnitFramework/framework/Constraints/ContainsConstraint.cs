@@ -33,7 +33,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                if (_realConstraint != null)
+                if (_realConstraint is not null)
                 {
                     return _realConstraint.Description;
                 }

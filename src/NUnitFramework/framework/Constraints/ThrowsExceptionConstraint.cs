@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         private class ThrowsExceptionConstraintResult : ConstraintResult
         {
             public ThrowsExceptionConstraintResult(ThrowsExceptionConstraint constraint, Exception? caughtException)
-                : base(constraint, caughtException, caughtException != null) { }
+                : base(constraint, caughtException, caughtException is not null) { }
 
             public override void WriteActualValueTo(MessageWriter writer)
             {

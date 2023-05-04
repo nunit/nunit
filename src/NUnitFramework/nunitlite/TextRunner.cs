@@ -92,10 +92,10 @@ namespace NUnitLite
             TextWriter originalStdOutWriter = null;
             TextWriter originalStdErrWriter = null;
 
-            _options = new NUnitLiteOptions(_testAssembly == null, args);
+            _options = new NUnitLiteOptions(_testAssembly is null, args);
 
             ExtendedTextWriter outWriter = null;
-            if (_options.OutFile != null)
+            if (_options.OutFile is not null)
             {
                 var outFile = Path.Combine(_options.WorkDirectory, _options.OutFile);
                 var textWriter = TextWriter.Synchronized(new StreamWriter(outFile));
@@ -113,7 +113,7 @@ namespace NUnitLite
                 using (outWriter)
                 {
                     TextWriter errWriter = null;
-                    if (_options.ErrFile != null)
+                    if (_options.ErrFile is not null)
                     {
                         var errFile = Path.Combine(_options.WorkDirectory, _options.ErrFile);
                         errWriter = TextWriter.Synchronized(new StreamWriter(errFile));
@@ -131,7 +131,7 @@ namespace NUnitLite
                     }
                     finally
                     {
-                        if (originalStdErrWriter != null)
+                        if (originalStdErrWriter is not null)
                         {
                             Console.SetError(originalStdErrWriter);
                         }
@@ -140,7 +140,7 @@ namespace NUnitLite
             }
             finally
             {
-                if (originalStdOutWriter != null)
+                if (originalStdOutWriter is not null)
                 {
                     Console.SetOut(originalStdOutWriter);
                 }
@@ -150,7 +150,7 @@ namespace NUnitLite
         // Entry point called by AutoRun and by the .NET Standard nunitlite.runner
         public int Execute(ExtendedTextWriter writer, TextReader reader, string[] args)
         {
-            _options = new NUnitLiteOptions(_testAssembly == null, args);
+            _options = new NUnitLiteOptions(_testAssembly is null, args);
 
             _textUI = new TextUI(writer, reader, _options);
 
@@ -194,7 +194,7 @@ namespace NUnitLite
                     return TextRunner.INVALID_ARG;
                 }
 
-                if (_testAssembly == null && _options.InputFile == null)
+                if (_testAssembly is null && _options.InputFile is null)
                 {
                     _textUI.DisplayError("No test assembly was specified.");
                     _textUI.Writer.WriteLine();
@@ -205,15 +205,15 @@ namespace NUnitLite
 
                 _textUI.DisplayRuntimeEnvironment();
 
-                var testFile = _testAssembly != null
+                var testFile = _testAssembly is not null
                     ? AssemblyHelper.GetAssemblyPath(_testAssembly)
                     : _options.InputFile;
 
                 _textUI.DisplayTestFiles(new[] { testFile });
-                if (_testAssembly == null)
+                if (_testAssembly is null)
                     _testAssembly = AssemblyHelper.Load(testFile);
 
-                if (_options.WaitBeforeExit && _options.OutFile != null)
+                if (_options.WaitBeforeExit && _options.OutFile is not null)
                     _textUI.DisplayWarning("Ignoring /wait option - only valid for Console");
 
                 var runSettings = MakeRunSettings(_options);
@@ -344,13 +344,13 @@ namespace NUnitLite
             if (options.NumberOfTestWorkers >= 0)
                 runSettings[FrameworkPackageSettings.NumberOfTestWorkers] = options.NumberOfTestWorkers;
 
-            if (options.InternalTraceLevel != null)
+            if (options.InternalTraceLevel is not null)
                 runSettings[FrameworkPackageSettings.InternalTraceLevel] = options.InternalTraceLevel;
 
             if (options.RandomSeed >= 0)
                 runSettings[FrameworkPackageSettings.RandomSeed] = options.RandomSeed;
 
-            if (options.WorkDirectory != null)
+            if (options.WorkDirectory is not null)
                 runSettings[FrameworkPackageSettings.WorkDirectory] = Path.GetFullPath(options.WorkDirectory);
 
             if (options.DefaultTimeout >= 0)
@@ -359,7 +359,7 @@ namespace NUnitLite
             if (options.StopOnError)
                 runSettings[FrameworkPackageSettings.StopOnError] = true;
 
-            if (options.DefaultTestNamePattern != null)
+            if (options.DefaultTestNamePattern is not null)
                 runSettings[FrameworkPackageSettings.DefaultTestNamePattern] = options.DefaultTestNamePattern;
 
             if (options.TestParameters.Count != 0)
@@ -427,9 +427,9 @@ namespace NUnitLite
             // Some mobiles don't have an Open With menu item,
             // so we use .txt, which is opened easily.
             const string ext = "log";
-            var baseName = _testAssembly != null
+            var baseName = _testAssembly is not null
                 ? _testAssembly.GetName().Name
-                : _options.InputFile != null
+                : _options.InputFile is not null
                     ? Path.GetFileNameWithoutExtension(_options.InputFile)
                     : "NUnitLite";
 

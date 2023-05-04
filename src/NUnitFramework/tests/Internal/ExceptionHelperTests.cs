@@ -70,7 +70,7 @@ namespace NUnit.Framework.Internal
 
         private static void ThrowingExtensionMethod(this Foo foo)
         {
-            if (foo.ExceptionToThrow != null)
+            if (foo.ExceptionToThrow is not null)
                 throw foo.ExceptionToThrow;
         }
 

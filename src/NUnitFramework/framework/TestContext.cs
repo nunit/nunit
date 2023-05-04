@@ -96,7 +96,7 @@ namespace NUnit.Framework
             {
                 Assembly? assembly = _testExecutionContext?.CurrentTest?.TypeInfo?.Assembly;
 
-                if (assembly != null)
+                if (assembly is not null)
                     return AssemblyHelper.GetDirectoryName(assembly);
 
                 // Test is null, we may be loading tests rather than executing.

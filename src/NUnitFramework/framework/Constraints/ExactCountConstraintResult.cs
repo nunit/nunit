@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="writer">The writer on which the actual value is displayed</param>
         public override void WriteActualValueTo(MessageWriter writer)
         {
-            if (_itemList == null || _itemList.Count == 0)
+            if (_itemList is null || _itemList.Count == 0)
             {
                 writer.Write("no items");
                 return;

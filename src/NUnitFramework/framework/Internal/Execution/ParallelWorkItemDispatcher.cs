@@ -335,7 +335,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     // This will return null if all queues are empty.
                     WorkShift? nextShift = SelectNextShift();
-                    if (nextShift != null)
+                    if (nextShift is not null)
                     {
                         ShiftStarting?.Invoke(nextShift);
                         nextShift.Start();

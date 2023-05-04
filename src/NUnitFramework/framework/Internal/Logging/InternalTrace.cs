@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Gets a flag indicating whether the InternalTrace is initialized
         /// </summary>
-        public static bool Initialized => traceWriter != null;
+        public static bool Initialized => traceWriter is not null;
 
         /// <summary>
         /// Initialize the internal trace facility using the name of the log
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal
         /// <param name="level">The trace level</param>
         public static void Initialize(string logName, InternalTraceLevel level)
         {
-            if (traceWriter == null)
+            if (traceWriter is null)
             {
                 traceLevel = level;
 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         /// <param name="level">The InternalTraceLevel</param>
         public static void Initialize(TextWriter writer, InternalTraceLevel level)
         {
-            if (traceWriter == null)
+            if (traceWriter is null)
             {
                 traceLevel = level;
 

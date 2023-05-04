@@ -146,7 +146,7 @@ namespace NUnit.Framework.Internal.Builders
                 // fixture instead
                 // TODO: Get rid of this somehow?
                 TestSuite? parent = (TestSuite?)containingSuite.Parent;
-                if (parent == null)
+                if (parent is null)
                 {
                     newSetupFixture.Name = RootSuite.Name;
                     RootSuite = newSetupFixture;

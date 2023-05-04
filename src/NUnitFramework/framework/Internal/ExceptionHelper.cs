@@ -141,7 +141,7 @@ namespace NUnit.Framework.Internal
                 foreach (var innerException in aggregateException.InnerExceptions)
                     result.AddRange(FlattenExceptionHierarchy(innerException));
             }
-            else if (exception.InnerException != null)
+            else if (exception.InnerException is not null)
             {
                 result.Add(exception.InnerException);
                 result.AddRange(FlattenExceptionHierarchy(exception.InnerException));

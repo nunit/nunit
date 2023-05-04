@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.Collections.Generic;
@@ -143,7 +143,7 @@ namespace NUnit.TestData.ActionAttributeTests
         {
             string message = $"{test.Name}.{_tag}.{phase}.{_targets}";
 
-            if(ActionAttributeFixture.Events != null)
+            if(ActionAttributeFixture.Events is not null)
                 ActionAttributeFixture.Events.Add(message);
         }
     }

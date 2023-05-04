@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
 
             foreach (var item in enumerable)
             {
-                if (_itemConstraint != null)
+                if (_itemConstraint is not null)
                 {
                     if (_itemConstraint.ApplyTo(item).IsSuccess)
                         matchCount++;
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Constraints
                     _expectedCount == 1 ? "exactly one item" :
                     $"exactly {_expectedCount} items";
 
-                return _itemConstraint != null ? PrefixConstraint.FormatDescription(descriptionPrefix, _itemConstraint) : descriptionPrefix;
+                return _itemConstraint is not null ? PrefixConstraint.FormatDescription(descriptionPrefix, _itemConstraint) : descriptionPrefix;
             }
         }
     }

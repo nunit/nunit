@@ -142,10 +142,10 @@ namespace NUnit.Framework.Constraints
         {
             this._failurePoints = new List<FailurePoint>();
 
-            if (x == null && y == null)
+            if (x is null && y is null)
                 return true;
 
-            if (x == null || y == null)
+            if (x is null || y is null)
                 return false;
 
             if (object.ReferenceEquals(x, y))
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Constraints
 
             EqualityAdapter? externalComparer = GetExternalComparer(x, y);
 
-            if (externalComparer != null)
+            if (externalComparer is not null)
                 return externalComparer.AreEqual(x, y, ref tolerance);
 
             foreach (EqualMethod equalMethod in _comparers)
@@ -180,7 +180,7 @@ namespace NUnit.Framework.Constraints
 
         private EqualityAdapter? GetExternalComparer(object x, object y)
         {
-            if (_externalComparers != null)
+            if (_externalComparers is not null)
             {
                 foreach (EqualityAdapter adapter in _externalComparers)
                     if (adapter.CanCompare(x, y))

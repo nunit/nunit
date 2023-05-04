@@ -136,16 +136,16 @@ namespace NUnit.Framework
             {
                 IEnumerable? source = GetTestFixtureSource(sourceType);
 
-                if (source != null)
+                if (source is not null)
                 {
                     foreach (object? item in source)
                     {
                         var parms = item as ITestFixtureData;
 
-                        if (parms == null)
+                        if (parms is null)
                         {
                             object?[]? args = item as object?[];
-                            if (args == null)
+                            if (args is null)
                             {
                                 args = new[] { item };
                             }
@@ -153,7 +153,7 @@ namespace NUnit.Framework
                             parms = new TestFixtureParameters(args);
                         }
 
-                        if (this.Category != null)
+                        if (this.Category is not null)
                             foreach (string cat in this.Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
@@ -173,7 +173,7 @@ namespace NUnit.Framework
         private IEnumerable? GetTestFixtureSource(Type sourceType)
         {
             // Handle Type implementing IEnumerable separately
-            if (SourceName == null)
+            if (SourceName is null)
                 return Reflect.Construct(sourceType) as IEnumerable;
 
             MemberInfo[] members = sourceType.GetMemberIncludingFromBase(SourceName,
@@ -184,13 +184,13 @@ namespace NUnit.Framework
                 MemberInfo member = members[0];
 
                 var field = member as FieldInfo;
-                if (field != null)
+                if (field is not null)
                     return field.IsStatic
                         ? (IEnumerable?)field.GetValue(null)
                         : SourceMustBeStaticError();
 
                 var property = member as PropertyInfo;
-                if (property != null)
+                if (property is not null)
                 {
                     MethodInfo? getMethod = property.GetGetMethod(true);
                     return getMethod?.IsStatic is true
@@ -199,7 +199,7 @@ namespace NUnit.Framework
                 }
 
                 var m = member as MethodInfo;
-                if (m != null)
+                if (m is not null)
                     return m.IsStatic
                         ? (IEnumerable?)m.Invoke(null, null)
                         : SourceMustBeStaticError();

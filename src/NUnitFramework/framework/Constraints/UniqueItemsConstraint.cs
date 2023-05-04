@@ -82,7 +82,7 @@ namespace NUnit.Framework.Constraints
             foreach (var item in actual)
             {
                 allItems.Add(item);
-                if (item != null)
+                if (item is not null)
                     allTypes.Add(item.GetType());
             }
 
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Constraints
             // If IEnumerable<T> is not implemented exit,
             // Otherwise return value is the Type of T
             Type? memberType = GetGenericTypeArgument(actual);
-            if (memberType == null)
+            if (memberType is null)
                 return TryInferFastPath(actual) ?? OriginalAlgorithm(actual);
             else if (!IsTypeSafeForFastPath(memberType))
                 return OriginalAlgorithm(actual);
@@ -163,7 +163,7 @@ namespace NUnit.Framework.Constraints
 
         private static bool IsTypeSafeForFastPath(Type? type)
         {
-            return type != null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
+            return type is not null && type.IsSealed && !IsHandledSpeciallyByNUnit(type);
         }
 
         private static readonly MethodInfo ItemsUniqueMethod =

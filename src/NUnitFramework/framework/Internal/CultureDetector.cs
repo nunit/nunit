@@ -58,13 +58,13 @@ namespace NUnit.Framework.Internal
             string? include = cultureAttribute.Include;
             string? exclude = cultureAttribute.Exclude;
 
-            if (include != null && !IsCultureSupported(include))
+            if (include is not null && !IsCultureSupported(include))
             {
                 reason = $"Only supported under culture {include}";
                 return false;
             }
 
-            if (exclude != null && IsCultureSupported(exclude))
+            if (exclude is not null && IsCultureSupported(exclude))
             {
                 reason = $"Not supported under culture {exclude}";
                 return false;

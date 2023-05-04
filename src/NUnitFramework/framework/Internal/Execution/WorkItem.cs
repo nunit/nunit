@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="context">The TestExecutionContext to use</param>
         public void InitializeContext(TestExecutionContext context)
         {
-            Guard.OperationValid(Context == null, "The context has already been initialized");
+            Guard.OperationValid(Context is null, "The context has already been initialized");
 
             Context = context;
         }
@@ -179,7 +179,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public virtual void Execute()
         {
-            Guard.OperationValid(Context != null, "Context must be set by InitializeContext");
+            Guard.OperationValid(Context is not null, "Context must be set by InitializeContext");
 
             // A supplementary thread is required in two conditions...
             //
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the WorkItem should be aborted, false if it should run to completion</param>
         public virtual void Cancel(bool force)
         {
-            if (Context != null)
+            if (Context is not null)
                 Context.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
 #if THREAD_ABORT
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Internal.Execution
                 lock (threadLock)
                 {
                     // Exit if not running on a separate thread
-                    if (thread == null)
+                    if (thread is null)
                         return;
 
                     tThread = thread;
@@ -358,10 +358,10 @@ namespace NUnit.Framework.Internal.Execution
             var list = new List<SetUpTearDownItem>();
 
             Type? fixtureType = Test.TypeInfo?.Type;
-            if (fixtureType == null)
+            if (fixtureType is null)
                 return list;
 
-            while (fixtureType != null && fixtureType != typeof(object))
+            while (fixtureType is not null && fixtureType != typeof(object))
             {
                 var node = BuildNode(fixtureType, setUpMethods, tearDownMethods, methodValidator);
                 if (node.HasMethods)
@@ -481,7 +481,7 @@ namespace NUnit.Framework.Internal.Execution
             // If there is no fixture and so nothing to do but dispatch
             // grandchildren we run directly. This saves time that would
             // otherwise be spent enqueuing and dequeuing items.
-            if (Test.TypeInfo == null)
+            if (Test.TypeInfo is null)
                 return ParallelExecutionStrategy.Direct;
 
             // If the context is single-threaded we are required to run
@@ -518,7 +518,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             var apartment = test.Properties.TryGet(PropertyNames.ApartmentState, ApartmentState.Unknown);
 
-            if (apartment == ApartmentState.Unknown && test.Parent != null)
+            if (apartment == ApartmentState.Unknown && test.Parent is not null)
                 return GetTargetApartment(test.Parent);
 
             return apartment;

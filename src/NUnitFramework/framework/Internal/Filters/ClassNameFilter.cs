@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             // tests below the fixture level may have non-null className
             // but we don't want to match them explicitly.
-            if (!test.IsSuite || test is ParameterizedMethodSuite || test.ClassName == null)
+            if (!test.IsSuite || test is ParameterizedMethodSuite || test.ClassName is null)
                 return false;
 
             return Match(test.ClassName);

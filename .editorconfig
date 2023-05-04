@@ -139,7 +139,7 @@ csharp_style_expression_bodied_properties = when_on_single_line:warning
 
 
 # CS3016: Arrays as attribute arguments is not CLS-compliant
-# Microsofts own MemberNotNull attribute expects an array/
+# Microsofts own MemberNotNull attribute expects an array
 dotnet_diagnostic.CS3016.severity = none
 
 ############################################################################################
@@ -149,3 +149,13 @@ dotnet_diagnostic.CS3016.severity = none
 # IDE0005: Remove unnecessary usings/imports
 dotnet_diagnostic.IDE0005.severity = error
 
+##################################################################################
+# CSharpIsNull Analyzers
+
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:warning
+
+# CSIsNull001: Use `is null` for null checks
+dotnet_diagnostic.CSIsNull001.severity = warning
+
+# CSIsNull002: Use `is object` for non-null checks
+dotnet_diagnostic.CSIsNull002.severity = warning

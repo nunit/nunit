@@ -98,7 +98,7 @@ namespace NUnit.Framework.Internal
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    if (key != null)
+                    if (key is not null)
                     {
                         var buildStr = key.GetValue("CurrentBuildNumber") as string;
                         int.TryParse(buildStr, out var build);
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Internal
             {
                 using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    if (key != null)
+                    if (key is not null)
                     {
                         var installationType = key.GetValue("InstallationType") as string;
                         switch(installationType)

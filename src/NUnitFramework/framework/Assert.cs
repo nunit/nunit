@@ -93,8 +93,8 @@ namespace NUnit.Framework
         [DoesNotReturn]
         static public void Pass(string? message, params object?[]? args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
+            if (message is null) message = string.Empty;
+            else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
             // If we are in a multiple assert block, this is an error
@@ -139,8 +139,8 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Fail(string? message, params object?[]? args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
+            if (message is null) message = string.Empty;
+            else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
             ReportFailure(message);
@@ -175,8 +175,8 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         static public void Warn(string? message, params object?[]? args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
+            if (message is null) message = string.Empty;
+            else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
             IssueWarning(message);
@@ -204,8 +204,8 @@ namespace NUnit.Framework
         [DoesNotReturn]
         static public void Ignore(string? message, params object?[]? args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
+            if (message is null) message = string.Empty;
+            else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
             // If we are in a multiple assert block, this is an error
@@ -249,8 +249,8 @@ namespace NUnit.Framework
         [DoesNotReturn]
         static public void Inconclusive(string? message, params object?[]? args)
         {
-            if (message == null) message = string.Empty;
-            else if (args != null && args.Length > 0)
+            if (message is null) message = string.Empty;
+            else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
             // If we are in a multiple assert block, this is an error
@@ -322,7 +322,7 @@ namespace NUnit.Framework
         public static void Multiple(TestDelegate testDelegate)
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "There is no current test execution context.");
+            Guard.OperationValid(context is not null, "There is no current test execution context.");
 
             var oldCount = context.CurrentResult.AssertionResults.Count;
             context.MultipleAssertLevel++;
@@ -355,7 +355,7 @@ namespace NUnit.Framework
         public static void Multiple(AsyncTestDelegate testDelegate)
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "There is no current test execution context.");
+            Guard.OperationValid(context is not null, "There is no current test execution context.");
 
             var oldCount = context.CurrentResult.AssertionResults.Count;
             context.MultipleAssertLevel++;
@@ -388,7 +388,7 @@ namespace NUnit.Framework
         public static async Task MultipleAsync(AsyncTestDelegate testDelegate)
         {
             TestExecutionContext context = TestExecutionContext.CurrentContext;
-            Guard.OperationValid(context != null, "There is no current test execution context.");
+            Guard.OperationValid(context is not null, "There is no current test execution context.");
 
             context.MultipleAssertLevel++;
 

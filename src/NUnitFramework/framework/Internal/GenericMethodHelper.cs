@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
             {
                 var arg = argList[argIndex];
 
-                if (arg != null)
+                if (arg is not null)
                 {
                     Type argType = arg.GetType();
                     TryApplyArgType(ParmTypes[argIndex], argType);
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Internal
 
             foreach (var typeArg in TypeArgs)
             {
-                if (typeArg == null || typeArg == ConflictingTypesMarker)
+                if (typeArg is null || typeArg == ConflictingTypesMarker)
                 {
                     typeArguments = null;
                     return false;
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal
             }
 
             Type? baseType = givenType.BaseType;
-            if (baseType == null)
+            if (baseType is null)
                 return false;
 
             return IsAssignableToGenericType(baseType, genericType);

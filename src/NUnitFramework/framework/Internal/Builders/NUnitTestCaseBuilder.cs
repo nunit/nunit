@@ -44,7 +44,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 CheckTestMethodSignature(testMethod, metadata, parms);
 
-                if (parms == null || parms.Arguments.Length == 0)
+                if (parms is null || parms.Arguments.Length == 0)
                     testMethod.ApplyAttributesToTest(method.MethodInfo);
 
                 // NOTE: After the call to CheckTestMethodSignature, the Method
@@ -54,21 +54,21 @@ namespace NUnit.Framework.Internal.Builders
 
                 // Needed to give proper full name to test in a parameterized fixture.
                 // Without this, the arguments to the fixture are not included.
-                if (parentSuite != null)
+                if (parentSuite is not null)
                     prefix = parentSuite.FullName;
 
-                if (parms != null)
+                if (parms is not null)
                 {
                     parms.ApplyToTest(testMethod);
 
-                    if (parms.TestName != null)
+                    if (parms.TestName is not null)
                     {
                         // The test is simply for efficiency
                         testMethod.Name = parms.TestName.IndexOf('{') >= 0
                             ? new TestNameGenerator(parms.TestName).GetDisplayName(testMethod, parms.OriginalArguments)
                             : parms.TestName;
                     }
-                    else if (parms.ArgDisplayNames != null)
+                    else if (parms.ArgDisplayNames is not null)
                     {
                         testMethod.Name = testMethod.Name + '(' + string.Join(", ", parms.ArgDisplayNames) + ')';
                     }
@@ -152,14 +152,14 @@ namespace NUnit.Framework.Internal.Builders
             object?[]? arglist = null;
             int argsProvided = 0;
 
-            if (parms != null)
+            if (parms is not null)
             {
                 testMethod.parms = parms;
                 testMethod.RunState = parms.RunState;
 
                 arglist = parms.Arguments;
 
-                if (arglist != null)
+                if (arglist is not null)
                     argsProvided = arglist.Length;
 
                 if (testMethod.RunState != RunState.Runnable)
@@ -175,20 +175,20 @@ namespace NUnit.Framework.Internal.Builders
 
                 var voidResult = Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(returnType));
 
-                if (!voidResult && (parms == null || !parms.HasExpectedResult))
+                if (!voidResult && (parms is null || !parms.HasExpectedResult))
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a void result when no result is expected");
 
-                if (voidResult && parms != null && parms.HasExpectedResult)
+                if (voidResult && parms is not null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a non-void result when a result is expected");
             }
             else if (metadata.IsVoidOrUnit)
             {
-                if (parms != null && parms.HasExpectedResult)
+                if (parms is not null && parms.HasExpectedResult)
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
             }
-            else if (parms == null || !parms.HasExpectedResult)
+            else if (parms is null || !parms.HasExpectedResult)
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
 
             if (argsProvided > 0 && maxArgsNeeded == 0)
@@ -205,17 +205,17 @@ namespace NUnit.Framework.Internal.Builders
 
             if (testMethod.Method.IsGenericMethodDefinition)
             {
-                if (arglist == null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
+                if (arglist is null || !new GenericMethodHelper(testMethod.Method.MethodInfo).TryGetTypeArguments(arglist, out var typeArguments))
                     return MarkAsNotRunnable(testMethod, "Unable to determine type arguments for method");
 
                 testMethod.Method = testMethod.Method.MakeGenericMethod(typeArguments);
                 parameters = testMethod.Method.GetParameters();
             }
 
-            if (parms != null && parms.TestName != null && parms.TestName.Trim() == "")
+            if (parms is not null && parms.TestName is not null && parms.TestName.Trim() == "")
                 return MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
 
-            if (arglist != null && parameters != null)
+            if (arglist is not null && parameters is not null)
                 TypeHelper.ConvertArgumentList(arglist, parameters);
 
             return true;

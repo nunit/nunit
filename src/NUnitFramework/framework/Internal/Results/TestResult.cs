@@ -350,7 +350,7 @@ namespace NUnit.Framework.Internal
                 case TestStatus.Passed:
                 case TestStatus.Inconclusive:
                 case TestStatus.Warning:
-                    if (Message != null && Message.Trim().Length > 0)
+                    if (Message is not null && Message.Trim().Length > 0)
                     {
                         TNode reasonNode = thisNode.AddElement("reason");
                         reasonNode.AddElementWithCDATA("message", Message);
@@ -486,11 +486,11 @@ namespace NUnit.Framework.Internal
                 resultState = resultState.WithSite(FailureSite.TearDown);
 
             string message = "TearDown : " + ExceptionHelper.BuildMessage(ex);
-            if (Message != null)
+            if (Message is not null)
                 message = Message + Environment.NewLine + message;
 
             string stackTrace = "--TearDown" + Environment.NewLine + ExceptionHelper.BuildStackTrace(ex);
-            if (StackTrace != null)
+            if (StackTrace is not null)
                 stackTrace = StackTrace + Environment.NewLine + stackTrace;
 
             SetResult(resultState, message, stackTrace);
@@ -500,7 +500,7 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(ex, nameof(ex));
 
-            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException != null)
+            if ((ex is NUnitException || ex is TargetInvocationException) && ex.InnerException is not null)
                 return ex.InnerException;
 
             return ex;
@@ -622,10 +622,10 @@ namespace NUnit.Framework.Internal
         {
             TNode failureNode = targetNode.AddElement("failure");
 
-            if (Message != null && Message.Trim().Length > 0)
+            if (Message is not null && Message.Trim().Length > 0)
                 failureNode.AddElementWithCDATA("message", Message);
 
-            if (StackTrace != null && StackTrace.Trim().Length > 0)
+            if (StackTrace is not null && StackTrace.Trim().Length > 0)
                 failureNode.AddElementWithCDATA("stack-trace", StackTrace);
 
             return failureNode;
@@ -644,9 +644,9 @@ namespace NUnit.Framework.Internal
             {
                 TNode assertionNode = assertionsNode.AddElement("assertion");
                 assertionNode.AddAttribute("result", assertion.Status.ToString());
-                if (assertion.Message != null)
+                if (assertion.Message is not null)
                     assertionNode.AddElementWithCDATA("message", assertion.Message);
-                if (assertion.StackTrace != null)
+                if (assertion.StackTrace is not null)
                     assertionNode.AddElementWithCDATA("stack-trace", assertion.StackTrace);
             }
 
@@ -686,7 +686,7 @@ namespace NUnit.Framework.Internal
 
                 attachmentNode.AddElement("filePath", attachment.FilePath);
 
-                if (attachment.Description != null)
+                if (attachment.Description is not null)
                     attachmentNode.AddElementWithCDATA("description", attachment.Description);
             }
 
