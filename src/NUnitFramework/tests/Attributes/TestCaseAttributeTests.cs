@@ -73,6 +73,14 @@ namespace NUnit.Framework.Attributes
             return (sbyte)(x + y);
         }
 
+        [TestCase(0x00FFFFFF, ExpectedResult = 0x00FFFFFF)]
+        public uint CanConvertIntToUInt(uint stopColor)
+        {
+            // Ensure that parameter type conversions are in sync with equality type conversions
+            Assert.That(0x00FFFFFF, Is.EqualTo(stopColor));
+            return stopColor;
+        }
+
         [TestCase(nameof(TestCaseAttributeFixture.MethodCausesConversionOverflow), RunState.NotRunnable)]
         [TestCase(nameof(TestCaseAttributeFixture.VoidTestCaseWithExpectedResult), RunState.NotRunnable)]
         [TestCase(nameof(TestCaseAttributeFixture.TestCaseWithNullableReturnValueAndNullExpectedResult), RunState.Runnable)]
