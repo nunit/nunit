@@ -9,20 +9,21 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class PredicateConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new PredicateConstraint<int>((x) => x < 5);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new PredicateConstraint<int>((x) => x < 5);
             ExpectedDescription = @"value matching lambda expression";
             StringRepresentation = "<predicate>";
         }
 
-        private static object[] SuccessData = new object[]
+        private static readonly object[] SuccessData = new object[]
         {
             0,
             -5
         };
-        private static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(123, "123")
         };
@@ -50,7 +51,7 @@ namespace NUnit.Framework.Constraints
 
         private static void ActualMayBeNullForNullableTypes<T>()
         {
-            Assert.That(null, new ConstraintExpression().Matches<T>(actual => true));
+            Assert.That(default(object), new ConstraintExpression().Matches<T>(actual => true));
         }
 
         [TestCase(typeof(int))]
@@ -70,7 +71,7 @@ namespace NUnit.Framework.Constraints
         {
             Assert.That(() =>
             {
-                Assert.That(null, new ConstraintExpression().Matches<T>(actual => true));
+                Assert.That(default(object), new ConstraintExpression().Matches<T>(actual => true));
             }, Throws.ArgumentException);
         }
     }

@@ -9,10 +9,10 @@ namespace NUnit.Framework
     {
         private readonly string _message;
         private readonly RuntimeType _runtimeType;
-        private readonly Version _minVersion;
-        private readonly Version _maxVersion;
+        private readonly Version? _minVersion;
+        private readonly Version? _maxVersion;
 
-        private PlatformInconsistency(string message, RuntimeType runtimeType, Version minVersion, Version maxVersion)
+        private PlatformInconsistency(string message, RuntimeType runtimeType, Version? minVersion, Version? maxVersion)
         {
             if (string.IsNullOrEmpty(message))
                 throw new ArgumentException("Descriptive message must be specified.", nameof(message));

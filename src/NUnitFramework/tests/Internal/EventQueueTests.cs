@@ -14,6 +14,9 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Event[] events =
         {
+            // These are all in violation of contract
+            // However the code here doesn't use the argument.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             new TestStartedEvent(null),
             new TestOutputEvent(null),
             new TestStartedEvent(null),
@@ -23,6 +26,7 @@ namespace NUnit.Framework.Internal.Execution
             new TestMessageEvent(null),
             new TestFinishedEvent(null),
             new TestFinishedEvent(null),
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         };
 
         private static void EnqueueEvents(EventQueue q)
@@ -41,7 +45,8 @@ namespace NUnit.Framework.Internal.Execution
         {
             for (int index = 0; index < events.Length; index++)
             {
-                Event e = q.Dequeue(false);
+                Event? e = q.Dequeue(false);
+                Assert.That(e, Is.Not.Null);
                 Assert.That(e.GetType(), Is.EqualTo(events[index].GetType()), $"Event {index}");
             }
         }
@@ -96,7 +101,6 @@ namespace NUnit.Framework.Internal.Execution
         [TestFixture]
         public class DequeueBlocking_StopTest : ProducerConsumerTest
         {
-            private EventQueue q;
             private volatile int receivedEvents;
 
             [Test]
@@ -105,27 +109,31 @@ namespace NUnit.Framework.Internal.Execution
 #endif
             public void DequeueBlocking_Stop()
             {
-                this.q = new EventQueue();
+                var q = new EventQueue();
                 this.receivedEvents = 0;
-                this.RunProducerConsumer();
+                this.RunProducerConsumer(q);
                 Assert.That(this.receivedEvents, Is.EqualTo(events.Length + 1));
             }
 
-            protected override void Producer()
+            protected override void Producer(object? parameter)
             {
-                EnqueueEvents(this.q);
+                if (parameter is not EventQueue q)
+                    throw new ArgumentException("Expected an EventQueue", nameof(parameter));
+                EnqueueEvents(q);
                 while (this.receivedEvents < events.Length)
                     Thread.Sleep(30);
 
-                this.q.Stop();
+                q.Stop();
             }
 
-            protected override void Consumer()
+            protected override void Consumer(object? parameter)
             {
-                Event e;
+                if (parameter is not EventQueue q)
+                    throw new ArgumentException("Expected an EventQueue", nameof(parameter));
+                Event? e;
                 do
                 {
-                    e = this.q.Dequeue(true);
+                    e = q.Dequeue(true);
                     this.receivedEvents++;
                     Thread.MemoryBarrier();
                 }
@@ -217,16 +225,16 @@ namespace NUnit.Framework.Internal.Execution
 
         public abstract class ProducerConsumerTest
         {
-            private volatile Exception myConsumerException;
+            private volatile Exception? myConsumerException;
 
-            protected void RunProducerConsumer()
+            protected void RunProducerConsumer(object? parameter)
             {
                 this.myConsumerException = null;
-                Thread consumerThread = new Thread(new ThreadStart(this.ConsumerThreadWrapper));
+                Thread consumerThread = new Thread(this.ConsumerThreadWrapper);
                 try
                 {
-                    consumerThread.Start();
-                    this.Producer();
+                    consumerThread.Start(parameter);
+                    this.Producer(parameter);
                     bool consumerStopped = consumerThread.Join(1000);
                     Assert.That(consumerStopped, Is.True);
                 }
@@ -240,15 +248,15 @@ namespace NUnit.Framework.Internal.Execution
                 Assert.That(this.myConsumerException, Is.Null);
             }
 
-            protected abstract void Producer();
+            protected abstract void Producer(object? parameter);
 
-            protected abstract void Consumer();
+            protected abstract void Consumer(object? parameter);
 
-            private void ConsumerThreadWrapper()
+            private void ConsumerThreadWrapper(object? parameter)
             {
                 try
                 {
-                    this.Consumer();
+                    this.Consumer(parameter);
                 }
 #if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
@@ -268,7 +276,7 @@ namespace NUnit.Framework.Internal.Execution
             public readonly Thread ProducerThread;
             public int SentEventsCount;
             public int MaxQueueLength;
-            public Exception Exception;
+            public Exception? Exception;
             private readonly EventQueue queue;
             private readonly bool delay;
 

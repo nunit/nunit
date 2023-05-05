@@ -6,7 +6,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters {
     public class DeMorganOnFiltersTest : TestFilterTests
     {
-        private static List<TestFilter[]> filterPairs;
+        private static readonly List<TestFilter[]> filterPairs;
 
         static DeMorganOnFiltersTest()
         {

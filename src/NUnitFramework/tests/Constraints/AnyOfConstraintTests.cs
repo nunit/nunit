@@ -8,16 +8,19 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AnyOfConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new AnyOfConstraint(new object[] { 1, 2, 3 });
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new AnyOfConstraint(new object[] { 1, 2, 3 });
             ExpectedDescription = "any of < 1, 2, 3 >";
             StringRepresentation = "<anyof 1 2 3>";
         }
 
-        private static object[] SuccessData = new object[] { 1, 2, 3 };
-        private static object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { "A", "\"A\"" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 1, 2, 3 };
+        private static readonly object[] FailureData = new object[] { new object[] { 4, "4" }, new object[] { "A", "\"A\"" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void ItemIsPresent_IgnoreCase()

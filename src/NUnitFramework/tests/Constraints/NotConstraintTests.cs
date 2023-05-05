@@ -5,16 +5,19 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class NotConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new NotConstraint( new EqualConstraint(null) );
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new NotConstraint( new EqualConstraint(null) );
             ExpectedDescription = "not equal to null";
             StringRepresentation = "<not <equal null>>";
         }
 
-        private static object[] SuccessData = new object[] { 42, "Hello" };
-        private static object[] FailureData = new object [] { new object[] { null, "null" } };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] { 42, "Hello" };
+        private static readonly object?[] FailureData = new object?[] { new object?[] { null, "null" } };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void NotHonorsIgnoreCaseUsingConstructors()

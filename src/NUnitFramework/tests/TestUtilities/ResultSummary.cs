@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using NUnit.Framework.Interfaces;
@@ -16,28 +16,22 @@ namespace NUnit.TestUtilities
         private int inconclusiveCount = 0;
         private int skipCount = 0;
 
-        private DateTime startTime = DateTime.MinValue;
-        private DateTime endTime = DateTime.MaxValue;
-        private double duration = 0.0d;
-        private string name;
-
-        public ResultSummary() { }
+        private readonly DateTime startTime = DateTime.MinValue;
+        private readonly DateTime endTime = DateTime.MaxValue;
+        private readonly double duration = 0.0d;
+        private readonly string name;
 
         public ResultSummary(ITestResult result)
         {
+            name = result.Name;
+            startTime = result.StartTime;
+            endTime = result.EndTime;
+            duration = result.Duration;
             Summarize(result);
         }
 
         private void Summarize(ITestResult result)
         {
-            if (name == null)
-            {
-                name = result.Name;
-                startTime = result.StartTime;
-                endTime = result.EndTime;
-                duration = result.Duration;
-            }
-
             if (result.HasChildren)
             {
                 foreach (var childResult in result.Children)

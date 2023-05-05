@@ -16,7 +16,7 @@ namespace NUnit.TestUtilities
 
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return null;
+            return new ConstraintResult(this, actual);
         }
     }
 }

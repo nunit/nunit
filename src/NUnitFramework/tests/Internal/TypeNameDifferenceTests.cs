@@ -136,7 +136,7 @@ namespace NUnit.Framework.Internal
                 _obj = obj;
             }
 
-            public override string ToString()
+            public override string? ToString()
             {
                 return _obj.ToString();
             }

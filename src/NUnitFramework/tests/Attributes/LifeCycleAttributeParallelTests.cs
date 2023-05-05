@@ -8,8 +8,8 @@ namespace NUnit.Framework.Attributes
     [Parallelizable(ParallelScope.All)]
     public class LifeCycleAttributeParallelTests
     {
-        private static ObjectIDGenerator generator = new ObjectIDGenerator();
-        private int constructorCount = 0;
+        private static readonly ObjectIDGenerator generator = new ObjectIDGenerator();
+        private readonly int constructorCount = 0;
         private int setupCount = 0;
 
         public LifeCycleAttributeParallelTests()

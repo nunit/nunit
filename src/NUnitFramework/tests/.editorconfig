@@ -13,3 +13,9 @@ dotnet_diagnostic.NUnit2007.severity = silent
 
 # NUnit2009: The same value has been provided as both the actual and the expected argument
 dotnet_diagnostic.NUnit2009.severity = silent
+
+# NUnit1028: The non-test method is public
+dotnet_diagnostic.NUnit1028.severity = warning
+
+# IDE0052: Remove unread private members
+dotnet_diagnostic.IDE0052.severity = warning

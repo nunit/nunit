@@ -207,20 +207,20 @@ namespace NUnit.Framework.Attributes
             [Values(10, 20)]int y) { }
 #pragma warning restore NUnit1028 // The non-test method is public
 
-        private static object[] ZeroData = Array.Empty<object>();
+        private static readonly object[] ZeroData = Array.Empty<object>();
 
-        private static object[] GoodData = new object[] {
+        private static readonly object[] GoodData = new object[] {
             new object[] { 12, 3 },
             new object[] { 12, 4 },
             new object[] { 12, 6 } };
 
-        private static object[] BadData = new object[] {
+        private static readonly object[] BadData = new object[] {
             new object[] { 12, 3, 4 },
             new object[] { 12, 4, 3 },
             new object[] { 12, 6, 2 } };
 
         [DatapointSource]
-        private int[] ints = new int[] { 1, 2, 3 };
+        private readonly int[] ints = new int[] { 1, 2, 3 };
 
         #endregion
     }

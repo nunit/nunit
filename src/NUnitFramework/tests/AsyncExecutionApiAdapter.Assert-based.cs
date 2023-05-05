@@ -11,7 +11,7 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                var ex = (Exception)null;
+                var ex = default(Exception);
                 using (new TestExecutionContext.IsolatedContext())
                 {
                     try
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         {
             public override void Execute(AsyncTestDelegate asyncUserCode)
             {
-                var ex = (Exception)null;
+                var ex = default(Exception);
                 using (new TestExecutionContext.IsolatedContext())
                 {
                     try

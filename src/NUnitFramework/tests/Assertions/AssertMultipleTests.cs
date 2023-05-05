@@ -87,7 +87,7 @@ namespace NUnit.Framework.Assertions
             });
         }
 
-        private ITestResult CheckResult(string methodName, ResultState expectedResultState, int expectedAsserts, params string[] assertionMessageRegex)
+        private static ITestResult CheckResult(string methodName, ResultState expectedResultState, int expectedAsserts, params string[] assertionMessageRegex)
         {
             ITestResult result = TestBuilder.RunTestCase(typeof(AssertMultipleFixture), methodName);
 
@@ -150,10 +150,10 @@ namespace NUnit.Framework.Assertions
             Assert.Multiple(() => { });
 
             // The assert multiple shouldn't've triggered a failure
-            Assert.That(currentResult.AssertionResults.Count, Is.EqualTo(previousFailureCount));
+            Assert.That(currentResult.AssertionResults, Has.Count.EqualTo(previousFailureCount));
 
             // If we get this far, the test is good so we should clean up the context from the intentional failure above
-            currentResult.SetResult(null, null, null);
+            currentResult.SetResult(ResultState.Inconclusive, null, null);
             currentResult.AssertionResults.Clear();
         }
     }
@@ -195,10 +195,7 @@ namespace NUnit.Framework.Assertions
         public void TearDown()
         {
             Console.WriteLine("Teardown Start, expect to see a Teardown End message");
-            Assert.Multiple(() =>
-            {
-                Assert.That(true);
-            });
+            Assert.Multiple(() => Assert.That(true));
             Console.WriteLine("Teardown End");
         }
 

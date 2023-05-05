@@ -59,7 +59,7 @@ namespace NUnit.Framework.Attributes
             Assert.That(context.ParallelScope, Is.EqualTo(scope & ParallelScope.ContextMask));
         }
 
-        private static ParallelScope[] Scopes = new ParallelScope[]
+        private static readonly ParallelScope[] Scopes = new ParallelScope[]
         {
             ParallelScope.None,
             ParallelScope.Self,

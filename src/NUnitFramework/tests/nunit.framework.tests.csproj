@@ -3,8 +3,11 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Framework</RootNamespace>
+    <Nullable>enable</Nullable>
+    <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
+    <GenerateNullableAttributes>false</GenerateNullableAttributes>
 
-    <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
+      <!-- Either NUnit or NUnitLite is not loading assemblies in a way that properly respects the
     nunit.framework.tests.deps.json file. Maybe fixed by https://github.com/nunit/nunit/issues/3353? -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
@@ -48,4 +51,12 @@
   <ItemGroup>
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or
+                        $(TargetFramework.CompareTo('net5.0')) &lt; 0">
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160"
+           PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>

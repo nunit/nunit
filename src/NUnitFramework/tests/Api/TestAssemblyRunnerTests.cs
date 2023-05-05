@@ -72,11 +72,14 @@ namespace NUnit.Framework.Api
         {
             var result = LoadMockAssembly();
 
-            Assert.That(result.IsSuite);
-            Assert.That(result, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
-            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable));
-            Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsSuite);
+                Assert.That(result, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
+                Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable));
+                Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+            });
         }
 
         [Test, SetUICulture("en-US")]
@@ -84,13 +87,16 @@ namespace NUnit.Framework.Api
         {
             var result = _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
 
-            Assert.That(result.IsSuite);
-            Assert.That(result, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Name, Is.EqualTo(MISSING_FILE));
-            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
-            Assert.That(result.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith(COULD_NOT_LOAD_MSG));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsSuite);
+                Assert.That(result, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Name, Is.EqualTo(MISSING_FILE));
+                Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
+                Assert.That(result.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.Properties.Get(PropertyNames.SkipReason),
+                    Does.StartWith(COULD_NOT_LOAD_MSG));
+            });
         }
 
         [Test, SetUICulture("en-US")]
@@ -98,13 +104,16 @@ namespace NUnit.Framework.Api
         {
             var result = _runner.Load(BAD_FILE, EMPTY_SETTINGS);
 
-            Assert.That(result.IsSuite);
-            Assert.That(result, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Name, Is.EqualTo(BAD_FILE));
-            Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
-            Assert.That(result.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                Does.StartWith("Could not load").And.Contains(BAD_FILE));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.IsSuite);
+                Assert.That(result, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Name, Is.EqualTo(BAD_FILE));
+                Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
+                Assert.That(result.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.Properties.Get(PropertyNames.SkipReason),
+                    Does.StartWith(COULD_NOT_LOAD_MSG).And.Contains(BAD_FILE));
+            });
         }
 
         #endregion
@@ -263,14 +272,18 @@ namespace NUnit.Framework.Api
 
             var explorer = _runner.ExploreTests(filter);
 
+            Assert.That(_runner.LoadedTest, Is.Not.Null);
             var runnerFixture = _runner.LoadedTest.Tests[0].Tests[0].Tests[0].Tests[0];
             var explorerFixture = explorer.Tests[0].Tests[0].Tests[0].Tests[0];
 
-            Assert.That(explorerFixture.Properties.Keys, Has.Count.EqualTo(runnerFixture.Properties.Keys.Count));
-            Assert.That(explorerFixture.Properties.Get(PropertyNames.Category),
-                Is.EqualTo(explorerFixture.Properties.Get(PropertyNames.Category)));
-            Assert.That(explorerFixture.Properties.Get(PropertyNames.Description),
-                Is.EqualTo(explorerFixture.Properties.Get(PropertyNames.Description)));
+            Assert.Multiple(() =>
+            {
+                Assert.That(explorerFixture.Properties.Keys, Has.Count.EqualTo(runnerFixture.Properties.Keys.Count));
+                Assert.That(explorerFixture.Properties.Get(PropertyNames.Category),
+                    Is.EqualTo(runnerFixture.Properties.Get(PropertyNames.Category)));
+                Assert.That(explorerFixture.Properties.Get(PropertyNames.Description),
+                    Is.EqualTo(runnerFixture.Properties.Get(PropertyNames.Description)));
+            });
         }
         #endregion
 
@@ -282,16 +295,19 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
 
-            Assert.That(result.Test.IsSuite);
-            Assert.That(result.Test, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Test.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
-            Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Passed));
-            Assert.That(result.FailCount, Is.EqualTo(MockAssembly.Failed));
-            Assert.That(result.WarningCount, Is.EqualTo(MockAssembly.Warnings));
-            Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
-            Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Test.IsSuite);
+                Assert.That(result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Test.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(result.PassCount, Is.EqualTo(MockAssembly.Passed));
+                Assert.That(result.FailCount, Is.EqualTo(MockAssembly.Failed));
+                Assert.That(result.WarningCount, Is.EqualTo(MockAssembly.Warnings));
+                Assert.That(result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
+                Assert.That(result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            });
         }
 
         [Test]
@@ -300,16 +316,19 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
             _runner.Run(this, TestFilter.Empty);
 
-            Assert.That(_suiteStartedCount, Is.EqualTo(MockAssembly.Suites));
-            Assert.That(_suiteFinishedCount, Is.EqualTo(MockAssembly.Suites));
-            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
-            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
-            Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_suiteStartedCount, Is.EqualTo(MockAssembly.Suites));
+                Assert.That(_suiteFinishedCount, Is.EqualTo(MockAssembly.Suites));
+                Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.TestStartedEvents));
+                Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.TestFinishedEvents));
+                Assert.That(_testOutputCount, Is.EqualTo(MockAssembly.TestOutputEvents));
 
-            Assert.That(_successCount, Is.EqualTo(MockAssembly.Passed));
-            Assert.That(_failCount, Is.EqualTo(MockAssembly.Failed));
-            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Skipped));
-            Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+                Assert.That(_successCount, Is.EqualTo(MockAssembly.Passed));
+                Assert.That(_failCount, Is.EqualTo(MockAssembly.Failed));
+                Assert.That(_skipCount, Is.EqualTo(MockAssembly.Skipped));
+                Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            });
         }
 
         [Test]
@@ -326,13 +345,15 @@ namespace NUnit.Framework.Api
             _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
 
-            Assert.That(result.Test.IsSuite);
-            Assert.That(result.Test, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-            Assert.That(result.Message,
-                Does.StartWith(COULD_NOT_LOAD_MSG));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Test.IsSuite);
+                Assert.That(result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+                Assert.That(result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+            });
         }
 
         [Test]
@@ -341,9 +362,7 @@ namespace NUnit.Framework.Api
             LoadMockAssembly();
 
             var ex = Assert.Throws<ArgumentException>(() =>
-                {
-                    TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>");
-                });
+                TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>"));
 
             Assert.That(ex.Message, Does.StartWith(string.Format(INVALID_FILTER_ELEMENT_MESSAGE, "invalidElement")));
         }
@@ -378,13 +397,15 @@ namespace NUnit.Framework.Api
             _runner.Load(BAD_FILE, EMPTY_SETTINGS);
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
 
-            Assert.That(result.Test.IsSuite);
-            Assert.That(result.Test, Is.TypeOf<TestAssembly>());
-            Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-            Assert.That(result.Message,
-                Does.StartWith("Could not load"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Test.IsSuite);
+                Assert.That(result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+                Assert.That(result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+            });
         }
 
         #endregion
@@ -399,15 +420,18 @@ namespace NUnit.Framework.Api
             _runner.WaitForCompletion(Timeout.Infinite);
 
             Assert.That(_runner.Result, Is.Not.Null, "No result returned");
-            Assert.That(_runner.Result.Test.IsSuite);
-            Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
-            Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.Runnable));
-            Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
-            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.ChildFailure));
-            Assert.That(_runner.Result.PassCount, Is.EqualTo(MockAssembly.Passed));
-            Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.Failed));
-            Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
-            Assert.That(_runner.Result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_runner.Result.Test.IsSuite);
+                Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.Runnable));
+                Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
+                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(_runner.Result.PassCount, Is.EqualTo(MockAssembly.Passed));
+                Assert.That(_runner.Result.FailCount, Is.EqualTo(MockAssembly.Failed));
+                Assert.That(_runner.Result.SkipCount, Is.EqualTo(MockAssembly.Skipped));
+                Assert.That(_runner.Result.InconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            });
         }
 
         [Test]
@@ -417,13 +441,16 @@ namespace NUnit.Framework.Api
             _runner.RunAsync(this, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
-            Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests));
-            Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testStartedCount, Is.EqualTo(MockAssembly.Tests - IgnoredFixture.Tests - BadFixture.Tests - ExplicitFixture.Tests));
+                Assert.That(_testFinishedCount, Is.EqualTo(MockAssembly.Tests));
 
-            Assert.That(_successCount, Is.EqualTo(MockAssembly.Passed));
-            Assert.That(_failCount, Is.EqualTo(MockAssembly.Failed));
-            Assert.That(_skipCount, Is.EqualTo(MockAssembly.Skipped));
-            Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+                Assert.That(_successCount, Is.EqualTo(MockAssembly.Passed));
+                Assert.That(_failCount, Is.EqualTo(MockAssembly.Failed));
+                Assert.That(_skipCount, Is.EqualTo(MockAssembly.Skipped));
+                Assert.That(_inconclusiveCount, Is.EqualTo(MockAssembly.Inconclusive));
+            });
         }
 
         [Test]
@@ -442,13 +469,15 @@ namespace NUnit.Framework.Api
             _runner.WaitForCompletion(Timeout.Infinite);
 
             Assert.That(_runner.Result, Is.Not.Null, "No result returned");
-            Assert.That(_runner.Result.Test.IsSuite);
-            Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
-            Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-            Assert.That(_runner.Result.Message,
-                Does.StartWith(COULD_NOT_LOAD_MSG));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_runner.Result.Test.IsSuite);
+                Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+                Assert.That(_runner.Result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+            });
         }
 
         [Test, SetUICulture("en-US")]
@@ -459,13 +488,15 @@ namespace NUnit.Framework.Api
             _runner.WaitForCompletion(Timeout.Infinite);
 
             Assert.That(_runner.Result, Is.Not.Null, "No result returned");
-            Assert.That(_runner.Result.Test.IsSuite);
-            Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
-            Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
-            Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
-            Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-            Assert.That(_runner.Result.Message,
-                Does.StartWith("Could not load"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_runner.Result.Test.IsSuite);
+                Assert.That(_runner.Result.Test, Is.TypeOf<TestAssembly>());
+                Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
+                Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
+                Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
+                Assert.That(_runner.Result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+            });
         }
 
         #endregion
@@ -479,7 +510,7 @@ namespace NUnit.Framework.Api
             Assert.DoesNotThrow(() => _runner.StopRun(force));
         }
 
-        private static TestCaseData[] StopRunCases = new TestCaseData[]
+        private static readonly TestCaseData[] StopRunCases = new TestCaseData[]
         {
             new TestCaseData(0, false).SetName("{m}(Simple dispatcher, cooperative stop)"),
             new TestCaseData(0, true).SetName("{m}(Simple dispatcher, forced stop)"),
@@ -521,8 +552,11 @@ namespace NUnit.Framework.Api
                 Assert.That(_testStartedCount, Is.GreaterThan(0), "No test cases started");
                 Assert.That(_suiteFinishedCount, Is.EqualTo(_suiteStartedCount), $"Not all suites terminated after {stopType}");
                 Assert.That(_testFinishedCount, Is.EqualTo(_testStartedCount), $"Not all test cases terminated after {stopType}");
+            });
 
-                Assert.That(_runner.Result, Is.Not.Null, "No result returned.");
+            Assert.That(_runner.Result, Is.Not.Null, "No result returned.");
+            Assert.Multiple(() =>
+            {
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.Cancelled), $"Invalid ResultState after {stopType}");
                 Assert.That(_runner.Result.PassCount, Is.LessThan(count), $"All tests passed in spite of {stopType}");
             });
@@ -619,6 +653,7 @@ namespace NUnit.Framework.Api
             var childResult = TestFinder.Find(
                 "DisplayRunParameters", result, true);
 
+            Assert.That(childResult, Is.Not.Null);
             Assert.That(childResult.Output, Is.EqualTo(
                 "Parameter X = 5" + Environment.NewLine +
                 "Parameter Y = 7" + Environment.NewLine));

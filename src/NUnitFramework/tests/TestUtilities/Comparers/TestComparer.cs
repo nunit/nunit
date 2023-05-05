@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
 
@@ -9,7 +9,7 @@ namespace NUnit.TestUtilities.Comparers
         public int CallCount = 0;
 
         #region IComparer Members
-        public int Compare(object x, object y)
+        public int Compare(object? x, object? y)
         {
             CallCount++;
 

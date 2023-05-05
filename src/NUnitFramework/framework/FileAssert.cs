@@ -55,7 +55,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(Stream expected, Stream actual, string message, params object?[]? args)
+        static public void AreEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.EqualTo(expected), message, args);
         }
@@ -67,7 +67,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        static public void AreEqual(Stream expected, Stream actual)
+        static public void AreEqual(Stream? expected, Stream? actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -153,7 +153,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to be displayed when the two Stream are the same.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(Stream expected, Stream actual, string message, params object?[]? args)
+        static public void AreNotEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
         {
             Assert.That(actual, Is.Not.EqualTo(expected), message, args);
         }
@@ -164,7 +164,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        static public void AreNotEqual(Stream expected, Stream actual)
+        static public void AreNotEqual(Stream? expected, Stream? actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }

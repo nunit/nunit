@@ -35,10 +35,10 @@ namespace NUnit.Framework.Internal.Results
 
     public abstract class TestResultIgnoredTests : TestResultTests
     {
-        protected string _ignoreReason;
+        private readonly string? _ignoreReason;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
-        protected TestResultIgnoredTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultIgnoredTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
         {
             _ignoreReason = ignoreReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;

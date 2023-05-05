@@ -57,7 +57,7 @@ namespace NUnit.Framework.Attributes
                 return _baseInfo.GetParameters();
             }
 
-            public object Invoke(object fixture, params object[] args)
+            public object? Invoke(object? fixture, params object?[]? args)
             {
                 return _baseInfo.Invoke(fixture, args);
             }

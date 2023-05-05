@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void TypeAndBaseTypesReturnsEmptyForNull()
         {
-            Assert.That(((Type)null).TypeAndBaseTypes(), Is.Empty);
+            Assert.That((default(Type)).TypeAndBaseTypes(), Is.Empty);
         }
 
         [Test]
@@ -181,11 +181,15 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsReturnsCorrectValue()
         {
-            Assert.That(
-                typeof(ReflectTests)
-                    .GetMethod(nameof(MethodReturning42), BindingFlags.Static | BindingFlags.NonPublic)
+            Assert.That(GetPrivateMethod(nameof(MethodReturning42))
                     .InvokeWithTransparentExceptions(instance: null),
                 Is.EqualTo(42));
+        }
+
+        private static MethodInfo GetPrivateMethod(string methodName)
+        {
+            MethodInfo? methodInfo = typeof(ReflectTests).GetMethod(methodName, BindingFlags.Static | BindingFlags.NonPublic);
+            return methodInfo ?? throw new ArgumentException($"Method ReflectTests.{methodName} not found");
         }
 
         [Test]
@@ -199,9 +203,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsDoesNotWrap()
         {
-            Assert.That(
-                () => typeof(ReflectTests)
-                    .GetMethod(nameof(MethodThrowingException), BindingFlags.Static | BindingFlags.NonPublic)
+            Assert.That(() => GetPrivateMethod(nameof(MethodThrowingException))
                     .InvokeWithTransparentExceptions(instance: null),
                 Throws.TypeOf<Exception>());
         }
@@ -217,9 +219,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public static void InvokeWithTransparentExceptionsDoesNotUnwrap()
         {
-            Assert.That(
-                () => typeof(ReflectTests)
-                    .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
+            Assert.That(() => GetPrivateMethod(nameof(MethodThrowingTargetInvocationException))
                     .InvokeWithTransparentExceptions(instance: null),
                 Throws.TypeOf<TargetInvocationException>());
         }
@@ -237,9 +237,7 @@ namespace NUnit.Framework.Internal
         {
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.IgnoreOnAffectedPlatform(() =>
             {
-                Assert.That(
-                    () => typeof(ReflectTests)
-                        .GetMethod(nameof(MethodThrowingTargetInvocationException), BindingFlags.Static | BindingFlags.NonPublic)
+                Assert.That(() => GetPrivateMethod(nameof(MethodThrowingTargetInvocationException))
                         .InvokeWithTransparentExceptions(instance: null),
                     Throws.Exception
                         .With.Property(nameof(Exception.StackTrace))
@@ -283,14 +281,14 @@ namespace NUnit.Framework.Internal
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 
             Assert.That(members, Has.Length.EqualTo(1), "Expected one result");
-            string actual = null;
+            string? actual = null;
             if (members[0] is FieldInfo field)
             {
-                actual = (string)field.GetValue(null);
+                actual = (string?)field.GetValue(null);
             }
             else if (members[0] is PropertyInfo property)
             {
-                actual = (string)property.GetValue(null, null);
+                actual = (string?)property.GetValue(null, null);
             }
 
             Assert.That(actual, Is.EqualTo(expected), "Value");

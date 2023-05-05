@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
             });
         }
 
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Internal
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
             });
         }
 
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Internal
 
             PlatformInconsistency.MonoMethodInfoInvokeLosesStackTrace.SkipOnAffectedPlatform(() =>
             {
-                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName)); // Sanity check
+                Assert.That(result.StackTrace, Does.Contain(fixture.GetType().FullName())); // Sanity check
             });
         }
 

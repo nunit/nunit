@@ -102,7 +102,7 @@ namespace NUnit.Framework.Syntax
         public void LambdaThrowsException()
         {
             Assert.That(
-                () => new MyClass(null),
+                () => new MyClass(null!),
                 Throws.InstanceOf<ArgumentNullException>());
         }
 
@@ -111,7 +111,7 @@ namespace NUnit.Framework.Syntax
         {
             string expectedExceptionMessage = (new ArgumentNullException()).Message;
             Assert.That(
-                () => new MyClass(null),
+                () => new MyClass(null!),
                 Throws.InstanceOf<ArgumentNullException>()
                 .And.Message.EqualTo(expectedExceptionMessage));
         }
@@ -122,6 +122,7 @@ namespace NUnit.Framework.Syntax
             var ex = CatchException(() =>
                 Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.TypeOf<ArgumentException>()));
 
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
@@ -133,12 +134,13 @@ namespace NUnit.Framework.Syntax
             var ex = CatchException(() =>
                 Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.InstanceOf<ArgumentException>()));
 
+            Assert.That(ex, Is.Not.Null);
             Assert.That(ex.Message, Does.StartWith(
                 "  Expected: instance of <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
         }
 
-        private Exception CatchException(TestDelegate del)
+        private Exception? CatchException(TestDelegate del)
         {
             using (new TestExecutionContext.IsolatedContext())
             {

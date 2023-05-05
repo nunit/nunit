@@ -21,7 +21,7 @@ namespace NUnit.Framework.Attributes
 #endif
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)
         {
-            var attr = Reflect.Construct(attrType, new object[] { propValue }) as PropertyAttribute;
+            var attr = Reflect.Construct(attrType, new object?[] { propValue }) as PropertyAttribute;
             Assert.That(attr, Is.Not.Null, "{0} is not a PropertyAttribute", attrType.Name);
             Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
         }

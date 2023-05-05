@@ -12,15 +12,17 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class EmptyConstraintTest : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new EmptyConstraint();
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new EmptyConstraint();
             ExpectedDescription = "<empty>";
             StringRepresentation = "<empty>";
         }
 
-        private static object[] SuccessData = new object[]
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[]
         {
             string.Empty,
             Array.Empty<object>(),
@@ -33,7 +35,7 @@ namespace NUnit.Framework.Constraints
             new EnumerableWithIndependentCount(1, Array.Empty<int>())
         };
 
-        private static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData("Hello", "\"Hello\""),
             new TestCaseData(new object[] { 1, 2, 3 }, "< 1, 2, 3 >"),
@@ -43,6 +45,7 @@ namespace NUnit.Framework.Constraints
             new TestCaseData(System.Collections.Immutable.ImmutableArray.Create(1), "< 1 >"),
             new TestCaseData(new EnumerableWithIndependentCount(0, new[] { 1 }), "< 1 >"),
         };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [TestCase(null)]
         [TestCase(5)]
@@ -51,16 +54,20 @@ namespace NUnit.Framework.Constraints
             Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(data));
         }
 
+        [Test]
         public void InvalidDataThrowsArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(default(SingleElementCollection<int>)));
-            Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(new NotReallyACollection()));
+            Assert.Multiple(() =>
+            {
+                Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(default(SingleElementCollection<int>)));
+                Assert.Throws<ArgumentException>(() => TheConstraint.ApplyTo(new NotReallyACollection()));
+            });
         }
 
         [Test]
         public void NullStringGivesFailureResult()
         {
-            string actual = null;
+            string? actual = null;
             var result = TheConstraint.ApplyTo(actual);
             Assert.That(result.Status, Is.EqualTo(ConstraintStatus.Failure));
         }
@@ -83,7 +90,7 @@ namespace NUnit.Framework.Constraints
 
         private class SingleElementCollection<T>
         {
-            private readonly T _element;
+            private readonly T? _element;
 
             public int Count { get; private set; }
 
@@ -105,12 +112,12 @@ namespace NUnit.Framework.Constraints
                 }
 
                 Count = 0;
-                return _element;
+                return _element!;
             }
 
             public override string ToString()
             {
-                return Count == 0 ? "<empty>" : _element.ToString();
+                return Count == 0 ? "<empty>" : _element!.ToString()!;
             }
         }
 
@@ -140,23 +147,26 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class EmptyStringConstraintTest : StringConstraintTests
     {
+        protected override Constraint TheConstraint { get; } = new EmptyStringConstraint();
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new EmptyStringConstraint();
             ExpectedDescription = "<empty>";
             StringRepresentation = "<emptystring>";
         }
 
-        private static object[] SuccessData = new object[]
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[]
         {
             string.Empty
         };
-        private static object[] FailureData = new object[]
+        private static readonly object[] FailureData = new object[]
         {
             new TestCaseData( "Hello", "\"Hello\"" ),
             new TestCaseData( null, "null")
         };
+#pragma warning restore IDE0052 // Remove unread private members
     }
 
     [TestFixture]

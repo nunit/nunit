@@ -37,7 +37,7 @@ namespace NUnit.Framework
                     nameof(SynchronizationContextFixture.TestMethodWithSourceThatSetsSynchronizationContext2)
                 })
                 {
-                    var parameterizedSuite = fixture.Tests.Single(t => t.Method.Name == name);
+                    var parameterizedSuite = fixture.Tests.Single(t => t.Method?.Name == name);
                     Assert.That(parameterizedSuite.Tests.Single().Arguments.Single(), Is.True);
                 }
             }
@@ -73,7 +73,7 @@ namespace NUnit.Framework
             apiAdapter.Execute(() =>
             {
                 Assert.That(Thread.CurrentThread, Is.SameAs(thread));
-                return Task.FromResult<object>(null);
+                return Task.FromResult<object?>(null);
             });
         }
 

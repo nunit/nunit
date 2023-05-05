@@ -81,7 +81,6 @@ namespace NUnit.Framework.Internal.Extensions
 
         public static IEnumerable<Type> TypesThatDontImplementIComparable => new[]
         {
-            null,
             typeof(object),
             typeof(Exception),
             typeof(ValueType),

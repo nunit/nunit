@@ -8,8 +8,8 @@ namespace NUnit.Framework.Internal
 {
     public class GenericMethodHelperTests
     {
-        private static TestCaseData[] TypeArgData = new[] {
-            new TestCaseData(nameof(MethodWithOneTypeAndOneParameter),
+        private static readonly TestCaseData[] TypeArgData = new[] {
+            new TestCaseData("MethodWithOneTypeAndOneParameter",
                 ArgList(42),
                 TypeArgs<int>()),
             new TestCaseData(nameof(MethodWithOneTypeAndTwoParameters),
@@ -89,8 +89,8 @@ namespace NUnit.Framework.Internal
         [TestCaseSource(nameof(TypeArgData))]
         public void GetTypeArgumentsForMethodTests(string methodName, object[] args, Type[] typeArgs)
         {
-            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-
+            MethodInfo? method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
             Assert.That(new GenericMethodHelper(method).TryGetTypeArguments(args, out var typeArguments) ? typeArguments : null, Is.EqualTo(typeArgs));
         }
 
@@ -130,9 +130,9 @@ namespace NUnit.Framework.Internal
 
         private void MethodWithGenericEnumerableOfTypeAsSecondArg<T, U>(T x, IEnumerable<U> c) { }
 
-        private void MethodTakingDictionary<T, U>(Dictionary<T, U> d) { }
+        private void MethodTakingDictionary<T, U>(Dictionary<T, U> d) where T : notnull { }
 
-        private void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) { }
+        private void MethodWithNestedTypes<T, U, V>(List<Dictionary<T, U>> x, Dictionary<U, List<V>> z) where T : notnull where U : notnull { }
 
         private void MethodWithOneTypeUsedDirectlyAndAsAnArray<T>(T value, T[] array) { }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 using System.IO;
@@ -11,7 +11,7 @@ namespace NUnit.TestUtilities
     /// </summary>
     public class TestDirectory : IDisposable
     {
-        private DirectoryInfo _testDir;
+        private readonly DirectoryInfo _testDir;
 
         public TestDirectory()
         {
@@ -32,13 +32,12 @@ namespace NUnit.TestUtilities
         {
             try
             {
-                if (_testDir != null && _testDir.Exists)
+                if (_testDir.Exists)
                 {
                     _testDir.Delete(true);
                 }
             }
             catch { }
-            _testDir = null;
         }
 
         /// <summary>

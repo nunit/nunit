@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Reflection;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
@@ -129,10 +128,11 @@ namespace NUnit.Framework.Internal
         // NOTE: We use different implementations for various platforms.
 
 #if !NETFRAMEWORK
-        private static readonly AsyncLocal<TestExecutionContext> _currentContext = new AsyncLocal<TestExecutionContext>();
+        private static readonly AsyncLocal<TestExecutionContext?> _currentContext = new();
         /// <summary>
         /// Gets and sets the current context.
         /// </summary>
+        [AllowNull]
         public static TestExecutionContext CurrentContext
         {
             get => _currentContext.Value ?? (_currentContext.Value = new AdhocContext());
@@ -541,10 +541,7 @@ namespace NUnit.Framework.Internal
             /// </summary>
             public AdhocContext()
             {
-                var type = GetType();
-                var method = type.GetMethod(nameof(AdhocTestMethod), BindingFlags.NonPublic | BindingFlags.Instance)!;
-
-                CurrentTest = new TestMethod(new MethodWrapper(type, method));
+                CurrentTest = new TestMethod(new MethodWrapper(GetType(), nameof(AdhocTestMethod)));
                 CurrentResult = CurrentTest.MakeTestResult();
             }
 

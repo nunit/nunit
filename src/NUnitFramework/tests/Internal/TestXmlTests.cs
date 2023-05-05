@@ -142,17 +142,20 @@ namespace NUnit.Framework.Internal
             {
                 var expectedProps = new List<string>();
                 foreach (string key in test.Properties.Keys)
-                    foreach (object value in test.Properties[key])
-                        expectedProps.Add(key + "=" + value);
+                    foreach (object? value in test.Properties[key])
+                        if (value is not null)
+                            expectedProps.Add(key + "=" + value);
 
-                TNode propsNode = topNode.SelectSingleNode("properties");
+                TNode? propsNode = topNode.SelectSingleNode("properties");
                 Assert.That(propsNode, Is.Not.Null);
 
                 var actualProps = new List<string>();
                 foreach (TNode node in propsNode.ChildNodes)
                 {
-                    string name = node.Attributes["name"];
-                    string value = node.Attributes["value"];
+                    string? name = node.Attributes["name"];
+                    string? value = node.Attributes["value"];
+                    Assert.That(name, Is.Not.Null);
+                    Assert.That(value, Is.Not.Null);
                     actualProps.Add(name + "=" + value);
                 }
 
@@ -166,7 +169,7 @@ namespace NUnit.Framework.Internal
                     foreach (Test child in suite.Tests)
                     {
                         string xpathQuery = $"{child.XmlElementName}[@id={child.Id}]";
-                        TNode childNode = topNode.SelectSingleNode(xpathQuery);
+                        TNode? childNode = topNode.SelectSingleNode(xpathQuery);
                         Assert.That(childNode, Is.Not.Null, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
 
                         CheckXmlForTest(child, childNode, recursive);

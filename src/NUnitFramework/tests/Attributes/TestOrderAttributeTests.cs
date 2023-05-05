@@ -36,6 +36,7 @@ namespace NUnit.Framework.Attributes
             var testSuite = new TestSuite("dummy").Containing(candidateTypes);
 
             var work = TestBuilder.CreateWorkItem(testSuite) as CompositeWorkItem;
+            Assert.That(work, Is.Not.Null);
 
             var fixtureWorkItems = work.Children;
 
@@ -51,8 +52,7 @@ namespace NUnit.Framework.Attributes
 
         private static int GetOrderAttributeValue(WorkItem item)
         {
-            var order = item.Test.Properties.Get(PropertyNames.Order);
-            return int.Parse(order.ToString());
+            return (int?)item.Test.Properties.Get(PropertyNames.Order) ?? int.MaxValue;
         }
 
         private static readonly object[] Cases =

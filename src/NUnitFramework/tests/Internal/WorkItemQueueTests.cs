@@ -144,7 +144,9 @@ namespace NUnit.Framework.Internal.Execution
             var testFixture = new TestFixture(new TypeWrapper(typeof(MyFixture)));
 
             var fixtureItem = WorkItemBuilder.CreateWorkItem(testFixture, TestFilter.Empty, new DebuggerProxy());
-            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem(fixtureItem as CompositeWorkItem);
+            Assert.That(fixtureItem, Is.Not.Null);
+            // TODO: Remove '!' when https://github.com/nunit/nunit.analyzers/issues/535 is released
+            var tearDown = new CompositeWorkItem.OneTimeTearDownWorkItem((CompositeWorkItem)fixtureItem!);
             EnqueueWorkItem("Test1");
             _queue.Enqueue(tearDown);
             EnqueueWorkItem("Test2");
@@ -171,7 +173,7 @@ namespace NUnit.Framework.Internal.Execution
         private void VerifyQueueContents(params string[] names)
         {
             foreach (string name in names)
-                Assert.That(_queue.Dequeue().Test.Name, Is.EqualTo(name));
+                Assert.That(_queue.Dequeue()?.Test.Name, Is.EqualTo(name));
         }
 
         private void Test1()

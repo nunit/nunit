@@ -36,6 +36,7 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(_filter.Pass(_anotherFixture), Is.False);
         }
 
+        [Test]
         public void ExplicitMatchTest()
         {
             Assert.That(_filter.IsExplicitMatch(_topLevelSuite));

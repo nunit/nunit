@@ -68,19 +68,21 @@ namespace NUnit.Framework.Constraints
 //                Is.EqualTo(System.Drawing.Color.FromArgb(255, 0, 0)));
 //        }
 
-        public void CheckExceptionMessage(Exception ex)
+        private static void CheckExceptionMessage(Exception ex)
         {
-            string NL = Environment.NewLine;
+            string nl = Environment.NewLine;
 
             StringReader rdr = new StringReader(ex.Message);
             /* skip */ rdr.ReadLine();
-            string expected = rdr.ReadLine();
-            if (expected != null && expected.Length > 11)
+            string? expected = rdr.ReadLine();
+            Assert.That(expected, Is.Not.Null);
+            if (expected.Length > 11)
                 expected = expected.Substring(11);
-            string actual = rdr.ReadLine();
-            if (actual != null && actual.Length > 11)
+            string? actual = rdr.ReadLine();
+            Assert.That(actual, Is.Not.Null);
+            if (actual.Length > 11)
                 actual = actual.Substring(11);
-            string line = rdr.ReadLine();
+            string? line = rdr.ReadLine();
             Assert.That(line, new NotConstraint(new EqualConstraint(null)), "No caret line displayed");
             int caret = line.Substring(11).IndexOf('^');
 
@@ -92,11 +94,11 @@ namespace NUnit.Framework.Constraints
                 if (caret > minLength ||
                     expected.Substring(0, minMatch) != actual.Substring(0, minMatch) ||
                     expected[caret] == actual[caret])
-                    Assert.Fail("Message Error: Caret does not point at first mismatch..." + NL + ex.Message);
+                    Assert.Fail("Message Error: Caret does not point at first mismatch..." + nl + ex.Message);
             }
 
             if (expected.Length > 68 || actual.Length > 68 || caret > 68)
-                Assert.Fail("Message Error: Strings are not truncated..." + NL + ex.Message);
+                Assert.Fail("Message Error: Strings are not truncated..." + nl + ex.Message);
         }
 
         //public class SameColorAs : Constraint

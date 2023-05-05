@@ -63,8 +63,11 @@ namespace NUnit.Framework.Internal
 
             var expected = $"{arg0:dd MMM yyyy}";
             Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
-            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+                Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            });
         }
 
         [Test]
@@ -79,8 +82,11 @@ namespace NUnit.Framework.Internal
 
             var expected = $"{5:00.00} @";
             Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
-            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            Assert.Multiple(() =>
+            {
+                Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+                Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            });
         }
 
         [Test]
@@ -96,9 +102,11 @@ namespace NUnit.Framework.Internal
 
             var expected = $"Quick {9:#.00} Fox";
             Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
-            Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
-            Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
-
+            Assert.Multiple(() =>
+            {
+                Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
+                Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));
+            });
         }
 
         [Test]
@@ -221,7 +229,7 @@ namespace NUnit.Framework.Internal
             ListenerWriter.Write(value);
             ListenerWriter.WriteLine(value);
 
-            var expected = Boolean.TrueString;
+            var expected = bool.TrueString;
             Assert.That(ListenerResult.Outputs, Has.Count.EqualTo(2));
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
             Assert.That(ListenerResult.Outputs[1], Is.EqualTo(expected + NL));

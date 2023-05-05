@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, "FakeMethod").MakeTestResult();
+            _result = TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]

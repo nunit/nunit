@@ -64,7 +64,7 @@ namespace NUnit.Framework
             using (var continuationIsAvailable = new ManualResetEventSlim())
             using (var getResultWasCalled = new ManualResetEventSlim())
             {
-                var continuation = (Action)null;
+                var continuation = default(Action);
 
                 ThreadPool.QueueUserWorkItem(state =>
                 {
@@ -88,7 +88,7 @@ namespace NUnit.Framework
                 if (getResultWasCalled.IsSet)
                     Assert.Fail("GetResult was called before the continuation passed to OnCompleted was invoked.");
 
-                continuation.Invoke();
+                continuation!.Invoke();
 
                 if (!getResultWasCalled.Wait(10_000))
                     Assert.Fail("GetResult was not called after the continuation passed to OnCompleted was invoked.");

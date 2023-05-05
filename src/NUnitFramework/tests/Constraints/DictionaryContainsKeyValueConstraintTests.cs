@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void FailsWhenNullDictionary()
         {
-            TestDictionary dictionary = null;
+            TestDictionary? dictionary = null;
 
             TestDelegate act = () => Assert.That(dictionary, new DictionaryContainsKeyValuePairConstraint("1", "World"));
 

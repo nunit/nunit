@@ -436,7 +436,7 @@ namespace NUnit.Framework.Constraints
 
         public T Current => enumerator.Current;
 
-        object IEnumerator.Current => enumerator.Current;
+        object? IEnumerator.Current => enumerator.Current;
 
         public bool MoveNext()
         {
@@ -457,12 +457,12 @@ namespace NUnit.Framework.Constraints
 
     public class NeverEqualIEquatableWithOverriddenAlwaysTrueEquals : IEquatable<NeverEqualIEquatableWithOverriddenAlwaysTrueEquals>
     {
-        public bool Equals(NeverEqualIEquatableWithOverriddenAlwaysTrueEquals other)
+        public bool Equals(NeverEqualIEquatableWithOverriddenAlwaysTrueEquals? other)
         {
             return false;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return true;
         }
@@ -490,7 +490,7 @@ namespace NUnit.Framework.Constraints
 
     public class NeverEqualIEquatable : IEquatable<NeverEqualIEquatable>
     {
-        public bool Equals(NeverEqualIEquatable other)
+        public bool Equals(NeverEqualIEquatable? other)
         {
             return false;
         }
@@ -505,9 +505,9 @@ namespace NUnit.Framework.Constraints
             this.value = value;
         }
 
-        public bool Equals(IEquatableWithoutEqualsOverridden other)
+        public bool Equals(IEquatableWithoutEqualsOverridden? other)
         {
-            return value.Equals(other.value);
+            return other is not null && value.Equals(other.value);
         }
     }
 
@@ -520,16 +520,16 @@ namespace NUnit.Framework.Constraints
             this.value = value;
         }
 
-        bool IEquatable<IEquatableWithExplicitImplementation>.Equals(IEquatableWithExplicitImplementation other)
+        bool IEquatable<IEquatableWithExplicitImplementation>.Equals(IEquatableWithExplicitImplementation? other)
         {
-            return value.Equals(other.value);
+            return other is not null && value.Equals(other.value);
         }
     }
 
     public class EquatableObject : IEquatable<EquatableObject>
     {
         public int SomeProperty { get; set; }
-        public bool Equals(EquatableObject other)
+        public bool Equals(EquatableObject? other)
         {
             if (other == null)
                 return false;
@@ -541,7 +541,7 @@ namespace NUnit.Framework.Constraints
     public class InheritingEquatableObject : EquatableObject, IEquatable<InheritingEquatableObject>
     {
         public int OtherProperty { get; set; }
-        public bool Equals(InheritingEquatableObject other)
+        public bool Equals(InheritingEquatableObject? other)
         {
             if (other == null)
                 return false;
@@ -559,7 +559,7 @@ namespace NUnit.Framework.Constraints
     {
         public int SomeProperty { get; set; }
 
-        public bool Equals(IEquatableObject other)
+        public bool Equals(IEquatableObject? other)
         {
             if (other == null)
                 return false;
@@ -570,7 +570,7 @@ namespace NUnit.Framework.Constraints
 
     public class MultipleIEquatables : InheritedEquatableObject, IEquatable<EquatableObject>
     {
-        public bool Equals(EquatableObject other)
+        public bool Equals(EquatableObject? other)
         {
             if (other == null)
                 return false;
@@ -635,7 +635,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>Indicates whether the current object is equal to another object of the same type.</summary>
         /// <returns>true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.</returns>
         /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(EnumerableObject<T> other)
+        public bool Equals(EnumerableObject<T>? other)
         {
             if (other == null)
                 return false;

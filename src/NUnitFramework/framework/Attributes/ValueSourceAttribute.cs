@@ -21,7 +21,7 @@ namespace NUnit.Framework
         /// that don't support params arrays.
         /// </summary>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        public ValueSourceAttribute(string sourceName)
+        public ValueSourceAttribute(string? sourceName)
         {
             SourceName = sourceName;
         }
@@ -32,7 +32,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="sourceType">The Type that will provide data</param>
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
-        public ValueSourceAttribute(Type sourceType, string sourceName)
+        public ValueSourceAttribute(Type? sourceType, string? sourceName)
         {
             SourceType = sourceType;
             SourceName = sourceName;

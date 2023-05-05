@@ -7,9 +7,10 @@ namespace NUnit.Framework.Constraints
 {
     public abstract class ConstraintTestBaseNoData
     {
-        protected Constraint TheConstraint;
         protected string ExpectedDescription = "<NOT SET>";
         protected string StringRepresentation = "<NOT SET>";
+
+        protected abstract Constraint TheConstraint { get; }
 
         [Test]
         public void ProvidesProperDescription()
@@ -47,7 +48,7 @@ namespace NUnit.Framework.Constraints
         [Test, TestCaseSource(nameof(FailureData))]
         public void FailsWithBadValues(object badValue, string message)
         {
-            string NL = Environment.NewLine;
+            string nl = Environment.NewLine;
 
             var constraintResult = TheConstraint.ApplyTo(badValue);
             Assert.That(constraintResult.IsSuccess, Is.False);
@@ -55,8 +56,8 @@ namespace NUnit.Framework.Constraints
             TextMessageWriter writer = new TextMessageWriter();
             constraintResult.WriteMessageTo(writer);
             Assert.That( writer.ToString(), Is.EqualTo(
-                TextMessageWriter.Pfx_Expected + ExpectedDescription + NL +
-                TextMessageWriter.Pfx_Actual + message + NL ));
+                TextMessageWriter.Pfx_Expected + ExpectedDescription + nl +
+                TextMessageWriter.Pfx_Actual + message + nl ));
         }
     }
 }

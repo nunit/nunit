@@ -12,16 +12,16 @@ namespace NUnit.TestUtilities.Collections
     /// </summary>
     internal class SimpleObjectList : IList
     {
-        private readonly List<object> contents = new List<object>();
+        private readonly List<object?> contents;
 
-        public SimpleObjectList(IEnumerable<object> source)
+        public SimpleObjectList(IEnumerable<object?> source)
         {
-            this.contents = new List<object>(source);
+            this.contents = new List<object?>(source);
         }
 
-        public SimpleObjectList(params object[] source)
+        public SimpleObjectList(params object?[] source)
         {
-            this.contents = new List<object>(source);
+            this.contents = new List<object?>(source);
         }
 
         #region ICollection Members
@@ -50,7 +50,7 @@ namespace NUnit.TestUtilities.Collections
 
         #region IList Members
 
-        public int Add(object value)
+        public int Add(object? value)
         {
             contents.Add(value);
             return contents.Count - 1;
@@ -61,17 +61,17 @@ namespace NUnit.TestUtilities.Collections
             contents.Clear();
         }
 
-        public bool Contains(object value)
+        public bool Contains(object? value)
         {
             return contents.Contains(value);
         }
 
-        public int IndexOf(object value)
+        public int IndexOf(object? value)
         {
             return contents.IndexOf(value);
         }
 
-        public void Insert(int index, object value)
+        public void Insert(int index, object? value)
         {
             contents.Insert(index, value);
         }
@@ -80,7 +80,7 @@ namespace NUnit.TestUtilities.Collections
 
         public bool IsReadOnly => false;
 
-        public void Remove(object value)
+        public void Remove(object? value)
         {
             contents.Remove(value);
         }
@@ -90,7 +90,7 @@ namespace NUnit.TestUtilities.Collections
             contents.RemoveAt(index);
         }
 
-        public object this[int index]
+        public object? this[int index]
         {
             get => contents[index];
             set => contents[index] = value;

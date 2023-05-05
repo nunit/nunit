@@ -13,9 +13,9 @@ namespace NUnit.Framework.Syntax
 
         public TestCompiler() : this( null, null ) { }
 
-        public TestCompiler( string[] assemblyNames ) : this( assemblyNames, null ) { }
+        public TestCompiler( string[]? assemblyNames ) : this( assemblyNames, null ) { }
 
-        public TestCompiler( string[] assemblyNames, string outputName )
+        public TestCompiler( string[]? assemblyNames, string? outputName )
         {
             if ( assemblyNames != null && assemblyNames.Length > 0 )
                 Options.ReferencedAssemblies.AddRange( assemblyNames );

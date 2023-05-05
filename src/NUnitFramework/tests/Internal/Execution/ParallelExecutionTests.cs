@@ -26,11 +26,6 @@ namespace NUnit.Framework.Internal.Execution
         private IEnumerable<TestEvent> ShiftEvents => AllEvents.Where(e => e.Action == TestAction.ShiftStarted || e.Action == TestAction.ShiftFinished);
         private IEnumerable<TestEvent> TestEvents => AllEvents.Where(e => e.Action == TestAction.TestStarting || e.Action == TestAction.TestFinished);
 
-        public ParallelExecutionTests(TestSuite testSuite)
-        {
-            _testSuite = testSuite;
-        }
-
         public ParallelExecutionTests(TestSuite testSuite, Expectations expectations)
         {
             _testSuite = testSuite;
@@ -101,7 +96,7 @@ namespace NUnit.Framework.Internal.Execution
             string expected = "NonParallel";
             if (_testSuite.Properties.ContainsKey(PropertyNames.ParallelScope))
             {
-                var scope = (ParallelScope)_testSuite.Properties.Get(PropertyNames.ParallelScope);
+                var scope = (ParallelScope)_testSuite.Properties.Get(PropertyNames.ParallelScope)!;
                 if ((scope & ParallelScope.Self) != 0)
                     expected = "Parallel";
             }
@@ -412,35 +407,33 @@ namespace NUnit.Framework.Internal.Execution
 
 #region ITestListener implementation
 
-        public void TestStarted(ITest test)
+        void ITestListener. TestStarted(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
                 Action = TestAction.TestStarting,
                 TestName = test.Name,
-                ThreadName = Thread.CurrentThread.Name
+                ThreadName = Thread.CurrentThread.Name ?? "NoThreadName",
             });
         }
 
-        public void TestFinished(ITestResult result)
+        void ITestListener. TestFinished(ITestResult result)
         {
             _events.Enqueue(new TestEvent()
             {
                 Action = TestAction.TestFinished,
                 TestName = result.Name,
                 Result = result.ResultState.ToString(),
-                ThreadName = Thread.CurrentThread.Name
+                ThreadName = Thread.CurrentThread.Name ?? "NoThreadName",
             });
         }
 
-        public void TestOutput(TestOutput output)
+        void ITestListener.TestOutput(TestOutput output)
         {
-
         }
 
-        public void SendMessage(TestMessage message)
+        void ITestListener.SendMessage(TestMessage message)
         {
-
         }
 
 #endregion
@@ -492,10 +485,10 @@ namespace NUnit.Framework.Internal.Execution
         public class TestEvent
         {
             public TestAction Action;
-            public string TestName;
-            public string ThreadName;
-            public string ShiftName;
-            public string Result;
+            public string? TestName;
+            public string? ThreadName;
+            public string? ShiftName;
+            public string? Result;
 
             public override string ToString()
             {
@@ -577,8 +570,10 @@ namespace NUnit.Framework.Internal.Execution
 
             public void Verify(TestEvent e)
             {
-                Assert.That(_expectations, Does.ContainKey(e.TestName), $"The test {e.TestName} is not in the dictionary.");
-                _expectations[e.TestName].Verify(e);
+                string? testName = e.TestName;
+                Assert.That(testName, Is.Not.Null);
+                Assert.That(_expectations, Does.ContainKey(testName), $"The test {e.TestName} is not in the dictionary.");
+                _expectations[testName].Verify(e);
             }
         }
 

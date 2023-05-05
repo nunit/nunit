@@ -111,7 +111,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AssertThatCanHandleRecursivelyThrowingExceptionAsActual()
         {
-            var result = (ITestResult)null;
+            var result = default(ITestResult);
 
             var ex = RecordPossiblyDangerousException(() =>
                 result = RunDataTestCase(nameof(UnexpectedExceptionFixture.AssertThatWithRecursivelyThrowingExceptionAsActual)));
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void AssertThatCanHandleRecursivelyThrowingExceptionAsExpected()
         {
-            var result = (ITestResult)null;
+            var result = default(ITestResult);
 
             var ex = RecordPossiblyDangerousException(() =>
                 result = RunDataTestCase(nameof(UnexpectedExceptionFixture.AssertThatWithRecursivelyThrowingExceptionAsExpected)));
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Internal
 #pragma warning disable SYSLIB0032
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
 #pragma warning restore SYSLIB0032
-        private static Exception RecordPossiblyDangerousException(Action action)
+        private static Exception? RecordPossiblyDangerousException(Action action)
         {
             try
             {

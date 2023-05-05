@@ -18,7 +18,7 @@ namespace NUnit.TestUtilities
             if (times == 0) return;
 
             maxParallelism = Math.Min(times, maxParallelism);
-            var exception = (Exception)null;
+            var exception = default(Exception);
 
             var threadsToWaitFor = maxParallelism;
             using (var noMoreThreadsEvent = new ManualResetEventSlim())
@@ -52,20 +52,21 @@ namespace NUnit.TestUtilities
                     }
                     else
                     {
-                        var actionMethod = action.GetMethodInfo();
+                        MethodInfo? actionMethod = action.GetMethodInfo();
 
                         new Thread(work.Invoke)
                         {
-                            Name = $"{nameof(StressUtility)}.{nameof(RunParallel)} ({actionMethod.Name}) dedicated thread {maxParallelism + 1}"
+                            Name = $"{nameof(StressUtility)}.{nameof(RunParallel)} ({actionMethod?.Name ?? "anonymous"}) dedicated thread {maxParallelism + 1}"
                         }.Start();
                     }
                 }
 
                 noMoreThreadsEvent.Wait();
 
-                if (Volatile.Read(ref exception) != null)
+                Exception? readException = Volatile.Read(ref exception);
+                if (readException != null)
                 {
-                    ExceptionHelper.Rethrow(exception);
+                    ExceptionHelper.Rethrow(readException);
                 }
             }
         }

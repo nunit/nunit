@@ -10,7 +10,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ExactType()
         {
-            Assert.That( "Hello", Is.TypeOf( typeof(System.String) ) );
+            Assert.That( "Hello", Is.TypeOf( typeof(string) ) );
         }
 
         [Test]
@@ -19,7 +19,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: <System.Int32>" + Environment.NewLine +
                 "  But was:  <System.String>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( "Hello", Is.TypeOf( typeof(System.Int32) ) ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That( "Hello", Is.TypeOf( typeof(int) ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -39,16 +39,16 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: instance of <System.Int32>" + System.Environment.NewLine +
                 "  But was:  <System.String>" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc123", Is.InstanceOf( typeof(System.Int32) ) ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc123", Is.InstanceOf( typeof(int) ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void IsNotInstanceOf()
         {
-            Assert.IsNotInstanceOf(typeof(System.Int32), "abc123" );
-            Assert.That( "abc123", Is.Not.InstanceOf(typeof(System.Int32)) );
-            Assert.IsNotInstanceOf<System.Int32>("abc123");
+            Assert.IsNotInstanceOf(typeof(int), "abc123" );
+            Assert.That( "abc123", Is.Not.InstanceOf(typeof(int)) );
+            Assert.IsNotInstanceOf<int>("abc123");
         }
 
         [Test, SetUICulture("en-US")]

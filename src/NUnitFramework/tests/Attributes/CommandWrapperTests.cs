@@ -92,7 +92,7 @@ namespace NUnit.Framework.Attributes
 
                 public override TestResult Execute(TestExecutionContext context)
                 {
-                    Type caughtType = null;
+                    Type? caughtType = null;
 
                     try
                     {
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Attributes
                     catch(Exception ex)
                     {
                         if (ex is NUnitException)
-                            ex = ex.InnerException;
+                            ex = ex.InnerException!;
                         caughtType = ex.GetType();
                     }
 

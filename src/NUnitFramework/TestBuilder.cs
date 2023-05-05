@@ -10,6 +10,8 @@ using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Abstractions;
 
+#nullable enable
+
 namespace NUnit.TestUtilities
 {
     /// <summary>
@@ -55,11 +57,7 @@ namespace NUnit.TestUtilities
         // depending on whether the method takes arguments or not
         internal static Test MakeTestFromMethod(Type type, string methodName)
         {
-            var method = type.GetMethod(methodName, BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-            if (method == null)
-                Assert.Fail("Method not found: " + methodName);
-            return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, method));
+            return new DefaultTestCaseBuilder().BuildFrom(new MethodWrapper(type, methodName));
         }
 
         #endregion
@@ -84,7 +82,7 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context);
         }
 
-        public static WorkItem CreateWorkItem(Test test, object testObject, IDebugger debugger = null)
+        public static WorkItem CreateWorkItem(Test test, object? testObject, IDebugger? debugger = null)
         {
             var context = new TestExecutionContext
             {
@@ -95,9 +93,10 @@ namespace NUnit.TestUtilities
             return CreateWorkItem(test, context, debugger);
         }
 
-        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger debugger = null)
+        public static WorkItem CreateWorkItem(Test test, TestExecutionContext context, IDebugger? debugger = null)
         {
             var work = WorkItemBuilder.CreateWorkItem(test, TestFilter.Empty, debugger ?? new DebuggerProxy(), true);
+            Assert.That(work, Is.Not.Null);
             work.InitializeContext(context);
 
             return work;
@@ -121,7 +120,7 @@ namespace NUnit.TestUtilities
         {
             var suite = MakeParameterizedMethodSuite(type, methodName);
 
-            object testObject = null;
+            object? testObject = null;
             if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
@@ -132,7 +131,7 @@ namespace NUnit.TestUtilities
         {
             var testMethod = MakeTestCase(type, methodName);
 
-            object testObject = null;
+            object? testObject = null;
             if (!type.IsStatic())
                 testObject = Reflect.Construct(type);
 
@@ -149,6 +148,8 @@ namespace NUnit.TestUtilities
         public static ITestResult RunAsTestCase(Action action)
         {
             var method = action.GetMethodInfo();
+            Assert.That(method, Is.Not.Null);
+            Assert.That(method.DeclaringType, Is.Not.Null);
             var testMethod = MakeTestCase(method.DeclaringType, method.Name);
             return RunTest(testMethod);
         }
@@ -158,7 +159,7 @@ namespace NUnit.TestUtilities
             return RunTest(test, null);
         }
 
-        public static ITestResult RunTest(Test test, object testObject, IDebugger debugger = null)
+        public static ITestResult RunTest(Test test, object? testObject, IDebugger? debugger = null)
         {
             return ExecuteWorkItem(CreateWorkItem(test, testObject, debugger ?? new DebuggerProxy()));
         }

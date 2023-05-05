@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.TestUtilities;
@@ -26,9 +27,12 @@ namespace NUnit.Framework.Internal.Execution
         [Test]
         public void ConstructWorkItem()
         {
-            Assert.That(_workItem, Is.TypeOf<SimpleWorkItem>());
-            Assert.That(_workItem.Test.Name, Is.EqualTo("DummyTest"));
-            Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Ready));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_workItem, Is.TypeOf<SimpleWorkItem>());
+                Assert.That(_workItem.Test.Name, Is.EqualTo("DummyTest"));
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Ready));
+            });
         }
 
         [Test]
@@ -36,9 +40,12 @@ namespace NUnit.Framework.Internal.Execution
         {
             _workItem.Execute();
 
-            Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
-            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.Running));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.Running));
+            });
         }
 
         [Test]
@@ -46,24 +53,14 @@ namespace NUnit.Framework.Internal.Execution
         {
             _context.ExecutionStatus = TestExecutionStatus.StopRequested;
             _workItem.Execute();
-            Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
-            Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(_workItem.State, Is.EqualTo(WorkItemState.Complete));
+                Assert.That(_context.CurrentResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(_context.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
+            });
         }
-
-        private Thread _thread;
-
-        private void StartExecution()
-        {
-            _thread = new Thread(ThreadProc);
-            _thread.Start();
-        }
-
-        private void ThreadProc()
-        {
-            _workItem.Execute();
-        }
-
 
         // Use static for simplicity
         private static class DummyFixture
@@ -161,7 +158,7 @@ namespace NUnit.Framework.Internal.Execution
 
             public override bool HasChildren => false;
 
-            public override IEnumerable<ITestResult> Children => null;
+            public override IEnumerable<ITestResult> Children => Enumerable.Empty<ITestResult>();
         }
 
         private class FakeWorkItem : WorkItem

@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal
         private string originalDirectory;
         private CultureInfo originalCulture;
         private CultureInfo originalUICulture;
-        private IPrincipal originalPrincipal;
+        private IPrincipal? originalPrincipal;
         private readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
         private readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
 
@@ -109,7 +109,7 @@ namespace NUnit.Framework.Internal
         [Test]
         public void CurrentContextFlowsToUserCreatedThread()
         {
-            TestExecutionContext threadContext = null;
+            TestExecutionContext? threadContext = null;
 
             Thread thread = new Thread(() =>
             {
@@ -784,8 +784,8 @@ namespace NUnit.Framework.Internal
             {
                 GenericIdentity identity = new GenericIdentity("foo");
                 context.CurrentPrincipal = new GenericPrincipal(identity, Array.Empty<string>());
-                Assert.That(Thread.CurrentPrincipal.Identity.Name, Is.EqualTo("foo"), "Principal was not set");
-                Assert.That(context.CurrentPrincipal.Identity.Name, Is.EqualTo("foo"), "Principal not in new context");
+                Assert.That(Thread.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"), "Principal was not set");
+                Assert.That(context.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"), "Principal not in new context");
                 Assert.That(originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Original context should not change");
             }
             finally
@@ -893,7 +893,7 @@ namespace NUnit.Framework.Internal
                 "TestCanCreateAppDomain",
                 AppDomain.CurrentDomain.Evidence,
                 AssemblyHelper.GetDirectoryName(Assembly.GetExecutingAssembly()),
-                null,
+                null!,
                 false);
 
             var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
@@ -949,10 +949,11 @@ namespace NUnit.Framework.Internal
         [SetUp]
         public void SetUp()
         {
-            var domain = AppDomain.CreateDomain("TestDomain", null, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath, false);
-            _runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+            var domain = AppDomain.CreateDomain("TestDomain", null!, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath!, false);
+            RunsInAppDomain? runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName!,
                 "NUnit.Framework.Internal.RunsInAppDomain") as RunsInAppDomain;
-            Assert.That(_runsInAppDomain, Is.Not.Null);
+            Assert.That(runsInAppDomain, Is.Not.Null);
+            _runsInAppDomain = runsInAppDomain;
         }
 
         [Test]

@@ -26,14 +26,14 @@ namespace NUnit.Framework.Assertions
         public void CanCallAssertWithoutTestExecutionContext(MethodInfo method)
         {
             var savedContext = ClearExecutionContext();
-            Exception testException = null;
+            Exception? testException = null;
 
             try
             {
                 // Currently, we know all the tests are static, without arguments
                 method.Invoke(null, null);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 testException = ex is TargetInvocationException
                     ? ex.InnerException

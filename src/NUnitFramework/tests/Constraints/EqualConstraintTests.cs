@@ -12,23 +12,26 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class EqualConstraintTests : ConstraintTestBase
     {
+        protected override Constraint TheConstraint { get; } = new EqualConstraint(4);
+
         [SetUp]
         public void SetUp()
         {
-            TheConstraint = new EqualConstraint(4);
             ExpectedDescription = "4";
             StringRepresentation = "<equal 4>";
         }
 
-        private static object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
-        private static object[] FailureData = new object[]
-            {
-                new TestCaseData(5, "5"),
-                new TestCaseData(null, "null"),
-                new TestCaseData("Hello", "\"Hello\""),
-                new TestCaseData(double.NaN, double.NaN.ToString()),
-                new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
-            };
+#pragma warning disable IDE0052 // Remove unread private members
+        private static readonly object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
+        private static readonly object[] FailureData = new object[]
+        {
+            new TestCaseData(5, "5"),
+            new TestCaseData(null, "null"),
+            new TestCaseData("Hello", "\"Hello\""),
+            new TestCaseData(double.NaN, double.NaN.ToString()),
+            new TestCaseData(double.PositiveInfinity, double.PositiveInfinity.ToString())
+        };
+#pragma warning restore IDE0052 // Remove unread private members
 
         [Test]
         public void Complex_PassesEquality()
@@ -701,8 +704,13 @@ namespace NUnit.Framework.Constraints
 
             public class IntListEqualComparer : IEqualityComparer<List<int>>
             {
-                public bool Equals(List<int> x, List<int> y)
+                public bool Equals(List<int>? x, List<int>? y)
                 {
+                    if (ReferenceEquals(x, y))
+                        return true;
+                    if (x is null || y is null)
+                        return false;
+
                     return x.Count == y.Count;
                 }
 
@@ -727,8 +735,13 @@ namespace NUnit.Framework.Constraints
 
             public class IntArrayEqualComparer : IEqualityComparer<int[]>
             {
-                public bool Equals(int[] x, int[] y)
+                public bool Equals(int[]? x, int[]? y)
                 {
+                    if (ReferenceEquals(x, y))
+                        return true;
+                    if (x is null || y is null)
+                        return false;
+
                     return x.Length == y.Length;
                 }
 
@@ -830,7 +843,7 @@ namespace NUnit.Framework.Constraints
                 _obj = obj;
             }
 
-            public override string ToString()
+            public override string? ToString()
             {
                 return _obj.ToString();
             }
@@ -870,7 +883,7 @@ namespace NUnit.Framework.Constraints
     }
     namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
         internal class ReallyLongClassNameShouldBeHere {
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj == null || GetType() != obj.GetType())
                 {
@@ -893,7 +906,7 @@ namespace NUnit.Framework.Constraints
     namespace ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
     {
         internal class ReallyLongClassNameShouldBeHere {
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj == null || GetType() != obj.GetType())
                 {
@@ -923,7 +936,7 @@ namespace NUnit.Framework.Constraints
             public BaseTest(int value) {
                 _value = value;
             }
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (obj == null || GetType() != obj.GetType())
                 {
@@ -964,8 +977,15 @@ namespace NUnit.Framework.Constraints
     /// </remark>
     public class ConvertibleComparer : IComparer<IConvertible>
     {
-        public int Compare(IConvertible x, IConvertible y)
+        public int Compare(IConvertible? x, IConvertible? y)
         {
+            if (ReferenceEquals(x, y))
+                return 0;
+            if (x is null)
+                return -1;
+            if (y is null)
+                return 1;
+
             var str1 = Convert.ToString(x, CultureInfo.InvariantCulture);
             var str2 = Convert.ToString(y, CultureInfo.InvariantCulture);
             return string.Compare(str1, str2, StringComparison.Ordinal);

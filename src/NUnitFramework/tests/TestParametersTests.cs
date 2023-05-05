@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework
         [Test]
         public void Add_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Add(null, "X"), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Add(null!, "X"), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -87,7 +87,7 @@ namespace NUnit.Framework
         [Test]
         public void Indexer_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters[null], Throws.ArgumentNullException);
+            Assert.That(() => _parameters[null!], Throws.ArgumentNullException);
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace NUnit.Framework
         [Test]
         public void Get_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get(null!), Throws.ArgumentNullException);
         }
 
         #endregion
@@ -127,7 +127,7 @@ namespace NUnit.Framework
         [Test]
         public void GetString_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null, "JUNK"), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get(null!, "JUNK"), Throws.ArgumentNullException);
         }
 
         #endregion
@@ -150,7 +150,7 @@ namespace NUnit.Framework
         [Test]
         public void GetInt_NullKeyThrowsException()
         {
-            Assert.That(() => _parameters.Get(null, 99), Throws.ArgumentNullException);
+            Assert.That(() => _parameters.Get(null!, 99), Throws.ArgumentNullException);
         }
 
         [Test]

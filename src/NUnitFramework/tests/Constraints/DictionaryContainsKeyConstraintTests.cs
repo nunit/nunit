@@ -235,6 +235,7 @@ namespace NUnit.Framework.Constraints
         }
 
         public class TestPlainObjectContainsGeneric<TKey>
+            where TKey : notnull
         {
             private readonly TKey _key;
 
@@ -262,6 +263,8 @@ namespace NUnit.Framework.Constraints
         }
 
         public class TestDictionaryGeneric<TKey, TItem> : Dictionary<TKey, TItem>
+            where TKey : notnull
+            where TItem : notnull
         {
             public new bool ContainsKey(TKey key)
             {
@@ -341,8 +344,8 @@ namespace NUnit.Framework.Constraints
                 set => throw new NotImplementedException();
             }
 
-            public ICollection<int> Keys { get; }
-            public ICollection<string> Values { get; }
+            public ICollection<int> Keys => throw new NotImplementedException();
+            public ICollection<string> Values => throw new NotImplementedException();
         }
 
         public class TestNonGenericDictionary : IDictionary
@@ -359,7 +362,7 @@ namespace NUnit.Framework.Constraints
                 return _key == (int)key;
             }
 
-            public void Add(object key, object value)
+            public void Add(object key, object? value)
             {
                 throw new NotImplementedException();
             }
@@ -379,14 +382,14 @@ namespace NUnit.Framework.Constraints
                 throw new NotImplementedException();
             }
 
-            public object this[object key]
+            public object? this[object key]
             {
                 get => throw new NotImplementedException();
                 set => throw new NotImplementedException();
             }
 
-            public ICollection Keys { get; }
-            public ICollection Values { get; }
+            public ICollection Keys => throw new NotImplementedException();
+            public ICollection Values => throw new NotImplementedException();
             public bool IsReadOnly { get; }
             public bool IsFixedSize { get; }
 
@@ -401,7 +404,7 @@ namespace NUnit.Framework.Constraints
             }
 
             public int Count { get; }
-            public object SyncRoot { get; }
+            public object SyncRoot => throw new NotImplementedException();
             public bool IsSynchronized { get; }
         }
 
@@ -466,8 +469,8 @@ namespace NUnit.Framework.Constraints
 
             public string this[string key] => throw new NotImplementedException();
 
-            public IEnumerable<string> Keys { get; }
-            public IEnumerable<string> Values { get; }
+            public IEnumerable<string> Keys => throw new NotImplementedException();
+            public IEnumerable<string> Values => throw new NotImplementedException();
         }
 
         public class TestSet : ISet<int>

@@ -131,10 +131,9 @@ namespace NUnit.Framework.Constraints
                 this.val = val;
             }
 
-            public int CompareTo(object x)
+            public int CompareTo(object? x)
             {
-                ClassWithIComparable other = x as ClassWithIComparable;
-                if (x is ClassWithIComparable)
+                if (x is ClassWithIComparable other)
                     return val.CompareTo(other.val);
 
                 throw new ArgumentException();
@@ -150,8 +149,10 @@ namespace NUnit.Framework.Constraints
                 this.val = val;
             }
 
-            public int CompareTo(ClassWithIComparableOfT other)
+            public int CompareTo(ClassWithIComparableOfT? other)
             {
+                if (other is null)
+                    return 1;
                 return val.CompareTo(other.val);
             }
 

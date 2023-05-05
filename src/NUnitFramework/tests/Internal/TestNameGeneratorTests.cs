@@ -15,12 +15,9 @@ namespace NUnit.Framework.Internal
         public void InitializeMethodInfos()
         {
             Type thisType = GetType();
-            var simpleMethod = thisType.GetMethod("TestMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            var simpleMethodWithArgs = thisType.GetMethod("TestMethodWithArgs", BindingFlags.NonPublic | BindingFlags.Instance);
-            var genericMethod = thisType.GetMethod("GenericTest", BindingFlags.NonPublic | BindingFlags.Instance);
-            _simpleTest = new TestMethod(new MethodWrapper(thisType, simpleMethod));
-            _simpleTestWithArgs = new TestMethod(new MethodWrapper(thisType, simpleMethodWithArgs));
-            _genericTest = new TestMethod(new MethodWrapper(thisType, genericMethod));
+            _simpleTest = new TestMethod(new MethodWrapper(thisType, nameof(TestMethod)));
+            _simpleTestWithArgs = new TestMethod(new MethodWrapper(thisType, nameof(TestMethodWithArgs)));
+            _genericTest = new TestMethod(new MethodWrapper(thisType, nameof(GenericTest)));
             _simpleTest.Id = "THE_ID";
         }
 
@@ -139,7 +136,7 @@ namespace NUnit.Framework.Internal
 
         private void TestMethod() { }
 
-        private void TestMethodWithArgs(Int32 a, Int32 b, Int32 c = 0) { }
+        private void TestMethodWithArgs(int a, int b, int c = 0) { }
 
         private void GenericTest<T, U, V>() { }
 

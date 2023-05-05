@@ -22,29 +22,38 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchTest()
         {
-            Assert.That(_filter.Match(_dummyFixture.Tests[0]));
-            Assert.That(_filter.Match(_anotherFixture.Tests[0]));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_filter.Match(_dummyFixture.Tests[0]));
+                Assert.That(_filter.Match(_anotherFixture.Tests[0]));
+            });
         }
 
         [Test]
         public void PassTest()
         {
-            Assert.That(_filter.Pass(_topLevelSuite));
-            Assert.That(_filter.Pass(_dummyFixture));
-            Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_filter.Pass(_topLevelSuite));
+                Assert.That(_filter.Pass(_dummyFixture));
+                Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
 
-            Assert.That(_filter.Pass(_anotherFixture));
-            Assert.That(_filter.Pass(_anotherFixture.Tests[0]));
-            Assert.That(_filter.Pass(_yetAnotherFixture), Is.False);
+                Assert.That(_filter.Pass(_anotherFixture));
+                Assert.That(_filter.Pass(_anotherFixture.Tests[0]));
+                Assert.That(_filter.Pass(_yetAnotherFixture), Is.False);
+            });
         }
 
+        [Test]
         public void ExplicitMatch_SingleName()
         {
-            Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(_filter.IsExplicitMatch(_dummyFixture));
-            Assert.That(_filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
-
-            Assert.That(_filter.IsExplicitMatch(_anotherFixture), Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
+                Assert.That(_filter.IsExplicitMatch(_dummyFixture));
+                Assert.That(_filter.IsExplicitMatch(_dummyFixture.Tests[0]));
+                Assert.That(_filter.IsExplicitMatch(_anotherFixture));
+            });
         }
     }
 }

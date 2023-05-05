@@ -120,16 +120,15 @@ namespace NUnit.Framework.Assertions
             });
 
             Assert.That(result.AssertionResults, Has.Count.EqualTo(1), "Incorrect number of AssertionResults");
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Warning));
-                Assert.That(result.AssertionResults[0].Message, Is.Not.Null, "Assertion Message should not be null");
-                Assert.That(result.AssertionResults[0].StackTrace, Does.Contain("WarningFixture"));
-                Assert.That(result.AssertionResults[0].StackTrace.Split(new[] { '\n' }), Has.Length.LessThan(3));
-            });
-
+            Assert.That(result.AssertionResults[0].Status, Is.EqualTo(AssertionStatus.Warning));
+            string? message = result.AssertionResults[0].Message;
+            Assert.That(message, Is.Not.Null, "Assertion Message should not be null");
+            string? stackTrace = result.AssertionResults[0].StackTrace;
+            Assert.That(stackTrace, Is.Not.Null, "StackTrace should not be null");
+            Assert.That(stackTrace, Does.Contain("WarningFixture"));
+            Assert.That(stackTrace.Split(new[] { '\n' }), Has.Length.LessThan(3));
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
-            Assert.That(result.Message, Contains.Substring(result.AssertionResults[0].Message), "Result message should contain assertion message");
+            Assert.That(result.Message, Contains.Substring(message), "Result message should contain assertion message");
 
             if (expectedMessage != null)
             {
@@ -251,7 +250,9 @@ namespace NUnit.Framework.Assertions
         public static void StackTracesAreFiltered(string methodName, int maxLineCount)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
-            if (result.FailCount != 0 && result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName))
+            if (result.FailCount != 0 &&
+                result.Message is not null &&
+                result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName()))
             {
                 return; // BeginInvoke causes PlatformNotSupportedException on .NET Core
             }
@@ -262,6 +263,7 @@ namespace NUnit.Framework.Assertions
             }
 
             var warningStackTrace = result.AssertionResults[0].StackTrace;
+            Assert.That(warningStackTrace, Is.Not.Null);
             var lines = warningStackTrace.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (maxLineCount < lines.Length)
