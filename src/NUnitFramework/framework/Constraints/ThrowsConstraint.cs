@@ -92,7 +92,7 @@ namespace NUnit.Framework.Constraints
                 else
                     Status = ConstraintStatus.Failure;
 
-                this._baseResult = baseResult;
+                _baseResult = baseResult;
             }
 
             /// <summary>

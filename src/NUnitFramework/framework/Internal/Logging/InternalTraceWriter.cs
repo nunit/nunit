@@ -20,7 +20,7 @@ namespace NUnit.Framework.Internal
         {
             var streamWriter = new StreamWriter(new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Write));
             streamWriter.AutoFlush = true;
-            this._writer = streamWriter;
+            _writer = streamWriter;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
         /// <param name="writer"></param>
         public InternalTraceWriter(TextWriter writer)
         {
-            this._writer = writer;
+            _writer = writer;
         }
 
         /// <summary>

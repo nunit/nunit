@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
         public TextMessageWriter(string? userMessage, params object?[]? args)
         {
             if (userMessage is not null && userMessage != string.Empty)
-                this.WriteMessageLine(userMessage, args);
+                WriteMessageLine(userMessage, args);
         }
         #endregion
 

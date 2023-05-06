@@ -276,7 +276,7 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                if (this.Status == ConstraintStatus.Failure)
+                if (Status == ConstraintStatus.Failure)
                 {
                     writer.Write("  Not unique items: ");
                     var output = MsgUtils.FormatCollection(NonUniqueItems, 0, MsgUtils.DefaultMaxItems);

@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
 
             actualType = actual?.GetType();
 
-            return new ExceptionTypeConstraintResult(this, actual, actualType, this.Matches(actual));
+            return new ExceptionTypeConstraintResult(this, actual, actualType, Matches(actual));
         }
 
         #region Nested Result Class
@@ -39,12 +39,12 @@ namespace NUnit.Framework.Constraints
             public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object? caughtException, Type? type, bool matches)
                 : base(constraint, type, matches)
             {
-                this._caughtException = caughtException;
+                _caughtException = caughtException;
             }
 
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (this.Status == ConstraintStatus.Failure)
+                if (Status == ConstraintStatus.Failure)
                 {
                     if (_caughtException is Exception ex)
                     {

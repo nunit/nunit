@@ -810,7 +810,7 @@ namespace NUnit.Framework.Constraints
 
             public Dummy(int value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public override string ToString()
@@ -825,7 +825,7 @@ namespace NUnit.Framework.Constraints
 
             public Dummy1(int value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public override string ToString()
@@ -889,7 +889,7 @@ namespace NUnit.Framework.Constraints
                 {
                     return false;
                 }
-                return obj.ToString() == this.ToString();
+                return obj.ToString() == ToString();
             }
             public override int GetHashCode()
             {
@@ -912,7 +912,7 @@ namespace NUnit.Framework.Constraints
                 {
                     return false;
                 }
-                return obj.ToString()==this.ToString();
+                return obj.ToString()==ToString();
             }
             public override int GetHashCode()
             {

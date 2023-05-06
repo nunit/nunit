@@ -79,7 +79,7 @@ namespace NUnit.Framework.Constraints
             /// <param name="builder">The ConstraintBuilder using this stack.</param>
             public ConstraintStack(ConstraintBuilder builder)
             {
-                this._builder = builder;
+                _builder = builder;
             }
 
             /// <summary>
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Constraints
             public void Push(IConstraint constraint)
             {
                 _stack.Push(constraint);
-                constraint.Builder = this._builder;
+                constraint.Builder = _builder;
             }
 
             /// <summary>
@@ -133,8 +133,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public ConstraintBuilder()
         {
-            this._ops = new OperatorStack();
-            this._constraints = new ConstraintStack(this);
+            _ops = new OperatorStack();
+            _constraints = new ConstraintStack(this);
         }
 
         #endregion

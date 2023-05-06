@@ -15,7 +15,7 @@ namespace NUnit.Framework.Internal
 
             public Dummy(int value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public override string ToString()
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal
 
             public Dummy(int value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public override string ToString()
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Internal
 
             public Dummy(int value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public override string ToString()
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Internal
 
             public Dummy1(int value)
             {
-                this.Value = value;
+                Value = value;
             }
 
             public override string ToString()

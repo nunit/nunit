@@ -26,7 +26,7 @@ namespace NUnit.Common
             if (parts.Length > 2)
                 throw new ArgumentException($"Invalid output spec: {spec}.");
 
-            this.OutputPath = parts[0];
+            OutputPath = parts[0];
 
             if (parts.Length == 1)
                 return;
@@ -36,7 +36,7 @@ namespace NUnit.Common
             if (opt.Length != 2 || opt[0].Trim() != "format")
                 throw new ArgumentException($"Invalid output spec: {spec}.");
 
-            this.Format = opt[1].Trim();
+            Format = opt[1].Trim();
         }
 
         #endregion

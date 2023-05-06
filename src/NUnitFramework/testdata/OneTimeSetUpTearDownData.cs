@@ -174,14 +174,14 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public void Init2()
         {
             DerivedSetUpCount++;
-            BaseSetUpCalledFirst = this.SetUpCount > 0;
+            BaseSetUpCalledFirst = SetUpCount > 0;
         }
 
         [OneTimeTearDown]
         public void Destroy2()
         {
             DerivedTearDownCount++;
-            BaseTearDownCalledLast = this.TearDownCount == 0;
+            BaseTearDownCalledLast = TearDownCount == 0;
         }
 
         [Test]

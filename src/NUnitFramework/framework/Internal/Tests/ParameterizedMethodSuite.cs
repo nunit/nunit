@@ -20,7 +20,7 @@ namespace NUnit.Framework.Internal
         {
             base.Method = method;
             _isTheory = method.IsDefined<TheoryAttribute>(true);
-            this.MaintainTestOrder = true;
+            MaintainTestOrder = true;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
                 if (_isTheory)
                     return "Theory";
 
-                if (this.Method.ContainsGenericParameters)
+                if (Method.ContainsGenericParameters)
                     return "GenericMethod";
 
                 return "ParameterizedMethod";

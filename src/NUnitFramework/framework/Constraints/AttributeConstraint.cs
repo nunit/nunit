@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         public AttributeConstraint(Type type, IConstraint baseConstraint)
             : base(baseConstraint, "attribute " + type.FullName)
         {
-            this._expectedType = type;
+            _expectedType = type;
 
             if (!typeof(Attribute).IsAssignableFrom(_expectedType))
                 throw new ArgumentException($"Type {_expectedType} is not an attribute", nameof(type));

@@ -62,7 +62,7 @@ namespace NUnit.Framework
             public RepeatedTestCommand(TestCommand innerCommand, int repeatCount)
                 : base(innerCommand)
             {
-                this._repeatCount = repeatCount;
+                _repeatCount = repeatCount;
             }
 
             /// <summary>

@@ -72,7 +72,7 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
         public CustomException(string msg, CustomType custom)
             : base(msg)
         {
-            this._custom = custom;
+            _custom = custom;
         }
     }
 

@@ -30,12 +30,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Appends an And Operator to the expression
         /// </summary>
-        public ConstraintExpression And => this.Append(new AndOperator());
+        public ConstraintExpression And => Append(new AndOperator());
 
         /// <summary>
         /// Appends an Or operator to the expression.
         /// </summary>
-        public ConstraintExpression Or => this.Append(new OrOperator());
+        public ConstraintExpression Or => Append(new OrOperator());
 
         #region IResolveConstraint Members
 

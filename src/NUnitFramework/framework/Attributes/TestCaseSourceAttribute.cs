@@ -34,7 +34,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestCaseSourceAttribute(string sourceName)
         {
-            this.SourceName = sourceName;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace NUnit.Framework
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName, object?[]? methodParams)
         {
-            this.MethodParams = methodParams;
-            this.SourceType = sourceType;
-            this.SourceName = sourceName;
+            MethodParams = methodParams;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
         /// <summary>
         /// Construct with a Type and name
@@ -57,8 +57,8 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestCaseSourceAttribute(Type sourceType, string sourceName)
         {
-            this.SourceType = sourceType;
-            this.SourceName = sourceName;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -69,8 +69,8 @@ namespace NUnit.Framework
         ///                     If the source name is a field or property has no effect.</param>
         public TestCaseSourceAttribute(string sourceName, object?[]? methodParams)
         {
-            this.MethodParams = methodParams;
-            this.SourceName = sourceName;
+            MethodParams = methodParams;
+            SourceName = sourceName;
         }
         /// <summary>
         /// Construct with a Type
@@ -78,7 +78,7 @@ namespace NUnit.Framework
         /// <param name="sourceType">The type that will provide data</param>
         public TestCaseSourceAttribute(Type sourceType)
         {
-            this.SourceType = sourceType;
+            SourceType = sourceType;
         }
 
         #endregion
@@ -195,8 +195,8 @@ namespace NUnit.Framework
                             parms = new TestCaseParameters(args);
                         }
 
-                        if (this.Category is not null)
-                            foreach (string cat in this.Category.Tokenize(','))
+                        if (Category is not null)
+                            foreach (string cat in Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
                         data.Add(parms);

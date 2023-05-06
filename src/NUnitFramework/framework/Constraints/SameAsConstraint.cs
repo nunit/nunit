@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected object.</param>
         public SameAsConstraint(object? expected) : base(expected)
         {
-            this._expected = expected;
+            _expected = expected;
         }
 
         /// <summary>

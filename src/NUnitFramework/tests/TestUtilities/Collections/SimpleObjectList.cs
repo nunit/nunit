@@ -16,12 +16,12 @@ namespace NUnit.TestUtilities.Collections
 
         public SimpleObjectList(IEnumerable<object?> source)
         {
-            this._contents = new List<object?>(source);
+            _contents = new List<object?>(source);
         }
 
         public SimpleObjectList(params object?[] source)
         {
-            this._contents = new List<object?>(source);
+            _contents = new List<object?>(source);
         }
 
         #region ICollection Members

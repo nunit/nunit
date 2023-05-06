@@ -36,8 +36,8 @@ namespace NUnit.Framework.Constraints
         protected TypeConstraint(Type type, string descriptionPrefix)
             : base(type)
         {
-            this.expectedType = type;
-            this.Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
+            expectedType = type;
+            Description = descriptionPrefix + MsgUtils.FormatValue(expectedType);
         }
 
         /// <inheritdoc/>
@@ -53,9 +53,9 @@ namespace NUnit.Framework.Constraints
             actualType = actual?.GetType();
 
             if (actual is Exception)
-                return new ConstraintResult(this, actual, this.Matches(actual));
+                return new ConstraintResult(this, actual, Matches(actual));
 
-            return new ConstraintResult(this, actualType, this.Matches(actual));
+            return new ConstraintResult(this, actualType, Matches(actual));
         }
 
         /// <summary>

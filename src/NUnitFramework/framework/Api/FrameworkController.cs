@@ -49,8 +49,8 @@ namespace NUnit.Framework.Api
         {
             Initialize(assemblyNameOrPath, settings);
 
-            this.Builder = new DefaultTestAssemblyBuilder();
-            this.Runner = new NUnitTestAssemblyRunner(this.Builder);
+            Builder = new DefaultTestAssemblyBuilder();
+            Runner = new NUnitTestAssemblyRunner(Builder);
 
             Test.IdPrefix = idPrefix ?? string.Empty;
         }

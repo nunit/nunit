@@ -16,7 +16,7 @@ namespace NUnit.TestData.AttributeInheritanceData
 
         public ConcernAttribute( Type typeOfConcern )
         {
-            this._typeOfConcern = typeOfConcern;
+            _typeOfConcern = typeOfConcern;
         }
     }
 

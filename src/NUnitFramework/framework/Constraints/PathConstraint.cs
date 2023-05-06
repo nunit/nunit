@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         protected PathConstraint(string expected)
             : base(expected)
         {
-            this.caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
+            caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
         }
 
         /// <summary>

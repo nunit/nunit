@@ -21,7 +21,7 @@ namespace NUnit.Framework
         /// <param name="propertyValue">The property value</param>
         public PropertyAttribute(string propertyName, string propertyValue)
         {
-            this._properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace NUnit.Framework
         /// <param name="propertyValue">The property value</param>
         public PropertyAttribute(string propertyName, int propertyValue)
         {
-            this._properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         /// <param name="propertyValue">The property value</param>
         public PropertyAttribute(string propertyName, double propertyValue)
         {
-            this._properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
@@ -60,10 +60,10 @@ namespace NUnit.Framework
         /// </summary>
         protected PropertyAttribute( object propertyValue )
         {
-            string propertyName = this.GetType().Name;
+            string propertyName = GetType().Name;
             if ( propertyName.EndsWith( "Attribute", StringComparison.Ordinal ) )
                 propertyName = propertyName.Substring( 0, propertyName.Length - 9 );
-            this._properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>

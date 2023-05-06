@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
 
             _displayName = new Lazy<string>(() =>
             {
-                var type = this.GetType();
+                var type = GetType();
                 var displayName = type.Name;
                 if (type.IsGenericType)
                     displayName = displayName.Substring(0, displayName.Length - 2);
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Constraints
         {
             string rep = GetStringRepresentation();
 
-            return this.Builder is null ? rep : $"<unresolved {rep}>";
+            return Builder is null ? rep : $"<unresolved {rep}>";
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder? builder = this.Builder;
+                ConstraintBuilder? builder = Builder;
                 if (builder is null)
                 {
                     builder = new ConstraintBuilder();
@@ -236,7 +236,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a ConstraintExpression by appending And
         /// to the current constraint.
         /// </summary>
-        public ConstraintExpression With => this.And;
+        public ConstraintExpression With => And;
 
         /// <summary>
         /// Returns a ConstraintExpression by appending Or
@@ -246,7 +246,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                ConstraintBuilder? builder = this.Builder;
+                ConstraintBuilder? builder = Builder;
                 if (builder is null)
                 {
                     builder = new ConstraintBuilder();

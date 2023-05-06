@@ -22,7 +22,7 @@ namespace NUnit.TestData.MultipleTestFixturesOrderAttribute
         private string _s;
         public MultipleTestFixtureAttributesOrder1(string s)
         {
-            this._s = s;
+            _s = s;
         }
 
         [Test]

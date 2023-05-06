@@ -26,7 +26,7 @@ namespace NUnit.Framework.Constraints
         public PropertyExistsConstraint(string name)
             : base(name)
         {
-            this._name = name;
+            _name = name;
         }
 
         /// <summary>

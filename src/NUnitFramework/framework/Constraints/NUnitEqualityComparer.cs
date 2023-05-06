@@ -140,7 +140,7 @@ namespace NUnit.Framework.Constraints
 
         internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
-            this._failurePoints = new List<FailurePoint>();
+            _failurePoints = new List<FailurePoint>();
 
             if (x is null && y is null)
                 return true;

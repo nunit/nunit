@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
 
             public ComparerAdapter(IComparer comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Constraints
 
             public EqualityComparerAdapter(IEqualityComparer comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
@@ -189,7 +189,7 @@ namespace NUnit.Framework.Constraints
 
             public EqualityComparerAdapter(IEqualityComparer<T> comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
@@ -220,7 +220,7 @@ namespace NUnit.Framework.Constraints
 
             public ComparerAdapter(IComparer<T> comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
@@ -248,7 +248,7 @@ namespace NUnit.Framework.Constraints
 
             public ComparisonAdapter(Comparison<T> comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)

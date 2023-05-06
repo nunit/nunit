@@ -81,7 +81,7 @@ namespace NUnit.Framework.Internal
 
             private ReflectionAssemblyLoader(Func<string, Assembly> loadFromAssemblyPath)
             {
-                this._loadFromAssemblyPath = loadFromAssemblyPath;
+                _loadFromAssemblyPath = loadFromAssemblyPath;
             }
 
             public static ReflectionAssemblyLoader? TryGet()

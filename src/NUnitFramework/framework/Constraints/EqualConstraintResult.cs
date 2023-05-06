@@ -44,11 +44,11 @@ namespace NUnit.Framework.Constraints
         public EqualConstraintResult(EqualConstraint constraint, object? actual, bool hasSucceeded)
             : base(constraint, actual, hasSucceeded)
         {
-            this._expectedValue = constraint.Arguments[0];
-            this._tolerance = constraint.Tolerance;
-            this._caseInsensitive = constraint.CaseInsensitive;
-            this._clipStrings = constraint.ClipStrings;
-            this._failurePoints = constraint.FailurePoints;
+            _expectedValue = constraint.Arguments[0];
+            _tolerance = constraint.Tolerance;
+            _caseInsensitive = constraint.CaseInsensitive;
+            _clipStrings = constraint.ClipStrings;
+            _failurePoints = constraint.FailurePoints;
         }
 
         /// <summary>

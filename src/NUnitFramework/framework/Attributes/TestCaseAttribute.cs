@@ -278,7 +278,7 @@ namespace NUnit.Framework
                     Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
                 }
                 else
-                    this.RunState = RunState.NotRunnable;
+                    RunState = RunState.NotRunnable;
             }
         }
 

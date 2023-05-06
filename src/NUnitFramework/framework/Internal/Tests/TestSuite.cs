@@ -82,14 +82,14 @@ namespace NUnit.Framework.Internal
         public TestSuite(TestSuite suite, ITestFilter filter)
             : this(suite.Name)
         {
-            this.FullName = suite.FullName;
-            this.Method   = suite.Method;
-            this.RunState = suite.RunState;
-            this.Fixture  = suite.Fixture;
+            FullName = suite.FullName;
+            Method   = suite.Method;
+            RunState = suite.RunState;
+            Fixture  = suite.Fixture;
 
             foreach (string key in suite.Properties.Keys)
             foreach (object val in suite.Properties[key])
-                this.Properties.Add(key, val);
+                Properties.Add(key, val);
 
             foreach (var child in suite._tests)
             {
@@ -99,11 +99,11 @@ namespace NUnit.Framework.Internal
                     {
                         TestSuite childSuite = ((TestSuite)child).Copy(filter);
                         childSuite.Parent    = this;
-                        this._tests.Add(childSuite);
+                        _tests.Add(childSuite);
                     }
                     else
                     {
-                        this._tests.Add(child);
+                        _tests.Add(child);
                     }
                 }
             }
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
         {
             if (!MaintainTestOrder)
             {
-                this._tests.Sort();
+                _tests.Sort();
 
                 foreach (Test test in Tests)
                 {
@@ -286,10 +286,10 @@ namespace NUnit.Framework.Internal
         public override TNode AddToXml(TNode parentNode, bool recursive)
         {
             TNode thisNode = parentNode.AddElement("test-suite");
-            thisNode.AddAttribute("type", this.TestType);
+            thisNode.AddAttribute("type", TestType);
 
             PopulateTestNode(thisNode, recursive);
-            thisNode.AddAttribute("testcasecount", this.TestCaseCount.ToString());
+            thisNode.AddAttribute("testcasecount", TestCaseCount.ToString());
 
 
             if (recursive)

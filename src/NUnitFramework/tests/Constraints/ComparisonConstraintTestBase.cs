@@ -60,7 +60,7 @@ namespace NUnit.Framework.Constraints
 
         public ClassWithIComparable(int val)
         {
-            this._val = val;
+            _val = val;
         }
 
         public int CompareTo(object? x)
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
 
         public ClassWithIComparableOfT(int val)
         {
-            this._val = val;
+            _val = val;
         }
 
         public int CompareTo(ClassWithIComparableOfT? other)

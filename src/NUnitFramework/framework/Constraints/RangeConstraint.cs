@@ -24,8 +24,8 @@ namespace NUnit.Framework.Constraints
         /// <param name="to">Inclusive end of the range.</param>
         public RangeConstraint(object from, object to) : base(from, to)
         {
-            this._from = from;
-            this._to = to;
+            _from = from;
+            _to = to;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RangeConstraint Using(IComparer comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RangeConstraint Using<T>(IComparer<T> comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -70,7 +70,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RangeConstraint Using<T>(Comparison<T> comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 

@@ -151,7 +151,7 @@ namespace NUnit.Options
 
         internal OptionValueCollection (OptionContext c)
         {
-            this._c = c;
+            _c = c;
         }
 
         #region ICollection
@@ -245,8 +245,8 @@ namespace NUnit.Options
 
         public OptionContext (OptionSet set)
         {
-            this._set = set;
-            this._c   = new OptionValueCollection (this);
+            _set = set;
+            _c   = new OptionValueCollection (this);
         }
 
         public Option Option {
@@ -297,24 +297,24 @@ namespace NUnit.Options
             if (maxValueCount < 0)
                 throw new ArgumentOutOfRangeException (nameof(maxValueCount));
 
-            this._prototype   = prototype;
-            this._names       = prototype.Split ('|');
-            this._description = description;
-            this._count       = maxValueCount;
-            this._type        = ParsePrototype ();
+            _prototype   = prototype;
+            _names       = prototype.Split ('|');
+            _description = description;
+            _count       = maxValueCount;
+            _type        = ParsePrototype ();
 
-            if (this._count == 0 && _type != OptionValueType.None)
+            if (_count == 0 && _type != OptionValueType.None)
                 throw new ArgumentException (
                         "Cannot provide maxValueCount of 0 for OptionValueType.Required or " +
                             "OptionValueType.Optional.",
                         nameof(maxValueCount));
-            if (this._type == OptionValueType.None && maxValueCount > 1)
+            if (_type == OptionValueType.None && maxValueCount > 1)
                 throw new ArgumentException (
                     $"Cannot provide maxValueCount of {maxValueCount} for OptionValueType.None.",
                     nameof(maxValueCount));
             if (Array.IndexOf (_names, "<>") >= 0 &&
-                    ((_names.Length == 1 && this._type != OptionValueType.None) ||
-                     (_names.Length > 1 && this.MaxValueCount > 1)))
+                    ((_names.Length == 1 && _type != OptionValueType.None) ||
+                     (_names.Length > 1 && MaxValueCount > 1)))
                 throw new ArgumentException (
                         "The default option handler '<>' cannot require values.",
                         nameof(prototype));
@@ -397,11 +397,11 @@ namespace NUnit.Options
                     "prototype");
             if (_count > 1) {
                 if (seps.Count == 0)
-                    this._separators = new[]{":", "="};
+                    _separators = new[]{":", "="};
                 else if (seps.Count == 1 && seps [0].Length == 0)
-                    this._separators = null;
+                    _separators = null;
                 else
-                    this._separators = seps.ToArray ();
+                    _separators = seps.ToArray ();
             }
 
             return type == '=' ? OptionValueType.Required : OptionValueType.Optional;
@@ -467,22 +467,22 @@ namespace NUnit.Options
         public OptionException (string message, string optionName)
             : base (message)
         {
-            this._option = optionName;
+            _option = optionName;
         }
 
         public OptionException (string message, string optionName, Exception innerException)
             : base (message, innerException)
         {
-            this._option = optionName;
+            _option = optionName;
         }
 
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
-            this._option = info.GetString ("OptionName");
+            _option = info.GetString ("OptionName");
         }
 
-        public string OptionName => this._option;
+        public string OptionName => _option;
 
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
@@ -573,7 +573,7 @@ namespace NUnit.Options
             {
                 if (action is null)
                     throw new ArgumentNullException (nameof(action));
-                this._action = action;
+                _action = action;
             }
 
             protected override void OnParseComplete (OptionContext c)
@@ -620,7 +620,7 @@ namespace NUnit.Options
             {
                 if (action is null)
                     throw new ArgumentNullException (nameof(action));
-                this._action = action;
+                _action = action;
             }
 
             protected override void OnParseComplete (OptionContext c)
@@ -637,7 +637,7 @@ namespace NUnit.Options
             {
                 if (action is null)
                     throw new ArgumentNullException (nameof(action));
-                this._action = action;
+                _action = action;
             }
 
             protected override void OnParseComplete (OptionContext c)

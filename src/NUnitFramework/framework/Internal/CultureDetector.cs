@@ -20,7 +20,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public CultureDetector()
         {
-            this._currentCulture = CultureInfo.CurrentCulture;
+            _currentCulture = CultureInfo.CurrentCulture;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
         /// <param name="culture">The culture to be used</param>
         public CultureDetector( string culture )
         {
-            this._currentCulture = new CultureInfo( culture );
+            _currentCulture = new CultureInfo( culture );
         }
 
         /// <summary>
@@ -90,11 +90,11 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                if( this._currentCulture.Name == culture || this._currentCulture.TwoLetterISOLanguageName == culture)
+                if( _currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
                     return true;
             }
 
-            this._reason = "Only supported under culture " + culture;
+            _reason = "Only supported under culture " + culture;
             return false;
         }
 

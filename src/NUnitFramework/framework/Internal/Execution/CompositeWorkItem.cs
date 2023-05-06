@@ -320,9 +320,9 @@ namespace NUnit.Framework.Internal.Execution
             // executed on the same thread since the time that
             // this test started, so we have to re-establish
             // the proper execution environment
-            this.Context.EstablishExecutionEnvironment();
+            Context.EstablishExecutionEnvironment();
 
-            _teardownCommand?.Execute(this.Context);
+            _teardownCommand?.Execute(Context);
         }
 
         private string? GetSkipReason()
@@ -445,7 +445,7 @@ namespace NUnit.Framework.Internal.Execution
                     foreach (var childResult in Result.Children)
                         if (childResult.ResultState == ResultState.Cancelled)
                         {
-                            this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                            Result.SetResult(ResultState.Cancelled, "Cancelled by user");
                             break;
                         }
 

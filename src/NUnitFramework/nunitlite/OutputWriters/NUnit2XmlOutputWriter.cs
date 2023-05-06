@@ -46,7 +46,7 @@ namespace NUnitLite
 
         private void WriteXmlOutput(ITestResult result, XmlWriter xmlWriter)
         {
-            this._xmlWriter = xmlWriter;
+            _xmlWriter = xmlWriter;
 
             InitializeXmlFile(result);
             WriteResultElement(result);

@@ -26,12 +26,12 @@ namespace NUnit.Framework.Internal
         /// <param name="writer">The writer where logs are sent.</param>
         public Logger(string name, InternalTraceLevel level, TextWriter? writer)
         {
-            this._maxLevel = level;
-            this._writer = writer;
-            this._fullname = this._name = name;
+            _maxLevel = level;
+            _writer = writer;
+            _fullname = _name = name;
             int index = _fullname.LastIndexOf('.');
             if (index >= 0)
-                this._name = _fullname.Substring(index + 1);
+                _name = _fullname.Substring(index + 1);
         }
 
         #region Error
@@ -129,13 +129,13 @@ namespace NUnit.Framework.Internal
         #region Helper Methods
         private void Log(InternalTraceLevel level, string message)
         {
-            if (this._maxLevel >= level)
+            if (_maxLevel >= level)
                 WriteLog(level, message);
         }
 
         private void Log(InternalTraceLevel level, string format, params object[] args)
         {
-            if (this._maxLevel >= level)
+            if (_maxLevel >= level)
                 WriteLog(level, string.Format( format, args ) );
         }
 

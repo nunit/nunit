@@ -24,7 +24,7 @@ namespace NUnit.Framework.Internal
         public TestAssembly(Assembly assembly, string assemblyNameOrPath)
             : this(assemblyNameOrPath)
         {
-            this.Assembly = assembly;
+            Assembly = assembly;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal
         /// </param>
         public TestAssembly(string assemblyNameOrPath) : base(assemblyNameOrPath)
         {
-            this.Name = Path.GetFileName(assemblyNameOrPath);
+            Name = Path.GetFileName(assemblyNameOrPath);
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace NUnit.Framework.Internal
         public TestAssembly(TestAssembly assembly, ITestFilter filter)
             : base(assembly, filter)
         {
-            this.Name     = assembly.Name;
-            this.Assembly = assembly.Assembly;
+            Name     = assembly.Name;
+            Assembly = assembly.Assembly;
         }
 
         /// <summary>

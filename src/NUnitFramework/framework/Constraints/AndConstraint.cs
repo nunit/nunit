@@ -54,8 +54,8 @@ namespace NUnit.Framework.Constraints
             public AndConstraintResult(AndConstraint constraint, object? actual, ConstraintResult leftResult, ConstraintResult rightResult)
                 : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess)
             {
-                this._leftResult = leftResult;
-                this._rightResult = rightResult;
+                _leftResult = leftResult;
+                _rightResult = rightResult;
             }
 
             /// <summary>
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (this.IsSuccess)
+                if (IsSuccess)
                     base.WriteActualValueTo(writer);
                 else if (!_leftResult.IsSuccess)
                     _leftResult.WriteActualValueTo(writer);
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                if (this.IsSuccess)
+                if (IsSuccess)
                     base.WriteAdditionalLinesTo(writer);
                 else if (!_leftResult.IsSuccess)
                     _leftResult.WriteAdditionalLinesTo(writer);

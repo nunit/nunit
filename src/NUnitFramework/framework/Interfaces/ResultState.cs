@@ -170,7 +170,7 @@ namespace NUnit.Framework.Interfaces
         /// <returns>A new ResultState</returns>
         public ResultState WithSite(FailureSite site)
         {
-            return new ResultState(this.Status, this.Label, site);
+            return new ResultState(Status, Label, site);
         }
 
         /// <summary>

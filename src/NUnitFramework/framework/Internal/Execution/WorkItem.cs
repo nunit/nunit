@@ -462,12 +462,12 @@ namespace NUnit.Framework.Internal.Execution
         [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
-            Context.CurrentTest = this.Test;
-            Context.CurrentResult = this.Result;
-            Context.Listener.TestStarted(this.Test);
+            Context.CurrentTest = Test;
+            Context.CurrentResult = Result;
+            Context.Listener.TestStarted(Test);
             Context.StartTime = DateTime.UtcNow;
             Context.StartTicks = Stopwatch.GetTimestamp();
-            Context.TestWorker = this.TestWorker;
+            Context.TestWorker = TestWorker;
 
             Context.EstablishExecutionEnvironment();
 

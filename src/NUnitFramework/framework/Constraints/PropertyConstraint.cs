@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         public PropertyConstraint(string name, IConstraint baseConstraint)
             : base(baseConstraint, "property " + name)
         {
-            this._name = name;
+            _name = name;
         }
 
         /// <summary>

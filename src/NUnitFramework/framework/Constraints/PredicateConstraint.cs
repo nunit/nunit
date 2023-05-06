@@ -19,7 +19,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public PredicateConstraint(Predicate<T> predicate)
         {
-            this._predicate = predicate;
+            _predicate = predicate;
         }
 
         /// <summary>

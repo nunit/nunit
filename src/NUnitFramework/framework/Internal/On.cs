@@ -26,7 +26,7 @@ namespace NUnit.Framework.Internal
 
             public DisposableAction(Action action)
             {
-                this._action = action;
+                _action = action;
             }
 
             public void Dispose()

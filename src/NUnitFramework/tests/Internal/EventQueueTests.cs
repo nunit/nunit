@@ -110,9 +110,9 @@ namespace NUnit.Framework.Internal.Execution
             public void DequeueBlocking_Stop()
             {
                 var q = new EventQueue();
-                this._receivedEvents = 0;
-                this.RunProducerConsumer(q);
-                Assert.That(this._receivedEvents, Is.EqualTo(Events.Length + 1));
+                _receivedEvents = 0;
+                RunProducerConsumer(q);
+                Assert.That(_receivedEvents, Is.EqualTo(Events.Length + 1));
             }
 
             protected override void Producer(object? parameter)
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal.Execution
                 if (parameter is not EventQueue q)
                     throw new ArgumentException("Expected an EventQueue", nameof(parameter));
                 EnqueueEvents(q);
-                while (this._receivedEvents < Events.Length)
+                while (_receivedEvents < Events.Length)
                     Thread.Sleep(30);
 
                 q.Stop();
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal.Execution
                 do
                 {
                     e = q.Dequeue(true);
-                    this._receivedEvents++;
+                    _receivedEvents++;
                     Thread.MemoryBarrier();
                 }
                 while (e is not null);
@@ -229,12 +229,12 @@ namespace NUnit.Framework.Internal.Execution
 
             protected void RunProducerConsumer(object? parameter)
             {
-                this._myConsumerException = null;
-                Thread consumerThread = new Thread(this.ConsumerThreadWrapper);
+                _myConsumerException = null;
+                Thread consumerThread = new Thread(ConsumerThreadWrapper);
                 try
                 {
                     consumerThread.Start(parameter);
-                    this.Producer(parameter);
+                    Producer(parameter);
                     bool consumerStopped = consumerThread.Join(1000);
                     Assert.That(consumerStopped, Is.True);
                 }
@@ -245,7 +245,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
                 }
 
-                Assert.That(this._myConsumerException, Is.Null);
+                Assert.That(_myConsumerException, Is.Null);
             }
 
             protected abstract void Producer(object? parameter);
@@ -256,7 +256,7 @@ namespace NUnit.Framework.Internal.Execution
             {
                 try
                 {
-                    this.Consumer(parameter);
+                    Consumer(parameter);
                 }
 #if THREAD_ABORT
                 catch (System.Threading.ThreadAbortException)
@@ -266,7 +266,7 @@ namespace NUnit.Framework.Internal.Execution
 #endif
                 catch (Exception ex)
                 {
-                    this._myConsumerException = ex;
+                    _myConsumerException = ex;
                 }
             }
         }
@@ -282,10 +282,10 @@ namespace NUnit.Framework.Internal.Execution
 
             public EventProducer(EventQueue q, int id, bool delay)
             {
-                this._queue = q;
-                this.ProducerThread = new Thread(new ThreadStart(this.Produce));
-                this.ProducerThread.Name = this.GetType().FullName + id;
-                this._delay = delay;
+                _queue = q;
+                ProducerThread = new Thread(new ThreadStart(Produce));
+                ProducerThread.Name = GetType().FullName + id;
+                _delay = delay;
             }
 
             private void Produce()
@@ -296,18 +296,18 @@ namespace NUnit.Framework.Internal.Execution
                     DateTime start = DateTime.Now;
                     while (DateTime.Now - start <= TimeSpan.FromSeconds(3))
                     {
-                        this._queue.Enqueue(e);
-                        this.SentEventsCount++;
-                        this.MaxQueueLength = Math.Max(this._queue.Count, this.MaxQueueLength);
+                        _queue.Enqueue(e);
+                        SentEventsCount++;
+                        MaxQueueLength = Math.Max(_queue.Count, MaxQueueLength);
 
                         // without Sleep or with just a Sleep(0), the EventPump thread does not keep up and the queue gets very long
-                        if (this._delay)
+                        if (_delay)
                             Thread.Sleep(1);
                     }
                 }
                 catch (Exception ex)
                 {
-                    this.Exception = ex;
+                    Exception = ex;
                 }
             }
         }

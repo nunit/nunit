@@ -21,11 +21,11 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public PropOperator(string name)
         {
-            this._name = name;
+            _name = name;
 
             // Prop stacks on anything and allows only
             // prefix operators to stack on it.
-            this.left_precedence = this.right_precedence = 1;
+            left_precedence = right_precedence = 1;
         }
 
         /// <summary>

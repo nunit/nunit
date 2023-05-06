@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public ComparerAdapter(IComparer comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             /// <summary>
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public ComparerAdapter(IComparer<T> comparer)
             {
-                this._comparer = comparer;
+                _comparer = comparer;
             }
 
             /// <summary>
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Constraints
             /// </summary>
             public ComparisonAdapterForComparison(Comparison<T> comparer)
             {
-                this._comparison = comparer;
+                _comparison = comparer;
             }
 
             /// <summary>

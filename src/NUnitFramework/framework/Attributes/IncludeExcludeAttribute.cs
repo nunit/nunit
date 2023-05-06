@@ -24,7 +24,7 @@ namespace NUnit.Framework
         /// <param name="include">Comma-delimited list of included items</param>
         public IncludeExcludeAttribute(string? include)
         {
-            this._include = include;
+            _include = include;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace NUnit.Framework
         /// </summary>
         public string? Include
         {
-            get => this._include;
+            get => _include;
             set => _include = value;
         }
 
@@ -44,8 +44,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Exclude
         {
-            get => this._exclude;
-            set => this._exclude = value;
+            get => _exclude;
+            set => _exclude = value;
         }
 
         /// <summary>

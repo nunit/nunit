@@ -296,7 +296,7 @@ namespace NUnit.Framework.Internal
 
             public override string ToString()
             {
-                return $"<{this.Runtime},{this.FrameworkVersion},{this.ClrVersion}>";
+                return $"<{Runtime},{FrameworkVersion},{ClrVersion}>";
             }
         }
 

@@ -66,7 +66,7 @@ namespace NUnit.Framework
         /// <returns>A modified TestCaseData</returns>
         public TestCaseData Returns(object? result)
         {
-            this.ExpectedResult = result;
+            ExpectedResult = result;
             return this;
         }
 
@@ -76,7 +76,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance</returns>
         public TestCaseData SetName(string? name)
         {
-            this.TestName = name;
+            TestName = name;
             return this;
         }
 
@@ -97,7 +97,7 @@ namespace NUnit.Framework
         /// <returns>The modified TestCaseData instance.</returns>
         public TestCaseData SetDescription(string description)
         {
-            this.Properties.Set(PropertyNames.Description, description);
+            Properties.Set(PropertyNames.Description, description);
             return this;
         }
 
@@ -108,7 +108,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetCategory(string category)
         {
-            this.Properties.Add(PropertyNames.Category, category);
+            Properties.Add(PropertyNames.Category, category);
             return this;
         }
 
@@ -120,7 +120,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetProperty(string propName, string propValue)
         {
-            this.Properties.Add(propName, propValue);
+            Properties.Add(propName, propValue);
             return this;
         }
 
@@ -132,7 +132,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetProperty(string propName, int propValue)
         {
-            this.Properties.Add(propName, propValue);
+            Properties.Add(propName, propValue);
             return this;
         }
 
@@ -144,7 +144,7 @@ namespace NUnit.Framework
         /// <returns></returns>
         public TestCaseData SetProperty(string propName, double propValue)
         {
-            this.Properties.Add(propName, propValue);
+            Properties.Add(propName, propValue);
             return this;
         }
 
@@ -152,7 +152,7 @@ namespace NUnit.Framework
         /// Marks the test case as explicit.
         /// </summary>
         public TestCaseData Explicit()	{
-            this.RunState = RunState.Explicit;
+            RunState = RunState.Explicit;
             return this;
         }
 
@@ -161,8 +161,8 @@ namespace NUnit.Framework
         /// </summary>
         public TestCaseData Explicit(string reason)
         {
-            this.RunState = RunState.Explicit;
-            this.Properties.Set(PropertyNames.SkipReason, reason);
+            RunState = RunState.Explicit;
+            Properties.Set(PropertyNames.SkipReason, reason);
             return this;
         }
 
@@ -173,9 +173,9 @@ namespace NUnit.Framework
         /// <returns></returns>
         public IgnoredTestCaseData Ignore(string reason)
         {
-            RunState prevRunState = this.RunState;
-            this.RunState = RunState.Ignored;
-            this.Properties.Set(PropertyNames.SkipReason, reason);
+            RunState prevRunState = RunState;
+            RunState = RunState.Ignored;
+            Properties.Set(PropertyNames.SkipReason, reason);
             var ignoredData = new IgnoredTestCaseData(this, prevRunState);
             return ignoredData;
         }

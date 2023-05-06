@@ -16,12 +16,12 @@ namespace NUnit.TestUtilities.Collections
 
         public SimpleEnumerable(IEnumerable<object> source)
         {
-            this._contents = new List<object>(source);
+            _contents = new List<object>(source);
         }
 
         public SimpleEnumerable(params object[] source)
         {
-            this._contents = new List<object>(source);
+            _contents = new List<object>(source);
         }
 
         #region IEnumerable Members

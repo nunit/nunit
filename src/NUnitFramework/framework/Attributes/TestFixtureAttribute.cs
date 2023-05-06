@@ -143,11 +143,11 @@ namespace NUnit.Framework
         [DisallowNull]
         public string? Reason
         {
-            get => this.Properties.Get(PropertyNames.SkipReason) as string;
+            get => Properties.Get(PropertyNames.SkipReason) as string;
             set
             {
                 Guard.ArgumentNotNull(value, nameof(value));
-                this.Properties.Set(PropertyNames.SkipReason, value);
+                Properties.Set(PropertyNames.SkipReason, value);
             }
         }
 
@@ -226,7 +226,7 @@ namespace NUnit.Framework
         /// </summary>
         public IEnumerable<TestSuite> BuildFrom(ITypeInfo typeInfo)
         {
-            return this.BuildFrom(typeInfo, PreFilter.Empty);
+            return BuildFrom(typeInfo, PreFilter.Empty);
         }
 
         #endregion

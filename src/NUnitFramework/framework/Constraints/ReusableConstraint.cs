@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="c">The expression to be resolved and reused</param>
         public ReusableConstraint(IResolveConstraint c)
         {
-            this._constraint = c.Resolve();
+            _constraint = c.Resolve();
         }
 
         /// <summary>

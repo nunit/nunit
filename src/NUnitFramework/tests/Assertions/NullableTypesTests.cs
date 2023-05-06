@@ -205,8 +205,8 @@ namespace NUnit.Framework.Assertions
 
             public MyStruct(int i, string s)
             {
-                this._i = i;
-                this._s = s;
+                _i = i;
+                _s = s;
             }
         }
 

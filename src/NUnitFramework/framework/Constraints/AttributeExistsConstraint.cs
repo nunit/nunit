@@ -20,7 +20,7 @@ namespace NUnit.Framework.Constraints
         public AttributeExistsConstraint(Type type)
             : base(type)
         {
-            this._expectedType = type;
+            _expectedType = type;
 
             if (!typeof(Attribute).IsAssignableFrom(_expectedType))
                 throw new ArgumentException($"Type {_expectedType} is not an attribute", nameof(type));

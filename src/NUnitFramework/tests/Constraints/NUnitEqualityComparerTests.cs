@@ -363,7 +363,7 @@ namespace NUnit.Framework.Constraints
         public DetectRecursionComparer(int maxRecursion)
         {
             var callerDepth = new StackTrace().FrameCount - 1;
-            this._maxRecursion = callerDepth + maxRecursion;
+            _maxRecursion = callerDepth + maxRecursion;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -391,7 +391,7 @@ namespace NUnit.Framework.Constraints
 
         public EnumerableWithDisposeChecks(T[] data)
         {
-            this._data = data;
+            _data = data;
         }
 
         public bool EnumeratorsDisposed
@@ -429,7 +429,7 @@ namespace NUnit.Framework.Constraints
 
         public DisposableEnumerator(IEnumerator<T> enumerator)
         {
-            this._enumerator = enumerator;
+            _enumerator = enumerator;
         }
 
         public bool Disposed => _disposedValue;
@@ -479,7 +479,7 @@ namespace NUnit.Framework.Constraints
 
         public Int32IEquatable(int value)
         {
-            this._value = value;
+            _value = value;
         }
 
         public bool Equals(int other)
@@ -502,7 +502,7 @@ namespace NUnit.Framework.Constraints
 
         public IEquatableWithoutEqualsOverridden(int value)
         {
-            this._value = value;
+            _value = value;
         }
 
         public bool Equals(IEquatableWithoutEqualsOverridden? other)
@@ -517,7 +517,7 @@ namespace NUnit.Framework.Constraints
 
         public IEquatableWithExplicitImplementation(int value)
         {
-            this._value = value;
+            _value = value;
         }
 
         bool IEquatable<IEquatableWithExplicitImplementation>.Equals(IEquatableWithExplicitImplementation? other)
@@ -585,7 +585,7 @@ namespace NUnit.Framework.Constraints
 
         public EnumerableObject(IEnumerable<T> enumerable, int someProperty)
         {
-            this._enumerable = enumerable;
+            _enumerable = enumerable;
             SomeProperty = someProperty;
         }
 
@@ -612,7 +612,7 @@ namespace NUnit.Framework.Constraints
 
         public EquatableWithEnumerableObject(IEnumerable<T> enumerable, int otherProperty)
         {
-            this._enumerable = enumerable;
+            _enumerable = enumerable;
             OtherProperty = otherProperty;
         }
 

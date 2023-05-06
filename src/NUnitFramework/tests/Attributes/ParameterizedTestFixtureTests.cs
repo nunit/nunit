@@ -52,9 +52,9 @@ namespace NUnit.Framework.Attributes
 
         public ParameterizedTestFixture(string? eq1, string? eq2, string? neq)
         {
-            this._eq1 = eq1;
-            this._eq2 = eq2;
-            this._neq = neq;
+            _eq1 = eq1;
+            _eq2 = eq2;
+            _neq = neq;
         }
 
         public ParameterizedTestFixture(string? eq1, string? eq2)
@@ -62,9 +62,9 @@ namespace NUnit.Framework.Attributes
 
         public ParameterizedTestFixture(int eq1, int eq2, int neq)
         {
-            this._eq1 = eq1.ToString();
-            this._eq2 = eq2.ToString();
-            this._neq = neq.ToString();
+            _eq1 = eq1.ToString();
+            _eq2 = eq2.ToString();
+            _neq = neq.ToString();
         }
 
         [Test]
