@@ -19,7 +19,7 @@ namespace NUnit.TestData.MultipleTestFixturesOrderAttribute
     [Order(1)]
     public class MultipleTestFixtureAttributesOrder1
     {
-        private string _s;
+        private readonly string _s;
         public MultipleTestFixtureAttributesOrder1(string s)
         {
             _s = s;

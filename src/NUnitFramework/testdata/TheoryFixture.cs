@@ -10,9 +10,9 @@ namespace NUnit.TestData.TheoryFixture
 #pragma warning disable IDE0051 // Remove unused private members
 #pragma warning disable CS0414 // The field is assigned but its value is never used
         [Datapoint]
-        private int _i0 = 0;
+        private readonly int _i0 = 0;
         [Datapoint]
-        private static int _i1 = 1;
+        private static readonly int I1 = 1;
 #pragma warning restore CS0414 // The field is assigned but its value is never used
 #pragma warning restore IDE0051 // Remove unused private members
         [Datapoint]

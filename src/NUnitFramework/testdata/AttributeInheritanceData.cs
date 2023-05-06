@@ -11,7 +11,7 @@ namespace NUnit.TestData.AttributeInheritanceData
     internal class ConcernAttribute : TestFixtureAttribute
     {
 #pragma warning disable IDE0052 // Remove unread private members
-        private Type _typeOfConcern;
+        private readonly Type _typeOfConcern;
 #pragma warning restore IDE0052 // Remove unread private members
 
         public ConcernAttribute( Type typeOfConcern )

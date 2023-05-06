@@ -145,6 +145,9 @@ dotnet_diagnostic.IDE0003.severity = warning
 # IDE0005: Remove unnecessary usings/imports
 dotnet_diagnostic.IDE0005.severity = error
 
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = warning
+
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = warning
 
