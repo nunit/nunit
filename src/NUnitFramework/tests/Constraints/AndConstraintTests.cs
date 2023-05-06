@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AndConstraintTests : ConstraintTestBase
     {
-        private TextMessageWriter messageWriter;
+        private TextMessageWriter _messageWriter;
 
         protected override Constraint TheConstraint { get; } = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
 
@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
         {
             ExpectedDescription = "greater than 40 and less than 50";
             StringRepresentation = "<and <greaterthan 40> <lessthan 50>>";
-            messageWriter = new TextMessageWriter();
+            _messageWriter = new TextMessageWriter();
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
@@ -58,8 +58,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(constraintResult.IsSuccess, Is.False);
 
-            constraintResult.WriteMessageTo(messageWriter);
-            Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
+            constraintResult.WriteMessageTo(_messageWriter);
+            Assert.That(_messageWriter.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -76,8 +76,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(constraintResult.IsSuccess, Is.False);
 
-            constraintResult.WriteMessageTo(messageWriter);
-            Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
+            constraintResult.WriteMessageTo(_messageWriter);
+            Assert.That(_messageWriter.ToString(), Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -94,8 +94,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.That(constraintResult.IsSuccess, Is.False);
 
-            constraintResult.WriteMessageTo(messageWriter);
-            Assert.That(messageWriter.ToString(), Is.EqualTo(expectedMsg));
+            constraintResult.WriteMessageTo(_messageWriter);
+            Assert.That(_messageWriter.ToString(), Is.EqualTo(expectedMsg));
         }
     }
 }

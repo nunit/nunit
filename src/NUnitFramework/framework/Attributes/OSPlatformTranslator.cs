@@ -12,8 +12,8 @@ namespace NUnit.Framework
     /// </summary>
     internal static class OSPlatformTranslator
     {
-        private static readonly Type? _osPlatformAttributeType = Type.GetType("System.Runtime.Versioning.OSPlatformAttribute, System.Runtime", false);
-        private static readonly PropertyInfo? _platformNameProperty = _osPlatformAttributeType?.GetProperty("PlatformName", typeof(string));
+        private static readonly Type? OsPlatformAttributeType = Type.GetType("System.Runtime.Versioning.OSPlatformAttribute, System.Runtime", false);
+        private static readonly PropertyInfo? PlatformNameProperty = OsPlatformAttributeType?.GetProperty("PlatformName", typeof(string));
 
         /// <summary>
         /// Converts one or more .NET 5+ OSPlatformAttributes into a single NUnit PlatformAttribute
@@ -25,9 +25,9 @@ namespace NUnit.Framework
             IApplyToTest[] applyToTestAttributes = provider.GetAttributes<IApplyToTest>(inherit: true);
 
             // OSPlatformAttribute is only available on NET5.O or greater
-            var osPlatformAttributes = _osPlatformAttributeType is null ?
+            var osPlatformAttributes = OsPlatformAttributeType is null ?
                 Array.Empty<Attribute>() :
-                (Attribute[])provider.GetCustomAttributes(_osPlatformAttributeType, inherit: true);
+                (Attribute[])provider.GetCustomAttributes(OsPlatformAttributeType, inherit: true);
 
             return Translate(osPlatformAttributes, applyToTestAttributes);
         }
@@ -63,7 +63,7 @@ namespace NUnit.Framework
             // Translate OSPlatformAttribute
             foreach (var osPlatformAttribute in osPlatformAttributes)
             {
-                string? platformName = (string?)_platformNameProperty?.GetValue(osPlatformAttribute);
+                string? platformName = (string?)PlatformNameProperty?.GetValue(osPlatformAttribute);
                 if (platformName is null)
                 {
                     // Invalid property, ignore

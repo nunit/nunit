@@ -9,45 +9,45 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class LessFixture
     {
-        private readonly int i1 = 5;
-        private readonly int i2 = 8;
-        private readonly uint u1 = 12345678;
-        private readonly uint u2 = 12345879;
-        private readonly long l1 = 12345678;
-        private readonly long l2 = 12345879;
-        private readonly ulong ul1 = 12345678;
-        private readonly ulong ul2 = 12345879;
-        private readonly float f1 = 3.543F;
-        private readonly float f2 = 8.543F;
-        private readonly decimal de1 = 53.4M;
-        private readonly decimal de2 = 83.4M;
-        private readonly double d1 = 4.85948654;
-        private readonly double d2 = 8.0;
-        private readonly System.Enum e1 = RunState.Explicit;
-        private readonly System.Enum e2 = RunState.Ignored;
+        private readonly int _i1 = 5;
+        private readonly int _i2 = 8;
+        private readonly uint _u1 = 12345678;
+        private readonly uint _u2 = 12345879;
+        private readonly long _l1 = 12345678;
+        private readonly long _l2 = 12345879;
+        private readonly ulong _ul1 = 12345678;
+        private readonly ulong _ul2 = 12345879;
+        private readonly float _f1 = 3.543F;
+        private readonly float _f2 = 8.543F;
+        private readonly decimal _de1 = 53.4M;
+        private readonly decimal _de2 = 83.4M;
+        private readonly double _d1 = 4.85948654;
+        private readonly double _d2 = 8.0;
+        private readonly Enum _e1 = RunState.Explicit;
+        private readonly Enum _e2 = RunState.Ignored;
 
         [Test]
         public void Less()
         {
             // Testing all forms after seeing some bugs. CFP
-            Assert.Less(i1,i2);
-            Assert.Less(i1,i2,"int");
-            Assert.Less(i1,i2,"{0}","int");
-            Assert.Less(u1,u2,"uint");
-            Assert.Less(u1,u2,"{0}","uint");
-            Assert.Less(l1,l2,"long");
-            Assert.Less(l1,l2,"{0}","long");
-            Assert.Less(ul1,ul2,"ulong");
-            Assert.Less(ul1,ul2,"{0}","ulong");
-            Assert.Less(d1,d2);
-            Assert.Less(d1,d2, "double");
-            Assert.Less(d1,d2, "{0}", "double");
-            Assert.Less(de1,de2);
-            Assert.Less(de1,de2, "decimal");
-            Assert.Less(de1,de2, "{0}", "decimal");
-            Assert.Less(f1,f2);
-            Assert.Less(f1,f2, "float");
-            Assert.Less(f1,f2, "{0}", "float");
+            Assert.Less(_i1,_i2);
+            Assert.Less(_i1,_i2,"int");
+            Assert.Less(_i1,_i2,"{0}","int");
+            Assert.Less(_u1,_u2,"uint");
+            Assert.Less(_u1,_u2,"{0}","uint");
+            Assert.Less(_l1,_l2,"long");
+            Assert.Less(_l1,_l2,"{0}","long");
+            Assert.Less(_ul1,_ul2,"ulong");
+            Assert.Less(_ul1,_ul2,"{0}","ulong");
+            Assert.Less(_d1,_d2);
+            Assert.Less(_d1,_d2, "double");
+            Assert.Less(_d1,_d2, "{0}", "double");
+            Assert.Less(_de1,_de2);
+            Assert.Less(_de1,_de2, "decimal");
+            Assert.Less(_de1,_de2, "{0}", "decimal");
+            Assert.Less(_f1,_f2);
+            Assert.Less(_f1,_f2, "float");
+            Assert.Less(_f1,_f2, "{0}", "float");
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than 5" + Environment.NewLine +
                 "  But was:  5" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Less(i1,i1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Less(_i1,_i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than 5" + Environment.NewLine +
                 "  But was:  8" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Less(i2,i1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Less(_i2,_i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than Explicit" + Environment.NewLine +
                 "  But was:  Ignored" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Less(e2,e1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Less(_e2,_e1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

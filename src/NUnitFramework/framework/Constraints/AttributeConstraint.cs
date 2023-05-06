@@ -12,7 +12,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AttributeConstraint : PrefixConstraint
     {
-        private readonly Type expectedType;
+        private readonly Type _expectedType;
 
         /// <summary>
         /// Constructs an AttributeConstraint for a specified attribute
@@ -23,10 +23,10 @@ namespace NUnit.Framework.Constraints
         public AttributeConstraint(Type type, IConstraint baseConstraint)
             : base(baseConstraint, "attribute " + type.FullName)
         {
-            this.expectedType = type;
+            this._expectedType = type;
 
-            if (!typeof(Attribute).IsAssignableFrom(expectedType))
-                throw new ArgumentException($"Type {expectedType} is not an attribute", nameof(type));
+            if (!typeof(Attribute).IsAssignableFrom(_expectedType))
+                throw new ArgumentException($"Type {_expectedType} is not an attribute", nameof(type));
         }
 
         /// <summary>
@@ -37,9 +37,9 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
-            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
+            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, _expectedType, true);
             if (attrs.Length == 0)
-                throw new ArgumentException($"Attribute {expectedType} was not found", nameof(actual));
+                throw new ArgumentException($"Attribute {_expectedType} was not found", nameof(actual));
 
             Attribute attrFound = attrs[0];
             return BaseConstraint.ApplyTo(attrFound);
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return $"<attribute {expectedType} {BaseConstraint}>";
+            return $"<attribute {_expectedType} {BaseConstraint}>";
         }
     }
 }

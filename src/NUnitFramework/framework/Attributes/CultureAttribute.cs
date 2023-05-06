@@ -14,8 +14,8 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
     public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private readonly CultureDetector cultureDetector = new CultureDetector();
-        private readonly CultureInfo currentCulture = CultureInfo.CurrentCulture;
+        private readonly CultureDetector _cultureDetector = new CultureDetector();
+        private readonly CultureInfo _currentCulture = CultureInfo.CurrentCulture;
 
         /// <summary>
         /// Constructor with no cultures specified, for use
@@ -56,13 +56,13 @@ namespace NUnit.Framework
         /// <returns>True, if the current culture is supported</returns>
         private bool IsCultureSupported([NotNullWhen(false)] out string? reason)
         {
-            if (Include is not null && !cultureDetector.IsCultureSupported(Include))
+            if (Include is not null && !_cultureDetector.IsCultureSupported(Include))
             {
                 reason = $"Only supported under culture {Include}";
                 return false;
             }
 
-            if (Exclude is not null && cultureDetector.IsCultureSupported(Exclude))
+            if (Exclude is not null && _cultureDetector.IsCultureSupported(Exclude))
             {
                 reason = $"Not supported under culture {Exclude}";
                 return false;
@@ -89,7 +89,7 @@ namespace NUnit.Framework
             }
             else
             {
-                if (currentCulture.Name == culture || currentCulture.TwoLetterISOLanguageName == culture)
+                if (_currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
                     return true;
             }
 

@@ -25,19 +25,19 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchTest()
         {
-            Assert.That(_filter.Match(_dummyFixture.Tests[0]), Is.EqualTo(_expected));
+            Assert.That(_filter.Match(DummyFixtureSuite.Tests[0]), Is.EqualTo(_expected));
         }
 
         [Test]
         public void PassTest()
         {
-            Assert.That(_filter.Pass(_nestingFixture), Is.EqualTo(_expected));
-            Assert.That(_filter.Pass(_nestedFixture), Is.EqualTo(_expected));
-            Assert.That(_filter.Pass(_emptyNestedFixture), Is.EqualTo(_expected));
+            Assert.That(_filter.Pass(NestingFixtureSuite), Is.EqualTo(_expected));
+            Assert.That(_filter.Pass(NestedFixtureSuite), Is.EqualTo(_expected));
+            Assert.That(_filter.Pass(EmptyNestedFixtureSuite), Is.EqualTo(_expected));
 
-            Assert.That(_filter.Pass(_topLevelSuite), Is.EqualTo(_expected));
-            Assert.That(_filter.Pass(_dummyFixture), Is.EqualTo(_expected));
-            Assert.That(_filter.Pass(_dummyFixture.Tests[0]), Is.EqualTo(_expected));
+            Assert.That(_filter.Pass(TopLevelSuite), Is.EqualTo(_expected));
+            Assert.That(_filter.Pass(DummyFixtureSuite), Is.EqualTo(_expected));
+            Assert.That(_filter.Pass(DummyFixtureSuite.Tests[0]), Is.EqualTo(_expected));
         }
 
     }

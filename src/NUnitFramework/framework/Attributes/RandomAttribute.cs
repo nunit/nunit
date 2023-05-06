@@ -218,7 +218,7 @@ namespace NUnit.Framework
             private readonly int _count;
             private readonly bool _inRange;
 
-            private readonly List<T> previousValues = new List<T>();
+            private readonly List<T> _previousValues = new List<T>();
 
             protected RandomDataSource(int count) : base(typeof(T))
             {
@@ -257,9 +257,9 @@ namespace NUnit.Framework
                             next = _inRange
                                 ? GetNext(randomizer, _min!, _max!)
                                 : GetNext(randomizer);
-                        } while (previousValues.Contains(next));
+                        } while (_previousValues.Contains(next));
 
-                        previousValues.Add(next);
+                        _previousValues.Add(next);
 
                         yield return next;
                     }
@@ -614,7 +614,7 @@ namespace NUnit.Framework
         {
             private readonly int _count;
 
-            private readonly List<object> previousValues = new List<object>();
+            private readonly List<object> _previousValues = new List<object>();
 
             public EnumDataSource(int count) : base(typeof(Enum))
             {
@@ -641,9 +641,9 @@ namespace NUnit.Framework
                         do
                         {
                             next = randomizer.NextEnum(parameter.ParameterType);
-                        } while (previousValues.Contains(next));
+                        } while (_previousValues.Contains(next));
 
-                        previousValues.Add(next);
+                        _previousValues.Add(next);
 
                         yield return next;
                     }

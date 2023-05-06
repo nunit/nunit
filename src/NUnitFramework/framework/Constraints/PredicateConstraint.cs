@@ -12,14 +12,14 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PredicateConstraint<T> : Constraint
     {
-        private readonly Predicate<T> predicate;
+        private readonly Predicate<T> _predicate;
 
         /// <summary>
         /// Construct a PredicateConstraint from a predicate
         /// </summary>
         public PredicateConstraint(Predicate<T> predicate)
         {
-            this.predicate = predicate;
+            this._predicate = predicate;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
         {
             get
             {
-                var name = predicate.GetMethodInfo().Name;
+                var name = _predicate.GetMethodInfo().Name;
                 return name.StartsWith("<", StringComparison.Ordinal)
                     ? "value matching lambda expression"
                     : "value matching " + name;
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Constraints
         {
             var argument = ConstraintUtils.RequireActual<T>(actual, nameof(actual), allowNull: true);
 
-            return new ConstraintResult(this, actual, predicate(argument));
+            return new ConstraintResult(this, actual, _predicate(argument));
         }
     }
 }

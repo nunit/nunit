@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class ParallelWorkItemDispatcher : IWorkItemDispatcher
     {
-        private static readonly Logger log = InternalTrace.GetLogger("Dispatcher");
+        private static readonly Logger Log = InternalTrace.GetLogger("Dispatcher");
 
         private const int WAIT_FOR_FORCED_TERMINATION = 5000;
 
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="levelOfParallelism">Number of workers to use</param>
         public ParallelWorkItemDispatcher(int levelOfParallelism)
         {
-            log.Info("Initializing with {0} workers", levelOfParallelism);
+            Log.Info("Initializing with {0} workers", levelOfParallelism);
 
             LevelOfParallelism = levelOfParallelism;
 
@@ -183,7 +183,7 @@ namespace NUnit.Framework.Internal.Execution
         // Separate method so it can be used by Start
         private void Dispatch(WorkItem work, ParallelExecutionStrategy strategy)
         {
-            log.Debug("Using {0} strategy for {1}", strategy, work.Name);
+            Log.Debug("Using {0} strategy for {1}", strategy, work.Name);
 
             // Currently, we only track CompositeWorkItems - this could be expanded
             if (work is CompositeWorkItem composite)
@@ -271,7 +271,7 @@ namespace NUnit.Framework.Internal.Execution
                 throw new InvalidOperationException("Called IsolateQueues without Start");
             }
 
-            log.Info("Saving Queue State for {0}", work.Name);
+            Log.Info("Saving Queue State for {0}", work.Name);
             lock (_queueLock)
             {
                 foreach (WorkItemQueue queue in Queues)
@@ -294,11 +294,11 @@ namespace NUnit.Framework.Internal.Execution
             {
                 if (_isolationLevel <= 0)
                 {
-                    log.Debug("Ignoring call to restore Queue State");
+                    Log.Debug("Ignoring call to restore Queue State");
                     return;
                 }
 
-                log.Info("Restoring Queue State");
+                Log.Info("Restoring Queue State");
 
                 foreach (WorkItemQueue queue in Queues)
                     queue.Restore();

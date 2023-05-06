@@ -13,32 +13,32 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class CultureSettingAndDetectionTests
     {
-        private readonly CultureDetector detector = new CultureDetector("fr-FR");
+        private readonly CultureDetector _detector = new CultureDetector("fr-FR");
 
         private void ExpectMatch( string culture )
         {
-            if ( !detector.IsCultureSupported( culture ) )
+            if ( !_detector.IsCultureSupported( culture ) )
                 Assert.Fail($"Failed to match \"{culture}\"");
         }
 
         private void ExpectMatch( CultureAttribute attr )
         {
-            if ( !detector.IsCultureSupported( attr ) )
+            if ( !_detector.IsCultureSupported( attr ) )
                 Assert.Fail($"Failed to match attribute with Include=\"{attr.Include}\",Exclude=\"{attr.Exclude}\"");
         }
 
         private void ExpectFailure( string culture )
         {
-            if ( detector.IsCultureSupported( culture ) )
+            if ( _detector.IsCultureSupported( culture ) )
                 Assert.Fail($"Should not match \"{culture}\"");
-            Assert.That( detector.Reason, Is.EqualTo("Only supported under culture " + culture));
+            Assert.That( _detector.Reason, Is.EqualTo("Only supported under culture " + culture));
         }
 
         private void ExpectFailure( CultureAttribute attr, string msg )
         {
-            if ( detector.IsCultureSupported( attr ) )
+            if ( _detector.IsCultureSupported( attr ) )
                 Assert.Fail($"Should not match attribute with Include=\"{attr.Include}\",Exclude=\"{attr.Exclude}\"");
-            Assert.That( detector.Reason, Is.EqualTo(msg));
+            Assert.That( _detector.Reason, Is.EqualTo(msg));
         }
 
         [Test]

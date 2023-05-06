@@ -7,7 +7,7 @@ namespace NUnit.Framework.Constraints
 {
     public class ContainsConstraintTests
     {
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         [Test]
         public void HonorsIgnoreCaseForStringCollection()

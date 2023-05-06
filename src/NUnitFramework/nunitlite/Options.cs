@@ -146,127 +146,127 @@ using System.Text.RegularExpressions;
 namespace NUnit.Options
 {
     public class OptionValueCollection : IList, IList<string> {
-        private readonly List<string> values = new List<string>();
-        private readonly OptionContext c;
+        private readonly List<string> _values = new List<string>();
+        private readonly OptionContext _c;
 
         internal OptionValueCollection (OptionContext c)
         {
-            this.c = c;
+            this._c = c;
         }
 
         #region ICollection
-        void ICollection.CopyTo (Array array, int index)  {(values as ICollection).CopyTo (array, index);}
-        bool ICollection.IsSynchronized => (values as ICollection).IsSynchronized;
-        object ICollection.SyncRoot => (values as ICollection).SyncRoot;
+        void ICollection.CopyTo (Array array, int index)  {(_values as ICollection).CopyTo (array, index);}
+        bool ICollection.IsSynchronized => (_values as ICollection).IsSynchronized;
+        object ICollection.SyncRoot => (_values as ICollection).SyncRoot;
 
         #endregion
 
         #region ICollection<T>
-        public void Add (string item)                       {values.Add (item);}
-        public void Clear ()                                {values.Clear ();}
-        public bool Contains (string item)                  {return values.Contains (item);}
-        public void CopyTo (string[] array, int arrayIndex) {values.CopyTo (array, arrayIndex);}
-        public bool Remove (string item)                    {return values.Remove (item);}
-        public int Count => values.Count;
+        public void Add (string item)                       {_values.Add (item);}
+        public void Clear ()                                {_values.Clear ();}
+        public bool Contains (string item)                  {return _values.Contains (item);}
+        public void CopyTo (string[] array, int arrayIndex) {_values.CopyTo (array, arrayIndex);}
+        public bool Remove (string item)                    {return _values.Remove (item);}
+        public int Count => _values.Count;
         public bool IsReadOnly => false;
 
         #endregion
 
         #region IEnumerable
-        IEnumerator IEnumerable.GetEnumerator () {return values.GetEnumerator ();}
+        IEnumerator IEnumerable.GetEnumerator () {return _values.GetEnumerator ();}
         #endregion
 
         #region IEnumerable<T>
-        public IEnumerator<string> GetEnumerator () {return values.GetEnumerator ();}
+        public IEnumerator<string> GetEnumerator () {return _values.GetEnumerator ();}
         #endregion
 
         #region IList
-        int IList.Add (object value)                {return (values as IList).Add (value);}
-        bool IList.Contains (object value)          {return (values as IList).Contains (value);}
-        int IList.IndexOf (object value)            {return (values as IList).IndexOf (value);}
-        void IList.Insert (int index, object value) {(values as IList).Insert (index, value);}
-        void IList.Remove (object value)            {(values as IList).Remove (value);}
-        void IList.RemoveAt (int index)             {(values as IList).RemoveAt (index);}
+        int IList.Add (object value)                {return (_values as IList).Add (value);}
+        bool IList.Contains (object value)          {return (_values as IList).Contains (value);}
+        int IList.IndexOf (object value)            {return (_values as IList).IndexOf (value);}
+        void IList.Insert (int index, object value) {(_values as IList).Insert (index, value);}
+        void IList.Remove (object value)            {(_values as IList).Remove (value);}
+        void IList.RemoveAt (int index)             {(_values as IList).RemoveAt (index);}
         bool IList.IsFixedSize => false;
         object IList.this [int index]               {get => this [index];
-            set => (values as IList)[index] = value;
+            set => (_values as IList)[index] = value;
         }
         #endregion
 
         #region IList<T>
-        public int IndexOf (string item)            {return values.IndexOf (item);}
-        public void Insert (int index, string item) {values.Insert (index, item);}
-        public void RemoveAt (int index)            {values.RemoveAt (index);}
+        public int IndexOf (string item)            {return _values.IndexOf (item);}
+        public void Insert (int index, string item) {_values.Insert (index, item);}
+        public void RemoveAt (int index)            {_values.RemoveAt (index);}
 
         private void AssertValid (int index)
         {
-            if (c.Option is null)
+            if (_c.Option is null)
                 throw new InvalidOperationException ("OptionContext.Option is null.");
-            if (index >= c.Option.MaxValueCount)
+            if (index >= _c.Option.MaxValueCount)
                 throw new ArgumentOutOfRangeException (nameof(index));
-            if (c.Option.OptionValueType == OptionValueType.Required &&
-                    index >= values.Count)
+            if (_c.Option.OptionValueType == OptionValueType.Required &&
+                    index >= _values.Count)
                 throw new OptionException (string.Format (
-                            c.OptionSet.MessageLocalizer ("Missing required value for option '{0}'."), c.OptionName),
-                        c.OptionName);
+                            _c.OptionSet.MessageLocalizer ("Missing required value for option '{0}'."), _c.OptionName),
+                        _c.OptionName);
         }
 
         public string this [int index] {
             get {
                 AssertValid (index);
-                return index >= values.Count ? null : values [index];
+                return index >= _values.Count ? null : _values [index];
             }
-            set => values [index] = value;
+            set => _values [index] = value;
         }
         #endregion
 
         public List<string> ToList ()
         {
-            return new List<string> (values);
+            return new List<string> (_values);
         }
 
         public string[] ToArray ()
         {
-            return values.ToArray ();
+            return _values.ToArray ();
         }
 
         public override string ToString ()
         {
-            return string.Join (", ", values.ToArray ());
+            return string.Join (", ", _values.ToArray ());
         }
     }
 
     public class OptionContext {
-        private Option                option;
-        private string                name;
-        private int                   index;
-        private readonly OptionSet             set;
-        private readonly OptionValueCollection c;
+        private Option                _option;
+        private string                _name;
+        private int                   _index;
+        private readonly OptionSet             _set;
+        private readonly OptionValueCollection _c;
 
         public OptionContext (OptionSet set)
         {
-            this.set = set;
-            this.c   = new OptionValueCollection (this);
+            this._set = set;
+            this._c   = new OptionValueCollection (this);
         }
 
         public Option Option {
-            get => option;
-            set => option = value;
+            get => _option;
+            set => _option = value;
         }
 
         public string OptionName {
-            get => name;
-            set => name = value;
+            get => _name;
+            set => _name = value;
         }
 
         public int OptionIndex {
-            get => index;
-            set => index = value;
+            get => _index;
+            set => _index = value;
         }
 
-        public OptionSet OptionSet => set;
+        public OptionSet OptionSet => _set;
 
-        public OptionValueCollection OptionValues => c;
+        public OptionValueCollection OptionValues => _c;
     }
 
     public enum OptionValueType {
@@ -276,12 +276,12 @@ namespace NUnit.Options
     }
 
     public abstract class Option {
-        private readonly string prototype;
-        private readonly string description;
-        private readonly string[] names;
-        private readonly OptionValueType type;
-        private readonly int count;
-        private string[] separators;
+        private readonly string _prototype;
+        private readonly string _description;
+        private readonly string[] _names;
+        private readonly OptionValueType _type;
+        private readonly int _count;
+        private string[] _separators;
 
         protected Option (string prototype, string description)
             : this (prototype, description, 1)
@@ -297,44 +297,44 @@ namespace NUnit.Options
             if (maxValueCount < 0)
                 throw new ArgumentOutOfRangeException (nameof(maxValueCount));
 
-            this.prototype   = prototype;
-            this.names       = prototype.Split ('|');
-            this.description = description;
-            this.count       = maxValueCount;
-            this.type        = ParsePrototype ();
+            this._prototype   = prototype;
+            this._names       = prototype.Split ('|');
+            this._description = description;
+            this._count       = maxValueCount;
+            this._type        = ParsePrototype ();
 
-            if (this.count == 0 && type != OptionValueType.None)
+            if (this._count == 0 && _type != OptionValueType.None)
                 throw new ArgumentException (
                         "Cannot provide maxValueCount of 0 for OptionValueType.Required or " +
                             "OptionValueType.Optional.",
                         nameof(maxValueCount));
-            if (this.type == OptionValueType.None && maxValueCount > 1)
+            if (this._type == OptionValueType.None && maxValueCount > 1)
                 throw new ArgumentException (
                     $"Cannot provide maxValueCount of {maxValueCount} for OptionValueType.None.",
                     nameof(maxValueCount));
-            if (Array.IndexOf (names, "<>") >= 0 &&
-                    ((names.Length == 1 && this.type != OptionValueType.None) ||
-                     (names.Length > 1 && this.MaxValueCount > 1)))
+            if (Array.IndexOf (_names, "<>") >= 0 &&
+                    ((_names.Length == 1 && this._type != OptionValueType.None) ||
+                     (_names.Length > 1 && this.MaxValueCount > 1)))
                 throw new ArgumentException (
                         "The default option handler '<>' cannot require values.",
                         nameof(prototype));
         }
 
-        public string           Prototype => prototype;
-        public string           Description => description;
-        public OptionValueType  OptionValueType => type;
-        public int              MaxValueCount => count;
+        public string           Prototype => _prototype;
+        public string           Description => _description;
+        public OptionValueType  OptionValueType => _type;
+        public int              MaxValueCount => _count;
 
         public string[] GetNames ()
         {
-            return (string[]) names.Clone ();
+            return (string[]) _names.Clone ();
         }
 
         public string[] GetValueSeparators ()
         {
-            if (separators is null)
+            if (_separators is null)
                 return new string [0];
-            return (string[]) separators.Clone ();
+            return (string[]) _separators.Clone ();
         }
 
         protected static T Parse<T> (string value, OptionContext c)
@@ -361,8 +361,8 @@ namespace NUnit.Options
             return t;
         }
 
-        internal string[] Names => names;
-        internal string[] ValueSeparators => separators;
+        internal string[] Names => _names;
+        internal string[] ValueSeparators => _separators;
 
         private static readonly char[] NameTerminator = new[]{'=', ':'};
 
@@ -370,15 +370,15 @@ namespace NUnit.Options
         {
             char type = '\0';
             List<string> seps = new List<string> ();
-            for (int i = 0; i < names.Length; ++i) {
-                string name = names [i];
+            for (int i = 0; i < _names.Length; ++i) {
+                string name = _names [i];
                 if (name.Length == 0)
                     throw new ArgumentException ("Empty option names are not supported.", "prototype");
 
                 int end = name.IndexOfAny (NameTerminator);
                 if (end == -1)
                     continue;
-                names [i] = name.Substring (0, end);
+                _names [i] = name.Substring (0, end);
                 if (type == '\0' || type == name [end])
                     type = name [end];
                 else
@@ -391,17 +391,17 @@ namespace NUnit.Options
             if (type == '\0')
                 return OptionValueType.None;
 
-            if (count <= 1 && seps.Count != 0)
+            if (_count <= 1 && seps.Count != 0)
                 throw new ArgumentException (
-                    $"Cannot provide key/value separators for Options taking {count} value(s).",
+                    $"Cannot provide key/value separators for Options taking {_count} value(s).",
                     "prototype");
-            if (count > 1) {
+            if (_count > 1) {
                 if (seps.Count == 0)
-                    this.separators = new[]{":", "="};
+                    this._separators = new[]{":", "="};
                 else if (seps.Count == 1 && seps [0].Length == 0)
-                    this.separators = null;
+                    this._separators = null;
                 else
-                    this.separators = seps.ToArray ();
+                    this._separators = seps.ToArray ();
             }
 
             return type == '=' ? OptionValueType.Required : OptionValueType.Optional;
@@ -458,7 +458,7 @@ namespace NUnit.Options
     [Serializable]
     public class OptionException : Exception
     {
-        private readonly string option;
+        private readonly string _option;
 
         public OptionException ()
         {
@@ -467,28 +467,28 @@ namespace NUnit.Options
         public OptionException (string message, string optionName)
             : base (message)
         {
-            this.option = optionName;
+            this._option = optionName;
         }
 
         public OptionException (string message, string optionName, Exception innerException)
             : base (message, innerException)
         {
-            this.option = optionName;
+            this._option = optionName;
         }
 
         protected OptionException (SerializationInfo info, StreamingContext context)
             : base (info, context)
         {
-            this.option = info.GetString ("OptionName");
+            this._option = info.GetString ("OptionName");
         }
 
-        public string OptionName => this.option;
+        public string OptionName => this._option;
 
         [SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
         public override void GetObjectData (SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData (info, context);
-            info.AddValue ("OptionName", option);
+            info.AddValue ("OptionName", _option);
         }
     }
 
@@ -566,19 +566,19 @@ namespace NUnit.Options
         }
 
         private sealed class ActionOption : Option {
-            private readonly Action<OptionValueCollection> action;
+            private readonly Action<OptionValueCollection> _action;
 
             public ActionOption (string prototype, string description, int count, Action<OptionValueCollection> action)
                 : base (prototype, description, count)
             {
                 if (action is null)
                     throw new ArgumentNullException (nameof(action));
-                this.action = action;
+                this._action = action;
             }
 
             protected override void OnParseComplete (OptionContext c)
             {
-                action (c.OptionValues);
+                _action (c.OptionValues);
             }
         }
 
@@ -613,36 +613,36 @@ namespace NUnit.Options
         }
 
         private sealed class ActionOption<T> : Option {
-            private readonly Action<T> action;
+            private readonly Action<T> _action;
 
             public ActionOption (string prototype, string description, Action<T> action)
                 : base (prototype, description, 1)
             {
                 if (action is null)
                     throw new ArgumentNullException (nameof(action));
-                this.action = action;
+                this._action = action;
             }
 
             protected override void OnParseComplete (OptionContext c)
             {
-                action (Parse<T> (c.OptionValues [0], c));
+                _action (Parse<T> (c.OptionValues [0], c));
             }
         }
 
         private sealed class ActionOption<TKey, TValue> : Option {
-            private readonly OptionAction<TKey, TValue> action;
+            private readonly OptionAction<TKey, TValue> _action;
 
             public ActionOption (string prototype, string description, OptionAction<TKey, TValue> action)
                 : base (prototype, description, 2)
             {
                 if (action is null)
                     throw new ArgumentNullException (nameof(action));
-                this.action = action;
+                this._action = action;
             }
 
             protected override void OnParseComplete (OptionContext c)
             {
-                action (
+                _action (
                         Parse<TKey> (c.OptionValues [0], c),
                         Parse<TValue> (c.OptionValues [1], c));
             }

@@ -780,7 +780,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region TypeEqualityMessages
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
         private static IEnumerable DifferentTypeSameValueTestData
         {
             get
@@ -806,31 +806,31 @@ namespace NUnit.Framework.Constraints
 
         private class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                this.Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
         private class Dummy1
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy1(int value)
             {
-                this.value = value;
+                this.Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 

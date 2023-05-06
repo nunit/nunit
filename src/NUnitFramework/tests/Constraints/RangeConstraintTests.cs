@@ -9,9 +9,9 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class RangeConstraintTest : ConstraintTestBase
     {
-        private readonly RangeConstraint rangeConstraint = new RangeConstraint(5, 42);
+        private readonly RangeConstraint _rangeConstraint = new RangeConstraint(5, 42);
 
-        protected override Constraint TheConstraint => rangeConstraint;
+        protected override Constraint TheConstraint => _rangeConstraint;
 
         [SetUp]
         public void SetUp()
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedIComparer()
         {
             var comparer = new ObjectComparer();
-            Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -42,7 +42,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedGenericComparer()
         {
             var comparer = new GenericComparer<int>();
-            Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedGenericComparison()
         {
             var comparer = new GenericComparison<int>();
-            Assert.That(rangeConstraint.Using(comparer.Delegate).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer.Delegate).ApplyTo(19).IsSuccess);
             Assert.That(comparer.WasCalled, "Comparer was not called");
         }
 
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
         public void UsesProvidedLambda()
         {
             Comparison<int> comparer = (x, y) => x.CompareTo(y);
-            Assert.That(rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
+            Assert.That(_rangeConstraint.Using(comparer).ApplyTo(19).IsSuccess);
         }
         [Test]
         public void ShouldThrowExceptionIfObjectHasNoComparer()

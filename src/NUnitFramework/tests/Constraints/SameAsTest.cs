@@ -5,10 +5,10 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class SameAsTest : ConstraintTestBase
     {
-        private static readonly object obj1 = new object();
-        private static readonly object obj2 = new object();
+        private static readonly object Obj1 = new object();
+        private static readonly object Obj2 = new object();
 
-        protected override Constraint TheConstraint { get; } = new SameAsConstraint(obj1);
+        protected override Constraint TheConstraint { get; } = new SameAsConstraint(Obj1);
 
         [SetUp]
         public void SetUp()
@@ -18,10 +18,10 @@ namespace NUnit.Framework.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] { obj1 };
+        private static readonly object[] SuccessData = new object[] { Obj1 };
         private static readonly object[] FailureData = new object[]
         { 
-            new TestCaseData( obj2, "<System.Object>" ),
+            new TestCaseData( Obj2, "<System.Object>" ),
             new TestCaseData( 3, "3" ),
             new TestCaseData( "Hello", "\"Hello\"" )
         };

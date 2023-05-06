@@ -12,10 +12,10 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class RangeConstraint : Constraint
     {
-        private readonly object from;
-        private readonly object to;
+        private readonly object _from;
+        private readonly object _to;
 
-        private ComparisonAdapter comparer = ComparisonAdapter.Default;
+        private ComparisonAdapter _comparer = ComparisonAdapter.Default;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeConstraint"/> class.
@@ -24,14 +24,14 @@ namespace NUnit.Framework.Constraints
         /// <param name="to">Inclusive end of the range.</param>
         public RangeConstraint(object from, object to) : base(from, to)
         {
-            this.from = from;
-            this.to = to;
+            this._from = from;
+            this._to = to;
         }
 
         /// <summary>
         /// Gets text describing a constraint
         /// </summary>
-        public override string Description => $"in range ({from},{to})";
+        public override string Description => $"in range ({_from},{_to})";
 
         /// <summary>
         /// Test whether the constraint is satisfied by a given value
@@ -40,10 +40,10 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if ( from is null || to is null || actual is null)
+            if ( _from is null || _to is null || actual is null)
                 throw new ArgumentException( "Cannot compare using a null reference", nameof(actual) );
             CompareFromAndTo();
-            bool isInsideRange = comparer.Compare(from, actual) <= 0 && comparer.Compare(to, actual) >= 0;
+            bool isInsideRange = _comparer.Compare(_from, actual) <= 0 && _comparer.Compare(_to, actual) >= 0;
             return new ConstraintResult(this, actual, isInsideRange);
         }
 
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RangeConstraint Using(IComparer comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
+            this._comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RangeConstraint Using<T>(IComparer<T> comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
+            this._comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -70,13 +70,13 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RangeConstraint Using<T>(Comparison<T> comparer)
         {
-            this.comparer = ComparisonAdapter.For(comparer);
+            this._comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
         private void CompareFromAndTo()
         {
-            if (comparer.Compare(from, to) > 0)
+            if (_comparer.Compare(_from, _to) > 0)
                 throw new ArgumentException("The from value must be less than or equal to the to value.");
         }
     }

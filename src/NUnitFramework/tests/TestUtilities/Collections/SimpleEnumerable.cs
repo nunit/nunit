@@ -12,23 +12,23 @@ namespace NUnit.TestUtilities.Collections
     /// </summary>
     internal class SimpleEnumerable : IEnumerable
     {
-        private readonly List<object> contents = new List<object>();
+        private readonly List<object> _contents = new List<object>();
 
         public SimpleEnumerable(IEnumerable<object> source)
         {
-            this.contents = new List<object>(source);
+            this._contents = new List<object>(source);
         }
 
         public SimpleEnumerable(params object[] source)
         {
-            this.contents = new List<object>(source);
+            this._contents = new List<object>(source);
         }
 
         #region IEnumerable Members
 
         public IEnumerator GetEnumerator()
         {
-            return contents.GetEnumerator();
+            return _contents.GetEnumerator();
         }
 
         #endregion

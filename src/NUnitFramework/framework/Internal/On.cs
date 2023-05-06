@@ -22,16 +22,16 @@ namespace NUnit.Framework.Internal
 
         private sealed class DisposableAction : IDisposable
         {
-            private Action? action;
+            private Action? _action;
 
             public DisposableAction(Action action)
             {
-                this.action = action;
+                this._action = action;
             }
 
             public void Dispose()
             {
-                Interlocked.Exchange(ref action, null)?.Invoke();
+                Interlocked.Exchange(ref _action, null)?.Invoke();
             }
         }
     }

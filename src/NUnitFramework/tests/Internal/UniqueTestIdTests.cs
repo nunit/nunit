@@ -8,7 +8,7 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class UniqueTestIdTests
     {
-        private readonly ConcurrentDictionary<string, string> IdHolder = new ConcurrentDictionary<string, string>();
+        private readonly ConcurrentDictionary<string, string> _idHolder = new ConcurrentDictionary<string, string>();
         private static string ID => TestContext.CurrentContext.Test.ID;
 
         [TestCase(1)]
@@ -17,23 +17,23 @@ namespace NUnit.Framework.Internal
         [TestCase(4)]
         public void TestCase(int testCase)
         {
-            Assert.That(IdHolder, Does.Not.ContainKey(ID));
-            IdHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
+            Assert.That(_idHolder, Does.Not.ContainKey(ID));
+            _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
         }
 
         [TestCaseSource(nameof(SomeStrings))]
         public void TestCaseSource(string testCaseSourceData)
         {
-            Assert.That(IdHolder, Does.Not.ContainKey(ID));
-            IdHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
+            Assert.That(_idHolder, Does.Not.ContainKey(ID));
+            _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
         }
 
         [Repeat(5)]
         [Test]
         public void Repeat()
         {
-            Assert.That(IdHolder, Does.Not.ContainKey(ID));
-            IdHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
+            Assert.That(_idHolder, Does.Not.ContainKey(ID));
+            _idHolder.AddOrUpdate(ID, ID, (s, s1) => ID);
         }
 
         public static IEnumerable<string> SomeStrings => new List<string>

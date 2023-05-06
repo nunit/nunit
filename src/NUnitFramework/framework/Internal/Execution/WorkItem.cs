@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public abstract class WorkItem : IDisposable
     {
-        private static readonly Logger log = InternalTrace.GetLogger("WorkItem");
+        private static readonly Logger Log = InternalTrace.GetLogger("WorkItem");
 
         #region Construction and Initialization
 
@@ -206,13 +206,13 @@ namespace NUnit.Framework.Internal.Execution
                         ? "RequiresThreadAttribute may not be specified on a test within a single-SingleThreadedAttribute fixture."
                         : "Tests in a single-threaded fixture may not specify a different apartment";
 
-                    log.Error(msg);
+                    Log.Error(msg);
                     Result.SetResult(ResultState.NotRunnable, msg);
                     WorkItemComplete();
                     return;
                 }
 
-                log.Debug("Running on separate thread because {0} is specified.",
+                Log.Debug("Running on separate thread because {0} is specified.",
                     Test.RequiresThread ? "RequiresThread" : "different Apartment");
 
                 RunOnSeparateThread(targetApartment);
@@ -242,8 +242,8 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 #if THREAD_ABORT
-        private readonly object threadLock = new object();
-        private int nativeThreadId;
+        private readonly object _threadLock = new object();
+        private int _nativeThreadId;
 #endif
 
         /// <summary>
@@ -261,20 +261,20 @@ namespace NUnit.Framework.Internal.Execution
                 Thread tThread;
                 int tNativeThreadId;
 
-                lock (threadLock)
+                lock (_threadLock)
                 {
                     // Exit if not running on a separate thread
-                    if (thread is null)
+                    if (_thread is null)
                         return;
 
-                    tThread = thread;
-                    tNativeThreadId = nativeThreadId;
-                    thread = null;
+                    tThread = _thread;
+                    tNativeThreadId = _nativeThreadId;
+                    _thread = null;
                 }
 
                 if (!tThread.Join(0))
                 {
-                    log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
+                    Log.Debug("Killing thread {0} for cancel", tThread.ManagedThreadId);
                     ThreadUtility.Kill(tThread, tNativeThreadId);
 
                     tThread.Join();
@@ -418,7 +418,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="message">The new message</param>
         protected void ChangeResult(ResultState resultState, string message)
         {
-            log.Debug("Changing result from {0} to {1}", Result.ResultState, resultState);
+            Log.Debug("Changing result from {0} to {1}", Result.ResultState, resultState);
 
             Result.SetResult(resultState, message);
         }
@@ -427,36 +427,36 @@ namespace NUnit.Framework.Internal.Execution
 
 #region Private Methods
 
-        private Thread? thread;
+        private Thread? _thread;
 
         private void RunOnSeparateThread(ApartmentState apartment)
         {
-            thread = new Thread(() =>
+            _thread = new Thread(() =>
             {
                 Thread.CurrentThread.CurrentCulture = Context.CurrentCulture;
                 Thread.CurrentThread.CurrentUICulture = Context.CurrentUICulture;
 #if THREAD_ABORT
-                lock (threadLock)
-                    nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
+                lock (_threadLock)
+                    _nativeThreadId = ThreadUtility.GetCurrentThreadNativeId();
 #endif
                 RunOnCurrentThread();
             });
 
             try
             {
-                thread.SetApartmentState(apartment);
+                _thread.SetApartmentState(apartment);
             }
             catch (PlatformNotSupportedException)
             {
                 string msg = "Apartment state cannot be set on this platform.";
-                log.Error(msg);
+                Log.Error(msg);
                 Result.SetResult(ResultState.Skipped, msg);
                 WorkItemComplete();
                 return;
             }
 
-            thread.Start();
-            thread.Join();
+            _thread.Start();
+            _thread.Join();
         }
 
         [SecuritySafeCritical]

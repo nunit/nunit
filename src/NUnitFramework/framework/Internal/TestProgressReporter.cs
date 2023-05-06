@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public sealed class TestProgressReporter : ITestListener
     {
-        private static readonly Logger log = InternalTrace.GetLogger("TestProgressReporter");
+        private static readonly Logger Log = InternalTrace.GetLogger("TestProgressReporter");
 
         private readonly ICallbackEventHandler _handler;
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error($"Exception processing {test.FullName}{Environment.NewLine}{ex}");
+                Log.Error($"Exception processing {test.FullName}{Environment.NewLine}{ex}");
             }
         }
 
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error($"Exception processing {result.FullName}{Environment.NewLine}{ex}");
+                Log.Error($"Exception processing {result.FullName}{Environment.NewLine}{ex}");
             }
         }
 
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error($"Exception processing TestOutput event{Environment.NewLine}{ex}");
+                Log.Error($"Exception processing TestOutput event{Environment.NewLine}{ex}");
             }
         }
 
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Internal
             }
             catch (Exception ex)
             {
-                log.Error($"Exception processing SendMessage event{Environment.NewLine}{ex}");
+                Log.Error($"Exception processing SendMessage event{Environment.NewLine}{ex}");
             }
         }
 

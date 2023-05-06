@@ -63,16 +63,16 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private class ComparerAdapter : EqualityAdapter
         {
-            private readonly IComparer comparer;
+            private readonly IComparer _comparer;
 
             public ComparerAdapter(IComparer comparer)
             {
-                this.comparer = comparer;
+                this._comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
-                return comparer.Compare(x, y) == 0;
+                return _comparer.Compare(x, y) == 0;
             }
         }
 
@@ -90,16 +90,16 @@ namespace NUnit.Framework.Constraints
 
         private class EqualityComparerAdapter : EqualityAdapter
         {
-            private readonly IEqualityComparer comparer;
+            private readonly IEqualityComparer _comparer;
 
             public EqualityComparerAdapter(IEqualityComparer comparer)
             {
-                this.comparer = comparer;
+                this._comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
-                return comparer.Equals(x, y);
+                return _comparer.Equals(x, y);
             }
         }
 
@@ -185,17 +185,17 @@ namespace NUnit.Framework.Constraints
 
         private class EqualityComparerAdapter<T> : GenericEqualityAdapter<T>
         {
-            private readonly IEqualityComparer<T> comparer;
+            private readonly IEqualityComparer<T> _comparer;
 
             public EqualityComparerAdapter(IEqualityComparer<T> comparer)
             {
-                this.comparer = comparer;
+                this._comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
-                return comparer.Equals(xValue, yValue);
+                return _comparer.Equals(xValue, yValue);
             }
         }
 
@@ -216,17 +216,17 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         private class ComparerAdapter<T> : GenericEqualityAdapter<T>
         {
-            private readonly IComparer<T> comparer;
+            private readonly IComparer<T> _comparer;
 
             public ComparerAdapter(IComparer<T> comparer)
             {
-                this.comparer = comparer;
+                this._comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
-                return comparer.Compare(xValue, yValue) == 0;
+                return _comparer.Compare(xValue, yValue) == 0;
             }
         }
 
@@ -244,17 +244,17 @@ namespace NUnit.Framework.Constraints
 
         private class ComparisonAdapter<T> : GenericEqualityAdapter<T>
         {
-            private readonly Comparison<T> comparer;
+            private readonly Comparison<T> _comparer;
 
             public ComparisonAdapter(Comparison<T> comparer)
             {
-                this.comparer = comparer;
+                this._comparer = comparer;
             }
 
             public override bool AreEqual(object x, object y)
             {
                 CastOrThrow(x, y, out var xValue, out var yValue);
-                return comparer.Invoke(xValue, yValue) == 0;
+                return _comparer.Invoke(xValue, yValue) == 0;
             }
         }
 

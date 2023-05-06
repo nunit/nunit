@@ -34,19 +34,19 @@ namespace NUnit.Framework.Constraints
         #region Nested Result Class
         private class ExceptionTypeConstraintResult : ConstraintResult
         {
-            private readonly object? caughtException;
+            private readonly object? _caughtException;
 
             public ExceptionTypeConstraintResult(ExceptionTypeConstraint constraint, object? caughtException, Type? type, bool matches)
                 : base(constraint, type, matches)
             {
-                this.caughtException = caughtException;
+                this._caughtException = caughtException;
             }
 
             public override void WriteActualValueTo(MessageWriter writer)
             {
                 if (this.Status == ConstraintStatus.Failure)
                 {
-                    if (caughtException is Exception ex)
+                    if (_caughtException is Exception ex)
                     {
                         writer.WriteActualValue(ex);
                     }

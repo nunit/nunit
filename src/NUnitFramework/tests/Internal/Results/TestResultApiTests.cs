@@ -11,8 +11,8 @@ namespace NUnit.Framework.Internal.Results
     {
         private IEnumerable<TestResult> TestResults => new[]
         {
-            _testResult,
-            _suiteResult
+            TestResult,
+            SuiteResult
         };
 
         private static IEnumerable<Action<TestResult, Exception>> RecordExceptionMethods => new Action<TestResult, Exception>[]

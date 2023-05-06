@@ -14,14 +14,14 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class RepeatableTestsWithTimeoutAttributesTests
     {
-        private int retryOnlyCount;
+        private int _retryOnlyCount;
 
         [Test]
         [Retry(3)]
         public void ShouldPassAfter3Retries()
         {
-            retryOnlyCount++;
-            Assert.That(retryOnlyCount, Is.GreaterThanOrEqualTo(2));
+            _retryOnlyCount++;
+            Assert.That(_retryOnlyCount, Is.GreaterThanOrEqualTo(2));
         }
 
         public class HelperMethodForTimeoutsClass

@@ -77,14 +77,14 @@ namespace NUnit.Framework.Assertions
 
         private static class AdhocTests
         {
-            private static readonly MethodInfo[] _methods =
+            private static readonly MethodInfo[] Methods =
                 typeof(AdhocTests).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
 
             public static IEnumerable<MethodInfo> TestMethods
             {
                 get
                 {
-                    foreach (var method in _methods)
+                    foreach (var method in Methods)
                         if (method.Name.StartsWith("Test"))
                             yield return method;
                 }

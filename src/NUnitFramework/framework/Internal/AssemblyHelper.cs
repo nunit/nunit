@@ -72,24 +72,24 @@ namespace NUnit.Framework.Internal
 #if NETSTANDARD2_0
         private sealed class ReflectionAssemblyLoader
         {
-            private static ReflectionAssemblyLoader? instance;
-            private static bool isInitialized;
+            private static ReflectionAssemblyLoader? _instance;
+            private static bool _isInitialized;
 
-            private readonly Func<string, Assembly> loadFromAssemblyPath;
+            private readonly Func<string, Assembly> _loadFromAssemblyPath;
 
-            public Assembly LoadFromAssemblyPath(string assemblyPath) => loadFromAssemblyPath.Invoke(assemblyPath);
+            public Assembly LoadFromAssemblyPath(string assemblyPath) => _loadFromAssemblyPath.Invoke(assemblyPath);
 
             private ReflectionAssemblyLoader(Func<string, Assembly> loadFromAssemblyPath)
             {
-                this.loadFromAssemblyPath = loadFromAssemblyPath;
+                this._loadFromAssemblyPath = loadFromAssemblyPath;
             }
 
             public static ReflectionAssemblyLoader? TryGet()
             {
-                if (isInitialized) return instance;
-                instance = TryInitialize();
-                isInitialized = true;
-                return instance;
+                if (_isInitialized) return _instance;
+                _instance = TryInitialize();
+                _isInitialized = true;
+                return _instance;
             }
 
             private static ReflectionAssemblyLoader? TryInitialize()

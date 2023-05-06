@@ -10,7 +10,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class SubstringConstraint : StringConstraint
     {
-        private StringComparison? comparisonType;
+        private StringComparison? _comparisonType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstringConstraint"/> class.
@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         {
             if (actual is null) return false;
 
-            var actualComparison = comparisonType ?? StringComparison.CurrentCulture;
+            var actualComparison = _comparisonType ?? StringComparison.CurrentCulture;
             return actual.IndexOf(expected, actualComparison) >= 0;
         }
 
@@ -52,9 +52,9 @@ namespace NUnit.Framework.Constraints
         /// than <paramref name="comparisonType"/> was already set.</exception>
         public SubstringConstraint Using(StringComparison comparisonType)
         {
-            if (this.comparisonType == null)
-                this.comparisonType = comparisonType;
-            else if (this.comparisonType != comparisonType)
+            if (this._comparisonType == null)
+                this._comparisonType = comparisonType;
+            else if (this._comparisonType != comparisonType)
                 throw new InvalidOperationException("A different comparison type was already set.");
 
             return this;

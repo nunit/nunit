@@ -13,7 +13,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class BinarySerializableConstraint : Constraint
     {
-        private readonly BinaryFormatter serializer = new BinaryFormatter();
+        private readonly BinaryFormatter _serializer = new BinaryFormatter();
 
         /// <summary>
         /// The Description of what this constraint tests, for
@@ -36,11 +36,11 @@ namespace NUnit.Framework.Constraints
 
             try
             {
-                serializer.Serialize(stream, actual);
+                _serializer.Serialize(stream, actual);
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                succeeded = serializer.Deserialize(stream) is not null;
+                succeeded = _serializer.Deserialize(stream) is not null;
             }
             catch (SerializationException)
             {

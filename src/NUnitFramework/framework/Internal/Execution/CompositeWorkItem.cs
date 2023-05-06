@@ -373,7 +373,7 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
-        private readonly object cancelLock = new object();
+        private readonly object _cancelLock = new object();
 
         /// <summary>
         /// Cancel (abort or stop) a CompositeWorkItem and all of its children
@@ -381,7 +381,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the CompositeWorkItem and all of its children should be aborted, false if it should allow all currently running tests to complete</param>
         public override void Cancel(bool force)
         {
-            lock (cancelLock)
+            lock (_cancelLock)
             {
                 foreach (var child in Children)
                 {

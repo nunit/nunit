@@ -227,7 +227,6 @@ namespace NUnitLite.Tests
             Assert.That(Report, Is.EqualTo(expected));
         }
 
-#pragma warning disable 414
         private static readonly TestCaseData[] ImmediateOutputData = new[] {
             new TestCaseData("Off",
                 new [] { new TestOutput("OUTPUT\n", "", null, "SomeMethod") },
@@ -272,7 +271,6 @@ namespace NUnitLite.Tests
                 new [] { new TestOutput("Hello", "", null, "EN"), new TestOutput("Ciao!", "", null, "IT"), new TestOutput("World!", "", null, "EN") },
                 "=> EN\nHello\n=> IT\nCiao!\n=> EN\nWorld!"),
         };
-#pragma warning restore 414
 
         [TestCaseSource(nameof(ImmediateOutputData))]
         public void ImmediateOutput(string labels, TestOutput[] outputs, string expected)

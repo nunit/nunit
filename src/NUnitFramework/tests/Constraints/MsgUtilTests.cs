@@ -305,12 +305,12 @@ namespace NUnit.Framework.Constraints
         #endregion
         #region ClipString
 
-        private const string s52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private const string S52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        [TestCase(s52, 52, 0, s52, TestName="NoClippingNeeded")]
-        [TestCase(s52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName="ClipAtEnd")]
-        [TestCase(s52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName="ClipAtStart")]
-        [TestCase(s52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
+        [TestCase(S52, 52, 0, S52, TestName="NoClippingNeeded")]
+        [TestCase(S52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName="ClipAtEnd")]
+        [TestCase(S52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName="ClipAtStart")]
+        [TestCase(S52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
             System.Console.WriteLine("input=  \"{0}\"", input);
@@ -325,24 +325,24 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void ClipExpectedAndActual_StringsFitInLine()
         {
-            string eClip = s52;
+            string eClip = S52;
             string aClip = "abcde";
             MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, 5);
-            Assert.That(eClip, Is.EqualTo(s52));
+            Assert.That(eClip, Is.EqualTo(S52));
             Assert.That(aClip, Is.EqualTo("abcde"));
 
-            eClip = s52;
+            eClip = S52;
             aClip = "abcdefghijklmno?qrstuvwxyz";
             MsgUtils.ClipExpectedAndActual(ref eClip, ref aClip, 52, 15);
-            Assert.That(eClip, Is.EqualTo(s52));
+            Assert.That(eClip, Is.EqualTo(S52));
             Assert.That(aClip, Is.EqualTo("abcdefghijklmno?qrstuvwxyz"));
         }
 
         [Test]
         public static void ClipExpectedAndActual_StringTailsFitInLine()
         {
-            string s1 = s52;
-            string s2 = s52.Replace('Z', '?');
+            string s1 = S52;
+            string s2 = S52.Replace('Z', '?');
             MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, 51);
             Assert.That(s1, Is.EqualTo("...ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
         }
@@ -350,13 +350,13 @@ namespace NUnit.Framework.Constraints
         [Test]
         public static void ClipExpectedAndActual_StringsDoNotFitInLine()
         {
-            string s1 = s52;
+            string s1 = S52;
             string s2 = "abcdefghij";
             MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 29, 10);
             Assert.That(s1, Is.EqualTo("abcdefghijklmnopqrstuvwxyz..."));
             Assert.That(s2, Is.EqualTo("abcdefghij"));
 
-            s1 = s52;
+            s1 = S52;
             s2 = "abcdefghijklmno?qrstuvwxyz";
             MsgUtils.ClipExpectedAndActual(ref s1, ref s2, 25, 15);
             Assert.That(s1, Is.EqualTo("...efghijklmnopqrstuvw..."));

@@ -11,14 +11,14 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ListContentsTests
     {
-        private static readonly object[] testArray = { "abc", 123, "xyz" };
+        private static readonly object[] TestArray = { "abc", 123, "xyz" };
 
         [Test]
         public void ArraySucceeds()
         {
-            Assert.Contains("abc", testArray);
-            Assert.Contains(123, testArray);
-            Assert.Contains("xyz", testArray, "expected array containing '{0}'", "xyz");
+            Assert.Contains("abc", TestArray);
+            Assert.Contains(123, TestArray);
+            Assert.Contains("xyz", TestArray, "expected array containing '{0}'", "xyz");
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains("def", testArray));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains("def", TestArray));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ArrayListSucceeds()
         {
-            var list = new SimpleObjectList( testArray );
+            var list = new SimpleObjectList( TestArray );
 
             Assert.Contains( "abc", list );
             Assert.Contains( 123, list );
@@ -63,14 +63,14 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new SimpleObjectList( testArray ) ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Contains( "def", new SimpleObjectList( TestArray ) ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void DifferentTypesMayBeEqual()
         {
-            Assert.Contains( 123.0, new SimpleObjectList( testArray ) );
+            Assert.Contains( 123.0, new SimpleObjectList( TestArray ) );
         }
 
         [Test]

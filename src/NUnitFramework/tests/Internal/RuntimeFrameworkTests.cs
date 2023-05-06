@@ -8,9 +8,9 @@ namespace NUnit.Framework.Internal
     public class RuntimeFrameworkTests
     {
 #if NETCOREAPP
-        private static readonly RuntimeType currentRuntime = RuntimeType.NetCore;
+        private static readonly RuntimeType CurrentRuntime = RuntimeType.NetCore;
 #else
-        private static readonly RuntimeType currentRuntime =
+        private static readonly RuntimeType CurrentRuntime =
             Type.GetType("Mono.Runtime", false) is not null
                 ? RuntimeType.Mono
                 : RuntimeType.NetFramework;
@@ -22,13 +22,13 @@ namespace NUnit.Framework.Internal
             RuntimeFramework framework = RuntimeFramework.CurrentFramework;
             Assert.Multiple(() =>
             {
-                Assert.That(framework.Runtime, Is.EqualTo(currentRuntime), "#1");
+                Assert.That(framework.Runtime, Is.EqualTo(CurrentRuntime), "#1");
                 Assert.That(framework.ClrVersion, Is.EqualTo(Environment.Version), "#2");
             });
         }
 
         [Test]
-        [TestCaseSource(nameof(netcoreRuntimes))]
+        [TestCaseSource(nameof(NetcoreRuntimes))]
         public void SpecifyingNetCoreVersioningThrowsPlatformException(string netcoreRuntime)
         {
             PlatformHelper platformHelper = new PlatformHelper();
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
             Assert.That(platformHelper.IsPlatformSupported("netcore"), Is.EqualTo(isNetCore));
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanCreateUsingFrameworkVersion(FrameworkData data)
         {
             RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal
             });
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanCreateUsingClrVersion(FrameworkData data)
         {
             Assume.That(data.FrameworkVersion.Major != 3, "#0");
@@ -77,7 +77,7 @@ namespace NUnit.Framework.Internal
             });
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanParseRuntimeFramework(FrameworkData data)
         {
             RuntimeFramework framework = RuntimeFramework.Parse(data.Representation);
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal
             });
         }
 
-        [TestCaseSource(nameof(frameworkData))]
+        [TestCaseSource(nameof(FrameworkTestData))]
         public void CanDisplayFrameworkAsString(FrameworkData data)
         {
             RuntimeFramework framework = new RuntimeFramework(data.Runtime, data.FrameworkVersion);
@@ -99,13 +99,13 @@ namespace NUnit.Framework.Internal
             });
         }
 
-        [TestCaseSource(nameof(matchData))]
+        [TestCaseSource(nameof(MatchData))]
         public bool CanMatchRuntimes(RuntimeFramework f1, RuntimeFramework f2)
         {
             return f1.Supports(f2);
         }
 
-        internal static TestCaseData[] matchData = new TestCaseData[] {
+        internal static TestCaseData[] MatchData = new TestCaseData[] {
             new TestCaseData(
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(3,5)),
                 new RuntimeFramework(RuntimeType.NetFramework, new Version(2,0)))
@@ -300,7 +300,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        internal static FrameworkData[] frameworkData = new FrameworkData[] {
+        internal static FrameworkData[] FrameworkTestData = new FrameworkData[] {
             new FrameworkData(RuntimeType.NetFramework, new Version(1,0), new Version(1,0,3705), "net-1.0", "Net 1.0"),
             new FrameworkData(RuntimeType.NetFramework, new Version(1,1), new Version(1,1,4322), "net-1.1", "Net 1.1"),
             new FrameworkData(RuntimeType.NetFramework, new Version(2,0), new Version(2,0,50727), "net-2.0", "Net 2.0"),
@@ -326,7 +326,7 @@ namespace NUnit.Framework.Internal
             new FrameworkData(RuntimeType.Any, RuntimeFramework.DefaultVersion, RuntimeFramework.DefaultVersion, "any", "Any")
         };
 
-        internal static string[] netcoreRuntimes = new string[] {
+        internal static string[] NetcoreRuntimes = new string[] {
             "netcore-1.0",
             "netcore-1.1",
             "netcore-2.0",

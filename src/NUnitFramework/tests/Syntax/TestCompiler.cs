@@ -7,7 +7,7 @@ namespace NUnit.Framework.Syntax
 {
     internal class TestCompiler
     {
-        private readonly Microsoft.CSharp.CSharpCodeProvider provider = new Microsoft.CSharp.CSharpCodeProvider();
+        private readonly Microsoft.CSharp.CSharpCodeProvider _provider = new Microsoft.CSharp.CSharpCodeProvider();
 
         public CompilerParameters Options { get; } = new CompilerParameters();
 
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Syntax
 
         public CompilerResults CompileCode( string code )
         {
-            return provider.CompileAssemblyFromSource( Options, code );
+            return _provider.CompileAssemblyFromSource( Options, code );
         }
     }
 }

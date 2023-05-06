@@ -48,14 +48,14 @@ namespace NUnit.Framework.Constraints
 
         private class AndConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult leftResult;
-            private readonly ConstraintResult rightResult;
+            private readonly ConstraintResult _leftResult;
+            private readonly ConstraintResult _rightResult;
 
             public AndConstraintResult(AndConstraint constraint, object? actual, ConstraintResult leftResult, ConstraintResult rightResult)
                 : base(constraint, actual, leftResult.IsSuccess && rightResult.IsSuccess)
             {
-                this.leftResult = leftResult;
-                this.rightResult = rightResult;
+                this._leftResult = leftResult;
+                this._rightResult = rightResult;
             }
 
             /// <summary>
@@ -69,20 +69,20 @@ namespace NUnit.Framework.Constraints
             {
                 if (this.IsSuccess)
                     base.WriteActualValueTo(writer);
-                else if (!leftResult.IsSuccess)
-                    leftResult.WriteActualValueTo(writer);
+                else if (!_leftResult.IsSuccess)
+                    _leftResult.WriteActualValueTo(writer);
                 else
-                    rightResult.WriteActualValueTo(writer);
+                    _rightResult.WriteActualValueTo(writer);
             }
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
                 if (this.IsSuccess)
                     base.WriteAdditionalLinesTo(writer);
-                else if (!leftResult.IsSuccess)
-                    leftResult.WriteAdditionalLinesTo(writer);
+                else if (!_leftResult.IsSuccess)
+                    _leftResult.WriteAdditionalLinesTo(writer);
                 else
-                    rightResult.WriteAdditionalLinesTo(writer);
+                    _rightResult.WriteAdditionalLinesTo(writer);
             }
         }
 

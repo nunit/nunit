@@ -22,28 +22,28 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchTest()
         {
-            Assert.That(_filter.Match(_dummyFixture));
-            Assert.That(_filter.Match(_anotherFixture), Is.False);
+            Assert.That(_filter.Match(DummyFixtureSuite));
+            Assert.That(_filter.Match(AnotherFixtureSuite), Is.False);
         }
 
         [Test]
         public void PassTest()
         {
-            Assert.That(_filter.Pass(_topLevelSuite));
-            Assert.That(_filter.Pass(_dummyFixture));
-            Assert.That(_filter.Pass(_dummyFixture.Tests[0]));
+            Assert.That(_filter.Pass(TopLevelSuite));
+            Assert.That(_filter.Pass(DummyFixtureSuite));
+            Assert.That(_filter.Pass(DummyFixtureSuite.Tests[0]));
 
-            Assert.That(_filter.Pass(_anotherFixture), Is.False);
+            Assert.That(_filter.Pass(AnotherFixtureSuite), Is.False);
         }
 
         [Test]
         public void ExplicitMatchTest()
         {
-            Assert.That(_filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(_filter.IsExplicitMatch(_dummyFixture));
-            Assert.That(_filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
+            Assert.That(_filter.IsExplicitMatch(TopLevelSuite));
+            Assert.That(_filter.IsExplicitMatch(DummyFixtureSuite));
+            Assert.That(_filter.IsExplicitMatch(DummyFixtureSuite.Tests[0]), Is.False);
 
-            Assert.That(_filter.IsExplicitMatch(_anotherFixture), Is.False);
+            Assert.That(_filter.IsExplicitMatch(AnotherFixtureSuite), Is.False);
         }
     }
 }

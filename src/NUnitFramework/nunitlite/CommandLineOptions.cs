@@ -23,8 +23,8 @@ namespace NUnit.Common
         private static readonly string DEFAULT_WORK_DIRECTORY =
             Directory.GetCurrentDirectory();
 
-        private bool validated;
-        private bool noresult;
+        private bool _validated;
+        private bool _noresult;
 
         #region Constructors
 
@@ -184,25 +184,25 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
-        private string workDirectory = null;
-        public string WorkDirectory => workDirectory ?? DEFAULT_WORK_DIRECTORY;
-        public bool WorkDirectorySpecified => workDirectory is not null;
+        private string _workDirectory = null;
+        public string WorkDirectory => _workDirectory ?? DEFAULT_WORK_DIRECTORY;
+        public bool WorkDirectorySpecified => _workDirectory is not null;
 
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified => InternalTraceLevel is not null;
 
-        private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
+        private readonly List<OutputSpecification> _resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
             get
             {
-                if (noresult)
+                if (_noresult)
                     return Array.Empty<OutputSpecification>();
 
-                if (resultOutputSpecifications.Count == 0)
-                    resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
+                if (_resultOutputSpecifications.Count == 0)
+                    _resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
 
-                return resultOutputSpecifications;
+                return _resultOutputSpecifications;
             }
         }
 
@@ -218,11 +218,11 @@ namespace NUnit.Common
 
         public bool Validate()
         {
-            if (!validated)
+            if (!_validated)
             {
                 CheckOptionCombinations();
 
-                validated = true;
+                _validated = true;
             }
 
             return ErrorMessages.Count == 0;
@@ -373,7 +373,7 @@ namespace NUnit.Common
 
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
-                v => workDirectory = RequiredValue(v, "--work"));
+                v => _workDirectory = RequiredValue(v, "--work"));
 
             this.Add("output|out=", "File {PATH} to contain text output from the tests.",
                 v => OutFile = RequiredValue(v, "--output"));
@@ -382,7 +382,7 @@ namespace NUnit.Common
                 v => ErrFile = RequiredValue(v, "--err"));
 
             this.Add("result=", "An output {SPEC} for saving the test results. This option may be repeated.",
-                v => ResolveOutputSpecification(RequiredValue(v, "--resultxml"), resultOutputSpecifications));
+                v => ResolveOutputSpecification(RequiredValue(v, "--resultxml"), _resultOutputSpecifications));
 
             this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
             {
@@ -391,7 +391,7 @@ namespace NUnit.Common
             });
 
             this.Add("noresult", "Don't save any test results.",
-                v => noresult = v is not null);
+                v => _noresult = v is not null);
 
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "Before", "After", "All"));

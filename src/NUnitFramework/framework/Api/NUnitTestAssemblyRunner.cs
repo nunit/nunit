@@ -25,7 +25,7 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
-        private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static readonly Logger Log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private readonly ITestAssemblyBuilder _builder;
         private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Api
         /// </remarks>
         public void RunAsync(ITestListener listener, ITestFilter filter)
         {
-            log.Info("Running tests");
+            Log.Info("Running tests");
             if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before running them.");
 

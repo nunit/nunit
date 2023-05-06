@@ -7,12 +7,12 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class NUnitComparerTests
     {
-        private NUnitComparer comparer;
+        private NUnitComparer _comparer;
 
         [SetUp]
         public void SetUp()
         {
-            comparer = new NUnitComparer();
+            _comparer = new NUnitComparer();
         }
 
         [TestCase(4, 4)]
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)4)]
         public void EqualItems(object x, object y)
         {
-            Assert.That(comparer.Compare(x, y), Is.EqualTo(0));
+            Assert.That(_comparer.Compare(x, y), Is.EqualTo(0));
         }
 
         [TestCase(4, 2)]
@@ -50,8 +50,8 @@ namespace NUnit.Framework.Constraints
         {
             Assert.Multiple(() =>
             {
-                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
-                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
             });
         }
 
@@ -63,8 +63,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.Multiple(() =>
             {
-                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
-                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
             });
         }
 
@@ -76,8 +76,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.Multiple(() =>
             {
-                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
-                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
             });
         }
 
@@ -89,8 +89,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.Multiple(() =>
             {
-                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
-                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
             });
         }
 
@@ -102,8 +102,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.Multiple(() =>
             {
-                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
-                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
             });
         }
 
@@ -115,8 +115,8 @@ namespace NUnit.Framework.Constraints
 
             Assert.Multiple(() =>
             {
-                Assert.That(comparer.Compare(greater, lesser), Is.GreaterThan(0));
-                Assert.That(comparer.Compare(lesser, greater), Is.LessThan(0));
+                Assert.That(_comparer.Compare(greater, lesser), Is.GreaterThan(0));
+                Assert.That(_comparer.Compare(lesser, greater), Is.LessThan(0));
             });
         }
 
@@ -124,17 +124,17 @@ namespace NUnit.Framework.Constraints
 
         private class ClassWithIComparable : IComparable
         {
-            private readonly int val;
+            private readonly int _val;
 
             public ClassWithIComparable(int val)
             {
-                this.val = val;
+                this._val = val;
             }
 
             public int CompareTo(object? x)
             {
                 if (x is ClassWithIComparable other)
-                    return val.CompareTo(other.val);
+                    return _val.CompareTo(other._val);
 
                 throw new ArgumentException();
             }
@@ -142,23 +142,23 @@ namespace NUnit.Framework.Constraints
 
         private class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
         {
-            private readonly int val;
+            private readonly int _val;
 
             public ClassWithIComparableOfT(int val)
             {
-                this.val = val;
+                this._val = val;
             }
 
             public int CompareTo(ClassWithIComparableOfT? other)
             {
                 if (other is null)
                     return 1;
-                return val.CompareTo(other.val);
+                return _val.CompareTo(other._val);
             }
 
             public int CompareTo(int other)
             {
-                return val.CompareTo(other);
+                return _val.CompareTo(other);
             }
         }
 

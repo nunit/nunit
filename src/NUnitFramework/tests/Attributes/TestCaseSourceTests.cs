@@ -378,14 +378,14 @@ namespace NUnit.Framework.Attributes
             Assert.That(suiteToTest.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
 
-        private static readonly object[] testCases =
+        private static readonly object[] TestCases =
         {
             new TestCaseData(
                 new[] { "A" },
                 new[] { "B" })
         };
 
-        [Test, TestCaseSource(nameof(testCases))]
+        [Test, TestCaseSource(nameof(TestCases))]
         public void MethodTakingTwoStringArrays(string[] a, string[] b)
         {
             Assert.Multiple(() =>

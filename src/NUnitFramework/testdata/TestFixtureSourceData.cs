@@ -14,53 +14,51 @@ namespace NUnit.TestData.TestFixtureSourceData
 {
     public abstract class TestFixtureSourceTest
     {
-        private readonly string Arg;
-        private readonly string Expected;
+        private readonly string _arg;
+        private readonly string _expected;
 
         public TestFixtureSourceTest(string arg, string expected)
         {
-            Arg = arg;
-            Expected = expected;
+            _arg = arg;
+            _expected = expected;
         }
 
         [Test]
         public void CheckSource()
         {
-            Assert.That(Arg, Is.EqualTo(Expected));
+            Assert.That(_arg, Is.EqualTo(_expected));
         }
     }
 
     public abstract class TestFixtureSourceDivideTest
     {
-        private readonly int X;
-        private readonly int Y;
-        private readonly int Z;
+        private readonly int _x;
+        private readonly int _y;
+        private readonly int _z;
 
         public TestFixtureSourceDivideTest(int x, int y, int z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            _x = x;
+            _y = y;
+            _z = z;
         }
 
         [Test]
         public void CheckSource()
         {
-            Assert.That(X / Y, Is.EqualTo(Z));
+            Assert.That(_x / _y, Is.EqualTo(_z));
         }
     }
 
-    [TestFixtureSource("StaticField")]
+    [TestFixtureSource(nameof(StaticField))]
     public class StaticField_SameClass : TestFixtureSourceTest
     {
         public StaticField_SameClass(string arg) : base(arg, "StaticFieldInClass") { }
 
-#pragma warning disable 414
-        private static object[] StaticField = new object[] { "StaticFieldInClass" };
-#pragma warning restore 414
+        private static readonly object[] StaticField = new object[] { "StaticFieldInClass" };
     }
 
-    [TestFixtureSource("StaticProperty")]
+    [TestFixtureSource(nameof(StaticProperty))]
     public class StaticProperty_SameClass : TestFixtureSourceTest
     {
         public StaticProperty_SameClass(string arg) : base(arg, "StaticPropertyInClass") { }
@@ -73,13 +71,13 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource("StaticProperty")]
+    [TestFixtureSource(nameof(StaticProperty))]
     public class StaticProperty_InheritedClass : StaticProperty_SameClass
     {
         public StaticProperty_InheritedClass(string arg) : base(arg, "StaticPropertyInClass") { }
     }
 
-    [TestFixtureSource("StaticMethod")]
+    [TestFixtureSource(nameof(StaticMethod))]
     public class StaticMethod_SameClass : TestFixtureSourceTest
     {
         public StaticMethod_SameClass(string arg) : base(arg, "StaticMethodInClass") { }
@@ -101,17 +99,17 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource("InstanceField")]
+    [TestFixtureSource(nameof(InstanceField))]
     public class InstanceField_SameClass : TestFixtureSourceTest
     {
         public InstanceField_SameClass(string arg) : base(arg, "InstanceFieldInClass") { }
 
-#pragma warning disable 414
-        private object[] InstanceField = new object[] { "InstanceFieldInClass" };
-#pragma warning restore 414
+#pragma warning disable IDE1006 // Naming Styles
+        private readonly object[] InstanceField = new object[] { "InstanceFieldInClass" };
+#pragma warning restore IDE1006 // Naming Styles
     }
 
-    [TestFixtureSource("InstanceProperty")]
+    [TestFixtureSource(nameof(InstanceProperty))]
     public class InstanceProperty_SameClass : TestFixtureSourceTest
     {
         public InstanceProperty_SameClass(string arg) : base(arg, "InstancePropertyInClass") { }
@@ -123,7 +121,7 @@ namespace NUnit.TestData.TestFixtureSourceData
             };
     }
 
-    [TestFixtureSource("InstanceMethod")]
+    [TestFixtureSource(nameof(InstanceMethod))]
     public class InstanceMethod_SameClass : TestFixtureSourceTest
     {
         public InstanceMethod_SameClass(string arg) : base(arg, "InstanceMethodInClass") { }
@@ -155,10 +153,10 @@ namespace NUnit.TestData.TestFixtureSourceData
     [TestFixtureSource(typeof(SourceData_IEnumerable))]
     public class IEnumerableSource : TestFixtureSourceTest
     {
-        public IEnumerableSource(string arg) : base(arg, "SourceData_IEnumerable") { }
+        public IEnumerableSource(string arg) : base(arg, nameof(SourceData_IEnumerable)) { }
     }
 
-    [TestFixtureSource("MyData")]
+    [TestFixtureSource(nameof(MyData))]
     public class SourceReturnsObjectArray : TestFixtureSourceDivideTest
     {
         public SourceReturnsObjectArray(int x, int y, int z) : base(x, y, z) { }
@@ -171,7 +169,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource("MyData")]
+    [TestFixtureSource(nameof(MyData))]
     public class SourceReturnsFixtureParameters : TestFixtureSourceDivideTest
     {
         public SourceReturnsFixtureParameters(int x, int y, int z) : base(x, y, z) { }
@@ -185,7 +183,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     [TestFixture]
-    [TestFixtureSource("MyData")]
+    [TestFixtureSource(nameof(MyData))]
     public class ExtraTestFixtureAttributeIsIgnored : TestFixtureSourceDivideTest
     {
         public ExtraTestFixtureAttributeIsIgnored(int x, int y, int z) : base(x, y, z) { }
@@ -199,8 +197,8 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 
     [TestFixture]
-    [TestFixtureSource("MyData")]
-    [TestFixtureSource("MoreData", Category = "Extra")]
+    [TestFixtureSource(nameof(MyData))]
+    [TestFixtureSource(nameof(MoreData), Category = "Extra")]
     [TestFixture(12, 12, 1)]
     public class TestFixtureMayUseMultipleSourceAttributes : TestFixtureSourceDivideTest
     {
@@ -213,14 +211,12 @@ namespace NUnit.TestData.TestFixtureSourceData
             yield return new object[] { 12, 6, 2 };
         }
 
-#pragma warning disable 414
-        private static object[] MoreData = new object[] {
+        private static readonly object[] MoreData = new object[] {
             new object[] { 12, 1, 12 },
             new object[] { 12, 2, 6 } };
-#pragma warning restore 414
     }
 
-    [TestFixtureSource("IgnoredData")]
+    [TestFixtureSource(nameof(IgnoredData))]
     public class IndividualInstancesMayBeIgnored : TestFixtureSourceTest
     {
         public IndividualInstancesMayBeIgnored(string arg) : base(arg, "IgnoredData") { }
@@ -233,7 +229,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource("ExplicitData")]
+    [TestFixtureSource(nameof(ExplicitData))]
     public class IndividualInstancesMayBeExplicit : TestFixtureSourceTest
     {
         public IndividualInstancesMayBeExplicit(string arg) : base(arg, "ExplicitData") { }
@@ -338,7 +334,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         };
     }
 
-    [TestFixtureSource(typeof(GenericFixtureSource), "Source")]
+    [TestFixtureSource(typeof(GenericFixtureSource), nameof(GenericFixtureSource.Source))]
     public class GenericFixtureSourceWithProperArgsProvided<T>
     {
         [Test]
@@ -367,7 +363,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-    [TestFixtureSource(typeof(GenericFixtureWithTypeAndConstructorArgsSource), "Source")]
+    [TestFixtureSource(typeof(GenericFixtureWithTypeAndConstructorArgsSource), nameof(GenericFixtureWithTypeAndConstructorArgsSource.Source))]
     public class GenericFixtureSourceWithTypeAndConstructorArgs<T>
     {
         private readonly T _arg;
@@ -393,7 +389,7 @@ namespace NUnit.TestData.TestFixtureSourceData
         };
     }
 
-    [TestFixtureSource(typeof(GenericFixtureWithConstructorArgsSource), "Source")]
+    [TestFixtureSource(typeof(GenericFixtureWithConstructorArgsSource), nameof(GenericFixtureWithConstructorArgsSource.Source))]
     public class GenericFixtureSourceWithConstructorArgs<T>
     {
         private readonly T _arg;
@@ -421,31 +417,23 @@ namespace NUnit.TestData.TestFixtureSourceData
 
         public IEnumerator GetEnumerator()
         {
-            yield return "SourceData_IEnumerable";
+            yield return nameof(SourceData_IEnumerable);
         }
     }
 
     internal class SourceData
     {
-        public static object[] InheritedStaticProperty =>
-            new object[]
-            {
-                new object[] { "StaticProperty" }
-            };
-
-#pragma warning disable 414
-        private static object[] StaticField = new object[] { "StaticField" };
-#pragma warning restore 414
+        private static readonly object[] StaticField = new object[] { nameof(StaticField) };
 
         private static object[] StaticProperty =>
             new object[]
             {
-                new object[] { "StaticProperty" }
+                new object[] { nameof(StaticProperty) }
             };
 
         private static object[] StaticMethod()
         {
-            return new object[] { new object[] { "StaticMethod" } };
+            return new object[] { new object[] { nameof(StaticMethod) } };
         }
     }
 
@@ -493,7 +481,7 @@ namespace NUnit.TestData.TestFixtureSourceData
     }
 }
 
-[TestFixtureSource("MyData")]
+[TestFixtureSource(nameof(MyData))]
 public class NoNamespaceTestFixtureSourceWithTwoValues
 {
     public NoNamespaceTestFixtureSourceWithTwoValues(int i) { }
@@ -503,12 +491,10 @@ public class NoNamespaceTestFixtureSourceWithTwoValues
     {
     }
 
-#pragma warning disable 414
-    private static object[] MyData = { 1, 2 };
-#pragma warning restore 414
+    private static readonly object[] MyData = { 1, 2 };
 }
 
-[TestFixtureSource("MyData")]
+[TestFixtureSource(nameof(MyData))]
 public class NoNamespaceTestFixtureSourceWithSingleValue
 {
     public NoNamespaceTestFixtureSourceWithSingleValue(int i) { }
@@ -518,12 +504,10 @@ public class NoNamespaceTestFixtureSourceWithSingleValue
     {
     }
 
-#pragma warning disable 414
-    private static object[] MyData = { 1 };
-#pragma warning restore 414
+    private static readonly object[] MyData = { 1 };
 }
 
-[TestFixtureSource("Data")]
+[TestFixtureSource(nameof(Data))]
 [Parallelizable(ParallelScope.All)]
 public class TextFixtureSourceWithParallelizableAttribute
 {

@@ -7,13 +7,13 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class NotSameFixture
     {
-        private readonly string s1 = "S1";
-        private readonly string s2 = "S2";
+        private readonly string _s1 = "S1";
+        private readonly string _s2 = "S2";
 
         [Test]
         public void NotSame()
         {
-            Assert.AreNotSame(s1, s2);
+            Assert.AreNotSame(_s1, _s2);
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not same as \"S1\"" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( s1, s1 ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( _s1, _s1 ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

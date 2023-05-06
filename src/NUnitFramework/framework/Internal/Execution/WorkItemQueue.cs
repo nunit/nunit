@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Execution
         private const int NORMAL_PRIORITY = 1;
         private const int PRIORITY_LEVELS = 2;
 
-        private readonly Logger log = InternalTrace.GetLogger("WorkItemQueue");
+        private readonly Logger _log = InternalTrace.GetLogger("WorkItemQueue");
 
         private ConcurrentQueue<WorkItem>[] _innerQueues;
 
@@ -272,7 +272,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            log.Info("{0}.{1} starting", Name, _savedState.Count);
+            _log.Info("{0}.{1} starting", Name, _savedState.Count);
 
             if (Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Running, (int)WorkItemQueueState.Paused) == (int)WorkItemQueueState.Paused)
                 _mreAdd.Set();
@@ -283,7 +283,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            log.Info("{0}.{1} stopping - {2} WorkItems processed", Name, _savedState.Count, ItemsProcessed);
+            _log.Info("{0}.{1} stopping - {2} WorkItems processed", Name, _savedState.Count, ItemsProcessed);
 
             if (Interlocked.Exchange(ref _state, (int)WorkItemQueueState.Stopped) != (int)WorkItemQueueState.Stopped)
                 _mreAdd.Set();
@@ -294,7 +294,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Pause()
         {
-            log.Debug("{0}.{1} pausing", Name, _savedState.Count);
+            _log.Debug("{0}.{1} pausing", Name, _savedState.Count);
 
             Interlocked.CompareExchange(ref _state, (int)WorkItemQueueState.Paused, (int)WorkItemQueueState.Running);
         }

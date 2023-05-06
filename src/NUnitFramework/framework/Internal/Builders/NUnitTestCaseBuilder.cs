@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal.Builders
 
             if (parms is not null)
             {
-                testMethod.parms = parms;
+                testMethod.Parms = parms;
                 testMethod.RunState = parms.RunState;
 
                 arglist = parms.Arguments;

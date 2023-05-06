@@ -14,10 +14,10 @@ namespace NUnitLite.Tests
 {
     public class NUnit3XmlOutputWriterTests
     {
-        private XmlDocument doc;
-        private XmlNode topNode;
-        private XmlNode envNode;
-        private XmlNode suiteNode;
+        private XmlDocument _doc;
+        private XmlNode _topNode;
+        private XmlNode _envNode;
+        private XmlNode _suiteNode;
 
         [OneTimeSetUp]
         public void RunMockAssemblyTests()
@@ -36,50 +36,50 @@ namespace NUnitLite.Tests
             sw.Close();
 #endif
 
-            doc = new XmlDocument();
-            doc.LoadXml(sb.ToString());
+            _doc = new XmlDocument();
+            _doc.LoadXml(sb.ToString());
 
-            topNode = doc.SelectSingleNode("/test-run");
-            if (topNode is not null)
+            _topNode = _doc.SelectSingleNode("/test-run");
+            if (_topNode is not null)
             {
-                suiteNode = topNode.SelectSingleNode("test-suite");
-                envNode = suiteNode.SelectSingleNode("environment");
+                _suiteNode = _topNode.SelectSingleNode("test-suite");
+                _envNode = _suiteNode.SelectSingleNode("environment");
             }
         }
 
         [Test]
         public void Document_HasTwoChildren()
         {
-            Assert.That(doc.ChildNodes.Count, Is.EqualTo(2));
+            Assert.That(_doc.ChildNodes.Count, Is.EqualTo(2));
         }
 
         [Test]
         public void Document_FirstChildIsXmlDeclaration()
         {
-            Assume.That(doc.FirstChild is not null);
-            Assert.That(doc.FirstChild.NodeType, Is.EqualTo(XmlNodeType.XmlDeclaration));
-            Assert.That(doc.FirstChild.Name, Is.EqualTo("xml"));
+            Assume.That(_doc.FirstChild is not null);
+            Assert.That(_doc.FirstChild.NodeType, Is.EqualTo(XmlNodeType.XmlDeclaration));
+            Assert.That(_doc.FirstChild.Name, Is.EqualTo("xml"));
         }
 
         [Test]
         public void Document_SecondChildIsComment()
         {
-            Assume.That(doc.ChildNodes.Count >= 2);
-            Assert.That(doc.ChildNodes[1].Name, Is.EqualTo("test-run"));
+            Assume.That(_doc.ChildNodes.Count >= 2);
+            Assert.That(_doc.ChildNodes[1].Name, Is.EqualTo("test-run"));
         }
 
         [Test]
         public void Document_HasTestResults()
         {
-            Assert.That(topNode, Is.Not.Null);
-            Assert.That(topNode.Name, Is.EqualTo("test-run"));
+            Assert.That(_topNode, Is.Not.Null);
+            Assert.That(_topNode.Name, Is.EqualTo("test-run"));
         }
 
         [Test]
         public void TestResults_AssemblyPathIsCorrect()
         {
-            Assert.That(RequiredAttribute(topNode, "fullname"), Is.EqualTo("NUnit.Tests.Assemblies.MockTestFixture"));
-            Assert.That(RequiredAttribute(topNode, "name"), Is.EqualTo("MockTestFixture"));
+            Assert.That(RequiredAttribute(_topNode, "fullname"), Is.EqualTo("NUnit.Tests.Assemblies.MockTestFixture"));
+            Assert.That(RequiredAttribute(_topNode, "name"), Is.EqualTo("MockTestFixture"));
         }
 
         [TestCase("testcasecount", MockTestFixture.Tests)]
@@ -89,27 +89,27 @@ namespace NUnitLite.Tests
         [TestCase("skipped", MockTestFixture.Skipped)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
-            Assert.That(RequiredAttribute(topNode, name), Is.EqualTo(count.ToString()));
+            Assert.That(RequiredAttribute(_topNode, name), Is.EqualTo(count.ToString()));
         }
 
         [Test]
         public void TestResults_HasValidStartTimeAttribute()
         {
-            string startTimeString = RequiredAttribute(topNode, "start-time");
+            string startTimeString = RequiredAttribute(_topNode, "start-time");
             Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid start time attribute: {0}. Expecting DateTime in 'o' format.", startTimeString);
         }
 
         [Test]
         public void TestResults_HasValidEndTimeAttribute()
         {
-            string endTimeString = RequiredAttribute(topNode, "end-time");
+            string endTimeString = RequiredAttribute(_topNode, "end-time");
             Assert.That(DateTime.TryParseExact(endTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid end time attribute: {0}. Expecting DateTime in 'o' format.", endTimeString);
         }
 
         [Test]
         public void Environment_HasEnvironmentElement()
         {
-            Assert.That(envNode, Is.Not.Null, "Missing environment element");
+            Assert.That(_envNode, Is.Not.Null, "Missing environment element");
         }
 
         [TestCase("framework-version")]
@@ -123,20 +123,20 @@ namespace NUnitLite.Tests
         [TestCase("os-architecture")]
         public void Environment_HasRequiredAttribute(string name)
         {
-            RequiredAttribute(envNode, name);
+            RequiredAttribute(_envNode, name);
         }
 
         [Test]
         public void CultureInfo_HasCultureInfoElement()
         {
-            Assert.That(envNode.Attributes["culture"], Is.Not.Null, "Missing culture-info attribute");
+            Assert.That(_envNode.Attributes["culture"], Is.Not.Null, "Missing culture-info attribute");
         }
 
         [TestCase("culture")]
         [TestCase("uiculture")]
         public void CultureInfo_HasRequiredAttribute(string name)
         {
-            string cultureName = RequiredAttribute(envNode, name);
+            string cultureName = RequiredAttribute(_envNode, name);
             System.Globalization.CultureInfo culture = null;
 
             try
@@ -154,7 +154,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestSuite_HasTestSuiteElement()
         {
-            Assert.That(suiteNode, Is.Not.Null, "Missing test-suite element");
+            Assert.That(_suiteNode, Is.Not.Null, "Missing test-suite element");
         }
 
         [TestCase("type", "TestFixture")]
@@ -166,13 +166,13 @@ namespace NUnitLite.Tests
         [TestCase("asserts", "0")]
         public void TestSuite_ExpectedAttribute(string name, string value)
         {
-            Assert.That(RequiredAttribute(suiteNode, name), Is.EqualTo(value));
+            Assert.That(RequiredAttribute(_suiteNode, name), Is.EqualTo(value));
         }
 
         [Test]
         public void TestSuite_HasValidStartTimeAttribute()
         {
-            var startTimeString = RequiredAttribute(suiteNode, "start-time");
+            var startTimeString = RequiredAttribute(_suiteNode, "start-time");
 
             var success = DateTime.TryParse(startTimeString, out _);
             Assert.That(success, "{0} is an invalid value for start time", startTimeString);
@@ -181,7 +181,7 @@ namespace NUnitLite.Tests
         [Test]
         public void TestSuite_HasValidEndTimeAttribute()
         {
-            var endTimeString = RequiredAttribute(suiteNode, "end-time");
+            var endTimeString = RequiredAttribute(_suiteNode, "end-time");
 
             var success = DateTime.TryParse(endTimeString, out _);
             Assert.That(success, "{0} is an invalid value for end time", endTimeString);
@@ -190,10 +190,10 @@ namespace NUnitLite.Tests
         [Test]
         public void IgnoredTestCases_HaveValidStartAndEndTimeAttributes()
         {
-            DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
-            DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
+            DateTime.TryParse(RequiredAttribute(_topNode, "start-time"), out var testRunStartTime);
+            DateTime.TryParse(RequiredAttribute(_topNode, "end-time"), out var testRunEndTime);
 
-            var testCaseNodes = suiteNode.SelectNodes("test-suite[@name='SkippedTest']/test-case");
+            var testCaseNodes = _suiteNode.SelectNodes("test-suite[@name='SkippedTest']/test-case");
             Assert.That(testCaseNodes, Is.Not.Null.And.Count.EqualTo(3));
 
             foreach (XmlNode testCase in testCaseNodes)
@@ -215,10 +215,10 @@ namespace NUnitLite.Tests
         [Test]
         public void ExplicitTest_HasValidStartAndEndTimeAttributes()
         {
-            DateTime.TryParse(RequiredAttribute(topNode, "start-time"), out var testRunStartTime);
-            DateTime.TryParse(RequiredAttribute(topNode, "end-time"), out var testRunEndTime);
+            DateTime.TryParse(RequiredAttribute(_topNode, "start-time"), out var testRunStartTime);
+            DateTime.TryParse(RequiredAttribute(_topNode, "end-time"), out var testRunEndTime);
 
-            var testCaseNodes = suiteNode.SelectNodes("test-case[@name='ExplicitTest']");
+            var testCaseNodes = _suiteNode.SelectNodes("test-case[@name='ExplicitTest']");
             Assert.That(testCaseNodes, Is.Not.Null.And.Count.EqualTo(1));
 
             XmlNode testCase = testCaseNodes[0];

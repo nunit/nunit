@@ -6,7 +6,7 @@ using NUnit.Framework.Interfaces;
 namespace NUnit.Framework.Internal.Filters {
     public class DeMorganOnFiltersTest : TestFilterTests
     {
-        private static readonly List<TestFilter[]> filterPairs;
+        private static readonly List<TestFilter[]> FilterPairs;
 
         static DeMorganOnFiltersTest()
         {
@@ -18,21 +18,21 @@ namespace NUnit.Framework.Internal.Filters {
                 new PropertyFilter("Priority", "Low")
             };
 
-            filterPairs = new List<TestFilter[]>();
+            FilterPairs = new List<TestFilter[]>();
             foreach (var part1 in filterParts)
             foreach (var part2 in filterParts)
             {
                 var and = new AndFilter(part1, new NotFilter(part2));
                 var or = new OrFilter(new NotFilter(part1), part2);
-                filterPairs.Add(new TestFilter[2] {new NotFilter(and), or});
-                filterPairs.Add(new TestFilter[2] {and, new NotFilter(or)});
+                FilterPairs.Add(new TestFilter[2] {new NotFilter(and), or});
+                FilterPairs.Add(new TestFilter[2] {and, new NotFilter(or)});
             }
         }
 
         private IEnumerable<ITest> GetTests()
         {
             var q = new Queue<ITest>();
-            q.Enqueue(_topLevelSuite);
+            q.Enqueue(TopLevelSuite);
             while (q.Count > 0)
             {
                 var test = q.Dequeue();
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal.Filters {
         }
 
         [Test]
-        [TestCaseSource(nameof(filterPairs))]
+        [TestCaseSource(nameof(FilterPairs))]
         public void DeMorganPassTests(TestFilter andFilter, TestFilter orFilter)
         {
 
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Internal.Filters {
         }
 
         [Test]
-        [TestCaseSource(nameof(filterPairs))]
+        [TestCaseSource(nameof(FilterPairs))]
         public void DeMorganMatchTests(TestFilter andFilter, TestFilter orFilter)
         {
             var disagreements = new List<string>();

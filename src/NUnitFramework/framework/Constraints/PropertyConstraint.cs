@@ -12,8 +12,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PropertyConstraint : PrefixConstraint
     {
-        private readonly string name;
-        private object? propValue;
+        private readonly string _name;
+        private object? _propValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyConstraint"/> class.
@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         public PropertyConstraint(string name, IConstraint baseConstraint)
             : base(baseConstraint, "property " + name)
         {
-            this.name = name;
+            this._name = name;
         }
 
         /// <summary>
@@ -36,13 +36,13 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentNotNull(actual, nameof(actual));
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            PropertyInfo? property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
+            PropertyInfo? property = Reflect.GetUltimateShadowingProperty(typeof(TActual), _name, bindingFlags);
 
             if (property is null && typeof(TActual).IsInterface)
             {
                 foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
-                    property = Reflect.GetUltimateShadowingProperty(@interface, name, bindingFlags);
+                    property = Reflect.GetUltimateShadowingProperty(@interface, _name, bindingFlags);
                     if (property is not null) break;
                 }
             }
@@ -51,23 +51,23 @@ namespace NUnit.Framework.Constraints
             {
                 if (actual is Type actualType)
                 {
-                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                    property = Reflect.GetUltimateShadowingProperty(actualType, _name, bindingFlags);
                 }
 
                 if (property is null)
                 {
                     actualType = actual.GetType();
 
-                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                    property = Reflect.GetUltimateShadowingProperty(actualType, _name, bindingFlags);
 
                     // TODO: Use an error result here
                     if (property is null)
-                        throw new ArgumentException($"Property {name} was not found on {actualType}.", nameof(name));
+                        throw new ArgumentException($"Property {_name} was not found on {actualType}.", nameof(_name));
                 }
             }
 
-            propValue = property.GetValue(actual, null);
-            var baseResult = BaseConstraint.ApplyTo(propValue);
+            _propValue = property.GetValue(actual, null);
+            var baseResult = BaseConstraint.ApplyTo(_propValue);
             return new PropertyConstraintResult(this, baseResult);
         }
 
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected override string GetStringRepresentation()
         {
-            return $"<property {name} {BaseConstraint}>";
+            return $"<property {_name} {BaseConstraint}>";
         }
     }
 }

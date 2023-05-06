@@ -8,71 +8,71 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class LessEqualFixture
     {
-        private readonly int i1 = 5;
-        private readonly int i2 = 8;
-        private readonly uint u1 = 12345678;
-        private readonly uint u2 = 12345879;
-        private readonly long l1 = 12345678;
-        private readonly long l2 = 12345879;
-        private readonly ulong ul1 = 12345678;
-        private readonly ulong ul2 = 12345879;
-        private readonly float f1 = 3.543F;
-        private readonly float f2 = 8.543F;
-        private readonly decimal de1 = 53.4M;
-        private readonly decimal de2 = 83.4M;
-        private readonly double d1 = 4.85948654;
-        private readonly double d2 = 8.0;
-        private readonly System.Enum e1 = RunState.Explicit;
-        private readonly System.Enum e2 = RunState.Ignored;
+        private readonly int _i1 = 5;
+        private readonly int _i2 = 8;
+        private readonly uint _u1 = 12345678;
+        private readonly uint _u2 = 12345879;
+        private readonly long _l1 = 12345678;
+        private readonly long _l2 = 12345879;
+        private readonly ulong _ul1 = 12345678;
+        private readonly ulong _ul2 = 12345879;
+        private readonly float _f1 = 3.543F;
+        private readonly float _f2 = 8.543F;
+        private readonly decimal _de1 = 53.4M;
+        private readonly decimal _de2 = 83.4M;
+        private readonly double _d1 = 4.85948654;
+        private readonly double _d2 = 8.0;
+        private readonly Enum _e1 = RunState.Explicit;
+        private readonly Enum _e2 = RunState.Ignored;
 
         [Test]
         public void LessOrEqual()
         {
             // Test equality check for all forms
-            Assert.LessOrEqual(i1, i1);
-            Assert.LessOrEqual(i1, i1, "int");
-            Assert.LessOrEqual(i1, i1, "{0}", "int");
-            Assert.LessOrEqual(u1, u1);
-            Assert.LessOrEqual(u1, u1, "uint");
-            Assert.LessOrEqual(u1, u1, "{0}", "uint");
-            Assert.LessOrEqual(l1, l1);
-            Assert.LessOrEqual(l1, l1, "long");
-            Assert.LessOrEqual(l1, l1, "{0}", "long");
-            Assert.LessOrEqual(ul1, ul1);
-            Assert.LessOrEqual(ul1, ul1, "ulong");
-            Assert.LessOrEqual(ul1, ul1, "{0}", "ulong");
-            Assert.LessOrEqual(d1, d1);
-            Assert.LessOrEqual(d1, d1, "double");
-            Assert.LessOrEqual(d1, d1, "{0}", "double");
-            Assert.LessOrEqual(de1, de1);
-            Assert.LessOrEqual(de1, de1, "decimal");
-            Assert.LessOrEqual(de1, de1, "{0}", "decimal");
-            Assert.LessOrEqual(f1, f1);
-            Assert.LessOrEqual(f1, f1, "float");
-            Assert.LessOrEqual(f1, f1, "{0}", "float");
+            Assert.LessOrEqual(_i1, _i1);
+            Assert.LessOrEqual(_i1, _i1, "int");
+            Assert.LessOrEqual(_i1, _i1, "{0}", "int");
+            Assert.LessOrEqual(_u1, _u1);
+            Assert.LessOrEqual(_u1, _u1, "uint");
+            Assert.LessOrEqual(_u1, _u1, "{0}", "uint");
+            Assert.LessOrEqual(_l1, _l1);
+            Assert.LessOrEqual(_l1, _l1, "long");
+            Assert.LessOrEqual(_l1, _l1, "{0}", "long");
+            Assert.LessOrEqual(_ul1, _ul1);
+            Assert.LessOrEqual(_ul1, _ul1, "ulong");
+            Assert.LessOrEqual(_ul1, _ul1, "{0}", "ulong");
+            Assert.LessOrEqual(_d1, _d1);
+            Assert.LessOrEqual(_d1, _d1, "double");
+            Assert.LessOrEqual(_d1, _d1, "{0}", "double");
+            Assert.LessOrEqual(_de1, _de1);
+            Assert.LessOrEqual(_de1, _de1, "decimal");
+            Assert.LessOrEqual(_de1, _de1, "{0}", "decimal");
+            Assert.LessOrEqual(_f1, _f1);
+            Assert.LessOrEqual(_f1, _f1, "float");
+            Assert.LessOrEqual(_f1, _f1, "{0}", "float");
 
             // Testing all forms after seeing some bugs. CFP
-            Assert.LessOrEqual(i1, i2);
-            Assert.LessOrEqual(i1, i2, "int");
-            Assert.LessOrEqual(i1, i2, "{0}", "int");
-            Assert.LessOrEqual(u1, u2);
-            Assert.LessOrEqual(u1, u2, "uint");
-            Assert.LessOrEqual(u1, u2, "{0}", "uint");
-            Assert.LessOrEqual(l1, l2);
-            Assert.LessOrEqual(l1, l2, "long");
-            Assert.LessOrEqual(l1, l2, "{0}", "long");
-            Assert.LessOrEqual(ul1, ul2);
-            Assert.LessOrEqual(ul1, ul2, "ulong");
-            Assert.LessOrEqual(ul1, ul2, "{0}", "ulong");
-            Assert.LessOrEqual(d1, d2);
-            Assert.LessOrEqual(d1, d2, "double");
-            Assert.LessOrEqual(d1, d2, "{0}", "double");
-            Assert.LessOrEqual(de1, de2);
-            Assert.LessOrEqual(de1, de2, "decimal");
-            Assert.LessOrEqual(de1, de2, "{0}", "decimal");
-            Assert.LessOrEqual(f1, f2);
-            Assert.LessOrEqual(f1, f2, "float");
-            Assert.LessOrEqual(f1, f2, "{0}", "float");
+            Assert.LessOrEqual(_i1, _i2);
+            Assert.LessOrEqual(_i1, _i2, "int");
+            Assert.LessOrEqual(_i1, _i2, "{0}", "int");
+            Assert.LessOrEqual(_u1, _u2);
+            Assert.LessOrEqual(_u1, _u2, "uint");
+            Assert.LessOrEqual(_u1, _u2, "{0}", "uint");
+            Assert.LessOrEqual(_l1, _l2);
+            Assert.LessOrEqual(_l1, _l2, "long");
+            Assert.LessOrEqual(_l1, _l2, "{0}", "long");
+            Assert.LessOrEqual(_ul1, _ul2);
+            Assert.LessOrEqual(_ul1, _ul2, "ulong");
+            Assert.LessOrEqual(_ul1, _ul2, "{0}", "ulong");
+            Assert.LessOrEqual(_d1, _d2);
+            Assert.LessOrEqual(_d1, _d2, "double");
+            Assert.LessOrEqual(_d1, _d2, "{0}", "double");
+            Assert.LessOrEqual(_de1, _de2);
+            Assert.LessOrEqual(_de1, _de2, "decimal");
+            Assert.LessOrEqual(_de1, _de2, "{0}", "decimal");
+            Assert.LessOrEqual(_f1, _f2);
+            Assert.LessOrEqual(_f1, _f2, "float");
+            Assert.LessOrEqual(_f1, _f2, "{0}", "float");
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than or equal to 5" + Environment.NewLine +
                 "  But was:  8" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(i2, i1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(_i2, _i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than or equal to Explicit" + Environment.NewLine +
                 "  But was:  Ignored" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(e2, e1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(_e2, _e1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

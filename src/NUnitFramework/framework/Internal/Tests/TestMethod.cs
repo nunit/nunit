@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The ParameterSet used to create this test method
         /// </summary>
-        internal TestCaseParameters? parms;
+        internal TestCaseParameters? Parms;
 
 #endregion
 
@@ -45,9 +45,9 @@ namespace NUnit.Framework.Internal
 
 #region Properties
 
-        internal bool HasExpectedResult => parms is {HasExpectedResult: true};
+        internal bool HasExpectedResult => Parms is {HasExpectedResult: true};
 
-        internal object? ExpectedResult => parms?.ExpectedResult;
+        internal object? ExpectedResult => Parms?.ExpectedResult;
 
         #endregion
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// The arguments to use in executing the test method, or empty array if none are provided.
         /// </summary>
-        public override object?[] Arguments => parms is null ? TestParameters.NoArguments : parms.Arguments;
+        public override object?[] Arguments => Parms is null ? TestParameters.NoArguments : Parms.Arguments;
 
         /// <summary>
         /// Overridden to return a TestCaseResult.

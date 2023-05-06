@@ -7,12 +7,14 @@ namespace NUnit.TestData.TheoryFixture
     [TestFixture]
     public class TheoryFixture
     {
-#pragma warning disable 414
+#pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable CS0414 // The field is assigned but its value is never used
         [Datapoint]
-        private int i0 = 0;
+        private int _i0 = 0;
         [Datapoint]
-        private static int i1 = 1;
-#pragma warning restore 414
+        private static int _i1 = 1;
+#pragma warning restore CS0414 // The field is assigned but its value is never used
+#pragma warning restore IDE0051 // Remove unused private members
         [Datapoint]
         public int I100 = 100;
 

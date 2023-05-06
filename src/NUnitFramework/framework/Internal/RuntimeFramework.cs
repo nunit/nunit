@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static readonly Version DefaultVersion = new Version(0,0);
 
-        private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
+        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new Lazy<RuntimeFramework>(() =>
         {
             Type? monoRuntimeType = null;
             Type? monoTouchType = null;
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Internal
         /// Static method to return a RuntimeFramework object
         /// for the framework that is currently in use.
         /// </summary>
-        public static RuntimeFramework CurrentFramework => currentFramework.Value;
+        public static RuntimeFramework CurrentFramework => LazyCurrentFramework.Value;
 
         /// <summary>
         /// The type of this runtime framework

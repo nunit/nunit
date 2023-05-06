@@ -16,8 +16,8 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class PropertyExistsConstraint : Constraint
     {
-        private readonly string name;
-        private Type? actualType;
+        private readonly string _name;
+        private Type? _actualType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyExistsConstraint"/> class.
@@ -26,14 +26,14 @@ namespace NUnit.Framework.Constraints
         public PropertyExistsConstraint(string name)
             : base(name)
         {
-            this.name = name;
+            this._name = name;
         }
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description => "property " + name;
+        public override string Description => "property " + _name;
 
         /// <summary>
         /// Test whether the property exists for a given object
@@ -45,14 +45,14 @@ namespace NUnit.Framework.Constraints
             Guard.ArgumentNotNull(actual, nameof(actual));
             const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            actualType = typeof(TActual);
-            PropertyInfo? property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+            _actualType = typeof(TActual);
+            PropertyInfo? property = Reflect.GetUltimateShadowingProperty(_actualType, _name, bindingFlags);
 
             if (property is null && typeof(TActual).IsInterface)
             {
                 foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
-                    property = Reflect.GetUltimateShadowingProperty(@interface, name, bindingFlags);
+                    property = Reflect.GetUltimateShadowingProperty(@interface, _name, bindingFlags);
                     if (property is not null) break;
                 }
             }
@@ -61,23 +61,23 @@ namespace NUnit.Framework.Constraints
             {
                 if (actual is Type actualIsType)
                 {
-                    actualType = actualIsType;
-                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                    _actualType = actualIsType;
+                    property = Reflect.GetUltimateShadowingProperty(_actualType, _name, bindingFlags);
 
                     if (property is null)
                     {
                         // Do not set actualType to System.RuntimeType as that is no expected
-                        property = Reflect.GetUltimateShadowingProperty(actual.GetType(), name, bindingFlags);
+                        property = Reflect.GetUltimateShadowingProperty(actual.GetType(), _name, bindingFlags);
                     }
                 }
                 else
                 {
-                    actualType = actual.GetType();
-                    property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
+                    _actualType = actual.GetType();
+                    property = Reflect.GetUltimateShadowingProperty(_actualType, _name, bindingFlags);
                 }
             }
 
-            return new ConstraintResult(this, actualType, property is not null);
+            return new ConstraintResult(this, _actualType, property is not null);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override string GetStringRepresentation()
         {
-            return $"<propertyexists {name}>";
+            return $"<propertyexists {_name}>";
         }
     }
 }

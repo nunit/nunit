@@ -13,25 +13,25 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class CategoryAttributeTests
     {
-        private TestSuite fixture;
+        private TestSuite _fixture;
 
         [SetUp]
         public void CreateFixture()
         {
-            fixture = TestBuilder.MakeFixture( typeof( FixtureWithCategories ) );
+            _fixture = TestBuilder.MakeFixture( typeof( FixtureWithCategories ) );
         }
 
         [Test]
         public void CategoryOnFixture()
         {
-            Assert.That(fixture.Properties["Category"], Contains.Item("DataBase"));
+            Assert.That(_fixture.Properties["Category"], Contains.Item("DataBase"));
             //Assert.That( fixture.Properties.Contains("Category", "DataBase"));
         }
 
         [Test]
         public void CategoryOnTestMethod()
         {
-            Test test1 = (Test)fixture.Tests[0];
+            Test test1 = (Test)_fixture.Tests[0];
             Assert.That(test1.Properties["Category"], Contains.Item("Long"));
             //Assert.That( test1.Properties.Contains("Category", "Long") );
         }
@@ -39,21 +39,21 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void CanDeriveFromCategoryAttribute()
         {
-            Test test2 = (Test)fixture.Tests[1];
+            Test test2 = (Test)_fixture.Tests[1];
             Assert.That(test2.Properties["Category"], Contains.Item("Critical") );
         }
 
         [Test]
         public void DerivedCategoryMayBeInherited()
         {
-            Assert.That(fixture.Properties["Category"], Contains.Item("MyCategory"));
+            Assert.That(_fixture.Properties["Category"], Contains.Item("MyCategory"));
             //Assert.That(fixture.Properties.Contains("Category", "MyCategory"));
         }
 
         [Test]
         public void CanSpecifyOnMethodAndTestCase()
         {
-            TestSuite test3 = (TestSuite)fixture.Tests[2];
+            TestSuite test3 = (TestSuite)_fixture.Tests[2];
             Assert.That(test3.Name, Is.EqualTo("Test3"));
             Assert.That(test3.Properties["Category"], Contains.Item("Top"));
             Test testCase = (Test)test3.Tests[0];
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestWithValidCategoryNameIsNotRunnable()
         {
-            Test testValidSpecialChars = (Test)fixture.Tests[3];
+            Test testValidSpecialChars = (Test)_fixture.Tests[3];
             Assert.That(testValidSpecialChars.RunState, Is.EqualTo(RunState.Runnable));
         }
     }

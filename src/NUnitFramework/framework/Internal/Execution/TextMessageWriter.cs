@@ -40,7 +40,7 @@ namespace NUnit.Framework.Internal
         #endregion
 
         #region Instance Fields
-        private int maxLineLength = DEFAULT_LINE_LENGTH;
+        private int _maxLineLength = DEFAULT_LINE_LENGTH;
         private bool _sameValDiffTypes = false;
         private string? _expectedType, _actualType;
         #endregion
@@ -70,8 +70,8 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public override int MaxLineLength
         {
-            get => maxLineLength;
-            set => maxLineLength = value;
+            get => _maxLineLength;
+            set => _maxLineLength = value;
         }
         #endregion
 

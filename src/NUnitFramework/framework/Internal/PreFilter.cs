@@ -115,7 +115,7 @@ namespace NUnit.Framework.Internal
 
         private class FilterElement
         {
-            private FilterElementType ElementType = FilterElementType.Unknown;
+            private FilterElementType _elementType = FilterElementType.Unknown;
             public string Text;
             public string? ClassName;
             public string? MethodName;
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Internal
 
             private bool MatchElementType(Type type)
             {
-                switch(ElementType)
+                switch(_elementType)
                 {
                     default:
                     case FilterElementType.Unknown:
@@ -162,19 +162,19 @@ namespace NUnit.Framework.Internal
             {
                 if (MatchFixtureElement(type))
                 {
-                    ElementType = FilterElementType.Fixture;
+                    _elementType = FilterElementType.Fixture;
                     return true;
                 }
 
                 if (MatchNamespaceElement(type))
                 {
-                    ElementType = FilterElementType.Namespace;
+                    _elementType = FilterElementType.Namespace;
                     return true;
                 }
 
                 if (MatchMethodElement(type))
                 {
-                    ElementType = FilterElementType.Method;
+                    _elementType = FilterElementType.Method;
                     return true;
                 }
 

@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void IsNotEmpty()
         {
-            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(_dummyFixture.Id));
+            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(DummyFixtureSuite.Id));
 
             Assert.That(filter.IsEmpty, Is.False);
         }
@@ -18,34 +18,34 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchTest()
         {
-            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(_dummyFixture.Id));
+            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(DummyFixtureSuite.Id));
 
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture), Is.False);
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite), Is.False);
         }
 
         [Test]
         public void PassTest()
         {
-            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(_dummyFixture.Id));
+            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(DummyFixtureSuite.Id));
 
-            Assert.That(filter.Pass(_topLevelSuite));
-            Assert.That(filter.Pass(_dummyFixture));
-            Assert.That(filter.Pass(_dummyFixture.Tests[0]));
+            Assert.That(filter.Pass(TopLevelSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite));
+            Assert.That(filter.Pass(DummyFixtureSuite.Tests[0]));
 
-            Assert.That(filter.Pass(_anotherFixture), Is.False);
+            Assert.That(filter.Pass(AnotherFixtureSuite), Is.False);
         }
 
         [Test]
         public void ExplicitMatchTest()
         {
-            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(_dummyFixture.Id));
+            var filter = new AndFilter(new CategoryFilter("Dummy"), new IdFilter(DummyFixtureSuite.Id));
 
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture));
-            Assert.That(filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
+            Assert.That(filter.IsExplicitMatch(TopLevelSuite));
+            Assert.That(filter.IsExplicitMatch(DummyFixtureSuite));
+            Assert.That(filter.IsExplicitMatch(DummyFixtureSuite.Tests[0]), Is.False);
 
-            Assert.That(filter.Match(_anotherFixture), Is.False);
+            Assert.That(filter.Match(AnotherFixtureSuite), Is.False);
         }
 
         [Test]
@@ -55,13 +55,13 @@ namespace NUnit.Framework.Internal.Filters
                 new NotFilter(
                     new CategoryFilter("Dummy")),
                 new NotFilter(
-                    new IdFilter(_dummyFixture.Id)));
+                    new IdFilter(DummyFixtureSuite.Id)));
 
-            Assert.That(filter.IsExplicitMatch(_topLevelSuite), Is.False);
-            Assert.That(filter.IsExplicitMatch(_dummyFixture), Is.False);
-            Assert.That(filter.IsExplicitMatch(_dummyFixture.Tests[0]), Is.False);
+            Assert.That(filter.IsExplicitMatch(TopLevelSuite), Is.False);
+            Assert.That(filter.IsExplicitMatch(DummyFixtureSuite), Is.False);
+            Assert.That(filter.IsExplicitMatch(DummyFixtureSuite.Tests[0]), Is.False);
 
-            Assert.That(filter.Match(_anotherFixture), "4");
+            Assert.That(filter.Match(AnotherFixtureSuite), "4");
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal.Filters
             var filters = new List<MockTestFilter>();
             foreach (var inputBool in inputBooleans)
             {
-                var strictFilter = new MockTestFilter(_dummyFixture, matchFunction, inputBool);
+                var strictFilter = new MockTestFilter(DummyFixtureSuite, matchFunction, inputBool);
                 Assert.That(ExecuteMatchFunction(strictFilter, matchFunction), Is.EqualTo(inputBool));
 
                 filters.Add(strictFilter);
@@ -122,11 +122,11 @@ namespace NUnit.Framework.Internal.Filters
             switch (matchFunction)
             {
                 case MockTestFilter.MatchFunction.IsExplicitMatch:
-                    return filter.IsExplicitMatch(_dummyFixture);
+                    return filter.IsExplicitMatch(DummyFixtureSuite);
                 case MockTestFilter.MatchFunction.Match:
-                    return filter.Match(_dummyFixture);
+                    return filter.Match(DummyFixtureSuite);
                 case MockTestFilter.MatchFunction.Pass:
-                    return filter.Pass(_dummyFixture);
+                    return filter.Pass(DummyFixtureSuite);
                 default:
                     throw new ArgumentException(
                         "Unexpected StrictIdFilterForTests.EqualValueFunction.", nameof(matchFunction));
@@ -137,22 +137,22 @@ namespace NUnit.Framework.Internal.Filters
         public void BuildFromXml()
         {
             TestFilter filter = TestFilter.FromXml(
-                $"<filter><and><cat>Dummy</cat><id>{_dummyFixture.Id}</id></and></filter>");
+                $"<filter><and><cat>Dummy</cat><id>{DummyFixtureSuite.Id}</id></and></filter>");
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture), Is.False);
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite), Is.False);
         }
 
         [Test]
         public void BuildFromXml_TopLevelDefaultsToAnd()
         {
             TestFilter filter = TestFilter.FromXml(
-                $"<filter><cat>Dummy</cat><id>{_dummyFixture.Id}</id></filter>");
+                $"<filter><cat>Dummy</cat><id>{DummyFixtureSuite.Id}</id></filter>");
 
             Assert.That(filter, Is.TypeOf<AndFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture), Is.False);
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite), Is.False);
         }
     }
 }

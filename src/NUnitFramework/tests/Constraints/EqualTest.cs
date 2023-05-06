@@ -19,13 +19,13 @@ namespace NUnit.Framework.Constraints
                 }));
         }
 
-        private static readonly string testString = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private static readonly string TestString = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
         [Test]
         public void LongStringsAreTruncated()
         {
-            string expected = testString;
-            string actual = testString.Replace('k', 'X');
+            string expected = TestString;
+            string actual = TestString.Replace('k', 'X');
 
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
@@ -37,8 +37,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void LongStringsAreTruncatedAtBothEndsIfNecessary()
         {
-            string expected = testString;
-            string actual = testString.Replace('Z', '?');
+            string expected = TestString;
+            string actual = TestString.Replace('Z', '?');
 
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
@@ -50,8 +50,8 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void LongStringsAreTruncatedAtFrontEndIfNecessary()
         {
-            string expected = testString;
-            string actual = testString  + "+++++";
+            string expected = TestString;
+            string actual = TestString  + "+++++";
 
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>

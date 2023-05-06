@@ -173,13 +173,13 @@ namespace NUnit.Framework.Assertions
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
-        private static readonly int[] underlyingArray = { 1, 2, 3, 4, 5 };
+        private static readonly int[] UnderlyingArray = { 1, 2, 3, 4, 5 };
 
         [Test]
         public void ArraySegmentAndArray()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new[] { 2, 3, 4 }));
+            Assert.That(new ArraySegment<int>(UnderlyingArray, 1, 3), Is.EqualTo(new[] { 2, 3, 4 }));
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace NUnit.Framework.Assertions
         public void ArrayAndArraySegment()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new[] { 2, 3, 4 }, Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
+            Assert.That(new[] { 2, 3, 4 }, Is.EqualTo(new ArraySegment<int>(UnderlyingArray, 1, 3)));
         }
 
         [Test]
@@ -207,7 +207,7 @@ namespace NUnit.Framework.Assertions
         public void TwoArraySegments()
         {
             Assume.That(ArraySegmentImplementsIEnumerable);
-            Assert.That(new ArraySegment<int>(underlyingArray, 1, 3), Is.EqualTo(new ArraySegment<int>(underlyingArray, 1, 3)));
+            Assert.That(new ArraySegment<int>(UnderlyingArray, 1, 3), Is.EqualTo(new ArraySegment<int>(UnderlyingArray, 1, 3)));
         }
 
         [Test]

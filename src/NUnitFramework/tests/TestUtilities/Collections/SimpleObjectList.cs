@@ -12,30 +12,30 @@ namespace NUnit.TestUtilities.Collections
     /// </summary>
     internal class SimpleObjectList : IList
     {
-        private readonly List<object?> contents;
+        private readonly List<object?> _contents;
 
         public SimpleObjectList(IEnumerable<object?> source)
         {
-            this.contents = new List<object?>(source);
+            this._contents = new List<object?>(source);
         }
 
         public SimpleObjectList(params object?[] source)
         {
-            this.contents = new List<object?>(source);
+            this._contents = new List<object?>(source);
         }
 
         #region ICollection Members
 
         public void CopyTo(Array array, int index)
         {
-            ((ICollection)contents).CopyTo(array, index);
+            ((ICollection)_contents).CopyTo(array, index);
         }
 
-        public int Count => contents.Count;
+        public int Count => _contents.Count;
 
-        public bool IsSynchronized => ((ICollection)contents).IsSynchronized;
+        public bool IsSynchronized => ((ICollection)_contents).IsSynchronized;
 
-        public object SyncRoot => ((ICollection)contents).SyncRoot;
+        public object SyncRoot => ((ICollection)_contents).SyncRoot;
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace NUnit.TestUtilities.Collections
 
         public IEnumerator GetEnumerator()
         {
-            return contents.GetEnumerator();
+            return _contents.GetEnumerator();
         }
 
         #endregion
@@ -52,28 +52,28 @@ namespace NUnit.TestUtilities.Collections
 
         public int Add(object? value)
         {
-            contents.Add(value);
-            return contents.Count - 1;
+            _contents.Add(value);
+            return _contents.Count - 1;
         }
 
         public void Clear()
         {
-            contents.Clear();
+            _contents.Clear();
         }
 
         public bool Contains(object? value)
         {
-            return contents.Contains(value);
+            return _contents.Contains(value);
         }
 
         public int IndexOf(object? value)
         {
-            return contents.IndexOf(value);
+            return _contents.IndexOf(value);
         }
 
         public void Insert(int index, object? value)
         {
-            contents.Insert(index, value);
+            _contents.Insert(index, value);
         }
 
         public bool IsFixedSize => false;
@@ -82,18 +82,18 @@ namespace NUnit.TestUtilities.Collections
 
         public void Remove(object? value)
         {
-            contents.Remove(value);
+            _contents.Remove(value);
         }
 
         public void RemoveAt(int index)
         {
-            contents.RemoveAt(index);
+            _contents.RemoveAt(index);
         }
 
         public object? this[int index]
         {
-            get => contents[index];
-            set => contents[index] = value;
+            get => _contents[index];
+            set => _contents[index] = value;
         }
 
         #endregion

@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ThrowsConstraint : PrefixConstraint
     {
-        private Exception? caughtException;
+        private Exception? _caughtException;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ThrowsConstraint"/> class,
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Get the actual exception thrown - used by Assert.Throws.
         /// </summary>
-        public Exception? ActualException => caughtException;
+        public Exception? ActualException => _caughtException;
 
         #region Constraint Overrides
 
@@ -44,14 +44,14 @@ namespace NUnit.Framework.Constraints
         {
             var @delegate = ConstraintUtils.RequireActual<Delegate>(actual, nameof(actual));
 
-            caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
+            _caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            if (caughtException is not null)
+            if (_caughtException is not null)
             {
                 return new ThrowsConstraintResult(
                     this,
-                    caughtException,
-                    BaseConstraint.ApplyTo(caughtException));
+                    _caughtException,
+                    BaseConstraint.ApplyTo(_caughtException));
 
             }
             return new ThrowsConstraintResult(this);
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Constraints
 
         private sealed class ThrowsConstraintResult : ConstraintResult
         {
-            private readonly ConstraintResult? baseResult;
+            private readonly ConstraintResult? _baseResult;
 
             public ThrowsConstraintResult(ThrowsConstraint constraint)
                 : base(constraint, null)
@@ -92,7 +92,7 @@ namespace NUnit.Framework.Constraints
                 else
                     Status = ConstraintStatus.Failure;
 
-                this.baseResult = baseResult;
+                this._baseResult = baseResult;
             }
 
             /// <summary>
@@ -103,10 +103,10 @@ namespace NUnit.Framework.Constraints
             /// <param name="writer">The writer on which the actual value is displayed</param>
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (baseResult is null)
+                if (_baseResult is null)
                     writer.Write("no exception thrown");
                 else
-                    baseResult.WriteActualValueTo(writer);
+                    _baseResult.WriteActualValueTo(writer);
             }
         }
 

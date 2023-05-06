@@ -11,16 +11,16 @@ namespace NUnit.Framework.Internal
     {
         internal class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                this.Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
@@ -35,16 +35,16 @@ namespace NUnit.Framework.Internal
     {
         internal class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                this.Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
     }
@@ -99,31 +99,31 @@ namespace NUnit.Framework.Internal
 
         private class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                this.Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
         private class Dummy1
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy1(int value)
             {
-                this.value = value;
+                this.Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 

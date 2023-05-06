@@ -11,18 +11,18 @@ namespace NUnit.Framework.Attributes
         [TestFixture]
         public class LiveTest
         {
-            private PairCounter pairsTested = new PairCounter();
+            private PairCounter _pairsTested = new PairCounter();
 
             [OneTimeSetUp]
             public void OneTimeSetUp()
             {
-                pairsTested = new PairCounter();
+                _pairsTested = new PairCounter();
             }
 
             [OneTimeTearDown]
             public void OneTimeTearDown()
             {
-                Assert.That(pairsTested, Has.Count.EqualTo(16));
+                Assert.That(_pairsTested, Has.Count.EqualTo(16));
             }
 
             [Test, Pairwise]
@@ -33,16 +33,16 @@ namespace NUnit.Framework.Attributes
             {
                 //Console.WriteLine("Pairwise: {0} {1} {2}", a, b, c);
 
-                pairsTested[a + b] = null;
-                pairsTested[a + c] = null;
-                pairsTested[b + c] = null;
+                _pairsTested[a + b] = null;
+                _pairsTested[a + c] = null;
+                _pairsTested[b + c] = null;
             }
         }
 
         // Test data is taken from various sources. See "Lessons Learned
         // in Software Testing" pp 53-59, for example. For orthogonal cases, see
         // https://web.archive.org/web/20100305233703/www.freequality.org/sites/www_freequality_org/documents/tools/Tagarray_files/tamatrix.htm
-        static internal object[] cases = new object[]
+        static internal object[] Cases = new object[]
         {
             new TestCaseData( new[] { 2, 4 }, 8, 8 ).SetName("Test 2x4"),
             new TestCaseData( new[] { 2, 2, 2 }, 4, 4 ).SetName("Test 2x2x2"),
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Attributes
             new TestCaseData( new[] { 5, 5, 5 }, 25, 25 ).SetName("Test 5x5x5")
         };
 
-        [Test, TestCaseSource(nameof(cases))]
+        [Test, TestCaseSource(nameof(Cases))]
         public void Test(int[] dimensions, int bestSoFar, int targetCases)
         {
             int features = dimensions.Length;

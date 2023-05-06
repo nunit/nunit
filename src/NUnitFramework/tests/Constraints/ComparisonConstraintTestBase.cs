@@ -56,17 +56,17 @@ namespace NUnit.Framework.Constraints
 
     internal class ClassWithIComparable : IComparable
     {
-        private readonly int val;
+        private readonly int _val;
 
         public ClassWithIComparable(int val)
         {
-            this.val = val;
+            this._val = val;
         }
 
         public int CompareTo(object? x)
         {
             if (x is ClassWithIComparable other)
-                return val.CompareTo(other.val);
+                return _val.CompareTo(other._val);
 
             throw new ArgumentException();
         }
@@ -74,23 +74,23 @@ namespace NUnit.Framework.Constraints
 
     internal class ClassWithIComparableOfT : IComparable<ClassWithIComparableOfT>, IComparable<int>
     {
-        private readonly int val;
+        private readonly int _val;
 
         public ClassWithIComparableOfT(int val)
         {
-            this.val = val;
+            this._val = val;
         }
 
         public int CompareTo(ClassWithIComparableOfT? other)
         {
             if (other is null)
                 return 1;
-            return val.CompareTo(other.val);
+            return _val.CompareTo(other._val);
         }
 
         public int CompareTo(int other)
         {
-            return val.CompareTo(other);
+            return _val.CompareTo(other);
         }
     }
 

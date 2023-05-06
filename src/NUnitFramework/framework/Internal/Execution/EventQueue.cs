@@ -140,7 +140,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventQueue
     {
-        private const int spinCount = 5;
+        private const int SpinCount = 5;
 
 //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Internal.Execution
                         return null;
 
                     // Spin a few times to see if something changes
-                    if (sw.Count <= spinCount)
+                    if (sw.Count <= SpinCount)
                     {
                         sw.SpinOnce();
                     }

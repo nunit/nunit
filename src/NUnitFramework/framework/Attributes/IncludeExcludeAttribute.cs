@@ -8,9 +8,9 @@ namespace NUnit.Framework
     /// </summary>
     public abstract class IncludeExcludeAttribute : NUnitAttribute
     {
-        private string? include;
-        private string? exclude;
-        private string? reason;
+        private string? _include;
+        private string? _exclude;
+        private string? _reason;
 
         /// <summary>
         /// Constructor with no included items specified, for use
@@ -24,7 +24,7 @@ namespace NUnit.Framework
         /// <param name="include">Comma-delimited list of included items</param>
         public IncludeExcludeAttribute(string? include)
         {
-            this.include = include;
+            this._include = include;
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Include
         {
-            get => this.include;
-            set => include = value;
+            get => this._include;
+            set => _include = value;
         }
 
         /// <summary>
@@ -44,8 +44,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Exclude
         {
-            get => this.exclude;
-            set => this.exclude = value;
+            get => this._exclude;
+            set => this._exclude = value;
         }
 
         /// <summary>
@@ -53,8 +53,8 @@ namespace NUnit.Framework
         /// </summary>
         public string? Reason
         {
-            get => reason;
-            set => reason = value;
+            get => _reason;
+            set => _reason = value;
         }
     }
 }
