@@ -49,5 +49,17 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(_context.TestCaseTimeout, Is.EqualTo(50));
         }
 #endif
+
+        [Test]
+        public void CancelAfterAttribute()
+        {
+            var attr = new CancelAfterAttribute(50) as IApplyToContext;
+            attr.ApplyToContext(_context);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_context.TestCaseTimeout, Is.EqualTo(50));
+                Assert.That(_context.UseCancellation, Is.True);
+            });
+        }
     }
 }

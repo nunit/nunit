@@ -29,18 +29,32 @@ namespace NUnit.Framework.Internal.Commands
 
             Test.Fixture ??= context.TestObject;
 
-            RunTestMethodInThreadAbortSafeZone(context, () =>
+            try
             {
-                BeforeTest(context);
-                context.CurrentResult = innerCommand.Execute(context);
-            });
-
-            if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                RunTestMethodInThreadAbortSafeZone(context, () =>
+                {
+                    BeforeTest(context);
+                    context.CurrentResult = innerCommand.Execute(context);
+                });
+            }
+            catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
             {
-                RunTestMethodInThreadAbortSafeZone(context, () => AfterTest(context));
+                // Even if the operation is cancelled, we still want to run the TearDown methods.
+                RunAfterTestCommand();
+                throw;
             }
 
+            RunAfterTestCommand();
+
             return context.CurrentResult;
+
+            void RunAfterTestCommand()
+            {
+                if (context.ExecutionStatus != TestExecutionStatus.AbortRequested)
+                {
+                    RunTestMethodInThreadAbortSafeZone(context, () => AfterTest(context));
+                }
+            }
         }
 
         /// <summary>

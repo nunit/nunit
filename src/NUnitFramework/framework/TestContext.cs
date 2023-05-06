@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -131,6 +132,11 @@ namespace NUnit.Framework
         /// when using the <see cref="RetryAttribute"/> or <see cref="RepeatAttribute"/>.
         /// </summary>
         public int CurrentRepeatCount => _testExecutionContext.CurrentRepeatCount;
+
+        /// <summary>
+        /// Gets the <see cref="CancellationToken"/> for the test case.
+        /// </summary>
+        public CancellationToken CancellationToken => _testExecutionContext.CancellationToken;
 
         #endregion
 

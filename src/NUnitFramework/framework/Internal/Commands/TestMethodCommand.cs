@@ -1,7 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Commands
 {
@@ -17,7 +19,7 @@ namespace NUnit.Framework.Internal.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethodCommand"/> class.
         /// </summary>
-        /// <param name="testMethod">The test.</param>
+        /// <param name="testMethod">The test.</param> 
         public TestMethodCommand(TestMethod testMethod) : base(testMethod)
         {
             _testMethod = testMethod;
@@ -57,17 +59,30 @@ namespace NUnit.Framework.Internal.Commands
         {
             var methodInfo = MethodInfoCache.Get(_testMethod.Method);
 
+            bool lastParameterAcceptsCancellationToken = methodInfo.Parameters.LastParameterAcceptsCancellationToken();
+
             if (methodInfo.IsAsyncOperation)
             {
-                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context));
+                return AsyncToSyncAdapter.Await(() => InvokeTestMethod(context, lastParameterAcceptsCancellationToken));
             }
 
-            return InvokeTestMethod(context);
+            return InvokeTestMethod(context, lastParameterAcceptsCancellationToken);
         }
 
-        private object? InvokeTestMethod(TestExecutionContext context)
+        private object? InvokeTestMethod(TestExecutionContext context, bool lastParameterAcceptsCancellationToken)
         {
-            return _testMethod.Method.Invoke(context.TestObject, _arguments);
+            object?[] arguments = _arguments;
+
+            if (lastParameterAcceptsCancellationToken &&
+                !arguments.LastArgumentIsCancellationToken())
+            {
+                // Add our CancellationToken as an extra argument to the test method
+                arguments = new object?[_arguments.Length + 1];
+                Array.Copy(_arguments, arguments, _arguments.Length);
+                arguments[_arguments.Length] = context.CancellationToken;
+            }
+
+            return _testMethod.Method.Invoke(context.TestObject, arguments);
         }
     }
 }

@@ -144,12 +144,18 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     command = new FixturePerTestCaseCommand(command);
                 }
-                // If a timeout is specified, create a TimeoutCommand
+
+                // If a timeout is specified, create a TimeoutCommand or CancelAfterCommand
                 // Get Timeout set on this test or set at a higher level
                 int timeout = Test.Properties.TryGet(PropertyNames.Timeout, Context.TestCaseTimeout);
+                bool useCancellation = Test.Properties.TryGet(PropertyNames.UseCancellation, Context.UseCancellation);
 
                 if (timeout > 0)
-                    command = new TimeoutCommand(command, timeout, _debugger);
+                {
+                    command = useCancellation ?
+                        new CancelAfterCommand(command, timeout, _debugger) :
+                        new TimeoutCommand(command, timeout, _debugger);
+                }
 
                 // Add wrappers for repeatable tests after timeout so the timeout is reset on each repeat
                 foreach (var repeatableAttribute in method.RepeatTestAttributes)

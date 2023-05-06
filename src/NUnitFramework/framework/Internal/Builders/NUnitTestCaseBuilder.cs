@@ -2,6 +2,7 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework.Internal.Builders
 {
@@ -195,6 +196,13 @@ namespace NUnit.Framework.Internal.Builders
             else if (parms is null || !parms.HasExpectedResult)
             {
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
+            }
+
+            if (parameters.LastParameterAcceptsCancellationToken() &&
+               (arglist is null || !arglist.LastArgumentIsCancellationToken()))
+            {
+                // Implict CancellationToken argument
+                argsProvided++;
             }
 
             if (argsProvided > 0 && maxArgsNeeded == 0)

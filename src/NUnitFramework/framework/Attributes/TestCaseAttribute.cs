@@ -8,6 +8,7 @@ using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -308,6 +309,14 @@ namespace NUnit.Framework
                     parms.ExpectedResult = expectedResultInTargetType;
                 }
 
+                // Special handling for CancellationToken
+                if (parameters.LastParameterAcceptsCancellationToken() &&
+                   (!Arguments.LastArgumentIsCancellationToken()))
+                {
+                    // Implict CancellationToken argument
+                    argsProvided++;
+                }
+
                 // Special handling for params arguments
                 if (argsNeeded > 0 && argsProvided >= argsNeeded - 1)
                 {
@@ -344,8 +353,8 @@ namespace NUnit.Framework
                     }
                 }
 
-                //Special handling for optional parameters
-                if (parms.Arguments.Length < argsNeeded)
+                // Special handling for optional parameters
+                if (argsProvided < argsNeeded)
                 {
                     var newArgList = new object?[parameters.Length];
                     Array.Copy(parms.Arguments, newArgList, parms.Arguments.Length);

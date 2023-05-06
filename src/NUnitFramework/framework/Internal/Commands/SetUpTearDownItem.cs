@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal.Commands
                     if (context.CurrentResult.AssertionResults.Count > oldCount)
                         context.CurrentResult.RecordTestCompletion();
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (!context.CancellationToken.IsCancellationRequested)
                 {
                     context.CurrentResult.RecordTearDownException(ex);
                 }

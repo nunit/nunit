@@ -1,18 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.Framework.Attributes;
+#if THREAD_ABORT
+using System.Linq;
 using NUnit.TestData;
-#if THREAD_ABORT
-#endif
-#if THREAD_ABORT
 #endif
 
 namespace NUnit.Framework.Tests.Attributes
@@ -20,91 +18,6 @@ namespace NUnit.Framework.Tests.Attributes
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests
     {
-        private const string FailureMessage = "The test has failed";
-        private const string IgnoreMessage = "The test was ignored";
-        private const string InconclusiveMessage = "The test was inconclusive";
-
-        public class TestAction
-        {
-            public string Name { get; }
-            public Action Action { get; }
-            public Action<ITestResult> Assertion { get; }
-
-            public TestAction(Action action, Action<ITestResult> assertion, string name)
-            {
-                Action = action;
-                Assertion = assertion;
-                Name = name;
-            }
-
-            public override string ToString()
-            {
-                return Name;
-            }
-        }
-
-        private static IEnumerable<TestAction> PossibleTestOutcomes
-        {
-            get
-            {
-                yield return new TestAction(Assert.Pass, AssertPassedResult, "Pass");
-                yield return new TestAction(() => throw new Exception(), AssertExceptionResult, "Exception");
-                yield return new TestAction(() => Assert.Fail(FailureMessage), AssertFailResult, "Fail");
-                yield return new TestAction(() => Assert.Ignore(IgnoreMessage), AssertIgnoreResult, "Ignore");
-                yield return new TestAction(() => Assert.Inconclusive(InconclusiveMessage), AssertInconclusiveResult, "Inconclusive");
-                yield return new TestAction(MultipleFail, AssertFailResult, "Multiple > Fail");
-                yield return new TestAction(AsynchronousMultipleFail, AssertFailResult, "Multiple > Async Fail");
-            }
-        }
-
-        private static void MultipleFail()
-        {
-            Assert.Multiple(() => Assert.Fail(FailureMessage));
-        }
-
-        private static void AsynchronousMultipleFail()
-        {
-            Assert.Multiple(async () =>
-            {
-                await System.Threading.Tasks.Task.Yield();
-                Assert.Fail(FailureMessage);
-            });
-        }
-
-        private static void AssertPassedResult(ITestResult result)
-        {
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-        }
-
-        private static void AssertExceptionResult(ITestResult result)
-        {
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.ResultState.Label, Is.EqualTo(ResultState.Error.Label));
-        }
-
-        private static void AssertFailResult(ITestResult result)
-        {
-            AssertOutcome(result, TestStatus.Failed, FailureMessage);
-        }
-
-        private static void AssertIgnoreResult(ITestResult result)
-        {
-            AssertOutcome(result, TestStatus.Skipped, IgnoreMessage);
-        }
-
-        private static void AssertInconclusiveResult(ITestResult result)
-        {
-            AssertOutcome(result, TestStatus.Inconclusive, InconclusiveMessage);
-        }
-
-        private static void AssertOutcome(ITestResult result, TestStatus status, string message)
-        {
-            Assert.That(result.ResultState.Status, Is.EqualTo(status));
-            Assert.That(result.ResultState.Site, Is.EqualTo(FailureSite.Test));
-            Assert.That(result.Message, Is.EqualTo(message));
-        }
-
         private sealed class SampleTests
         {
             private const int TimeExceedingTimeout = 500;
@@ -167,7 +80,7 @@ namespace NUnit.Framework.Tests.Attributes
 
         [Test]
         public void TestThatCompletesWithinTimeoutPeriodHasItsOriginalResultPropagated(
-            [ValueSource(nameof(PossibleTestOutcomes))] TestAction test,
+            [ValueSource(typeof(TestAction), nameof(TestAction.PossibleTestOutcomes))] TestAction test,
             [Values] bool isDebuggerAttached)
         {
             // given
@@ -185,7 +98,7 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         [Test]
-        [TestCaseSource(nameof(PossibleTestOutcomes))]
+        [TestCaseSource(typeof(TestAction), nameof(TestAction.PossibleTestOutcomes))]
         public void TestThatTimesOutIsRanToCompletionAndItsResultIsPropagatedWhenDebuggerIsAttached(TestAction test)
         {
             // given
