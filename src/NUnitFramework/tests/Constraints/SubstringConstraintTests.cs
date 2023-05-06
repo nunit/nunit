@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
                 var newConstraint = subStringConstraint.Using(StringComparison.CurrentCultureIgnoreCase).IgnoreCase;
             });
 
-            var stringConstraint = (StringConstraint)new SubstringConstraint("hello"); ;
+            var stringConstraint = (StringConstraint)new SubstringConstraint("hello");
             Assert.DoesNotThrow(() =>
             {
                 var newConstraint = (SubstringConstraint)stringConstraint.IgnoreCase;

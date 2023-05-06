@@ -79,20 +79,24 @@ namespace NUnit.Framework.Attributes
             foreach (NUnit.Framework.Internal.TestCaseParameters parms in strategy.GetTestCases(sources))
             {
                 for (int i = 1; i < features; i++)
+                {
                     for (int j = 0; j < i; j++)
                     {
                         string? a = parms.Arguments[i] as string;
                         string? b = parms.Arguments[j] as string;
                         pairs[a + b] = null;
                     }
+                }
 
                 ++cases;
             }
 
             int expectedPairs = 0;
             for (int i = 1; i < features; i++)
+            {
                 for (int j = 0; j < i; j++)
                     expectedPairs += dimensions[i] * dimensions[j];
+            }
 
             Assert.That(pairs, Has.Count.EqualTo(expectedPairs), "Number of pairs is incorrect");
             Assert.That(cases, Is.AtMost(bestSoFar), "Regression: Number of test cases exceeded target previously reached");

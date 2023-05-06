@@ -204,8 +204,10 @@ namespace NUnit.Common
             Token token = NextToken();
 
             foreach (TokenKind kind in kinds)
+            {
                 if (token.Kind == kind)
                     return token;
+            }
 
             throw InvalidTokenError(token);
         }
@@ -216,8 +218,10 @@ namespace NUnit.Common
             Token token = NextToken();
 
             foreach (Token item in valid)
+            {
                 if (token == item)
                     return token;
+            }
 
             throw InvalidTokenError(token);
         }
@@ -232,8 +236,10 @@ namespace NUnit.Common
         private bool LookingAt(params Token[] tokens)
         {
             foreach (Token token in tokens)
+            {
                 if (LookAhead == token)
                     return true;
+            }
 
             return false;
         }

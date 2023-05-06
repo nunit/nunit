@@ -45,7 +45,9 @@ namespace NUnit.Framework.Internal
                 currentPlatform = new OSPlatform(PlatformID.MacOSX, os.Version);
             }
             else
+            {
                 currentPlatform = new OSPlatform(os.Platform, os.Version);
+            }
 
             return currentPlatform;
         });

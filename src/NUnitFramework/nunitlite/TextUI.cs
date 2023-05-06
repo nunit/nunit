@@ -462,16 +462,22 @@ namespace NUnitLite
                     DisplayErrorsFailuresAndWarnings(childResult);
             }
             else if (display)
+            {
                 DisplayTestResult(result);
+            }
         }
 
         private void DisplayNotRunResults(ITestResult result)
         {
             if (result.HasChildren)
+            {
                 foreach (ITestResult childResult in result.Children)
                     DisplayNotRunResults(childResult);
+            }
             else if (result.ResultState.Status == TestStatus.Skipped)
+            {
                 DisplayTestResult(result);
+            }
         }
 
         private static readonly char[] TRIM_CHARS = new char[] { '\r', '\n' };

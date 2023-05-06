@@ -20,12 +20,14 @@ namespace NUnit.Framework.Internal.Filters {
 
             FilterPairs = new List<TestFilter[]>();
             foreach (var part1 in filterParts)
-            foreach (var part2 in filterParts)
+            {
+                foreach (var part2 in filterParts)
             {
                 var and = new AndFilter(part1, new NotFilter(part2));
                 var or = new OrFilter(new NotFilter(part1), part2);
                 FilterPairs.Add(new TestFilter[2] {new NotFilter(and), or});
                 FilterPairs.Add(new TestFilter[2] {and, new NotFilter(or)});
+            }
             }
         }
 

@@ -114,8 +114,10 @@ namespace NUnit.Framework.Internal
                 test.RunState = RunState;
 
             foreach (string key in Properties.Keys)
+            {
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
+            }
         }
 
         /// <summary>

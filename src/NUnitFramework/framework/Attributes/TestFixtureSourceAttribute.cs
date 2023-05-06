@@ -155,8 +155,10 @@ namespace NUnit.Framework
                         }
 
                         if (Category is not null)
+                        {
                             foreach (string cat in Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
+                        }
 
                         data.Add(parms);
                     }
@@ -186,9 +188,11 @@ namespace NUnit.Framework
 
                 var field = member as FieldInfo;
                 if (field is not null)
+                {
                     return field.IsStatic
                         ? (IEnumerable?)field.GetValue(null)
                         : SourceMustBeStaticError();
+                }
 
                 var property = member as PropertyInfo;
                 if (property is not null)
@@ -201,9 +205,11 @@ namespace NUnit.Framework
 
                 var m = member as MethodInfo;
                 if (m is not null)
+                {
                     return m.IsStatic
                         ? m.InvokeMaybeAwait<IEnumerable?>()
                         : SourceMustBeStaticError();
+                }
             }
 
             return null;

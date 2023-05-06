@@ -142,6 +142,7 @@ namespace NUnit.Framework.Internal
             FrameworkVersion = ClrVersion = version;
 
             if (version.Major > 0) // 0 means any version
+            {
                 switch (Runtime)
                 {
                     case RuntimeType.NetCore:
@@ -184,6 +185,7 @@ namespace NUnit.Framework.Internal
                         }
                         break;
                 }
+            }
         }
 
         private static void ThrowInvalidFrameworkVersion(Version version)
@@ -321,7 +323,9 @@ namespace NUnit.Framework.Internal
             if (Runtime != RuntimeType.Any
                 && target.Runtime != RuntimeType.Any
                 && Runtime != target.Runtime)
+            {
                 return false;
+            }
 
             if (AllowAnyVersion || target.AllowAnyVersion)
                 return true;

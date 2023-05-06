@@ -92,7 +92,9 @@ namespace NUnit.Framework.Internal.Builders
                 // See if we need to add a CombinatorialAttribute for parameterized data
                 if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))
                     && !builders.Any(builder => builder is CombiningStrategyAttribute))
+                {
                     builders.Add(new CombinatorialAttribute());
+                }
 
                 foreach (var attr in builders)
                 {

@@ -183,8 +183,10 @@ namespace NUnit.Framework.Constraints
             if (_externalComparers is not null)
             {
                 foreach (EqualityAdapter adapter in _externalComparers)
+                {
                     if (adapter.CanCompare(x, y))
                         return adapter;
+                }
             }
 
             return null;

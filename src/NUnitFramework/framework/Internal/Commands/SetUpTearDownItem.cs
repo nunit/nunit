@@ -62,6 +62,7 @@ namespace NUnit.Framework.Internal.Commands
             // As of NUnit 3.0, we will only run teardown at a given
             // inheritance level if we actually ran setup at that level.
             if (_setUpWasRun)
+            {
                 try
                 {
                     // Count of assertion results so far
@@ -82,6 +83,7 @@ namespace NUnit.Framework.Internal.Commands
                 {
                     context.CurrentResult.RecordTearDownException(ex);
                 }
+            }
         }
 
         private void RunSetUpOrTearDownMethod(TestExecutionContext context, IMethodInfo method)

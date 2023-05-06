@@ -278,7 +278,9 @@ namespace NUnit.Framework
                     Properties.Set(PropertyNames.IgnoreUntilDate, _untilDate.Value.ToString("u"));
                 }
                 else
+                {
                     RunState = RunState.NotRunnable;
+                }
             }
         }
 
@@ -351,7 +353,9 @@ namespace NUnit.Framework
                     for (var i = parms.Arguments.Length; i < parameters.Length; i++)
                     {
                         if (parameters[i].IsOptional)
+                        {
                             newArgList[i] = Type.Missing;
+                        }
                         else
                         {
                             if (i < parms.Arguments.Length)

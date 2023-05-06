@@ -38,8 +38,10 @@ namespace NUnit.Framework.Constraints.Comparers
         public bool DidCompare(object x, object y)
         {
             foreach (var comparison in _comparisons)
+            {
                 if (ReferenceEquals(comparison.X, x) && ReferenceEquals(comparison.Y, y))
                     return true;
+            }
 
             return false;
         }

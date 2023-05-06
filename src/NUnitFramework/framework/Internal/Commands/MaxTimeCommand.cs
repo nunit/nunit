@@ -39,8 +39,10 @@ namespace NUnit.Framework.Internal.Commands
                     double elapsedTime = result.Duration * 1000d;
 
                     if (elapsedTime > maxTime)
+                    {
                         result.SetResult(ResultState.Failure,
                             $"Elapsed time of {elapsedTime}ms exceeds maximum of {maxTime}ms");
+                    }
                 }
             };
         }

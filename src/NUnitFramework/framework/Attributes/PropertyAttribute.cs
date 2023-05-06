@@ -80,8 +80,10 @@ namespace NUnit.Framework
         public virtual void ApplyToTest(Test test)
         {
             foreach (string key in Properties.Keys)
-                foreach(object value in Properties[key])
+            {
+                foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
+            }
         }
 
         #endregion

@@ -31,13 +31,17 @@ namespace NUnit.Framework.Internal.Builders
                 object?[] testdata = new object?[sources.Length];
 
                 for (int i = 0; i < sources.Length; i++)
+                {
                     if (enumerators[i].MoveNext())
                     {
                         testdata[i] = enumerators[i].Current;
                         gotData = true;
                     }
                     else
+                    {
                         testdata[i] = null;
+                    }
+                }
 
                 if (!gotData)
                     break;

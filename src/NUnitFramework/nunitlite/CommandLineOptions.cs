@@ -253,9 +253,10 @@ namespace NUnit.Common
                 isValid = false;
 
                 foreach (string valid in validValues)
+                {
                     if (string.Compare(valid, val, StringComparison.OrdinalIgnoreCase) == 0)
                         return valid;
-
+                }
             }
 
             if (!isValid)
@@ -304,7 +305,9 @@ namespace NUnit.Common
                     var fullTestListPath = ExpandToFullPath(testListFile);
 
                     if (!File.Exists(fullTestListPath))
+                    {
                         ErrorMessages.Add("Unable to locate file: " + testListFile);
+                    }
                     else
                     {
                         try
@@ -421,14 +424,20 @@ namespace NUnit.Common
             Add("<>", v =>
             {
                 if (LooksLikeAnOption(v))
+                {
                     ErrorMessages.Add("Invalid argument: " + v);
+                }
                 else if (InputFileRequired)
+                {
                     if (InputFile is null)
                         InputFile = v;
                     else
                         ErrorMessages.Add("Multiple file names are not allowed on the command-line.\n    Invalid entry: " + v);
+                }
                 else
+                {
                     ErrorMessages.Add("Do not provide a file name when running a self-executing test.\n    Invalid entry: " + v);
+                }
             });
         }
 

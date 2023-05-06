@@ -34,12 +34,16 @@ namespace NUnit.Common
         public override void Write(ColorStyle style, string value)
         {
             if (ColorEnabled)
+            {
                 using (new ColorConsole(style))
                 {
                     Write(value);
                 }
+            }
             else
+            {
                 Write(value);
+            }
         }
 
         /// <summary>
@@ -50,12 +54,16 @@ namespace NUnit.Common
         public override void WriteLine(ColorStyle style, string value)
         {
             if (ColorEnabled)
+            {
                 using (new ColorConsole(style))
                 {
                     WriteLine(value);
                 }
+            }
             else
+            {
                 WriteLine(value);
+            }
         }
 
         /// <summary>

@@ -206,7 +206,9 @@ namespace NUnit.Framework.Internal
                 if (arg is Array {Rank: 1} argArray)
                 {
                     if (argArray.Length == 0)
+                    {
                         display = "[]";
+                    }
                     else
                     {
                         var builder = new StringBuilder();
@@ -244,15 +246,25 @@ namespace NUnit.Framework.Internal
                 else if (arg is double dbl)
                 {
                     if (double.IsNaN(dbl))
+                    {
                         display = "double.NaN";
+                    }
                     else if (double.IsPositiveInfinity(dbl))
+                    {
                         display = "double.PositiveInfinity";
+                    }
                     else if (double.IsNegativeInfinity(dbl))
+                    {
                         display = "double.NegativeInfinity";
+                    }
                     else if (dbl == double.MaxValue)
+                    {
                         display = "double.MaxValue";
+                    }
                     else if (dbl == double.MinValue)
+                    {
                         display = "double.MinValue";
+                    }
                     else
                     {
                         if (display.IndexOf('.') == -1)
@@ -263,15 +275,25 @@ namespace NUnit.Framework.Internal
                 else if (arg is float f)
                 {
                     if (float.IsNaN(f))
+                    {
                         display = "float.NaN";
+                    }
                     else if (float.IsPositiveInfinity(f))
+                    {
                         display = "float.PositiveInfinity";
+                    }
                     else if (float.IsNegativeInfinity(f))
+                    {
                         display = "float.NegativeInfinity";
+                    }
                     else if (f == float.MaxValue)
+                    {
                         display = "float.MaxValue";
+                    }
                     else if (f == float.MinValue)
+                    {
                         display = "float.MinValue";
+                    }
                     else
                     {
                         if (display.IndexOf('.') == -1)

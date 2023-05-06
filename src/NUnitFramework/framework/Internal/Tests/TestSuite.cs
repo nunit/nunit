@@ -88,8 +88,10 @@ namespace NUnit.Framework.Internal
             Fixture  = suite.Fixture;
 
             foreach (string key in suite.Properties.Keys)
-            foreach (object val in suite.Properties[key])
+            {
+                foreach (object val in suite.Properties[key])
                 Properties.Add(key, val);
+            }
 
             foreach (var child in suite._tests)
             {

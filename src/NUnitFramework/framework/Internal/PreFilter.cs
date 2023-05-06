@@ -51,8 +51,10 @@ namespace NUnit.Framework.Internal
             // Check to see if it makes any of the existing
             // filter elements redundant.
             for (int index = _filters.Count - 1; index >= 0; index--)
+            {
                 if (_filters[index].Text.StartsWith(filterText + "."))
                     _filters.RemoveAt(index);
+            }
 
             _filters.Add(new FilterElement(filterText));
         }

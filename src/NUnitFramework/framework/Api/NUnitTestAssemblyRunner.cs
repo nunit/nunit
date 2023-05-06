@@ -292,7 +292,9 @@ namespace NUnit.Framework.Api
 #if NETFRAMEWORK
             if (Settings.TryGetValue(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
                 (bool)pauseBeforeRun)
+            {
                 PauseBeforeRun();
+            }
 #endif
 
             context.Dispatcher.Start(topLevelWorkItem);
@@ -326,11 +328,17 @@ namespace NUnit.Framework.Api
 
             if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
                 (bool)runOnMainThread)
+            {
                 context.Dispatcher = new MainThreadWorkItemDispatcher();
+            }
             else if (levelOfParallelism > 0)
+            {
                 context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            }
             else
+            {
                 context.Dispatcher = new SimpleWorkItemDispatcher();
+            }
 
             return context;
         }

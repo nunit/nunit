@@ -21,7 +21,9 @@ namespace NUnit.Framework.Constraints.Comparers
 
             if (xGenericTypeDefinition != typeof(KeyValuePair<,>) ||
                 yGenericTypeDefinition != typeof(KeyValuePair<,>))
+            {
                 return null;
+            }
 
             var keyTolerance = Tolerance.Exact;
             object? xKey = xType.GetProperty("Key")!.GetValue(x, null);

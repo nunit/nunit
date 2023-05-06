@@ -101,8 +101,10 @@ namespace NUnit.Framework.Internal
                     Type[] argTypes = argType.GetGenericArguments();
 
                     if (argTypes.Length == genericArgTypes.Length)
+                    {
                         for (int i = 0; i < genericArgTypes.Length; i++)
                             TryApplyArgType(genericArgTypes[i], argTypes[i]);
+                    }
                 }
             }
         }

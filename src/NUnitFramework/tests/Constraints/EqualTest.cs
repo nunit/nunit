@@ -94,7 +94,9 @@ namespace NUnit.Framework.Constraints
                 if (caret > minLength ||
                     expected.Substring(0, minMatch) != actual.Substring(0, minMatch) ||
                     expected[caret] == actual[caret])
+                {
                     Assert.Fail("Message Error: Caret does not point at first mismatch..." + nl + ex.Message);
+                }
             }
 
             if (expected.Length > 68 || actual.Length > 68 || caret > 68)

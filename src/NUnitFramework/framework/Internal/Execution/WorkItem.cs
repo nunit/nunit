@@ -218,7 +218,9 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnSeparateThread(targetApartment);
             }
             else
+            {
                 RunOnCurrentThread();
+            }
         }
 
         private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
@@ -405,8 +407,10 @@ namespace NUnit.Framework.Internal.Execution
             var list = new List<IMethodInfo>();
 
             foreach (var method in methods)
+            {
                 if (method.TypeInfo.Type == type)
                     list.Add(method);
+            }
 
             return list;
         }
@@ -500,7 +504,9 @@ namespace NUnit.Framework.Internal.Execution
             // Item is not explicitly marked, so check the inherited context
             if (Context.ParallelScope.HasFlag(ParallelScope.Children) ||
                 Test is TestFixture && Context.ParallelScope.HasFlag(ParallelScope.Fixtures))
+            {
                 return ParallelExecutionStrategy.Parallel;
+            }
 
             // There is no scope specified either on the item itself or in the context.
             // In that case, simple work items are test cases and just run on the same

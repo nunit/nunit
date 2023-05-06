@@ -142,9 +142,13 @@ namespace NUnit.Framework.Internal
             {
                 var expectedProps = new List<string>();
                 foreach (string key in test.Properties.Keys)
+                {
                     foreach (object? value in test.Properties[key])
+                    {
                         if (value is not null)
                             expectedProps.Add(key + "=" + value);
+                    }
+                }
 
                 TNode? propsNode = topNode.SelectSingleNode("properties");
                 Assert.That(propsNode, Is.Not.Null);

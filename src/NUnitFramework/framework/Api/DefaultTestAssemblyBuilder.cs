@@ -201,8 +201,10 @@ namespace NUnit.Framework.Api
             var result = new List<Type>();
 
             foreach (Type type in assembly.GetTypes())
+            {
                 if (filter.IsMatch(type))
                     result.Add(type);
+            }
 
             return result;
         }

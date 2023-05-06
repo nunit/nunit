@@ -306,8 +306,10 @@ namespace NUnit.Framework.Internal
                        if (parameters.Length != parameterTypes.Length) return false;
 
                        for (var i = 0; i < parameterTypes.Length; i++)
+                       {
                            if (parameters[i].ParameterType != parameterTypes[i])
                                return false;
+                       }
 
                        return true;
                    });
@@ -326,7 +328,8 @@ namespace NUnit.Framework.Internal
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                      .SingleOrDefault(candidate =>
                      {
-                         if (candidate.Name != name) return false;
+                         if (candidate.Name != name)
+                             return false;
 
                          var indexParameters = candidate.GetIndexParameters();
                          if (indexParameters.Length != indexParameterTypes.Length) return false;

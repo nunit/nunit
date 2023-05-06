@@ -154,8 +154,10 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 foreach (var q in _innerQueues)
+                {
                     if (!q.IsEmpty)
                         return false;
+                }
 
                 return true;
             }
@@ -256,9 +258,13 @@ namespace NUnit.Framework.Internal.Execution
                 // Dequeue our work item
                 WorkItem? work = null;
                 while (work is null)
+                {
                     foreach (var q in _innerQueues)
+                    {
                         if (q.TryDequeue(out work))
                             break;
+                    }
+                }
 
                 // Add to items processed using CAS
                 Interlocked.Increment(ref _itemsProcessed);
@@ -353,13 +359,17 @@ namespace NUnit.Framework.Internal.Execution
             sb.AppendLine($"Contents of {Name} at isolation level {_savedState.Count}");
 
             if (IsEmpty)
+            {
                 sb.AppendLine("  <empty>");
+            }
             else
+            {
                 for (int priority = 0; priority < PRIORITY_LEVELS; priority++)
                 {
                     foreach (WorkItem work in _innerQueues[priority])
                         sb.AppendLine($"pri-{priority}: {work.Name}");
                 }
+            }
 
             int level = 0;
             foreach (var state in _savedState)

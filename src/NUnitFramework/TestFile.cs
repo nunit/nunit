@@ -23,7 +23,9 @@ namespace NUnit.TestUtilities
         public TestFile(string fileName, string contentSource, bool isContent)
         {
             if (Path.IsPathRooted(fileName))
+            {
                 _fileInfo = new FileInfo(fileName);
+            }
             else
             {
                 var tempPath = Path.GetTempPath();
@@ -90,10 +92,12 @@ namespace NUnit.TestUtilities
                     if (count == 0)
                         break;
                     foreach (char c in buffer)
+                    {
                         if (c == target)
                             return offset;
                         else
                             offset++;
+                    }
                 }
 
                 return -1L;
@@ -116,9 +120,13 @@ namespace NUnit.TestUtilities
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
+            {
                 if (disposing)
+                {
                     if (_fileInfo.Exists)
                         _fileInfo.Delete();
+                }
+            }
 
             _disposedValue = true;
         }

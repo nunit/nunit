@@ -62,8 +62,10 @@ namespace NUnit.Framework.Internal.Filters
             TNode result = parentNode.AddElement(ElementName);
 
             if (recursive)
+            {
                 foreach (ITestFilter filter in Filters)
                     filter.AddToXml(result, true);
+            }
 
             return result;
         }

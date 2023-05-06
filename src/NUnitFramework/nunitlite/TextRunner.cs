@@ -303,7 +303,9 @@ namespace NUnitLite
             var specs = _options.ExploreOutputSpecifications;
 
             if (specs.Count == 0)
+            {
                 new TestCaseOutputWriter().WriteTestFile(testNode, Console.Out);
+            }
             else
             {
                 var outputManager = new OutputManager(_options.WorkDirectory);
@@ -324,7 +326,9 @@ namespace NUnitLite
             var runSettings = new Dictionary<string, object>();
 
             if (options.PreFilters.Count > 0)
+            {
                 runSettings[FrameworkPackageSettings.LOAD] = options.PreFilters;
+            }
             else if (options.TestList.Count > 0)
             {
                 var prefilters = new List<string>();

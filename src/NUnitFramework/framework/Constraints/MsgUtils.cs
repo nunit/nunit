@@ -299,7 +299,9 @@ namespace NUnit.Framework.Constraints
         private static string FormatDouble(double d)
         {
             if (double.IsNaN(d) || double.IsInfinity(d))
+            {
                 return d.ToString();
+            }
             else
             {
                 string s = d.ToString("G17", CultureInfo.InvariantCulture);
@@ -314,7 +316,9 @@ namespace NUnit.Framework.Constraints
         private static string FormatFloat(float f)
         {
             if (float.IsNaN(f) || float.IsInfinity(f))
+            {
                 return f.ToString();
+            }
             else
             {
                 string s = f.ToString("G9", CultureInfo.InvariantCulture);
@@ -546,9 +550,13 @@ namespace NUnit.Framework.Constraints
                 sb.Append(ELLIPSIS);
             }
             else if (clipStart > 0)
+            {
                 sb.Append(s.Substring(clipStart));
+            }
             else
+            {
                 sb.Append(s);
+            }
 
             return sb.ToString();
         }

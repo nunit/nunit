@@ -304,10 +304,12 @@ namespace NUnit.Framework.Interfaces
                 writer.WriteAttributeString(pair.Key, pair.Value);
 
             if (Value is not null)
+            {
                 if (ValueIsCDATA)
                     writer.WriteCDataSafe(Value);
                 else
                     writer.WriteString(Value);
+            }
 
             var count = ChildNodes.Count;
             for (var i = 0; i < count; i++)
@@ -333,8 +335,10 @@ namespace NUnit.Framework.Interfaces
             }
 
             foreach (XmlNode child in xmlNode.ChildNodes)
+            {
                 if (child.NodeType == XmlNodeType.Element)
                     tNode.AddChildNode(FromXml(child));
+            }
 
             return tNode;
         }

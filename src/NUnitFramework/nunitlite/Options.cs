@@ -206,9 +206,11 @@ namespace NUnit.Options
                 throw new ArgumentOutOfRangeException (nameof(index));
             if (_c.Option.OptionValueType == OptionValueType.Required &&
                     index >= _values.Count)
+            {
                 throw new OptionException (string.Format (
                             _c.OptionSet.MessageLocalizer ("Missing required value for option '{0}'."), _c.OptionName),
                         _c.OptionName);
+            }
         }
 
         public string this [int index] {
@@ -304,20 +306,28 @@ namespace NUnit.Options
             _type        = ParsePrototype ();
 
             if (_count == 0 && _type != OptionValueType.None)
+            {
                 throw new ArgumentException (
                         "Cannot provide maxValueCount of 0 for OptionValueType.Required or " +
                             "OptionValueType.Optional.",
                         nameof(maxValueCount));
+            }
+
             if (_type == OptionValueType.None && maxValueCount > 1)
+            {
                 throw new ArgumentException (
                     $"Cannot provide maxValueCount of {maxValueCount} for OptionValueType.None.",
                     nameof(maxValueCount));
+            }
+
             if (Array.IndexOf (_names, "<>") >= 0 &&
                     ((_names.Length == 1 && _type != OptionValueType.None) ||
                      (_names.Length > 1 && MaxValueCount > 1)))
+            {
                 throw new ArgumentException (
                         "The default option handler '<>' cannot require values.",
                         nameof(prototype));
+            }
         }
 
         public string           Prototype => _prototype;
@@ -380,11 +390,16 @@ namespace NUnit.Options
                     continue;
                 _names [i] = name.Substring (0, end);
                 if (type == '\0' || type == name [end])
+                {
                     type = name [end];
+                }
                 else
+                {
                     throw new ArgumentException (
                         $"Conflicting option types: '{type}' vs. '{name[end]}'.",
                         "prototype");
+                }
+
                 AddSeparators (name, end, seps);
             }
 
@@ -392,9 +407,12 @@ namespace NUnit.Options
                 return OptionValueType.None;
 
             if (_count <= 1 && seps.Count != 0)
+            {
                 throw new ArgumentException (
                     $"Cannot provide key/value separators for Options taking {_count} value(s).",
                     "prototype");
+            }
+
             if (_count > 1) {
                 if (seps.Count == 0)
                     _separators = new[]{":", "="};
@@ -414,16 +432,22 @@ namespace NUnit.Options
                 switch (name [i]) {
                     case '{':
                         if (start != -1)
+                        {
                             throw new ArgumentException (
                                 $"Ill-formed name/value separator found in \"{name}\".",
                                 "prototype");
+                        }
+
                         start = i+1;
                         break;
                     case '}':
                         if (start == -1)
+                        {
                             throw new ArgumentException (
                                 $"Ill-formed name/value separator found in \"{name}\".",
                                 "prototype");
+                        }
+
                         seps.Add (name.Substring (start, i-start));
                         start = -1;
                         break;
@@ -434,9 +458,11 @@ namespace NUnit.Options
                 }
             }
             if (start != -1)
+            {
                 throw new ArgumentException (
                     $"Ill-formed name/value separator found in \"{name}\".",
                     "prototype");
+            }
         }
 
         public void Invoke (OptionContext c)
@@ -773,14 +799,19 @@ namespace NUnit.Options
         private void ParseValue (string option, OptionContext c)
         {
             if (option is not null)
+            {
                 foreach (string o in c.Option.ValueSeparators is not null
                         ? option.Split (c.Option.ValueSeparators, StringSplitOptions.None)
                         : new[]{option}) {
                     c.OptionValues.Add (o);
                 }
+            }
+
             if (c.OptionValues.Count == c.Option.MaxValueCount ||
                     c.Option.OptionValueType == OptionValueType.Optional)
+            {
                 c.Option.Invoke (c);
+            }
             else if (c.OptionValues.Count > c.Option.MaxValueCount) {
                 throw new OptionException (Localizer ($"Error: Found {c.OptionValues.Count} option values when expecting {c.Option.MaxValueCount}."),
                         c.OptionName);
@@ -856,7 +887,9 @@ namespace NUnit.Options
                     continue;
 
                 if (written < OptionWidth)
+                {
                     o.Write (new string (' ', OptionWidth - written));
+                }
                 else {
                     o.WriteLine ();
                     o.Write (new string (' ', OptionWidth));
@@ -968,7 +1001,10 @@ namespace NUnit.Options
                             start = -1;
                         }
                         else if (start < 0)
+                        {
                             start = i + 1;
+                        }
+
                         break;
                     case '}':
                         if (start < 0) {

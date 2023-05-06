@@ -67,8 +67,10 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 foreach (var q in Queues)
+                {
                     if (!q.IsEmpty)
                         return true;
+                }
 
                 return false;
             }

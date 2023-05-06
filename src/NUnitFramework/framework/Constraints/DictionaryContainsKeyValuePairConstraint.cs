@@ -46,8 +46,11 @@ namespace NUnit.Framework.Constraints
             if (TypeHelper.TryCast<IDictionary>(actual, out var dictionary))
             {
                 foreach (var entry in dictionary)
+                {
                     if (ItemsEqual(entry, _expected))
                         return true;
+                }
+
                 return false;
             }
 
@@ -59,8 +62,11 @@ namespace NUnit.Framework.Constraints
                 var enumerable = (IEnumerable)actual;
 
                 foreach (var item in enumerable)
+                {
                     if (ItemsEqual(item, expected))
                         return true;
+                }
+
                 return false;
             }
 

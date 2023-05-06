@@ -85,8 +85,10 @@ namespace NUnit.Framework.Assertions
                 get
                 {
                     foreach (var method in Methods)
+                    {
                         if (method.Name.StartsWith("Test"))
                             yield return method;
+                    }
                 }
             }
 

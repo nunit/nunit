@@ -264,9 +264,11 @@ namespace NUnit.Framework
                         yield return next;
                     }
                     else
+                    {
                         yield return _inRange
                             ? GetNext(randomizer, _min!, _max!)
                             : GetNext(randomizer);
+                    }
                 }
             }
 
@@ -648,7 +650,9 @@ namespace NUnit.Framework
                         yield return next;
                     }
                     else
+                    {
                         yield return randomizer.NextEnum(parameter.ParameterType);
+                    }
                 }
             }
         }

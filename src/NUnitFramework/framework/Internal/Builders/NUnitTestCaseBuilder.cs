@@ -176,12 +176,16 @@ namespace NUnit.Framework.Internal.Builders
                 var voidResult = Reflect.IsVoidOrUnit(AwaitAdapter.GetResultType(returnType));
 
                 if (!voidResult && (parms is null || !parms.HasExpectedResult))
+                {
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a void result when no result is expected");
+                }
 
                 if (voidResult && parms is not null && parms.HasExpectedResult)
+                {
                     return MarkAsNotRunnable(testMethod,
                         "Async test method must return an awaitable with a non-void result when a result is expected");
+                }
             }
             else if (metadata.IsVoidOrUnit)
             {
@@ -189,7 +193,9 @@ namespace NUnit.Framework.Internal.Builders
                     return MarkAsNotRunnable(testMethod, "Method returning void cannot have an expected result");
             }
             else if (parms is null || !parms.HasExpectedResult)
+            {
                 return MarkAsNotRunnable(testMethod, "Method has non-void return value, but no result is expected");
+            }
 
             if (argsProvided > 0 && maxArgsNeeded == 0)
                 return MarkAsNotRunnable(testMethod, "Arguments provided for method with no parameters");

@@ -140,8 +140,10 @@ namespace NUnit.Framework.Internal.Builders
                     // Count how many have arguments
                     int withArgs = 0;
                     foreach (var attr in attrs)
+                    {
                         if (HasArguments(attr))
                             withArgs++;
+                    }
 
                     // If all have args, just return them
                     if (withArgs == attrs.Length)
@@ -155,8 +157,10 @@ namespace NUnit.Framework.Internal.Builders
                     var result = new IFixtureBuilder[withArgs];
                     int count = 0;
                     foreach (var attr in attrs)
+                    {
                         if (HasArguments(attr))
                             result[count++] = attr;
+                    }
 
                     return result;
                 }

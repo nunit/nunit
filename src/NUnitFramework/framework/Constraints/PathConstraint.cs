@@ -62,7 +62,10 @@ namespace NUnit.Framework.Constraints
                 {
                     leadingSeparators += Path.DirectorySeparatorChar;
                 }
-                else break;
+                else
+                {
+                    break;
+                }
             }
 
             string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);

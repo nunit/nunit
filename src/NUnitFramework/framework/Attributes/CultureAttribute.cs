@@ -105,8 +105,10 @@ namespace NUnit.Framework
         public bool IsCultureSupported(string[] cultures)
         {
             foreach (string culture in cultures)
+            {
                 if (IsCultureSupported(culture))
                     return true;
+            }
 
             return false;
         }

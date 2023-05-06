@@ -26,11 +26,13 @@ namespace NUnit.Framework.Internal.Results
         public void ThrowsForNullException()
         {
             foreach (var method in RecordExceptionMethods)
-            foreach (var result in TestResults)
+            {
+                foreach (var result in TestResults)
             {
                 Assert.That(
                     () => method.Invoke(result, null!),
                     Throws.ArgumentNullException.With.Property("ParamName").EqualTo("ex"));
+            }
             }
         }
 
@@ -46,10 +48,14 @@ namespace NUnit.Framework.Internal.Results
             };
 
             foreach (var method in RecordExceptionMethods)
-            foreach (var result in TestResults)
-            foreach (var exception in exceptions)
+            {
+                foreach (var result in TestResults)
+                {
+                    foreach (var exception in exceptions)
             {
                 method.Invoke(result, exception);
+            }
+                }
             }
         }
     }

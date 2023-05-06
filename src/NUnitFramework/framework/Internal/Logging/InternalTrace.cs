@@ -50,7 +50,9 @@ namespace NUnit.Framework.Internal
 
             }
             else
+            {
                 _traceWriter.WriteLine($"InternalTrace: Ignoring attempted re-initialization from level {_traceLevel} to level {level}");
+            }
         }
 
         /// <summary>
@@ -72,7 +74,9 @@ namespace NUnit.Framework.Internal
 
             }
             else
+            {
                 _traceWriter.WriteLine($"InternalTrace: Ignoring attempted re-initialization from level {_traceLevel} to level {level}");
+            }
         }
 
         /// <summary>

@@ -49,8 +49,10 @@ namespace NUnit.Framework.Constraints
             var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
 
             foreach (object? obj in dictionary.Values)
+            {
                 if (ItemsEqual(obj, Expected))
                     return true;
+            }
 
             return false;
         }

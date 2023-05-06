@@ -100,7 +100,9 @@ namespace NUnit.Framework.Constraints
                 writer.WriteMessageLine(StreamsDiffer_1, expected.Length, offset);
             }
             else
+            {
                 writer.WriteMessageLine(StreamsDiffer_2, expected.Length, actual.Length);
+            }
         }
         #endregion
 
@@ -123,11 +125,13 @@ namespace NUnit.Framework.Constraints
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
                 if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
+                {
                     DisplayDifferences(
                         writer,
                         failurePoint.ExpectedValue,
                         failurePoint.ActualValue,
                         ++depth);
+                }
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write("  Extra:    ");
@@ -187,9 +191,13 @@ namespace NUnit.Framework.Constraints
             bool useOneIndex = expectedRank == actualRank;
 
             if (expectedArray is not null && actualArray is not null)
+            {
                 for (int r = 1; r < expectedRank && useOneIndex; r++)
+                {
                     if (expectedArray.GetLength(r) != actualArray.GetLength(r))
                         useOneIndex = false;
+                }
+            }
 
             int[] expectedIndices = MsgUtils.GetArrayIndicesFromCollectionIndex(expected, failurePoint.Position);
             if (useOneIndex)
@@ -226,11 +234,13 @@ namespace NUnit.Framework.Constraints
                 DisplayFailurePoint(writer, expected, actual, failurePoint, depth);
 
                 if (failurePoint.ExpectedHasData && failurePoint.ActualHasData)
+                {
                     DisplayDifferences(
                         writer,
                         failurePoint.ExpectedValue,
                         failurePoint.ActualValue,
                         ++depth);
+                }
                 else if (failurePoint.ActualHasData)
                 {
                     writer.Write($"  Extra:    < {MsgUtils.FormatValue(failurePoint.ActualValue)}, ... >");

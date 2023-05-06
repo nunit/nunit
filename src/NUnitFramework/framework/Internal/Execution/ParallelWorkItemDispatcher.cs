@@ -359,8 +359,10 @@ namespace NUnit.Framework.Internal.Execution
         private WorkShift? SelectNextShift()
         {
             foreach (var shift in Shifts)
+            {
                 if (shift.HasWork)
                     return shift;
+            }
 
             return null;
         }

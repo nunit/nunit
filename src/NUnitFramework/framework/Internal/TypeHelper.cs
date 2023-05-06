@@ -68,7 +68,9 @@ namespace NUnit.Framework.Internal
                         sb.Append(">");
                     }
                     else
+                    {
                         sb.Append(nestedClass);
+                    }
                 }
 
                 return sb.ToString();
@@ -109,9 +111,18 @@ namespace NUnit.Framework.Internal
                         display += ".0";
                     display += arg is double ? "d" : "f";
                 }
-                else if (arg is decimal) display += "m";
-                else if (arg is long) display += "L";
-                else if (arg is ulong) display += "UL";
+                else if (arg is decimal)
+                {
+                    display += "m";
+                }
+                else if (arg is long)
+                {
+                    display += "L";
+                }
+                else if (arg is ulong)
+                {
+                    display += "UL";
+                }
                 else if (arg is string)
                 {
                     if (display.Length > STRING_MAX)
@@ -234,8 +245,10 @@ namespace NUnit.Framework.Internal
                     }
 
                     if (convert)
+                    {
                         arglist[i] = Convert.ChangeType(arg, targetType,
                             System.Globalization.CultureInfo.InvariantCulture);
+                    }
                 }
             }
         }

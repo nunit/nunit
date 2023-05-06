@@ -158,12 +158,14 @@ namespace NUnit.Framework.Internal.Execution
                 _running = false;
 
             lock (_cancelLock)
+            {
                 if (_workerThread is not null && _currentWorkItem is not null)
                 {
                     _currentWorkItem.Cancel(force);
                     if (force)
                         _currentWorkItem = null;
                 }
+            }
         }
     }
 }

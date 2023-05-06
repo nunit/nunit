@@ -145,11 +145,13 @@ namespace NUnit.Framework.Internal.Builders
             foreach (var name in names)
             {
                 foreach (var child in suite.Tests)
+                {
                     if (child.Name == name)
                     {
                         suite = child;
                         break;
                     }
+                }
 
                 if (suite.Name != name)
                 {

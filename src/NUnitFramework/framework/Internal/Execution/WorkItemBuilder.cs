@@ -72,7 +72,9 @@ namespace NUnit.Framework.Internal.Execution
                         countOrderedItems++;
                     }
                     else
+                    {
                         work.Children.Add(childItem);
+                    }
                 }
 
                 if (countOrderedItems > 0)

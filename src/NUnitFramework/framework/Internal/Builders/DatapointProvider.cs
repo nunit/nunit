@@ -50,10 +50,14 @@ namespace NUnit.Framework.Internal.Builders
 
                 if (member.IsDefined(typeof(DatapointAttribute), true) &&
                     GetTypeFromMemberInfo(member) == parameterType)
+                {
                     return true;
+                }
                 else if (member.IsDefined(typeof(DatapointSourceAttribute), true) &&
                     GetElementTypeFromMemberInfo(member) == parameterType)
+                {
                     return true;
+                }
             }
 
             return false;

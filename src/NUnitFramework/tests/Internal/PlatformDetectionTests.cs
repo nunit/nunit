@@ -50,8 +50,10 @@ namespace NUnit.Framework.Internal
                 bool shouldPass = false;
 
                 foreach( string platform in expected )
+                {
                     if ( shouldPass = platform.ToLower() == testPlatform.ToLower() )
                         break;
+                }
 
                 bool didPass = helper.IsPlatformSupported( testPlatform );
 

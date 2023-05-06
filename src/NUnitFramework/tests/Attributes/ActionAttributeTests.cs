@@ -63,12 +63,16 @@ namespace NUnit.Framework
             var notExpected = new List<string>();
 
             foreach (var item in ExpectedEvents)
+            {
                 if (!ActionAttributeFixture.Events.Contains(item))
                     notFound.Add(item);
+            }
 
             foreach (var item in ActionAttributeFixture.Events)
+            {
                 if (!ExpectedEvents.Contains(item))
                     notExpected.Add(item);
+            }
 
             if (notFound.Count > 0 || notExpected.Count > 0)
             {
