@@ -17,7 +17,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A ConstraintResult</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            return new ConstraintResult(this, actual, actual == null);
+            return new ConstraintResult(this, actual, actual is null);
         }
     }
 }

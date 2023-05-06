@@ -17,9 +17,9 @@ namespace NUnit.Framework.Syntax
 
         public TestCompiler( string[]? assemblyNames, string? outputName )
         {
-            if ( assemblyNames != null && assemblyNames.Length > 0 )
+            if ( assemblyNames is not null && assemblyNames.Length > 0 )
                 Options.ReferencedAssemblies.AddRange( assemblyNames );
-            if ( outputName != null )
+            if ( outputName is not null)
                 Options.OutputAssembly = outputName;
 
             Options.IncludeDebugInformation = false;

@@ -150,7 +150,7 @@ namespace NUnit.Framework.Internal.Execution
                 while (true)
                 {
                     Event? e = _events.Dequeue( PumpState == EventPumpState.Pumping );
-                    if ( e == null )
+                    if ( e is null )
                         break;
                     try
                     {

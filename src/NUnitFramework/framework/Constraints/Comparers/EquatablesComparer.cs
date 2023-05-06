@@ -14,18 +14,18 @@ namespace NUnit.Framework.Constraints.Comparers
         {
             if (equalityComparer.CompareAsCollection && state.TopLevelComparison)
                 return null;
-            if (tolerance != null && tolerance.HasVariance)
+            if (tolerance is not null && tolerance.HasVariance)
                 return null;
 
             Type xType = x.GetType();
             Type yType = y.GetType();
 
             MethodInfo? equals = FirstImplementsIEquatableOfSecond(xType, yType);
-            if (equals != null)
+            if (equals is not null)
                 return InvokeFirstIEquatableEqualsSecond(x, y, equals);
 
             equals = FirstImplementsIEquatableOfSecond(yType, xType);
-            if (xType != yType && equals != null)
+            if (xType != yType && equals is not null)
                 return InvokeFirstIEquatableEqualsSecond(y, x, equals);
 
             return null;
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Constraints.Comparers
             {
                 if (implementation.Argument.IsAssignableFrom(second))
                 {
-                    if (mostDerived.Argument == null || mostDerived.Argument.IsAssignableFrom(implementation.Argument))
+                    if (mostDerived.Argument is null || mostDerived.Argument.IsAssignableFrom(implementation.Argument))
                         mostDerived = implementation;
                 }
             }
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints.Comparers
 
         private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo? equals)
         {
-            return equals != null && (bool)equals.Invoke(first, new[] { second })!;
+            return equals is not null && (bool)equals.Invoke(first, new[] { second })!;
         }
 
         private readonly struct EquatableMethodImpl

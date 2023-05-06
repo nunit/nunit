@@ -96,13 +96,13 @@ namespace NUnit.Framework.Internal
 
         private bool IsPlatformSupported(string? include, string? exclude)
         {
-            if (include != null && !IsPlatformSupported(include))
+            if (include is not null && !IsPlatformSupported(include))
             {
                 Reason = $"Only supported on {include}";
                 return false;
             }
 
-            if (exclude != null && IsPlatformSupported(exclude))
+            if (exclude is not null && IsPlatformSupported(exclude))
             {
                 Reason = $"Not supported on {exclude}";
                 return false;
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Internal
 
         private bool IsRuntimeSupported(RuntimeType runtime, string? versionSpecification)
         {
-            Version version = versionSpecification == null
+            Version version = versionSpecification is null
                 ? RuntimeFramework.DefaultVersion
                 : new Version(versionSpecification);
 
@@ -299,7 +299,7 @@ namespace NUnit.Framework.Internal
 
         private bool IsNetCoreRuntimeSupported(RuntimeType runtime, string? versionSpecification)
         {
-            if (versionSpecification != null)
+            if (versionSpecification is not null)
             {
                 throw new PlatformNotSupportedException($"Detecting versions of .NET Core is not supported - {runtime}-{versionSpecification}");
             }

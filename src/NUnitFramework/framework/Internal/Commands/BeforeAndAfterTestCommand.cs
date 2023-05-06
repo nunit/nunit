@@ -24,8 +24,8 @@ namespace NUnit.Framework.Internal.Commands
         /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
-            Guard.OperationValid(BeforeTest != null, "BeforeTest was not set by the derived class constructor");
-            Guard.OperationValid(AfterTest != null, "AfterTest was not set by the derived class constructor");
+            Guard.OperationValid(BeforeTest is not null, "BeforeTest was not set by the derived class constructor");
+            Guard.OperationValid(AfterTest is not null, "AfterTest was not set by the derived class constructor");
 
             Test.Fixture ??= context.TestObject;
 

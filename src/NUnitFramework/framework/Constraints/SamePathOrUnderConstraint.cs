@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         protected override bool Matches(string actual)
         {
-            if (actual == null) return false;
+            if (actual is null) return false;
 
             string path1 = Canonicalize(expected);
             string path2 = Canonicalize(actual);

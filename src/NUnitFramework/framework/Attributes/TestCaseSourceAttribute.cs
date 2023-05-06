@@ -148,7 +148,7 @@ namespace NUnit.Framework
             {
                 IEnumerable? source = ContextUtils.DoIsolated(() => GetTestCaseSource(method));
 
-                if (source != null)
+                if (source is not null)
                 {
                     foreach (object? item in source)
                     {
@@ -159,11 +159,11 @@ namespace NUnit.Framework
                         //    single null argument will cause an error to be
                         //    reported at the test level, in most cases.
                         // 2. User provided an ITestCaseData and we just use it.
-                        ITestCaseData? parms = item == null
+                        ITestCaseData? parms = item is null
                             ? new TestCaseParameters(new object?[] { null })
                             : item as ITestCaseData;
 
-                        if (parms == null)
+                        if (parms is null)
                         {
                             object?[]? args = null;
 
@@ -186,7 +186,7 @@ namespace NUnit.Framework
                                 }
                             }
 
-                            if (args == null)
+                            if (args is null)
                             {
                                 args = new[] { item };
                             }
@@ -194,7 +194,7 @@ namespace NUnit.Framework
                             parms = new TestCaseParameters(args);
                         }
 
-                        if (this.Category != null)
+                        if (this.Category is not null)
                             foreach (string cat in this.Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
 
@@ -221,7 +221,7 @@ namespace NUnit.Framework
             Type sourceType = SourceType ?? method.TypeInfo.Type;
 
             // Handle Type implementing IEnumerable separately
-            if (SourceName == null)
+            if (SourceName is null)
                 return Reflect.Construct(sourceType, null) as IEnumerable;
 
             MemberInfo[] members = sourceType.GetMemberIncludingFromBase(SourceName,
@@ -232,26 +232,26 @@ namespace NUnit.Framework
                 MemberInfo member = members[0];
 
                 var field = member as FieldInfo;
-                if (field != null)
+                if (field is not null)
                     return field.IsStatic
-                        ? (MethodParams == null ? (IEnumerable?)field.GetValue(null)
+                        ? (MethodParams is null ? (IEnumerable?)field.GetValue(null)
                                                 : ReturnErrorAsParameter(ParamGivenToField))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
 
                 var property = member as PropertyInfo;
-                if (property != null)
+                if (property is not null)
                 {
                     MethodInfo? getMethod = property.GetGetMethod(true);
                     return getMethod?.IsStatic is true
-                        ? (MethodParams == null ? (IEnumerable?)property.GetValue(null, null)
+                        ? (MethodParams is null ? (IEnumerable?)property.GetValue(null, null)
                                                 : ReturnErrorAsParameter(ParamGivenToProperty))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
                 }
 
                 var m = member as MethodInfo;
-                if (m != null)
+                if (m is not null)
                     return m.IsStatic
-                        ? (MethodParams == null || m.GetParameters().Length == MethodParams.Length
+                        ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
                             ? (IEnumerable?)m.Invoke(null, MethodParams)
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);

@@ -155,7 +155,7 @@ namespace NUnit.Framework.Internal
             {
                 var context = CallContext.GetData(NUnitCallContext.TestExecutionContextKey) as TestExecutionContext;
 
-                if (context == null)
+                if (context is null)
                 {
                     context = new AdhocContext();
                     CallContext.SetData(NUnitCallContext.TestExecutionContextKey, context);
@@ -169,7 +169,7 @@ namespace NUnit.Framework.Internal
             [SecuritySafeCritical]
             private set
             {
-                if (value == null)
+                if (value is null)
                     CallContext.FreeNamedDataSlot(NUnitCallContext.TestExecutionContextKey);
                 else
                     CallContext.SetData(NUnitCallContext.TestExecutionContextKey, value);
@@ -217,7 +217,7 @@ namespace NUnit.Framework.Internal
             set
             {
                 _currentResult = value;
-                if (value != null)
+                if (value is not null)
                     OutWriter = value.OutWriter;
             }
         }
@@ -247,7 +247,7 @@ namespace NUnit.Framework.Internal
             {
                 // ExecutionStatus may have been set to StopRequested or AbortRequested
                 // in a prior context. If so, reflect the same setting in this context.
-                if (_executionStatus == TestExecutionStatus.Running && _priorContext != null)
+                if (_executionStatus == TestExecutionStatus.Running && _priorContext is not null)
                     _executionStatus = _priorContext.ExecutionStatus;
 
                 return _executionStatus;
@@ -257,7 +257,7 @@ namespace NUnit.Framework.Internal
                 _executionStatus = value;
 
                 // Push the same setting up to all prior contexts
-                if (_priorContext != null)
+                if (_priorContext is not null)
                     _priorContext.ExecutionStatus = value;
             }
         }
@@ -302,7 +302,7 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (_randomGenerator == null)
+                if (_randomGenerator is null)
                     _randomGenerator = new Randomizer(CurrentTest.Seed);
                 return _randomGenerator;
             }
@@ -450,7 +450,7 @@ namespace NUnit.Framework.Internal
         {
             var context = new TestExecutionContext(this);
 
-            if (context.CurrentTest != null)
+            if (context.CurrentTest is not null)
                 context.CurrentResult = context.CurrentTest.MakeTestResult();
 
             context.TestWorker = TestWorker;

@@ -50,7 +50,7 @@ namespace NUnit.TestUtilities
             Assembly a = typeof(TestFile).Assembly;
             using (Stream? s = a.GetManifestResourceStream(_resourceName))
             {
-                if (s == null)
+                if (s is null)
                     throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
 
                 var buffer = new byte[1024];
@@ -72,13 +72,13 @@ namespace NUnit.TestUtilities
 
         public long OffsetOf(char target)
         {
-            if (_resourceName == null)
+            if (_resourceName is null)
                 return -1L;
 
             Assembly a = typeof(TestFile).Assembly;
             using (Stream? s = a.GetManifestResourceStream(_resourceName))
             {
-                if (s == null)
+                if (s is null)
                     throw new Exception("Manifest Resource Stream " + _resourceName + " was not found.");
 
                 byte[] buffer = new byte[1024];
@@ -110,7 +110,7 @@ namespace NUnit.TestUtilities
         /// </summary>
         public override string ToString()
         {
-            return _fileInfo == null ? string.Empty : _fileInfo.FullName;
+            return _fileInfo is null ? string.Empty : _fileInfo.FullName;
         }
 
         protected virtual void Dispose(bool disposing)

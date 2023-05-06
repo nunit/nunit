@@ -28,7 +28,7 @@ namespace NUnit.Framework
         {
             RunState = RunState.Runnable;
 
-            if (arguments == null)
+            if (arguments is null)
                 Arguments = new object?[] { null };
             else
                 Arguments = arguments;
@@ -430,7 +430,7 @@ namespace NUnit.Framework
                 }
             }
 
-            if (IncludePlatform != null || ExcludePlatform != null)
+            if (IncludePlatform is not null || ExcludePlatform is not null)
             {
                 if (test.RunState is RunState.NotRunnable or RunState.Ignored)
                 {

@@ -70,17 +70,17 @@ namespace NUnit.Framework.Api
         /// <summary>
         /// Indicates whether a test is loaded
         /// </summary>
-        public bool IsTestLoaded => LoadedTest != null;
+        public bool IsTestLoaded => LoadedTest is not null;
 
         /// <summary>
         /// Indicates whether a test is running
         /// </summary>
-        public bool IsTestRunning => TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Running;
+        public bool IsTestRunning => TopLevelWorkItem is not null && TopLevelWorkItem.State == WorkItemState.Running;
 
         /// <summary>
         /// Indicates whether a test run is complete
         /// </summary>
-        public bool IsTestComplete => TopLevelWorkItem != null && TopLevelWorkItem.State == WorkItemState.Complete;
+        public bool IsTestComplete => TopLevelWorkItem is not null && TopLevelWorkItem.State == WorkItemState.Complete;
 
         /// <summary>
         /// Our settings, specified when loading the assembly
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Api
         /// <returns>The number of test cases found</returns>
         public int CountTestCases(ITestFilter filter)
         {
-            if (LoadedTest == null)
+            if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before counting test cases.");
 
             return CountTestCases(LoadedTest, filter);
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Api
         /// <returns>Test Assembly with test cases that matches the filter</returns>
         public ITest ExploreTests(ITestFilter filter)
         {
-            if (LoadedTest == null)
+            if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before exploring them.");
 
             if (filter == TestFilter.Empty)
@@ -195,7 +195,7 @@ namespace NUnit.Framework.Api
         public void RunAsync(ITestListener listener, ITestFilter filter)
         {
             log.Info("Running tests");
-            if (LoadedTest == null)
+            if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before running them.");
 
             _runComplete.Reset();
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Api
             var context = CreateTestExecutionContext(LoadedTest, listener);
 
             TopLevelWorkItem = WorkItemBuilder.CreateWorkItem(LoadedTest, filter, new DebuggerProxy(), true);
-            if (TopLevelWorkItem == null)
+            if (TopLevelWorkItem is null)
                 throw new InvalidOperationException("Loaded test didn't result in a WorkItem");
 
             TopLevelWorkItem.InitializeContext(context);
@@ -231,7 +231,7 @@ namespace NUnit.Framework.Api
         /// <param name="force">If true, kill any tests that are currently running</param>
         public void StopRun(bool force)
         {
-            if (IsTestRunning && Context != null)
+            if (IsTestRunning && Context is not null)
             {
                 Context.ExecutionStatus = force
                     ? TestExecutionStatus.AbortRequested
@@ -340,13 +340,13 @@ namespace NUnit.Framework.Api
         /// </summary>
         private void OnRunCompleted(object? sender, EventArgs e)
         {
-            if (_pump != null)
+            if (_pump is not null)
                 _pump.Dispose();
 
-            if (_savedOut != null)
+            if (_savedOut is not null)
                 Console.SetOut(_savedOut);
 
-            if (_savedErr != null)
+            if (_savedErr is not null)
                 Console.SetError(_savedErr);
 
             _runComplete.Set();

@@ -71,7 +71,7 @@ namespace NUnit.Framework.Attributes
         public void TestEquality()
         {
             Assert.That(eq2, Is.EqualTo(eq1));
-            if (eq1 != null && eq2 != null)
+            if (eq1 is not null && eq2 is not null)
                 Assert.That(eq2.GetHashCode(), Is.EqualTo(eq1.GetHashCode()));
         }
 
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Attributes
         public void TestInequality()
         {
             Assert.That(neq, Is.Not.EqualTo(eq1));
-            if (eq1 != null && neq != null)
+            if (eq1 is not null && neq is not null)
                 Assert.That(neq.GetHashCode(), Is.Not.EqualTo(eq1.GetHashCode()));
         }
     }

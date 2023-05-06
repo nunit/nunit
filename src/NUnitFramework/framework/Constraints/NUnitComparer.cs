@@ -25,9 +25,9 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         public int Compare(object? x, object? y)
         {
-            if (x == null)
-                return y == null ? 0 : -1;
-            else if (y == null)
+            if (x is null)
+                return y is null ? 0 : -1;
+            else if (y is null)
                 return +1;
 
             if (Numerics.IsNumericType(x) && Numerics.IsNumericType(y))
@@ -43,11 +43,11 @@ namespace NUnit.Framework.Constraints
             static bool IsIComparable(MethodInfo method) => method.GetParameters()[0].ParameterType == typeof(object);
 
             MethodInfo? method = xType.GetMethod("CompareTo", new[] { yType });
-            if (method != null && !IsIComparable(method))
+            if (method is not null && !IsIComparable(method))
                 return (int)method.Invoke(x, new[] { y })!;
 
             method = yType.GetMethod("CompareTo", new[] { xType });
-            if (method != null && !IsIComparable(method))
+            if (method is not null && !IsIComparable(method))
                 return -(int)method.Invoke(y, new[] { x })!;
 
             if (x is IComparable xComparable)

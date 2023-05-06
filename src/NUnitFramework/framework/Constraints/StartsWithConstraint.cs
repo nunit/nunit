@@ -29,7 +29,7 @@ namespace NUnit.Framework.Constraints
         protected override bool Matches(string actual)
         {
             var stringComparison = this.caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
-            return actual != null && actual.StartsWith(expected, stringComparison);
+            return actual is not null && actual.StartsWith(expected, stringComparison);
         }
     }
 }

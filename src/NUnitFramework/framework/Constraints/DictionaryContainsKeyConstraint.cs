@@ -54,7 +54,7 @@ namespace NUnit.Framework.Constraints
         public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
         {
             var builder = this.Builder;
-            if (builder == null)
+            if (builder is null)
             {
                 builder = new ConstraintBuilder();
                 builder.Append(this);
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Constraints
 
         private bool Matches(object? actual)
         {
-            if (actual == null)
+            if (actual is null)
                 throw new ArgumentException("Expected: IDictionary But was: null", nameof(actual));
 
             if (_isDeprecatedMode)
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Constraints
             }
 
             var method = GetContainsKeyMethod(actual);
-            if (method != null)
+            if (method is not null)
                 return (bool)method.Invoke(actual, new[] { Expected })!;
 
             throw new ArgumentException($"The {TypeHelper.GetDisplayName(actual.GetType())} value must have a ContainsKey or Contains(TKey) method.");
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Constraints
                             .GetInterfaces()
                             .Concat(GetBaseTypes(instanceType))
                             .Select(FindContainsKeyMethod)
-                            .FirstOrDefault(m => m != null);
+                            .FirstOrDefault(m => m is not null);
 
             return method;
         }
@@ -127,12 +127,12 @@ namespace NUnit.Framework.Constraints
                 && !m.IsGenericMethod
                 && m.GetParameters().Length == 1);
 
-            if (method == null && type.IsGenericType)
+            if (method is null && type.IsGenericType)
             {
                 var definition = type.GetGenericTypeDefinition();
                 var tKeyGenericArg = definition.GetGenericArguments().FirstOrDefault(typeArg => typeArg.Name == "TKey");
 
-                if (tKeyGenericArg != null)
+                if (tKeyGenericArg is not null)
                 {
                     method = definition
                              .GetMethods(BindingFlags.Instance | BindingFlags.Public)
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Constraints
                                                   m.GetParameters().Length == 1 &&
                                                   m.GetParameters()[0].ParameterType == tKeyGenericArg);
 
-                    if (method != null)
+                    if (method is not null)
                     {
                         method = methods.Single(m => m.MetadataToken == method.MetadataToken);
                     }
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Constraints
 
         private static IEnumerable<Type> GetBaseTypes(Type type)
         {
-            for (Type? baseType = type.BaseType; baseType != null; baseType = baseType.BaseType)
+            for (Type? baseType = type.BaseType; baseType is not null; baseType = baseType.BaseType)
             {
                 yield return baseType;
             }

@@ -19,13 +19,13 @@ namespace NUnit.Framework.Internal.Commands
             TestFixture? testFixture = null;
 
             ITest? currentTest = Test;
-            while (currentTest != null && testFixture == null)
+            while (currentTest is not null && testFixture is null)
             {
                 testFixture = currentTest as TestFixture;
                 currentTest = currentTest.Parent;
             }
 
-            Guard.ArgumentValid(testFixture != null, "FixturePerTestCaseCommand must reference a TestFixture", nameof(innerCommand));
+            Guard.ArgumentValid(testFixture is not null, "FixturePerTestCaseCommand must reference a TestFixture", nameof(innerCommand));
 
             ITypeInfo? typeInfo = testFixture.TypeInfo;
 

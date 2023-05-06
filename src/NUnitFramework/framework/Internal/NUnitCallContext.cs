@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
         [SecuritySafeCritical]
         public void Dispose()
         {
-            if (_oldContext == null)
+            if (_oldContext is null)
                 CallContext.FreeNamedDataSlot(TestExecutionContextKey);
             else
                 CallContext.SetData(TestExecutionContextKey, _oldContext);

@@ -472,7 +472,7 @@ namespace NUnit.Framework.Attributes
         {
             bool isNetCore;
             Type? monoRuntimeType = Type.GetType("Mono.Runtime", false);
-            bool isMono = monoRuntimeType != null;
+            bool isMono = monoRuntimeType is not null;
 #if NETCOREAPP
             isNetCore = true;
 #else
@@ -523,7 +523,7 @@ namespace NUnit.Framework.Attributes
         {
             bool isNetCore;
             Type? monoRuntimeType = Type.GetType("Mono.Runtime", false);
-            bool isMono = monoRuntimeType != null;
+            bool isMono = monoRuntimeType is not null;
 #if NETCOREAPP
             isNetCore = true;
 #else

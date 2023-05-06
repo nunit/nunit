@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
         /// <returns>True if the filter matches the an ancestor of the test</returns>
         public bool MatchParent(ITest test)
         {
-            return test.Parent != null && (Match(test.Parent) || MatchParent(test.Parent));
+            return test.Parent is not null && (Match(test.Parent) || MatchParent(test.Parent));
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace NUnit.Framework.Internal
 
                 case "prop":
                     string? name = node.Attributes["name"];
-                    if (name != null)
+                    if (name is not null)
                         return new PropertyFilter(name, NodeValue(node), IsRegex(node));
                     break;
             }

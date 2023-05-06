@@ -44,14 +44,14 @@ namespace NUnit.Framework
         public bool IsError(out string? message)
         {
             message = _errorMessage;
-            return _errorMessage != null;
+            return _errorMessage is not null;
         }
 
         public T? Value
         {
             get
             {
-                if (_errorMessage != null) throw new InvalidOperationException("The result is not success.");
+                if (_errorMessage is not null) throw new InvalidOperationException("The result is not success.");
                 return _value;
             }
         }

@@ -879,7 +879,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">Expected values</param>
         public AnyOfConstraint AnyOf(params object?[]? expected)
         {
-            if (expected == null)
+            if (expected is null)
             {
                 expected = new object?[] { null };
             }

@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
 
             try
             {
-                if (stateInfo == null)
+                if (stateInfo is null)
                     thread.Abort();
                 else
                     thread.Abort(stateInfo);
@@ -227,7 +227,7 @@ namespace NUnit.Framework.Internal
             {
                 Thread.CurrentPrincipal = principal;
             }
-            catch (PlatformNotSupportedException) when (principal == null) //E.g. Mono.WASM
+            catch (PlatformNotSupportedException) when (principal is null) //E.g. Mono.WASM
             { }
         }
     }

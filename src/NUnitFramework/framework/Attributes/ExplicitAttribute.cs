@@ -43,7 +43,7 @@ namespace NUnit.Framework
             if (test.RunState != RunState.NotRunnable && test.RunState != RunState.Ignored)
             {
                 test.RunState = RunState.Explicit;
-                if (_reason != null)
+                if (_reason is not null)
                     test.Properties.Set(PropertyNames.SkipReason, _reason);
             }
         }

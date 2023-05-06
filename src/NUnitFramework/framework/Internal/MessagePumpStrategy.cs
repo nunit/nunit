@@ -192,8 +192,8 @@ namespace NUnit.Framework.Internal
 
         private static void ContinueOnSameSynchronizationContext(AwaitAdapter awaiter, Action continuation)
         {
-            if (awaiter == null) throw new ArgumentNullException(nameof(awaiter));
-            if (continuation == null) throw new ArgumentNullException(nameof(continuation));
+            if (awaiter is null) throw new ArgumentNullException(nameof(awaiter));
+            if (continuation is null) throw new ArgumentNullException(nameof(continuation));
 
             var context = SynchronizationContext.Current;
 

@@ -34,12 +34,12 @@ namespace NUnit.Framework.Internal
         private ITestResult? RunTests(string? nameSpace, TestFilter filter)
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
-            if (nameSpace != null)
+            if (nameSpace is not null)
                 options["LOAD"] = new[] { nameSpace };
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            if (runner.Load(ASSEMBLY_PATH, options) != null)
+            if (runner.Load(ASSEMBLY_PATH, options) is not null)
                 return runner.Run(TestListener.NULL, filter);
 
             return null;

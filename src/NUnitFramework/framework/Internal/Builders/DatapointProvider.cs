@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Builders
                 if (member.IsDefined(typeof(DatapointAttribute), true))
                 {
                     var field = member as FieldInfo;
-                    if (GetTypeFromMemberInfo(member) == parameterType && field != null)
+                    if (GetTypeFromMemberInfo(member) == parameterType && field is not null)
                     {
                         if (field.IsStatic)
                             datapoints.Add(field.GetValue(null));
@@ -95,20 +95,20 @@ namespace NUnit.Framework.Internal.Builders
                         FieldInfo? field = member as FieldInfo;
                         PropertyInfo? property = member as PropertyInfo;
                         MethodInfo? method = member as MethodInfo;
-                        if (field != null)
+                        if (field is not null)
                         {
                             instance = field.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)field.GetValue(instance)!)
                                 datapoints.Add(data);
                         }
-                        else if (property != null)
+                        else if (property is not null)
                         {
                             MethodInfo? getMethod = property.GetGetMethod(true);
                             instance = getMethod?.IsStatic is true ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)property.GetValue(instance, null)!)
                                 datapoints.Add(data);
                         }
-                        else if (method != null)
+                        else if (method is not null)
                         {
                             instance = method.IsStatic ? null : ProviderCache.GetInstanceOf(owningType);
                             foreach (object data in (IEnumerable)method.Invoke(instance, Array.Empty<Type>())!)
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Internal.Builders
             if (datapoints.Count == 0)
             {
                 var underlyingParameterType = Nullable.GetUnderlyingType(parameterType);
-                if (underlyingParameterType != null)
+                if (underlyingParameterType is not null)
                 {
                     parameterType = underlyingParameterType;
                 }
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Internal.Builders
                     }
                 }
 
-                if (datapoints.Count > 0 && underlyingParameterType != null)
+                if (datapoints.Count > 0 && underlyingParameterType is not null)
                 {
                     datapoints.Add(null);
                 }
@@ -160,7 +160,7 @@ namespace NUnit.Framework.Internal.Builders
 
         private static IEnumerable<Tuple<MemberInfo, Type>> GetNestedMembersFromType(Type? type)
         {
-            while (type != null)
+            while (type is not null)
             {
                 foreach (var tuple in GetDirectMembersOfType(type)) yield return tuple;
                 type = type.DeclaringType;
@@ -178,15 +178,15 @@ namespace NUnit.Framework.Internal.Builders
         private Type? GetTypeFromMemberInfo(MemberInfo member)
         {
             var field = member as FieldInfo;
-            if (field != null)
+            if (field is not null)
                 return field.FieldType;
 
             var property = member as PropertyInfo;
-            if (property != null)
+            if (property is not null)
                 return property.PropertyType;
 
             var method = member as MethodInfo;
-            if (method != null)
+            if (method is not null)
                 return method.ReturnType;
 
             return null;
@@ -196,7 +196,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             Type? type = GetTypeFromMemberInfo(member);
 
-            if (type == null)
+            if (type is null)
                 return null;
 
             if (type.IsArray)

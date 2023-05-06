@@ -17,12 +17,12 @@ namespace NUnit.Framework.Tests.Interfaces
             var expected = new StringBuilder();
             expected.AppendFormat("<test-output stream=\"{0}\"", stream);
 
-            if (testId != null)
+            if (testId is not null)
             {
                 expected.AppendFormat(" testid=\"{0}\"", testId);
             }
 
-            if (testName != null)
+            if (testName is not null)
             {
                 expected.AppendFormat(" testname=\"{0}\"", testName);
             }

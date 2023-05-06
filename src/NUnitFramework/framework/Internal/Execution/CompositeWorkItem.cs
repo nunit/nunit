@@ -187,7 +187,7 @@ namespace NUnit.Framework.Internal.Execution
             while (--index >= 0)
                 command = new BeforeTestActionCommand(command, actions[index]);
 
-            if (Test.TypeInfo != null)
+            if (Test.TypeInfo is not null)
             {
                 // Build the OneTimeSetUpCommands
                 foreach (SetUpTearDownItem item in setUpTearDown)
@@ -386,7 +386,7 @@ namespace NUnit.Framework.Internal.Execution
                 foreach (var child in Children)
                 {
                     var ctx = child.Context;
-                    if (ctx != null)
+                    if (ctx is not null)
                         ctx.ExecutionStatus = force ? TestExecutionStatus.AbortRequested : TestExecutionStatus.StopRequested;
 
                     if (child.State == WorkItemState.Running)

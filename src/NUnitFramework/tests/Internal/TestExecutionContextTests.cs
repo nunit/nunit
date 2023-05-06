@@ -287,7 +287,7 @@ namespace NUnit.Framework.Internal
         {
             var worker = TestExecutionContext.CurrentContext.TestWorker;
             var isRunningUnderTestWorker = TestExecutionContext.CurrentContext.Dispatcher is ParallelWorkItemDispatcher;
-            Assert.That(worker != null || !isRunningUnderTestWorker);
+            Assert.That(worker is not null || !isRunningUnderTestWorker);
         }
 
 #endregion

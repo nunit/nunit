@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal.Execution
                 while (_running)
                 {
                     _currentWorkItem = WorkQueue.Dequeue();
-                    if (_currentWorkItem == null)
+                    if (_currentWorkItem is null)
                         break;
 
                     log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Internal.Execution
                 _running = false;
 
             lock (cancelLock)
-                if (_workerThread != null && _currentWorkItem != null)
+                if (_workerThread is not null && _currentWorkItem is not null)
                 {
                     _currentWorkItem.Cancel(force);
                     if (force)

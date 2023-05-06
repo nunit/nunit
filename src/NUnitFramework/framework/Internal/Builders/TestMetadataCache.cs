@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Builders
 
             private static ITestAction[] GetActionsForType(Type? type)
             {
-                if (type == null || type == typeof(object))
+                if (type is null || type == typeof(object))
                 {
                     return Array.Empty<ITestAction>();
                 }

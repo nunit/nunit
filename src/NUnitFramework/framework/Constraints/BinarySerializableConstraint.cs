@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if (actual == null)
+            if (actual is null)
                 throw new ArgumentNullException(nameof(actual));
 
             MemoryStream stream = new MemoryStream();
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                succeeded = serializer.Deserialize(stream) != null;
+                succeeded = serializer.Deserialize(stream) is not null;
             }
             catch (SerializationException)
             {

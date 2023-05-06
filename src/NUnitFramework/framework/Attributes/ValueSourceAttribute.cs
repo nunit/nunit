@@ -73,7 +73,7 @@ namespace NUnit.Framework
         {
             Type sourceType = SourceType ?? parameter.Method.TypeInfo.Type;
 
-            if (SourceName == null)
+            if (SourceName is null)
             {
                 return Reflect.Construct(sourceType) as IEnumerable
                     ?? throw new InvalidDataSourceException($"The value source type '{sourceType}' does not implement IEnumerable.");
@@ -93,7 +93,7 @@ namespace NUnit.Framework
             MemberInfo member = members[0];
 
             var field = member as FieldInfo;
-            if (field != null)
+            if (field is not null)
             {
                 if (field.IsStatic)
                     return (IEnumerable?)field.GetValue(null);
@@ -102,7 +102,7 @@ namespace NUnit.Framework
             }
 
             var property = member as PropertyInfo;
-            if (property != null)
+            if (property is not null)
             {
                 MethodInfo? getMethod = property.GetGetMethod(true);
                 if (getMethod?.IsStatic is true)
@@ -112,7 +112,7 @@ namespace NUnit.Framework
             }
 
             var m = member as MethodInfo;
-            if (m != null)
+            if (m is not null)
             {
                 if (m.IsStatic)
                     return (IEnumerable?)m.Invoke(null, null);

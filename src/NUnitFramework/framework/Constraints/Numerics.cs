@@ -35,7 +35,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>true if the object is a floating point numeric type</returns>
         public static bool IsFloatingPointNumeric(object? obj)
         {
-            if (null != obj)
+            if (obj is not null)
             {
                 if (obj is double) return true;
                 if (obj is float) return true;
@@ -46,7 +46,7 @@ namespace NUnit.Framework.Constraints
 
         internal static bool IsFloatingPointNumeric(Type type)
         {
-            if (null != type)
+            if (type is not null)
             {
                 if (type == typeof(double)) return true;
                 if (type == typeof(float)) return true;
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>true if the object is a fixed point numeric type</returns>
         public static bool IsFixedPointNumeric(object? obj)
         {
-            if (null != obj)
+            if (obj is not null)
             {
                 if (obj is byte) return true;
                 if (obj is sbyte) return true;
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Constraints
 
         internal static bool IsFixedPointNumeric(Type type)
         {
-            if (null != type)
+            if (type is not null)
             {
                 if (type == typeof(byte)) return true;
                 if (type == typeof(sbyte)) return true;
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
             if (tolerance.IsUnsetOrDefault)
             {
                 var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp != null && !temp.IsUnsetOrDefault)
+                if (temp is not null && !temp.IsUnsetOrDefault)
                     tolerance = temp;
             }
 
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Constraints
             if (tolerance.IsUnsetOrDefault)
             {
                 var temp = TestExecutionContext.CurrentContext?.DefaultFloatingPointTolerance;
-                if (temp != null && !temp.IsUnsetOrDefault)
+                if (temp is not null && !temp.IsUnsetOrDefault)
                     tolerance = temp;
             }
 

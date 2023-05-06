@@ -76,7 +76,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             lock (cancelLock)
             {
-                if (_topLevelWorkItem != null)
+                if (_topLevelWorkItem is not null)
                 {
                     _topLevelWorkItem.Cancel(force);
                     if (force)

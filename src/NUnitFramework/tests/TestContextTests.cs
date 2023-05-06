@@ -345,7 +345,7 @@ namespace NUnit.Framework
             var isTestContextOutAvailable = false;
             Task.Factory.StartNew(() =>
             {
-                isTestContextOutAvailable = TestContext.Out != null;
+                isTestContextOutAvailable = TestContext.Out is not null;
             }).Wait();
             Assert.That(isTestContextOutAvailable, Is.True);
         }

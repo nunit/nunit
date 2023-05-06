@@ -13,11 +13,14 @@ namespace NUnit.TestUtilities.Comparers
         {
             CallCount++;
 
-            if (x == null && y == null)
+            if (x is null && y is null)
                 return 0;
 
-            if (x == null || y == null)
+            if (x is null)
                 return -1;
+
+            if (y is null)
+                return +1;
 
             if (x.Equals(y))
                 return 0;

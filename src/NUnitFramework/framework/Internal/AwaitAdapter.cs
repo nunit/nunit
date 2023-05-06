@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal
 
         public static AwaitAdapter FromAwaitable(object? awaitable)
         {
-            if (awaitable == null)
+            if (awaitable is null)
                 throw new InvalidOperationException("A null reference cannot be awaited.");
 
             // TaskAwaitAdapter is more efficient because it can rely on Task’s
@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal
             var adapter =
                 CSharpPatternBasedAwaitAdapter.TryCreate(awaitable)
                 ?? FSharpAsyncAwaitAdapter.TryCreate(awaitable);
-            if (adapter != null)
+            if (adapter is not null)
                 return adapter;
 
             throw new NotSupportedException("NUnit can only await objects which follow the C# specification for awaitable expressions.");

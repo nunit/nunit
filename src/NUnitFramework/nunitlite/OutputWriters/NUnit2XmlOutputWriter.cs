@@ -126,7 +126,7 @@ namespace NUnitLite
             switch (result.ResultState.Status)
             {
                 case TestStatus.Skipped:
-                    if (result.Message != null)
+                    if (result.Message is not null)
                         WriteReasonElement(result.Message);
                     break;
                 case TestStatus.Failed:
@@ -285,7 +285,7 @@ namespace NUnitLite
             WriteCData(message);
             xmlWriter.WriteEndElement();
             xmlWriter.WriteStartElement("stack-trace");
-            if (stackTrace != null)
+            if (stackTrace is not null)
                 WriteCData(stackTrace);
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndElement();

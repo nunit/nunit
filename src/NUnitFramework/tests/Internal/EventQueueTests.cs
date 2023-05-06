@@ -137,7 +137,7 @@ namespace NUnit.Framework.Internal.Execution
                     this.receivedEvents++;
                     Thread.MemoryBarrier();
                 }
-                while (e != null);
+                while (e is not null);
             }
         }
 

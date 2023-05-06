@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal
         private static readonly RuntimeType currentRuntime = RuntimeType.NetCore;
 #else
         private static readonly RuntimeType currentRuntime =
-            Type.GetType("Mono.Runtime", false) != null
+            Type.GetType("Mono.Runtime", false) is not null
                 ? RuntimeType.Mono
                 : RuntimeType.NetFramework;
 #endif

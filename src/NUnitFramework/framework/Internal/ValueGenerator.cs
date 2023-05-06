@@ -97,7 +97,7 @@ namespace NUnit.Framework.Internal
             /// </param>
             public ComparableStep(TStep value, Func<T, TStep, T> apply)
             {
-                if (apply == null) throw new ArgumentNullException(nameof(apply));
+                if (apply is null) throw new ArgumentNullException(nameof(apply));
                 _step = value;
                 _apply = apply;
             }

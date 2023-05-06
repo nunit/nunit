@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static IDisposable Dispose(Action action)
         {
-            if (action == null) throw new ArgumentNullException(nameof(action));
+            if (action is null) throw new ArgumentNullException(nameof(action));
             return new DisposableAction(action);
         }
 

@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal
             get => _testName;
             set
             {
-                Guard.OperationValid(ArgDisplayNames == null || value == null, "TestName cannot be set when argument display names are set.");
+                Guard.OperationValid(ArgDisplayNames is null || value is null, "TestName cannot be set when argument display names are set.");
                 _testName = value;
             }
         }
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Internal
             get => _argDisplayNames;
             set
             {
-                Guard.OperationValid(TestName == null || value == null, "Argument display names cannot be set when TestName is set.");
+                Guard.OperationValid(TestName is null || value is null, "Argument display names cannot be set when TestName is set.");
                 _argDisplayNames = value;
             }
         }

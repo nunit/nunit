@@ -108,7 +108,7 @@ namespace NUnit.Framework.Internal.Filters
 
             foreach (var value in _values)
             {
-                if (value != null)
+                if (value is not null)
                 {
                     result.AddElement(_xmlElementName, value);
                 }

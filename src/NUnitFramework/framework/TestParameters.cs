@@ -76,7 +76,7 @@ namespace NUnit.Framework
         public T Get<T>(string name, [MaybeNull] T defaultValue)
         {
             string? val = Get(name);
-            return val != null ? (T)Convert.ChangeType(val, typeof(T), MODIFIED_INVARIANT_CULTURE) : defaultValue;
+            return val is not null ? (T)Convert.ChangeType(val, typeof(T), MODIFIED_INVARIANT_CULTURE) : defaultValue;
         }
 
         /// <summary>

@@ -121,7 +121,7 @@ namespace NUnit.Framework
         private static bool IsNullableEnum(Type t)
         {
             Type? u = Nullable.GetUnderlyingType(t);
-            return u != null && u.IsEnum;
+            return u is not null && u.IsEnum;
         }
     }
 }

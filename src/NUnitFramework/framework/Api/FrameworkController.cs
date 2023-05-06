@@ -175,7 +175,7 @@ namespace NUnit.Framework.Api
         {
             ITest loadedTest;
 
-            if (_testAssembly != null)
+            if (_testAssembly is not null)
                 loadedTest = Runner.Load(_testAssembly, Settings);
             else
                 loadedTest = Runner.Load(AssemblyNameOrPath, Settings);
@@ -221,7 +221,7 @@ namespace NUnit.Framework.Api
 
             public void RaiseCallbackEvent(string report)
             {
-                if (_callback != null)
+                if (_callback is not null)
                     _callback.Invoke(report);
             }
         }
@@ -388,7 +388,7 @@ namespace NUnit.Framework.Api
                 AddDictionaryEntries(setting, dict);
                 AddBackwardsCompatibleDictionaryEntries(setting, dict);
             }
-            else if (value != null)
+            else if (value is not null)
             {
                 setting.AddAttribute("value", value.ToString()!);
             }

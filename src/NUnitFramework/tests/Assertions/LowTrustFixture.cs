@@ -79,7 +79,7 @@ namespace NUnit.Framework.Assertions
 
             // Grant full trust to NUnit.Framework assembly to enable use of NUnit assertions in sandboxed test code.
             strongNames.Add(GetStrongName(typeof(TestAttribute).Assembly));
-            if (fullTrustAssemblies != null)
+            if (fullTrustAssemblies is not null)
             {
                 foreach (var assembly in fullTrustAssemblies)
                 {
@@ -147,8 +147,8 @@ namespace NUnit.Framework.Assertions
         }
         public object? Run(MethodInfo method, params object[] parameters)
         {
-            if (method == null) throw new ArgumentNullException(nameof(method));
-            if (_appDomain == null) throw new ObjectDisposedException(null);
+            if (method is null) throw new ArgumentNullException(nameof(method));
+            if (_appDomain is null) throw new ObjectDisposedException(null);
 
             var methodRunnerType = typeof(MethodRunner);
             var methodRunnerProxy = (MethodRunner?)_appDomain.CreateInstanceAndUnwrap(
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Assertions
             AssemblyName assemblyName = assembly.GetName();
 
             byte[]? publicKey = assembly.GetName().GetPublicKey();
-            if (publicKey == null || publicKey.Length == 0)
+            if (publicKey is null || publicKey.Length == 0)
             {
                 throw new InvalidOperationException("Assembly is not strongly named");
             }
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Assertions
                 }
                 catch (TargetInvocationException e)
                 {
-                    if (e.InnerException == null) throw;
+                    if (e.InnerException is null) throw;
                     throw e.InnerException;
                 }
             }

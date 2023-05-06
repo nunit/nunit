@@ -45,7 +45,7 @@ namespace NUnit.Framework.Internal.Execution
         private bool TrySendToListener(string text)
         {
             var context = TestExecutionContext.CurrentContext;
-            if (context == null || context.Listener == null)
+            if (context is null || context.Listener is null)
                 return false;
 
             context.Listener.TestOutput(new TestOutput(text, _streamName,
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void Write(object? value)
         {
-            if (value == null || !TrySendToListener(FormatForListener(value)))
+            if (value is null || !TrySendToListener(FormatForListener(value)))
                 _defaultWriter.Write(value);
         }
 
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void Write(string? value)
         {
-            if (value == null || !TrySendToListener(value))
+            if (value is null || !TrySendToListener(value))
                 _defaultWriter.Write(value);
         }
 
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void Write(char[]? buffer)
         {
-            if (buffer == null || !TrySendToListener(new string(buffer)))
+            if (buffer is null || !TrySendToListener(new string(buffer)))
                 _defaultWriter.Write(buffer);
         }
 
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void WriteLine(string? value)
         {
-            if (value == null || !TrySendLineToListener(value))
+            if (value is null || !TrySendLineToListener(value))
                 _defaultWriter.WriteLine(value);
         }
 
@@ -235,7 +235,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void WriteLine(object? value)
         {
-            if (value == null || !TrySendLineToListener(FormatForListener(value)))
+            if (value is null || !TrySendLineToListener(FormatForListener(value)))
                 _defaultWriter.WriteLine(value);
         }
 
@@ -354,7 +354,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public override void WriteLine(char[]? buffer)
         {
-            if (buffer == null || !TrySendLineToListener(new string(buffer)))
+            if (buffer is null || !TrySendLineToListener(new string(buffer)))
                 _defaultWriter.WriteLine(buffer);
         }
 

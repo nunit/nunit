@@ -32,19 +32,19 @@ namespace NUnit.Common
         internal CommandLineOptions(IDefaultOptionsProvider defaultOptionsProvider, bool requireInputFile, params string[] args)
         {
             // Apply default options
-            if (defaultOptionsProvider == null) throw new ArgumentNullException(nameof(defaultOptionsProvider));
+            if (defaultOptionsProvider is null) throw new ArgumentNullException(nameof(defaultOptionsProvider));
 
             TeamCity = defaultOptionsProvider.TeamCity;
 
             ConfigureOptions(requireInputFile);
-            if (args != null)
+            if (args is not null)
                 Parse(PreParse(args));
         }
 
         public CommandLineOptions(bool requireInputFile, params string[] args)
         {
             ConfigureOptions(requireInputFile);
-            if (args != null)
+            if (args is not null)
                 Parse(PreParse(args));
         }
 
@@ -152,7 +152,7 @@ namespace NUnit.Common
         public IDictionary<string, string> TestParameters { get; } = new Dictionary<string, string>();
 
         public string WhereClause { get; private set; }
-        public bool WhereClauseSpecified => WhereClause != null;
+        public bool WhereClauseSpecified => WhereClause is not null;
 
         public int DefaultTimeout { get; private set; } = -1;
         public bool DefaultTimeoutSpecified => DefaultTimeout >= 0;
@@ -177,19 +177,19 @@ namespace NUnit.Common
         public bool TeamCity { get; private set; }
 
         public string OutFile { get; private set; }
-        public bool OutFileSpecified => OutFile != null;
+        public bool OutFileSpecified => OutFile is not null;
 
         public string ErrFile { get; private set; }
-        public bool ErrFileSpecified => ErrFile != null;
+        public bool ErrFileSpecified => ErrFile is not null;
 
         public string DisplayTestLabels { get; private set; }
 
         private string workDirectory = null;
         public string WorkDirectory => workDirectory ?? DEFAULT_WORK_DIRECTORY;
-        public bool WorkDirectorySpecified => workDirectory != null;
+        public bool WorkDirectorySpecified => workDirectory is not null;
 
         public string InternalTraceLevel { get; private set; }
-        public bool InternalTraceLevelSpecified => InternalTraceLevel != null;
+        public bool InternalTraceLevelSpecified => InternalTraceLevel is not null;
 
         private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
@@ -248,7 +248,7 @@ namespace NUnit.Common
 
             bool isValid = true;
 
-            if (validValues != null && validValues.Length > 0)
+            if (validValues is not null && validValues.Length > 0)
             {
                 isValid = false;
 
@@ -280,7 +280,7 @@ namespace NUnit.Common
 
         private string ExpandToFullPath(string path)
         {
-            if (path == null) return null;
+            if (path is null) return null;
 
             return Path.GetFullPath(path);
         }
@@ -366,10 +366,10 @@ namespace NUnit.Common
                 v => NumberOfTestWorkers = RequiredInt(v, "--workers"));
 
             this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
-                v => StopOnError = v != null);
+                v => StopOnError = v is not null);
 
             this.Add("wait", "Wait for input before closing console window.",
-                v => WaitBeforeExit = v != null);
+                v => WaitBeforeExit = v is not null);
 
             // Output Control
             this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
@@ -391,7 +391,7 @@ namespace NUnit.Common
             });
 
             this.Add("noresult", "Don't save any test results.",
-                v => noresult = v != null);
+                v => noresult = v is not null);
 
             this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "Before", "After", "All"));
@@ -400,22 +400,22 @@ namespace NUnit.Common
                 v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
 
             this.Add("teamcity", "Turns on use of TeamCity service messages.",
-                v => TeamCity = v != null);
+                v => TeamCity = v is not null);
 
             this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
             this.Add("noheader|noh", "Suppress display of program information at start of run.",
-                v => NoHeader = v != null);
+                v => NoHeader = v is not null);
 
             this.Add("nocolor|noc", "Displays console output without color.",
-                v => NoColor = v != null);
+                v => NoColor = v is not null);
 
             this.Add("help|h", "Display this message and exit.",
-                v => ShowHelp = v != null);
+                v => ShowHelp = v is not null);
 
             this.Add("version|V", "Display the header and exit.",
-                v => ShowVersion = v != null);
+                v => ShowVersion = v is not null);
 
             // Default
             this.Add("<>", v =>
@@ -423,7 +423,7 @@ namespace NUnit.Common
                 if (LooksLikeAnOption(v))
                     ErrorMessages.Add("Invalid argument: " + v);
                 else if (InputFileRequired)
-                    if (InputFile == null)
+                    if (InputFile is null)
                         InputFile = v;
                     else
                         ErrorMessages.Add("Multiple file names are not allowed on the command-line.\n    Invalid entry: " + v);
@@ -439,7 +439,7 @@ namespace NUnit.Common
 
         private void ResolveOutputSpecification(string value, IList<OutputSpecification> outputSpecifications)
         {
-            if (value == null)
+            if (value is null)
                 return;
 
             try

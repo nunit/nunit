@@ -18,7 +18,7 @@ namespace NUnit.Common
         /// <param name="spec">The option value string.</param>
         public OutputSpecification(string spec)
         {
-            if (spec == null)
+            if (spec is null)
                 throw new ArgumentNullException(nameof(spec), "Output spec may not be null.");
 
             string[] parts = spec.Split(';');

@@ -160,7 +160,7 @@ namespace NUnit.Framework.Syntax
         {
             public MyClass(string s)
             {
-                if (s == null)
+                if (s is null)
                     throw new ArgumentNullException();
             }
         }

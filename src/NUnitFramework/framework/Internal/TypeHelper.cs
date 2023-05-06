@@ -90,7 +90,7 @@ namespace NUnit.Framework.Internal
         public static string GetDisplayName(Type type, object?[]? arglist)
         {
             string baseName = GetDisplayName(type);
-            if (arglist == null || arglist.Length == 0)
+            if (arglist is null || arglist.Length == 0)
                 return baseName;
 
             StringBuilder sb = new StringBuilder(baseName);
@@ -133,8 +133,8 @@ namespace NUnit.Framework.Internal
         public static bool TryGetBestCommonType(Type? type1, Type? type2, [NotNullIfNotNull("type1"), NotNullIfNotNull("type2")] out Type? bestCommonType)
         {
             if (type1 == type2) { bestCommonType = type1; return true; }
-            if (type1 == null) { bestCommonType = type2; return true; }
-            if (type2 == null) { bestCommonType = type1; return true; }
+            if (type1 is null) { bestCommonType = type2; return true; }
+            if (type2 is null) { bestCommonType = type1; return true; }
 
             if (TypeHelper.IsNumeric(type1) && TypeHelper.IsNumeric(type2))
             {
@@ -277,14 +277,14 @@ namespace NUnit.Framework.Internal
                         }
                     }
 
-                    if (typeArgs[i] == null)
+                    if (typeArgs[i] is null)
                     {
                         typeArgs = null;
                         break;
                     }
                 }
 
-                if (typeArgs != null)
+                if (typeArgs is not null)
                 {
                     typeArgsOut = typeArgs!;
                     return true;
@@ -363,7 +363,7 @@ namespace NUnit.Framework.Internal
         /// <param name="obj">The object to cast.</param>
         internal static bool CanCast<T>(object? obj)
         {
-            return obj is T || (obj == null && default(T) == null);
+            return obj is T || (obj is null && default(T) is null);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace NUnit.Framework.Internal
             }
 
             value = default(T);
-            return obj == null && default(T) == null;
+            return obj is null && default(T) is null;
         }
 
         /// <summary>

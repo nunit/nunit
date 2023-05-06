@@ -130,7 +130,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
             Assert.That(result.Message, Contains.Substring(message), "Result message should contain assertion message");
 
-            if (expectedMessage != null)
+            if (expectedMessage is not null)
             {
                 Assert.Multiple(() =>
                 {

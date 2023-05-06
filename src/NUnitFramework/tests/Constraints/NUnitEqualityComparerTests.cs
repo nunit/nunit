@@ -531,7 +531,7 @@ namespace NUnit.Framework.Constraints
         public int SomeProperty { get; set; }
         public bool Equals(EquatableObject? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return SomeProperty == other.SomeProperty;
@@ -543,7 +543,7 @@ namespace NUnit.Framework.Constraints
         public int OtherProperty { get; set; }
         public bool Equals(InheritingEquatableObject? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return OtherProperty == other.OtherProperty && Equals((EquatableObject) other);
@@ -561,7 +561,7 @@ namespace NUnit.Framework.Constraints
 
         public bool Equals(IEquatableObject? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return SomeProperty == other.SomeProperty;
@@ -572,7 +572,7 @@ namespace NUnit.Framework.Constraints
     {
         public bool Equals(EquatableObject? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return SomeProperty == other.SomeProperty;
@@ -637,7 +637,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="other">An object to compare with this object.</param>
         public bool Equals(EnumerableObject<T>? other)
         {
-            if (other == null)
+            if (other is null)
                 return false;
 
             return OtherProperty == other.SomeProperty;

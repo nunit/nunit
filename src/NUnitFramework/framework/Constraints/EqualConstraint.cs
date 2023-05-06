@@ -371,7 +371,7 @@ namespace NUnit.Framework.Constraints
             {
                 var sb = new StringBuilder(MsgUtils.FormatValue(_expected));
 
-                if (_tolerance != null && _tolerance.HasVariance)
+                if (_tolerance is not null && _tolerance.HasVariance)
                 {
                     sb.Append(" +/- ");
                     sb.Append(MsgUtils.FormatValue(_tolerance.Amount));
@@ -397,13 +397,13 @@ namespace NUnit.Framework.Constraints
         // null array reference. Others could be added in the future.
         private void AdjustArgumentIfNeeded<T>(ref T arg)
         {
-            if (arg != null)
+            if (arg is not null)
             {
                 Type argType = arg.GetType();
                 Type? genericTypeDefinition = argType.IsGenericType ? argType.GetGenericTypeDefinition() : null;
 
                 if (genericTypeDefinition == typeof(ArraySegment<>) &&
-                    argType.GetProperty("Array")?.GetValue(arg, null) == null)
+                    argType.GetProperty("Array")?.GetValue(arg, null) is null)
                 {
                     var elementType = argType.GetGenericArguments()[0];
                     var array = Array.CreateInstance(elementType, 0);

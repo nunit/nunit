@@ -135,7 +135,7 @@ namespace NUnit.Framework.Interfaces
                     var previous = current;
                     current = new TNode(reader.Name, reader.Value);
 
-                    if (root == null)
+                    if (root is null)
                     {
                         // initialize root
                         root = current;
@@ -180,7 +180,7 @@ namespace NUnit.Framework.Interfaces
                 reader.Read();
             }
 
-            if (root == null)
+            if (root is null)
             {
                 throw new ArgumentException("Could not extract root element from " + xmlText);
             }
@@ -303,7 +303,7 @@ namespace NUnit.Framework.Interfaces
             foreach (var pair in Attributes)
                 writer.WriteAttributeString(pair.Key, pair.Value);
 
-            if (Value != null)
+            if (Value is not null)
                 if (ValueIsCDATA)
                     writer.WriteCDataSafe(Value);
                 else
@@ -373,7 +373,7 @@ namespace NUnit.Framework.Interfaces
                 }
             }
 
-            return tail != null
+            return tail is not null
                 ? ApplySelection(resultNodes, tail)
                 : resultNodes;
         }
@@ -417,7 +417,7 @@ namespace NUnit.Framework.Interfaces
                 if (node.Name != _nodeName)
                     return false;
 
-                if (_propName == null)
+                if (_propName is null)
                     return true;
 
                 return node.Attributes[_propName] == _propValue;

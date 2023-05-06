@@ -200,7 +200,7 @@ namespace NUnit.Framework.Interfaces
         /// <param name="other">An object to compare with this object.</param>
         public bool Equals(ResultState? other)
         {
-            return other != null &&
+            return other is not null &&
                    Status == other.Status &&
                    Label == other.Label &&
                    Site == other.Site;
@@ -253,7 +253,7 @@ namespace NUnit.Framework.Interfaces
         {
             var sb = new StringBuilder(Status.ToString());
 
-            if (Label != null && Label.Length > 0)
+            if (Label is not null && Label.Length > 0)
                 sb.AppendFormat(":{0}", Label);
             if (Site != FailureSite.Test)
                 sb.AppendFormat("({0})", Site.ToString());

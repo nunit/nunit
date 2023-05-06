@@ -38,7 +38,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null && context.CurrentResult != null)
+            if (context is not null && context.CurrentResult is not null)
                 context.CurrentResult.OutWriter.Write(value);
             else
                 _defaultWriter.Write(value);
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null && context.CurrentResult != null)
+            if (context is not null && context.CurrentResult is not null)
                 context.CurrentResult.OutWriter.Write(value);
             else
                 _defaultWriter.Write(value);
@@ -66,7 +66,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             var context = TestExecutionContext.CurrentContext;
 
-            if (context != null && context.CurrentResult != null)
+            if (context is not null && context.CurrentResult is not null)
                 context.CurrentResult.OutWriter.WriteLine(value);
             else
                 _defaultWriter.WriteLine(value);

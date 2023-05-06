@@ -255,7 +255,7 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Dequeue our work item
                 WorkItem? work = null;
-                while (work == null)
+                while (work is null)
                     foreach (var q in _innerQueues)
                         if (q.TryDequeue(out work))
                             break;

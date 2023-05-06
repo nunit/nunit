@@ -38,30 +38,30 @@ namespace NUnit.Framework.Constraints
 
             PropertyInfo? property = Reflect.GetUltimateShadowingProperty(typeof(TActual), name, bindingFlags);
 
-            if (property == null && typeof(TActual).IsInterface)
+            if (property is null && typeof(TActual).IsInterface)
             {
                 foreach (var @interface in typeof(TActual).GetInterfaces())
                 {
                     property = Reflect.GetUltimateShadowingProperty(@interface, name, bindingFlags);
-                    if (property != null) break;
+                    if (property is not null) break;
                 }
             }
 
-            if (property == null)
+            if (property is null)
             {
                 if (actual is Type actualType)
                 {
                     property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
                 }
 
-                if (property == null)
+                if (property is null)
                 {
                     actualType = actual.GetType();
 
                     property = Reflect.GetUltimateShadowingProperty(actualType, name, bindingFlags);
 
                     // TODO: Use an error result here
-                    if (property == null)
+                    if (property is null)
                         throw new ArgumentException($"Property {name} was not found on {actualType}.", nameof(name));
                 }
             }

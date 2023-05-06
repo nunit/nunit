@@ -77,10 +77,10 @@ namespace NUnit.Framework.Interfaces
             writer.WriteStartElement("test-output");
             writer.WriteAttributeString("stream", Stream);
 
-            if (TestId != null)
+            if (TestId is not null)
                 writer.WriteAttributeString("testid", TestId);
 
-            if (TestName != null)
+            if (TestName is not null)
                 writer.WriteAttributeStringSafe("testname", TestName);
 
             writer.WriteCDataSafe(Text);

@@ -21,7 +21,7 @@ namespace NUnit.Framework
                     catch { }
                 }
 
-                if (ex != null) ExceptionHelper.Rethrow(ex);
+                if (ex is not null) ExceptionHelper.Rethrow(ex);
             }
 
             public override string ToString() => "Assert.ThrowsAsync(…)";
@@ -51,7 +51,7 @@ namespace NUnit.Framework
                     catch { }
                 }
 
-                if (ex != null) ExceptionHelper.Rethrow(ex);
+                if (ex is not null) ExceptionHelper.Rethrow(ex);
             }
 
             public override string ToString() => "Assert.CatchAsync(…)";

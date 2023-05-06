@@ -12,7 +12,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void InheritedFixtureAttributeIsRecognized()
         {
-            Assert.That( TestBuilder.MakeFixture( typeof (When_collecting_test_fixtures) ) != null );
+            Assert.That( TestBuilder.MakeFixture( typeof (When_collecting_test_fixtures) ) is not null);
         }
 
         [Test]

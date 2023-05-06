@@ -39,7 +39,7 @@ namespace NUnitLite.Tests
             doc.LoadXml(sb.ToString());
 
             topNode = doc.SelectSingleNode("/test-results");
-            if (topNode != null)
+            if (topNode is not null)
             {
                 envNode = topNode.SelectSingleNode("environment");
                 cultureNode = topNode.SelectSingleNode("culture-info");
@@ -56,7 +56,7 @@ namespace NUnitLite.Tests
         [Test]
         public void Document_FirstChildIsXmlDeclaration()
         {
-            Assume.That(doc.FirstChild != null);
+            Assume.That(doc.FirstChild is not null);
             Assert.That(doc.FirstChild.NodeType, Is.EqualTo(XmlNodeType.XmlDeclaration));
             Assert.That(doc.FirstChild.Name, Is.EqualTo("xml"));
         }

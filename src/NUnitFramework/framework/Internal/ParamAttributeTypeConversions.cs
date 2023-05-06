@@ -58,7 +58,7 @@ namespace NUnit.Framework.Internal
                 return convertedValue;
 
             throw new InvalidOperationException(
-                (value == null ? "Null" : $"A value of type {value.GetType()} ({value})")
+                (value is null ? "Null" : $"A value of type {value.GetType()} ({value})")
                 + $" cannot be passed to a parameter of type {targetType}.");
         }
 
@@ -82,7 +82,7 @@ namespace NUnit.Framework.Internal
                 return true;
             }
 
-            if (value == null || value.GetType().FullName == "System.DBNull")
+            if (value is null || value.GetType().FullName == "System.DBNull")
             {
                 convertedValue = null;
                 return Reflect.IsAssignableFromNull(targetType);

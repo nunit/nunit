@@ -59,7 +59,7 @@ namespace NUnit.Framework
         [return: NotNullIfNotNull("str")]
         internal static string? EscapeInvalidXmlCharacters(string? str)
         {
-            if (str == null) return null;
+            if (str is null) return null;
 
             // quick check when we expect valid input
             foreach (var c in str)
@@ -105,7 +105,7 @@ namespace NUnit.Framework
                          i + 1 != str.Length &&
                          char.IsLowSurrogate(str[i + 1]))
                 {
-                    if (builder != null)
+                    if (builder is not null)
                     {
                         builder.Append(c);
                         builder.Append(str[i + 1]);
@@ -119,7 +119,7 @@ namespace NUnit.Framework
                     // when doing this conversion until we encounter a unicode character.
                     // Then, we allocate the rest of the string and escape the invalid
                     // character.
-                    if (builder == null)
+                    if (builder is null)
                     {
                         builder = new StringBuilder();
                         for (int index = 0; index < i; index++)
@@ -130,7 +130,7 @@ namespace NUnit.Framework
                 }
             }
 
-            if (builder != null)
+            if (builder is not null)
                 return builder.ToString();
             else
                 return str;

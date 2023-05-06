@@ -27,7 +27,7 @@ namespace NUnit.Framework.Constraints
 
             Exception? caughtException = ExceptionHelper.RecordException(@delegate, nameof(actual));
 
-            return new ConstraintResult(this, caughtException, caughtException == null);
+            return new ConstraintResult(this, caughtException, caughtException is null);
         }
 
         /// <summary>
