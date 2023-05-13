@@ -252,12 +252,18 @@ namespace NUnit.Framework
                 if (m is not null)
                     return m.IsStatic
                         ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
-                            ? (IEnumerable?)m.Invoke(null, MethodParams)
+                            ? InvokeSourceMethod(m, MethodParams)
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
             }
 
             return null;
+        }
+        private static IEnumerable? InvokeSourceMethod(MethodInfo m, object?[]? methodArgs)
+        {
+            if (AsyncToSyncAdapter.IsAsyncOperation(m))
+                return (IEnumerable?)AsyncToSyncAdapter.Await(() => m.Invoke(null, methodArgs));
+            return (IEnumerable?)m.Invoke(null, methodArgs);
         }
 
         private static IEnumerable ReturnErrorAsParameter(string errorMessage)
