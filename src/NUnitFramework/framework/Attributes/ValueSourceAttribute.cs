@@ -28,6 +28,7 @@ using System.Collections;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -137,7 +138,7 @@ namespace NUnit.Framework
             if (m != null)
             {
                 if (m.IsStatic)
-                    return (IEnumerable)m.Invoke(null, null);
+                    return m.InvokeMaybeAwait<IEnumerable?>();
 
                 throw CreateSourceNameException();
             }

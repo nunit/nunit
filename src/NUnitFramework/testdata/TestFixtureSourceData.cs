@@ -29,6 +29,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#if !(NET35 || NET40)
+using System.Threading.Tasks;
+#endif
+
 namespace NUnit.TestData.TestFixtureSourceData
 {
     public abstract class TestFixtureSourceTest
@@ -108,6 +112,19 @@ namespace NUnit.TestData.TestFixtureSourceData
             return new object[] { new object[] { "StaticMethodInClass" } };
         }
     }
+
+#if !(NET35 || NET40)
+    [TestFixtureSource("StaticAsyncMethod")]
+    public class StaticAsyncMethod_SameClass : TestFixtureSourceTest
+    {
+        public StaticAsyncMethod_SameClass(string arg) : base(arg, "StaticAsyncMethodInClass") { }
+
+        private static Task<object[]> StaticAsyncMethod()
+        {
+            return Task.FromResult(new object[] { new object[] { "StaticAsyncMethodInClass" } });
+        }
+    }
+#endif
 
     [TestFixtureSource("InstanceField")]
     public class InstanceField_SameClass : TestFixtureSourceTest

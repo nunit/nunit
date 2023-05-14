@@ -31,6 +31,7 @@ using System.Security;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -267,18 +268,12 @@ namespace NUnit.Framework
                 if (m != null)
                     return m.IsStatic
                         ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
-                            ? InvokeSourceMethod(m, MethodParams)
+                            ? m.InvokeMaybeAwait<IEnumerable?>(MethodParams)
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
             }
 
             return null;
-        }
-        private static IEnumerable? InvokeSourceMethod(MethodInfo m, object?[]? methodArgs)
-        {
-            if (AsyncToSyncAdapter.IsAsyncOperation(m))
-                return (IEnumerable?)AsyncToSyncAdapter.Await(() => m.Invoke(null, methodArgs));
-            return (IEnumerable?)m.Invoke(null, methodArgs);
         }
 
         private static IEnumerable ReturnErrorAsParameter(string errorMessage)

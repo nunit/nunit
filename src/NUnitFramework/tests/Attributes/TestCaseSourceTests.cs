@@ -31,7 +31,10 @@ using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
 using System;
 using System.Globalization;
+
+#if !(NET35 || NET40)
 using System.Threading.Tasks;
+#endif
 
 namespace NUnit.Framework.Attributes
 {
@@ -57,6 +60,7 @@ namespace NUnit.Framework.Attributes
             get { return new object[] { new object[] { "StaticProperty" } }; }
         }
 
+#if !(NET35 || NET40)
 #pragma warning disable NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
         [Test, TestCaseSource(nameof(AsyncStaticMethod))]
 #pragma warning restore NUnit1019 // The source specified by the TestCaseSource does not return an IEnumerable or a type that implements IEnumerable
@@ -65,11 +69,12 @@ namespace NUnit.Framework.Attributes
             Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
         }
 
-        private static Task<IEnumerable?> AsyncStaticMethod()
+        private static Task<IEnumerable> AsyncStaticMethod()
         {
             var result = new object[] { new object[] { "AsyncStaticMethod" } };
-            return Task.FromResult((IEnumerable?)result);
+            return Task.FromResult((IEnumerable)result);
         }
+#endif
 
         [Test]
         public void SourceUsingInstancePropertyIsNotRunnable()
