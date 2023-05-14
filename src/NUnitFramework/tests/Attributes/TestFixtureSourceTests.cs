@@ -14,6 +14,7 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(StaticField_SameClass))]
         [TestCase(typeof(StaticProperty_SameClass))]
         [TestCase(typeof(StaticMethod_SameClass))]
+        [TestCase(typeof(StaticAsyncMethod_SameClass))]
         [TestCase(typeof(StaticField_DifferentClass))]
         [TestCase(typeof(StaticProperty_DifferentClass))]
         [TestCase(typeof(StaticMethod_DifferentClass))]

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
@@ -62,6 +63,21 @@ namespace NUnit.Framework.Attributes
         private static IEnumerable StaticMethod()
         {
             return new object[] { "StaticMethod" };
+        }
+
+        [Test]
+        public void ValueSourceCanBeAsyncStaticMethod(
+#pragma warning disable NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
+            [ValueSource(nameof(AsyncStaticMethod))] string source)
+#pragma warning restore NUnit1024 // The source specified by the ValueSource does not return an IEnumerable or a type that implements IEnumerable
+        {
+            Assert.That(source, Is.EqualTo("AsyncStaticMethod"));
+        }
+
+        private static Task<IEnumerable?> AsyncStaticMethod()
+        {
+            var result = new object[] { "AsyncStaticMethod" };
+            return Task.FromResult((IEnumerable?)result);
         }
 
         [Test]
