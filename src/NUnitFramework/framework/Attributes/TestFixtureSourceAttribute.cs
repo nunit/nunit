@@ -31,6 +31,7 @@ using NUnit.Compatibility;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -220,7 +221,7 @@ namespace NUnit.Framework
                 var m = member as MethodInfo;
                 if (m != null)
                     return m.IsStatic
-                        ? (IEnumerable)m.Invoke(null, null)
+                        ? m.InvokeMaybeAwait<IEnumerable?>()
                         : SourceMustBeStaticError();
             }
 

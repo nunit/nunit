@@ -35,6 +35,9 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(StaticField_SameClass))]
         [TestCase(typeof(StaticProperty_SameClass))]
         [TestCase(typeof(StaticMethod_SameClass))]
+#if !(NET35 || NET40)
+        [TestCase(typeof(StaticAsyncMethod_SameClass))]
+#endif
         [TestCase(typeof(StaticField_DifferentClass))]
         [TestCase(typeof(StaticProperty_DifferentClass))]
         [TestCase(typeof(StaticMethod_DifferentClass))]
