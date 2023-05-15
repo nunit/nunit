@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NUnit.TestData.TestFixtureSourceData
 {
@@ -86,6 +87,17 @@ namespace NUnit.TestData.TestFixtureSourceData
         private static object[] StaticMethod()
         {
             return new object[] { new object[] { "StaticMethodInClass" } };
+        }
+    }
+
+    [TestFixtureSource("StaticAsyncMethod")]
+    public class StaticAsyncMethod_SameClass : TestFixtureSourceTest
+    {
+        public StaticAsyncMethod_SameClass(string arg) : base(arg, "StaticAsyncMethodInClass") { }
+
+        private static Task<object[]> StaticAsyncMethod()
+        {
+            return Task.FromResult(new object[] { new object[] { "StaticAsyncMethodInClass" } });
         }
     }
 

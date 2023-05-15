@@ -8,6 +8,7 @@ using System.Security;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
+using NUnit.Framework.Internal.Extensions;
 
 namespace NUnit.Framework
 {
@@ -252,7 +253,7 @@ namespace NUnit.Framework
                 if (m is not null)
                     return m.IsStatic
                         ? (MethodParams is null || m.GetParameters().Length == MethodParams.Length
-                            ? (IEnumerable?)m.Invoke(null, MethodParams)
+                            ? m.InvokeMaybeAwait<IEnumerable?>(MethodParams)
                             : ReturnErrorAsParameter(NumberOfArgsDoesNotMatch))
                         : ReturnErrorAsParameter(SourceMustBeStatic);
             }
