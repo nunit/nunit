@@ -228,6 +228,11 @@ namespace NUnit.Framework.Internal
                     if (name != null)
                         return new PropertyFilter(name, node.Value) { IsRegex = isRegex };
                     break;
+
+                case "partition":
+                    if (PartitionFilter.TryCreate(node.Value, out var partitionFilter))
+                        return partitionFilter;
+                    break;
             }
 
             throw new ArgumentException("Invalid filter element: " + node.Name, "xmlNode");
