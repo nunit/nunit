@@ -8,41 +8,41 @@ namespace NUnit.Framework.Attributes
     [TestFixture]
     public class SetCultureAttributeTests
     {
-        private CultureInfo originalCulture;
-        private CultureInfo originalUICulture;
+        private CultureInfo _originalCulture;
+        private CultureInfo _originalUICulture;
 
         [SetUp]
         public void Setup()
         {
-            originalCulture = CultureInfo.CurrentCulture;
-            originalUICulture = CultureInfo.CurrentUICulture;
+            _originalCulture = CultureInfo.CurrentCulture;
+            _originalUICulture = CultureInfo.CurrentUICulture;
         }
 
         [Test, SetUICulture("fr-FR")]
         public void SetUICultureOnlyToFrench()
         {
-            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
+            Assert.That(_originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
             Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-FR"), "UICulture not set correctly");
         }
 
         [Test, SetUICulture("fr-CA")]
         public void SetUICultureOnlyToFrenchCanadian()
         {
-            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
+            Assert.That(_originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
             Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("fr-CA"), "UICulture not set correctly");
         }
 
         [Test, SetUICulture("ru-RU")]
         public void SetUICultureOnlyToRussian()
         {
-            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
+            Assert.That(_originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture should not change");
             Assert.That(CultureInfo.CurrentUICulture.Name, Is.EqualTo("ru-RU"), "UICulture not set correctly");
         }
 
         [Test, SetCulture("fr-FR")]
         public void SetCultureOnlyToFrench()
         {
-            Assert.That(originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture should not change");
+            Assert.That(_originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture should not change");
             Assert.That(CultureInfo.CurrentCulture.Name, Is.EqualTo("fr-FR"), "Culture not set correctly");
         }
 

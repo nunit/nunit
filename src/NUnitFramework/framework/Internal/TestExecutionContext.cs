@@ -128,17 +128,16 @@ namespace NUnit.Framework.Internal
         // NOTE: We use different implementations for various platforms.
 
 #if !NETFRAMEWORK
-        private static readonly AsyncLocal<TestExecutionContext?> _currentContext = new();
+        private static readonly AsyncLocal<TestExecutionContext?> AsyncLocalCurrentContext = new();
         /// <summary>
         /// Gets and sets the current context.
         /// </summary>
         [AllowNull]
         public static TestExecutionContext CurrentContext
         {
-            get => _currentContext.Value ?? (_currentContext.Value = new AdhocContext());
+            get => AsyncLocalCurrentContext.Value ??= new AdhocContext();
             internal set // internal so that AdhocTestExecutionTests can get at it
-                =>
-                    _currentContext.Value = value;
+                => AsyncLocalCurrentContext.Value = value;
         }
 #else
         // In all other builds, we use the CallContext

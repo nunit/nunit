@@ -54,7 +54,7 @@ namespace NUnit.Framework.Internal
             TestName = data.TestName;
 
             foreach (string key in data.Properties.Keys)
-                this.Properties[key] = data.Properties[key];
+                Properties[key] = data.Properties[key];
         }
 
         private TestParameters(RunState runState, object?[] args)
@@ -110,12 +110,14 @@ namespace NUnit.Framework.Internal
         /// <param name="test">A test.</param>
         public void ApplyToTest(Test test)
         {
-            if (this.RunState != RunState.Runnable)
-                test.RunState = this.RunState;
+            if (RunState != RunState.Runnable)
+                test.RunState = RunState;
 
             foreach (string key in Properties.Keys)
+            {
                 foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
+            }
         }
 
         /// <summary>

@@ -689,7 +689,7 @@ namespace NUnit.Framework.Internal
             [Test]
             public static void ReturnsSameRandomizerForSameParameter()
             {
-                ParameterInfo p = testMethod1.GetParameters()[0];
+                ParameterInfo p = TestMethod1Info.GetParameters()[0];
                 var r1 = Randomizer.GetRandomizer(p);
                 var r2 = Randomizer.GetRandomizer(p);
                 Assert.That(r1, Is.SameAs(r2));
@@ -698,8 +698,8 @@ namespace NUnit.Framework.Internal
             [Test]
             public static void ReturnsSameRandomizerForDifferentParametersOfSameMethod()
             {
-                ParameterInfo p1 = testMethod1.GetParameters()[0];
-                ParameterInfo p2 = testMethod1.GetParameters()[1];
+                ParameterInfo p1 = TestMethod1Info.GetParameters()[0];
+                ParameterInfo p2 = TestMethod1Info.GetParameters()[1];
                 var r1 = Randomizer.GetRandomizer(p1);
                 var r2 = Randomizer.GetRandomizer(p2);
                 Assert.That(r1, Is.SameAs(r2));
@@ -708,26 +708,26 @@ namespace NUnit.Framework.Internal
             [Test]
             public static void ReturnsSameRandomizerForSameMethod()
             {
-                var r1 = Randomizer.GetRandomizer(testMethod1);
-                var r2 = Randomizer.GetRandomizer(testMethod1);
+                var r1 = Randomizer.GetRandomizer(TestMethod1Info);
+                var r2 = Randomizer.GetRandomizer(TestMethod1Info);
                 Assert.That(r1, Is.SameAs(r2));
             }
 
             [Test]
             public static void ReturnsDifferentRandomizersForDifferentMethods()
             {
-                var r1 = Randomizer.GetRandomizer(testMethod1);
-                var r2 = Randomizer.GetRandomizer(testMethod2);
+                var r1 = Randomizer.GetRandomizer(TestMethod1Info);
+                var r2 = Randomizer.GetRandomizer(TestMethod2Info);
                 Assert.That(r1, Is.Not.SameAs(r2));
             }
 
-            private static readonly MethodInfo testMethod1 =
+            private static readonly MethodInfo TestMethod1Info =
                 typeof(Repeatability).GetMethod(nameof(TestMethod1), BindingFlags.NonPublic | BindingFlags.Static)!;
             private static void TestMethod1(int x, int y)
             {
             }
 
-            private static readonly MethodInfo testMethod2 =
+            private static readonly MethodInfo TestMethod2Info =
                 typeof(Repeatability).GetMethod(nameof(TestMethod2), BindingFlags.NonPublic | BindingFlags.Static)!;
             private static void TestMethod2(int x, int y)
             {

@@ -195,7 +195,7 @@ namespace NUnit.Framework.Internal
         /// value in the XML representation of a test and has no other
         /// function in the framework.
         /// </summary>
-        public virtual string TestType => this.GetType().Name;
+        public virtual string TestType => GetType().Name;
 
         /// <summary>
         /// Gets a count of test cases represented by
@@ -386,14 +386,14 @@ namespace NUnit.Framework.Internal
         /// <param name="recursive"></param>
         protected void PopulateTestNode(TNode thisNode, bool recursive)
         {
-            thisNode.AddAttribute("id", this.Id);
-            thisNode.AddAttribute("name", this.Name);
-            thisNode.AddAttribute("fullname", this.FullName);
-            if (this.MethodName is not null)
-                thisNode.AddAttribute("methodname", this.MethodName);
-            if (this.ClassName is not null)
-                thisNode.AddAttribute("classname", this.ClassName);
-            thisNode.AddAttribute("runstate", this.RunState.ToString());
+            thisNode.AddAttribute("id", Id);
+            thisNode.AddAttribute("name", Name);
+            thisNode.AddAttribute("fullname", FullName);
+            if (MethodName is not null)
+                thisNode.AddAttribute("methodname", MethodName);
+            if (ClassName is not null)
+                thisNode.AddAttribute("classname", ClassName);
+            thisNode.AddAttribute("runstate", RunState.ToString());
 
             if (Properties.Keys.Count > 0)
                 Properties.AddToXml(thisNode, recursive);
@@ -450,7 +450,7 @@ namespace NUnit.Framework.Internal
         /// <param name="other">An object to compare with this instance.</param>
         public int CompareTo(Test? other)
         {
-            return other is null ? -1 : this.FullName.CompareTo(other.FullName);
+            return other is null ? -1 : FullName.CompareTo(other.FullName);
         }
 
 #endregion

@@ -57,9 +57,13 @@ namespace NUnit.Framework.Internal.Execution
         protected override void PerformWork()
         {
             if (!CheckForCancellation())
+            {
                 if (Test.RunState == RunState.Explicit && !Filter.IsExplicitMatch(Test))
+                {
                     SkipFixture(ResultState.Explicit, GetSkipReason(), null);
+                }
                 else
+                {
                     switch (Test.RunState)
                     {
                         default:
@@ -101,7 +105,10 @@ namespace NUnit.Framework.Internal.Execution
                                     PerformOneTimeTearDown();
                             }
                             else if (Test.TestType == "Theory")
+                            {
                                 Result.SetResult(ResultState.Failure, "No test cases were provided");
+                            }
+
                             break;
 
                         case RunState.Skipped:
@@ -116,6 +123,8 @@ namespace NUnit.Framework.Internal.Execution
                             SkipFixture(ResultState.NotRunnable, GetSkipReason(), GetProviderStackTrace());
                             break;
                     }
+                }
+            }
 
             // Fall through in case nothing was run.
             // Otherwise, this is done in the completion event.
@@ -276,12 +285,14 @@ namespace NUnit.Framework.Internal.Execution
             // If run was cancelled, reduce countdown by number of
             // child items not yet staged and check if we are done.
             if (childCount > 0)
-                lock(_childCompletionLock)
+            {
+                lock (_childCompletionLock)
                 {
                     _childTestCountdown.Signal(childCount);
                     if (_childTestCountdown.CurrentCount == 0)
                         OnAllChildItemsCompleted();
                 }
+            }
         }
 
         private void SkipFixture(ResultState resultState, string? message, string? stackTrace)
@@ -320,9 +331,9 @@ namespace NUnit.Framework.Internal.Execution
             // executed on the same thread since the time that
             // this test started, so we have to re-establish
             // the proper execution environment
-            this.Context.EstablishExecutionEnvironment();
+            Context.EstablishExecutionEnvironment();
 
-            _teardownCommand?.Execute(this.Context);
+            _teardownCommand?.Execute(Context);
         }
 
         private string? GetSkipReason()
@@ -373,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
-        private readonly object cancelLock = new object();
+        private readonly object _cancelLock = new object();
 
         /// <summary>
         /// Cancel (abort or stop) a CompositeWorkItem and all of its children
@@ -381,7 +392,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="force">true if the CompositeWorkItem and all of its children should be aborted, false if it should allow all currently running tests to complete</param>
         public override void Cancel(bool force)
         {
-            lock (cancelLock)
+            lock (_cancelLock)
             {
                 foreach (var child in Children)
                 {
@@ -443,11 +454,13 @@ namespace NUnit.Framework.Internal.Execution
                         _originalWorkItem.PerformOneTimeTearDown();
 
                     foreach (var childResult in Result.Children)
+                    {
                         if (childResult.ResultState == ResultState.Cancelled)
                         {
-                            this.Result.SetResult(ResultState.Cancelled, "Cancelled by user");
+                            Result.SetResult(ResultState.Cancelled, "Cancelled by user");
                             break;
                         }
+                    }
 
                     _originalWorkItem.WorkItemComplete();
                 }

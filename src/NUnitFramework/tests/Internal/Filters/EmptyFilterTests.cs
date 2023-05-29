@@ -23,25 +23,25 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchesAnything()
         {
-            Assert.That(TestFilter.Empty.Match(_dummyFixture));
-            Assert.That(TestFilter.Empty.Match(_anotherFixture));
-            Assert.That(TestFilter.Empty.Match(_yetAnotherFixture));
+            Assert.That(TestFilter.Empty.Match(DummyFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(AnotherFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(YetAnotherFixtureSuite));
         }
 
         [Test]
         public void PassesAnything()
         {
-            Assert.That(TestFilter.Empty.Match(_dummyFixture));
-            Assert.That(TestFilter.Empty.Match(_anotherFixture));
-            Assert.That(TestFilter.Empty.Match(_yetAnotherFixture));
+            Assert.That(TestFilter.Empty.Match(DummyFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(AnotherFixtureSuite));
+            Assert.That(TestFilter.Empty.Match(YetAnotherFixtureSuite));
         }
 
         [Test]
         public void MatchesNothingExplicitly()
         {
-            Assert.That(TestFilter.Empty.IsExplicitMatch(_dummyFixture), Is.False);
-            Assert.That(TestFilter.Empty.IsExplicitMatch(_anotherFixture), Is.False);
-            Assert.That(TestFilter.Empty.IsExplicitMatch(_yetAnotherFixture), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(DummyFixtureSuite), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(AnotherFixtureSuite), Is.False);
+            Assert.That(TestFilter.Empty.IsExplicitMatch(YetAnotherFixtureSuite), Is.False);
         }
     }
 }

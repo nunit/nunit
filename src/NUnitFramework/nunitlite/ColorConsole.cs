@@ -32,9 +32,11 @@ namespace NUnit.Common
             ConsoleColor bg = Console.BackgroundColor;
 
             if (color == bg || color == ConsoleColor.Red && bg == ConsoleColor.Magenta)
+            {
                 return bg == ConsoleColor.Black
                     ? ConsoleColor.White
                     : ConsoleColor.Black;
+            }
 
             return color;
         }

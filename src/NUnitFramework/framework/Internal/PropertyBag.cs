@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class PropertyBag : IPropertyBag
     {
-        private readonly Dictionary<string, IList> inner = new Dictionary<string, IList>();
+        private readonly Dictionary<string, IList> _inner = new Dictionary<string, IList>();
 
         #region IPropertyBagMembers
 
@@ -30,10 +30,10 @@ namespace NUnit.Framework.Internal
         {
             Guard.ArgumentNotNull(value, "value");
 
-            if (!inner.TryGetValue(key, out var list))
+            if (!_inner.TryGetValue(key, out var list))
             {
                 list = new List<object>();
-                inner.Add(key, list);
+                _inner.Add(key, list);
             }
             list.Add(value);
         }
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Internal
 
             IList list = new List<object>();
             list.Add(value);
-            inner[key] = list;
+            _inner[key] = list;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public object? Get(string key)
         {
-            return inner.TryGetValue(key, out var list) && list.Count > 0
+            return _inner.TryGetValue(key, out var list) && list.Count > 0
                 ? list[0]
                 : null;
         }
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal
         /// </returns>
         public bool ContainsKey(string key)
         {
-            return inner.ContainsKey(key);
+            return _inner.ContainsKey(key);
         }
 
         /// <summary>
@@ -90,14 +90,14 @@ namespace NUnit.Framework.Internal
         /// <returns>true if found</returns>
         public bool TryGet(string key, [NotNullWhen(true)] out IList? values)
         {
-            return inner.TryGetValue(key, out values);
+            return _inner.TryGetValue(key, out values);
         }
 
         /// <summary>
         /// Gets a collection containing all the keys in the property set
         /// </summary>
         /// <value></value>
-        public ICollection<string> Keys => inner.Keys;
+        public ICollection<string> Keys => _inner.Keys;
 
         /// <summary>
         /// Gets or sets the list of values for a particular key
@@ -106,14 +106,14 @@ namespace NUnit.Framework.Internal
         {
             get
             {
-                if (!inner.TryGetValue(key, out var list))
+                if (!_inner.TryGetValue(key, out var list))
                 {
                     list = new List<object>();
-                    inner.Add(key, list);
+                    _inner.Add(key, list);
                 }
                 return list;
             }
-            set => inner[key] = value;
+            set => _inner[key] = value;
         }
 
         #endregion
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal
             TNode properties = parentNode.AddElement("properties");
 
             // enumerating dictionary directly with struct enumerator which is fastest
-            foreach (var pair in inner)
+            foreach (var pair in _inner)
             {
                 // Use for-loop to avoid allocating the enumerator
                 var list = pair.Value;

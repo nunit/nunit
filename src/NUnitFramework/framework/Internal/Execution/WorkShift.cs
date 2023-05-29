@@ -28,7 +28,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class WorkShift
     {
-        private static readonly Logger log = InternalTrace.GetLogger("WorkShift");
+        private static readonly Logger Log = InternalTrace.GetLogger("WorkShift");
 
         private readonly object _syncRoot = new object();
         private int _busyCount = 0;
@@ -67,8 +67,10 @@ namespace NUnit.Framework.Internal.Execution
             get
             {
                 foreach (var q in Queues)
+                {
                     if (!q.IsEmpty)
                         return true;
+                }
 
                 return false;
             }
@@ -100,7 +102,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void AddQueue(WorkItemQueue queue)
         {
-            log.Debug("{0} shift adding queue {1}", Name, queue.Name);
+            Log.Debug("{0} shift adding queue {1}", Name, queue.Name);
 
             Queues.Add(queue);
 
@@ -114,7 +116,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="worker"></param>
         public void Assign(TestWorker worker)
         {
-            log.Debug("{0} shift assigned worker {1}", Name, worker.Name);
+            Log.Debug("{0} shift assigned worker {1}", Name, worker.Name);
 
             Workers.Add(worker);
         }
@@ -126,7 +128,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Start()
         {
-            log.Info("{0} shift starting", Name);
+            Log.Info("{0} shift starting", Name);
 
             IsActive = true;
 
@@ -172,7 +174,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void EndShift()
         {
-            log.Info("{0} shift ending", Name);
+            Log.Info("{0} shift ending", Name);
 
             IsActive = false;
 

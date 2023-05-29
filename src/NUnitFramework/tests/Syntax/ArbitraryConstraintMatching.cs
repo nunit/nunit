@@ -9,27 +9,27 @@ namespace NUnit.Framework.Syntax
     [TestFixture]
     public class ArbitraryConstraintMatching
     {
-        private readonly Constraint custom = new CustomConstraint();
-        private readonly Constraint another = new AnotherConstraint();
+        private readonly Constraint _custom = new CustomConstraint();
+        private readonly Constraint _another = new AnotherConstraint();
 
         [Test]
         public void CanMatchCustomConstraint()
         {
-            IResolveConstraint constraint = new ConstraintExpression().Matches(custom);
+            IResolveConstraint constraint = new ConstraintExpression().Matches(_custom);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<custom>"));
         }
 
         [Test]
         public void CanMatchCustomConstraintAfterPrefix()
         {
-            IResolveConstraint constraint = Is.All.Matches(custom);
+            IResolveConstraint constraint = Is.All.Matches(_custom);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <custom>>"));
         }
 
         [Test]
         public void CanMatchCustomConstraintsUnderAndOperator()
         {
-            IResolveConstraint constraint = Is.All.Matches(custom).And.Matches(another);
+            IResolveConstraint constraint = Is.All.Matches(_custom).And.Matches(_another);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>")); 
         }
 

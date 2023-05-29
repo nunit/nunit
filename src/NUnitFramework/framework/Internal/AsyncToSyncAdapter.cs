@@ -9,12 +9,12 @@ namespace NUnit.Framework.Internal
 {
     internal static class AsyncToSyncAdapter
     {
-        private static readonly Type? _asyncStateMachineAttributeType = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute, System.Runtime", false);
+        private static readonly Type? AsyncStateMachineAttributeType = Type.GetType("System.Runtime.CompilerServices.AsyncStateMachineAttribute, System.Runtime", false);
 
         public static bool IsAsyncOperation(MethodInfo method)
         {
             return AwaitAdapter.IsAwaitable(method.ReturnType)
-                || (_asyncStateMachineAttributeType is not null && method.IsDefined(_asyncStateMachineAttributeType, false));
+                || (AsyncStateMachineAttributeType is not null && method.IsDefined(AsyncStateMachineAttributeType, false));
         }
 
         public static bool IsAsyncOperation(Delegate @delegate)

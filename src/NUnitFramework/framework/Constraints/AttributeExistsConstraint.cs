@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class AttributeExistsConstraint : Constraint
     {
-        private readonly Type expectedType;
+        private readonly Type _expectedType;
 
         /// <summary>
         /// Constructs an AttributeExistsConstraint for a specific attribute Type
@@ -20,17 +20,17 @@ namespace NUnit.Framework.Constraints
         public AttributeExistsConstraint(Type type)
             : base(type)
         {
-            this.expectedType = type;
+            _expectedType = type;
 
-            if (!typeof(Attribute).IsAssignableFrom(expectedType))
-                throw new ArgumentException($"Type {expectedType} is not an attribute", nameof(type));
+            if (!typeof(Attribute).IsAssignableFrom(_expectedType))
+                throw new ArgumentException($"Type {_expectedType} is not an attribute", nameof(type));
         }
 
         /// <summary>
         /// The Description of what this constraint tests, for
         /// use in messages and in the ConstraintResult.
         /// </summary>
-        public override string Description => "type with attribute " + MsgUtils.FormatValue(expectedType);
+        public override string Description => "type with attribute " + MsgUtils.FormatValue(_expectedType);
 
         /// <summary>
         /// Tests whether the object provides the expected attribute.
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Constraints
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             Guard.ArgumentNotNull(actual, nameof(actual));
-            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, expectedType, true);
+            Attribute[] attrs = AttributeHelper.GetCustomAttributes(actual, _expectedType, true);
             ConstraintResult result = new ConstraintResult(this, actual);
             result.Status = attrs.Length > 0
                 ? ConstraintStatus.Success : ConstraintStatus.Failure;

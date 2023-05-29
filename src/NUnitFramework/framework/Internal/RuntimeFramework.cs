@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static readonly Version DefaultVersion = new Version(0,0);
 
-        private static readonly Lazy<RuntimeFramework> currentFramework = new Lazy<RuntimeFramework>(() =>
+        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new Lazy<RuntimeFramework>(() =>
         {
             Type? monoRuntimeType = null;
             Type? monoTouchType = null;
@@ -142,6 +142,7 @@ namespace NUnit.Framework.Internal
             FrameworkVersion = ClrVersion = version;
 
             if (version.Major > 0) // 0 means any version
+            {
                 switch (Runtime)
                 {
                     case RuntimeType.NetCore:
@@ -184,6 +185,7 @@ namespace NUnit.Framework.Internal
                         }
                         break;
                 }
+            }
         }
 
         private static void ThrowInvalidFrameworkVersion(Version version)
@@ -212,7 +214,7 @@ namespace NUnit.Framework.Internal
         /// Static method to return a RuntimeFramework object
         /// for the framework that is currently in use.
         /// </summary>
-        public static RuntimeFramework CurrentFramework => currentFramework.Value;
+        public static RuntimeFramework CurrentFramework => LazyCurrentFramework.Value;
 
         /// <summary>
         /// The type of this runtime framework
@@ -321,7 +323,9 @@ namespace NUnit.Framework.Internal
             if (Runtime != RuntimeType.Any
                 && target.Runtime != RuntimeType.Any
                 && Runtime != target.Runtime)
+            {
                 return false;
+            }
 
             if (AllowAnyVersion || target.AllowAnyVersion)
                 return true;

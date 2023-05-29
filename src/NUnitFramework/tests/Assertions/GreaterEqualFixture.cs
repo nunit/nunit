@@ -9,70 +9,70 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class GreaterEqualFixture
     {
-        private readonly int i1 = 5;
-        private readonly int i2 = 4;
-        private readonly uint u1 = 12345879;
-        private readonly uint u2 = 12345678;
-        private readonly long l1 = 12345879;
-        private readonly long l2 = 12345678;
-        private readonly ulong ul1 = 12345879;
-        private readonly ulong ul2 = 12345678;
-        private readonly float f1 = 3.543F;
-        private readonly float f2 = 2.543F;
-        private readonly decimal de1 = 53.4M;
-        private readonly decimal de2 = 33.4M;
-        private readonly double d1 = 4.85948654;
-        private readonly double d2 = 1.0;
-        private readonly System.Enum e1 = RunState.Explicit;
-        private readonly System.Enum e2 = RunState.Ignored;
+        private readonly int _i1 = 5;
+        private readonly int _i2 = 4;
+        private readonly uint _u1 = 12345879;
+        private readonly uint _u2 = 12345678;
+        private readonly long _l1 = 12345879;
+        private readonly long _l2 = 12345678;
+        private readonly ulong _ul1 = 12345879;
+        private readonly ulong _ul2 = 12345678;
+        private readonly float _f1 = 3.543F;
+        private readonly float _f2 = 2.543F;
+        private readonly decimal _de1 = 53.4M;
+        private readonly decimal _de2 = 33.4M;
+        private readonly double _d1 = 4.85948654;
+        private readonly double _d2 = 1.0;
+        private readonly Enum _e1 = RunState.Explicit;
+        private readonly Enum _e2 = RunState.Ignored;
 
         [Test]
         public void GreaterOrEqual_Int32()
         {
-            Assert.GreaterOrEqual(i1, i1);           
-            Assert.GreaterOrEqual(i1, i2);
+            Assert.GreaterOrEqual(_i1, _i1);           
+            Assert.GreaterOrEqual(_i1, _i2);
         }
 
         [Test]
         public void GreaterOrEqual_UInt32()
         {
-            Assert.GreaterOrEqual(u1, u1);
-            Assert.GreaterOrEqual(u1, u2);
+            Assert.GreaterOrEqual(_u1, _u1);
+            Assert.GreaterOrEqual(_u1, _u2);
         }
 
         [Test]
         public void GreaterOrEqual_Long()
         {
-            Assert.GreaterOrEqual(l1, l1);
-            Assert.GreaterOrEqual(l1, l2);
+            Assert.GreaterOrEqual(_l1, _l1);
+            Assert.GreaterOrEqual(_l1, _l2);
         }
 
         [Test]
         public void GreaterOrEqual_ULong()
         {
-            Assert.GreaterOrEqual(ul1, ul1);
-            Assert.GreaterOrEqual(ul1, ul2);
+            Assert.GreaterOrEqual(_ul1, _ul1);
+            Assert.GreaterOrEqual(_ul1, _ul2);
         }
 
         [Test]
         public void GreaterOrEqual_Double()
         {
-            Assert.GreaterOrEqual(d1, d1, "double");
-            Assert.GreaterOrEqual(d1, d2, "double");
+            Assert.GreaterOrEqual(_d1, _d1, "double");
+            Assert.GreaterOrEqual(_d1, _d2, "double");
         }
 
         [Test]
         public void GreaterOrEqual_Decimal()
         {
-            Assert.GreaterOrEqual(de1, de1, "{0}", "decimal");
-            Assert.GreaterOrEqual(de1, de2, "{0}", "decimal");
+            Assert.GreaterOrEqual(_de1, _de1, "{0}", "decimal");
+            Assert.GreaterOrEqual(_de1, _de2, "{0}", "decimal");
         }
 
         [Test]
         public void GreaterOrEqual_Float()
         {
-            Assert.GreaterOrEqual(f1, f1, "float");
-            Assert.GreaterOrEqual(f1, f2, "float");
+            Assert.GreaterOrEqual(_f1, _f1, "float");
+            Assert.GreaterOrEqual(_f1, _f2, "float");
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than or equal to 5" + Environment.NewLine +
                 "  But was:  4" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.GreaterOrEqual(i2, i1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.GreaterOrEqual(_i2, _i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than or equal to Ignored" + Environment.NewLine +
                 "  But was:  Explicit" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.GreaterOrEqual(e1, e2));
+            var ex = Assert.Throws<AssertionException>(() => Assert.GreaterOrEqual(_e1, _e2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

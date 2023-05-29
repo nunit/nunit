@@ -12,8 +12,8 @@ namespace NUnit.Framework.Internal
     public class SetUpFixtureTests
     {
         private static readonly string ASSEMBLY_PATH = AssemblyHelper.GetAssemblyPath(typeof(TestData.SetupFixture.Namespace1.SomeFixture).Assembly);
-        private ITestAssemblyBuilder builder;
-        private ITestAssemblyRunner runner;
+        private ITestAssemblyBuilder _builder;
+        private ITestAssemblyRunner _runner;
 
         #region SetUp
         [SetUp]
@@ -21,8 +21,8 @@ namespace NUnit.Framework.Internal
         {
             TestUtilities.SimpleEventRecorder.Clear();
 
-            builder = new DefaultTestAssemblyBuilder();
-            runner = new NUnitTestAssemblyRunner(builder);
+            _builder = new DefaultTestAssemblyBuilder();
+            _runner = new NUnitTestAssemblyRunner(_builder);
         }
         #endregion SetUp
 
@@ -39,8 +39,8 @@ namespace NUnit.Framework.Internal
             // No need for the overhead of parallel execution here
             options["NumberOfTestWorkers"] = 0;
 
-            if (runner.Load(ASSEMBLY_PATH, options) is not null)
-                return runner.Run(TestListener.NULL, filter);
+            if (_runner.Load(ASSEMBLY_PATH, options) is not null)
+                return _runner.Run(TestListener.NULL, filter);
 
             return null;
         }
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
             {
                 ["LOAD"] = new[] { nameSpace }
             };
-            ITest? suite = builder.Build(ASSEMBLY_PATH, options);
+            ITest? suite = _builder.Build(ASSEMBLY_PATH, options);
 
             Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>
@@ -102,7 +102,7 @@ namespace NUnit.Framework.Internal
         public void AssemblySetUpFixtureFollowsAssemblyNodeInTree()
         {
             IDictionary<string, object> options = new Dictionary<string, object>();
-            var rootSuite = builder.Build(ASSEMBLY_PATH, options);
+            var rootSuite = _builder.Build(ASSEMBLY_PATH, options);
             Assert.That(rootSuite, Is.TypeOf<TestAssembly>());
             var setupFixture = rootSuite.Tests[0];
             Assert.That(setupFixture, Is.TypeOf<SetUpFixture>());
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal
             {
                 ["LOAD"] = new[] { nameSpace }
             };
-            ITest? suite = builder.Build(ASSEMBLY_PATH, options);
+            ITest? suite = _builder.Build(ASSEMBLY_PATH, options);
 
             Assert.That(suite, Is.Not.Null);
             Assert.Multiple(() =>

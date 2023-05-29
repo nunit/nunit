@@ -21,7 +21,7 @@ namespace NUnit.Framework.Constraints
             
             // Indexer stacks on anything and allows only
             // prefix operators to stack on it.
-            this.left_precedence = this.right_precedence = 1;
+            left_precedence = right_precedence = 1;
         }
 
         /// <summary>

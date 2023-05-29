@@ -67,7 +67,9 @@ namespace NUnit.Framework.Internal
         public static Randomizer GetRandomizer(MemberInfo member)
         {
             if (Randomizers.TryGetValue(member, out var randomizer))
+            {
                 return randomizer;
+            }
             else
             {
                 var r = CreateRandomizer();

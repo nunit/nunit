@@ -6,72 +6,72 @@ namespace NUnit.Framework.Constraints
 {
     public class ExactlyOneConstraintTests
     {
-        private static readonly IEnumerable<string> testCollectionLen0 = new List<string>();
-        private static readonly IEnumerable<string> testCollectionLen1 = new List<string> { "item" };
-        private static readonly IEnumerable<string> testCollectionLen2 = new List<string> { "item", "otherItem" };
-        private static readonly IEnumerable<string> testCollectionLen3 = new List<string> { "item", "item", "otherItem" };
+        private static readonly IEnumerable<string> TestCollectionLen0 = new List<string>();
+        private static readonly IEnumerable<string> TestCollectionLen1 = new List<string> { "item" };
+        private static readonly IEnumerable<string> TestCollectionLen2 = new List<string> { "item", "otherItem" };
+        private static readonly IEnumerable<string> TestCollectionLen3 = new List<string> { "item", "item", "otherItem" };
 
         [Test]
         public void ExactlyOneItemInCollection()
         {
-            Assert.That(testCollectionLen1, Has.One.Items);
+            Assert.That(TestCollectionLen1, Has.One.Items);
         }
 
         [Test]
         public void ExactlyOneItemMatches()
         {
-            Assert.That(testCollectionLen1, Has.One.EqualTo("item"));
+            Assert.That(TestCollectionLen1, Has.One.EqualTo("item"));
         }
 
         [Test]
         public void ExactlyOneItemDoesNotMatch()
         {
-            Assert.That(testCollectionLen1, Has.One.Not.EqualTo("notItem"));
+            Assert.That(TestCollectionLen1, Has.One.Not.EqualTo("notItem"));
         }
         [Test]
         public void ExactlyOneItemMustMatchButNoneInCollection()
         {
-            Assert.That(Has.One.EqualTo("item").ApplyTo(testCollectionLen0).IsSuccess, Is.False);
+            Assert.That(Has.One.EqualTo("item").ApplyTo(TestCollectionLen0).IsSuccess, Is.False);
         }
 
         [Test]
         public void ExactlyOneBlankConstraintWhereCollectionIsTwo()
         {
             Assert.Throws<AssertionException>(() =>
-                Assert.That(testCollectionLen2, Has.One.Items));
+                Assert.That(TestCollectionLen2, Has.One.Items));
         }
 
         [Test]
         public void ExactlyOneItemDoesNotMatchFromTwoElements()
         {
             Assert.Throws<AssertionException>(() =>
-                Assert.That(testCollectionLen2, Has.One.EqualTo("notItem")));
+                Assert.That(TestCollectionLen2, Has.One.EqualTo("notItem")));
         }
 
         [Test]
         public void ExactlyOneItemMustMatchButMultipleMatch()
         {
             Assert.Throws<AssertionException>(() =>
-                Assert.That(testCollectionLen3, Has.One.EqualTo("item")));
+                Assert.That(TestCollectionLen3, Has.One.EqualTo("item")));
         }
 
         [Test]
         public void ExactlyOneBlankConstraintWhereCollectionIsOne()
         {
-            Assert.That(testCollectionLen1, Has.One.Items);
+            Assert.That(TestCollectionLen1, Has.One.Items);
         }
 
         [Test]
         public void ExactlyOneConstraintMatchingWhereCollectionIsTwo()
         {
-            Assert.That(testCollectionLen2, Has.One.EqualTo("item"));
+            Assert.That(TestCollectionLen2, Has.One.EqualTo("item"));
         }
 
         [Test]
         public void ExactlyOneConstraintNotMatchingWhereCollectionIsTwo()
         {
            Assert.Throws<AssertionException>(() =>
-                Assert.That(testCollectionLen2, Has.One.EqualTo("blah")));
+                Assert.That(TestCollectionLen2, Has.One.EqualTo("blah")));
         }
     }
 }

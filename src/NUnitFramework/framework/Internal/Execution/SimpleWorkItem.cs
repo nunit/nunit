@@ -90,8 +90,10 @@ namespace NUnit.Framework.Internal.Execution
 
                 // Create TestActionCommands using attributes of the method
                 foreach (ITestAction action in Test.Actions)
+                {
                     if (action.Targets == ActionTargets.Default || action.Targets.HasFlag(ActionTargets.Test))
-                        command = new TestActionCommand(command, action); ;
+                        command = new TestActionCommand(command, action);
+                }
 
                 // Try to locate the parent fixture. In current implementations, the test method
                 // is either one or two levels below the TestFixture - if this changes,

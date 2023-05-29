@@ -26,7 +26,9 @@ namespace NUnit.TestUtilities.Comparers
                     return -1;
             }
             else if (yAsString is null)
+            {
                 return 1;
+            }
 
             if (int.TryParse(xAsString, out int intX) && int.TryParse(yAsString, out int intY))
             {

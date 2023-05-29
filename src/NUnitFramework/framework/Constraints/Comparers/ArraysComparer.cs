@@ -23,8 +23,10 @@ namespace NUnit.Framework.Constraints.Comparers
                 return false;
 
             for (int r = 1; r < rank; r++)
+            {
                 if (xArray.GetLength(r) != yArray.GetLength(r))
                     return false;
+            }
 
             return EnumerablesComparer.Equal(xArray, yArray, ref tolerance, state, equalityComparer);
         }

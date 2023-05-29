@@ -11,7 +11,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class ConstraintExpressionTests
     {
-        private static readonly Func<int, int, bool> myIntComparer = (x, y) => x == y;
+        private static readonly Func<int, int, bool> MyIntComparer = (x, y) => x == y;
 
         [Test]
         public void ConstraintExpressionMemberAnd()
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Constraints
         public void ConstraintExpressionContainsUsing()
         {
             var constraintExpression = new ConstraintExpression();
-            var constraint = constraintExpression.Contains(4).Using(myIntComparer);
+            var constraint = constraintExpression.Contains(4).Using(MyIntComparer);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);
         }
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Constraints
         public void ConstraintExpressionContainUsing()
         {
             var constraintExpression = new ConstraintExpression();
-            var constraint = constraintExpression.Contain(8).Using(myIntComparer);
+            var constraint = constraintExpression.Contain(8).Using(MyIntComparer);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);
         }

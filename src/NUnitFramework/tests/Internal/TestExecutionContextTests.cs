@@ -25,10 +25,10 @@ namespace NUnit.Framework.Internal
         private TestExecutionContext _fixtureContext;
         private TestExecutionContext _setupContext;
         private ResultState _fixtureResult;
-        private string originalDirectory;
-        private CultureInfo originalCulture;
-        private CultureInfo originalUICulture;
-        private IPrincipal? originalPrincipal;
+        private string _originalDirectory;
+        private CultureInfo _originalCulture;
+        private CultureInfo _originalUICulture;
+        private IPrincipal? _originalPrincipal;
         private readonly DateTime _fixtureCreateTime = DateTime.UtcNow;
         private readonly long _fixtureCreateTicks = Stopwatch.GetTimestamp();
 
@@ -58,21 +58,21 @@ namespace NUnit.Framework.Internal
         {
             _setupContext = TestExecutionContext.CurrentContext;
 
-            originalDirectory = Directory.GetCurrentDirectory();
+            _originalDirectory = Directory.GetCurrentDirectory();
 
-            originalCulture = CultureInfo.CurrentCulture;
-            originalUICulture = CultureInfo.CurrentUICulture;
-            originalPrincipal = Thread.CurrentPrincipal;
+            _originalCulture = CultureInfo.CurrentCulture;
+            _originalUICulture = CultureInfo.CurrentUICulture;
+            _originalPrincipal = Thread.CurrentPrincipal;
         }
 
         [TearDown]
         public void Cleanup()
         {
-            Directory.SetCurrentDirectory(originalDirectory);
+            Directory.SetCurrentDirectory(_originalDirectory);
 
-            Thread.CurrentThread.CurrentCulture = originalCulture;
-            Thread.CurrentThread.CurrentUICulture = originalUICulture;
-            Thread.CurrentPrincipal = originalPrincipal;
+            Thread.CurrentThread.CurrentCulture = _originalCulture;
+            Thread.CurrentThread.CurrentUICulture = _originalUICulture;
+            Thread.CurrentPrincipal = _originalPrincipal;
 
             Assert.That(
                 TestExecutionContext.CurrentContext.CurrentTest.FullName,
@@ -715,19 +715,19 @@ namespace NUnit.Framework.Internal
             try
             {
                 CultureInfo otherCulture =
-                    new CultureInfo(originalCulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
+                    new CultureInfo(_originalCulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
                 context.CurrentCulture = otherCulture;
                 Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(otherCulture), "Culture was not set");
                 Assert.That(context.CurrentCulture, Is.EqualTo(otherCulture), "Culture not in new context");
-                Assert.That(originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Original context should not change");
+                Assert.That(_originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.That(originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture was not restored");
-            Assert.That(originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Culture not in final context");
+            Assert.That(_originalCulture, Is.EqualTo(CultureInfo.CurrentCulture), "Culture was not restored");
+            Assert.That(_originalCulture, Is.EqualTo(_setupContext.CurrentCulture), "Culture not in final context");
         }
 
         [Test]
@@ -738,19 +738,19 @@ namespace NUnit.Framework.Internal
             try
             {
                 CultureInfo otherCulture =
-                    new CultureInfo(originalUICulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
+                    new CultureInfo(_originalUICulture.Name == "fr-FR" ? "en-GB" : "fr-FR");
                 context.CurrentUICulture = otherCulture;
                 Assert.That(CultureInfo.CurrentUICulture, Is.EqualTo(otherCulture), "UICulture was not set");
                 Assert.That(context.CurrentUICulture, Is.EqualTo(otherCulture), "UICulture not in new context");
-                Assert.That(originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "Original context should not change");
+                Assert.That(_originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.That(originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture was not restored");
-            Assert.That(originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "UICulture not in final context");
+            Assert.That(_originalUICulture, Is.EqualTo(CultureInfo.CurrentUICulture), "UICulture was not restored");
+            Assert.That(_originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "UICulture not in final context");
         }
 
 #endregion
@@ -786,15 +786,15 @@ namespace NUnit.Framework.Internal
                 context.CurrentPrincipal = new GenericPrincipal(identity, Array.Empty<string>());
                 Assert.That(Thread.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"), "Principal was not set");
                 Assert.That(context.CurrentPrincipal?.Identity?.Name, Is.EqualTo("foo"), "Principal not in new context");
-                Assert.That(originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Original context should not change");
+                Assert.That(_originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Original context should not change");
             }
             finally
             {
                 _setupContext.EstablishExecutionEnvironment();
             }
 
-            Assert.That(originalPrincipal, Is.EqualTo(Thread.CurrentPrincipal), "Principal was not restored");
-            Assert.That(originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Principal not in final context");
+            Assert.That(_originalPrincipal, Is.EqualTo(Thread.CurrentPrincipal), "Principal was not restored");
+            Assert.That(_originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Principal not in final context");
         }
 
 #endregion

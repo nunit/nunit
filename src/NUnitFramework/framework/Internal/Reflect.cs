@@ -126,7 +126,7 @@ namespace NUnit.Framework.Internal
         }
 
         // §6.1.2 (Implicit numeric conversions) of the specification
-        private static readonly Dictionary<Type, List<Type>> convertibleValueTypes = new Dictionary<Type, List<Type>>() {
+        private static readonly Dictionary<Type, List<Type>> ConvertibleValueTypes = new Dictionary<Type, List<Type>>() {
             { typeof(decimal), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char) } },
             { typeof(double), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
             { typeof(float), new List<Type> { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(char), typeof(float) } },
@@ -153,7 +153,7 @@ namespace NUnit.Framework.Internal
                 return to.IsClass || to.FullName().StartsWith("System.Nullable", StringComparison.Ordinal);
             }
 
-            if (convertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
+            if (ConvertibleValueTypes.TryGetValue(to, out var types) && types.Contains(from))
                 return true;
 
             return from
@@ -306,8 +306,10 @@ namespace NUnit.Framework.Internal
                        if (parameters.Length != parameterTypes.Length) return false;
 
                        for (var i = 0; i < parameterTypes.Length; i++)
+                       {
                            if (parameters[i].ParameterType != parameterTypes[i])
                                return false;
+                       }
 
                        return true;
                    });
@@ -326,7 +328,8 @@ namespace NUnit.Framework.Internal
                      .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                      .SingleOrDefault(candidate =>
                      {
-                         if (candidate.Name != name) return false;
+                         if (candidate.Name != name)
+                             return false;
 
                          var indexParameters = candidate.GetIndexParameters();
                          if (indexParameters.Length != indexParameterTypes.Length) return false;

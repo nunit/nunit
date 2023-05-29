@@ -11,7 +11,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class TestWorker
     {
-        private static readonly Logger log = InternalTrace.GetLogger("TestWorker");
+        private static readonly Logger Log = InternalTrace.GetLogger("TestWorker");
 
         private Thread? _workerThread;
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Internal.Execution
                     if (_currentWorkItem is null)
                         break;
 
-                    log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);
+                    Log.Info("{0} executing {1}", Thread.CurrentThread.Name!, _currentWorkItem.Name);
 
                     _currentWorkItem.TestWorker = this;
 
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Internal.Execution
             }
             finally
             {
-                log.Info("{0} stopping - {1} WorkItems processed.", Name, _workItemCount);
+                Log.Info("{0} stopping - {1} WorkItems processed.", Name, _workItemCount);
             }
         }
 
@@ -142,11 +142,11 @@ namespace NUnit.Framework.Internal.Execution
             {
             }
 
-            log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
+            Log.Info("{0} starting on thread [{1}]", Name, _workerThread.ManagedThreadId);
             _workerThread.Start();
         }
 
-        private readonly object cancelLock = new object();
+        private readonly object _cancelLock = new object();
 
         /// <summary>
         /// Stop the thread, either immediately or after finishing the current WorkItem
@@ -157,13 +157,15 @@ namespace NUnit.Framework.Internal.Execution
             if (force)
                 _running = false;
 
-            lock (cancelLock)
+            lock (_cancelLock)
+            {
                 if (_workerThread is not null && _currentWorkItem is not null)
                 {
                     _currentWorkItem.Cancel(force);
                     if (force)
                         _currentWorkItem = null;
                 }
+            }
         }
     }
 }

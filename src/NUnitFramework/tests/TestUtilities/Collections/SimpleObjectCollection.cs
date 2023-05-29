@@ -12,30 +12,30 @@ namespace NUnit.TestUtilities.Collections
     /// </summary>
     internal class SimpleObjectCollection : ICollection
     {
-        private readonly List<object?> contents;
+        private readonly List<object?> _contents;
 
         public SimpleObjectCollection(IEnumerable<object?> source)
         {
-            this.contents = new List<object?>(source);
+            _contents = new List<object?>(source);
         }
 
         public SimpleObjectCollection(params object?[] source)
         {
-            this.contents = new List<object?>(source);
+            _contents = new List<object?>(source);
         }
 
         #region ICollection Members
 
         public void CopyTo(Array array, int index)
         {
-            ((ICollection)contents).CopyTo(array, index);
+            ((ICollection)_contents).CopyTo(array, index);
         }
 
-        public int Count => contents.Count;
+        public int Count => _contents.Count;
 
-        public bool IsSynchronized => ((ICollection)contents).IsSynchronized;
+        public bool IsSynchronized => ((ICollection)_contents).IsSynchronized;
 
-        public object SyncRoot => ((ICollection)contents).SyncRoot;
+        public object SyncRoot => ((ICollection)_contents).SyncRoot;
 
         #endregion
 
@@ -43,7 +43,7 @@ namespace NUnit.TestUtilities.Collections
 
         public IEnumerator GetEnumerator()
         {
-            return contents.GetEnumerator();
+            return _contents.GetEnumerator();
         }
 
         #endregion

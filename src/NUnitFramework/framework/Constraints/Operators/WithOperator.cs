@@ -15,8 +15,8 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public WithOperator()
         {
-            this.left_precedence = 1;
-            this.right_precedence = 4;
+            left_precedence = 1;
+            right_precedence = 4;
         }
 
         /// <summary>

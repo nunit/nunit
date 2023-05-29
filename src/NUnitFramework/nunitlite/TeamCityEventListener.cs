@@ -54,8 +54,11 @@ namespace NUnitLite
             string testName = result.Test.Name;
 
             if (result.Test.IsSuite)
+            {
                 TC_TestSuiteFinished(testName);
+            }
             else
+            {
                 switch (result.ResultState.Status)
                 {
                     case TestStatus.Passed:
@@ -75,6 +78,7 @@ namespace NUnitLite
                         TC_TestFinished(testName, result.Duration);
                         break;
                 }
+            }
         }
 
         /// <summary>

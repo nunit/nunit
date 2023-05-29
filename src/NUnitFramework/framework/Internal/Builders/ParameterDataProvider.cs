@@ -29,8 +29,10 @@ namespace NUnit.Framework.Internal.Builders
         public bool HasDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)
+            {
                 if (provider.HasDataFor(parameter))
                     return true;
+            }
 
             return false;
         }
@@ -42,8 +44,10 @@ namespace NUnit.Framework.Internal.Builders
         public IEnumerable GetDataFor(IParameterInfo parameter)
         {
             foreach (var provider in _providers)
+            {
                 foreach (object? data in provider.GetDataFor(parameter))
                     yield return data;
+            }
         }
     }
 }

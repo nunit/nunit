@@ -303,13 +303,13 @@ namespace NUnit.Framework.Constraints
             public override bool Equals(object? obj)
             {
                 if (obj is TestReferenceType_OverridesEquals other)
-                    return other.A == this.A;
+                    return other.A == A;
                 return false;
             }
 
             public override int GetHashCode()
             {
-                return this.A.GetHashCode();
+                return A.GetHashCode();
             }
         }
 

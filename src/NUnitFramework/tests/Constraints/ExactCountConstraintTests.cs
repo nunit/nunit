@@ -7,13 +7,13 @@ namespace NUnit.Framework.Constraints
 {
     public class ExactCountConstraintTests
     {
-        private static readonly string[] names = new[] { "Charlie", "Fred", "Joe", "Charlie" };
+        private static readonly string[] Names = new[] { "Charlie", "Fred", "Joe", "Charlie" };
 
         [Test]
         public void ZeroItemsMatch()
         {
-            Assert.That(names, new ExactCountConstraint(0, Is.EqualTo("Sam")));
-            Assert.That(names, Has.Exactly(0).EqualTo("Sam"));
+            Assert.That(Names, new ExactCountConstraint(0, Is.EqualTo("Sam")));
+            Assert.That(Names, Has.Exactly(0).EqualTo("Sam"));
         }
 
         [Test]
@@ -22,15 +22,15 @@ namespace NUnit.Framework.Constraints
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "no item equal to \"Charlie\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "2 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(0, Is.EqualTo("Charlie"))));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(0, Is.EqualTo("Charlie"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void ExactlyOneItemMatches()
         {
-            Assert.That(names, new ExactCountConstraint(1, Is.EqualTo("Fred")));
-            Assert.That(names, Has.Exactly(1).EqualTo("Fred"));
+            Assert.That(Names, new ExactCountConstraint(1, Is.EqualTo("Fred")));
+            Assert.That(Names, Has.Exactly(1).EqualTo("Fred"));
         }
 
         [Test]
@@ -39,35 +39,35 @@ namespace NUnit.Framework.Constraints
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly one item equal to \"Charlie\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "2 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1, Is.EqualTo("Charlie"))));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(1, Is.EqualTo("Charlie"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void ExactlyTwoItemsMatch()
         {
-            Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Charlie")));
-            Assert.That(names, Has.Exactly(2).EqualTo("Charlie"));
+            Assert.That(Names, new ExactCountConstraint(2, Is.EqualTo("Charlie")));
+            Assert.That(Names, Has.Exactly(2).EqualTo("Charlie"));
         }
 
         [Test]
         public void ExactlyAndExactly()
         {
-            Assert.That(names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(1).EqualTo("Fred"));
-            Assert.That(names, Has.Exactly(4).Items.And.Exactly(2).EqualTo("Charlie"));
-            Assert.That(names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(4).Items);
+            Assert.That(Names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(1).EqualTo("Fred"));
+            Assert.That(Names, Has.Exactly(4).Items.And.Exactly(2).EqualTo("Charlie"));
+            Assert.That(Names, Has.Exactly(2).EqualTo("Charlie").And.Exactly(4).Items);
         }
 
         [Test]
         public void ExactlyOrExactly()
         {
-            Assert.That(names, Has.Exactly(3).EqualTo("Fred").Or.Exactly(2).EqualTo("Charlie"));
+            Assert.That(Names, Has.Exactly(3).EqualTo("Fred").Or.Exactly(2).EqualTo("Charlie"));
         }
 
         [Test]
         public void ExactlyFollowedByOr()
         {
-            Assert.That(names, Has.Exactly(3).EqualTo("Fred").Or.EqualTo("Charlie"));
+            Assert.That(Names, Has.Exactly(3).EqualTo("Fred").Or.EqualTo("Charlie"));
         }
 
         [Test]
@@ -76,20 +76,20 @@ namespace NUnit.Framework.Constraints
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly 2 items equal to \"Fred\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "1 item < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(2, Is.EqualTo("Fred"))));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void ExactlyFourItemsNoPredicate()
         {
-            Assert.That(names, new ExactCountConstraint(4));
+            Assert.That(Names, new ExactCountConstraint(4));
         }
 
         [Test]
         public void ExactlyFourItemsNoopNoPredicate()
         {
-            Assert.That(names, Has.Exactly(4).Items);
+            Assert.That(Names, Has.Exactly(4).Items);
         }
 
         [Test]
@@ -98,14 +98,14 @@ namespace NUnit.Framework.Constraints
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "exactly one item" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "4 items < \"Charlie\", \"Fred\", \"Joe\", \"Charlie\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(names, new ExactCountConstraint(1)));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Names, new ExactCountConstraint(1)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void ExactlyTwoItemsNoopMatch()
         {
-            Assert.That(names, Has.Exactly(2).Items.EqualTo("Charlie"));
+            Assert.That(Names, Has.Exactly(2).Items.EqualTo("Charlie"));
         }
 
         [Test]

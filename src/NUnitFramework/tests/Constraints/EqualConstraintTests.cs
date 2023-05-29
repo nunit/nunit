@@ -780,7 +780,7 @@ namespace NUnit.Framework.Constraints
         #endregion
 
         #region TypeEqualityMessages
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
         private static IEnumerable DifferentTypeSameValueTestData
         {
             get
@@ -806,31 +806,31 @@ namespace NUnit.Framework.Constraints
 
         private class Dummy
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
         private class Dummy1
         {
-            internal readonly int value;
+            internal readonly int Value;
 
             public Dummy1(int value)
             {
-                this.value = value;
+                Value = value;
             }
 
             public override string ToString()
             {
-                return "Dummy " + value;
+                return "Dummy " + Value;
             }
         }
 
@@ -889,7 +889,7 @@ namespace NUnit.Framework.Constraints
                 {
                     return false;
                 }
-                return obj.ToString() == this.ToString();
+                return obj.ToString() == ToString();
             }
             public override int GetHashCode()
             {
@@ -912,7 +912,7 @@ namespace NUnit.Framework.Constraints
                 {
                     return false;
                 }
-                return obj.ToString()==this.ToString();
+                return obj.ToString()==ToString();
             }
             public override int GetHashCode()
             {

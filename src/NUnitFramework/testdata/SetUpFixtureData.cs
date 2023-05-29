@@ -95,7 +95,7 @@ namespace NUnit.TestUtilities
         // Currently, only one fixture uses it, if more use it, they should not be run in parallel.
         // TODO: Create a utility that can be used by multiple fixtures
 
-        private static readonly Queue<string> _events = new Queue<string>();
+        private static readonly Queue<string> Events = new Queue<string>();
 
         /// <summary>
         /// Registers an event.
@@ -103,7 +103,7 @@ namespace NUnit.TestUtilities
         /// <param name="evnt">The event to register.</param>
         public static void RegisterEvent(string evnt)
         {
-            _events.Enqueue(evnt);
+            Events.Enqueue(evnt);
         }
 
 
@@ -116,7 +116,7 @@ namespace NUnit.TestUtilities
             foreach (string expected in expectedEvents)
             {
                 int item = 0;
-                string actual = _events.Count > 0 ? _events.Dequeue() : null;
+                string actual = Events.Count > 0 ? Events.Dequeue() : null;
                 Assert.AreEqual( expected, actual, "Item {0}", item++ );
             }
         }
@@ -128,7 +128,7 @@ namespace NUnit.TestUtilities
         /// <returns>An ExpectedEventsRecorder so that further expected events can be recorded and verified</returns>
         public static ExpectedEventsRecorder ExpectEvents(params string[] expectedEvents)
         {
-            return new ExpectedEventsRecorder(_events, expectedEvents);
+            return new ExpectedEventsRecorder(Events, expectedEvents);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace NUnit.TestUtilities
         /// </summary>
         public static void Clear()
         {
-            _events.Clear();
+            Events.Clear();
         }
     }
 }

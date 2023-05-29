@@ -34,7 +34,7 @@ namespace NUnit.Framework
         /// <param name="name">The name of the category</param>
         public CategoryAttribute(string name)
         {
-            this.categoryName = name.Trim();
+            categoryName = name.Trim();
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// </summary>
         protected CategoryAttribute()
         {
-            this.categoryName = this.GetType().Name;
+            categoryName = GetType().Name;
             if ( categoryName.EndsWith( "Attribute", StringComparison.Ordinal ) )
                 categoryName = categoryName.Substring( 0, categoryName.Length - 9 );
         }
@@ -61,7 +61,7 @@ namespace NUnit.Framework
         /// <param name="test">The test to modify</param>
         public void ApplyToTest(Test test)
         {
-            test.Properties.Add(PropertyNames.Category, this.Name);
+            test.Properties.Add(PropertyNames.Category, Name);
         }
 
         #endregion

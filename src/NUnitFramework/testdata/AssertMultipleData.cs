@@ -12,7 +12,7 @@ namespace NUnit.TestData.AssertMultipleData
 
     public class AssertMultipleFixture
     {
-        private static readonly ComplexNumber complex = new ComplexNumber(5.2, 3.9);
+        private static readonly ComplexNumber Complex = new ComplexNumber(5.2, 3.9);
 
         [Test]
         public void EmptyBlock()
@@ -34,8 +34,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.That(complex.RealPart, Is.EqualTo(5.2));
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
             });
         }
 
@@ -45,8 +45,8 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.Multiple(() =>
             {
                 Assert.That(2 + 2, Is.EqualTo(4));
-                Assert.That(complex.RealPart, Is.EqualTo(5.2));
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
             });
         }
 
@@ -59,8 +59,8 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2));
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
                 });
             });
         }
@@ -77,8 +77,8 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2));
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
                 });
             });
         }
@@ -159,8 +159,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 Assert.Fail("Message from Assert.Fail");
             });
         }
@@ -170,8 +170,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 Assert.Warn("WARNING");
             });
         }
@@ -182,8 +182,8 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.Multiple(() =>
             {
                 Assert.Warn("WARNING");
-                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
             });
         }
 
@@ -192,8 +192,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9), "ImaginaryPart");
             });
         }
 
@@ -202,8 +202,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
             });
         }
 
@@ -212,8 +212,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
             });
         }
 
@@ -226,8 +226,8 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9), "ImaginaryPart");
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9), "ImaginaryPart");
                 });
             });
         }
@@ -241,8 +241,8 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 });
             });
         }
@@ -259,8 +259,8 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9), "ImaginaryPart");
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9), "ImaginaryPart");
                 });
             });
         }
@@ -277,8 +277,8 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(() =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 });
             });
         }
@@ -356,8 +356,8 @@ namespace NUnit.TestData.AssertMultipleData
             {
                 await Task.Delay(100);
                 Assert.That(2 + 2, Is.EqualTo(4));
-                Assert.That(complex.RealPart, Is.EqualTo(5.2));
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
             });
         }
 
@@ -372,8 +372,8 @@ namespace NUnit.TestData.AssertMultipleData
                 Assert.Multiple(async () =>
                 {
                     await Task.Delay(100);
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2));
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2));
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
                 });
             });
         }
@@ -391,9 +391,9 @@ namespace NUnit.TestData.AssertMultipleData
 
                 Assert.Multiple(async () =>
                 {
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2));
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2));
                     await Task.Delay(100);
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(3.9));
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(3.9));
                 });
             });
         }
@@ -404,8 +404,8 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.Multiple(async () =>
             {
                 await Task.Delay(100);
-                Assert.That(complex.RealPart, Is.EqualTo(5.0), "RealPart");
-                Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                Assert.That(Complex.RealPart, Is.EqualTo(5.0), "RealPart");
+                Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
             });
         }
 
@@ -423,8 +423,8 @@ namespace NUnit.TestData.AssertMultipleData
                 Assert.Multiple(async () =>
                 {
                     await Task.Delay(100);
-                    Assert.That(complex.RealPart, Is.EqualTo(5.2), "RealPart");
-                    Assert.That(complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
+                    Assert.That(Complex.RealPart, Is.EqualTo(5.2), "RealPart");
+                    Assert.That(Complex.ImaginaryPart, Is.EqualTo(4.2), "ImaginaryPart");
                 });
             });
         }

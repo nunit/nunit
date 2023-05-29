@@ -31,7 +31,7 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// List of comparers used to compare pairs of objects.
         /// </summary>
-        private static readonly EqualMethod[] _comparers =
+        private static readonly EqualMethod[] Comparers =
         {
             ArraysComparer.Equal,
             DictionariesComparer.Equal,
@@ -140,7 +140,7 @@ namespace NUnit.Framework.Constraints
 
         internal bool AreEqual(object? x, object? y, ref Tolerance tolerance, ComparisonState state)
         {
-            this._failurePoints = new List<FailurePoint>();
+            _failurePoints = new List<FailurePoint>();
 
             if (x is null && y is null)
                 return true;
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Constraints
             if (externalComparer is not null)
                 return externalComparer.AreEqual(x, y, ref tolerance);
 
-            foreach (EqualMethod equalMethod in _comparers)
+            foreach (EqualMethod equalMethod in Comparers)
             {
                 bool? result = equalMethod(x, y, ref tolerance, state, this);
                 if (result.HasValue)
@@ -183,8 +183,10 @@ namespace NUnit.Framework.Constraints
             if (_externalComparers is not null)
             {
                 foreach (EqualityAdapter adapter in _externalComparers)
+                {
                     if (adapter.CanCompare(x, y))
                         return adapter;
+                }
             }
 
             return null;

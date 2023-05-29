@@ -65,14 +65,14 @@ namespace NUnit.TestData.UnexpectedExceptionFixture
 
     internal class CustomException : Exception
     {
-        #pragma warning disable 414
-        private CustomType custom;
-        #pragma warning restore 414
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly CustomType _custom;
+#pragma warning restore IDE0052 // Remove unread private members
 
         public CustomException(string msg, CustomType custom)
             : base(msg)
         {
-            this.custom = custom;
+            _custom = custom;
         }
     }
 

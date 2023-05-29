@@ -8,7 +8,7 @@ namespace NUnit.Common
     {
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
-        public bool _colorEnabled;
+        public bool ColorEnabled;
 
         /// <summary>
         /// Construct a ColorConsoleWriter.
@@ -22,7 +22,7 @@ namespace NUnit.Common
         public ColorConsoleWriter(bool colorEnabled)
             : base(Console.Out, shouldDisposeWriter:false)
         {
-            _colorEnabled = colorEnabled;
+            ColorEnabled = colorEnabled;
         }
 
         #region Extended Methods
@@ -33,13 +33,17 @@ namespace NUnit.Common
         /// <param name="value">The value.</param>
         public override void Write(ColorStyle style, string value)
         {
-            if (_colorEnabled)
+            if (ColorEnabled)
+            {
                 using (new ColorConsole(style))
                 {
                     Write(value);
                 }
+            }
             else
+            {
                 Write(value);
+            }
         }
 
         /// <summary>
@@ -49,13 +53,17 @@ namespace NUnit.Common
         /// <param name="value">The value.</param>
         public override void WriteLine(ColorStyle style, string value)
         {
-            if (_colorEnabled)
+            if (ColorEnabled)
+            {
                 using (new ColorConsole(style))
                 {
                     WriteLine(value);
                 }
+            }
             else
+            {
                 WriteLine(value);
+            }
         }
 
         /// <summary>

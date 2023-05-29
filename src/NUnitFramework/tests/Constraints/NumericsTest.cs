@@ -7,14 +7,14 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class NumericsTests
     {
-        private Tolerance tenPercent, zeroTolerance, absoluteTolerance;
+        private Tolerance _tenPercent, _zeroTolerance, _absoluteTolerance;
 
         [SetUp]
         public void SetUp()
         {
-            absoluteTolerance = new Tolerance(0.1);
-            tenPercent = new Tolerance(10.0).Percent;
-            zeroTolerance = Tolerance.Exact;
+            _absoluteTolerance = new Tolerance(0.1);
+            _tenPercent = new Tolerance(10.0).Percent;
+            _zeroTolerance = Tolerance.Exact;
         }
 
         [TestCase(123456789)]
@@ -26,14 +26,14 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanMatchWithoutToleranceMode(object value)
         {
-            Assert.That(Numerics.AreEqual(value, value, ref zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual(value, value, ref _zeroTolerance), Is.True);
         }
 
         // Separate test case because you can't use decimal in an attribute (24.1.3)
         [Test]
         public void CanMatchDecimalWithoutToleranceMode()
         {
-            Assert.That(Numerics.AreEqual(123m, 123m, ref zeroTolerance), Is.True);
+            Assert.That(Numerics.AreEqual(123m, 123m, ref _zeroTolerance), Is.True);
         }
 
         [TestCase((int)9500)]
@@ -51,36 +51,36 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void CanMatchIntegralsWithPercentage(object value)
         {
-            Assert.That(Numerics.AreEqual(10000, value, ref tenPercent), Is.True);
+            Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True);
         }
 
         [Test]
         public void CanMatchDecimalWithPercentage()
         {
-            Assert.That(Numerics.AreEqual(10000m, 9500m, ref tenPercent), Is.True);
-            Assert.That(Numerics.AreEqual(10000m, 10000m, ref tenPercent), Is.True);
-            Assert.That(Numerics.AreEqual(10000m, 10500m, ref tenPercent), Is.True);
+            Assert.That(Numerics.AreEqual(10000m, 9500m, ref _tenPercent), Is.True);
+            Assert.That(Numerics.AreEqual(10000m, 10000m, ref _tenPercent), Is.True);
+            Assert.That(Numerics.AreEqual(10000m, 10500m, ref _tenPercent), Is.True);
         }
 
         [Test]
         public void CanCalculateAbsoluteDifference()
         {
-            Assert.That(Numerics.Difference(10000m, 9500m, absoluteTolerance.Mode), Is.EqualTo(500m));
-            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.05, absoluteTolerance.Mode)), Is.EqualTo(0.05).Within(0.00001));
-            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.15, absoluteTolerance.Mode)), Is.EqualTo(-0.05).Within(0.00001));
+            Assert.That(Numerics.Difference(10000m, 9500m, _absoluteTolerance.Mode), Is.EqualTo(500m));
+            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.05, _absoluteTolerance.Mode)), Is.EqualTo(0.05).Within(0.00001));
+            Assert.That(Convert.ToDouble(Numerics.Difference(0.1, 0.15, _absoluteTolerance.Mode)), Is.EqualTo(-0.05).Within(0.00001));
         }
 
         [Test]
         public void CanCalculatePercentDifference()
         {
-            Assert.That(Numerics.Difference(10000m, 8500m, tenPercent.Mode), Is.EqualTo(15));
-            Assert.That(Numerics.Difference(10000m, 11500m, tenPercent.Mode), Is.EqualTo(-15));
+            Assert.That(Numerics.Difference(10000m, 8500m, _tenPercent.Mode), Is.EqualTo(15));
+            Assert.That(Numerics.Difference(10000m, 11500m, _tenPercent.Mode), Is.EqualTo(-15));
         }
 
         [Test]
         public void DifferenceForNonNumericTypesReturnsNaN()
         {
-            Assert.That(Numerics.Difference(new object(), new object(), tenPercent.Mode), Is.EqualTo(double.NaN));
+            Assert.That(Numerics.Difference(new object(), new object(), _tenPercent.Mode), Is.EqualTo(double.NaN));
         }
 
         [Test]
@@ -165,19 +165,19 @@ namespace NUnit.Framework.Constraints
         [TestCase((ulong)11500)]
         public void FailsOnIntegralsOutsideOfPercentage(object value)
         {
-            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000, value, ref tenPercent), Is.True));
+            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000, value, ref _tenPercent), Is.True));
         }
 
         [Test]
         public void FailsOnDecimalBelowPercentage()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 8500m, ref tenPercent), Is.True));
+            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 8500m, ref _tenPercent), Is.True));
         }
 
         [Test]
         public void FailsOnDecimalAbovePercentage()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 11500m, ref tenPercent), Is.True));
+            Assert.Throws<AssertionException>(() => Assert.That(Numerics.AreEqual(10000m, 11500m, ref _tenPercent), Is.True));
         }
 
         [Test]

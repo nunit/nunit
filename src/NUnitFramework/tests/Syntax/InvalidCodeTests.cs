@@ -8,7 +8,7 @@ namespace NUnit.Framework.Syntax
     [TestFixture]
     public class InvalidCodeTests
     {
-        private static readonly string template1 =
+        private static readonly string Template1 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -30,7 +30,7 @@ class SomeClass
         [TestCase("Has.Some.Items")]
         public void CodeShouldNotCompile(string fragment)
         {
-            string code = template1.Replace("$FRAGMENT$", fragment);
+            string code = Template1.Replace("$FRAGMENT$", fragment);
             TestCompiler compiler = new TestCompiler(
                 new[] { "system.dll", "nunit.framework.dll" },
                 "test.dll");
@@ -39,7 +39,7 @@ class SomeClass
                 Assert.Fail("Code fragment \"" + fragment + "\" should not compile but it did");
         }
 
-        private static readonly string template2 =
+        private static readonly string Template2 =
 @"using System;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -60,7 +60,7 @@ class SomeClass
         [TestCase("Has.Exactly(5)")]
         public void CodeShouldNotCompileAsFinishedConstraint(string fragment)
         {
-            string code = template2.Replace("$FRAGMENT$", fragment);
+            string code = Template2.Replace("$FRAGMENT$", fragment);
             TestCompiler compiler = new TestCompiler(
                 new[] { "system.dll", "nunit.framework.dll" },
                 "test.dll");

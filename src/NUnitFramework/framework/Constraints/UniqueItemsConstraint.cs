@@ -63,7 +63,9 @@ namespace NUnit.Framework.Constraints
                 }
 
                 if (isUnique)
+                {
                     processedItems.Add(o1);
+                }
                 else if (unknownNonUnique)
                 {
                     nonUniques.Add(o1);
@@ -123,15 +125,21 @@ namespace NUnit.Framework.Constraints
         private static bool IsSpecialComparisonType(Type type)
         {
             if (type.IsGenericType)
+            {
                 return type.FullName().StartsWith("System.Collections.Generic.KeyValuePair`2", StringComparison.Ordinal);
+            }
             else if (Numerics.IsNumericType(type))
+            {
                 return true;
+            }
             else
+            {
                 return
                     type == typeof(string)
                     || type == typeof(char)
                     || type == typeof(DateTimeOffset)
                     || type == typeof(DictionaryEntry);
+            }
         }
 
         private ICollection GetNonUniqueItems(IEnumerable actual)
@@ -276,7 +284,7 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteAdditionalLinesTo(MessageWriter writer)
             {
-                if (this.Status == ConstraintStatus.Failure)
+                if (Status == ConstraintStatus.Failure)
                 {
                     writer.Write("  Not unique items: ");
                     var output = MsgUtils.FormatCollection(NonUniqueItems, 0, MsgUtils.DefaultMaxItems);

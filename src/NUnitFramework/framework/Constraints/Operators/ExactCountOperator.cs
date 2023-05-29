@@ -8,7 +8,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ExactCountOperator : SelfResolvingOperator
     {
-        private readonly int expectedCount;
+        private readonly int _expectedCount;
 
         /// <summary>
         /// Construct an ExactCountOperator for a specified count
@@ -18,10 +18,10 @@ namespace NUnit.Framework.Constraints
         {
             // Collection Operators stack on everything
             // and allow all other ops to stack on them
-            this.left_precedence = 1;
-            this.right_precedence = 10;
+            left_precedence = 1;
+            right_precedence = 10;
 
-            this.expectedCount = expectedCount;
+            _expectedCount = expectedCount;
         }
 
         /// <summary>
@@ -33,9 +33,9 @@ namespace NUnit.Framework.Constraints
         public override void Reduce(ConstraintBuilder.ConstraintStack stack)
         {
             if (RightContext is null || RightContext is BinaryOperator)
-                stack.Push(new ExactCountConstraint(expectedCount));
+                stack.Push(new ExactCountConstraint(_expectedCount));
             else
-                stack.Push(new ExactCountConstraint(expectedCount, stack.Pop()));
+                stack.Push(new ExactCountConstraint(_expectedCount, stack.Pop()));
         }
     }
 }

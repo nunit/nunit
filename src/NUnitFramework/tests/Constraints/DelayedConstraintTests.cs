@@ -22,9 +22,9 @@ namespace NUnit.Framework.Constraints
         private const int POLLING = 50;
         private const int MIN = AFTER - 10;
 
-        private static bool boolValue;
-        private static List<int> list;
-        private static string? statusString;
+        private static bool _boolValue;
+        private static List<int> _list;
+        private static string? _statusString;
 
         protected override Constraint TheConstraint { get; } = new DelayedConstraint(new EqualConstraint(true), 500);
 
@@ -34,9 +34,9 @@ namespace NUnit.Framework.Constraints
             ExpectedDescription = "True after 500 milliseconds delay";
             StringRepresentation = "<after 500 <equal True>>";
 
-            boolValue = false;
-            list = new List<int>();
-            statusString = null;
+            _boolValue = false;
+            _list = new List<int>();
+            _statusString = null;
             //SetValueTrueAfterDelay(300);
         }
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
         public void SimpleTestUsingBoolean()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(() => boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
+            Assert.That(() => _boolValue, new DelayedConstraint(new EqualConstraint(true), AFTER, POLLING));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Constraints
             // https://github.com/nunit/nunit.analyzers/issues/431
             // It was decided to keep to analyzer warning
 #pragma warning disable NUnit2044 // Non-delegate actual parameter
-            Assert.That(list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+            Assert.That(_list, Has.Count.EqualTo(1).After(AFTER, POLLING));
 #pragma warning restore NUnit2044 // Non-delegate actual parameter
         }
 
@@ -125,14 +125,14 @@ namespace NUnit.Framework.Constraints
         public void CanTestContentsOfDelegateReturningList()
         {
             SetValuesAfterDelay(1);
-            Assert.That(() => list, Has.Count.EqualTo(1).After(AFTER, POLLING));
+            Assert.That(() => _list, Has.Count.EqualTo(1).After(AFTER, POLLING));
         }
 
         [Test]
         public void CanTestInitiallyNullDelegate()
         {
             SetValuesAfterDelay(DELAY);
-            Assert.That(() => statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
+            Assert.That(() => _statusString, Is.Not.Null.And.Length.GreaterThan(0).After(AFTER, POLLING));
         }
 
         [Test]
@@ -246,32 +246,32 @@ namespace NUnit.Framework.Constraints
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
 
-        private static int setValuesDelay;
+        private static int _setValuesDelay;
 
-        private static object MethodReturningValue() { return boolValue; }
+        private static object MethodReturningValue() { return _boolValue; }
 
         private static object MethodReturningFalse() { return false; }
 
         private static object MethodReturningZero() { return 0; }
 
-        private static readonly AutoResetEvent waitEvent = new AutoResetEvent(false);
+        private static readonly AutoResetEvent WaitEvent = new AutoResetEvent(false);
 
         private static void Delay(int delay)
         {
-            waitEvent.WaitOne(delay);
+            WaitEvent.WaitOne(delay);
         }
 
         private static void MethodSetsValues()
         {
-            Delay(setValuesDelay);
-            boolValue = true;
-            list.Add(1);
-            statusString = "Finished";
+            Delay(_setValuesDelay);
+            _boolValue = true;
+            _list.Add(1);
+            _statusString = "Finished";
         }
 
         private static void SetValuesAfterDelay(int delayInMilliSeconds)
         {
-            setValuesDelay = delayInMilliSeconds;
+            _setValuesDelay = delayInMilliSeconds;
             Thread thread = new Thread(MethodSetsValues);
             thread.Start();
         }

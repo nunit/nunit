@@ -66,11 +66,13 @@ namespace NUnit.Framework
             };
 
             foreach (Type invalidType in invalidAttributes)
+            {
                 if (typeInfo.HasMethodWithAttribute(invalidType))
                 {
                     reason = invalidType.Name + " attribute not allowed in a SetUpFixture";
                     return false;
                 }
+            }
 
             return true;
         }

@@ -27,7 +27,7 @@ namespace NUnit.Framework
         {
             Guard.ArgumentValid(apartment != ApartmentState.Unknown, "must be STA or MTA", nameof(apartment));
 
-            this.Properties.Add(PropertyNames.ApartmentState, apartment);
+            Properties.Add(PropertyNames.ApartmentState, apartment);
         }
 
         void IApplyToTest.ApplyToTest(Test test)

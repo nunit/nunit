@@ -8,46 +8,46 @@ namespace NUnit.TestData.RepeatingTests
     [TestFixture]
     public class RepeatingTestsFixtureBase
     {
-        private int fixtureSetupCount;
-        private int fixtureTeardownCount;
-        private int setupCount;
-        private int teardownCount;
-        private readonly List<string> tearDownResults = new List<string>();
+        private int _fixtureSetupCount;
+        private int _fixtureTeardownCount;
+        private int _setupCount;
+        private int _teardownCount;
+        private readonly List<string> _tearDownResults = new List<string>();
 
         [OneTimeSetUp]
         public void FixtureSetUp()
         {
-            fixtureSetupCount++;
+            _fixtureSetupCount++;
         }
 
         [OneTimeTearDown]
         public void FixtureTearDown()
         {
-            fixtureTeardownCount++;
+            _fixtureTeardownCount++;
         }
 
         [SetUp]
         public void SetUp()
         {
-            setupCount++;
+            _setupCount++;
         }
 
         [TearDown]
         public void TearDown()
         {
-            tearDownResults.Add(TestContext.CurrentContext.Result.Outcome.ToString());
-            teardownCount++;
+            _tearDownResults.Add(TestContext.CurrentContext.Result.Outcome.ToString());
+            _teardownCount++;
         }
 
-        public int FixtureSetupCount => fixtureSetupCount;
+        public int FixtureSetupCount => _fixtureSetupCount;
 
-        public int FixtureTeardownCount => fixtureTeardownCount;
+        public int FixtureTeardownCount => _fixtureTeardownCount;
 
-        public int SetupCount => setupCount;
+        public int SetupCount => _setupCount;
 
-        public int TeardownCount => teardownCount;
+        public int TeardownCount => _teardownCount;
 
-        public List<string> TearDownResults => tearDownResults;
+        public List<string> TearDownResults => _tearDownResults;
         public int Count { get; protected set; }
     }
 }

@@ -81,8 +81,10 @@ namespace NUnit.Framework.Internal.Builders
                 {
                     int cnt = 0;
                     foreach (object? o in arguments)
+                    {
                         if (o is Type) cnt++;
                         else break;
+                    }
 
                     typeArgs = new Type[cnt];
                     for (int i = 0; i < cnt; i++)
@@ -140,8 +142,10 @@ namespace NUnit.Framework.Internal.Builders
                 fixture.RunState = testFixtureData.RunState;
 
             foreach (string key in testFixtureData.Properties.Keys)
+            {
                 foreach (object val in testFixtureData.Properties[key])
                     fixture.Properties.Add(key, val);
+            }
 
             if (fixture.RunState != RunState.NotRunnable)
                 CheckTestFixtureIsValid(fixture);

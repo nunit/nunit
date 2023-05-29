@@ -9,8 +9,8 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Warning, "Warning message");
-            _suiteResult.AddResult(_testResult);
+            TestResult.SetResult(ResultState.Warning, "Warning message");
+            SuiteResult.AddResult(TestResult);
         }
 
         [Test]
@@ -18,8 +18,8 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_testResult.ResultState, Is.EqualTo(ResultState.Warning));
-                Assert.That(_testResult.Message, Is.EqualTo("Warning message"));
+                Assert.That(TestResult.ResultState, Is.EqualTo(ResultState.Warning));
+                Assert.That(TestResult.Message, Is.EqualTo("Warning message"));
             });
         }
 
@@ -28,22 +28,22 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_suiteResult.ResultState, Is.EqualTo(ResultState.ChildWarning));
-                Assert.That(_suiteResult.Message, Is.EqualTo(TestResult.CHILD_WARNINGS_MESSAGE));
-                Assert.That(_suiteResult.TotalCount, Is.EqualTo(1));
-                Assert.That(_suiteResult.PassCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.FailCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.WarningCount, Is.EqualTo(1));
-                Assert.That(_suiteResult.SkipCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.InconclusiveCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.AssertCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.ChildWarning));
+                Assert.That(SuiteResult.Message, Is.EqualTo(TestResult.CHILD_WARNINGS_MESSAGE));
+                Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.PassCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.FailCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.WarningCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.AssertCount, Is.EqualTo(0));
             });
         }
 
         [Test]
         public void TestResultXmlNodeIsWarning()
         {
-            TNode testNode = _testResult.ToXml(true);
+            TNode testNode = TestResult.ToXml(true);
 
             Assert.Multiple(() =>
             {
@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultXmlNodeIsWarning()
         {
-            TNode suiteNode = _suiteResult.ToXml(true);
+            TNode suiteNode = SuiteResult.ToXml(true);
 
             Assert.Multiple(() =>
             {

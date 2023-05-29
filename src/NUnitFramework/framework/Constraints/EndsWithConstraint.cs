@@ -16,7 +16,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="expected">The expected string</param>
         public EndsWithConstraint(string expected) : base(expected)
         {
-            this.descriptionText = "String ending with";
+            descriptionText = "String ending with";
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace NUnit.Framework.Constraints
         /// <returns></returns>
         protected override bool Matches(string actual)
         {
-            var stringComparison = this.caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+            var stringComparison = caseInsensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
             return actual is not null && actual.EndsWith(expected, stringComparison);
         }
     }

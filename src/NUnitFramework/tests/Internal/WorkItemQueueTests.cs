@@ -68,13 +68,17 @@ namespace NUnit.Framework.Internal.Execution
 
                 alive = 0;
                 foreach (var worker in workers)
+                {
                     if (worker.IsAlive)
                         alive++;
+                }
             }
 
             if (alive > 0)
+            {
                 foreach (var worker in workers)
                     Assert.That(worker.IsAlive, Is.False, "Worker thread {0} did not stop", worker.Name);
+            }
         }
 
         [Test]

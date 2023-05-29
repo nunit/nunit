@@ -53,7 +53,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public DictionaryContainsKeyValuePairConstraint WithValue(object expectedValue)
         {
-            var builder = this.Builder;
+            var builder = Builder;
             if (builder is null)
             {
                 builder = new ConstraintBuilder();
@@ -74,8 +74,10 @@ namespace NUnit.Framework.Constraints
             {
                 var dictionary = ConstraintUtils.RequireActual<IDictionary>(actual, nameof(actual));
                 foreach (var obj in dictionary.Keys)
+                {
                     if (ItemsEqual(obj, Expected))
                         return true;
+                }
 
                 return false;
             }

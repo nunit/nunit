@@ -36,7 +36,7 @@ namespace NUnit.Framework.Internal.Execution
     /// </summary>
     public class EventPump : IDisposable
     {
-        private static readonly Logger log = InternalTrace.GetLogger("EventPump");
+        private static readonly Logger Log = InternalTrace.GetLogger("EventPump");
 
         #region Instance Variables
 
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         private void PumpThreadProc()
         {
-            log.Debug("Starting EventPump");
+            Log.Debug("Starting EventPump");
 
             //ITestListener hostListeners = CoreExtensions.Host.Listeners;
             try
@@ -159,22 +159,22 @@ namespace NUnit.Framework.Internal.Execution
                     }
                     catch (Exception ex)
                     {
-                        log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
+                        Log.Error("Exception in event handler {0}", ExceptionHelper.BuildStackTrace(ex));
                     }
                 }
 
-                log.Debug("EventPump Terminating");
+                Log.Debug("EventPump Terminating");
             }
             catch (Exception ex)
             {
-                log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex));
+                Log.Error("Exception in pump thread {0}", ExceptionHelper.BuildStackTrace(ex));
             }
             finally
             {
                 _pumpState = (int)EventPumpState.Stopped;
                 //pumpThread = null;
                 if (_events.Count > 0)
-                    log.Error("Event pump thread exiting with {0} events remaining");
+                    Log.Error("Event pump thread exiting with {0} events remaining");
             }
         }
         #endregion

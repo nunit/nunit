@@ -23,8 +23,10 @@ namespace NUnit.Framework.Constraints.Comparers
                 return false;
 
             foreach (object key in xDictionary.Keys)
+            {
                 if (!equalityComparer.AreEqual(xDictionary[key], yDictionary[key], ref tolerance, state.PushComparison(x, y)))
                     return false;
+            }
 
             return true;
         }

@@ -23,8 +23,8 @@ namespace NUnit.Common
         private static readonly string DEFAULT_WORK_DIRECTORY =
             Directory.GetCurrentDirectory();
 
-        private bool validated;
-        private bool noresult;
+        private bool _validated;
+        private bool _noresult;
 
         #region Constructors
 
@@ -184,25 +184,25 @@ namespace NUnit.Common
 
         public string DisplayTestLabels { get; private set; }
 
-        private string workDirectory = null;
-        public string WorkDirectory => workDirectory ?? DEFAULT_WORK_DIRECTORY;
-        public bool WorkDirectorySpecified => workDirectory is not null;
+        private string _workDirectory = null;
+        public string WorkDirectory => _workDirectory ?? DEFAULT_WORK_DIRECTORY;
+        public bool WorkDirectorySpecified => _workDirectory is not null;
 
         public string InternalTraceLevel { get; private set; }
         public bool InternalTraceLevelSpecified => InternalTraceLevel is not null;
 
-        private readonly List<OutputSpecification> resultOutputSpecifications = new List<OutputSpecification>();
+        private readonly List<OutputSpecification> _resultOutputSpecifications = new List<OutputSpecification>();
         public IList<OutputSpecification> ResultOutputSpecifications
         {
             get
             {
-                if (noresult)
+                if (_noresult)
                     return Array.Empty<OutputSpecification>();
 
-                if (resultOutputSpecifications.Count == 0)
-                    resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
+                if (_resultOutputSpecifications.Count == 0)
+                    _resultOutputSpecifications.Add(new OutputSpecification("TestResult.xml"));
 
-                return resultOutputSpecifications;
+                return _resultOutputSpecifications;
             }
         }
 
@@ -218,11 +218,11 @@ namespace NUnit.Common
 
         public bool Validate()
         {
-            if (!validated)
+            if (!_validated)
             {
                 CheckOptionCombinations();
 
-                validated = true;
+                _validated = true;
             }
 
             return ErrorMessages.Count == 0;
@@ -253,9 +253,10 @@ namespace NUnit.Common
                 isValid = false;
 
                 foreach (string valid in validValues)
+                {
                     if (string.Compare(valid, val, StringComparison.OrdinalIgnoreCase) == 0)
                         return valid;
-
+                }
             }
 
             if (!isValid)
@@ -293,10 +294,10 @@ namespace NUnit.Common
             // determines the display order for the help.
 
             // Select Tests
-            this.Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
+            Add("test=", "Comma-separated list of {NAMES} of tests to run or explore. This option may be repeated.",
                 v => ((List<string>)TestList).AddRange(TestNameParser.Parse(RequiredValue(v, "--test"))));
 
-            this.Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
+            Add("testlist=", "File {PATH} containing a list of tests to run, one per line. This option may be repeated.",
                 v =>
                 {
                     string testListFile = RequiredValue(v, "--testlist");
@@ -304,7 +305,9 @@ namespace NUnit.Common
                     var fullTestListPath = ExpandToFullPath(testListFile);
 
                     if (!File.Exists(fullTestListPath))
+                    {
                         ErrorMessages.Add("Unable to locate file: " + testListFile);
+                    }
                     else
                     {
                         try
@@ -328,13 +331,13 @@ namespace NUnit.Common
                     }
                 });
 
-            this.Add("prefilter=", "Comma-separated list of {NAMES} of test classes or namespaces to be loaded. This option may be repeated.",
+            Add("prefilter=", "Comma-separated list of {NAMES} of test classes or namespaces to be loaded. This option may be repeated.",
                 v => ((List<string>)PreFilters).AddRange(TestNameParser.Parse(RequiredValue(v, "--prefilter"))));
 
-            this.Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
+            Add("where=", "Test selection {EXPRESSION} indicating what tests will be run. See description below.",
                 v => WhereClause = RequiredValue(v, "--where"));
 
-            this.Add("params|p=", "Define a test parameter.",
+            Add("params|p=", "Define a test parameter.",
                 v =>
                 {
                     string parameters = RequiredValue(v, "--params");
@@ -356,79 +359,85 @@ namespace NUnit.Common
                         }
                     }
                 });
-            this.Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
+            Add("timeout=", "Set timeout for each test case in {MILLISECONDS}.",
                 v => DefaultTimeout = RequiredInt(v, "--timeout"));
 
-            this.Add("seed=", "Set the random {SEED} used to generate test cases.",
+            Add("seed=", "Set the random {SEED} used to generate test cases.",
                 v => RandomSeed = RequiredInt(v, "--seed"));
 
-            this.Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
+            Add("workers=", "Specify the {NUMBER} of worker threads to be used in running tests. If not specified, defaults to 2 or the number of processors, whichever is greater.",
                 v => NumberOfTestWorkers = RequiredInt(v, "--workers"));
 
-            this.Add("stoponerror", "Stop run immediately upon any test failure or error.",
+            Add("stoponerror", "Stop run immediately upon any test failure or error.",
                 v => StopOnError = v is not null);
 
-            this.Add("wait", "Wait for input before closing console window.",
+            Add("wait", "Wait for input before closing console window.",
                 v => WaitBeforeExit = v is not null);
 
             // Output Control
-            this.Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
-                v => workDirectory = RequiredValue(v, "--work"));
+            Add("work=", "{PATH} of the directory to use for output files. If not specified, defaults to the current directory.",
+                v => _workDirectory = RequiredValue(v, "--work"));
 
-            this.Add("output|out=", "File {PATH} to contain text output from the tests.",
+            Add("output|out=", "File {PATH} to contain text output from the tests.",
                 v => OutFile = RequiredValue(v, "--output"));
 
-            this.Add("err=", "File {PATH} to contain error output from the tests.",
+            Add("err=", "File {PATH} to contain error output from the tests.",
                 v => ErrFile = RequiredValue(v, "--err"));
 
-            this.Add("result=", "An output {SPEC} for saving the test results. This option may be repeated.",
-                v => ResolveOutputSpecification(RequiredValue(v, "--resultxml"), resultOutputSpecifications));
+            Add("result=", "An output {SPEC} for saving the test results. This option may be repeated.",
+                v => ResolveOutputSpecification(RequiredValue(v, "--resultxml"), _resultOutputSpecifications));
 
-            this.Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
+            Add("explore:", "Display or save test info rather than running tests. Optionally provide an output {SPEC} for saving the test info. This option may be repeated.", v =>
             {
                 Explore = true;
                 ResolveOutputSpecification(v, ExploreOutputSpecifications);
             });
 
-            this.Add("noresult", "Don't save any test results.",
-                v => noresult = v is not null);
+            Add("noresult", "Don't save any test results.",
+                v => _noresult = v is not null);
 
-            this.Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
+            Add("labels=", "Specify whether to write test case names to the output. Values: Off, On, All",
                 v => DisplayTestLabels = RequiredValue(v, "--labels", "Off", "On", "Before", "After", "All"));
 
-            this.Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
+            Add("test-name-format=", "Non-standard naming pattern to use in generating test names.",
                 v => DefaultTestNamePattern = RequiredValue(v, "--test-name-format"));
 
-            this.Add("teamcity", "Turns on use of TeamCity service messages.",
+            Add("teamcity", "Turns on use of TeamCity service messages.",
                 v => TeamCity = v is not null);
 
-            this.Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
+            Add("trace=", "Set internal trace {LEVEL}.\nValues: Off, Error, Warning, Info, Verbose (Debug)",
                 v => InternalTraceLevel = RequiredValue(v, "--trace", "Off", "Error", "Warning", "Info", "Verbose", "Debug"));
 
-            this.Add("noheader|noh", "Suppress display of program information at start of run.",
+            Add("noheader|noh", "Suppress display of program information at start of run.",
                 v => NoHeader = v is not null);
 
-            this.Add("nocolor|noc", "Displays console output without color.",
+            Add("nocolor|noc", "Displays console output without color.",
                 v => NoColor = v is not null);
 
-            this.Add("help|h", "Display this message and exit.",
+            Add("help|h", "Display this message and exit.",
                 v => ShowHelp = v is not null);
 
-            this.Add("version|V", "Display the header and exit.",
+            Add("version|V", "Display the header and exit.",
                 v => ShowVersion = v is not null);
 
             // Default
-            this.Add("<>", v =>
+            Add("<>", v =>
             {
                 if (LooksLikeAnOption(v))
+                {
                     ErrorMessages.Add("Invalid argument: " + v);
+                }
                 else if (InputFileRequired)
+                {
                     if (InputFile is null)
                         InputFile = v;
                     else
                         ErrorMessages.Add("Multiple file names are not allowed on the command-line.\n    Invalid entry: " + v);
+                }
                 else
+                {
                     ErrorMessages.Add("Do not provide a file name when running a self-executing test.\n    Invalid entry: " + v);
+                }
             });
         }
 

@@ -12,7 +12,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
     public class PropertyAttribute : NUnitAttribute, IApplyToTest
     {
-        private readonly PropertyBag properties = new PropertyBag();
+        private readonly PropertyBag _properties = new PropertyBag();
 
         /// <summary>
         /// Construct a PropertyAttribute with a name and string value
@@ -21,7 +21,7 @@ namespace NUnit.Framework
         /// <param name="propertyValue">The property value</param>
         public PropertyAttribute(string propertyName, string propertyValue)
         {
-            this.properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace NUnit.Framework
         /// <param name="propertyValue">The property value</param>
         public PropertyAttribute(string propertyName, int propertyValue)
         {
-            this.properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace NUnit.Framework
         /// <param name="propertyValue">The property value</param>
         public PropertyAttribute(string propertyName, double propertyValue)
         {
-            this.properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
@@ -60,16 +60,16 @@ namespace NUnit.Framework
         /// </summary>
         protected PropertyAttribute( object propertyValue )
         {
-            string propertyName = this.GetType().Name;
+            string propertyName = GetType().Name;
             if ( propertyName.EndsWith( "Attribute", StringComparison.Ordinal ) )
                 propertyName = propertyName.Substring( 0, propertyName.Length - 9 );
-            this.properties.Add(propertyName, propertyValue);
+            _properties.Add(propertyName, propertyValue);
         }
 
         /// <summary>
         /// Gets the property dictionary for this attribute
         /// </summary>
-        public IPropertyBag Properties => properties;
+        public IPropertyBag Properties => _properties;
 
         #region IApplyToTest Members
 
@@ -80,8 +80,10 @@ namespace NUnit.Framework
         public virtual void ApplyToTest(Test test)
         {
             foreach (string key in Properties.Keys)
-                foreach(object value in Properties[key])
+            {
+                foreach (object value in Properties[key])
                     test.Properties.Add(key, value);
+            }
         }
 
         #endregion

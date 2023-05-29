@@ -23,7 +23,7 @@ namespace NUnit.Framework.Constraints
         protected PathConstraint(string expected)
             : base(expected)
         {
-            this.caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
+            caseInsensitive = Path.DirectorySeparatorChar == WindowsDirectorySeparatorChar;
         }
 
         /// <summary>
@@ -62,7 +62,10 @@ namespace NUnit.Framework.Constraints
                 {
                     leadingSeparators += Path.DirectorySeparatorChar;
                 }
-                else break;
+                else
+                {
+                    break;
+                }
             }
 
             string[] parts = path.Split(DirectorySeparatorChars, StringSplitOptions.RemoveEmptyEntries);

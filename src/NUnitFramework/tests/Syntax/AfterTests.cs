@@ -87,16 +87,16 @@ namespace NUnit.Framework.Syntax
         [SetUp]
         public void InitializeValues()
         {
-            this.Flag = false;
-            this.Num = 0;
-            this.Ob1 = new object();
-            this.Ob2 = new object();
-            this.Ob3 = new object();
-            this.List = new List<object>();
-            this.List.Add(1);
-            this.List.Add(2);
-            this.List.Add(3);
-            this.Greeting = "hello";
+            Flag = false;
+            Num = 0;
+            Ob1 = new object();
+            Ob2 = new object();
+            Ob3 = new object();
+            List = new List<object>();
+            List.Add(1);
+            List.Add(2);
+            List.Add(3);
+            Greeting = "hello";
 
             new Thread(ModifyValuesAfterDelay).Start();
         }
@@ -105,12 +105,12 @@ namespace NUnit.Framework.Syntax
         {
             Thread.Sleep(100);
 
-            this.Flag = true;
-            this.Num = 1;
-            this.Ob1 = Ob2;
-            this.Ob3 = null;
-            this.List.Add(4);
-            this.Greeting += "world";
+            Flag = true;
+            Num = 1;
+            Ob1 = Ob2;
+            Ob3 = null;
+            List.Add(4);
+            Greeting += "world";
         }
     }
 

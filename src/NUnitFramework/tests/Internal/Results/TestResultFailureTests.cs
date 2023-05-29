@@ -104,10 +104,10 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Failure, _failureReason, _stackTrace);
-            _testResult.AssertCount = 3;
+            TestResult.SetResult(ResultState.Failure, _failureReason, _stackTrace);
+            TestResult.AssertCount = 3;
 
-            _suiteResult.AddResult(_testResult);
+            SuiteResult.AddResult(TestResult);
         }
 
         [Test]
@@ -115,10 +115,10 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_testResult.ResultState, Is.EqualTo(ResultState.Failure));
-                Assert.That(_testResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                Assert.That(_testResult.Message, Is.EqualTo(_failureReason));
-                Assert.That(_testResult.StackTrace, Is.EqualTo(_stackTrace));
+                Assert.That(TestResult.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(TestResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(TestResult.Message, Is.EqualTo(_failureReason));
+                Assert.That(TestResult.StackTrace, Is.EqualTo(_stackTrace));
             });
         }
 
@@ -127,25 +127,25 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_suiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
-                Assert.That(_suiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
-                Assert.That(_suiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
-                Assert.That(_suiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
-                Assert.That(_suiteResult.StackTrace, Is.Null);
-                Assert.That(_suiteResult.TotalCount, Is.EqualTo(1));
-                Assert.That(_suiteResult.PassCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.FailCount, Is.EqualTo(1));
-                Assert.That(_suiteResult.WarningCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.SkipCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.InconclusiveCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.AssertCount, Is.EqualTo(3));
+                Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.ChildFailure));
+                Assert.That(SuiteResult.ResultState.Status, Is.EqualTo(TestStatus.Failed));
+                Assert.That(SuiteResult.Message, Is.EqualTo(TestResult.CHILD_ERRORS_MESSAGE));
+                Assert.That(SuiteResult.ResultState.Site, Is.EqualTo(FailureSite.Child));
+                Assert.That(SuiteResult.StackTrace, Is.Null);
+                Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.PassCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.FailCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.WarningCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.AssertCount, Is.EqualTo(3));
             });
         }
 
         [Test]
         public void TestResultXmlNodeIsFailure()
         {
-            TNode testNode = _testResult.ToXml(true);
+            TNode testNode = TestResult.ToXml(true);
 
             Assert.Multiple(() =>
             {
@@ -162,8 +162,8 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void TestResultXmlNodeEscapesInvalidXmlCharacters()
         {
-            _testResult.SetResult(ResultState.Failure, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00");
-            TNode testNode = _testResult.ToXml(true);
+            TestResult.SetResult(ResultState.Failure, "Invalid Characters: \u0001\u0008\u000b\u001f\ud800; Valid Characters: \u0009\u000a\u000d\u0020\ufffd\ud800\udc00");
+            TNode testNode = TestResult.ToXml(true);
             TNode? failureNode = testNode.SelectSingleNode("failure");
 
             Assert.That(failureNode, Is.Not.Null, "No <failure> element found");
@@ -177,7 +177,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultXmlNodeIsFailure()
         {
-            TNode suiteNode = _suiteResult.ToXml(true);
+            TNode suiteNode = SuiteResult.ToXml(true);
 
             Assert.Multiple(() =>
             {

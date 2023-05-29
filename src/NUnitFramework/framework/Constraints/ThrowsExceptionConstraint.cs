@@ -51,7 +51,7 @@ namespace NUnit.Framework.Constraints
 
             public override void WriteActualValueTo(MessageWriter writer)
             {
-                if (this.Status == ConstraintStatus.Failure)
+                if (Status == ConstraintStatus.Failure)
                     writer.Write("no exception thrown");
                 else
                     base.WriteActualValueTo(writer);

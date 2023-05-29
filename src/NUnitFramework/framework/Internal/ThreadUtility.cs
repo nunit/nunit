@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal
             }
         }
 
-        private static bool isNotOnWindows;
+        private static bool _isNotOnWindows;
 
         /// <summary>
         /// Captures the current thread's native id. If provided to <see cref="Kill(Thread,int)"/> later, allows the thread to be killed if it's in a message pump native blocking wait.
@@ -162,17 +162,19 @@ namespace NUnit.Framework.Internal
         [SecuritySafeCritical]
         public static int GetCurrentThreadNativeId()
         {
-            if (isNotOnWindows) return 0;
+            if (_isNotOnWindows) return 0;
             try
             {
                 return GetCurrentThreadId();
             }
             catch (EntryPointNotFoundException)
             {
-                isNotOnWindows = true;
+                _isNotOnWindows = true;
                 return 0;
             }
         }
+
+        private const int ERROR_INVALID_THREAD_ID = 0x5A4;
 
         /// <summary>
         /// Sends a message to the thread to dislodge it from native code and allow a return to managed code, where a ThreadAbortException can be generated.
@@ -185,7 +187,6 @@ namespace NUnit.Framework.Internal
             {
                 // ReSharper disable once InconsistentNaming
                 // P/invoke doesn’t need to follow naming convention
-                const int ERROR_INVALID_THREAD_ID = 0x5A4;
                 var errorCode = Marshal.GetLastWin32Error();
                 if (errorCode != ERROR_INVALID_THREAD_ID)
                     throw new Win32Exception(errorCode);

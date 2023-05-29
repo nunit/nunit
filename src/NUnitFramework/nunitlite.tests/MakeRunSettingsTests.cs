@@ -7,7 +7,7 @@ namespace NUnitLite.Tests
 {
     public class MakeRunSettingsTests
     {
-        private static TestCaseData[] SettingsData =
+        private static readonly TestCaseData[] SettingsData =
         {
             new TestCaseData("--timeout=50", "DefaultTimeout", 50),
             new TestCaseData("--work=results", "WorkDirectory", Path.GetFullPath("results")),

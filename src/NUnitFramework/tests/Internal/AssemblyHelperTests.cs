@@ -13,14 +13,14 @@ namespace NUnit.Framework.Internal
         [Test]
         public void GetNameForAssembly()
         {
-            var assemblyName = AssemblyHelper.GetAssemblyName(this.GetType().Assembly);
+            var assemblyName = AssemblyHelper.GetAssemblyName(GetType().Assembly);
             Assert.That(assemblyName.Name, Is.EqualTo(THIS_ASSEMBLY_NAME).IgnoreCase);
         }
 
         [Test]
         public void GetPathForAssembly()
         {
-            string path = AssemblyHelper.GetAssemblyPath(this.GetType().Assembly);
+            string path = AssemblyHelper.GetAssemblyPath(GetType().Assembly);
             Assert.That(Path.GetFileName(path), Is.EqualTo(THIS_ASSEMBLY_PATH).IgnoreCase);
 
             Assert.That(File.Exists(path));

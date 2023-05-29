@@ -32,7 +32,7 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestFixtureSourceAttribute(string sourceName)
         {
-            this.SourceName = sourceName;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace NUnit.Framework
         /// <param name="sourceName">The name of a static method, property or field that will provide data.</param>
         public TestFixtureSourceAttribute(Type sourceType, string sourceName)
         {
-            this.SourceType = sourceType;
-            this.SourceName = sourceName;
+            SourceType = sourceType;
+            SourceName = sourceName;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace NUnit.Framework
         /// <param name="sourceType">The type that will provide data</param>
         public TestFixtureSourceAttribute(Type sourceType)
         {
-            this.SourceType = sourceType;
+            SourceType = sourceType;
         }
 
         #endregion
@@ -154,9 +154,11 @@ namespace NUnit.Framework
                             parms = new TestFixtureParameters(args);
                         }
 
-                        if (this.Category is not null)
-                            foreach (string cat in this.Category.Tokenize(','))
+                        if (Category is not null)
+                        {
+                            foreach (string cat in Category.Tokenize(','))
                                 parms.Properties.Add(PropertyNames.Category, cat);
+                        }
 
                         data.Add(parms);
                     }
@@ -186,9 +188,11 @@ namespace NUnit.Framework
 
                 var field = member as FieldInfo;
                 if (field is not null)
+                {
                     return field.IsStatic
                         ? (IEnumerable?)field.GetValue(null)
                         : SourceMustBeStaticError();
+                }
 
                 var property = member as PropertyInfo;
                 if (property is not null)
@@ -201,9 +205,11 @@ namespace NUnit.Framework
 
                 var m = member as MethodInfo;
                 if (m is not null)
+                {
                     return m.IsStatic
                         ? m.InvokeMaybeAwait<IEnumerable?>()
                         : SourceMustBeStaticError();
+                }
             }
 
             return null;

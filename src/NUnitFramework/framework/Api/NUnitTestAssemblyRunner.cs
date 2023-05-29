@@ -25,7 +25,7 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class NUnitTestAssemblyRunner : ITestAssemblyRunner
     {
-        private static readonly Logger log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
+        private static readonly Logger Log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private readonly ITestAssemblyBuilder _builder;
         private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Api
         /// </remarks>
         public void RunAsync(ITestListener listener, ITestFilter filter)
         {
-            log.Info("Running tests");
+            Log.Info("Running tests");
             if (LoadedTest is null)
                 throw new InvalidOperationException("Tests must be loaded before running them.");
 
@@ -292,7 +292,9 @@ namespace NUnit.Framework.Api
 #if NETFRAMEWORK
             if (Settings.TryGetValue(FrameworkPackageSettings.PauseBeforeRun, out var pauseBeforeRun) &&
                 (bool)pauseBeforeRun)
+            {
                 PauseBeforeRun();
+            }
 #endif
 
             context.Dispatcher.Start(topLevelWorkItem);
@@ -326,11 +328,17 @@ namespace NUnit.Framework.Api
 
             if (Settings.TryGetValue(FrameworkPackageSettings.RunOnMainThread, out var runOnMainThread) &&
                 (bool)runOnMainThread)
+            {
                 context.Dispatcher = new MainThreadWorkItemDispatcher();
+            }
             else if (levelOfParallelism > 0)
+            {
                 context.Dispatcher = new ParallelWorkItemDispatcher(levelOfParallelism);
+            }
             else
+            {
                 context.Dispatcher = new SimpleWorkItemDispatcher();
+            }
 
             return context;
         }

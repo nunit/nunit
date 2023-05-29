@@ -16,8 +16,8 @@ namespace NUnit.Framework.Constraints
             // ThrowsOperator stacks on everything but
             // it's always the first item on the stack
             // anyway. It is evaluated last of all ops.
-            this.left_precedence = 1;
-            this.right_precedence = 100;
+            left_precedence = 1;
+            right_precedence = 100;
         }
 
         /// <summary>

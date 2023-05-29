@@ -144,11 +144,13 @@ namespace NUnit.Common
                 case '!':
                     GetChar();
                     foreach(string dbl in DOUBLE_CHAR_SYMBOLS)
+                    {
                         if (ch == dbl[0] && NextChar == dbl[1])
                         {
                             GetChar();
                             return new Token(TokenKind.Symbol, dbl) { Pos = pos };
                         }
+                    }
 
                     return new Token(TokenKind.Symbol, ch);
 

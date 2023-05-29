@@ -13,7 +13,7 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class ArrayEqualsFailureMessageFixture
     {
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         [Test]
         public void ArraysHaveDifferentRanks()

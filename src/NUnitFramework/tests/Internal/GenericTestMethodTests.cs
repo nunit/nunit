@@ -39,8 +39,10 @@ namespace NUnit.Framework.Internal
             // Examine grandchildren - child is parameterized method suite
             var suiteResult = result.Children.ToArray()[0];
             foreach (var childResult in suiteResult.Children)
+            {
                 if (childResult.ResultState == ResultState.NotRunnable)
                     invalid++;
+            }
 
             Assert.That(invalid, Is.EqualTo(2), "Invalid count");
         }
@@ -98,8 +100,10 @@ namespace NUnit.Framework.Internal
             // Examine grandchildren - child is parameterized method suite
             var suiteResult = result.Children.ToArray()[0];
             foreach (var childResult in suiteResult.Children)
+            {
                 if (childResult.ResultState == ResultState.NotRunnable)
                     invalid++;
+            }
 
             Assert.That(invalid, Is.EqualTo(2), "Invalid count");
         }
@@ -150,8 +154,10 @@ namespace NUnit.Framework.Internal
             // Examine grandchildren - child is parameterized method suite
             var suiteResult = result.Children.ToArray()[0];
             foreach (var childResult in suiteResult.Children)
+            {
                 if (childResult.ResultState == ResultState.NotRunnable)
                     invalid++;
+            }
 
             Assert.That(invalid, Is.EqualTo(2), "Invalid count");
         }

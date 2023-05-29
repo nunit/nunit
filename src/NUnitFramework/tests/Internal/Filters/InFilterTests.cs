@@ -29,8 +29,8 @@ namespace NUnit.Framework.Internal.Filters
         {
             var filter = new OrFilter(new CategoryFilter("Dummy"), new FullNameFilter(ANOTHER_CLASS));
 
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
 
             Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
@@ -66,8 +66,8 @@ namespace NUnit.Framework.Internal.Filters
                 $"<filter><or><test>{DUMMY_CLASS}</test><test>{ANOTHER_CLASS}</test></or></filter>");
 
             Assert.That(filter, Is.TypeOf<InFilter>());
-            Assert.That(filter.Match(_dummyFixture));
-            Assert.That(filter.Match(_anotherFixture));
+            Assert.That(filter.Match(DummyFixtureSuite));
+            Assert.That(filter.Match(AnotherFixtureSuite));
         }
         
         [Test]

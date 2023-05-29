@@ -13,14 +13,14 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class NUnitEqualityComparerTests
     {
-        private Tolerance tolerance;
-        private NUnitEqualityComparer comparer;
+        private Tolerance _tolerance;
+        private NUnitEqualityComparer _comparer;
 
         [SetUp]
         public void Setup()
         {
-            tolerance = Tolerance.Default;
-            comparer = new NUnitEqualityComparer();
+            _tolerance = Tolerance.Default;
+            _comparer = new NUnitEqualityComparer();
         }
 
         [TestCase(4, 4)]
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)4)]
         public void EqualItems(object x, object y)
         {
-            Assert.That(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance));
         }
 
         [TestCase(4, 2)]
@@ -56,8 +56,8 @@ namespace NUnit.Framework.Constraints
         [TestCase(4, (char)2)]
         public void UnequalItems(object greater, object lesser)
         {
-            Assert.That(comparer.AreEqual(greater, lesser, ref tolerance), Is.False);
-            Assert.That(comparer.AreEqual(lesser, greater, ref tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(greater, lesser, ref _tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(lesser, greater, ref _tolerance), Is.False);
         }
 
         [TestCase(double.PositiveInfinity, double.PositiveInfinity)]
@@ -68,7 +68,7 @@ namespace NUnit.Framework.Constraints
         [TestCase(float.NaN, float.NaN)]
         public void SpecialFloatingPointValuesCompareAsEqual(object x, object y)
         {
-            Assert.That(comparer.AreEqual(x, y, ref tolerance));
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Constraints
             {
                 var one = new DirectoryInfo(testDir.Directory.FullName);
                 var two = new DirectoryInfo(testDir.Directory.FullName);
-                Assert.That(comparer.AreEqual(one, two, ref tolerance));
+                Assert.That(_comparer.AreEqual(one, two, ref _tolerance));
             }
         }
 
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Constraints
             using (var one = new TestDirectory())
             using (var two = new TestDirectory())
             {
-                Assert.That(comparer.AreEqual(one, two, ref tolerance), Is.False);
+                Assert.That(_comparer.AreEqual(one, two, ref _tolerance), Is.False);
             }
         }
 
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Constraints
             object[] array = new object[1];
             array[0] = array;
 
-            Assert.That(comparer.AreEqual(array, array, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(array, array, ref _tolerance), Is.True);
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Constraints
             IEquatableWithoutEqualsOverridden x = new IEquatableWithoutEqualsOverridden(1);
             IEquatableWithoutEqualsOverridden y = new IEquatableWithoutEqualsOverridden(1);
 
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.True);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Constraints
 
             // y.Equals(x) is what gets actually called
             // TODO: This should work both ways
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.True);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Constraints
 
             // y.Equals(x) is what gets actually called
             // TODO: This should work both ways
-            Assert.That(comparer.AreEqual(y, x, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(y, x, ref _tolerance), Is.True);
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace NUnit.Framework.Constraints
             IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
             IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(1);
 
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.True);
         }
 
         [Test]
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Constraints
             IEquatableWithExplicitImplementation x = new IEquatableWithExplicitImplementation(1);
             IEquatableWithExplicitImplementation y = new IEquatableWithExplicitImplementation(2);
 
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.False);
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Constraints
         {
             NeverEqualIEquatable z = new NeverEqualIEquatable();
 
-            Assert.That(comparer.AreEqual(z, z, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(z, z, ref _tolerance), Is.True);
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Constraints
             NeverEqualIEquatableWithOverriddenAlwaysTrueEquals x = new NeverEqualIEquatableWithOverriddenAlwaysTrueEquals();
             NeverEqualIEquatableWithOverriddenAlwaysTrueEquals y = new NeverEqualIEquatableWithOverriddenAlwaysTrueEquals();
 
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.False);
         }
 
         [Test]
@@ -174,10 +174,10 @@ namespace NUnit.Framework.Constraints
             var y = new EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
             var z = new EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
 
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.True);
-            Assert.That(comparer.AreEqual(y, x, ref tolerance), Is.True);
-            Assert.That(comparer.AreEqual(x, z, ref tolerance), Is.False);
-            Assert.That(comparer.AreEqual(z, x, ref tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(y, x, ref _tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(x, z, ref _tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(z, x, ref _tolerance), Is.False);
 
             Assert.That(y, Is.EqualTo(x));
             Assert.That(x, Is.EqualTo(y));
@@ -188,16 +188,16 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void IEquatableIsIgnoredAndEnumerableEqualsUsedWithAsCollection()
         {
-            comparer.CompareAsCollection = true;
+            _comparer.CompareAsCollection = true;
 
             var x = new EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
             var y = new EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
             var z = new EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
 
-            Assert.That(comparer.AreEqual(x, y, ref tolerance), Is.False);
-            Assert.That(comparer.AreEqual(y, x, ref tolerance), Is.False);
-            Assert.That(comparer.AreEqual(x, z, ref tolerance), Is.True);
-            Assert.That(comparer.AreEqual(z, x, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(x, y, ref _tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(y, x, ref _tolerance), Is.False);
+            Assert.That(_comparer.AreEqual(x, z, ref _tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(z, x, ref _tolerance), Is.True);
 
             Assert.That(y, Is.Not.EqualTo(x).AsCollection);
             Assert.That(x, Is.Not.EqualTo(y).AsCollection);
@@ -284,7 +284,7 @@ namespace NUnit.Framework.Constraints
         public void IEnumeratorIsDisposed()
         {
             var enumeration = new EnumerableWithDisposeChecks<int>(new[] { 0, 1, 2, 3 });
-            Assert.That(comparer.AreEqual(enumeration, enumeration, ref tolerance), Is.True);
+            Assert.That(_comparer.AreEqual(enumeration, enumeration, ref _tolerance), Is.True);
             Assert.That(enumeration.EnumeratorsDisposed);
         }
 
@@ -320,7 +320,7 @@ namespace NUnit.Framework.Constraints
             var x = new[] { equalInstance1, equalInstance1 };
             var y = new[] { equalInstance2, equalInstance2 };
 
-            Assert.That(equalityComparer.AreEqual(x, y, ref tolerance), Is.True);
+            Assert.That(equalityComparer.AreEqual(x, y, ref _tolerance), Is.True);
         }
 
         private static IEnumerable<TestCaseData> GetRecursiveComparerTestCases()
@@ -357,20 +357,20 @@ namespace NUnit.Framework.Constraints
 
     internal class DetectRecursionComparer : EqualityAdapter
     {
-        private readonly int maxRecursion;
+        private readonly int _maxRecursion;
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public DetectRecursionComparer(int maxRecursion)
         {
             var callerDepth = new StackTrace().FrameCount - 1;
-            this.maxRecursion = callerDepth + maxRecursion;
+            _maxRecursion = callerDepth + maxRecursion;
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         public override bool CanCompare(object x, object y)
         {
             var currentDepth = new StackTrace().FrameCount - 1;
-            return currentDepth >= maxRecursion;
+            return currentDepth >= _maxRecursion;
         }
 
         public override bool AreEqual(object x, object y)
@@ -386,19 +386,19 @@ namespace NUnit.Framework.Constraints
 
     internal class EnumerableWithDisposeChecks<T> : IEnumerable<T>
     {
-        private readonly IEnumerable<T> data;
-        private readonly List<DisposableEnumerator<T>> enumerators = new List<DisposableEnumerator<T>>();
+        private readonly IEnumerable<T> _data;
+        private readonly List<DisposableEnumerator<T>> _enumerators = new List<DisposableEnumerator<T>>();
 
         public EnumerableWithDisposeChecks(T[] data)
         {
-            this.data = data;
+            _data = data;
         }
 
         public bool EnumeratorsDisposed
         {
             get
             {
-                foreach (var disposableEnumerator in enumerators)
+                foreach (var disposableEnumerator in _enumerators)
                 {
                     if (!disposableEnumerator.Disposed)
                     {
@@ -411,8 +411,8 @@ namespace NUnit.Framework.Constraints
 
         public IEnumerator<T> GetEnumerator()
         {
-            var enumerator = new DisposableEnumerator<T>(data.GetEnumerator());
-            enumerators.Add(enumerator);
+            var enumerator = new DisposableEnumerator<T>(_data.GetEnumerator());
+            _enumerators.Add(enumerator);
             return enumerator;
         }
 
@@ -424,33 +424,33 @@ namespace NUnit.Framework.Constraints
 
     internal class DisposableEnumerator<T> : IEnumerator<T>
     {
-        private bool disposedValue = false;
-        private readonly IEnumerator<T> enumerator;
+        private bool _disposedValue = false;
+        private readonly IEnumerator<T> _enumerator;
 
         public DisposableEnumerator(IEnumerator<T> enumerator)
         {
-            this.enumerator = enumerator;
+            _enumerator = enumerator;
         }
 
-        public bool Disposed => disposedValue;
+        public bool Disposed => _disposedValue;
 
-        public T Current => enumerator.Current;
+        public T Current => _enumerator.Current;
 
-        object? IEnumerator.Current => enumerator.Current;
+        object? IEnumerator.Current => _enumerator.Current;
 
         public bool MoveNext()
         {
-            return enumerator.MoveNext();
+            return _enumerator.MoveNext();
         }
 
         public void Reset()
         {
-            enumerator.Reset();
+            _enumerator.Reset();
         }
 
         public void Dispose()
         {
-            disposedValue = true;
+            _disposedValue = true;
         }
 
     }
@@ -475,16 +475,16 @@ namespace NUnit.Framework.Constraints
 
     public class Int32IEquatable : IEquatable<int>
     {
-        private readonly int value;
+        private readonly int _value;
 
         public Int32IEquatable(int value)
         {
-            this.value = value;
+            _value = value;
         }
 
         public bool Equals(int other)
         {
-            return value.Equals(other);
+            return _value.Equals(other);
         }
     }
 
@@ -498,31 +498,31 @@ namespace NUnit.Framework.Constraints
 
     public class IEquatableWithoutEqualsOverridden : IEquatable<IEquatableWithoutEqualsOverridden>
     {
-        private readonly int value;
+        private readonly int _value;
 
         public IEquatableWithoutEqualsOverridden(int value)
         {
-            this.value = value;
+            _value = value;
         }
 
         public bool Equals(IEquatableWithoutEqualsOverridden? other)
         {
-            return other is not null && value.Equals(other.value);
+            return other is not null && _value.Equals(other._value);
         }
     }
 
     public class IEquatableWithExplicitImplementation : IEquatable<IEquatableWithExplicitImplementation>
     {
-        private readonly int value;
+        private readonly int _value;
 
         public IEquatableWithExplicitImplementation(int value)
         {
-            this.value = value;
+            _value = value;
         }
 
         bool IEquatable<IEquatableWithExplicitImplementation>.Equals(IEquatableWithExplicitImplementation? other)
         {
-            return other is not null && value.Equals(other.value);
+            return other is not null && _value.Equals(other._value);
         }
     }
 
@@ -581,11 +581,11 @@ namespace NUnit.Framework.Constraints
 
     public class EnumerableObject<T> : IEnumerable<T>
     {
-        private readonly IEnumerable<T> enumerable;
+        private readonly IEnumerable<T> _enumerable;
 
         public EnumerableObject(IEnumerable<T> enumerable, int someProperty)
         {
-            this.enumerable = enumerable;
+            _enumerable = enumerable;
             SomeProperty = someProperty;
         }
 
@@ -595,7 +595,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return enumerable.GetEnumerator();
+            return _enumerable.GetEnumerator();
         }
 
         /// <summary>Returns an enumerator that iterates through a collection.</summary>
@@ -608,11 +608,11 @@ namespace NUnit.Framework.Constraints
 
     public class EquatableWithEnumerableObject<T> : IEnumerable<T>, IEquatable<EnumerableObject<T>>
     {
-        private readonly IEnumerable<T> enumerable;
+        private readonly IEnumerable<T> _enumerable;
 
         public EquatableWithEnumerableObject(IEnumerable<T> enumerable, int otherProperty)
         {
-            this.enumerable = enumerable;
+            _enumerable = enumerable;
             OtherProperty = otherProperty;
         }
 
@@ -622,7 +622,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.</returns>
         public IEnumerator<T> GetEnumerator()
         {
-            return enumerable.GetEnumerator();
+            return _enumerable.GetEnumerator();
         }
 
         /// <summary>Returns an enumerator that iterates through a collection.</summary>

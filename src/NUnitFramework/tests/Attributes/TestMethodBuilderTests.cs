@@ -220,7 +220,7 @@ namespace NUnit.Framework.Attributes
             new object[] { 12, 6, 2 } };
 
         [DatapointSource]
-        private readonly int[] ints = new int[] { 1, 2, 3 };
+        private readonly int[] _ints = new int[] { 1, 2, 3 };
 
         #endregion
     }

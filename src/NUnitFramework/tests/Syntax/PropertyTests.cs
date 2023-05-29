@@ -81,20 +81,20 @@ namespace NUnit.Framework.Syntax
 
     public class PropertySyntaxVariations
     {
-        private readonly int[] ints = new int[] { 1, 2, 3 };
+        private readonly int[] _ints = new int[] { 1, 2, 3 };
 
         [Test]
         public void ExistenceTest()
         {
-            Assert.That(ints, Has.Property("Length"));
-            Assert.That(ints, Has.Length);
+            Assert.That(_ints, Has.Property("Length"));
+            Assert.That(_ints, Has.Length);
         }
 
         [Test]
         public void SeparateConstraintTest()
         {
-            Assert.That(ints, Has.Property("Length").EqualTo(3));
-            Assert.That(ints, Has.Length.EqualTo(3));
+            Assert.That(_ints, Has.Property("Length").EqualTo(3));
+            Assert.That(_ints, Has.Length.EqualTo(3));
         }
     }
 }

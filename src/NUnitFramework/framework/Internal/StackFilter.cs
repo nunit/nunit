@@ -67,9 +67,11 @@ namespace NUnit.Framework.Internal
                 var line = sr.ReadLine();
 
                 if (_topOfStackRegex is not null)
+                {
                     // First, skip past any Assert, Assume or MultipleAssertBlock lines
                     while (line is not null && _topOfStackRegex.IsMatch(line))
                         line = sr.ReadLine();
+                }
 
                 // Copy lines down to the line that invoked the failing method.
                 // This is actually only needed for the compact framework, but

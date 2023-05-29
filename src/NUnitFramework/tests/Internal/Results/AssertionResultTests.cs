@@ -10,13 +10,13 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Success, "Test passed!");
+            TestResult.SetResult(ResultState.Success, "Test passed!");
 
             RecordExpectedAssertions(
                 new AssertionResult(AssertionStatus.Passed, "Message 1", "Stack 1"),
                 new AssertionResult(AssertionStatus.Failed, "Message 2", "Stack 2"));
 
-            _suiteResult.AddResult(_testResult);
+            SuiteResult.AddResult(TestResult);
         }
 
         private readonly List<AssertionResult> _expectedAssertions = new List<AssertionResult>();
@@ -26,25 +26,25 @@ namespace NUnit.Framework.Internal.Results
             _expectedAssertions.AddRange(expectedAssertions);
 
             foreach (var assertion in _expectedAssertions)
-                _testResult.RecordAssertion(assertion);
+                TestResult.RecordAssertion(assertion);
         }
 
         [Test]
         public void TestResult_AssertionResults()
         {
-            Assert.That(_testResult.AssertionResults, Is.EqualTo(_expectedAssertions));
+            Assert.That(TestResult.AssertionResults, Is.EqualTo(_expectedAssertions));
         }
 
         [Test]
         public void SuiteResult_AssertionResults()
         {
-            Assert.That(_suiteResult.AssertionResults, Is.Empty);
+            Assert.That(SuiteResult.AssertionResults, Is.Empty);
         }
 
         [Test]
         public void TestResultXml_AssertionResults()
         {
-            TNode? assertionResults = _testResult.ToXml(true).SelectSingleNode("assertions");
+            TNode? assertionResults = TestResult.ToXml(true).SelectSingleNode("assertions");
 
             if (_expectedAssertions.Count == 0)
             {
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultXml_AssertionResults()
         {
-            TNode suiteNode = _suiteResult.ToXml(true);
+            TNode suiteNode = SuiteResult.ToXml(true);
             Assert.That(suiteNode.SelectSingleNode("assertions"), Is.Null);
         }
     }

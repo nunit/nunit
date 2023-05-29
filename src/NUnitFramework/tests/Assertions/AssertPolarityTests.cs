@@ -7,59 +7,59 @@ namespace NUnit.Framework.Assertions
     [TestFixture]
     public class AssertPolarityTests
     {
-        private readonly int i1 = 1;
-        private readonly int i2 = -1;
-        private readonly uint u1 = 123456789;
-        private readonly long l1 = 123456789;
-        private readonly long l2 = -12345879;
-        private readonly ulong ul1 = 123456890;
-        private readonly float f1 = 8.543F;
-        private readonly float f2 = -8.543F;
-        private readonly decimal de1 = 83.4M;
-        private readonly decimal de2 = -83.4M;
-        private readonly double d1 = 8.0;
-        private readonly double d2 = -8.0;
+        private readonly int _i1 = 1;
+        private readonly int _i2 = -1;
+        private readonly uint _u1 = 123456789;
+        private readonly long _l1 = 123456789;
+        private readonly long _l2 = -12345879;
+        private readonly ulong _ul1 = 123456890;
+        private readonly float _f1 = 8.543F;
+        private readonly float _f2 = -8.543F;
+        private readonly decimal _de1 = 83.4M;
+        private readonly decimal _de2 = -83.4M;
+        private readonly double _d1 = 8.0;
+        private readonly double _d2 = -8.0;
 
         [Test]
         public void PositiveNumbersPassPositiveAssertion()
         {
-            Assert.Positive(i1);
-            Assert.Positive(l1);
-            Assert.Positive(f1);
-            Assert.Positive(de1);
-            Assert.Positive(d1);
+            Assert.Positive(_i1);
+            Assert.Positive(_l1);
+            Assert.Positive(_f1);
+            Assert.Positive(_de1);
+            Assert.Positive(_d1);
         }
 
         [Test]
         public void AssertNegativeNumbersFailPositiveAssertion()
         {
-            Assert.Throws<AssertionException>(() => Assert.Positive(i2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(l2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(f2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(de2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(d2));
+            Assert.Throws<AssertionException>(() => Assert.Positive(_i2));
+            Assert.Throws<AssertionException>(() => Assert.Positive(_l2));
+            Assert.Throws<AssertionException>(() => Assert.Positive(_f2));
+            Assert.Throws<AssertionException>(() => Assert.Positive(_de2));
+            Assert.Throws<AssertionException>(() => Assert.Positive(_d2));
         }
 
         [Test]
         public void NegativeNumbersPassNegativeAssertion()
         {
-            Assert.Negative(i2);
-            Assert.Negative(l2);
-            Assert.Negative(f2);
-            Assert.Negative(de2);
-            Assert.Negative(d2);
+            Assert.Negative(_i2);
+            Assert.Negative(_l2);
+            Assert.Negative(_f2);
+            Assert.Negative(_de2);
+            Assert.Negative(_d2);
         }
 
         [Test]
         public void AssertPositiveNumbersFailNegativeAssertion()
         {
-            Assert.Throws<AssertionException>(() => Assert.Negative(i1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(u1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(l1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(ul1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(f1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(de1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(d1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_i1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_u1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_l1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_ul1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_f1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_de1));
+            Assert.Throws<AssertionException>(() => Assert.Negative(_d1));
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than 0" + Environment.NewLine +
                 "  But was:  -1" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Positive(i2));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Positive(_i2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than 0" + Environment.NewLine +
                 "  But was:  1" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Negative(i1));
+            var ex = Assert.Throws<AssertionException>(() => Assert.Negative(_i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }

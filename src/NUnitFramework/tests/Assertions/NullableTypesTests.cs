@@ -199,14 +199,14 @@ namespace NUnit.Framework.Assertions
         private readonly struct MyStruct
         {
 #pragma warning disable IDE0052 // Remove unread private members
-            private readonly int i;
-            private readonly string s;
+            private readonly int _i;
+            private readonly string _s;
 #pragma warning restore IDE0052 // Remove unread private members
 
             public MyStruct(int i, string s)
             {
-                this.i = i;
-                this.s = s;
+                _i = i;
+                _s = s;
             }
         }
 

@@ -9,7 +9,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture]
     public class AllItemsConstraintTests
     {
-        private readonly string NL = Environment.NewLine;
+        private static readonly string NL = Environment.NewLine;
 
         [Test]
         public void AllItemsAreNotNull()

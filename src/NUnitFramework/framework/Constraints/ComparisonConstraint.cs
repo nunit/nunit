@@ -93,7 +93,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using(IComparer comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(IComparer<T> comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Constraints
         /// <returns>A constraint modified to use the given comparer</returns>
         public ComparisonConstraint Using<T>(Comparison<T> comparer)
         {
-            this._comparer = ComparisonAdapter.For(comparer);
+            _comparer = ComparisonAdapter.For(comparer);
             return this;
         }
 

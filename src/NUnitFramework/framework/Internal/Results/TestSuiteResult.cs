@@ -222,8 +222,11 @@ namespace NUnit.Framework.Internal
 
                 case TestStatus.Skipped:
                     if (childResultState.Label == "Ignored")
+                    {
                         if (ResultState.Status == TestStatus.Inconclusive || ResultState.Status == TestStatus.Passed)
                             SetResult(ResultState.ChildIgnored, CHILD_IGNORE_MESSAGE);
+                    }
+
                     break;
             }
         }

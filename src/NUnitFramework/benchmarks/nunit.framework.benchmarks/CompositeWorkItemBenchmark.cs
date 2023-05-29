@@ -45,12 +45,12 @@ public class CompositeWorkItemBenchmark
 }
 
 [SomeTestAttr]
-[TestFixtureSource(nameof(_fixtureArgs))]
+[TestFixtureSource(nameof(FixtureArgs))]
 public class TestWithTestActionAttribute
 {
-    private static object[] _fixtureArgs = Enumerable.Range(0, 100)
-                                                     .Select(a => new object[] { $"a{a:000}" })
-                                                     .ToArray();
+    private static readonly object[] FixtureArgs = Enumerable.Range(0, 100)
+                                                             .Select(a => new object[] { $"a{a:000}" })
+                                                             .ToArray();
 
     public TestWithTestActionAttribute(string arg) { }
 
@@ -61,7 +61,7 @@ public class TestWithTestActionAttribute
 [AttributeUsage(AttributeTargets.Class)]
 public class SomeTestAttrAttribute : Attribute, ITestAction
 {
-    private object _data = Enumerable.Range(0, 1000000).ToArray();
+    private readonly object _data = Enumerable.Range(0, 1000000).ToArray();
 
     public SomeTestAttrAttribute()
     {

@@ -46,15 +46,15 @@ namespace NUnit.Framework.Attributes
     [TestFixture(default(string), default(string), "typed null test")]
     public class ParameterizedTestFixture
     {
-        private readonly string? eq1;
-        private readonly string? eq2;
-        private readonly string? neq;
+        private readonly string? _eq1;
+        private readonly string? _eq2;
+        private readonly string? _neq;
 
         public ParameterizedTestFixture(string? eq1, string? eq2, string? neq)
         {
-            this.eq1 = eq1;
-            this.eq2 = eq2;
-            this.neq = neq;
+            _eq1 = eq1;
+            _eq2 = eq2;
+            _neq = neq;
         }
 
         public ParameterizedTestFixture(string? eq1, string? eq2)
@@ -62,49 +62,49 @@ namespace NUnit.Framework.Attributes
 
         public ParameterizedTestFixture(int eq1, int eq2, int neq)
         {
-            this.eq1 = eq1.ToString();
-            this.eq2 = eq2.ToString();
-            this.neq = neq.ToString();
+            _eq1 = eq1.ToString();
+            _eq2 = eq2.ToString();
+            _neq = neq.ToString();
         }
 
         [Test]
         public void TestEquality()
         {
-            Assert.That(eq2, Is.EqualTo(eq1));
-            if (eq1 is not null && eq2 is not null)
-                Assert.That(eq2.GetHashCode(), Is.EqualTo(eq1.GetHashCode()));
+            Assert.That(_eq2, Is.EqualTo(_eq1));
+            if (_eq1 is not null && _eq2 is not null)
+                Assert.That(_eq2.GetHashCode(), Is.EqualTo(_eq1.GetHashCode()));
         }
 
         [Test]
         public void TestInequality()
         {
-            Assert.That(neq, Is.Not.EqualTo(eq1));
-            if (eq1 is not null && neq is not null)
-                Assert.That(neq.GetHashCode(), Is.Not.EqualTo(eq1.GetHashCode()));
+            Assert.That(_neq, Is.Not.EqualTo(_eq1));
+            if (_eq1 is not null && _neq is not null)
+                Assert.That(_neq.GetHashCode(), Is.Not.EqualTo(_eq1.GetHashCode()));
         }
     }
 
     public class ParameterizedTestFixtureNamingTests
     {
-        private TestSuite fixture;
+        private TestSuite _fixture;
 
         [SetUp]
         public void MakeFixture()
         {
-            fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.ParameterizedTestFixture));
+            _fixture = TestBuilder.MakeFixture(typeof(NUnit.TestData.ParameterizedTestFixture));
         }
 
         [Test]
         public void TopLevelSuiteIsNamedCorrectly()
         {
-            Assert.That(fixture.Name, Is.EqualTo("ParameterizedTestFixture"));
-            Assert.That(fixture.FullName, Is.EqualTo("NUnit.TestData.ParameterizedTestFixture"));
+            Assert.That(_fixture.Name, Is.EqualTo("ParameterizedTestFixture"));
+            Assert.That(_fixture.FullName, Is.EqualTo("NUnit.TestData.ParameterizedTestFixture"));
         }
 
         [Test]
         public void SuiteHasCorrectNumberOfInstances()
         {
-            Assert.That(fixture.Tests, Has.Count.EqualTo(2));
+            Assert.That(_fixture.Tests, Has.Count.EqualTo(2));
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace NUnit.Framework.Attributes
         {
             var names = new List<string>();
             var fullnames = new List<string>();
-            foreach (Test test in fixture.Tests)
+            foreach (Test test in _fixture.Tests)
             {
                 names.Add(test.Name);
                 fullnames.Add(test.FullName);
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MethodWithoutParamsIsNamedCorrectly()
         {
-            TestSuite instance = (TestSuite)fixture.Tests[0];
+            TestSuite instance = (TestSuite)_fixture.Tests[0];
             Test? method = TestFinder.Find("MethodWithoutParams", instance, false);
             Assert.That(method, Is.Not.Null );
             Assert.That(method.FullName, Is.EqualTo(instance.FullName + ".MethodWithoutParams"));
@@ -136,7 +136,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void MethodWithParamsIsNamedCorrectly()
         {
-            TestSuite instance = (TestSuite)fixture.Tests[0];
+            TestSuite instance = (TestSuite)_fixture.Tests[0];
             TestSuite? method = (TestSuite?)TestFinder.Find("MethodWithParams", instance, false);
             Assert.That(method, Is.Not.Null);
             

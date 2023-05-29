@@ -9,37 +9,37 @@ namespace NUnit.Framework.Internal
     [TestFixture]
     public class TestXmlTests
     {
-        private TestSuite testSuite;
-        private TestFixture testFixture;
-        private TestMethod testMethod;
+        private TestSuite _testSuite;
+        private TestFixture _testFixture;
+        private TestMethod _testMethod;
 
         [SetUp]
         public void SetUp()
         {
-            testMethod = new TestMethod(new MethodWrapper(typeof(DummyFixture), "DummyMethod"));
-            testMethod.Properties.Set(PropertyNames.Description, "Test description");
-            testMethod.Properties.Add(PropertyNames.Category, "Dubious");
-            testMethod.Properties.Set("Priority", "low");
+            _testMethod = new TestMethod(new MethodWrapper(typeof(DummyFixture), "DummyMethod"));
+            _testMethod.Properties.Set(PropertyNames.Description, "Test description");
+            _testMethod.Properties.Add(PropertyNames.Category, "Dubious");
+            _testMethod.Properties.Set("Priority", "low");
 
-            testFixture = new TestFixture(new TypeWrapper(typeof(DummyFixture)));
-            testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
-            testFixture.Properties.Add(PropertyNames.Category, "Fast");
-            testFixture.Properties.Add("Value", 3);
+            _testFixture = new TestFixture(new TypeWrapper(typeof(DummyFixture)));
+            _testFixture.Properties.Set(PropertyNames.Description, "Fixture description");
+            _testFixture.Properties.Add(PropertyNames.Category, "Fast");
+            _testFixture.Properties.Add("Value", 3);
 
-            testFixture.Tests.Add(testMethod);
+            _testFixture.Tests.Add(_testMethod);
 
-            testSuite = new TestSuite(typeof(DummyFixture));
-            testSuite.Properties.Set(PropertyNames.Description, "Suite description");
+            _testSuite = new TestSuite(typeof(DummyFixture));
+            _testSuite.Properties.Set(PropertyNames.Description, "Suite description");
         }
 
         [Test]
         public void TestTypeTests()
         {
-            Assert.That(testMethod.TestType,
+            Assert.That(_testMethod.TestType,
                 Is.EqualTo("TestMethod"));
-            Assert.That(testFixture.TestType,
+            Assert.That(_testFixture.TestType,
                 Is.EqualTo("TestFixture"));
-            Assert.That(testSuite.TestType,
+            Assert.That(_testSuite.TestType,
                 Is.EqualTo("TestSuite"));
             Assert.That(new TestAssembly("junk").TestType,
                 Is.EqualTo("Assembly"));
@@ -57,47 +57,47 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestMethodToXml()
         {
-            CheckXmlForTest(testMethod, false);
+            CheckXmlForTest(_testMethod, false);
         }
 
         [Test]
         public void TestFixtureToXml()
         {
-            CheckXmlForTest(testFixture, false);
+            CheckXmlForTest(_testFixture, false);
         }
 
         [Test]
         public void TestFixtureToXml_Recursive()
         {
-            CheckXmlForTest(testFixture, true);
+            CheckXmlForTest(_testFixture, true);
         }
 
         [Test]
         public void TestSuiteToXml()
         {
-            CheckXmlForTest(testSuite, false);
+            CheckXmlForTest(_testSuite, false);
         }
 
         [Test]
         public void TestSuiteToXml_Recursive()
         {
-            CheckXmlForTest(testSuite, true);
+            CheckXmlForTest(_testSuite, true);
         }
 
         [Test]
         public void TestNameWithInvalidCharacter()
         {
-            testMethod.Name = "\u0001HappyFace";
+            _testMethod.Name = "\u0001HappyFace";
             // This throws if the name is not properly escaped
-            Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"\\u0001HappyFace\""));
+            Assert.That(_testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"\\u0001HappyFace\""));
         }
 
         [Test]
         public void TestNameWithInvalidCharacter_NonFirstPosition()
         {
-            testMethod.Name = "Happy\u0001Face";
+            _testMethod.Name = "Happy\u0001Face";
             // This throws if the name is not properly escaped
-            Assert.That(testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"Happy\\u0001Face\""));
+            Assert.That(_testMethod.ToXml(false).OuterXml, Contains.Substring("name=\"Happy\\u0001Face\""));
         }
 
         #region Helper Methods For Checking XML
@@ -142,9 +142,13 @@ namespace NUnit.Framework.Internal
             {
                 var expectedProps = new List<string>();
                 foreach (string key in test.Properties.Keys)
+                {
                     foreach (object? value in test.Properties[key])
+                    {
                         if (value is not null)
                             expectedProps.Add(key + "=" + value);
+                    }
+                }
 
                 TNode? propsNode = topNode.SelectSingleNode("properties");
                 Assert.That(propsNode, Is.Not.Null);

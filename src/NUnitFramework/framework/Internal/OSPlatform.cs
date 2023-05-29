@@ -18,7 +18,7 @@ namespace NUnit.Framework.Internal
     public class OSPlatform
     {
         #region Static Members
-        private static readonly Lazy<OSPlatform> currentPlatform = new Lazy<OSPlatform> (() =>
+        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new Lazy<OSPlatform> (() =>
         {
             OSPlatform currentPlatform;
 
@@ -45,7 +45,9 @@ namespace NUnit.Framework.Internal
                 currentPlatform = new OSPlatform(PlatformID.MacOSX, os.Version);
             }
             else
+            {
                 currentPlatform = new OSPlatform(os.Platform, os.Version);
+            }
 
             return currentPlatform;
         });
@@ -74,7 +76,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Get the OSPlatform under which we are currently running
         /// </summary>
-        public static OSPlatform CurrentPlatform => currentPlatform.Value;
+        public static OSPlatform CurrentPlatform => LazyCurrentPlatform.Value;
 
         #endregion
 

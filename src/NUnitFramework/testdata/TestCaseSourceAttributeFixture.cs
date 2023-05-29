@@ -13,16 +13,14 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
     {
         #region Test Calling Assert.Ignore
 
-        [TestCaseSource(nameof(source))]
+        [TestCaseSource(nameof(Source))]
         public void MethodCallsIgnore(int x, int y, int z)
         {
             Assert.Ignore("Ignore this");
         }
 
-#pragma warning disable 414
-        private static object[] source = new object[] {
+        private static readonly object[] Source = new object[] {
             new TestCaseData( 2, 3, 4 ) };
-#pragma warning restore 414
 
         #endregion
 
@@ -77,35 +75,35 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
         [Test, TestCaseSource(nameof(InstanceProperty))]
         public void MethodWithInstancePropertyAsSource(string source)
         {
-            Assert.AreEqual("InstanceProperty", source);
+            Assert.AreEqual(nameof(InstanceProperty), source);
         }
 
         private IEnumerable InstanceProperty =>
             new object[]
             {
-                new object[] { "InstanceProperty" }
+                new object[] { nameof(InstanceProperty) }
             };
 
         [Test, TestCaseSource(nameof(InstanceMethod))]
         public void MethodWithInstanceMethodAsSource(string source)
         {
-            Assert.AreEqual("InstanceMethod", source);
+            Assert.AreEqual(nameof(InstanceMethod), source);
         }
 
         private IEnumerable InstanceMethod()
         {
-            return new object[] { new object[] { "InstanceMethod" } };
+            return new object[] { new object[] { nameof(InstanceMethod) } };
         }
 
         [Test, TestCaseSource(nameof(InstanceField))]
         public void MethodWithInstanceFieldAsSource(string source)
         {
-            Assert.AreEqual("InstanceField", source);
+            Assert.AreEqual(nameof(InstanceField), source);
         }
 
-#pragma warning disable 414
-        private object[] InstanceField = { new object[] { "InstanceField" } };
-#pragma warning restore 414
+#pragma warning disable IDE1006 // Naming Styles
+        private readonly object[] InstanceField = { new object[] { nameof(InstanceField) } };
+#pragma warning restore IDE1006 // Naming Styles
 
         #endregion
 
@@ -152,10 +150,9 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
 
         private class DivideDataProvider
         {
-#pragma warning disable 0169, 0649    // x is never assigned
-            private static object[] myObject;
+#pragma warning disable CS0649 // Field is never assigned to, and will always have its default value
             public static string MyField;
-#pragma warning restore 0169, 0649
+#pragma warning restore CS0649 // Field is never assigned to, and will always have its default value
             public static int MyProperty { get; set; }
             public static IEnumerable HereIsTheDataWithParameters(int inject1, int inject2, int inject3)
             {
@@ -171,7 +168,7 @@ namespace NUnit.TestData.TestCaseSourceAttributeFixture
             }
         }
 
-        private static object[] ComplexArrayBasedTestInput = new[]
+        private static readonly object[] ComplexArrayBasedTestInput = new[]
         {
             new[] { 1, "text", new object() },
             Array.Empty<object>(),

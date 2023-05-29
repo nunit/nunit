@@ -51,8 +51,10 @@ namespace NUnit.Framework.Internal
             // Check to see if it makes any of the existing
             // filter elements redundant.
             for (int index = _filters.Count - 1; index >= 0; index--)
+            {
                 if (_filters[index].Text.StartsWith(filterText + "."))
                     _filters.RemoveAt(index);
+            }
 
             _filters.Add(new FilterElement(filterText));
         }
@@ -115,7 +117,7 @@ namespace NUnit.Framework.Internal
 
         private class FilterElement
         {
-            private FilterElementType ElementType = FilterElementType.Unknown;
+            private FilterElementType _elementType = FilterElementType.Unknown;
             public string Text;
             public string? ClassName;
             public string? MethodName;
@@ -144,7 +146,7 @@ namespace NUnit.Framework.Internal
 
             private bool MatchElementType(Type type)
             {
-                switch(ElementType)
+                switch(_elementType)
                 {
                     default:
                     case FilterElementType.Unknown:
@@ -162,19 +164,19 @@ namespace NUnit.Framework.Internal
             {
                 if (MatchFixtureElement(type))
                 {
-                    ElementType = FilterElementType.Fixture;
+                    _elementType = FilterElementType.Fixture;
                     return true;
                 }
 
                 if (MatchNamespaceElement(type))
                 {
-                    ElementType = FilterElementType.Namespace;
+                    _elementType = FilterElementType.Namespace;
                     return true;
                 }
 
                 if (MatchMethodElement(type))
                 {
-                    ElementType = FilterElementType.Method;
+                    _elementType = FilterElementType.Method;
                     return true;
                 }
 

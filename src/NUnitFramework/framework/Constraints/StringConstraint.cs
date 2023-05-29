@@ -58,7 +58,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         protected StringConstraint()
         {
-            this.expected = string.Empty;
+            expected = string.Empty;
         }
 
         /// <summary>

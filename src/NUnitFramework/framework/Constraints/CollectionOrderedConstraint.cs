@@ -209,14 +209,18 @@ namespace NUnit.Framework.Constraints
                             int comparisonResult = step.Comparer.Compare(previousValue, currentValue);
 
                             if (comparisonResult < 0)
+                            {
                                 if (step.Direction == OrderDirection.Descending)
                                     return false;
                                 else break;
+                            }
 
                             if (comparisonResult > 0)
+                            {
                                 if (step.Direction != OrderDirection.Descending)
                                     return false;
                                 else break;
+                            }
                         }
                     }
                     else

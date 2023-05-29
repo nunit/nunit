@@ -11,20 +11,20 @@ namespace NUnit.Framework.Internal.Results
     public abstract class TestResultTests
     {
         protected const string NonWhitespaceIgnoreReason = "because";
-        protected TestMethod _test;
-        protected TestResult _testResult;
+        protected TestMethod Test;
+        protected TestResult TestResult;
 
-        protected TestSuite _suite;
-        protected TestSuiteResult _suiteResult;
+        protected TestSuite Suite;
+        protected TestSuiteResult SuiteResult;
 
         [SetUp]
         public void SetUp()
         {
-            _test = new TestMethod(new MethodWrapper(typeof(DummySuite), "DummyMethod"));
-            _testResult = _test.MakeTestResult();
+            Test = new TestMethod(new MethodWrapper(typeof(DummySuite), "DummyMethod"));
+            TestResult = Test.MakeTestResult();
 
-            _suite = new TestSuite(typeof(DummySuite));
-            _suiteResult = (TestSuiteResult)_suite.MakeTestResult();
+            Suite = new TestSuite(typeof(DummySuite));
+            SuiteResult = (TestSuiteResult)Suite.MakeTestResult();
         }
 
         protected static void ReasonNodeExpectedValidation(TNode testNode, string reasonMessage)

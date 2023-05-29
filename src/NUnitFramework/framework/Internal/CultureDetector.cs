@@ -10,17 +10,17 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class CultureDetector
     {
-        private readonly CultureInfo currentCulture;
+        private readonly CultureInfo _currentCulture;
 
         // Set whenever we fail to support a list of platforms
-        private string reason = string.Empty;
+        private string _reason = string.Empty;
 
         /// <summary>
         /// Default constructor uses the current culture.
         /// </summary>
         public CultureDetector()
         {
-            this.currentCulture = CultureInfo.CurrentCulture;
+            _currentCulture = CultureInfo.CurrentCulture;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Internal
         /// <param name="culture">The culture to be used</param>
         public CultureDetector( string culture )
         {
-            this.currentCulture = new CultureInfo( culture );
+            _currentCulture = new CultureInfo( culture );
         }
 
         /// <summary>
@@ -41,8 +41,10 @@ namespace NUnit.Framework.Internal
         public bool IsCultureSupported( string[] cultures )
         {
             foreach( string culture in cultures )
+            {
                 if ( IsCultureSupported( culture ) )
                     return true;
+            }
 
             return false;
         }
@@ -60,13 +62,13 @@ namespace NUnit.Framework.Internal
 
             if (include is not null && !IsCultureSupported(include))
             {
-                reason = $"Only supported under culture {include}";
+                _reason = $"Only supported under culture {include}";
                 return false;
             }
 
             if (exclude is not null && IsCultureSupported(exclude))
             {
-                reason = $"Not supported under culture {exclude}";
+                _reason = $"Not supported under culture {exclude}";
                 return false;
             }
 
@@ -90,11 +92,11 @@ namespace NUnit.Framework.Internal
             }
             else
             {
-                if( this.currentCulture.Name == culture || this.currentCulture.TwoLetterISOLanguageName == culture)
+                if( _currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
                     return true;
             }
 
-            this.reason = "Only supported under culture " + culture;
+            _reason = "Only supported under culture " + culture;
             return false;
         }
 
@@ -103,6 +105,6 @@ namespace NUnit.Framework.Internal
         /// defined if called before IsSupported( Attribute )
         /// is called.
         /// </summary>
-        public string Reason => reason;
+        public string Reason => _reason;
     }
 }

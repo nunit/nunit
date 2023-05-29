@@ -21,8 +21,8 @@ namespace NUnit.Framework.Interfaces
     [DebuggerDisplay("{OuterXml}")]
     public sealed class TNode
     {
-        internal List<TNode>? _childNodes;
-        internal Dictionary<string, string>? _attributes;
+        private List<TNode>? _childNodes;
+        private Dictionary<string, string>? _attributes;
 
         #region Constructors
 
@@ -304,10 +304,12 @@ namespace NUnit.Framework.Interfaces
                 writer.WriteAttributeString(pair.Key, pair.Value);
 
             if (Value is not null)
+            {
                 if (ValueIsCDATA)
                     writer.WriteCDataSafe(Value);
                 else
                     writer.WriteString(Value);
+            }
 
             var count = ChildNodes.Count;
             for (var i = 0; i < count; i++)
@@ -333,8 +335,10 @@ namespace NUnit.Framework.Interfaces
             }
 
             foreach (XmlNode child in xmlNode.ChildNodes)
+            {
                 if (child.NodeType == XmlNodeType.Element)
                     tNode.AddChildNode(FromXml(child));
+            }
 
             return tNode;
         }
@@ -425,107 +429,108 @@ namespace NUnit.Framework.Interfaces
         }
 
         #endregion
-    }
 
-    /// <summary>
-    /// Class used to represent a list of XmlResults
-    /// </summary>
-    public readonly struct NodeList : IEnumerable<TNode>
-    {
-        private static readonly List<TNode> _emptyList = new();
-
-        private readonly TNode _parent;
-
-        internal NodeList(TNode parent)
-        {
-            _parent = parent;
-        }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Class used to represent a list of XmlResults
         /// </summary>
-        public TNode this[int index]
+        public readonly struct NodeList : IEnumerable<TNode>
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
+            private static readonly List<TNode> EmptyList = new();
+
+            private readonly TNode _parent;
+
+            internal NodeList(TNode parent)
             {
-                if (_parent._childNodes is null || (uint) index >= (uint) _parent._childNodes.Count)
-                    ThrowArgumentOutOfRangeException(index);
-
-                return _parent._childNodes![index];
+                _parent = parent;
             }
-        }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void ThrowArgumentOutOfRangeException(int index)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valida values");
-        }
-
-        /// <summary>
-        /// Gets the number of elements contained in the collection.
-        /// </summary>
-        public int Count
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _parent._childNodes?.Count ?? 0;
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public List<TNode>.Enumerator GetEnumerator() => _parent._childNodes?.GetEnumerator() ?? _emptyList.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        IEnumerator<TNode> IEnumerable<TNode>.GetEnumerator() => GetEnumerator();
-    }
-
-    /// <summary>
-    /// Class used to represent the attributes of a node
-    /// </summary>
-    public readonly struct AttributeDictionary
-    {
-        private static readonly Dictionary<string, string> _emptyDictionary = new();
-
-        private readonly TNode _parent;
-
-        internal AttributeDictionary(TNode parent)
-        {
-            _parent = parent;
-        }
-
-        /// <summary>
-        /// Gets or sets the value associated with the specified key.
-        /// Overridden to return null if attribute is not found.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>Value of the attribute or null</returns>
-        public string? this[string key]
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get
+            /// <summary>
+            /// Gets or sets the element at the specified index.
+            /// </summary>
+            public TNode this[int index]
             {
-                string? value = null;
-                _parent._attributes?.TryGetValue(key, out value);
-                return value;
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    if (_parent._childNodes is null || (uint)index >= (uint)_parent._childNodes.Count)
+                        ThrowArgumentOutOfRangeException(index);
+
+                    return _parent._childNodes![index];
+                }
             }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            private static void ThrowArgumentOutOfRangeException(int index)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index was out or range of valida values");
+            }
+
+            /// <summary>
+            /// Gets the number of elements contained in the collection.
+            /// </summary>
+            public int Count
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _parent._childNodes?.Count ?? 0;
+            }
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public List<TNode>.Enumerator GetEnumerator() => _parent._childNodes?.GetEnumerator() ?? EmptyList.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            IEnumerator<TNode> IEnumerable<TNode>.GetEnumerator() => GetEnumerator();
         }
 
         /// <summary>
-        /// Returns an enumerator that iterates through the collection.
+        /// Class used to represent the attributes of a node
         /// </summary>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Dictionary<string,string>.Enumerator GetEnumerator() => _parent._attributes?.GetEnumerator() ?? _emptyDictionary.GetEnumerator();
-
-        /// <summary>
-        /// Gets the number of key/value pairs contained in the <see cref="T:System.Collections.Generic.Dictionary`2" />.
-        /// </summary>
-        public int Count
+        public readonly struct AttributeDictionary
         {
+            private static readonly Dictionary<string, string> EmptyDictionary = new();
+
+            private readonly TNode _parent;
+
+            internal AttributeDictionary(TNode parent)
+            {
+                _parent = parent;
+            }
+
+            /// <summary>
+            /// Gets or sets the value associated with the specified key.
+            /// Overridden to return null if attribute is not found.
+            /// </summary>
+            /// <param name="key">The key.</param>
+            /// <returns>Value of the attribute or null</returns>
+            public string? this[string key]
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    string? value = null;
+                    _parent._attributes?.TryGetValue(key, out value);
+                    return value;
+                }
+            }
+
+            /// <summary>
+            /// Returns an enumerator that iterates through the collection.
+            /// </summary>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _parent._attributes?.Count ?? 0;
+            public Dictionary<string, string>.Enumerator GetEnumerator() => _parent._attributes?.GetEnumerator() ?? EmptyDictionary.GetEnumerator();
+
+            /// <summary>
+            /// Gets the number of key/value pairs contained in the <see cref="T:System.Collections.Generic.Dictionary`2" />.
+            /// </summary>
+            public int Count
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => _parent._attributes?.Count ?? 0;
+            }
         }
     }
 }

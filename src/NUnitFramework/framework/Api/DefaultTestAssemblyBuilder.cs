@@ -19,7 +19,7 @@ namespace NUnit.Framework.Api
     /// </summary>
     public class DefaultTestAssemblyBuilder : ITestAssemblyBuilder
     {
-        private static readonly Logger log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
+        private static readonly Logger Log = InternalTrace.GetLogger(typeof(DefaultTestAssemblyBuilder));
 
         #region Instance Fields
 
@@ -54,7 +54,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(Assembly assembly, IDictionary<string, object> options)
         {
-            log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
+            Log.Debug("Loading {0} in AppDomain {1}", assembly.FullName!, AppDomain.CurrentDomain.FriendlyName);
 
             string assemblyPath = AssemblyHelper.GetAssemblyPath(assembly);
             string suiteName = assemblyPath.Equals("<Unknown>")
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Api
         /// </returns>
         public ITest Build(string assemblyNameOrPath, IDictionary<string, object> options)
         {
-            log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
+            Log.Debug("Loading {0} in AppDomain {1}", assemblyNameOrPath, AppDomain.CurrentDomain.FriendlyName);
 
             TestSuite testAssembly;
 
@@ -165,11 +165,11 @@ namespace NUnit.Framework.Api
         private IList<Test> GetFixtures(Assembly assembly, PreFilter filter)
         {
             var fixtures = new List<Test>();
-            log.Debug("Examining assembly for test fixtures");
+            Log.Debug("Examining assembly for test fixtures");
 
             var testTypes = GetCandidateFixtureTypes(assembly, filter);
 
-            log.Debug("Found {0} classes to examine", testTypes.Count);
+            Log.Debug("Found {0} classes to examine", testTypes.Count);
             var timer = Stopwatch.StartNew();
             var testcases = 0;
             foreach (Type testType in testTypes)
@@ -191,7 +191,7 @@ namespace NUnit.Framework.Api
                 }
             }
 
-            log.Debug("Found {0} fixtures with {1} test cases in {2}ms", fixtures.Count, testcases, timer.ElapsedMilliseconds);
+            Log.Debug("Found {0} fixtures with {1} test cases in {2}ms", fixtures.Count, testcases, timer.ElapsedMilliseconds);
 
             return fixtures;
         }
@@ -201,8 +201,10 @@ namespace NUnit.Framework.Api
             var result = new List<Type>();
 
             foreach (Type type in assembly.GetTypes())
+            {
                 if (filter.IsMatch(type))
                     result.Add(type);
+            }
 
             return result;
         }

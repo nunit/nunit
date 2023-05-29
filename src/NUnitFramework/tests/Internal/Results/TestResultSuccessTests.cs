@@ -49,10 +49,10 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SimulateTestRun()
         {
-            _testResult.SetResult(ResultState.Success, _successMessage);
-            _testResult.AssertCount = 2;
+            TestResult.SetResult(ResultState.Success, _successMessage);
+            TestResult.AssertCount = 2;
 
-            _suiteResult.AddResult(_testResult);
+            SuiteResult.AddResult(TestResult);
         }
 
         [Test]
@@ -60,8 +60,8 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_testResult.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(_testResult.Message, Is.EqualTo(_successMessage));
+                Assert.That(TestResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(TestResult.Message, Is.EqualTo(_successMessage));
             });
         }
 
@@ -70,21 +70,21 @@ namespace NUnit.Framework.Internal.Results
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_suiteResult.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(_suiteResult.TotalCount, Is.EqualTo(1));
-                Assert.That(_suiteResult.PassCount, Is.EqualTo(1));
-                Assert.That(_suiteResult.FailCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.WarningCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.SkipCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.InconclusiveCount, Is.EqualTo(0));
-                Assert.That(_suiteResult.AssertCount, Is.EqualTo(2));
+                Assert.That(SuiteResult.ResultState, Is.EqualTo(ResultState.Success));
+                Assert.That(SuiteResult.TotalCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.PassCount, Is.EqualTo(1));
+                Assert.That(SuiteResult.FailCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.WarningCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.SkipCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.InconclusiveCount, Is.EqualTo(0));
+                Assert.That(SuiteResult.AssertCount, Is.EqualTo(2));
             });
         }
 
         [Test]
         public void TestResultXmlNodeIsSuccess()
         {
-            TNode testNode = _testResult.ToXml(true);
+            TNode testNode = TestResult.ToXml(true);
 
             Assert.Multiple(() =>
             {
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Internal.Results
         [Test]
         public void SuiteResultXmlNodeIsSuccess()
         {
-            TNode suiteNode = _suiteResult.ToXml(true);
+            TNode suiteNode = SuiteResult.ToXml(true);
 
             Assert.Multiple(() =>
             {
