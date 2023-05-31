@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Security;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 
@@ -463,7 +462,6 @@ namespace NUnit.Framework.Internal.Execution
             _thread.Join();
         }
 
-        [SecuritySafeCritical]
         private void RunOnCurrentThread()
         {
             Context.CurrentTest = Test;

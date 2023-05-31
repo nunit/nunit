@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Security;
 using System.Security.Principal;
 using System.Threading;
 using NUnit.Compatibility;
@@ -146,10 +145,6 @@ namespace NUnit.Framework.Internal
         /// </summary>
         public static TestExecutionContext CurrentContext
         {
-            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
-            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
-            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
-            [SecuritySafeCritical]
             get
             {
                 var context = CallContext.GetData(NUnitCallContext.TestExecutionContextKey) as TestExecutionContext;
@@ -162,10 +157,6 @@ namespace NUnit.Framework.Internal
 
                 return context;
             }
-            // This method invokes security critical members on the 'System.Runtime.Remoting.Messaging.CallContext' class.
-            // Callers of this method have no influence on how these methods are used so we define a 'SecuritySafeCriticalAttribute'
-            // rather than a 'SecurityCriticalAttribute' to enable use by security transparent callers.
-            [SecuritySafeCritical]
             private set
             {
                 if (value is null)
@@ -407,11 +398,6 @@ namespace NUnit.Framework.Internal
         /// Note that we may be running on the same thread where the
         /// context was initially created or on a different thread.
         /// </summary>
-        [SecuritySafeCritical] // This gives partial trust code the ability to capture an existing
-                               // SynchronizationContext.Current and restore it at any time.
-                               // This simply unblocks us on .NET Framework and is not in the spirit
-                               // of partial trust. If we choose to make partial trust a design priority,
-                               // we’ll need to thoroughly review more than just this instance.
         public void EstablishExecutionEnvironment()
         {
             _sandboxedThreadState.Restore();
@@ -475,7 +461,6 @@ namespace NUnit.Framework.Internal
         /// Obtain lifetime service object
         /// </summary>
         /// <returns></returns>
-        [SecurityCritical]  // Override of security critical method must be security critical itself
         public override object InitializeLifetimeService()
         {
             return null!;

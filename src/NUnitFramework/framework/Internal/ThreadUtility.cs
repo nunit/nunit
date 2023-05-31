@@ -6,7 +6,6 @@ using System.Threading;
 #if THREAD_ABORT
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Security;
 #endif
 
 namespace NUnit.Framework.Internal
@@ -159,7 +158,6 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Captures the current thread's native id. If provided to <see cref="Kill(Thread,int)"/> later, allows the thread to be killed if it's in a message pump native blocking wait.
         /// </summary>
-        [SecuritySafeCritical]
         public static int GetCurrentThreadNativeId()
         {
             if (_isNotOnWindows) return 0;
@@ -180,7 +178,6 @@ namespace NUnit.Framework.Internal
         /// Sends a message to the thread to dislodge it from native code and allow a return to managed code, where a ThreadAbortException can be generated.
         /// The message is meaningless (WM_CLOSE without a window handle) but it will end any blocking message wait.
         /// </summary>
-        [SecuritySafeCritical]
         private static void PostThreadCloseMessage(int nativeId)
         {
             if (!PostThreadMessage(nativeId, WM.CLOSE, IntPtr.Zero, IntPtr.Zero))

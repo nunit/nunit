@@ -3,7 +3,6 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security;
 using System.Threading.Tasks;
 
 namespace NUnit.Framework.Internal
@@ -40,7 +39,6 @@ namespace NUnit.Framework.Internal
 
             public override bool IsCompleted => _awaiter.IsCompleted;
 
-            [SecuritySafeCritical]
             public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
 
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.
@@ -64,7 +62,6 @@ namespace NUnit.Framework.Internal
 
             public override bool IsCompleted => _awaiter.IsCompleted;
 
-            [SecuritySafeCritical]
             public override void OnCompleted(Action action) => _awaiter.UnsafeOnCompleted(action);
 
             // Assumption that GetResult blocks until complete is only valid for System.Threading.Tasks.Task.

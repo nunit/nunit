@@ -2,7 +2,6 @@
 
 using System;
 using System.Reflection;
-using System.Security;
 using System.Threading;
 
 namespace NUnit.Framework.Internal
@@ -63,7 +62,6 @@ namespace NUnit.Framework.Internal
             return null;
         }
 
-        [SecuritySafeCritical]
         private static void SetSynchronizationContext(SynchronizationContext? syncContext)
         {
             SynchronizationContext.SetSynchronizationContext(syncContext);

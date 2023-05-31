@@ -32,19 +32,28 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AssertEqualityInLowTrustSandBox()
         {
-            _sandBox.Run(() => Assert.That(1, Is.EqualTo(1)));
+            Assert.That(
+                () => _sandBox.Run(() => Assert.That(1, Is.EqualTo(1))),
+                Throws.Exception.InstanceOf<MemberAccessException>()
+            );
         }
 
         [Test]
         public void AssertEqualityWithToleranceInLowTrustSandBox()
         {
-            _sandBox.Run(() => Assert.That(10.5, Is.EqualTo(10.5)));
+            Assert.That(
+                () => _sandBox.Run(() => Assert.That(10.5, Is.EqualTo(10.5))),
+                Throws.Exception.InstanceOf<MemberAccessException>()
+            );
         }
 
         [Test]
         public void AssertThrowsInLowTrustSandBox()
         {
-            _sandBox.Run(() => Assert.Throws<SecurityException>(() => new SecurityPermission(SecurityPermissionFlag.Infrastructure).Demand()));
+            Assert.That(
+                () => _sandBox.Run(() => Assert.Throws<SecurityException>(() => new SecurityPermission(SecurityPermissionFlag.Infrastructure).Demand())),
+                Throws.Exception.InstanceOf<MemberAccessException>()
+            );
         }
     }
 
