@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Security;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
@@ -209,11 +208,6 @@ namespace NUnit.Framework.Api
             return result;
         }
 
-        // This method invokes members on the 'System.Diagnostics.Process' class and must satisfy the link demand of
-        // the full-trust 'PermissionSetAttribute' on this class. Callers of this method have no influence on how the
-        // Process class is used, so we can safely satisfy the link demand with a 'SecuritySafeCriticalAttribute' rather
-        // than a 'SecurityCriticalAttribute' and allow use by security transparent callers.
-        [SecuritySafeCritical]
         private TestSuite BuildTestAssembly(Assembly assembly, string assemblyNameOrPath, IList<Test> fixtures)
         {
             TestSuite testAssembly = new TestAssembly(assembly, assemblyNameOrPath);

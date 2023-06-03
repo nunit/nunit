@@ -3,7 +3,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Security;
 using System.Threading;
 
 namespace NUnit.Framework.Internal
@@ -75,7 +74,6 @@ namespace NUnit.Framework.Internal
                 return context?.GetType().FullName == "System.Windows.Forms.WindowsFormsSynchronizationContext";
             }
 
-            [SecuritySafeCritical]
             public override void WaitForCompletion(AwaitAdapter awaiter)
             {
                 var context = SynchronizationContext.Current;

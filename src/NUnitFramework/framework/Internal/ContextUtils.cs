@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Security;
 using System.Threading;
 
 namespace NUnit.Framework.Internal
@@ -20,7 +19,6 @@ namespace NUnit.Framework.Internal
             return returnValue!;
         }
 
-        [SecuritySafeCritical]
         public static void DoIsolated(ContextCallback callback, object? state)
         {
             var previousState = SandboxedThreadState.Capture();
