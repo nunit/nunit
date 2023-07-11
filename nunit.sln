@@ -55,6 +55,8 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "nunit.testdata.fsharp", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.benchmarks", "src\NUnitFramework\benchmarks\nunit.framework.benchmarks\nunit.framework.benchmarks.csproj", "{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.classic", "src\NUnitFramework\nunit.framework.classic\nunit.framework.classic.csproj", "{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
