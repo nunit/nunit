@@ -44,33 +44,33 @@ namespace NUnit.Framework.Assertions
         {
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnore");
-            Assert.AreEqual(ResultState.Ignored, result.ResultState);
-            Assert.AreEqual("Ignore me", result.Message);
+            Classic.Assert.AreEqual(ResultState.Ignored, result.ResultState);
+            Classic.Assert.AreEqual("Ignore me", result.Message);
         }
 
         [Test]
         public void IgnoreWorksForTestSuite()
         {
             TestSuite suite = new TestSuite("IgnoredTestFixture");
-            suite.Add( TestBuilder.MakeFixture( typeof( IgnoredTestSuiteFixture ) ) );
-            ITestResult fixtureResult = TestBuilder.RunTest(suite).Children.ToArray ()[0];
+            suite.Add(TestBuilder.MakeFixture(typeof(IgnoredTestSuiteFixture)));
+            ITestResult fixtureResult = TestBuilder.RunTest(suite).Children.ToArray()[0];
 
-            Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), fixtureResult.ResultState);
+            Classic.Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), fixtureResult.ResultState);
 
             foreach (ITestResult testResult in fixtureResult.Children)
-                Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.Parent), testResult.ResultState);
+                Classic.Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.Parent), testResult.ResultState);
         }
 
         [Test]
         public void IgnoreWorksFromSetUp()
         {
-            ITestResult fixtureResult = TestBuilder.RunTestFixture( typeof( IgnoreInSetUpFixture ) );
+            ITestResult fixtureResult = TestBuilder.RunTestFixture(typeof(IgnoreInSetUpFixture));
 
             // TODO: Decide whether to pass Ignored state to containing fixture
             //Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (var testResult in fixtureResult.Children)
-                Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
+                Classic.Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
         }
 
         [Test]
@@ -78,11 +78,11 @@ namespace NUnit.Framework.Assertions
         {
             try
             {
-                Assert.Ignore( "my message" );
+                Assert.Ignore("my message");
             }
-            catch( IgnoreException ex )
+            catch (IgnoreException ex)
             {
-                Assert.AreEqual( "my message", ex.Message );
+                Classic.Assert.AreEqual("my message", ex.Message);
             }
         }
 
@@ -91,11 +91,11 @@ namespace NUnit.Framework.Assertions
         {
             try
             {
-                Assert.Ignore( "The number is {0}", 5 );
+                Assert.Ignore("The number is {0}", 5);
             }
-            catch( IgnoreException ex )
+            catch (IgnoreException ex)
             {
-                Assert.AreEqual( "The number is 5", ex.Message );
+                Classic.Assert.AreEqual("The number is 5", ex.Message);
             }
         }
 
@@ -104,11 +104,11 @@ namespace NUnit.Framework.Assertions
         {
             try
             {
-                Assert.Ignore( "The numbers are {0}, {1} and {2}", 1, 2, 3 );
+                Assert.Ignore("The numbers are {0}, {1} and {2}", 1, 2, 3);
             }
-            catch( IgnoreException ex )
+            catch (IgnoreException ex)
             {
-                Assert.AreEqual( "The numbers are 1, 2 and 3", ex.Message );
+                Classic.Assert.AreEqual("The numbers are 1, 2 and 3", ex.Message);
             }
         }
 
@@ -117,11 +117,11 @@ namespace NUnit.Framework.Assertions
         {
             try
             {
-            Assert.Ignore( "The numbers are {0}, {1} and {2}", new object[] { 1, 2, 3 } );
+                Assert.Ignore("The numbers are {0}, {1} and {2}", new object[] { 1, 2, 3 });
             }
-            catch( IgnoreException ex )
+            catch (IgnoreException ex)
             {
-                Assert.AreEqual( "The numbers are 1, 2 and 3", ex.Message );
+                Classic.Assert.AreEqual("The numbers are 1, 2 and 3", ex.Message);
             }
         }
     }

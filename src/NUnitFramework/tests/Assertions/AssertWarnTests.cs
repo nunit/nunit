@@ -16,8 +16,8 @@ namespace NUnit.Framework.Assertions
                 typeof(WarningFixture),
                 "CallAssertWarnWithMessage");
 
-            Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Assert.AreEqual("MESSAGE", result.Message);
+            Classic.Assert.AreEqual(ResultState.Warning, result.ResultState);
+            Classic.Assert.AreEqual("MESSAGE", result.Message);
         }
 
         [Test]
@@ -27,8 +27,8 @@ namespace NUnit.Framework.Assertions
                 typeof(WarningFixture),
                 "CallAssertWarnWithMessageAndArgs");
 
-            Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
+            Classic.Assert.AreEqual(ResultState.Warning, result.ResultState);
+            Classic.Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
         }
 
         [Test]

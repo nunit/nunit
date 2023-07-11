@@ -14,7 +14,7 @@ namespace NUnit.Framework.Assertions
         public void ThrowsAssertionException()
         {
             Assert.That(
-                () => Assert.Fail(),
+                Assert.Fail,
                 Throws.TypeOf<AssertionException>());
         }
 
@@ -22,7 +22,7 @@ namespace NUnit.Framework.Assertions
         public void ThrowsAssertionException_MessageSpecified()
         {
             Assert.That(
-                () => Assert.Fail(),
+                Assert.Fail,
                 Throws.TypeOf<AssertionException>(),
                 "My Message");
         }
@@ -50,9 +50,9 @@ namespace NUnit.Framework.Assertions
                 typeof(AssertFailFixture),
                 "CallAssertFail");
 
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
+            Classic.Assert.AreEqual(ResultState.Failure, result.ResultState);
 
-            Assert.AreEqual(1, result.AssertionResults.Count);
+            Classic.Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
             Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
         }
@@ -64,10 +64,10 @@ namespace NUnit.Framework.Assertions
                 typeof(AssertFailFixture),
                 "CallAssertFailWithMessage");
 
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.AreEqual("MESSAGE", result.Message);
+            Classic.Assert.AreEqual(ResultState.Failure, result.ResultState);
+            Classic.Assert.AreEqual("MESSAGE", result.Message);
 
-            Assert.AreEqual(1, result.AssertionResults.Count);
+            Classic.Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
             Assert.Multiple(() =>
             {
@@ -83,10 +83,10 @@ namespace NUnit.Framework.Assertions
                 typeof(AssertFailFixture),
                 "CallAssertFailWithMessageAndArgs");
 
-            Assert.AreEqual(ResultState.Failure, result.ResultState);
-            Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
+            Classic.Assert.AreEqual(ResultState.Failure, result.ResultState);
+            Classic.Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
 
-            Assert.AreEqual(1, result.AssertionResults.Count);
+            Classic.Assert.AreEqual(1, result.AssertionResults.Count);
             var assertion = result.AssertionResults[0];
             Assert.Multiple(() =>
             {

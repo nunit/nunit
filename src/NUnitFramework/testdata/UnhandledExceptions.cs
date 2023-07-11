@@ -56,7 +56,7 @@ namespace NUnit.TestData.UnhandledExceptionData
 
         private void ThreadedAssertProc()
         {
-            Assert.AreEqual(5, 2 + 2);
+            Framework.Classic.Assert.AreEqual(5, 2 + 2);
         }
         #endregion
     }

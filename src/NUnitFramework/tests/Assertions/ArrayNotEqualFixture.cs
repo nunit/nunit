@@ -14,8 +14,8 @@ namespace NUnit.Framework.Assertions
             string[] array1 = { "one", "two", "three" };
             string[] array2 = { "one", "two", "three", "four", "five" };
 
-            Assert.AreNotEqual(array1, array2);
-            Assert.AreNotEqual(array2, array1);
+            Classic.Assert.AreNotEqual(array1, array2);
+            Classic.Assert.AreNotEqual(array2, array1);
         }
 
         [Test]
@@ -23,8 +23,8 @@ namespace NUnit.Framework.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             string[] array2 = { "one", "two", "ten" };
-            Assert.AreNotEqual(array1, array2);
-            Assert.AreNotEqual(array2, array1);
+            Classic.Assert.AreNotEqual(array1, array2);
+            Classic.Assert.AreNotEqual(array2, array1);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             object[] array2 = { "one", "three", "two" };
-            Assert.AreNotEqual(array1, array2);
+            Classic.Assert.AreNotEqual(array1, array2);
         }
 
     }

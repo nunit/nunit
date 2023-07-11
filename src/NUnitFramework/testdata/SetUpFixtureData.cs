@@ -117,7 +117,7 @@ namespace NUnit.TestUtilities
             {
                 int item = 0;
                 string actual = Events.Count > 0 ? Events.Dequeue() : null;
-                Assert.AreEqual( expected, actual, "Item {0}", item++ );
+                Assert.That( actual,Is.EqualTo(expected), $"Item {++item}");
             }
         }
 

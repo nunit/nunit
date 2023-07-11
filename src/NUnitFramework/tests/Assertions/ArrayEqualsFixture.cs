@@ -22,7 +22,7 @@ namespace NUnit.Framework.Assertions
         {
             string[] array = { "one", "two", "three" };
             Assert.That( array, Is.SameAs(array) );
-            Assert.AreEqual( array, array );
+            Assert.That(array, Is.EqualTo(array));
         }
 
         [Test]
@@ -31,8 +31,8 @@ namespace NUnit.Framework.Assertions
             string[] array1 = { "one", "two", "three" };
             string[] array2 = { "one", "two", "three" };
             Assert.IsFalse( array1 == array2 );
-            Assert.AreEqual(array1, array2);
-            Assert.AreEqual(array2, array1);
+            Assert.That(array2, Is.EqualTo(array1));
+            Assert.That(array1, Is.EqualTo(array2));
         }
 
         [Test]
@@ -40,8 +40,8 @@ namespace NUnit.Framework.Assertions
         {
             int[] a = new[] { 1, 2, 3 };
             int[] b = new[] { 1, 2, 3 };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -49,8 +49,8 @@ namespace NUnit.Framework.Assertions
         {
             double[] a = new[] { 1.0, 2.0, 3.0 };
             double[] b = new[] { 1.0, 2.0, 3.0 };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -58,8 +58,8 @@ namespace NUnit.Framework.Assertions
         {
             decimal[] a = new[] { 1.0m, 2.0m, 3.0m };
             decimal[] b = new[] { 1.0m, 2.0m, 3.0m };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -67,8 +67,8 @@ namespace NUnit.Framework.Assertions
         {
             int[] a = new[] { 1, 2, 3 };
             double[] b = new[] { 1.0, 2.0, 3.0 };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -76,8 +76,8 @@ namespace NUnit.Framework.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             object[] array2 = { "one", "two", "three" };
-            Assert.AreEqual( array1, array2, "String[] not equal to Object[]" );
-            Assert.AreEqual( array2, array1, "Object[] not equal to String[]" );
+            Assert.That( array2, Is.EqualTo(array2), "String[] not equal to Object[]" );
+            Assert.That(array1, Is.EqualTo(array1), "Object[] not equal to String[]");
         }
 
         [Test]
@@ -86,8 +86,8 @@ namespace NUnit.Framework.Assertions
             DateTime now = DateTime.Now;
             object[] array1 = new object[] { 1, 2.0f, 3.5d, 7.000m, "Hello", now };
             object[] array2 = new object[] { 1.0d, 2, 3.5, 7, "Hello", now };
-            Assert.AreEqual( array1, array2 );
-            Assert.AreEqual(array2, array1);
+            Assert.That(array2, Is.EqualTo(array1));
+            Assert.That(array1, Is.EqualTo(array2));
         }
 
         [Test]
@@ -95,8 +95,8 @@ namespace NUnit.Framework.Assertions
         {
             int[,] a = new[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
             int[,] b = new[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -105,7 +105,7 @@ namespace NUnit.Framework.Assertions
             int[, ,] expected = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
             int[,,] actual = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Assertions
             int[, , , ,] expected = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
             int[, , , ,] actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -122,8 +122,8 @@ namespace NUnit.Framework.Assertions
         {
             int[][] a = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
             int[][] b = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Assertions
             int[][] expected = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
             int[][] actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -140,8 +140,8 @@ namespace NUnit.Framework.Assertions
         {
             object a = new[] { 1, 2, 3 };
             object b = new[] { 1.0, 2.0, 3.0 };
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -149,8 +149,8 @@ namespace NUnit.Framework.Assertions
         {
             int[] a = new[] { 1, 2, 3 };
             ICollection b = new SimpleObjectCollection( 1, 2, 3 );
-            Assert.AreEqual(a, b);
-            Assert.AreEqual(b, a);
+            Assert.That(b, Is.EqualTo(a));
+            Assert.That(a, Is.EqualTo(b));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Assertions
             int[] expected = new[] { 1, 2, 3, 4 };
             int[,] actual = new[,] { { 1, 2 }, { 3, 4 } };
 
-            Assert.AreNotEqual(expected, actual);
+            Assert.That(actual, Is.Not.EqualTo(expected));
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
@@ -169,7 +169,7 @@ namespace NUnit.Framework.Assertions
             int[,] expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
             int[,] actual = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
 
-            Assert.AreNotEqual(expected, actual);
+            Assert.That(actual, Is.Not.EqualTo(expected));
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 

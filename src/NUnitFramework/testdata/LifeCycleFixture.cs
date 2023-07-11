@@ -101,14 +101,14 @@ namespace NUnit.TestData.LifeCycleTests
         public void CountIsAlwaysOne()
         {
             Count++;
-            Assert.AreEqual(1, Count);
+            Assert.That(Count,Is.EqualTo(1));
         }
 
         [Test]
         public void CountIsAlwaysOne_2()
         {
             Count++;
-            Assert.AreEqual(1, Count);
+            Assert.That(Count, Is.EqualTo(1));
         }
     }
 
@@ -199,13 +199,13 @@ namespace NUnit.TestData.LifeCycleTests
         [Test]
         public void Test1()
         {
-            Assert.AreEqual(_initialValue, _value++);
+            Assert.That(_value++, Is.EqualTo(_initialValue));
         }
 
         [Test]
         public void Test2()
         {
-            Assert.AreEqual(_initialValue, _value++);
+            Assert.That(_value++, Is.EqualTo(_initialValue));
         }
     }
 
@@ -220,7 +220,7 @@ namespace NUnit.TestData.LifeCycleTests
         [TestCase(3)]
         public void Test(int _)
         {
-            Assert.AreEqual(0, _counter++);
+            Assert.That(_counter++, Is.EqualTo(0));
         }
     }
 
@@ -235,7 +235,7 @@ namespace NUnit.TestData.LifeCycleTests
         [TestCaseSource(nameof(Args))]
         public void Test(int _)
         {
-            Assert.AreEqual(0, _counter++);
+            Assert.That(_counter++,Is.EqualTo(0));
         }
     }
 
@@ -247,7 +247,7 @@ namespace NUnit.TestData.LifeCycleTests
         [Test]
         public void Test([Values] bool? _)
         {
-            Assert.AreEqual(0, _counter++);
+            Assert.That(_counter++, Is.EqualTo(0));
         }
     }
 
@@ -259,7 +259,7 @@ namespace NUnit.TestData.LifeCycleTests
         [Theory]
         public void Test(bool? _)
         {
-            Assert.AreEqual(0, _counter++);
+            Assert.That(_counter++, Is.EqualTo(0));
         }
     }
 
@@ -324,13 +324,13 @@ namespace NUnit.TestData.LifeCycleTests
             [Test]
             public void Test1()
             {
-                Assert.AreEqual(0, _value++);
+                Assert.That(_value++, Is.EqualTo(0));
             }
 
             [Test]
             public void Test2()
             {
-                Assert.AreEqual(0, _value++);
+                Assert.That(_value++, Is.EqualTo(0));
             }
         }
     }
@@ -347,14 +347,14 @@ namespace NUnit.TestData.LifeCycleTests
             [Order(0)]
             public void Test1()
             {
-                Assert.AreEqual(0, _value++);
+                Assert.That(_value++, Is.EqualTo(0));
             }
 
             [Test]
             [Order(1)]
             public void Test2()
             {
-                Assert.AreEqual(1, _value++);
+                Assert.That(_value++, Is.EqualTo(1));
             }
         }
     }
@@ -378,13 +378,13 @@ namespace NUnit.TestData.LifeCycleTests
         [Test]
         public void Test1()
         {
-            Assert.AreEqual(0, _value++);
+            Assert.That(_value++, Is.EqualTo(0));
         }
 
         [Test]
         public void Test2()
         {
-            Assert.AreEqual(0, _value++);
+            Assert.That(_value++, Is.EqualTo(0));
         }
     }
 
@@ -398,14 +398,14 @@ namespace NUnit.TestData.LifeCycleTests
         [Order(0)]
         public void Test1()
         {
-            Assert.AreEqual(0, _value++);
+            Assert.That(_value++, Is.EqualTo(0));
         }
 
         [Test]
         [Order(1)]
         public void Test2()
         {
-            Assert.AreEqual(1, _value++);
+            Assert.That(_value++, Is.EqualTo(1));
         }
     }
     #endregion

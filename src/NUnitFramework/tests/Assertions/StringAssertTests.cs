@@ -137,7 +137,7 @@ namespace NUnit.Framework.Assertions
             byte[] data = System.Text.Encoding.Unicode.GetBytes( input );
             string garbage = System.Text.Encoding.UTF8.GetString( data, 0, data.Length);
 
-            Assert.AreNotEqual( input, garbage );
+            Classic.Assert.AreNotEqual( input, garbage );
         }
 
 

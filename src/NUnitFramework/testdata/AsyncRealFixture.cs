@@ -16,29 +16,29 @@ namespace NUnit.TestData
         {
             var result = await ReturnOne();
 
-            Assert.AreEqual(1, result);
+            Assert.That(result, Is.EqualTo(1));
         }
 
 #region async Task
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskSuccess()
+        public async Task AsyncTaskSuccess()
         {
             var result = await ReturnOne();
 
-            Assert.AreEqual(1, result);
+            Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskFailure()
+        public async Task AsyncTaskFailure()
         {
             var result = await ReturnOne();
 
-            Assert.AreEqual(2, result);
+            Assert.That(result, Is.EqualTo(2));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskError()
+        public async Task AsyncTaskError()
         {
             await ThrowException();
 
@@ -46,21 +46,21 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskPass()
+        public async Task AsyncTaskPass()
         {
             Assert.Pass();
             throw new Exception("This test expects Assert.Pass() to throw an exception.");
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskIgnore()
+        public async Task AsyncTaskIgnore()
         {
             Assert.Ignore();
             throw new Exception("This test expects Assert.Ignore() to throw an exception.");
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskInconclusive()
+        public async Task AsyncTaskInconclusive()
         {
             Assert.Inconclusive();
             throw new Exception("This test expects Assert.Inconclusive() to throw an exception.");
@@ -71,39 +71,39 @@ namespace NUnit.TestData
         #region non-async Task
 
         [Test]
-        public System.Threading.Tasks.Task TaskSuccess()
+        public Task TaskSuccess()
         {
-            return Task.Run(() => Assert.AreEqual(1, 1));
+            return Task.Run(() => Assert.That(1, Is.EqualTo(1)));
         }
 
         [Test]
-        public System.Threading.Tasks.Task TaskFailure()
+        public Task TaskFailure()
         {
-            return Task.Run(() => Assert.AreEqual(1, 2));
+            return Task.Run(() => Assert.That(2, Is.EqualTo(1)));
         }
 
         [Test]
-        public System.Threading.Tasks.Task TaskError()
+        public Task TaskError()
         {
             throw new InvalidOperationException();
         }
 
         [Test]
-        public System.Threading.Tasks.Task TaskPass()
+        public Task TaskPass()
         {
             Assert.Pass();
             throw new Exception("This test expects Assert.Pass() to throw an exception.");
         }
 
         [Test]
-        public System.Threading.Tasks.Task TaskIgnore()
+        public Task TaskIgnore()
         {
             Assert.Ignore();
             throw new Exception("This test expects Assert.Ignore() to throw an exception.");
         }
 
         [Test]
-        public System.Threading.Tasks.Task TaskInconclusive()
+        public Task TaskInconclusive()
         {
             Assert.Inconclusive();
             throw new Exception("This test expects Assert.Inconclusive() to throw an exception.");
@@ -170,9 +170,9 @@ namespace NUnit.TestData
 #endregion
 
         [TestCase(1, 2)]
-        public async System.Threading.Tasks.Task AsyncTaskTestCaseWithParametersSuccess(int a, int b)
+        public async Task AsyncTaskTestCaseWithParametersSuccess(int a, int b)
         {
-            Assert.AreEqual(await ReturnOne(), b - a);
+            Assert.That(b - a, Is.EqualTo(await ReturnOne()));
         }
 
         [TestCase(ExpectedResult = null)]
@@ -188,23 +188,23 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async System.Threading.Tasks.Task NestedAsyncTaskSuccess()
+        public async Task NestedAsyncTaskSuccess()
         {
             var result = await Task.Run(async () => await ReturnOne());
 
-            Assert.AreEqual(1, result);
+            Assert.That(result, Is.EqualTo(1));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task NestedAsyncTaskFailure()
+        public async Task NestedAsyncTaskFailure()
         {
             var result = await Task.Run(async () => await ReturnOne());
 
-            Assert.AreEqual(2, result);
+            Assert.That(result, Is.EqualTo(2));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task NestedAsyncTaskError()
+        public async Task NestedAsyncTaskError()
         {
             await Task.Run(async () => await ThrowException());
 
@@ -212,23 +212,23 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskMultipleSuccess()
+        public async Task AsyncTaskMultipleSuccess()
         {
             var result = await ReturnOne();
 
-            Assert.AreEqual(await ReturnOne(), result);
+            Assert.That(result, Is.EqualTo(await ReturnOne()));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskMultipleFailure()
+        public async Task AsyncTaskMultipleFailure()
         {
             var result = await ReturnOne();
 
-            Assert.AreEqual(await ReturnOne() + 1, result);
+            Assert.That(result, Is.EqualTo(await ReturnOne() + 1));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task AsyncTaskMultipleError()
+        public async Task AsyncTaskMultipleError()
         {
             await ThrowException();
 
@@ -236,23 +236,23 @@ namespace NUnit.TestData
         }
 
         [Test]
-        public async System.Threading.Tasks.Task TaskCheckTestContextAcrossTasks()
+        public async Task TaskCheckTestContextAcrossTasks()
         {
             var testName = await GetTestNameFromContext();
 
             Assert.IsNotNull(testName);
-            Assert.AreEqual(testName, TestContext.CurrentContext.Test.Name);
+            Assert.That(TestContext.CurrentContext.Test.Name,Is.EqualTo(testName));
         }
 
         [Test]
-        public async System.Threading.Tasks.Task TaskCheckTestContextWithinTestBody()
+        public async Task TaskCheckTestContextWithinTestBody()
         {
             var testName = TestContext.CurrentContext.Test.Name;
 
             await ReturnOne();
 
             Assert.IsNotNull(testName);
-            Assert.AreEqual(testName, TestContext.CurrentContext.Test.Name);
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo(testName));
         }
 
         private static Task<string> GetTestNameFromContext()

@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using NUnit.Framework.Classic;
 using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Assertions

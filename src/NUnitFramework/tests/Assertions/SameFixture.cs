@@ -11,7 +11,7 @@ namespace NUnit.Framework.Assertions
         public void Same()
         {
             string s1 = "S1";
-            Assert.AreSame(s1, s1);
+            Assert.That(s1, Is.SameAs(s1));
         }
 
         [Test]
@@ -22,7 +22,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreSame(ex1, ex2));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ex1, Is.SameAs(ex2)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Assertions
                 "  Expected: same as 2" + Environment.NewLine +
                 "  But was:  2" + Environment.NewLine;
 #pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreSame(index, index));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(index, Is.SameAs(index)));
 #pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
@@ -44,7 +44,7 @@ namespace NUnit.Framework.Assertions
         {
             var actual = new ThrowsIfToStringIsCalled(1);
 
-            Assert.AreSame(actual, actual);
+            Assert.That(actual, Is.SameAs(actual));
         }
     }
 }
