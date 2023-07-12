@@ -28,67 +28,67 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void Greater()
         {
-            Assert.Greater(_i1,_i2);
-            Assert.Greater(_u1,_u2);
-            Assert.Greater(_l1,_l2);
-            Assert.Greater(_ul1,_ul2);
-            Assert.Greater(_d1,_d2, "double");
-            Assert.Greater(_de1,_de2, "{0}", "decimal");
-            Assert.Greater(_f1,_f2, "float");
+            Classic.Assert.Greater(_i1,_i2);
+            Classic.Assert.Greater(_u1,_u2);
+            Classic.Assert.Greater(_l1,_l2);
+            Classic.Assert.Greater(_ul1,_ul2);
+            Classic.Assert.Greater(_d1,_d2, "double");
+            Classic.Assert.Greater(_de1,_de2, "{0}", "decimal");
+            Classic.Assert.Greater(_f1,_f2, "float");
         }
 
         [Test]
         public void MixedTypes()
         {	
-            Assert.Greater( 5, 3L, "int to long");
-            Assert.Greater( 5, 3.5f, "int to float" );
-            Assert.Greater( 5, 3.5d, "int to double" );
-            Assert.Greater( 5, 3U, "int to uint" );
-            Assert.Greater( 5, 3UL, "int to ulong" );
-            Assert.Greater( 5, 3M, "int to decimal" );
+            Classic.Assert.Greater( 5, 3L, "int to long");
+            Classic.Assert.Greater( 5, 3.5f, "int to float" );
+            Classic.Assert.Greater( 5, 3.5d, "int to double" );
+            Classic.Assert.Greater( 5, 3U, "int to uint" );
+            Classic.Assert.Greater( 5, 3UL, "int to ulong" );
+            Classic.Assert.Greater( 5, 3M, "int to decimal" );
 
-            Assert.Greater( 5L, 3, "long to int");
-            Assert.Greater( 5L, 3.5f, "long to float" );
-            Assert.Greater( 5L, 3.5d, "long to double" );
-            Assert.Greater( 5L, 3U, "long to uint" );
-            Assert.Greater( 5L, 3UL, "long to ulong" );
-            Assert.Greater( 5L, 3M, "long to decimal" );
+            Classic.Assert.Greater( 5L, 3, "long to int");
+            Classic.Assert.Greater( 5L, 3.5f, "long to float" );
+            Classic.Assert.Greater( 5L, 3.5d, "long to double" );
+            Classic.Assert.Greater( 5L, 3U, "long to uint" );
+            Classic.Assert.Greater( 5L, 3UL, "long to ulong" );
+            Classic.Assert.Greater( 5L, 3M, "long to decimal" );
 
-            Assert.Greater( 8.2f, 5, "float to int" );
-            Assert.Greater( 8.2f, 8L, "float to long" );
-            Assert.Greater( 8.2f, 3.5d, "float to double" );
-            Assert.Greater( 8.2f, 8U, "float to uint" );
-            Assert.Greater( 8.2f, 8UL, "float to ulong" );
-            Assert.Greater( 8.2f, 3.5M, "float to decimal" );
+            Classic.Assert.Greater( 8.2f, 5, "float to int" );
+            Classic.Assert.Greater( 8.2f, 8L, "float to long" );
+            Classic.Assert.Greater( 8.2f, 3.5d, "float to double" );
+            Classic.Assert.Greater( 8.2f, 8U, "float to uint" );
+            Classic.Assert.Greater( 8.2f, 8UL, "float to ulong" );
+            Classic.Assert.Greater( 8.2f, 3.5M, "float to decimal" );
 
-            Assert.Greater( 8.2d, 5, "double to int" );
-            Assert.Greater( 8.2d, 5L, "double to long" );
-            Assert.Greater( 8.2d, 3.5f, "double to float" );
-            Assert.Greater( 8.2d, 8U, "double to uint" );
-            Assert.Greater( 8.2d, 8UL, "double to ulong" );
-            Assert.Greater( 8.2d, 3.5M, "double to decimal" );
+            Classic.Assert.Greater( 8.2d, 5, "double to int" );
+            Classic.Assert.Greater( 8.2d, 5L, "double to long" );
+            Classic.Assert.Greater( 8.2d, 3.5f, "double to float" );
+            Classic.Assert.Greater( 8.2d, 8U, "double to uint" );
+            Classic.Assert.Greater( 8.2d, 8UL, "double to ulong" );
+            Classic.Assert.Greater( 8.2d, 3.5M, "double to decimal" );
             
 
-            Assert.Greater( 5U, 3, "uint to int" );
-            Assert.Greater( 5U, 3L, "uint to long" );
-            Assert.Greater( 5U, 3.5f, "uint to float" );
-            Assert.Greater( 5U, 3.5d, "uint to double" );
-            Assert.Greater( 5U, 3UL, "uint to ulong" );
-            Assert.Greater( 5U, 3M, "uint to decimal" );
+            Classic.Assert.Greater( 5U, 3, "uint to int" );
+            Classic.Assert.Greater( 5U, 3L, "uint to long" );
+            Classic.Assert.Greater( 5U, 3.5f, "uint to float" );
+            Classic.Assert.Greater( 5U, 3.5d, "uint to double" );
+            Classic.Assert.Greater( 5U, 3UL, "uint to ulong" );
+            Classic.Assert.Greater( 5U, 3M, "uint to decimal" );
             
-            Assert.Greater( 5ul, 3, "ulong to int" );
-            Assert.Greater( 5UL, 3L, "ulong to long" );
-            Assert.Greater( 5UL, 3.5f, "ulong to float" );
-            Assert.Greater( 5UL, 3.5d, "ulong to double" );
-            Assert.Greater( 5UL, 3U, "ulong to uint" );
-            Assert.Greater( 5UL, 3M, "ulong to decimal" );
+            Classic.Assert.Greater( 5ul, 3, "ulong to int" );
+            Classic.Assert.Greater( 5UL, 3L, "ulong to long" );
+            Classic.Assert.Greater( 5UL, 3.5f, "ulong to float" );
+            Classic.Assert.Greater( 5UL, 3.5d, "ulong to double" );
+            Classic.Assert.Greater( 5UL, 3U, "ulong to uint" );
+            Classic.Assert.Greater( 5UL, 3M, "ulong to decimal" );
             
-            Assert.Greater( 5M, 3, "decimal to int" );
-            Assert.Greater( 5M, 3L, "decimal to long" );
-            Assert.Greater( 5M, 3.5f, "decimal to float" );
-            Assert.Greater( 5M, 3.5d, "decimal to double" );
-            Assert.Greater( 5M, 3U, "decimal to uint" );
-            Assert.Greater( 5M, 3UL, "decimal to ulong" );
+            Classic.Assert.Greater( 5M, 3, "decimal to int" );
+            Classic.Assert.Greater( 5M, 3L, "decimal to long" );
+            Classic.Assert.Greater( 5M, 3.5f, "decimal to float" );
+            Classic.Assert.Greater( 5M, 3.5d, "decimal to double" );
+            Classic.Assert.Greater( 5M, 3U, "decimal to uint" );
+            Classic.Assert.Greater( 5M, 3UL, "decimal to ulong" );
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than 5" + Environment.NewLine +
                 "  But was:  5" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Greater(_i1,_i1));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Greater(_i1,_i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than 5" + Environment.NewLine +
                 "  But was:  4" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Greater(_i2,_i1));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Greater(_i2,_i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than Ignored" + Environment.NewLine +
                 "  But was:  Explicit" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Greater(_e1,_e2));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Greater(_e1,_e2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than 99" + Environment.NewLine +
                 "  But was:  7" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Greater( 7, 99 ));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Greater( 7, 99 ));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }
