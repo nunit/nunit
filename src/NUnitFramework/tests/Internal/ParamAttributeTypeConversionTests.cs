@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using NUnit.Framework.Classic;
 
 namespace NUnit.Framework.Internal
 {

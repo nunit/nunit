@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Classic;
 using NUnit.TestUtilities.Collections;
 using NUnit.TestUtilities.Comparers;
 
