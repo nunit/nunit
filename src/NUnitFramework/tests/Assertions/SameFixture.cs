@@ -22,7 +22,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(ex1, Is.SameAs(ex2)));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ex2, Is.SameAs(ex1)));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

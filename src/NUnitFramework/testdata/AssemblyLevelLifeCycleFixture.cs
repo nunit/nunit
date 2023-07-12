@@ -17,13 +17,13 @@ namespace NUnit.TestData.LifeCycleTests
                 [Test]
                 public void Test1()
                 {
-                    Assert.AreEqual(0, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                 }
 
                 [Test]
                 public void Test2()
                 {
-                    Assert.AreEqual(0, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                 }
             }
             ";
@@ -46,14 +46,14 @@ namespace NUnit.TestData.LifeCycleTests
                 [Order(0)]
                 public void Test1()
                 {
-                    Assert.AreEqual(0, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                 }
 
                 [Test]
                 [Order(1)]
                 public void Test2()
                 {
-                    Assert.AreEqual(1, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(1, _value++);
                 }
             }
             ";
@@ -78,14 +78,14 @@ namespace NUnit.TestData.LifeCycleTests
                     [Order(0)]
                     public void Test1()
                     {
-                        Assert.AreEqual(0, _value++);
+                        NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                     }
 
                     [Test]
                     [Order(1)]
                     public void Test2()
                     {
-                        Assert.AreEqual(1, _value++);
+                        NUnit.Framework.Classic.Assert.AreEqual(1, _value++);
                     }
                 }
             }
@@ -108,14 +108,14 @@ namespace NUnit.TestData.LifeCycleTests
                     [Order(0)]
                     public void Test1()
                     {
-                        Assert.AreEqual(0, _value++);
+                        NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                     }
 
                     [Test]
                     [Order(1)]
                     public void Test2()
                     {
-                        Assert.AreEqual(1, _value++);
+                        NUnit.Framework.Classic.Assert.AreEqual(1, _value++);
                     }
                 }
             }
@@ -143,14 +143,14 @@ namespace NUnit.TestData.LifeCycleTests
                 [Order(0)]
                 public void Test1()
                 {
-                    Assert.AreEqual(0, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                 }
 
                 [Test]
                 [Order(1)]
                 public void Test2()
                 {
-                    Assert.AreEqual(1, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(1, _value++);
                 }
             }
             ";
@@ -169,14 +169,14 @@ namespace NUnit.TestData.LifeCycleTests
                 [Order(0)]
                 public void Test1()
                 {
-                    Assert.AreEqual(0, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _value++);
                 }
 
                 [Test]
                 [Order(1)]
                 public void Test2()
                 {
-                    Assert.AreEqual(1, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(1, _value++);
                 }
             }
             ";
@@ -209,13 +209,13 @@ namespace NUnit.TestData.LifeCycleTests
                 [Test]
                 public void Test1()
                 {
-                    Assert.AreEqual(_initialValue, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(_initialValue, _value++);
                 }
 
                 [Test]
                 public void Test2()
                 {
-                    Assert.AreEqual(_initialValue, _value++);
+                    NUnit.Framework.Classic.Assert.AreEqual(_initialValue, _value++);
                 }
             }
             ";
@@ -238,7 +238,7 @@ namespace NUnit.TestData.LifeCycleTests
                 [TestCase(3)]
                 public void Test(int _)
                 {
-                    Assert.AreEqual(0, _counter++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _counter++);
                 }
             }
             ";
@@ -263,7 +263,7 @@ namespace NUnit.TestData.LifeCycleTests
                 [TestCaseSource(""Args"")]
                 public void Test(int _)
                 {
-                    Assert.AreEqual(0, _counter++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _counter++);
                 }
             }
             ";
@@ -283,7 +283,7 @@ namespace NUnit.TestData.LifeCycleTests
                 [Test]
                 public void Test([Values] bool? _)
                 {
-                    Assert.AreEqual(0, _counter++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _counter++);
                 }
             }
             ";
@@ -303,7 +303,7 @@ namespace NUnit.TestData.LifeCycleTests
                 [Theory]
                 public void Test(bool? _)
                 {
-                    Assert.AreEqual(0, _counter++);
+                    NUnit.Framework.Classic.Assert.AreEqual(0, _counter++);
                 }
             }
             ";

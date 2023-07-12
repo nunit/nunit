@@ -54,6 +54,7 @@ var IMAGE_DIR = PROJECT_DIR + "images/";
 var NUNITFRAMWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
 var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
 var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
+var NUNITFRAMEWORKCLASSICBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.classic/bin/" + configuration + "/";
 var NUNITLITEBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite/bin/" + configuration + "/";
 var NUNITLITERUNNERBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite-runner/bin/" + configuration + "/";
 
@@ -129,6 +130,7 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectory(NUNITFRAMEWORKBIN);
+        CleanDirectory(NUNITFRAMEWORKCLASSICBIN);
         CleanDirectory(NUNITLITEBIN);
         CleanDirectory(NUNITLITERUNNERBIN);
     });
@@ -232,6 +234,7 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
+    "nunit.framework.classic.dll",
     "nunit.framework.pdb",
     "nunit.framework.xml",
     "nunit.framework.tests.dll",
@@ -269,6 +272,7 @@ Task("CreateImage")
         var directories = new String[]
         {
             NUNITFRAMEWORKBIN,
+            NUNITFRAMEWORKCLASSICBIN,
             NUNITLITEBIN
         };
         foreach (var dir in directories)

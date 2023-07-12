@@ -33,10 +33,6 @@
       <ProjectReference Include="..\framework\nunit.framework.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Update="Schemas\*.xsd" CopyToOutputDirectory="Always" />
-    </ItemGroup>
-
     <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or&#xD;&#xA;                        $(TargetFramework.CompareTo('net5.0')) &lt; 0">
         <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
         <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />

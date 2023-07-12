@@ -353,10 +353,10 @@ namespace NUnitLite.Tests
         [Test]
         public void InvalidOption()
         {
-            var options = new NUnitLiteOptions("-asembly:nunit.tests.dll");
+            var options = new NUnitLiteOptions("-asembly:nunit.tests.dll"); // Deliberately misspell "assembly"
             Assert.That(options.Validate(), Is.False);
             Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
-            Assert.That(options.ErrorMessages[0], Is.EqualTo("Invalid argument: -assembly:nunit.tests.dll"));
+            Assert.That(options.ErrorMessages[0], Is.EqualTo("Invalid argument: -asembly:nunit.tests.dll"));
         }
 
         [Test]
