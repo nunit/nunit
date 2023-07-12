@@ -23,7 +23,7 @@ namespace NUnitLite.Tests
         public void RunMockAssemblyTests()
         {
             ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
-            Assert.NotNull(result);
+            Assert.That(result, Is.Not.Null);
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
@@ -204,8 +204,8 @@ namespace NUnitLite.Tests
                 Assert.That(startTimeStr, Does.EndWith("Z"), "Ignored start-time is not UTC");
                 Assert.That(endTimeStr, Does.EndWith("Z"), "Ignored end-time is not UTC");
 
-                Assert.IsTrue(DateTime.TryParse(startTimeStr, out var startTime));
-                Assert.IsTrue(DateTime.TryParse(endTimeStr, out var endTime));
+                Assert.That(DateTime.TryParse(startTimeStr, out var startTime));
+                Assert.That(DateTime.TryParse(endTimeStr, out var endTime));
 
                 Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
                 Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the end time of test suite");
@@ -229,8 +229,8 @@ namespace NUnitLite.Tests
             Assert.That(startTimeStr, Does.EndWith("Z"), "Explicit start-time is not UTC");
             Assert.That(endTimeStr, Does.EndWith("Z"), "Explicit end-time is not UTC");
 
-            Assert.IsTrue(DateTime.TryParse(startTimeStr, out var startTime));
-            Assert.IsTrue(DateTime.TryParse(endTimeStr, out var endTime));
+            Assert.That(DateTime.TryParse(startTimeStr, out var startTime));
+            Assert.That(DateTime.TryParse(endTimeStr, out var endTime));
 
             Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the start time of test suite");
             Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Explicit test cases should be set to approximately the end time of test suite");

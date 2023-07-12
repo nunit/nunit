@@ -298,7 +298,7 @@ namespace NUnit.TestData.AssertMultipleData
             Assert.Multiple(() =>
             {
                 Assert.That(2 + 2, Is.EqualTo(5),"Failure 1");
-                Assert.True(1 == 0, "Failure 2");
+                NUnit.Framework.Classic.Assert.True(1 == 0, "Failure 2");
                 throw new Exception("Simulated Error");
             });
         }

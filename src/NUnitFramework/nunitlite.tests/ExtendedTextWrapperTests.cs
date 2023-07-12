@@ -93,7 +93,7 @@ namespace NUnit.Common.Tests
                 var colorWriter = new ColorConsoleWriter();
                 colorWriter.Dispose();
 
-                Assert.IsFalse(textWriter.IsDisposed);
+                Assert.That(textWriter.IsDisposed,Is.False);
             }
             finally
             {

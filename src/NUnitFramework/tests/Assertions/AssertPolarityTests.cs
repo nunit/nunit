@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -23,50 +23,50 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void PositiveNumbersPassPositiveAssertion()
         {
-            Assert.Positive(_i1);
-            Assert.Positive(_l1);
-            Assert.Positive(_f1);
-            Assert.Positive(_de1);
-            Assert.Positive(_d1);
+            Classic.Assert.Positive(_i1);
+            Classic.Assert.Positive(_l1);
+            Classic.Assert.Positive(_f1);
+            Classic.Assert.Positive(_de1);
+            Classic.Assert.Positive(_d1);
         }
 
         [Test]
         public void AssertNegativeNumbersFailPositiveAssertion()
         {
-            Assert.Throws<AssertionException>(() => Assert.Positive(_i2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(_l2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(_f2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(_de2));
-            Assert.Throws<AssertionException>(() => Assert.Positive(_d2));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_i2));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_l2));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_f2));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_de2));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_d2));
         }
 
         [Test]
         public void NegativeNumbersPassNegativeAssertion()
         {
-            Assert.Negative(_i2);
-            Assert.Negative(_l2);
-            Assert.Negative(_f2);
-            Assert.Negative(_de2);
-            Assert.Negative(_d2);
+            Classic.Assert.Negative(_i2);
+            Classic.Assert.Negative(_l2);
+            Classic.Assert.Negative(_f2);
+            Classic.Assert.Negative(_de2);
+            Classic.Assert.Negative(_d2);
         }
 
         [Test]
         public void AssertPositiveNumbersFailNegativeAssertion()
         {
-            Assert.Throws<AssertionException>(() => Assert.Negative(_i1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(_u1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(_l1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(_ul1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(_f1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(_de1));
-            Assert.Throws<AssertionException>(() => Assert.Negative(_d1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_i1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_u1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_l1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_ul1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_f1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_de1));
+            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_d1));
         }
 
         [Test]
         public void IsNegativeWithMessageOverload()
         {
             Assert.That(
-                () => Assert.Negative(1, "MESSAGE"),
+                () => Classic.Assert.Negative(1, "MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
         }
 
@@ -74,20 +74,20 @@ namespace NUnit.Framework.Assertions
         public void IsPositiveWithMessageOverload()
         {
             Assert.That(
-                () => Assert.Positive(-1, "MESSAGE"),
+                () => Classic.Assert.Positive(-1, "MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
         }
 
         [Test]
         public void IsPositiveWithMessageOverloadPasses()
         {
-            Assert.Positive(1, "Message");
+            Classic.Assert.Positive(1, "Message");
         }
 
         [Test]
         public void IsNegativeWithMessageOverloadPasses()
         {
-            Assert.Negative(-1, "Message");
+            Classic.Assert.Negative(-1, "Message");
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: greater than 0" + Environment.NewLine +
                 "  But was:  -1" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Positive(_i2));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_i2));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than 0" + Environment.NewLine +
                 "  But was:  1" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Negative(_i1));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_i1));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }

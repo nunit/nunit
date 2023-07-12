@@ -240,7 +240,7 @@ namespace NUnit.TestData
         {
             var testName = await GetTestNameFromContext();
 
-            Assert.IsNotNull(testName);
+            Assert.That(testName,Is.Not.Null);
             Assert.That(TestContext.CurrentContext.Test.Name,Is.EqualTo(testName));
         }
 
@@ -251,7 +251,7 @@ namespace NUnit.TestData
 
             await ReturnOne();
 
-            Assert.IsNotNull(testName);
+            Assert.That(testName, Is.Not.Null);
             Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo(testName));
         }
 

@@ -30,7 +30,7 @@ namespace NUnit.Framework.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             string[] array2 = { "one", "two", "three" };
-            Assert.IsFalse( array1 == array2 );
+            Framework.Classic.Assert.IsFalse( array1 == array2 );
             Assert.That(array2, Is.EqualTo(array1));
             Assert.That(array1, Is.EqualTo(array2));
         }

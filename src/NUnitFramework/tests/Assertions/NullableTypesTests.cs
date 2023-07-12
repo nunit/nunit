@@ -11,8 +11,8 @@ namespace NUnit.Framework.Assertions
             int? nullInt = null;
             int? five = 5;
 
-            Assert.IsNull(nullInt);
-            Assert.IsNotNull(five);
+            Classic.Assert.IsNull(nullInt);
+            Classic.Assert.IsNotNull(five);
             Assert.That(nullInt, Is.Null);
             Assert.That(five, Is.Not.Null);
         }
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Assertions
         public void CanTestForNaN()
         {
             double? anNaN = double.NaN;
-            Assert.IsNaN(anNaN);
+            Assert.That(anNaN, Is.Not.Null);
             Assert.That(anNaN, Is.NaN);
         }
 

@@ -20,7 +20,7 @@ namespace NUnit.Framework.Assertions
             string expected = nunitString;
             string actual = nunitString;
 
-            Assert.IsTrue(expected == actual);
+            Classic.Assert.IsTrue(expected == actual);
             Classic.Assert.AreEqual(expected, actual);
         }
 
@@ -55,15 +55,15 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void IntegerLongComparison()
         {
-            Framework.Classic.Assert.AreEqual(1, 1L);
-            Framework.Classic.Assert.AreEqual(1L, 1);
+            Classic.Assert.AreEqual(1, 1L);
+            Classic.Assert.AreEqual(1L, 1);
         }
 
         [Test]
         public void IntegerEquals()
         {
             int val = 42;
-            Framework.Classic.Assert.AreEqual(val, 42);
+            Classic.Assert.AreEqual(val, 42);
         }
 
 
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Assertions
                 "  But was:  \"Goodbye JUnit\"" + Environment.NewLine +
                 "  -----------^" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Framework.Classic.Assert.AreEqual(expected, junitString));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreEqual(expected, junitString));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Assertions
                 "  Expected: 1.234d +/- 0.0d" + Environment.NewLine +
                 "  But was:  " + double.NaN + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Framework.Classic.Assert.AreEqual(1.234, double.NaN, 0.0));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreEqual(1.234, double.NaN, 0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -102,14 +102,14 @@ namespace NUnit.Framework.Assertions
                 "  Expected: " + double.NaN + Environment.NewLine +
                 "  But was:  1.234d" + Environment.NewLine;
 
-            var ex = Assert.Throws<AssertionException>(() => Framework.Classic.Assert.AreEqual(double.NaN, 1.234, 0.0));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreEqual(double.NaN, 1.234, 0.0));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void NanEqualsNaNSucceeds()
         {
-            Framework.Classic.Assert.AreEqual(double.NaN, double.NaN, 0.0);
+            Classic.Assert.AreEqual(double.NaN, double.NaN, 0.0);
         }
 
         [Test]
@@ -178,7 +178,7 @@ namespace NUnit.Framework.Assertions
             float expected = val;
             float actual = val;
 
-            Assert.IsTrue(expected == actual);
+            Classic.Assert.IsTrue(expected == actual);
             Classic.Assert.AreEqual(expected, actual, (float)0.0);
         }
 
@@ -189,7 +189,7 @@ namespace NUnit.Framework.Assertions
             byte expected = val;
             byte actual = val;
 
-            Assert.IsTrue(expected == actual);
+            Classic.Assert.IsTrue(expected == actual);
             Classic.Assert.AreEqual(expected, actual);
         }
 
@@ -199,7 +199,7 @@ namespace NUnit.Framework.Assertions
             string s1 = "test";
             string s2 = new StringBuilder(s1).ToString();
 
-            Assert.IsTrue(s1.Equals(s2));
+            Classic.Assert.IsTrue(s1.Equals(s2));
             Classic.Assert.AreEqual(s1,s2);
         }
 
@@ -210,7 +210,7 @@ namespace NUnit.Framework.Assertions
             short expected = val;
             short actual = val;
 
-            Assert.IsTrue(expected == actual);
+            Classic.Assert.IsTrue(expected == actual);
             Classic.Assert.AreEqual(expected, actual);
         }
 
@@ -221,7 +221,7 @@ namespace NUnit.Framework.Assertions
             int expected = val;
             int actual = val;
 
-            Assert.IsTrue(expected == actual);
+            Classic.Assert.IsTrue(expected == actual);
             Classic.Assert.AreEqual(expected, actual);
         }
 
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Assertions
             uint expected = val;
             uint actual = val;
 
-            Assert.IsTrue(expected == actual);
+            Classic.Assert.IsTrue(expected == actual);
             Classic.Assert.AreEqual(expected, actual);
         }
 
@@ -243,11 +243,11 @@ namespace NUnit.Framework.Assertions
             decimal actual = 100.0m;
             int integer = 100;
 
-            Assert.IsTrue( expected == actual );
+            Classic.Assert.IsTrue( expected == actual );
             Classic.Assert.AreEqual(expected, actual);
-            Assert.IsTrue(expected == integer);
+            Classic.Assert.IsTrue(expected == integer);
             Classic.Assert.AreEqual(expected, integer);
-            Assert.IsTrue(actual == integer);
+            Classic.Assert.IsTrue(actual == integer);
             Classic.Assert.AreEqual(actual, integer);
         }
 

@@ -22,7 +22,7 @@ namespace NUnitLite.Tests
         public void RunMockAssemblyTests()
         {
             ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
-            Assert.NotNull(result);
+            Assert.That(result,Is.Not.Null);
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);

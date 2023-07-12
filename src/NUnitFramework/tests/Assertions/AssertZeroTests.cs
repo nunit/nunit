@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
 
@@ -25,63 +25,63 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void ZeroIsZero()
         {
-            Assert.Zero(_i1);
-            Assert.Zero(_u1);
-            Assert.Zero(_l1);
-            Assert.Zero(_ul1);
-            Assert.Zero(_f1);
-            Assert.Zero(_de1);
-            Assert.Zero(_d1);
+            Assert.That(_i1,Is.Zero);
+            Assert.That(_u1, Is.Zero);
+            Assert.That(_l1, Is.Zero);
+            Assert.That(_ul1, Is.Zero);
+            Assert.That(_f1, Is.Zero);
+            Assert.That(_de1, Is.Zero);
+            Assert.That(_d1, Is.Zero);
         }
 
         [Test]
         public void AssertZeroFailsWhenNumberIsNotAZero()
         {
-            Assert.Throws<AssertionException>(() => Assert.Zero(_i2));
-            Assert.Throws<AssertionException>(() => Assert.Zero(_u2));
-            Assert.Throws<AssertionException>(() => Assert.Zero(_l2));
-            Assert.Throws<AssertionException>(() => Assert.Zero(_ul2));
-            Assert.Throws<AssertionException>(() => Assert.Zero(_f2));
-            Assert.Throws<AssertionException>(() => Assert.Zero(_de2));
-            Assert.Throws<AssertionException>(() => Assert.Zero(_d2));
+            Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_u2,Is.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_l2, Is.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_ul2, Is.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_f2, Is.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_de2, Is.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_d2, Is.Zero));
         }
 
         [Test]
         public void NotZeroIsNotZero()
         {
-            Assert.NotZero(_i2);
-            Assert.NotZero(_u2);
-            Assert.NotZero(_l2);
-            Assert.NotZero(_ul2);
-            Assert.NotZero(_f2);
-            Assert.NotZero(_de2);
-            Assert.NotZero(_d2);
+            Assert.That(_i2,Is.Not.Zero);
+            Assert.That(_u2,Is.Not.Zero);
+            Assert.That(_l2,Is.Not.Zero);
+            Assert.That(_ul2,Is.Not.Zero);
+            Assert.That(_f2,Is.Not.Zero);
+            Assert.That(_de2,Is.Not.Zero);
+            Assert.That(_d2,Is.Not.Zero);
         }
 
         [Test]
         public void AssertNotZeroFailsWhenNumberIsZero()
         {
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_i1));
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_u1));
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_l1));
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_ul1));
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_f1));
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_de1));
-            Assert.Throws<AssertionException>(() => Assert.NotZero(_d1));
+            Assert.Throws<AssertionException>(() => Assert.That(_i1, Is.Not.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_u1, Is.Not.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_l1, Is.Not.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_ul1, Is.Not.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_f1, Is.Not.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_de1, Is.Not.Zero));
+            Assert.Throws<AssertionException>(() => Assert.That(_d1, Is.Not.Zero));
         }
 
         [Test]
         public void ZeroWithMessagesOverload()
         {
             Assert.That(
-                () => Assert.Zero(1, "MESSAGE"),
+                () => Assert.That(1,Is.Zero, "MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
         }
 
         [Test]
         public void ZeroWithMessageOverloadPasses()
         {
-            Assert.Zero(0, "Message");
+            Assert.That(0,Is.Zero, "Message");
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: 0" + Environment.NewLine +
                 "  But was:  1234" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.Zero(_i2));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2,Is.Zero));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
     }

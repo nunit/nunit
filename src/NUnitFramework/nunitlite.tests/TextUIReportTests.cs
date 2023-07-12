@@ -29,7 +29,7 @@ namespace NUnitLite.Tests
         public void CreateResult()
         {
             _result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture)) as TestResult;
-            Assert.NotNull(_result, "Unable to run fixture");
+            Assert.That(_result,Is.Not.Null, "Unable to run fixture");
 
             _result.StartTime = _result.EndTime = new DateTime(2014, 12, 2, 12, 34, 56, DateTimeKind.Utc);
             _result.Duration = 0.123;
