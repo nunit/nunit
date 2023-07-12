@@ -3,7 +3,7 @@
 #if !NETCOREAPP
 using System.CodeDom.Compiler;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     internal class TestCompiler
     {

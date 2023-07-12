@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Summary description for ArrayEqualsFailureMessageFixture.

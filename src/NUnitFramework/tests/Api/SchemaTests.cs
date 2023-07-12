@@ -2,10 +2,11 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     public static class SchemaTests
     {

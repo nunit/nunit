@@ -2,10 +2,11 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData.UnexpectedExceptionFixture;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class UnexpectedExceptionTests

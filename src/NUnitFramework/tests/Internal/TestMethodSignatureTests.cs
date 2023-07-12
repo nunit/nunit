@@ -3,10 +3,12 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestMethodSignatureFixture;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class TestMethodSignatureTests

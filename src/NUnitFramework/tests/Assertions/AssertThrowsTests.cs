@@ -2,9 +2,9 @@
 
 using System;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AssertThrowsTests

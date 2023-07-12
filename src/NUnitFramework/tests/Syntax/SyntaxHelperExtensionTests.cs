@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Classic;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     public static class SyntaxHelperExtensionTests
     {

@@ -3,7 +3,7 @@
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public static class ExecutionContextTests
     {

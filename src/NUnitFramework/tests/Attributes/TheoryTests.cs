@@ -1,11 +1,13 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-using System;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
-using NUnit.TestData.TheoryFixture;
-using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Attributes
+using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.TheoryFixture;
+using NUnit.TestUtilities;
+
+namespace NUnit.Framework.Tests.Attributes
 {
     public class TheoryTests
     {

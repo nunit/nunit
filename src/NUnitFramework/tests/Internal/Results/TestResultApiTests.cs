@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public sealed class TestResultApiTests : TestResultTests
     {

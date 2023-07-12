@@ -4,9 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class EventListenerTextWriterTests

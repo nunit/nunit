@@ -1,17 +1,18 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestCaseSourceAttributeFixture;
 using NUnit.TestUtilities;
-using System;
-using System.Globalization;
-using System.Threading.Tasks;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class TestCaseSourceTests : TestSourceMayBeInherited

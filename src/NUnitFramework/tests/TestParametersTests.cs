@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public class TestParametersTests
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
-    <RootNamespace>NUnit.Framework</RootNamespace>
+    <RootNamespace>NUnit.Framework.Tests</RootNamespace>
     <Nullable>enable</Nullable>
     <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
     <GenerateNullableAttributes>false</GenerateNullableAttributes>

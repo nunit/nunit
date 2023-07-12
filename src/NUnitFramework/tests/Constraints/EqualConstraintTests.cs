@@ -4,10 +4,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class EqualConstraintTests : ConstraintTestBase

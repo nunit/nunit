@@ -9,7 +9,7 @@ using System.Runtime.Versioning;
 using NUnit.Framework.Interfaces;
 #endif
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class OSPlatformTranslatorTests

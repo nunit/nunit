@@ -3,9 +3,10 @@
 using System.Collections.Generic;
 using NUnit.Framework.Classic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using static NUnit.Framework.TestContext;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class PropertyBagAdapterTests
     {

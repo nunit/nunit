@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class StringAssertTests

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     [TestFixture]
     public class ArbitraryConstraintMatching

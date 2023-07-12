@@ -1,6 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Internal.Filters
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
+
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     [TestFixture("NUnit.Framework.Internal.Filters", false, true)]
     [TestFixture("NUnit.Framework.*", true, true)]

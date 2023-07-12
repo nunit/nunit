@@ -3,10 +3,11 @@
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
 using NUnit.TestData.SetUpData;
+using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class SetUpTearDownTests

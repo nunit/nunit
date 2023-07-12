@@ -1,10 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class AllItemsConstraintTests
@@ -98,7 +100,7 @@ namespace NUnit.Framework.Constraints
         [Test]
         public void WorksOnICollection()
         {
-            var c = new NUnit.TestUtilities.Collections.SimpleObjectCollection(1, 2, 3);
+            var c = new SimpleObjectCollection(1, 2, 3);
             Assert.That(c, Is.All.Not.Null);
         }
 

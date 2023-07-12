@@ -1,11 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestUtilities;
 using System;
 using System.IO;
 using System.Text;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AssertEqualsTests

@@ -7,7 +7,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.TestFixtureSourceData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class TestFixtureSourceTests
     {

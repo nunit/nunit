@@ -7,7 +7,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.AssertIgnoreData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Tests of IgnoreException and Assert.Ignore

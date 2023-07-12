@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System.Threading;
 using System.Collections.Generic;
+using System.Threading;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     // NOTE: The tests in this file ensure that the various
     // syntactic elements work together to create a

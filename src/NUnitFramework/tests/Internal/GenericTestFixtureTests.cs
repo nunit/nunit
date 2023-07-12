@@ -3,7 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture(typeof(List<int>))]
     [TestFixture(TypeArgs=new[] {typeof(List<object>)} )]

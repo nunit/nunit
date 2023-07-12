@@ -4,7 +4,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public class SendMessageTests : ITestListener
     {

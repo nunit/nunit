@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class SameFixture

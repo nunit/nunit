@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class LessEqualFixture

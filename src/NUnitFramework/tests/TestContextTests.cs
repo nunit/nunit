@@ -1,16 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData.TestContextData;
 using NUnit.TestUtilities;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     [TestFixture]
     public class TestContextTests
@@ -144,7 +144,7 @@ namespace NUnit.Framework
         public void TestCaseCanAccessItsOwnFullName(int x)
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
+                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCaseCanAccessItsOwnFullName(42)"));
         }
 
         #endregion

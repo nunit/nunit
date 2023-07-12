@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+
 using System.Reflection;
 using NUnit.Compatibility;
 
-namespace NUnit.Framework.Compatibility
+namespace NUnit.Framework.Tests.Compatibility
 {
     [TestFixture]
     public class AttributeHelperTests

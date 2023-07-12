@@ -5,7 +5,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.CategoryAttributeData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     /// <summary>
     /// Summary description for CategoryAttributeTests.

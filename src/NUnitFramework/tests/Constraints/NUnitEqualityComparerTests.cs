@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
-using NUnit.TestUtilities;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class NUnitEqualityComparerTests

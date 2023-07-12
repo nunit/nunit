@@ -2,8 +2,10 @@
 
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters {
+namespace NUnit.Framework.Tests.Internal.Filters {
     public class DeMorganOnFiltersTest : TestFilterTests
     {
         private static readonly List<TestFilter[]> FilterPairs;

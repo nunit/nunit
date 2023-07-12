@@ -7,6 +7,7 @@
 //
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
+
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -16,7 +17,7 @@ using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public partial class RepeatAttributeTests

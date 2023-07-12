@@ -3,7 +3,7 @@
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal.Builders;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class PairwiseTest

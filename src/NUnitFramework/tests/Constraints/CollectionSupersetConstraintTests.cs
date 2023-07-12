@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class CollectionSupersetConstraintTests : ConstraintTestBaseNoData

@@ -7,7 +7,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class RequiresThreadAttributeTests : ThreadingTests

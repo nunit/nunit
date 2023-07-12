@@ -2,9 +2,10 @@
 
 using System;
 using System.Reflection;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class RandomizerTests
     {

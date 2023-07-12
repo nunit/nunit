@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     /// <summary>
     /// Adapts each NUnit API that executes async user code synchronously to a common interface

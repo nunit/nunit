@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Classic;
-using NUnit.TestUtilities.Collections;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Test Library for the NUnit CollectionAssert class.
@@ -320,8 +321,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreEqual_IEquatableImplementationIsIgnored()
         {
-            var x = new Constraints.EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
-            var y = new Constraints.EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
+            var x = new EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
 
             // They are not equal using Assert
             Classic.Assert.AreNotEqual(x, y, "Assert 1");
@@ -430,8 +431,8 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void AreNotEqual_IEquatableImplementationIsIgnored()
         {
-            var x = new Constraints.EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
-            var y = new Constraints.EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
+            var x = new EquatableWithEnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 42);
+            var y = new EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
 
             // Equal using Assert
             Classic.Assert.AreEqual(x, y, "Assert 1");

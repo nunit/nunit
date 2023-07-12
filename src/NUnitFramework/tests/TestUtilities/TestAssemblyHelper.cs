@@ -7,7 +7,7 @@ using System.CodeDom.Compiler;
 using System.Linq;
 using System.Reflection;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     public static class TestAssemblyHelper
     {

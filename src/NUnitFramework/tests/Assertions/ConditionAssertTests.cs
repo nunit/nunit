@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Linq;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class ConditionAssertTests

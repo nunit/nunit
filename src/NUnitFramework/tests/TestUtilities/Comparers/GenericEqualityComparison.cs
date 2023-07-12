@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
     internal class GenericEqualityComparison<T>
     {

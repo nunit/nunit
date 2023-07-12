@@ -2,9 +2,10 @@
 
 using System.Text;
 using System.Threading;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal
 {
     public class TestWorkerTests
     {

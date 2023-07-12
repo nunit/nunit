@@ -5,7 +5,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     /// <summary>
     /// Tests for MaxTime decoration.

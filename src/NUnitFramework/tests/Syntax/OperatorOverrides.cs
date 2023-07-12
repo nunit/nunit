@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     public class NotOperatorOverride : SyntaxTest
     {

@@ -5,12 +5,13 @@ using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class ApplyToTestTests
     {
-        private Test _test;
+        private NUnit.Framework.Internal.Test _test;
 
         [SetUp]
         public void SetUp()

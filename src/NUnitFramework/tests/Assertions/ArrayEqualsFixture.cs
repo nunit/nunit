@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Summary description for ArrayEqualTests.

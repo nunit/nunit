@@ -4,7 +4,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.AttributeInheritanceData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class AttributeInheritanceTests

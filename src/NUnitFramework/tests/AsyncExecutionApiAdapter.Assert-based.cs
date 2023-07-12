@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public partial class AsyncExecutionApiAdapter
     {

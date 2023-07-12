@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.TestUtilities.Collections
+namespace NUnit.Framework.Tests.TestUtilities.Collections
 {
     /// <summary>
     /// SimpleObjectCollection is used in testing to ensure that only

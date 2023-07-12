@@ -3,9 +3,9 @@
 using System;
 using System.IO;
 using NUnit.Framework.Classic;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class DirectoryAssertTests

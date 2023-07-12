@@ -7,7 +7,7 @@ using NUnit.TestData;
 using NUnit.TestData.MultipleTestFixturesOrderAttribute;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class TestOrderAttributeTests

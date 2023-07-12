@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestData.ParallelExecutionData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal.Execution
 {
     [TestFixtureSource(nameof(GetParallelSuites))]
     [NonParallelizable]

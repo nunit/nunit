@@ -4,9 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using NUnit.Framework.Constraints;
 using ActualValueDelegate = NUnit.Framework.Constraints.ActualValueDelegate<object>;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture, NonParallelizable]
     public class DelayedConstraintTests : ConstraintTestBase

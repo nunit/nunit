@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 using static NUnit.Framework.Constraints.UniqueItemsConstraint;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class UniqueItemsConstraintTests : ConstraintTestBase

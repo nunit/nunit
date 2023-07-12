@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     [TestFixture]
     public class ResultStateTests

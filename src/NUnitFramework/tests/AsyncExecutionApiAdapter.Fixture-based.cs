@@ -5,7 +5,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public partial class AsyncExecutionApiAdapter
     {

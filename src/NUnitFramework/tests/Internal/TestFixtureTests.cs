@@ -3,11 +3,14 @@
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.OneTimeSetUpTearDownData;
-using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
+using NUnit.TestUtilities;
+using NUnit.Framework;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     /// <summary>
     /// Tests of the NUnitTestFixture class

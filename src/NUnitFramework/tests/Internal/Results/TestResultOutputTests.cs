@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal.Results
+namespace NUnit.Framework.Tests.Internal.Results
 {
     public class TestResultOutputTests
     {
@@ -13,7 +14,7 @@ namespace NUnit.Framework.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
+            _result = NUnit.TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]

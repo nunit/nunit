@@ -2,8 +2,9 @@
 
 using System;
 using System.IO;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class EqualTests

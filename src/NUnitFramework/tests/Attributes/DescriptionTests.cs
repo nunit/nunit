@@ -2,11 +2,11 @@
 
 using System;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
-using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     // TODO: Review to see if we need these tests
 

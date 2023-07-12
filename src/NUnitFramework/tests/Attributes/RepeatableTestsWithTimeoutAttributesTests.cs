@@ -9,7 +9,7 @@ using NUnit.Framework.Internal.Commands;
 using NUnit.Framework.Internal.Execution;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class RepeatableTestsWithTimeoutAttributesTests

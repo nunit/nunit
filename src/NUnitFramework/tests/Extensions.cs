@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     /// <summary>
     /// Contains this assembly's general extension methods.

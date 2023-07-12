@@ -3,8 +3,9 @@
 using System;
 using System.Collections;
 using NUnit.Framework.Classic;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class ParamAttributeTypeConversionTests

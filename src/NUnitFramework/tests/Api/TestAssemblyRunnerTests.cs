@@ -3,18 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-#if THREAD_ABORT
 using System.Text;
-#endif
 using System.Threading;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
-using NUnit.TestUtilities;
-using NUnit.Framework.Internal.Filters;
+#if THREAD_ABORT
+#endif
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     // Functional tests of the TestAssemblyRunner and all subordinate classes
     [NonParallelizable]
@@ -77,7 +78,7 @@ namespace NUnit.Framework.Api
                 Assert.That(result.IsSuite);
                 Assert.That(result, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
-                Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.Runnable));
+                Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.Runnable));
                 Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
             });
         }
@@ -92,7 +93,7 @@ namespace NUnit.Framework.Api
                 Assert.That(result.IsSuite);
                 Assert.That(result, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Name, Is.EqualTo(MISSING_FILE));
-                Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
+                Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.NotRunnable));
                 Assert.That(result.TestCaseCount, Is.EqualTo(0));
                 Assert.That(result.Properties.Get(PropertyNames.SkipReason),
                     Does.StartWith(COULD_NOT_LOAD_MSG));
@@ -109,7 +110,7 @@ namespace NUnit.Framework.Api
                 Assert.That(result.IsSuite);
                 Assert.That(result, Is.TypeOf<TestAssembly>());
                 Assert.That(result.Name, Is.EqualTo(BAD_FILE));
-                Assert.That(result.RunState, Is.EqualTo(Interfaces.RunState.NotRunnable));
+                Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.NotRunnable));
                 Assert.That(result.TestCaseCount, Is.EqualTo(0));
                 Assert.That(result.Properties.Get(PropertyNames.SkipReason),
                     Does.StartWith(COULD_NOT_LOAD_MSG).And.Contains(BAD_FILE));

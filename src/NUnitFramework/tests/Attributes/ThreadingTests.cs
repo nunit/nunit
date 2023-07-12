@@ -3,7 +3,7 @@
 
 using System.Threading;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class ThreadingTests
     {

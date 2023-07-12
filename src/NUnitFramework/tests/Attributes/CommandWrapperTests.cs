@@ -6,7 +6,7 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class CommandWrapperTests
     {

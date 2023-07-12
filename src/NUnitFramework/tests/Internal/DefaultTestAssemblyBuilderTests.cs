@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Reflection;
 using NUnit.Framework.Api;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     internal class DefaultTestAssemblyBuilderTests
     {

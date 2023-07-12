@@ -2,9 +2,11 @@
 
 using System;
 using System.IO;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class FileOrDirectoryExistsConstraintTests

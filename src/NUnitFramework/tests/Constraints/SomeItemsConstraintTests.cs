@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     internal class SomeItemsConstraintTests

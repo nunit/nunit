@@ -2,13 +2,13 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
-using System.Threading.Tasks;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class WarningTests

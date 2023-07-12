@@ -7,7 +7,7 @@ using NUnit.TestData;
 using NUnit.TestUtilities;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     [TestFixture(nameof(F.ReturnsTask))]
     [TestFixture(nameof(F.ReturnsCustomTask))]

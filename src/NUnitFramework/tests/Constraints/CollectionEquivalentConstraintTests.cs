@@ -8,11 +8,12 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     public class CollectionEquivalentConstraintTests
     {

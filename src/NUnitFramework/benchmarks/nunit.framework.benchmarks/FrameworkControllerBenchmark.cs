@@ -28,6 +28,7 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 using NUnit.Framework.Internal.Filters;
+using NUnit.Framework.Tests;
 
 namespace NUnit.Framework;
 

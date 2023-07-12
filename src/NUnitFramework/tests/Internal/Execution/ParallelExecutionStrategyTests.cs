@@ -1,8 +1,10 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal.Execution
 {
     public class ParallelExecutionStrategyTests
     {

@@ -5,12 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web.UI;
+using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     // Functional tests of the FrameworkController and all subordinate classes
     public class FrameworkControllerTests

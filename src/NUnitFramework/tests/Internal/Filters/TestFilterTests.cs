@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using NUnit.Framework.Internal;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     // Filter XML formats
     //

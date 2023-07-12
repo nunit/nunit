@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture(45, 45, 90)]
     [TestFixture(null, null, null)]

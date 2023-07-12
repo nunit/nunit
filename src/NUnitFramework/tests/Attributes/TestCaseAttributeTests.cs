@@ -4,13 +4,14 @@ using System;
 using System.Collections;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.TestCaseAttributeFixture;
 using NUnit.TestUtilities;
-using System.Threading.Tasks;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class TestCaseAttributeTests

@@ -6,7 +6,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Tests
 {
     public class TextOutputTests : ITestListener
     {
@@ -148,7 +148,7 @@ namespace NUnit.Framework
         public void TestContextWriteLine_WritesToResult()
         {
             TestContext.WriteLine(SOME_TEXT);
-            Assert.That(Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
+            Assert.That(Framework.Internal.TestExecutionContext.CurrentContext.CurrentResult.Output, Is.EqualTo(SOME_TEXT + NL));
         }
 
         #region ITestListener Implementation

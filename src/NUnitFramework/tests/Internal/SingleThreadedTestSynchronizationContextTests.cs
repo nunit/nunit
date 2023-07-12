@@ -4,9 +4,10 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using NUnit.Framework.Interfaces;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [Parallelizable(ParallelScope.Children)]
     public static class SingleThreadedTestSynchronizationContextTests

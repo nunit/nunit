@@ -9,7 +9,7 @@ using NUnit.Framework.Internal;
 using NUnit.TestData.OneTimeSetUpTearDownData;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class OneTimeSetupTearDownTest

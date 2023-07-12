@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class CollectionTallyTests

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests
 {
     public class WorkItemTests
     {

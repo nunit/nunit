@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using NUnit.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     /// <summary>
     /// Summary description for FileAssertTests.

@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     internal sealed class DummyConstraint : Constraint
     {

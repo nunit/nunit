@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     public class EqualToTest : SyntaxTest
     {

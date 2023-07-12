@@ -3,8 +3,10 @@
 using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal
 {
     /// <summary>
     /// Summary description for EventQueueTests.

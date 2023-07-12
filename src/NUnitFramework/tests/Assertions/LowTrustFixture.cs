@@ -9,7 +9,7 @@ using System.Security;
 using System.Security.Permissions;
 using System.Security.Policy;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     [Platform(Exclude = "Mono,MonoTouch", Reason = "Mono does not implement Code Access Security")]
