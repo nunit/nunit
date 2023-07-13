@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Constraints
 
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { 1, "a", new List<int>(), new InternalWithSerializableAttributeClass() };
-        private static readonly object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Constraints.InternalClass>" ) };
+        private static readonly object[] FailureData = new object[] { new TestCaseData( new InternalClass(), "<NUnit.Framework.Tests.Constraints.InternalClass>" ) };
 #pragma warning restore IDE0052 // Remove unread private members
 
         [Test]

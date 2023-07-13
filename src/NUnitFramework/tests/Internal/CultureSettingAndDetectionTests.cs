@@ -4,7 +4,7 @@ using System.Globalization;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.CultureAttributeData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal
 {

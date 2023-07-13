@@ -6,7 +6,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

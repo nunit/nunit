@@ -10,7 +10,6 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 #if THREAD_ABORT
 #endif
 #if THREAD_ABORT

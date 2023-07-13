@@ -6,7 +6,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
 using System.Threading;
 using NUnit.TestData.TestFixtureTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal
 {

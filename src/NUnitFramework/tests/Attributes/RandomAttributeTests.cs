@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.RandomAttributeTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

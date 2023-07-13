@@ -378,7 +378,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             var generic = new DifferingNamespace1.DummyGeneric<int>(1).GetType();
 
-            var expected = "NUnit.Framework.Internal.DifferingNamespace1.DummyGeneric`1";
+            var expected = "NUnit.Framework.Tests.Internal.DifferingNamespace1.DummyGeneric`1";
 
             var actual = _differenceGetter.GetGenericTypeName(generic);
 

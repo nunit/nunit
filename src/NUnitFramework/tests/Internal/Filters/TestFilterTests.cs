@@ -1,7 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
@@ -39,8 +39,8 @@ namespace NUnit.Framework.Tests.Internal.Filters
 
     public abstract class TestFilterTests
     {
-        public const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
-        public const string ANOTHER_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+AnotherFixture";
+        public const string DUMMY_CLASS = "NUnit.Framework.Tests.Internal.Filters.TestFilterTests+DummyFixture";
+        public const string ANOTHER_CLASS = "NUnit.Framework.Tests.Internal.Filters.TestFilterTests+AnotherFixture";
         public const string DUMMY_CLASS_REGEX = "NUnit.*\\+DummyFixture";
         public const string ANOTHER_CLASS_REGEX = "NUnit.*\\+AnotherFixture";
 

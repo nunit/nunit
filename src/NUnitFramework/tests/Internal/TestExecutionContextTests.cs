@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Internal
             TestExecutionContext ec = TestExecutionContext.CurrentContext;
             Assert.That(ec.CurrentTest.Name, Is.EqualTo("TestExecutionContextTests"));
             Assert.That(ec.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
             Assert.That(_fixtureContext.CurrentTest.Id, Is.Not.Null.And.Not.Empty);
             Assert.That(_fixtureContext.CurrentTest.Properties.Get("Question"), Is.EqualTo("Why?"));
         }
@@ -137,7 +137,7 @@ namespace NUnit.Framework.Tests.Internal
         public void FixtureSetUpCanAccessFixtureFullName()
         {
             Assert.That(_fixtureContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
         }
 
         [Test]
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Tests.Internal
         public void SetUpCanAccessTestFullName()
         {
             Assert.That(_setupContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.SetUpCanAccessTestFullName"));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Tests.Internal
         {
 
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Tests.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [Test]
@@ -243,10 +243,10 @@ namespace NUnit.Framework.Tests.Internal
         public async Task AsyncTestCanAccessItsOwnFullName()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.AsyncTestCanAccessItsOwnFullName"));
         }
 
         [Test]
@@ -307,11 +307,11 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void CanAccessResultFullName()
         {
-            Assert.That(_fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests"));
+            Assert.That(_fixtureContext.CurrentResult.FullName, Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests"));
             Assert.That(_setupContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName"));
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName"));
         }
 
         [Test]
@@ -343,10 +343,10 @@ namespace NUnit.Framework.Tests.Internal
         public async Task CanAccessResultFullName_Async()
         {
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
             await YieldAsync();
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.FullName,
-                Is.EqualTo("NUnit.Framework.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
+                Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.CanAccessResultFullName_Async"));
         }
 
         [Test]
@@ -898,7 +898,7 @@ namespace NUnit.Framework.Tests.Internal
                 null!,
                 false);
 
-            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Internal.TestExecutionContextTests+TestClass");
+            var obj = domain.CreateInstanceAndUnwrap("nunit.framework.tests", "NUnit.Framework.Tests.Internal.TestExecutionContextTests+TestClass");
 
             Assert.That(obj, Is.Not.Null);
         }
@@ -953,7 +953,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             var domain = AppDomain.CreateDomain("TestDomain", null!, AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.RelativeSearchPath!, false);
             RunsInAppDomain? runsInAppDomain = domain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName!,
-                "NUnit.Framework.Internal.RunsInAppDomain") as RunsInAppDomain;
+                "NUnit.Framework.Tests.Internal.RunsInAppDomain") as RunsInAppDomain;
             Assert.That(runsInAppDomain, Is.Not.Null);
             _runsInAppDomain = runsInAppDomain;
         }

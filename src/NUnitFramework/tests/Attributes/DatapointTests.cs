@@ -4,7 +4,6 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.DatapointFixture;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

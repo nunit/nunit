@@ -188,7 +188,7 @@ namespace NUnit.Framework.Tests.Assertions
             var set2 = new SimpleObjectList("x", "y", "z", "a");
 
             var expectedMessage =
-                "  Expected is <NUnit.TestUtilities.Collections.SimpleObjectList> with 3 elements, actual is <NUnit.TestUtilities.Collections.SimpleObjectList> with 4 elements" + Environment.NewLine +
+                "  Expected is <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectList> with 3 elements, actual is <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectList> with 4 elements" + Environment.NewLine +
                 "  Values differ at index [3]" + Environment.NewLine +
                 "  Extra:    < \"a\" >";
 
@@ -203,7 +203,7 @@ namespace NUnit.Framework.Tests.Assertions
             var set2 = new SimpleObjectList("x", "y", "a");
 
             var expectedMessage =
-                "  Expected and actual are both <NUnit.TestUtilities.Collections.SimpleObjectList> with 3 elements" + Environment.NewLine +
+                "  Expected and actual are both <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectList> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  String lengths are both 1. Strings differ at index 0." + Environment.NewLine +
                 "  Expected: \"z\"" + Environment.NewLine +
@@ -768,7 +768,7 @@ namespace NUnit.Framework.Tests.Assertions
             var set2 = new SimpleEnumerable((1, 2, 3), (1, 2, 3), (1, 2, 4));
 
             var expectedMessage =
-                "  Expected and actual are both <NUnit.TestUtilities.Collections.SimpleEnumerable>" + Environment.NewLine +
+                "  Expected and actual are both <NUnit.Framework.Tests.TestUtilities.Collections.SimpleEnumerable>" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  Expected: (1, 2, 3)" + Environment.NewLine +
                 "  But was:  (1, 2, 4)" + Environment.NewLine;

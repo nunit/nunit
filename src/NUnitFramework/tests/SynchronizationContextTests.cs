@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests
 {

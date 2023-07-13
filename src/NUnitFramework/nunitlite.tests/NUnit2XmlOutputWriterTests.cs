@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
 
 namespace NUnitLite.Tests
@@ -21,7 +22,7 @@ namespace NUnitLite.Tests
         [OneTimeSetUp]
         public void RunMockAssemblyTests()
         {
-            ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
+            ITestResult result = TestBuilder.RunTestFixture(typeof(MockTestFixture));
             Assert.That(result,Is.Not.Null);
 
             StringBuilder sb = new StringBuilder();

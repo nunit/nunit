@@ -43,8 +43,8 @@ namespace NUnit.Framework.Tests.Constraints
         [SetUp]
         public void SetUp()
         {
-            ExpectedDescription = "instance of <NUnit.TestUtilities.TestDelegates+BaseException>";
-            StringRepresentation = "<throws <instanceof NUnit.TestUtilities.TestDelegates+BaseException>>";
+            ExpectedDescription = "instance of <NUnit.Framework.Tests.TestUtilities.TestDelegates+BaseException>";
+            StringRepresentation = "<throws <instanceof NUnit.Framework.Tests.TestUtilities.TestDelegates+BaseException>>";
         }
 
 #pragma warning disable IDE0052 // Remove unread private members

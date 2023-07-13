@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

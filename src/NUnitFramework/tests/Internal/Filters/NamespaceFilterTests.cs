@@ -5,7 +5,7 @@ using NUnit.Framework.Internal.Filters;
 
 namespace NUnit.Framework.Tests.Internal.Filters
 {
-    [TestFixture("NUnit.Framework.Internal.Filters", false, true)]
+    [TestFixture("NUnit.Framework.Tests.Internal.Filters", false, true)]
     [TestFixture("NUnit.Framework.*", true, true)]
     [TestFixture("NUnit.Framework", false, false)]
     public class NamespaceFilterTests : TestFilterTests

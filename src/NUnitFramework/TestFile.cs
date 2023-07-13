@@ -6,7 +6,7 @@ using System.Reflection;
 
 #nullable enable
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     public class TestFile : IDisposable
     {

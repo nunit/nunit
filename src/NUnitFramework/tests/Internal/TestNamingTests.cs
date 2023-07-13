@@ -6,7 +6,7 @@ namespace NUnit.Framework.Tests.Internal
 {
     public abstract class TestNamingTests
     {
-        protected const string OUTER_CLASS = "NUnit.Framework.Internal.TestNamingTests";
+        protected const string OUTER_CLASS = "NUnit.Framework.Tests.Internal.TestNamingTests";
 
         protected abstract string FixtureName { get; }
 

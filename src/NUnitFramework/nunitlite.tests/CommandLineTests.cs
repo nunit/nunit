@@ -5,14 +5,14 @@ using System.Reflection;
 using NUnit.Common;
 using NUnit.Options;
 using NUnit.Framework;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnitLite.Tests
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using NUnit.TestUtilities;
-
+    
     [TestFixture]
     public class CommandLineTests
     {

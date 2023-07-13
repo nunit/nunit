@@ -18,7 +18,7 @@ namespace NUnit.Framework.Tests.Internal.Results
         [SetUp]
         public void SetUp()
         {
-            _result = NUnit.TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
+            _result = NUnit.Framework.Tests.TestUtilities.Fakes.GetTestMethod(this, nameof(FakeMethod)).MakeTestResult();
         }
 
         [Test]

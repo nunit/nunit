@@ -12,7 +12,7 @@ using NUnit.Framework.Internal.Abstractions;
 
 #nullable enable
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Utility Class used to build and run NUnit tests used as test data

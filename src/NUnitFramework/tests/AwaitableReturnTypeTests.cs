@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 using F = NUnit.TestData.AwaitableReturnTypeFixture;
 
 namespace NUnit.Framework.Tests

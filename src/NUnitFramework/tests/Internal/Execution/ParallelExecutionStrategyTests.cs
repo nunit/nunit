@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal.Execution
 {

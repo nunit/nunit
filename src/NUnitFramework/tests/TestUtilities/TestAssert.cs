@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
 
 namespace NUnit.Framework.Tests.TestUtilities
 {

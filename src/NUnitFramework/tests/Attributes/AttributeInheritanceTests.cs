@@ -2,7 +2,7 @@
 
 using NUnit.Framework.Internal;
 using NUnit.TestData.AttributeInheritanceData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Attributes
 {

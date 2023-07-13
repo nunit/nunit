@@ -4,7 +4,7 @@ using System.IO;
 using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
 using NUnit.TestData.OneTimeSetUpTearDownData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
 namespace NUnit.Framework.Tests.Internal
 {

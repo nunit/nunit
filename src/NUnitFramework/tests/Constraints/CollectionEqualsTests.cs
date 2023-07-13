@@ -72,7 +72,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex.Message, Is.EqualTo(
-                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
+                "  Expected is <System.Int32[3]>, actual is <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [1]" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "2" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));

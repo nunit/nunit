@@ -69,7 +69,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DoesNotMatchWhenIndexerIsNotExpectedToBeEqual()
         {
-            var expectedErrorMessage = "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester.";
+            var expectedErrorMessage = "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Tests.Constraints.IndexerConstraintTests+IndexerTester.";
 
             var tester = new IndexerTester();
 
