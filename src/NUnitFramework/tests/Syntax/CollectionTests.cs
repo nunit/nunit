@@ -27,7 +27,7 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class CollectionOrderedTest_Descending : SyntaxTest
+    public class CollectionOrderedTestDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class CollectionOrderedTest_Comparer : SyntaxTest
+    public class CollectionOrderedTestComparer : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class CollectionOrderedTest_Comparer_Descending : SyntaxTest
+    public class CollectionOrderedTestComparerDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class CollectionOrderedByTest_Descending : SyntaxTest
+    public class CollectionOrderedByTestDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class CollectionOrderedByTest_Comparer : SyntaxTest
+    public class CollectionOrderedByTestComparer : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -95,7 +95,7 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-    public class CollectionOrderedByTest_Comparer_Descending : SyntaxTest
+    public class CollectionOrderedByTestComparerDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
