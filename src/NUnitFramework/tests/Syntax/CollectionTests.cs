@@ -44,7 +44,7 @@ namespace NUnit.Framework.Tests.Syntax
         public void SetUp()
         {
             IComparer comparer = ObjectComparer.Default;
-            ParseTree = "<ordered NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<ordered NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.Using(comparer);
             BuilderSyntax = Builder().Ordered.Using(comparer);
         }
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Tests.Syntax
         public void SetUp()
         {
             IComparer comparer = ObjectComparer.Default;
-            ParseTree = "<ordered descending NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<ordered descending NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.Using(comparer).Descending;
             BuilderSyntax = Builder().Ordered.Using(comparer).Descending;
         }
@@ -89,7 +89,7 @@ namespace NUnit.Framework.Tests.Syntax
         [SetUp]
         public void SetUp()
         {
-            ParseTree = "<orderedby SomePropertyName NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<orderedby SomePropertyName NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
             BuilderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
         }
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Tests.Syntax
         [SetUp]
         public void SetUp()
         {
-            ParseTree = "<orderedby SomePropertyName descending NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<orderedby SomePropertyName descending NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
             BuilderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
         }

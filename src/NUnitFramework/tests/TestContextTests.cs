@@ -137,7 +137,7 @@ namespace NUnit.Framework.Tests
         public void TestCanAccessItsOwnFullName()
         {
             Assert.That(TestContext.CurrentContext.Test.FullName,
-                Is.EqualTo("NUnit.Framework.TestContextTests.TestCanAccessItsOwnFullName"));
+                Is.EqualTo("NUnit.Framework.Tests.TestContextTests.TestCanAccessItsOwnFullName"));
         }
 
         [TestCase(42)]
