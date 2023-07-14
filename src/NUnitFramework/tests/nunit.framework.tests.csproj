@@ -50,11 +50,7 @@
     <EmbeddedResource Include="TestListFile2.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
-  </ItemGroup>
-
-  <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.CompareTo('net5.0')) &lt; 0">
+ <ItemGroup Condition="$(TargetFramework.StartsWith('netstandard')) Or $(TargetFramework.CompareTo('net5.0')) &lt; 0">
     <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[$(AnnotatedReferenceAssemblyVersion)]" />
     <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>

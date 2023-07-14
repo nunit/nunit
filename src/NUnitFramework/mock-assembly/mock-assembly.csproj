@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
     <RootNamespace>NUnit.Tests</RootNamespace>
+      <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
+    <ProjectCapability Remove="TestContainer" />
   </ItemGroup>
 
 </Project>
