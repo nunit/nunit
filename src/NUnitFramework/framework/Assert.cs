@@ -61,7 +61,7 @@ namespace NUnit.Framework
 
         #region Charlie
 
-        private const string CHARLIE_APPRECIATION = "Charlie Poole led NUnit for 20+ years, across at least 207 releases in 37 different repositories, authoring 4,898 commits across them. He participated in 2,990 issues, 1,305 PRs, and impacted 6,992,983 lines of code. NUnit was downloaded from NuGet 225+ million times during his tenure. And those numbers don't include at least 9 additional years of his work. This assertion attempts to pay homage to Charlie, who by virtue of his contributions has helped untold millions of tests pass.";
+        private const string CharlieAppreciation = "Charlie Poole led NUnit for 20+ years, across at least 207 releases in 37 different repositories, authoring 4,898 commits across them. He participated in 2,990 issues, 1,305 PRs, and impacted 6,992,983 lines of code. NUnit was downloaded from NuGet 225+ million times during his tenure. And those numbers don't include at least 9 additional years of his work. This assertion attempts to pay homage to Charlie, who by virtue of his contributions has helped untold millions of tests pass.";
 
         /// <summary>
         /// An alias of the corresponding Assert.Pass() method. Charlie Poole was the lead of NUnit for 21 years,
@@ -75,7 +75,7 @@ namespace NUnit.Framework
         [DoesNotReturn]
         public static void Charlie()
         {
-            Assert.Pass(CHARLIE_APPRECIATION);
+            Assert.Pass(CharlieAppreciation);
         }
 
         #endregion
@@ -385,10 +385,14 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        private static void ReportFailure(ConstraintResult result, string? message)
-        {
-            ReportFailure(result, message, null);
-        }
+        /// <summary>
+        /// Check if message comes with args, and convert that to a formatted string
+        /// </summary>
+        protected static string? ConvertMessageWithArgs(string? message, object?[]? args) 
+            => message is null ? null : args is null ? message : string.Format(message, args);
+
+        private static void ReportFailure(ConstraintResult result, string? message) 
+            => ReportFailure(result, message, null);
 
         private static void ReportFailure(ConstraintResult result, string? message, params object?[]? args)
         {
@@ -442,11 +446,9 @@ namespace NUnit.Framework
             }
         }
 
-        private static void IncrementAssertCount()
-        {
-            TestExecutionContext.CurrentContext.IncrementAssertCount();
-        }
+        private static void IncrementAssertCount() 
+            => TestExecutionContext.CurrentContext.IncrementAssertCount();
 
-#endregion
+        #endregion
     }
 }

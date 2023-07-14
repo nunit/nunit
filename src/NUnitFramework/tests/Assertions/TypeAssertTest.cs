@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ExactType()
         {
-            Assert.That( "Hello", Is.TypeOf( typeof(string) ) );
+            Assert.That("Hello", Is.TypeOf(typeof(string)));
         }
 
         [Test]
@@ -19,8 +19,8 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: <System.Int32>" + Environment.NewLine +
                 "  But was:  <System.String>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( "Hello", Is.TypeOf( typeof(int) ) ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("Hello", Is.TypeOf(typeof(int))));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -28,37 +28,37 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = new ArgumentException();
 
-            Assert.IsInstanceOf(typeof(System.Exception), ex );
-            Assert.That( ex, Is.InstanceOf(typeof(Exception)));
-            Assert.IsInstanceOf<Exception>( ex );
+            Classic.Assert.IsInstanceOf(typeof(Exception), ex);
+            Assert.That(ex, Is.InstanceOf(typeof(Exception)));
+            Classic.Assert.IsInstanceOf<Exception>(ex);
         }
 
         [Test]
         public void IsInstanceOfFails()
         {
             var expectedMessage =
-                "  Expected: instance of <System.Int32>" + System.Environment.NewLine +
-                "  But was:  <System.String>" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc123", Is.InstanceOf( typeof(int) ) ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                "  Expected: instance of <System.Int32>" + Environment.NewLine +
+                "  But was:  <System.String>" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc123", Is.InstanceOf(typeof(int))));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void IsNotInstanceOf()
         {
-            Assert.IsNotInstanceOf(typeof(int), "abc123" );
-            Assert.That( "abc123", Is.Not.InstanceOf(typeof(int)) );
-            Assert.IsNotInstanceOf<int>("abc123");
+            Classic.Assert.IsNotInstanceOf(typeof(int), "abc123");
+            Assert.That("abc123", Is.Not.InstanceOf(typeof(int)));
+            Classic.Assert.IsNotInstanceOf<int>("abc123");
         }
 
         [Test, SetUICulture("en-US")]
         public void IsNotInstanceOfFails()
         {
             var expectedMessage =
-                "  Expected: not instance of <System.Exception>" + System.Environment.NewLine +
-                "  But was:  <System.ArgumentException: Value does not fall within the expected range.>" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.IsNotInstanceOf( typeof(System.Exception), new ArgumentException() ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                "  Expected: not instance of <System.Exception>" + Environment.NewLine +
+                "  But was:  <System.ArgumentException: Value does not fall within the expected range.>" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.IsNotInstanceOf(typeof(Exception), new ArgumentException()));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test()]
@@ -66,45 +66,45 @@ namespace NUnit.Framework.Tests.Assertions
         {
             int[] array10 = new int[10];
 
-            Assert.IsAssignableFrom(typeof(int[]), array10);
+            Classic.Assert.IsAssignableFrom(typeof(int[]), array10);
             Assert.That(array10, Is.AssignableFrom(typeof(int[])));
-            Assert.IsAssignableFrom<int[]>(array10);
+            Classic.Assert.IsAssignableFrom<int[]>(array10);
         }
 
         [Test]
         public void IsAssignableFromFails()
         {
-            int [] array10 = new int [10];
-            int [,] array2 = new int[2,2];
+            int[] array10 = new int[10];
+            int[,] array2 = new int[2, 2];
 
             var expectedMessage =
-                "  Expected: assignable from <System.Int32[,]>" + System.Environment.NewLine +
-                "  But was:  <System.Int32[]>" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( array10, Is.AssignableFrom( array2.GetType() ) ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                "  Expected: assignable from <System.Int32[,]>" + Environment.NewLine +
+                "  But was:  <System.Int32[]>" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(array10, Is.AssignableFrom(array2.GetType())));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test()]
         public void IsNotAssignableFrom()
         {
-            int [] array10 = new int [10];
+            int[] array10 = new int[10];
 
-            Assert.IsNotAssignableFrom( typeof(int[,] ),array10);
-            Assert.That( array10, Is.Not.AssignableFrom( typeof(int[,] ) ) );
-            Assert.IsNotAssignableFrom<int[,]>(array10);
+            Classic.Assert.IsNotAssignableFrom(typeof(int[,]), array10);
+            Assert.That(array10, Is.Not.AssignableFrom(typeof(int[,])));
+            Classic.Assert.IsNotAssignableFrom<int[,]>(array10);
         }
 
         [Test]
         public void IsNotAssignableFromFails()
         {
-            int [] array10 = new int [10];
-            int [] array2 = new int[2];
+            int[] array10 = new int[10];
+            int[] array2 = new int[2];
 
             var expectedMessage =
-                "  Expected: not assignable from <System.Int32[]>" + System.Environment.NewLine +
-                "  But was:  <System.Int32[]>" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( array10, Is.Not.AssignableFrom( array2.GetType() ) ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                "  Expected: not assignable from <System.Int32[]>" + Environment.NewLine +
+                "  But was:  <System.Int32[]>" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(array10, Is.Not.AssignableFrom(array2.GetType())));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
     }
 }
