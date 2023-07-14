@@ -10,8 +10,4 @@
     <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Include="TestContainer" />
-  </ItemGroup>
-
 </Project>
