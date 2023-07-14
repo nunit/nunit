@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -40,7 +39,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new bool Equals(object a, object b)
+        public new static bool Equals(object a, object b)
         {
             throw new InvalidOperationException("Assert.Equals should not be used. Use Assert.AreEqual instead.");
         }
@@ -53,7 +52,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public static new void ReferenceEquals(object a, object b)
+        public new static void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used. Use Assert.AreSame instead.");
         }
@@ -74,7 +73,7 @@ namespace NUnit.Framework
         /// This assertion attempts to pay homage to Charlie, who by virtue of his contributions has helped untold millions of tests pass.
         /// </summary>
         [DoesNotReturn]
-        static public void Charlie()
+        public static void Charlie()
         {
             Assert.Pass(CHARLIE_APPRECIATION);
         }
@@ -91,7 +90,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [DoesNotReturn]
-        static public void Pass(string? message, params object?[]? args)
+        public static void Pass(string? message, params object?[]? args)
         {
             if (message is null) message = string.Empty;
             else if (args is not null && args.Length > 0)
@@ -111,7 +110,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         [DoesNotReturn]
-        static public void Pass(string? message)
+        public static void Pass(string? message)
         {
             Assert.Pass(message, null);
         }
@@ -122,7 +121,7 @@ namespace NUnit.Framework
         /// of success returned to NUnit.
         /// </summary>
         [DoesNotReturn]
-        static public void Pass()
+        public static void Pass()
         {
             Assert.Pass(string.Empty, null);
         }
@@ -137,7 +136,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Fail(string? message, params object?[]? args)
+        public static void Fail(string? message, params object?[]? args)
         {
             if (message is null) message = string.Empty;
             else if (args is not null && args.Length > 0)
@@ -151,7 +150,7 @@ namespace NUnit.Framework
         /// inside a multiple assert block.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        static public void Fail(string? message)
+        public static void Fail(string? message)
         {
             Assert.Fail(message, null);
         }
@@ -159,7 +158,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test as failed. Returns without throwing an exception when inside a multiple assert block.
         /// </summary>
-        static public void Fail()
+        public static void Fail()
         {
             Assert.Fail(string.Empty, null);
         }
@@ -173,7 +172,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Warn(string? message, params object?[]? args)
+        public static void Warn(string? message, params object?[]? args)
         {
             if (message is null) message = string.Empty;
             else if (args is not null && args.Length > 0)
@@ -186,7 +185,7 @@ namespace NUnit.Framework
         /// Issues a warning using the message provided.
         /// </summary>
         /// <param name="message">The message to display.</param>
-        static public void Warn(string? message)
+        public static void Warn(string? message)
         {
             IssueWarning(message);
         }
@@ -202,7 +201,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [DoesNotReturn]
-        static public void Ignore(string? message, params object?[]? args)
+        public static void Ignore(string? message, params object?[]? args)
         {
             if (message is null) message = string.Empty;
             else if (args is not null && args.Length > 0)
@@ -221,7 +220,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         [DoesNotReturn]
-        static public void Ignore(string? message)
+        public static void Ignore(string? message)
         {
             Assert.Ignore(message, null);
         }
@@ -231,7 +230,7 @@ namespace NUnit.Framework
         /// This causes the test to be reported as ignored.
         /// </summary>
         [DoesNotReturn]
-        static public void Ignore()
+        public static void Ignore()
         {
             Assert.Ignore(string.Empty, null);
         }
@@ -247,7 +246,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
         [DoesNotReturn]
-        static public void Inconclusive(string? message, params object?[]? args)
+        public static void Inconclusive(string? message, params object?[]? args)
         {
             if (message is null) message = string.Empty;
             else if (args is not null && args.Length > 0)
@@ -266,7 +265,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         [DoesNotReturn]
-        static public void Inconclusive(string? message)
+        public static void Inconclusive(string? message)
         {
             Assert.Inconclusive(message, null);
         }
@@ -276,40 +275,14 @@ namespace NUnit.Framework
         /// This causes the test to be reported as Inconclusive.
         /// </summary>
         [DoesNotReturn]
-        static public void Inconclusive()
+        public static void Inconclusive()
         {
             Assert.Inconclusive(string.Empty, null);
         }
 
         #endregion
 
-        #region Contains
-
-        /// <summary>
-        /// Asserts that an object is contained in a collection. Returns without throwing an exception when inside a
-        /// multiple assert block.
-        /// </summary>
-        /// <param name="expected">The expected object</param>
-        /// <param name="actual">The collection to be examined</param>
-        /// <param name="message">The message to display in case of failure</param>
-        /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Contains(object? expected, ICollection? actual, string? message, params object?[]? args)
-        {
-            Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)) ,message, args);
-        }
-
-        /// <summary>
-        /// Asserts that an object is contained in a collection. Returns without throwing an exception when inside a
-        /// multiple assert block.
-        /// </summary>
-        /// <param name="expected">The expected object</param>
-        /// <param name="actual">The collection to be examined</param>
-        public static void Contains(object? expected, ICollection? actual)
-        {
-            Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)) ,null, null);
-        }
-
-        #endregion
+       
 
         #region Multiple
 

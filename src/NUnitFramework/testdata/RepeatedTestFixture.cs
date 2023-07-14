@@ -28,7 +28,7 @@ namespace NUnit.TestData.RepeatingTests
         public void RepeatFailOnFirst()
         {
             Count++;
-            Framework.Classic.Assert.IsTrue (true);
+            Framework.Classic.Assert.IsFalse (true);
         }
     }
 

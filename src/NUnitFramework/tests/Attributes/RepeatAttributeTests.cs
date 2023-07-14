@@ -22,7 +22,6 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     public partial class RepeatAttributeTests
     {
-        [Ignore("Fix later when VS testing is back online")]
         [TestCase(typeof(RepeatFailOnFirstTryFixture), "Failed(Child)", 1)]
         [TestCase(typeof(RepeatFailOnSecondTryFixture), "Failed(Child)", 2)]
         [TestCase(typeof(RepeatFailOnThirdTryFixture), "Failed(Child)", 3)]
@@ -36,15 +35,17 @@ namespace NUnit.Framework.Tests.Attributes
         [TestCase(typeof(RepeatErrorOnThirdTryFixture), "Failed(Child)", 3)]
         public void RepeatWorksAsExpected(Type fixtureType, string outcome, int nTries)
         {
-            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
+            var fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-
-            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
-            Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
-            Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
-            Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
-            Assert.That(fixture.Count, Is.EqualTo(nTries));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+                Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
+                Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
+                Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
+                Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
+                Assert.That(fixture.Count, Is.EqualTo(nTries));
+            });
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void CategoryWorksWithRepeatedTest()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
-            Test? test = suite.Tests[0] as Test;
+            var test = suite.Tests[0] as Test;
             Assert.That(test, Is.Not.Null);
             System.Collections.IList categories = test.Properties["Category"];
             Assert.That(categories, Is.Not.Null);

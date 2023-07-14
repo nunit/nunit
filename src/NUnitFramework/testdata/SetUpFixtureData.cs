@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.TestUtilities
             /// <returns>true, if there are expected events left to match, otherwise false.</returns>
             public bool MatchEvent(string @event, int item)
             {
-                Assert.Contains(@event, _expectedEvents, "Item {0}", item);
+                Assert.That(_expectedEvents,Does.Contain(@event), $"Item {item}");
                 _expectedEvents.Remove(@event);
                 return _expectedEvents.Count > 0;
             }

@@ -13,12 +13,12 @@ namespace NUnit.Framework.Tests.Internal
     {
         private TestAssembly _testAssembly;
         private NamespaceTreeBuilder _builder;
-
+        private const string NameofDll = "mytest.dll";
 
         [SetUp]
         public void CreateTreeBuilder()
         {
-            _testAssembly = new TestAssembly("mytest.dll");
+            _testAssembly = new TestAssembly(NameofDll);
             _builder = new NamespaceTreeBuilder(_testAssembly);
         }
 
@@ -58,9 +58,9 @@ namespace NUnit.Framework.Tests.Internal
         {
             _builder.Add(new[]
             {
-                new TestSuite(typeof(NUnit.TestData.TestFixtureTests.RegularFixtureWithOneTest)),
-                new TestSuite(typeof(NUnit.TestData.SetUpData.SetUpAndTearDownFixture)),
-                new TestSuite(typeof(NUnit.TestData.TheoryFixture.TheoryFixture))
+                new TestSuite(typeof(TestData.TestFixtureTests.RegularFixtureWithOneTest)),
+                new TestSuite(typeof(TestData.SetUpData.SetUpAndTearDownFixture)),
+                new TestSuite(typeof(TestData.TheoryFixture.TheoryFixture))
             });
 
             CheckTree("NUnit", "TestData", "TestFixtureTests", "RegularFixtureWithOneTest");
@@ -68,15 +68,14 @@ namespace NUnit.Framework.Tests.Internal
             CheckTree("NUnit", "TestData", "TheoryFixture", "TheoryFixture");
         }
 
-        [Ignore("Wait until VS Test works again so I can debug this")]
         [Test]
         public void AddMultipleFixtures_DifferentTopLevelNamespaces()
         {
             _builder.Add(new[]
             {
-                new TestSuite(typeof(Fixture1)),
-                new TestSuite(typeof(Fixture2)),
-                new TestSuite(typeof(Fixture3)),
+                new TestSuite(typeof(One.Fixture1)),
+                new TestSuite(typeof(Two.Fixture2)),
+                new TestSuite(typeof(Three.Fixture3)),
             });
 
             CheckTree("One", "Fixture1");
@@ -147,7 +146,7 @@ namespace NUnit.Framework.Tests.Internal
         private void CheckTree(params string[] names)
         {
             ITest suite = _builder.RootSuite;
-            Assert.That(suite.Name, Is.EqualTo("mytest.dll"));
+            Assert.That(suite.Name, Is.EqualTo(NameofDll));
 
             foreach (var name in names)
             {
@@ -163,7 +162,7 @@ namespace NUnit.Framework.Tests.Internal
                 if (suite.Name != name)
                 {
                     var dump = DumpTree(_builder.RootSuite, "   ");
-                    Assert.Fail("Did not find {0} in tree under {1}\nTree Contains:\n{2}", name, suite.Name, dump);
+                    Assert.Fail($"Did not find {name} in tree under {suite.Name}\nTree Contains:\n{dump}");
                 }
             }
         }
@@ -177,10 +176,20 @@ namespace NUnit.Framework.Tests.Internal
             return sb.ToString();
         }
     }
+}
 
+namespace One
+{
     public class Fixture1 { }
+}
 
+namespace Two
+{
     public class Fixture2 { }
+}
 
+namespace Three
+{
     public class Fixture3 { }
 }
+
