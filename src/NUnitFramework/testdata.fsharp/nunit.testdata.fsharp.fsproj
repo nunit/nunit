@@ -7,6 +7,7 @@
     <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
     <NoWarn>$(NoWarn);NU1604</NoWarn>
     <Optimize>false</Optimize>
+      <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
