@@ -9,8 +9,4 @@
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <ProjectCapability Include="TestContainer" />
-  </ItemGroup>-->
-
 </Project>

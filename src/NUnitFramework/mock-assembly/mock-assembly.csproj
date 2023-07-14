@@ -11,8 +11,4 @@
     <ProjectReference Include="..\nunitlite\nunitlite.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectCapability Remove="TestContainer" />
-  </ItemGroup>
-
 </Project>
