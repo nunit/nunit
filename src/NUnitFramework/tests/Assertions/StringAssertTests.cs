@@ -11,123 +11,123 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void Contains()
         {
-            StringAssert.Contains( "abc", "abc" );
-            StringAssert.Contains( "abc", "***abc" );
-            StringAssert.Contains( "abc", "**abc**" );
+            Classic.StringAssert.Contains( "abc", "abc" );
+            Classic.StringAssert.Contains( "abc", "***abc" );
+            Classic.StringAssert.Contains( "abc", "**abc**" );
         }
 
         [Test]
         public void ContainsFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "String containing \"abc\"" + System.Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "\"abxcdxbc\"" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.Contains("abc", "abxcdxbc"));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                TextMessageWriter.Pfx_Expected + "String containing \"abc\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "\"abxcdxbc\"" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.Contains("abc", "abxcdxbc"));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void DoesNotContain()
         {
-            StringAssert.DoesNotContain("x", "abc");
+            Classic.StringAssert.DoesNotContain("x", "abc");
         }
 
         [Test]
         public void DoesNotContainFails()
         {
-            Assert.Throws<AssertionException>(() => StringAssert.DoesNotContain("abc", "**abc**"));
+            Assert.Throws<AssertionException>(() => Classic.StringAssert.DoesNotContain("abc", "**abc**"));
         }
 
         [Test]
         public void StartsWith()
         {
-            StringAssert.StartsWith( "abc", "abcdef" );
-            StringAssert.StartsWith( "abc", "abc" );
+            Classic.StringAssert.StartsWith( "abc", "abcdef" );
+            Classic.StringAssert.StartsWith( "abc", "abc" );
         }
 
         [Test]
         public void StartsWithFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "String starting with \"xyz\"" + System.Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "\"abcxyz\"" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.StartsWith("xyz", "abcxyz"));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                TextMessageWriter.Pfx_Expected + "String starting with \"xyz\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "\"abcxyz\"" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.StartsWith("xyz", "abcxyz"));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void DoesNotStartWith()
         {
-            StringAssert.DoesNotStartWith("x", "abc");
+            Classic.StringAssert.DoesNotStartWith("x", "abc");
         }
 
         [Test]
         public void DoesNotStartWithFails()
         {
-            Assert.Throws<AssertionException>(() => StringAssert.DoesNotStartWith("abc", "abc**"));
+            Assert.Throws<AssertionException>(() => Classic.StringAssert.DoesNotStartWith("abc", "abc**"));
         }
 
         [Test]
         public void EndsWith()
         {
-            StringAssert.EndsWith( "abc", "abc" );
-            StringAssert.EndsWith( "abc", "123abc" );
+            Classic.StringAssert.EndsWith( "abc", "abc" );
+            Classic.StringAssert.EndsWith( "abc", "123abc" );
         }
 
         [Test]
         public void EndsWithFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "String ending with \"xyz\"" + System.Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "\"abcdef\"" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.EndsWith( "xyz", "abcdef" ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                TextMessageWriter.Pfx_Expected + "String ending with \"xyz\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "\"abcdef\"" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.EndsWith( "xyz", "abcdef" ));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void DoesNotEndWith()
         {
-            StringAssert.DoesNotEndWith("x", "abc");
+            Classic.StringAssert.DoesNotEndWith("x", "abc");
         }
 
         [Test]
         public void DoesNotEndWithFails()
         {
-            Assert.Throws<AssertionException>(() => StringAssert.DoesNotEndWith("abc", "***abc"));
+            Assert.Throws<AssertionException>(() => Classic.StringAssert.DoesNotEndWith("abc", "***abc"));
         }
 
         [Test]
         public void CaseInsensitiveCompare()
         {
-            StringAssert.AreEqualIgnoringCase( "name", "NAME" );
+            Classic.StringAssert.AreEqualIgnoringCase( "name", "NAME" );
         }
 
         [Test]
         public void CaseInsensitiveCompareFails()
         {
             var expectedMessage =
-                "  Expected string length 4 but was 5. Strings differ at index 4." + System.Environment.NewLine
-                + TextMessageWriter.Pfx_Expected + "\"Name\", ignoring case" + System.Environment.NewLine
-                + TextMessageWriter.Pfx_Actual   + "\"NAMES\"" + System.Environment.NewLine
-                + "  ---------------^" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.AreEqualIgnoringCase("Name", "NAMES"));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                "  Expected string length 4 but was 5. Strings differ at index 4." + Environment.NewLine
+                + TextMessageWriter.Pfx_Expected + "\"Name\", ignoring case" + Environment.NewLine
+                + TextMessageWriter.Pfx_Actual   + "\"NAMES\"" + Environment.NewLine
+                + "  ---------------^" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.AreEqualIgnoringCase("Name", "NAMES"));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void IsMatch()
         {
-            StringAssert.IsMatch( "a?bc", "12a3bc45" );
+            Classic.StringAssert.IsMatch( "a?bc", "12a3bc45" );
         }
 
         [Test]
         public void IsMatchFails()
         {
             var expectedMessage =
-                TextMessageWriter.Pfx_Expected + "String matching \"a?b*c\"" + System.Environment.NewLine +
-                TextMessageWriter.Pfx_Actual + "\"12ab456\"" + System.Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => StringAssert.IsMatch("a?b*c", "12ab456"));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+                TextMessageWriter.Pfx_Expected + "String matching \"a?b*c\"" + Environment.NewLine +
+                TextMessageWriter.Pfx_Actual + "\"12ab456\"" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.IsMatch("a?b*c", "12ab456"));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -144,15 +144,15 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void EqualsFailsWhenUsed()
         {
-            var ex = Assert.Throws<InvalidOperationException>(() => StringAssert.Equals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("StringAssert.Equals should not be used."));
+            var ex = Assert.Throws<InvalidOperationException>(() => Classic.StringAssert.Equals(string.Empty, string.Empty));
+            Assert.That(ex?.Message, Does.StartWith("StringAssert.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
-            var ex = Assert.Throws<InvalidOperationException>(() => StringAssert.ReferenceEquals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("StringAssert.ReferenceEquals should not be used."));
+            var ex = Assert.Throws<InvalidOperationException>(() => Classic.StringAssert.ReferenceEquals(string.Empty, string.Empty));
+            Assert.That(ex?.Message, Does.StartWith("StringAssert.ReferenceEquals should not be used."));
         }
     }
 }
