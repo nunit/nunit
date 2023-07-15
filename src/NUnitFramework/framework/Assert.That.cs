@@ -89,7 +89,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
-            That(del, expr.Resolve(), null, null);
+            That(del, expr.Resolve(), "");
         }
 
         /// <summary>
@@ -99,15 +99,14 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
         {
             var constraint = expr.Resolve();
 
             IncrementAssertCount();
             var result = constraint.ApplyTo(del);
             if (!result.IsSuccess)
-                ReportFailure(result, message, args);
+                ReportFailure(result, message);
         }
 
         /// <summary>

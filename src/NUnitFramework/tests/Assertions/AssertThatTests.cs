@@ -2,7 +2,6 @@
 
 using System;
 using System.Threading.Tasks;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
 using NUnit.Framework.Tests.TestUtilities;
@@ -79,7 +78,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertionPasses_ActualLambdaAndConstraintWithMessageAndArgs()
         {
-            Assert.That(() => 2 + 2, Is.EqualTo(4), "Should be {0}", 4);
+            Assert.That(() => 2 + 2, Is.EqualTo(4), "Should be 4");
         }
 
         [Test]
@@ -92,26 +91,26 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertionPasses_DelegateAndConstraint()
         {
-            Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4));
+            Assert.That(ReturnsFour, Is.EqualTo(4));
         }
 
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessage()
         {
-            Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Message");
+            Assert.That(ReturnsFour, Is.EqualTo(4), "Message");
         }
 
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessageAndArgs()
         {
-            Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), "Should be {0}", 4);
+            Assert.That(ReturnsFour, Is.EqualTo(4), "Should be 4");
         }
 
         [Test]
         public void AssertionPasses_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => $"Not Equal to {4}";
-            Assert.That(new ActualValueDelegate<int>(ReturnsFour), Is.EqualTo(4), getExceptionMessage);
+            Assert.That(ReturnsFour, Is.EqualTo(4), getExceptionMessage);
         }
 
         private int ReturnsFour()
@@ -208,20 +207,20 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraint()
         {
-            Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4)));
+            Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4)));
         }
 
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessage()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error"));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
         }
 
         [Test]
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageAndArgs()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Should be 4"));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), "Should be 4"));
             Assert.That(ex?.Message, Does.Contain("Should be 4"));
         }
 
@@ -229,7 +228,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void FailureThrowsAssertionException_DelegateAndConstraintWithMessageStringFunc()
         {
             Func<string> getExceptionMessage = () => "error";
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), getExceptionMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), getExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
         }
 

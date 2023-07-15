@@ -382,13 +382,9 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
-
         private static void ReportFailure(ConstraintResult result, string? message)
-            => ReportFailure(result, message, null);
-
-        private static void ReportFailure(ConstraintResult result, string? message, params object?[]? args)
         {
-            MessageWriter writer = new TextMessageWriter(message, args);
+            MessageWriter writer = new TextMessageWriter(message);
             result.WriteMessageTo(writer);
 
             ReportFailure(writer.ToString());
