@@ -6,7 +6,7 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Classic
 {
-    public abstract partial class Assert
+    public partial class Assert
     {
         #region True
 
