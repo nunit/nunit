@@ -63,52 +63,52 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// The result is inconclusive
         /// </summary>
-        public static readonly ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
+        public static readonly ResultState Inconclusive = new(TestStatus.Inconclusive);
 
         /// <summary>
         /// The test has been skipped.
         /// </summary>
-        public static readonly ResultState Skipped = new ResultState(TestStatus.Skipped);
+        public static readonly ResultState Skipped = new(TestStatus.Skipped);
 
         /// <summary>
         /// The test has been ignored.
         /// </summary>
-        public static readonly ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
+        public static readonly ResultState Ignored = new(TestStatus.Skipped, "Ignored");
 
         /// <summary>
         /// The test was skipped because it is explicit
         /// </summary>
-        public static readonly ResultState Explicit = new ResultState(TestStatus.Skipped, "Explicit");
+        public static readonly ResultState Explicit = new(TestStatus.Skipped, "Explicit");
 
         /// <summary>
         /// The test succeeded
         /// </summary>
-        public static readonly ResultState Success = new ResultState(TestStatus.Passed);
+        public static readonly ResultState Success = new(TestStatus.Passed);
 
         /// <summary>
         /// The test issued a warning
         /// </summary>
-        public static readonly ResultState Warning = new ResultState(TestStatus.Warning);
+        public static readonly ResultState Warning = new(TestStatus.Warning);
 
         /// <summary>
         /// The test failed
         /// </summary>
-        public static readonly ResultState Failure = new ResultState(TestStatus.Failed);
+        public static readonly ResultState Failure = new(TestStatus.Failed);
 
         /// <summary>
         /// The test encountered an unexpected exception
         /// </summary>
-        public static readonly ResultState Error = new ResultState(TestStatus.Failed, "Error");
+        public static readonly ResultState Error = new(TestStatus.Failed, "Error");
 
         /// <summary>
         /// The test was cancelled by the user
         /// </summary>
-        public static readonly ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
+        public static readonly ResultState Cancelled = new(TestStatus.Failed, "Cancelled");
 
         /// <summary>
         /// The test was not runnable.
         /// </summary>
-        public static readonly ResultState NotRunnable = new ResultState(TestStatus.Failed, "Invalid");
+        public static readonly ResultState NotRunnable = new(TestStatus.Failed, "Invalid");
 
         /// <summary>
         /// A suite failed because one or more child tests failed or had errors

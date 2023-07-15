@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     public class OSPlatform
     {
         #region Static Members
-        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new Lazy<OSPlatform>(() =>
+        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new(() =>
         {
             OSPlatform currentPlatform;
 

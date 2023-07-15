@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal.Builders
             _searchInDeclaringTypes = searchInDeclaringTypes;
         }
 
-        private static readonly ProviderCache ProviderCache = new ProviderCache();
+        private static readonly ProviderCache ProviderCache = new();
 
         #region IDataPointProvider Members
 

@@ -35,12 +35,12 @@ namespace NUnit.Framework
             try
             {
                 await code();
-                Assert.That(() => { }, constraint, message, args);
+                Assert.That(() => { }, constraint, ConvertMessageWithArgs(message, args));
             }
             catch (Exception ex)
             {
                 var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, args);
+                Assert.That(() => edi.Throw(), constraint, ConvertMessageWithArgs(message, args));
             }
         }
 
@@ -68,12 +68,12 @@ namespace NUnit.Framework
             try
             {
                 var result = await code();
-                Assert.That(() => result, constraint, message, args);
+                Assert.That(() => result, constraint, ConvertMessageWithArgs(message, args));
             }
             catch (Exception ex)
             {
                 var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, args);
+                Assert.That(() => edi.Throw(), constraint, ConvertMessageWithArgs(message, args));
             }
         }
 

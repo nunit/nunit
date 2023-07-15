@@ -314,13 +314,13 @@ namespace NUnit.Framework.Internal
         /// <returns>An array of Types for the interfaces.</returns>
         public static Type[] GetDeclaredInterfaces(Type type)
         {
-            List<Type> interfaces = new List<Type>(type.GetInterfaces());
+            List<Type> interfaces = new(type.GetInterfaces());
 
             if (type.BaseType is null || type.BaseType == typeof(object))
                 return interfaces.ToArray();
 
-            List<Type> baseInterfaces = new List<Type>(type.BaseType.GetInterfaces());
-            List<Type> declaredInterfaces = new List<Type>();
+            List<Type> baseInterfaces = new(type.BaseType.GetInterfaces());
+            List<Type> declaredInterfaces = new();
 
             foreach (Type interfaceType in interfaces)
             {

@@ -10,7 +10,7 @@ namespace NUnit.Framework.Internal
     public class InternalTraceWriter : TextWriter
     {
         private readonly TextWriter _writer;
-        private readonly object _myLock = new object();
+        private readonly object _myLock = new();
 
         /// <summary>
         /// Construct an InternalTraceWriter that writes to a file.

@@ -22,8 +22,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void ConstructWithOneArg<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType, new object?[] { propValue }) as PropertyAttribute;
-            Assert.That(attr, Is.Not.Null, "{0} is not a PropertyAttribute", attrType.Name);
-            Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
+            Assert.That(attr, Is.Not.Null, $"{attrType.Name} is not a PropertyAttribute");
+            Assert.That(attr!.Properties.Get(propName), Is.EqualTo(propValue));
         }
 
         [TestCase(typeof(ParallelizableAttribute), PropertyNames.ParallelScope, ParallelScope.Self)]
@@ -31,8 +31,8 @@ namespace NUnit.Framework.Tests.Attributes
         public void ConstructWithNoArgs<T>(Type attrType, string propName, T propValue)
         {
             var attr = Reflect.Construct(attrType) as PropertyAttribute;
-            Assert.That(attr, Is.Not.Null, "{0} is not a PropertyAttribute", attrType.Name);
-            Assert.That(attr.Properties.Get(propName), Is.EqualTo(propValue));
+            Assert.That(attr, Is.Not.Null, $"{attrType.Name} is not a PropertyAttribute");
+            Assert.That(attr!.Properties.Get(propName), Is.EqualTo(propValue));
         }
     }
 }

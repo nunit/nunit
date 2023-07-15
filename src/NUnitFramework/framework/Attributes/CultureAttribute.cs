@@ -14,7 +14,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private readonly CultureDetector _cultureDetector = new CultureDetector();
+        private readonly CultureDetector _cultureDetector = new();
         private readonly CultureInfo _currentCulture = CultureInfo.CurrentCulture;
 
         /// <summary>

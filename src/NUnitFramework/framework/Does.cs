@@ -28,7 +28,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the value
         /// is a file or directory and it exists.
         /// </summary>
-        public static FileOrDirectoryExistsConstraint Exist => new FileOrDirectoryExistsConstraint();
+        public static FileOrDirectoryExistsConstraint Exist => new();
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace NUnit.Framework
         /// presence of a particular object in the collection.
         /// </summary>
         public static SomeItemsConstraint Contain(object? expected) =>
-            new SomeItemsConstraint(new EqualConstraint(expected));
+            new(new EqualConstraint(expected));
 
         /// <summary>
         /// Returns a new <see cref="ContainsConstraint"/>. This constraint
@@ -50,7 +50,7 @@ namespace NUnit.Framework
         /// collection member.
         /// </summary>
         public static ContainsConstraint Contain(string expected) =>
-            new ContainsConstraint(expected);
+            new(expected);
 
         #endregion
 

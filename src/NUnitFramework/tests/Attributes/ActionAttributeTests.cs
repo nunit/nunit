@@ -38,8 +38,11 @@ namespace NUnit.Framework.Tests.Attributes
             options["NumberOfTestWorkers"] = 0;
 
             ITest test = runner.Load(ASSEMBLY_PATH, options);
-            Assert.That(test, Is.Not.Null, "Assembly not loaded");
-            Assert.That(runner.LoadedTest, Is.SameAs(test));
+            Assert.Multiple(() =>
+            {
+                Assert.That(test, Is.Not.Null, "Assembly not loaded");
+                Assert.That(runner.LoadedTest, Is.SameAs(test));
+            });
             Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
@@ -156,20 +159,20 @@ namespace NUnit.Framework.Tests.Attributes
             if (firstEvent > 0)
             {
                 var beforeEvent = ActionAttributeFixture.Events[firstEvent - 1];
-                Assert.That(beforeEvent, Does.Not.StartWith(suiteName), "Extra ActionAttribute Before: {0}", beforeEvent);
+                Assert.That(beforeEvent, Does.Not.StartWith(suiteName), $"Extra ActionAttribute Before: {beforeEvent}");
             }
 
             if (lastEvent < ActionAttributeFixture.Events.Count - 1)
             {
                 var afterEvent = ActionAttributeFixture.Events[lastEvent + 1];
-                Assert.That(afterEvent, Does.Not.StartWith(suiteName), "Extra ActionAttribute After: {0}", afterEvent);
+                Assert.That(afterEvent, Does.Not.StartWith(suiteName), $"Extra ActionAttribute After: {afterEvent}");
             }
         }
 
         private void CheckActionsOnTestCase(string testName)
         {
             var index = ActionAttributeFixture.Events.IndexOf(testName);
-            Assert.That(index, Is.GreaterThanOrEqualTo(0), "{0} did not execute", testName);
+            Assert.That(index, Is.GreaterThanOrEqualTo(0), $"{testName} did not execute");
             var numActions = ExpectedTestCaseActions.Length;
 
             for (int i = 0; i < numActions; i++)
@@ -237,7 +240,7 @@ namespace NUnit.Framework.Tests.Attributes
         // The exact order of events may vary, depending on the runtime framework
         // in use. Consequently, we test heuristically. The following list is
         // only one possible ordering of events.
-        private static readonly List<string> ExpectedEvents = new List<string>(new[] {
+        private static readonly List<string> ExpectedEvents = new(new[] {
                 ASSEMBLY_NAME + ".OnAssembly.Before.Test, Suite",
                 ASSEMBLY_NAME + ".OnAssembly.Before.Suite",
                 ASSEMBLY_NAME + ".OnAssembly.Before.Default",

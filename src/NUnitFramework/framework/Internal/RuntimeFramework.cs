@@ -28,9 +28,9 @@ namespace NUnit.Framework.Internal
         /// DefaultVersion is an empty Version, used to indicate that
         /// NUnit should select the CLR version to use for the test.
         /// </summary>
-        public static readonly Version DefaultVersion = new Version(0, 0);
+        public static readonly Version DefaultVersion = new(0, 0);
 
-        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new Lazy<RuntimeFramework>(() =>
+        private static readonly Lazy<RuntimeFramework> LazyCurrentFramework = new(() =>
         {
             Type? monoRuntimeType = null;
             Type? monoTouchType = null;

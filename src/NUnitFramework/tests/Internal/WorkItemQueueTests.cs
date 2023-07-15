@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Linq;
 using System.Threading;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
@@ -54,7 +55,7 @@ namespace NUnit.Framework.Tests.Internal
             foreach (var worker in workers)
             {
                 worker.Start();
-                Assert.That(worker.IsAlive, "Worker thread {0} did not start", worker.Name);
+                Assert.That(worker.IsAlive, $"Worker thread {worker.Name} did not start");
             }
 
             _queue.Start();
@@ -68,18 +69,13 @@ namespace NUnit.Framework.Tests.Internal
             {
                 Thread.Sleep(60);  // Allow time for workers to stop
 
-                alive = 0;
-                foreach (var worker in workers)
-                {
-                    if (worker.IsAlive)
-                        alive++;
-                }
+                alive = workers.Count(worker => worker.IsAlive);
             }
 
             if (alive > 0)
             {
                 foreach (var worker in workers)
-                    Assert.That(worker.IsAlive, Is.False, "Worker thread {0} did not stop", worker.Name);
+                    Assert.That(worker.IsAlive, Is.False, $"Worker thread {worker.Name} did not stop");
             }
         }
 

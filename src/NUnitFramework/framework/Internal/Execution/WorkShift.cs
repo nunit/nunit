@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal.Execution
     {
         private static readonly Logger Log = InternalTrace.GetLogger("WorkShift");
 
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private int _busyCount = 0;
 
         /// <summary>

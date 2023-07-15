@@ -222,7 +222,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _completionEvent = new();
 
         /// <summary>
         /// Wait until the execution of this item is complete
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 #if THREAD_ABORT
-        private readonly object _threadLock = new object();
+        private readonly object _threadLock = new();
         private int _nativeThreadId;
 #endif
 

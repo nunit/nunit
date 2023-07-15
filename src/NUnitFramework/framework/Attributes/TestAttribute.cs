@@ -31,7 +31,7 @@ namespace NUnit.Framework
         private object? _expectedResult;
         private bool _hasExpectedResult = false; // needed in case result is set to null
 
-        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new();
 
         /// <summary>
         /// Descriptive text for this test

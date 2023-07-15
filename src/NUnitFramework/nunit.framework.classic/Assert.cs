@@ -42,10 +42,6 @@ namespace NUnit.Framework.Classic
 
         #endregion
 
-        /// <summary>
-        /// Check if message comes with args, and convert that to a formatted string
-        /// </summary>
-        protected static string? ConvertMessageWithArgs(string? message, object?[]? args)
-            => message is null ? null : args is null ? message : string.Format(message, args);
+        
     }
 }

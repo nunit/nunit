@@ -16,13 +16,13 @@ namespace NUnit.Framework.Internal
     {
         private static readonly char[] ARG_START = new char[] { '(', '<' };
 
-        private readonly List<FilterElement> _filters = new List<FilterElement>();
+        private readonly List<FilterElement> _filters = new();
 
         /// <summary>
         /// Return a new PreFilter, without elements, which is considered
         /// empty and always matches.
         /// </summary>
-        public static PreFilter Empty => new PreFilter();
+        public static PreFilter Empty => new();
 
         /// <summary>
         /// Return true if the filter is empty, in which case it

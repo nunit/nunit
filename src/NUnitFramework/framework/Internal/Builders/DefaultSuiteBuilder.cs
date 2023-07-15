@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal.Builders
     public class DefaultSuiteBuilder : ISuiteBuilder
     {
         // Builder we use for fixtures without any fixture attribute specified
-        private readonly NUnitTestFixtureBuilder _defaultBuilder = new NUnitTestFixtureBuilder();
+        private readonly NUnitTestFixtureBuilder _defaultBuilder = new();
 
         #region ISuiteBuilder Methods
 

@@ -7,7 +7,7 @@ namespace NUnit.Framework.Internal.Builders
 {
     internal sealed class ProviderCache
     {
-        private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _instances = new();
 
         public object GetInstanceOf(Type providerType)
         {

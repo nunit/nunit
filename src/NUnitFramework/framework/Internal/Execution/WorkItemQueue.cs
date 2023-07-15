@@ -63,12 +63,12 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly Stack<SavedState> _savedState = new Stack<SavedState>();
+        private readonly Stack<SavedState> _savedState = new();
 
         /* This event is used solely for the purpose of having an optimized sleep cycle when
          * we have to wait on an external event (Add or Remove for instance)
          */
-        private readonly ManualResetEventSlim _mreAdd = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _mreAdd = new();
 
         /* The whole idea is to use these two values in a transactional
          * way to track and manage the actual data inside the underlying lock-free collection

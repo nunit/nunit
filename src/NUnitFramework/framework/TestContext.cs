@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// use within a test, but it should not be used
         /// outside the test for which it is created.
         /// </summary>
-        public static TestContext CurrentContext => new TestContext(TestExecutionContext.CurrentContext);
+        public static TestContext CurrentContext => new(TestExecutionContext.CurrentContext);
 
         /// <summary>
         /// Gets a TextWriter that will send output to the current test result.
@@ -63,7 +63,7 @@ namespace NUnit.Framework
         /// <summary>
         /// TestParameters object holds parameters for the test run, if any are specified
         /// </summary>
-        public static readonly TestParameters Parameters = new TestParameters();
+        public static readonly TestParameters Parameters = new();
 
         /// <summary>
         /// Static DefaultWorkDirectory is now used as the source

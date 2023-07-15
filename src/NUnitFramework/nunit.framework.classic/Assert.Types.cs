@@ -47,7 +47,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsAssignableFrom<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), message, args);
+            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object under examination</param>
         public static void IsAssignableFrom<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), null, null);
+            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), "");
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotAssignableFrom(Type expected, object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(expected), message, args);
+            Assert.That(actual, Is.Not.AssignableFrom(expected), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object under examination</param>
         public static void IsNotAssignableFrom(Type expected, object? actual)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(expected), null, null);
+            Assert.That(actual, Is.Not.AssignableFrom(expected), "");
         }
 
         #endregion
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotAssignableFrom<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), message, args);
+            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object under examination</param>
         public static void IsNotAssignableFrom<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), null, null);
+            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), "");
         }
 
         #endregion
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsInstanceOf(Type expected, object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.InstanceOf(expected), message, args);
+            Assert.That(actual, Is.InstanceOf(expected), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsInstanceOf(Type expected, object? actual)
         {
-            Assert.That(actual, Is.InstanceOf(expected), null, null);
+            Assert.That(actual, Is.InstanceOf(expected), "");
         }
 
         #endregion
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsInstanceOf<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), message, args);
+            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsInstanceOf<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), null, null);
+            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), "");
         }
 
         #endregion
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotInstanceOf(Type expected, object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.InstanceOf(expected), message, args);
+            Assert.That(actual, Is.Not.InstanceOf(expected), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsNotInstanceOf(Type expected, object? actual)
         {
-            Assert.That(actual, Is.Not.InstanceOf(expected), null, null);
+            Assert.That(actual, Is.Not.InstanceOf(expected), "");
         }
 
         #endregion
@@ -215,7 +215,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotInstanceOf<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), message, args);
+            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsNotInstanceOf<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), null, null);
+            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), "");
         }
 
         #endregion

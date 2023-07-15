@@ -159,8 +159,11 @@ namespace NUnit.Framework.Tests.Internal
                 {
                     string? name = node.Attributes["name"];
                     string? value = node.Attributes["value"];
-                    Assert.That(name, Is.Not.Null);
-                    Assert.That(value, Is.Not.Null);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(name, Is.Not.Null);
+                        Assert.That(value, Is.Not.Null);
+                    });
                     actualProps.Add(name + "=" + value);
                 }
 
@@ -175,7 +178,7 @@ namespace NUnit.Framework.Tests.Internal
                     {
                         string xpathQuery = $"{child.XmlElementName}[@id={child.Id}]";
                         TNode? childNode = topNode.SelectSingleNode(xpathQuery);
-                        Assert.That(childNode, Is.Not.Null, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
+                        Assert.That(childNode, Is.Not.Null, $"Expected node for test with ID={child.Id}, Name={child.Name}");
 
                         CheckXmlForTest(child, childNode, recursive);
                     }

@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Single instance of our default filter
         /// </summary>
-        public static StackFilter DefaultFilter = new StackFilter();
+        public static StackFilter DefaultFilter = new();
 
         private readonly Regex? _topOfStackRegex;
         private readonly Regex? _bottomOfStackRegex;

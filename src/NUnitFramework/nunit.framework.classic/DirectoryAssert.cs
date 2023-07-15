@@ -10,7 +10,7 @@ namespace NUnit.Framework.Classic
     /// <summary>
     /// Asserts on Directories
     /// </summary>
-    public static class DirectoryAssert
+    public abstract class DirectoryAssert : AssertBase
     {
         #region Equals and ReferenceEquals
 
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Classic
         public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual, string message,
             params object?[]? args)
         {
-            Assert.AreEqual(expected, actual, message, args);
+            Assert.AreEqual(expected, actual, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">A directory containing the actual value</param>
         public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual)
         {
-            AreEqual(expected, actual, String.Empty, null);
+            AreEqual(expected, actual, string.Empty);
         }
 
         #endregion
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Classic
         public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual, string message,
             params object?[]? args)
         {
-            Assert.AreNotEqual(expected, actual, message, args);
+            Assert.AreNotEqual(expected, actual, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">A directory containing the actual value</param>
         public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual)
         {
-            AreNotEqual(expected, actual, string.Empty, null);
+            AreNotEqual(expected, actual, string.Empty);
         }
 
         #endregion
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(DirectoryInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, message, args);
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, message, args);
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -180,8 +180,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(DirectoryInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), message,
-                args);
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message,args));
         }
 
         /// <summary>
@@ -207,8 +206,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), message,
-                args);
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message,args));
         }
 
         /// <summary>

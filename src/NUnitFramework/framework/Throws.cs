@@ -71,7 +71,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Creates a constraint specifying that no exception is thrown
         /// </summary>
-        public static ThrowsNothingConstraint Nothing => new ThrowsNothingConstraint();
+        public static ThrowsNothingConstraint Nothing => new();
 
         #endregion
 

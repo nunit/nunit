@@ -10,7 +10,7 @@ namespace NUnit.Framework.Classic
     /// <summary>
     /// Asserts on Files
     /// </summary>
-    public static class FileAssert
+    public abstract class FileAssert : AssertBase
     {
         #region Equals and ReferenceEquals
 
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.EqualTo(expected), message, args);
+            Framework.Assert.That(actual, Is.EqualTo(expected), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace NUnit.Framework.Classic
         {
             using FileStream exStream = expected.OpenRead();
             using FileStream acStream = actual.OpenRead();
-            AreEqual(exStream, acStream, message, args);
+            AreEqual(exStream, acStream, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace NUnit.Framework.Classic
         {
             using FileStream exStream = File.OpenRead(expected);
             using FileStream acStream = File.OpenRead(actual);
-            AreEqual(exStream, acStream, message, args);
+            AreEqual(exStream, acStream, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void AreNotEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.EqualTo(expected), message, args);
+            Framework.Assert.That(actual, Is.Not.EqualTo(expected), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace NUnit.Framework.Classic
         {
             using FileStream exStream = expected.OpenRead();
             using FileStream acStream = actual.OpenRead();
-            AreNotEqual(exStream, acStream, message, args);
+            AreNotEqual(exStream, acStream, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace NUnit.Framework.Classic
         {
             using FileStream exStream = File.OpenRead(expected);
             using FileStream acStream = File.OpenRead(actual);
-            AreNotEqual(exStream, acStream, message, args);
+            AreNotEqual(exStream, acStream, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(FileInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(FileInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
