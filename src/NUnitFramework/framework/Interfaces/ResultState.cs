@@ -113,32 +113,32 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// A suite failed because one or more child tests failed or had errors
         /// </summary>
-        public static readonly ResultState ChildFailure = ResultState.Failure.WithSite(FailureSite.Child);
+        public static readonly ResultState ChildFailure = Failure.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite failed because one or more child tests had warnings
         /// </summary>
-        public static readonly ResultState ChildWarning = ResultState.Warning.WithSite(FailureSite.Child);
+        public static readonly ResultState ChildWarning = Warning.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite is marked ignored because one or more child tests were ignored
         /// </summary>
-        public static readonly ResultState ChildIgnored = ResultState.Ignored.WithSite(FailureSite.Child);
+        public static readonly ResultState ChildIgnored = Ignored.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite failed in its OneTimeSetUp
         /// </summary>
-        public static readonly ResultState SetUpFailure = ResultState.Failure.WithSite(FailureSite.SetUp);
+        public static readonly ResultState SetUpFailure = Failure.WithSite(FailureSite.SetUp);
 
         /// <summary>
         /// A suite had an unexpected exception in its OneTimeSetUp
         /// </summary>
-        public static readonly ResultState SetUpError = ResultState.Error.WithSite(FailureSite.SetUp);
+        public static readonly ResultState SetUpError = Error.WithSite(FailureSite.SetUp);
 
         /// <summary>
         /// A suite had an unexpected exception in its OneTimeDown
         /// </summary>
-        public static readonly ResultState TearDownError = ResultState.Error.WithSite(FailureSite.TearDown);
+        public static readonly ResultState TearDownError = Error.WithSite(FailureSite.TearDown);
 
         #endregion
 
@@ -224,36 +224,28 @@ namespace NUnit.Framework.Interfaces
         /// Overload == operator for ResultStates
         /// </summary>
         public static bool operator ==(ResultState? left, ResultState? right)
-        {
-            if (left is null)
-                return right is null;
-
-            return left.Equals(right);
-        }
+            => left?.Equals(right) ?? right is null;
 
         /// <summary>
         /// Overload != operator for ResultStates
         /// </summary>
-        public static bool operator !=(ResultState? left, ResultState? right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(ResultState? left, ResultState? right) => !(left == right);
 
         #endregion
 
         #region ToString Override
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="string"/> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
+        /// A <see cref="string"/> that represents this instance.
         /// </returns>
         public override string ToString()
         {
             var sb = new StringBuilder(Status.ToString());
 
-            if (Label is not null && Label.Length > 0)
+            if (Label.Length > 0)
                 sb.AppendFormat(":{0}", Label);
             if (Site != FailureSite.Test)
                 sb.AppendFormat("({0})", Site.ToString());

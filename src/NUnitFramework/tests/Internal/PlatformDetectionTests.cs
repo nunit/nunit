@@ -231,7 +231,7 @@ namespace NUnit.Framework.Tests.Internal
         public void DetectUnixUnderMicrosoftDotNet()
         {
             CheckOSPlatforms(
-                new OSPlatform(OSPlatform.UnixPlatformID_Microsoft, new Version(0, 0)),
+                new OSPlatform(OSPlatform.UnixPlatformIDMicrosoft, new Version(0, 0)),
                 "UNIX,Linux");
         }
 
@@ -239,7 +239,7 @@ namespace NUnit.Framework.Tests.Internal
         public void DetectUnixUnderMono()
         {
             CheckOSPlatforms(
-                new OSPlatform(OSPlatform.UnixPlatformID_Mono, new Version(0, 0)),
+                new OSPlatform(OSPlatform.UnixPlatformIDMono, new Version(0, 0)),
                 "UNIX,Linux");
         }
 

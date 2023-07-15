@@ -35,15 +35,20 @@ Supported platforms:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
+    <file src="README.md" />
     <file src="..\..\nuget\icon.png" />
     <file src="bin/net462/nunit.framework.dll" target="lib\net462" />
-    <file src="bin/net462/nunit.framework.classic.dll" target="lib\net462" />
     <file src="bin/net462/nunit.framework.xml" target="lib\net462" />
     <file src="bin/net462/nunit.framework.pdb" target="lib\net462" />
+    <file src="bin/net462/nunit.framework.classic.dll" target="lib\net462" />
+    <file src="bin/net462/nunit.framework.classic.xml" target="lib\net462" />
+    <file src="bin/net462/nunit.framework.classic.pdb" target="lib\net462" />
     <file src="bin/netstandard2.0/nunit.framework.dll" target="lib\netstandard2.0" />
-    <file src="bin/netstandard2.0/nunit.framework.classic.dll" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunit.framework.xml" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunit.framework.pdb" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunit.framework.classic.dll" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunit.framework.classic.xml" target="lib\netstandard2.0" />
+    <file src="bin/netstandard2.0/nunit.framework.classic.pdb" target="lib\netstandard2.0" />
     <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>
 </package>

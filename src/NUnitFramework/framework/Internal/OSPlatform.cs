@@ -27,7 +27,7 @@ namespace NUnit.Framework.Internal
                 ProductType productType = GetProductType();
                 currentPlatform = new OSPlatform(os.Platform, os.Version, productType);
 #else
-                OSVERSIONINFOEX osvi = new OSVERSIONINFOEX();
+                Osversioninfoex osvi = new Osversioninfoex();
                 osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
                 GetVersionEx(ref osvi);
                 currentPlatform = new OSPlatform(os.Platform, os.Version, (ProductType)osvi.ProductType);
@@ -50,12 +50,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Platform ID for Unix as defined by .NET
         /// </summary>
-        public static readonly PlatformID UnixPlatformID_Microsoft = (PlatformID)4;
+        public static readonly PlatformID UnixPlatformIDMicrosoft = (PlatformID)4;
 
         /// <summary>
         /// Platform ID for Unix as defined by Mono
         /// </summary>
-        public static readonly PlatformID UnixPlatformID_Mono = (PlatformID)128;
+        public static readonly PlatformID UnixPlatformIDMono = (PlatformID)128;
 
         /// <summary>
         /// Platform ID for XBox as defined by .NET and Mono
@@ -156,32 +156,28 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                if (key is not null)
                 {
-                    if (key is not null)
+                    var installationType = key.GetValue("InstallationType") as string;
+                    return installationType switch
                     {
-                        var installationType = key.GetValue("InstallationType") as string;
-                        switch (installationType)
-                        {
-                            case "Client":
-                                return ProductType.WorkStation;
-                            case "Server":
-                            case "Server Core":
-                                return ProductType.Server;
-                            default:
-                                return ProductType.Unknown;
-                        }
-                    }
+                        "Client" => ProductType.WorkStation,
+                        "Server" or "Server Core" => ProductType.Server,
+                        _ => ProductType.Unknown,
+                    };
                 }
             }
             catch (Exception)
             {
+                // ignored, we don't what it is, so Unknown is fine
             }
+
             return ProductType.Unknown;
         }
 #else
         [StructLayout(LayoutKind.Sequential)]
-        private struct OSVERSIONINFOEX
+        private struct Osversioninfoex
         {
 #pragma warning disable IDE1006 // P/invoke doesn’t need to follow naming convention
             public uint dwOSVersionInfoSize;
@@ -200,7 +196,7 @@ namespace NUnit.Framework.Internal
         }
 
         [DllImport("Kernel32.dll")]
-        private static extern bool GetVersionEx(ref OSVERSIONINFOEX osvi);
+        private static extern bool GetVersionEx(ref Osversioninfoex osvi);
 #endif
         #endregion
 
@@ -281,8 +277,8 @@ namespace NUnit.Framework.Internal
         /// Return true if this is a Unix or Linux platform
         /// </summary>
         public bool IsUnix =>
-            Platform == UnixPlatformID_Microsoft
-            || Platform == UnixPlatformID_Mono;
+            Platform == UnixPlatformIDMicrosoft
+            || Platform == UnixPlatformIDMono;
 
         /// <summary>
         /// Return true if the platform is Win32S

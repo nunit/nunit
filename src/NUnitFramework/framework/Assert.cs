@@ -32,7 +32,7 @@ namespace NUnit.Framework
         #region Equals and ReferenceEquals
 
         /// <summary>
-        /// DO NOT USE! Use Assert.AreEqual(...) instead.
+        /// DO NOT USE! Use Assert.That(x,Is.EqualTo) instead.
         /// The Equals method throws an InvalidOperationException. This is done
         /// to make sure there is no mistake by calling this function.
         /// </summary>
@@ -178,7 +178,7 @@ namespace NUnit.Framework
             else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
-            IssueWarning(ConvertMessageWithArgs(message, args));
+            IssueWarning(message);
         }
 
         /// <summary>
@@ -383,12 +383,6 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        /// <summary>
-        /// Check if message comes with args, and convert that to a formatted string
-        /// </summary>
-        protected static string? ConvertMessageWithArgs(string? message, object?[]? args)
-            => message is null ? null : args is null ? message : string.Format(message, args);
-
         private static void ReportFailure(ConstraintResult result, string? message)
             => ReportFailure(result, message, null);
 
@@ -419,7 +413,7 @@ namespace NUnit.Framework
         }
 
         // System.Environment.StackTrace puts extra entries on top of the stack, at least in some environments
-        private static readonly StackFilter SystemEnvironmentFilter = new StackFilter(@" System\.Environment\.");
+        private static readonly StackFilter SystemEnvironmentFilter = new(@" System\.Environment\.");
 
         private static string? GetStackTrace() =>
             StackFilter.DefaultFilter.Filter(SystemEnvironmentFilter.Filter(GetEnvironmentStackTraceWithoutThrowing()));
