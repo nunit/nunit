@@ -152,8 +152,8 @@ namespace NUnit.Framework.Tests.Attributes
             fixture.BlowUpInSetUp = true;
             ITestResult result = TestBuilder.RunTestFixture(fixture);
 
-            Assert.That( fixture.SetUpCount, Is.EqualTo(1), "setUpCount" );
-            Assert.That( fixture.TearDownCount, Is.EqualTo(1), "tearDownCount" );
+            Assert.That(fixture.SetUpCount, Is.EqualTo(1), "setUpCount");
+            Assert.That(fixture.TearDownCount, Is.EqualTo(1), "tearDownCount");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
             Assert.That(result.Message, Is.EqualTo("System.Exception : This was thrown from fixture setup"), "TestSuite Message");
@@ -176,8 +176,8 @@ namespace NUnit.Framework.Tests.Attributes
             fixture.Reinitialize();
             result = TestBuilder.RunTestFixture(fixture);
 
-            Assert.That( fixture.SetUpCount, Is.EqualTo(1), "setUpCount" );
-            Assert.That( fixture.TearDownCount, Is.EqualTo(1), "tearDownCount" );
+            Assert.That(fixture.SetUpCount, Is.EqualTo(1), "setUpCount");
+            Assert.That(fixture.TearDownCount, Is.EqualTo(1), "tearDownCount");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
         }
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void HandleExceptionInFixtureConstructor()
         {
-            ITestResult result = TestBuilder.RunTestFixture( typeof( ExceptionInConstructor ) );
+            ITestResult result = TestBuilder.RunTestFixture(typeof(ExceptionInConstructor));
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.SetUpError));
             Assert.That(result.Message, Is.EqualTo("System.Exception : This was thrown in constructor"), "TestSuite Message");
@@ -273,8 +273,8 @@ namespace NUnit.Framework.Tests.Attributes
             fixture.Reinitialize();
             result = TestBuilder.RunTestFixture(fixture);
 
-            Assert.That( fixture.SetUpCount, Is.EqualTo(1), "setUpCount" );
-            Assert.That( fixture.TearDownCount, Is.EqualTo(1), "tearDownCount" );
+            Assert.That(fixture.SetUpCount, Is.EqualTo(1), "setUpCount");
+            Assert.That(fixture.TearDownCount, Is.EqualTo(1), "tearDownCount");
         }
 
         [Test]
@@ -306,21 +306,21 @@ namespace NUnit.Framework.Tests.Attributes
         {
             IgnoredFixture fixture = new IgnoredFixture();
             TestSuite suite = new TestSuite("IgnoredFixtureSuite");
-            TestSuite fixtureSuite = TestBuilder.MakeFixture( fixture.GetType() );
+            TestSuite fixtureSuite = TestBuilder.MakeFixture(fixture.GetType());
             TestMethod testMethod = (TestMethod)fixtureSuite.Tests[0];
-            suite.Add( fixtureSuite );
+            suite.Add(fixtureSuite);
 
             TestBuilder.RunTest(fixtureSuite, fixture);
-            Assert.That( fixture.SetupCalled, Is.False, "OneTimeSetUp called running fixture");
-            Assert.That( fixture.TeardownCalled, Is.False, "OneTimeSetUp called running fixture");
+            Assert.That(fixture.SetupCalled, Is.False, "OneTimeSetUp called running fixture");
+            Assert.That(fixture.TeardownCalled, Is.False, "OneTimeSetUp called running fixture");
 
             TestBuilder.RunTest(suite, fixture);
-            Assert.That( fixture.SetupCalled, Is.False, "OneTimeSetUp called running enclosing suite");
-            Assert.That( fixture.TeardownCalled, Is.False, "OneTimeTearDown called running enclosing suite");
+            Assert.That(fixture.SetupCalled, Is.False, "OneTimeSetUp called running enclosing suite");
+            Assert.That(fixture.TeardownCalled, Is.False, "OneTimeTearDown called running enclosing suite");
 
             TestBuilder.RunTest(testMethod, fixture);
-            Assert.That( fixture.SetupCalled, Is.False, "OneTimeSetUp called running a test case");
-            Assert.That( fixture.TeardownCalled, Is.False, "OneTimeTearDown called running a test case");
+            Assert.That(fixture.SetupCalled, Is.False, "OneTimeSetUp called running a test case");
+            Assert.That(fixture.TeardownCalled, Is.False, "OneTimeTearDown called running a test case");
         }
 
         [Test]
@@ -330,8 +330,8 @@ namespace NUnit.Framework.Tests.Attributes
 
             TestBuilder.RunTestFixture(fixture);
 
-            Assert.That( fixture.SetupCalled, Is.False, "OneTimeSetUp should not be called for a fixture with no tests" );
-            Assert.That( fixture.TeardownCalled, Is.False, "OneTimeTearDown should not be called for a fixture with no tests" );
+            Assert.That(fixture.SetupCalled, Is.False, "OneTimeSetUp should not be called for a fixture with no tests");
+            Assert.That(fixture.TeardownCalled, Is.False, "OneTimeTearDown should not be called for a fixture with no tests");
         }
 
         [Test]

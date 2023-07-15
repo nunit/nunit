@@ -361,7 +361,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(rhs, Is.EqualTo(lhs));
         }
 
-
         private static IEnumerable<TestCaseData> ZeroTestCasesSource() => Enumerable.Empty<TestCaseData>();
 
         [TestCaseSource(nameof(ZeroTestCasesSource))]
@@ -373,7 +372,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void TestMethodIsNotRunnableWhenSourceDoesNotExist()
         {
             TestSuite suiteToTest = TestBuilder.MakeParameterizedMethodSuite(typeof(TestCaseSourceAttributeFixture), nameof(TestCaseSourceAttributeFixture.MethodWithNonExistingSource));
-            
+
             Assert.That(suiteToTest.Tests, Has.Count.EqualTo(1));
             Assert.That(suiteToTest.Tests[0].RunState, Is.EqualTo(RunState.NotRunnable));
         }
@@ -401,7 +400,7 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(args.Length == 1 && args[0] == "1");
         }
 
-        private static readonly string[][] SingleMemberArrayAsArgument = { new[] { "1" }  };
+        private static readonly string[][] SingleMemberArrayAsArgument = { new[] { "1" } };
 
         #region Test name tests
 

@@ -113,7 +113,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void ValueSourceMayNotBeInstanceField()
         {
             var result = TestBuilder.RunParameterizedMethodSuite(GetType(), nameof(MethodWithValueSourceInstanceField));
-            Assert.That(result.Children.ToArray ()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
+            Assert.That(result.Children.ToArray()[0].ResultState, Is.EqualTo(ResultState.NotRunnable));
         }
 
         private void MethodWithValueSourceInstanceField(

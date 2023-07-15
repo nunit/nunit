@@ -18,7 +18,7 @@ namespace NUnit.TestData.RepeatingTests
         public void RepeatSuccess()
         {
             Count++;
-            Framework.Classic.Assert.IsTrue (true);
+            Assert.Pass();
         }
     }
 
@@ -28,7 +28,7 @@ namespace NUnit.TestData.RepeatingTests
         public void RepeatFailOnFirst()
         {
             Count++;
-            Framework.Classic.Assert.IsFalse (true);
+            Assert.Fail();
         }
     }
 
@@ -40,7 +40,7 @@ namespace NUnit.TestData.RepeatingTests
             Count++;
 
             if (Count == 2)
-                Framework.Classic.Assert.IsTrue(false);
+                Assert.Fail();
         }
     }
 
@@ -52,7 +52,7 @@ namespace NUnit.TestData.RepeatingTests
             Count++;
 
             if (Count == 3)
-                Framework.Classic.Assert.IsTrue(false);
+                Assert.Fail();
         }
     }
 
@@ -139,7 +139,7 @@ namespace NUnit.TestData.RepeatingTests
         public void TestWithCategory()
         {
             Count++;
-            Framework.Classic.Assert.IsTrue(true);
+            Assert.Pass();
         }
     }
 

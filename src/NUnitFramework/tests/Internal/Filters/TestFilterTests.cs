@@ -47,7 +47,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         protected readonly TestSuite DummyFixtureSuite = TestBuilder.MakeFixture(typeof(DummyFixture));
         protected readonly TestSuite AnotherFixtureSuite = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected readonly TestSuite YetAnotherFixtureSuite = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
-        protected readonly TestSuite FixtureWithMultipleTestsSuite = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
+        protected readonly TestSuite FixtureWithMultipleTestsSuite = TestBuilder.MakeFixture(typeof(FixtureWithMultipleTests));
         protected readonly TestSuite NestingFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture));
         protected readonly TestSuite NestedFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture.NestedFixture));
         protected readonly TestSuite EmptyNestedFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture.EmptyNestedFixture));
@@ -75,9 +75,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         {
             [Test]
             public void Test() { }
-
         }
-
 
         [Category("Special,Character-Fixture+!")]
         private class SpecialCharactersFixture
@@ -99,10 +97,10 @@ namespace NUnit.Framework.Tests.Internal.Filters
         private class FixtureWithMultipleTests
         {
             [Test]
-            public void Test1 () {}
+            public void Test1() { }
 
-            [Test, Category ("Dummy")]
-            public void Test2 () {}
+            [Test, Category("Dummy")]
+            public void Test2() { }
         }
 
         private class NestingFixture

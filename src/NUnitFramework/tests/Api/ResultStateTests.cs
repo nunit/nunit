@@ -136,7 +136,6 @@ namespace NUnit.Framework.Tests.Api
             Assert.That(new ResultState(TestStatus.Failed, "Error", FailureSite.SetUp), Is.Not.EqualTo(new ResultState(TestStatus.Failed, "Error", FailureSite.Child)));
         }
 
-
         [Test]
         public void TestEquality_WrongType()
         {

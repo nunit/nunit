@@ -20,7 +20,8 @@ namespace NUnit.Framework.Tests.Internal
     /// <summary>
     /// Summary description for TestExecutionContextTests.
     /// </summary>
-    [TestFixture][Property("Question", "Why?")]
+    [TestFixture]
+    [Property("Question", "Why?")]
     public class TestExecutionContextTests
     {
         private TestExecutionContext _fixtureContext;
@@ -86,7 +87,7 @@ namespace NUnit.Framework.Tests.Internal
                 "Cannot access CurrentResult in TearDown");
         }
 
-#region CurrentContext
+        #region CurrentContext
 
         [Test]
         public async Task CurrentContextFlowsWithAsyncExecution()
@@ -123,9 +124,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(threadContext, Is.Not.Null.And.SameAs(TestExecutionContext.CurrentContext));
         }
 
-#endregion
+        #endregion
 
-#region CurrentTest
+        #region CurrentTest
 
         [Test]
         public void FixtureSetUpCanAccessFixtureName()
@@ -200,7 +201,6 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void TestCanAccessItsOwnFullName()
         {
-
             Assert.That(TestExecutionContext.CurrentContext.CurrentTest.FullName,
                 Is.EqualTo("NUnit.Framework.Tests.Internal.TestExecutionContextTests.TestCanAccessItsOwnFullName"));
         }
@@ -228,7 +228,7 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(123, "abc")]
         public void TestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
         }
 
         [Test]
@@ -279,9 +279,9 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(123, "abc")]
         public async Task AsyncTestCanAccessItsOwnArguments(int i, string s)
         {
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
             await YieldAsync();
-            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] {i, s}));
+            Assert.That(TestExecutionContext.CurrentContext.CurrentTest.Arguments, Is.EqualTo(new object[] { i, s }));
         }
 
         [Test]
@@ -292,9 +292,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(worker is not null || !isRunningUnderTestWorker);
         }
 
-#endregion
+        #endregion
 
-#region CurrentResult
+        #region CurrentResult
 
         [Test]
         public void CanAccessResultName()
@@ -367,9 +367,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.CurrentResult.ResultState, Is.EqualTo(ResultState.Inconclusive));
         }
 
-#endregion
+        #endregion
 
-#region StartTime
+        #region StartTime
 
         [Test]
         public void CanAccessStartTime()
@@ -388,9 +388,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTime, Is.EqualTo(startTime));
         }
 
-#endregion
+        #endregion
 
-#region StartTicks
+        #region StartTicks
 
         [Test]
         public void CanAccessStartTicks()
@@ -409,9 +409,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.StartTicks, Is.EqualTo(startTicks));
         }
 
-#endregion
+        #endregion
 
-#region OutWriter
+        #region OutWriter
 
         [Test]
         public void CanAccessOutWriter()
@@ -430,9 +430,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.OutWriter, Is.SameAs(outWriter));
         }
 
-#endregion
+        #endregion
 
-#region TestObject
+        #region TestObject
 
         [Test]
         public void CanAccessTestObject()
@@ -451,9 +451,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestObject, Is.SameAs(testObject));
         }
 
-#endregion
+        #endregion
 
-#region StopOnError
+        #region StopOnError
 
         [Test]
         public void CanAccessStopOnError()
@@ -471,9 +471,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.StopOnError, Is.EqualTo(stop));
         }
 
-#endregion
+        #endregion
 
-#region Listener
+        #region Listener
 
         [Test]
         public void CanAccessListener()
@@ -492,9 +492,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.Listener, Is.SameAs(listener));
         }
 
-#endregion
+        #endregion
 
-#region Dispatcher
+        #region Dispatcher
 
         [Test]
         public void CanAccessDispatcher()
@@ -513,9 +513,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.Dispatcher, Is.SameAs(dispatcher));
         }
 
-#endregion
+        #endregion
 
-#region ParallelScope
+        #region ParallelScope
 
         [Test]
         public void CanAccessParallelScope()
@@ -534,9 +534,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.ParallelScope, Is.EqualTo(scope));
         }
 
-#endregion
+        #endregion
 
-#region TestWorker
+        #region TestWorker
 
         [Test]
         public void CanAccessTestWorker()
@@ -558,9 +558,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestWorker, Is.SameAs(worker));
         }
 
-#endregion
+        #endregion
 
-#region RandomGenerator
+        #region RandomGenerator
 
         [Test]
         public void CanAccessRandomGenerator()
@@ -579,9 +579,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.RandomGenerator, Is.SameAs(random));
         }
 
-#endregion
+        #endregion
 
-#region AssertCount
+        #region AssertCount
 
         [Test]
         public void CanAccessAssertCount()
@@ -603,9 +603,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.AssertCount, Is.EqualTo(3));
         }
 
-#endregion
+        #endregion
 
-#region MultipleAssertLevel
+        #region MultipleAssertLevel
 
         [Test]
         public void CanAccessMultipleAssertLevel()
@@ -631,9 +631,9 @@ namespace NUnit.Framework.Tests.Internal
             });
         }
 
-#endregion
+        #endregion
 
-#region TestCaseTimeout
+        #region TestCaseTimeout
 
         [Test]
         public void CanAccessTestCaseTimeout()
@@ -652,9 +652,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.TestCaseTimeout, Is.EqualTo(timeout));
         }
 
-#endregion
+        #endregion
 
-#region UpstreamActions
+        #region UpstreamActions
 
         [Test]
         public void CanAccessUpstreamActions()
@@ -673,9 +673,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(TestExecutionContext.CurrentContext.UpstreamActions, Is.SameAs(actions));
         }
 
-#endregion
+        #endregion
 
-#region CurrentCulture and CurrentUICulture
+        #region CurrentCulture and CurrentUICulture
 
         [Test]
         public void CanAccessCurrentCulture()
@@ -755,9 +755,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(_originalUICulture, Is.EqualTo(_setupContext.CurrentUICulture), "UICulture not in final context");
         }
 
-#endregion
+        #endregion
 
-#region CurrentPrincipal
+        #region CurrentPrincipal
 
         [Test]
         public void CanAccessCurrentPrincipal()
@@ -799,9 +799,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(_originalPrincipal, Is.EqualTo(_setupContext.CurrentPrincipal), "Principal not in final context");
         }
 
-#endregion
+        #endregion
 
-#region ValueFormatter
+        #region ValueFormatter
 
         [Test]
         public void SetAndRestoreValueFormatter()
@@ -827,9 +827,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(MsgUtils.FormatValue(123), Is.EqualTo("123"));
         }
 
-#endregion
+        #endregion
 
-#region SingleThreaded
+        #region SingleThreaded
 
         [Test]
         public void SingleThreadedDefaultsToFalse()
@@ -845,9 +845,9 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(new TestExecutionContext(parent).IsSingleThreaded, Is.True);
         }
 
-#endregion
+        #endregion
 
-#region ExecutionStatus
+        #region ExecutionStatus
 
         [Test]
         public void ExecutionStatusIsPushedToHigherContext()
@@ -883,12 +883,12 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(rightContext.ExecutionStatus, Is.EqualTo(TestExecutionStatus.StopRequested));
         }
 
-#endregion
+        #endregion
 
-#region Cross-domain Tests
+        #region Cross-domain Tests
 
 #if NETFRAMEWORK
-        [Test, Platform(Exclude="Mono", Reason="Intermittent failures")]
+        [Test, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
         public void CanCreateObjectInAppDomain()
         {
             AppDomain domain = AppDomain.CreateDomain(
@@ -911,7 +911,7 @@ namespace NUnit.Framework.Tests.Internal
 
         #endregion
 
-#region CurrentRepeatCount Tests
+        #region CurrentRepeatCount Tests
         [Test]
         public void CanAccessCurrentRepeatCount()
         {
@@ -919,9 +919,9 @@ namespace NUnit.Framework.Tests.Internal
             _fixtureContext.CurrentRepeatCount++;
             Assert.That(_fixtureContext.CurrentRepeatCount, Is.EqualTo(1), "expected value to be able to be incremented from the TestExecutionContext");
         }
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private async Task YieldAsync()
         {
@@ -939,11 +939,11 @@ namespace NUnit.Framework.Tests.Internal
             return TestExecutionContext.CurrentContext;
         }
 
-#endregion
+        #endregion
     }
 
 #if NETFRAMEWORK
-    [TestFixture, Platform(Exclude="Mono", Reason="Intermittent failures")]
+    [TestFixture, Platform(Exclude = "Mono", Reason = "Intermittent failures")]
     public class TextExecutionContextInAppDomain
     {
         private RunsInAppDomain _runsInAppDomain;

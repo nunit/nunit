@@ -23,7 +23,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] {4, 4.0f, 4.0d, 4.0000m};
+        private static readonly object[] SuccessData = new object[] { 4, 4.0f, 4.0d, 4.0000m };
         private static readonly object[] FailureData = new object[]
         {
             new TestCaseData(5, "5"),
@@ -107,7 +107,6 @@ namespace NUnit.Framework.Tests.Constraints
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Hours);
             }
 
-
             [Test]
             public void CanMatchUsingIsEqualToWithinTimeSpan()
             {
@@ -115,7 +114,6 @@ namespace NUnit.Framework.Tests.Constraints
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
                 Assert.That(actual, Is.EqualTo(expected).Within(TimeSpan.FromMinutes(2)));
             }
-
 
             [Test]
             public void CanMatchDatesWithinMinutes()
@@ -154,7 +152,7 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 DateTime expected = new DateTime(2007, 4, 1, 13, 0, 0);
                 DateTime actual = new DateTime(2007, 4, 1, 13, 1, 0);
-                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute*5).Ticks);
+                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
             [Test]
@@ -200,7 +198,6 @@ namespace NUnit.Framework.Tests.Constraints
 
         public class DateTimeOffsetShouldBeSame
         {
-
             [Datapoints]
             public static readonly DateTimeOffset[] SameDateTimeOffsets =
                 {
@@ -309,7 +306,7 @@ namespace NUnit.Framework.Tests.Constraints
             public void CanMatchDatesWithinMinutes()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(5).Minutes);
             }
 
@@ -317,7 +314,7 @@ namespace NUnit.Framework.Tests.Constraints
             public void CanMatchDatesWithinSeconds()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(300).Seconds);
             }
 
@@ -325,7 +322,7 @@ namespace NUnit.Framework.Tests.Constraints
             public void CanMatchDatesWithinMilliseconds()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
                 Assert.That(actual, new EqualConstraint(expected).Within(300_000).Milliseconds);
             }
 
@@ -333,8 +330,8 @@ namespace NUnit.Framework.Tests.Constraints
             public void CanMatchDatesWithinTicks()
             {
                 var expected = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 0, 0));
-                var actual =  new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
-                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute*5).Ticks);
+                var actual = new DateTimeOffset(new DateTime(2007, 4, 1, 13, 1, 0));
+                Assert.That(actual, new EqualConstraint(expected).Within(TimeSpan.TicksPerMinute * 5).Ticks);
             }
 
             [Test]
@@ -365,45 +362,45 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void CanMatchDictionaries_SameOrder()
             {
-                Assert.That(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}}, Is.EqualTo(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}}));
+                Assert.That(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } }, Is.EqualTo(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchDictionaries_Failure()
             {
                 Assert.Throws<AssertionException>(
-                    () => Assert.That(new Dictionary<int, int> {{0, 0}, {1, 5}, {2, 2}}, Is.EqualTo(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}})));
+                    () => Assert.That(new Dictionary<int, int> { { 0, 0 }, { 1, 5 }, { 2, 2 } }, Is.EqualTo(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } })));
             }
 
             [Test]
             public void CanMatchDictionaries_DifferentOrder()
             {
-                Assert.That(new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}}, Is.EqualTo(new Dictionary<int, int> {{0, 0}, {1, 1}, {2, 2}}));
+                Assert.That(new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Dictionary<int, int> { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchHashtables_SameOrder()
             {
-                Assert.That(new Hashtable {{0, 0}, {1, 1}, {2, 2}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}}));
+                Assert.That(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchHashtables_Failure()
             {
                 Assert.Throws<AssertionException>(
-                    () => Assert.That(new Hashtable {{0, 0}, {1, 5}, {2, 2}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}})));
+                    () => Assert.That(new Hashtable { { 0, 0 }, { 1, 5 }, { 2, 2 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } })));
             }
 
             [Test]
             public void CanMatchHashtables_DifferentOrder()
             {
-                Assert.That(new Hashtable {{0, 0}, {2, 2}, {1, 1}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}}));
+                Assert.That(new Hashtable { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
 
             [Test]
             public void CanMatchHashtableWithDictionary()
             {
-                Assert.That(new Dictionary<int, int> {{0, 0}, {2, 2}, {1, 1}}, Is.EqualTo(new Hashtable {{0, 0}, {1, 1}, {2, 2}}));
+                Assert.That(new Dictionary<int, int> { { 0, 0 }, { 2, 2 }, { 1, 1 } }, Is.EqualTo(new Hashtable { { 0, 0 }, { 1, 1 }, { 2, 2 } }));
             }
         }
 
@@ -693,11 +690,11 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void UsesProvidedListComparer()
             {
-                var list1 = new List<int>() {2, 3};
-                var list2 = new List<int>() {3, 4};
+                var list1 = new List<int>() { 2, 3 };
+                var list2 = new List<int>() { 3, 4 };
 
-                var list11 = new List<List<int>>() {list1};
-                var list22 = new List<List<int>>() {list2};
+                var list11 = new List<List<int>>() { list1 };
+                var list22 = new List<List<int>>() { list2 };
                 var comparer = new IntListEqualComparer();
 
                 Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
@@ -724,11 +721,11 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void UsesProvidedArrayComparer()
             {
-                var array1 = new[] {2, 3};
-                var array2 = new[] {3, 4};
+                var array1 = new[] { 2, 3 };
+                var array2 = new[] { 3, 4 };
 
-                var list11 = new List<int[]>() {array1};
-                var list22 = new List<int[]>() {array2};
+                var list11 = new List<int[]>() { array1 };
+                var list22 = new List<int[]>() { array2 };
                 var comparer = new IntArrayEqualComparer();
 
                 Assert.That(list11, new CollectionEquivalentConstraint(list22).Using(comparer));
@@ -802,7 +799,7 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That("  Expected: 0 (Int32)"+ NL + "  But was:  0 (IntPtr)"+ NL, Is.EqualTo(ex.Message));
+            Assert.That("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL, Is.EqualTo(ex.Message));
         }
 
         private class Dummy
@@ -872,7 +869,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Is.Zero, Is.EqualTo(Is.Zero)));
-            Assert.That("  Expected: <<equal 0>>"+ NL + "  But was:  <<equal 0>>"+ NL, Is.EqualTo(ex.Message));
+            Assert.That("  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL, Is.EqualTo(ex.Message));
         }
 
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
@@ -882,8 +879,10 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
         }
     }
-    namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip {
-        internal class ReallyLongClassNameShouldBeHere {
+    namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
+    {
+        internal class ReallyLongClassNameShouldBeHere
+        {
             public override bool Equals(object? obj)
             {
                 if (obj is null || GetType() != obj.GetType())
@@ -900,20 +899,19 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 return "a";
             }
-
         }
-
     }
     namespace ExampleTest.Clip.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip
     {
-        internal class ReallyLongClassNameShouldBeHere {
+        internal class ReallyLongClassNameShouldBeHere
+        {
             public override bool Equals(object? obj)
             {
                 if (obj is null || GetType() != obj.GetType())
                 {
                     return false;
                 }
-                return obj.ToString()==ToString();
+                return obj.ToString() == ToString();
             }
             public override int GetHashCode()
             {
@@ -925,16 +923,18 @@ namespace NUnit.Framework.Tests.Constraints
                 return "a";
             }
         }
-
     }
-    namespace ExampleTest {
-        internal class BaseTest {
+    namespace ExampleTest
+    {
+        internal class BaseTest
+        {
             private readonly int _value;
             public BaseTest()
             {
                 _value = 0;
             }
-            public BaseTest(int value) {
+            public BaseTest(int value)
+            {
                 _value = value;
             }
             public override bool Equals(object? obj)
@@ -957,14 +957,14 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        internal class ClassA : BaseTest {
+        internal class ClassA : BaseTest
+        {
             public ClassA(int x) : base(x) { }
-
         }
 
         internal class ClassB : BaseTest
         {
-             public ClassB(int x) : base(x) { }
+            public ClassB(int x) : base(x) { }
         }
     }
     #endregion

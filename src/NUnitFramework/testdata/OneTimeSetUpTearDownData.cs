@@ -222,7 +222,6 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         public static bool BaseSetUpCalledFirst;
         public static bool BaseTearDownCalledLast;
 
-
         [OneTimeSetUp]
         public static void Init2()
         {
@@ -322,7 +321,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     {
         public ExceptionInConstructor()
         {
-            throw new Exception( "This was thrown in constructor" );
+            throw new Exception("This was thrown in constructor");
         }
 
         [Test]
@@ -365,13 +364,13 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
-    [TestFixture, Ignore( "Do Not Run This" )]
+    [TestFixture, Ignore("Do Not Run This")]
     public class IgnoredFixture
     {
         public bool SetupCalled = false;
@@ -390,10 +389,10 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         }
 
         [Test]
-        public void Success(){}
+        public void Success() { }
 
         [Test]
-        public void EvenMoreSuccess(){}
+        public void EvenMoreSuccess() { }
     }
 
     [TestFixture]

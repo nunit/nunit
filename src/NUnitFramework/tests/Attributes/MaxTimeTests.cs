@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture, NonParallelizable]
     public class MaxTimeTests
     {
-        [Test,MaxTime(1000)]
+        [Test, MaxTime(1000)]
         public void MaxTimeNotExceeded()
         {
         }

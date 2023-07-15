@@ -68,7 +68,6 @@ namespace NUnit.Framework.Tests.Attributes
             Assert.That(fixture.Count, Is.EqualTo(nTries));
         }
 
-
         [Test]
         public void CategoryWorksWithRetry()
         {

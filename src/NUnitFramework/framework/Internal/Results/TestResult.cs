@@ -174,7 +174,6 @@ namespace NUnit.Framework.Internal
                 {
                     RwLock.ExitReadLock();
                 }
-
             }
             private set => _message = value;
         }
@@ -589,7 +588,6 @@ namespace NUnit.Framework.Internal
         {
             RecordAssertion(status, message, null);
         }
-
 
         /// <summary>
         /// Creates a failure message incorporating failures

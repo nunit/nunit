@@ -19,4 +19,4 @@ namespace NUnit.Framework.Constraints
             right_precedence = 10;
         }
     }
- }
+}

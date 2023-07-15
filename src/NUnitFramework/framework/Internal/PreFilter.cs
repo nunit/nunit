@@ -146,7 +146,7 @@ namespace NUnit.Framework.Internal
 
             private bool MatchElementType(Type type)
             {
-                switch(_elementType)
+                switch (_elementType)
                 {
                     default:
                     case FilterElementType.Unknown:

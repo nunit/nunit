@@ -453,7 +453,6 @@ namespace NUnit.Framework.Tests.Constraints
         {
             _disposedValue = true;
         }
-
     }
 
     public class NeverEqualIEquatableWithOverriddenAlwaysTrueEquals : IEquatable<NeverEqualIEquatableWithOverriddenAlwaysTrueEquals>
@@ -547,7 +546,7 @@ namespace NUnit.Framework.Tests.Constraints
             if (other is null)
                 return false;
 
-            return OtherProperty == other.OtherProperty && Equals((EquatableObject) other);
+            return OtherProperty == other.OtherProperty && Equals((EquatableObject)other);
         }
     }
 

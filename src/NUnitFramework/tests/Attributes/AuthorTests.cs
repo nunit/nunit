@@ -71,13 +71,13 @@ namespace NUnit.Framework.Tests.Attributes
         }
 
         #region Multiple Authors
-        [Test(Author = "Rob Prouse <rob@prouse.org>"),Author("Charlie Poole", "charlie@poole.org")]
+        [Test(Author = "Rob Prouse <rob@prouse.org>"), Author("Charlie Poole", "charlie@poole.org")]
         [Author("NUnit")]
         public void TestMethodMultipleAuthors()
         {
             Test test = TestBuilder.MakeTestFromMethod(FixtureType, nameof(AuthorFixture.TestMethodMultipleAuthors));
             Assert.That(test.Properties[PropertyNames.Author], Is.EquivalentTo(
-                new[] { "Rob Prouse <rob@prouse.org>","Charlie Poole <charlie@poole.org>", "NUnit"}));
+                new[] { "Rob Prouse <rob@prouse.org>", "Charlie Poole <charlie@poole.org>", "NUnit" }));
         }
 
         [Test]

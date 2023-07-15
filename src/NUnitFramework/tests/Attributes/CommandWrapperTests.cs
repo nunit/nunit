@@ -98,7 +98,7 @@ namespace NUnit.Framework.Tests.Attributes
                     {
                         innerCommand.Execute(context);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         if (ex is NUnitException)
                             ex = ex.InnerException!;
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Tests.Attributes
                     }
 
                     return context.CurrentResult;
-}
+                }
             }
         }
     }

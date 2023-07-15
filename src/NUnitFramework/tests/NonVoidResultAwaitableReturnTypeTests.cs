@@ -16,7 +16,6 @@ namespace NUnit.Framework.Tests
         public NonVoidResultAwaitableReturnTypeTests(string methodName)
             : base(methodName)
         {
-
         }
 
         [Test]

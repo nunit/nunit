@@ -52,4 +52,4 @@ namespace NUnit.Framework.Tests.Internal.Results
 
         #endregion
     }
- }
+}

@@ -47,7 +47,6 @@ namespace NUnit.Framework.Internal
                     _traceWriter = new InternalTraceWriter(logName);
                     _traceWriter.WriteLine("InternalTrace: Initializing to level {0}", _traceLevel);
                 }
-
             }
             else
             {
@@ -71,7 +70,6 @@ namespace NUnit.Framework.Internal
                     _traceWriter = new InternalTraceWriter(writer);
                     _traceWriter.WriteLine($"InternalTrace: Initializing to level {_traceLevel}");
                 }
-
             }
             else
             {

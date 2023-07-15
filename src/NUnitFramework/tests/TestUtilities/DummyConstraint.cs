@@ -13,7 +13,6 @@ namespace NUnit.Framework.Tests.TestUtilities
 
         public override string Description => throw new NotImplementedException();
 
-
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
             return new ConstraintResult(this, actual);

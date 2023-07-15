@@ -84,9 +84,9 @@ namespace NUnit.Framework.Tests.Assertions
         public void GenericThrowsReturnsCorrectException()
         {
             var ex = Assert.Throws<ArgumentException>(
-                () => { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
+                () => throw new ArgumentException("myMessage", "myParam")) as ArgumentException;
 
-            Assert.That(ex,Is.Not.Null, "No ArgumentException thrown");
+            Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
             Assert.Multiple(() =>
             {
                 Assert.That(ex!.Message, Does.StartWith("myMessage"));
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ThrowsReturnsCorrectException()
         {
             var ex = Assert.Throws(typeof(ArgumentException),
-                () => { throw new ArgumentException("myMessage", "myParam"); }) as ArgumentException;
+                () => throw new ArgumentException("myMessage", "myParam")) as ArgumentException;
 
             Assert.That(ex, Is.Not.Null, "No ArgumentException thrown");
             Assert.Multiple(() =>
@@ -133,7 +133,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex!.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine ));
+                "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
 
             CheckForSpuriousAssertionResults();
         }
@@ -147,7 +147,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex, Is.Not.Null);
             Assert.That(ex!.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
-                "  But was:  <System.Exception: my message" + Environment.NewLine ));
+                "  But was:  <System.Exception: my message" + Environment.NewLine));
 
             CheckForSpuriousAssertionResults();
         }

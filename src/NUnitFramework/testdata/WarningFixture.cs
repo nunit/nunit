@@ -689,7 +689,7 @@ namespace NUnit.TestData
             Assert.Warn("(Warning message)");
         }
 
-#endregion
+        #endregion
     }
 
     public abstract class WarningInSetUpOrTearDownFixture

@@ -14,7 +14,6 @@ namespace NUnit.Common.Tests
                 Throws.TypeOf<ArgumentNullException>());
         }
 
-
         [Test]
         public void SpecOptionMustContainEqualSign()
         {

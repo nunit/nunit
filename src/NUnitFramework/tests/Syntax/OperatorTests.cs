@@ -71,7 +71,6 @@ namespace NUnit.Framework.Tests.Syntax
             StaticSyntax = Has.Some.With.Some.LessThan(100);
             BuilderSyntax = Builder().Some.With.Some.LessThan(100);
         }
-
     }
 
     public class SomeTest_UseOfAndSome : SyntaxTest

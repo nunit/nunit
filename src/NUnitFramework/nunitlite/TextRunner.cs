@@ -135,7 +135,7 @@ namespace NUnitLite
                         {
                             Console.SetError(originalStdErrWriter);
                         }
-                    }                    
+                    }
                 }
             }
             finally
@@ -392,7 +392,6 @@ namespace NUnitLite
                     : testFilters[0];
             }
 
-
             if (options.WhereClauseSpecified)
             {
                 string xmlText = new TestSelectionParser().Parse(options.WhereClause);
@@ -484,7 +483,6 @@ namespace NUnitLite
         /// <param name="message">A TestMessage object containing the text to send</param>
         public void SendMessage(TestMessage message)
         {
-
         }
 
         #endregion

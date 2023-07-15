@@ -25,7 +25,7 @@ namespace NUnit.Framework
     /// }
     /// </example>
     ///
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TestAttribute : NUnitAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object? _expectedResult;
@@ -84,7 +84,6 @@ namespace NUnit.Framework
 
             if (_hasExpectedResult && test.Method.GetParameters().Length > 0)
                 test.MakeInvalid("The 'TestAttribute.ExpectedResult' property may not be used on parameterized methods.");
-
         }
 
         #endregion

@@ -274,8 +274,8 @@ namespace NUnit.Framework.Tests.Assertions
                     + string.Concat(lines.Select((line, i) => $" {i + 1}. {line.Trim()}" + Environment.NewLine).ToArray())
                     + "(end)");
 
-                 // ^ Most of that is to differentiate it from the current method's stack trace
-                 // reported directly underneath at the same level of indentation.
+                // ^ Most of that is to differentiate it from the current method's stack trace
+                // reported directly underneath at the same level of indentation.
             }
         }
     }

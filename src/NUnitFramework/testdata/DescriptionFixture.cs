@@ -9,11 +9,11 @@ namespace NUnit.TestData
     {
         [Test(Description = "Test Description")]
         public void Method()
-        {}
+        { }
 
         [Test]
         public void NoDescriptionMethod()
-        {}
+        { }
 
         [Test]
         [Description("Separate Description")]

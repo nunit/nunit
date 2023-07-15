@@ -11,9 +11,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void Contains()
         {
-            Classic.StringAssert.Contains( "abc", "abc" );
-            Classic.StringAssert.Contains( "abc", "***abc" );
-            Classic.StringAssert.Contains( "abc", "**abc**" );
+            Classic.StringAssert.Contains("abc", "abc");
+            Classic.StringAssert.Contains("abc", "***abc");
+            Classic.StringAssert.Contains("abc", "**abc**");
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void StartsWith()
         {
-            Classic.StringAssert.StartsWith( "abc", "abcdef" );
-            Classic.StringAssert.StartsWith( "abc", "abc" );
+            Classic.StringAssert.StartsWith("abc", "abcdef");
+            Classic.StringAssert.StartsWith("abc", "abc");
         }
 
         [Test]
@@ -70,8 +70,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void EndsWith()
         {
-            Classic.StringAssert.EndsWith( "abc", "abc" );
-            Classic.StringAssert.EndsWith( "abc", "123abc" );
+            Classic.StringAssert.EndsWith("abc", "abc");
+            Classic.StringAssert.EndsWith("abc", "123abc");
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 TextMessageWriter.Pfx_Expected + "String ending with \"xyz\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abcdef\"" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.EndsWith( "xyz", "abcdef" ));
+            var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.EndsWith("xyz", "abcdef"));
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -99,7 +99,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void CaseInsensitiveCompare()
         {
-            Classic.StringAssert.AreEqualIgnoringCase( "name", "NAME" );
+            Classic.StringAssert.AreEqualIgnoringCase("name", "NAME");
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected string length 4 but was 5. Strings differ at index 4." + Environment.NewLine
                 + TextMessageWriter.Pfx_Expected + "\"Name\", ignoring case" + Environment.NewLine
-                + TextMessageWriter.Pfx_Actual   + "\"NAMES\"" + Environment.NewLine
+                + TextMessageWriter.Pfx_Actual + "\"NAMES\"" + Environment.NewLine
                 + "  ---------------^" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.AreEqualIgnoringCase("Name", "NAMES"));
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void IsMatch()
         {
-            Classic.StringAssert.IsMatch( "a?bc", "12a3bc45" );
+            Classic.StringAssert.IsMatch("a?bc", "12a3bc45");
         }
 
         [Test]
@@ -134,12 +134,11 @@ namespace NUnit.Framework.Tests.Assertions
         public void DifferentEncodingsOfSameStringAreNotEqual()
         {
             string input = "Hello World";
-            byte[] data = System.Text.Encoding.Unicode.GetBytes( input );
-            string garbage = System.Text.Encoding.UTF8.GetString( data, 0, data.Length);
+            byte[] data = System.Text.Encoding.Unicode.GetBytes(input);
+            string garbage = System.Text.Encoding.UTF8.GetString(data, 0, data.Length);
 
-            Classic.Assert.AreNotEqual( input, garbage );
+            Classic.Assert.AreNotEqual(input, garbage);
         }
-
 
         [Test]
         public void EqualsFailsWhenUsed()

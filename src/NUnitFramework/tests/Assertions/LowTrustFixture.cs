@@ -1,5 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if !NETFRAMEWORK
+#pragma warning disable format // Temporary until release of https://github.com/dotnet/roslyn/issues/62612
+#endif
+
 #if NETFRAMEWORK
 using System;
 using System.Collections.Generic;
@@ -64,7 +68,7 @@ namespace NUnit.Framework.Tests.Assertions
     {
         private readonly AppDomain _appDomain;
 
-#region Constructor(s)
+        #region Constructor(s)
 
         /// <summary>
         /// Creates a low trust <see cref="TestSandBox"/> instance.
@@ -102,9 +106,9 @@ namespace NUnit.Framework.Tests.Assertions
                 strongNames.ToArray());
         }
 
-#endregion
+        #endregion
 
-#region Finalizer and Dispose methods
+        #region Finalizer and Dispose methods
 
         /// <summary>
         /// The <see cref="TestSandBox"/> finalizer.
@@ -132,9 +136,9 @@ namespace NUnit.Framework.Tests.Assertions
             AppDomain.Unload(_appDomain);
         }
 
-#endregion
+        #endregion
 
-#region PermissionSet factory methods
+        #region PermissionSet factory methods
         public static PermissionSet GetLowTrustPermissionSet()
         {
             var permissions = new PermissionSet(PermissionState.None);
@@ -146,9 +150,9 @@ namespace NUnit.Framework.Tests.Assertions
             return permissions;
         }
 
-#endregion
+        #endregion
 
-#region Run methods
+        #region Run methods
 
         public void Run(Action action)
         {
@@ -176,9 +180,9 @@ namespace NUnit.Framework.Tests.Assertions
             }
         }
 
-#endregion
+        #endregion
 
-#region Private methods
+        #region Private methods
 
         private static StrongName GetStrongName(Assembly assembly)
         {
@@ -193,9 +197,9 @@ namespace NUnit.Framework.Tests.Assertions
             return new StrongName(new StrongNamePublicKeyBlob(publicKey), assemblyName.Name, assemblyName.Version);
         }
 
-#endregion
+        #endregion
 
-#region Inner classes
+        #region Inner classes
 
         [Serializable]
         internal class MethodRunner : MarshalByRefObject
@@ -217,7 +221,7 @@ namespace NUnit.Framework.Tests.Assertions
             }
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

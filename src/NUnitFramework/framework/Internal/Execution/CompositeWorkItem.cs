@@ -169,7 +169,7 @@ namespace NUnit.Framework.Internal.Execution
                 // ParameterizedMethodSuites and individual test cases both use the same
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite =  action.Targets.HasFlag(ActionTargets.Suite)
+                bool applyToSuite = action.Targets.HasFlag(ActionTargets.Suite)
                     || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
 
                 bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
@@ -487,4 +487,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-

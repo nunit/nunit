@@ -16,9 +16,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraySucceeds()
         {
-            Assert.That(TestArray,Has.Some.EqualTo("abc"));
-            Assert.That(TestArray,Has.Some.EqualTo(123));
-            Assert.That(TestArray,Has.Some.EqualTo("xyz"), "expected array containing 'xyz'");
+            Assert.That(TestArray, Has.Some.EqualTo("abc"));
+            Assert.That(TestArray, Has.Some.EqualTo(123));
+            Assert.That(TestArray, Has.Some.EqualTo("xyz"), "expected array containing 'xyz'");
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(TestArray,Has.Some.EqualTo("def")));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(TestArray, Has.Some.EqualTo("def")));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -37,7 +37,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<object>(),Has.Some.EqualTo("def")));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<object>(), Has.Some.EqualTo("def")));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
@@ -45,13 +45,13 @@ namespace NUnit.Framework.Tests.Assertions
         public void NullArrayIsError()
         {
             string[]? nullList = null;
-            Assert.Throws<ArgumentException>(() => Assert.That(nullList,Has.Some.EqualTo("def")));
+            Assert.Throws<ArgumentException>(() => Assert.That(nullList, Has.Some.EqualTo("def")));
         }
 
         [Test]
         public void ArrayListSucceeds()
         {
-            var list = new SimpleObjectList( TestArray );
+            var list = new SimpleObjectList(TestArray);
 
             Assert.That(list, Has.Some.EqualTo("abc"));
             Assert.That(list, Has.Some.EqualTo(123));
@@ -64,14 +64,14 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(  new SimpleObjectList( TestArray ),Has.Some.EqualTo("def") ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo("def")));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
         public void DifferentTypesMayBeEqual()
         {
-            Assert.That( new SimpleObjectList( TestArray ),Has.Some.EqualTo(123.0) );
+            Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo(123.0));
         }
 
         [Test]

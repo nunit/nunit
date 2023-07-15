@@ -1,7 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Linq;
-using NUnit.Framework.Classic;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
@@ -216,15 +215,13 @@ namespace NUnit.Framework.Tests.Attributes
 
         #region Assembly level InstancePerTestCase
 
-
-
 #if NETFRAMEWORK
 
         private readonly string[] _referenceAssemblies = new[]
         {
             typeof(Test).Assembly.Location,
             typeof(BaseLifeCycle).Assembly.Location,
-            typeof(DirectoryAssert).Assembly.Location
+            typeof(Classic.DirectoryAssert).Assembly.Location
         };
 
         [Test]

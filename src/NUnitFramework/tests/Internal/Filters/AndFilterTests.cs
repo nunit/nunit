@@ -86,7 +86,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         /// 
         /// See also <see cref="MockTestFilter"/>.
         /// </summary>
-        [TestCase(new[] { false, false}, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
+        [TestCase(new[] { false, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
         [TestCase(new[] { true, false }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
         [TestCase(new[] { false, true }, false, MockTestFilter.MatchFunction.IsExplicitMatch)]
         [TestCase(new[] { true, true }, true, MockTestFilter.MatchFunction.IsExplicitMatch)]

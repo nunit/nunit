@@ -88,7 +88,7 @@ namespace NUnit.Framework.Internal.Execution
                 IsolateQueues(work);
         }
 
-#endregion
+        #endregion
 
         #region Properties
 

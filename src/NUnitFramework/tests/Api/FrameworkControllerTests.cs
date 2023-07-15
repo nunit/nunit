@@ -81,7 +81,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(inserted.ChildNodes[0].Attributes["name"], Is.EqualTo("key1"));
                 Assert.That(inserted.ChildNodes[0].Attributes["value"], Is.EqualTo("value1"));
             });
-            
+
             var innerNode = inserted.ChildNodes[1].FirstChild;
             Assert.That(innerNode, Is.Not.Null);
             Assert.Multiple(() =>
@@ -453,9 +453,9 @@ namespace NUnit.Framework.Tests.Api
             Assert.That(_handler.GetCallbackResult(), Is.EqualTo("0"));
         }
 
-#endregion
+        #endregion
 
-#region RunTestsAction
+        #region RunTestsAction
         [TestCaseSource(nameof(EmptyFilters))]
         public void RunTestsAction_AfterLoad_ReturnsRunnableSuite(string filter)
         {
@@ -543,9 +543,9 @@ namespace NUnit.Framework.Tests.Api
             Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static string? GetSkipReason(TNode result)
         {
@@ -553,6 +553,6 @@ namespace NUnit.Framework.Tests.Api
             return propNode?.Attributes["value"];
         }
 
-#endregion
+        #endregion
     }
 }

@@ -17,7 +17,7 @@ namespace NUnit.TestData.RandomAttributeTests
         [Test]
         public void RandomInt([Random(COUNT)] int x)
         {
-            Assert.That(x, Is.InRange(0, int.MaxValue-1));
+            Assert.That(x, Is.InRange(0, int.MaxValue - 1));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace NUnit.TestData.RandomAttributeTests
         [Test]
         public void RandomUInt([Random(COUNT)] uint x)
         {
-            Assert.That(x, Is.InRange(0u, uint.MaxValue-1));
+            Assert.That(x, Is.InRange(0u, uint.MaxValue - 1));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace NUnit.TestData.RandomAttributeTests
         [Test]
         public void RandomUShort([Random(COUNT)] ushort x)
         {
-            Assert.That(x, Is.InRange(0, ushort.MaxValue-1));
+            Assert.That(x, Is.InRange(0, ushort.MaxValue - 1));
         }
 
         [Test]

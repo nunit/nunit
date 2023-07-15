@@ -8,7 +8,6 @@ using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 
-
 namespace NUnitLite.Tests
 {
     public class TeamCityEventListenerTests

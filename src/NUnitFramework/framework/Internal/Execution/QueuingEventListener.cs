@@ -30,7 +30,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="test">The test that is starting</param>
         public void TestStarted(ITest test)
         {
-            Events.Enqueue( new TestStartedEvent( test ) );
+            Events.Enqueue(new TestStartedEvent(test));
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="result">Result of the test case</param>
         public void TestFinished(ITestResult result)
         {
-            Events.Enqueue( new TestFinishedEvent( result ) );
+            Events.Enqueue(new TestFinishedEvent(result));
         }
 
         /// <summary>

@@ -12,14 +12,14 @@ namespace NUnit.Framework.Tests.Attributes
         [Test]
         public void InheritedFixtureAttributeIsRecognized()
         {
-            Assert.That( TestBuilder.MakeFixture( typeof (When_collecting_test_fixtures) ) is not null);
+            Assert.That(TestBuilder.MakeFixture(typeof(When_collecting_test_fixtures)) is not null);
         }
 
         [Test]
         public void InheritedTestAttributeIsRecognized()
         {
-            Test fixture = TestBuilder.MakeFixture( typeof( When_collecting_test_fixtures ) );
-            Assert.That( fixture.TestCaseCount, Is.EqualTo(1));
+            Test fixture = TestBuilder.MakeFixture(typeof(When_collecting_test_fixtures));
+            Assert.That(fixture.TestCaseCount, Is.EqualTo(1));
         }
     }
 }

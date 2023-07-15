@@ -350,7 +350,7 @@ namespace NUnit.Framework.Constraints
             public override void WriteActualValueTo(MessageWriter writer)
             {
                 // Choose startIndex in such way that '_breakingIndex' is always visible in message.
-                int startIndex = Math.Max(0, _breakingIndex - MsgUtils.DefaultMaxItems  + 2);
+                int startIndex = Math.Max(0, _breakingIndex - MsgUtils.DefaultMaxItems + 2);
                 var enumerable = (IEnumerable?)ActualValue;
                 var actualValueMessage = enumerable is null ? "null" : MsgUtils.FormatCollection(enumerable, startIndex);
                 writer.Write(actualValueMessage);

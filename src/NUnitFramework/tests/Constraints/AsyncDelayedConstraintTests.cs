@@ -34,14 +34,14 @@ namespace NUnit.Framework.Tests.Constraints
         public void ConstraintVoidDelegateFailureAsDelegateIsNotCalled()
         {
             Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
-                           .ApplyTo(new TestDelegate(async () => { await One(); })).IsSuccess, Is.False);
+                           .ApplyTo(new TestDelegate(async () => await One())).IsSuccess, Is.False);
         }
 
         [Test]
         public void ConstraintVoidDelegateExceptionIsFailureAsDelegateIsNotCalled()
         {
             Assert.That(new DelayedConstraint(new EqualConstraint(1), 100)
-                           .ApplyTo(new TestDelegate(async () => { await Throw(); })).IsSuccess, Is.False);
+                           .ApplyTo(new TestDelegate(async () => await Throw())).IsSuccess, Is.False);
         }
 
         [Test]
@@ -49,7 +49,6 @@ namespace NUnit.Framework.Tests.Constraints
         {
             Assert.That(async () => await One(), Is.EqualTo(1).After(100));
         }
-
 
         [Test]
         public void SyntaxFailure()

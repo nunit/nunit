@@ -21,7 +21,7 @@ namespace NUnit.Framework.Interfaces
         /// Initializes a new instance of the <see cref="ResultState"/> class.
         /// </summary>
         /// <param name="status">The TestStatus.</param>
-        public ResultState(TestStatus status) : this (status, string.Empty, FailureSite.Test)
+        public ResultState(TestStatus status) : this(status, string.Empty, FailureSite.Test)
         {
         }
 
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         /// <param name="status">The TestStatus.</param>
         /// <param name="label">The label.</param>
-        public ResultState(TestStatus status, string? label) : this (status, label, FailureSite.Test)
+        public ResultState(TestStatus status, string? label) : this(status, label, FailureSite.Test)
         {
         }
 
@@ -63,82 +63,82 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// The result is inconclusive
         /// </summary>
-        public readonly static ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
+        public static readonly ResultState Inconclusive = new ResultState(TestStatus.Inconclusive);
 
         /// <summary>
         /// The test has been skipped.
         /// </summary>
-        public readonly static ResultState Skipped = new ResultState(TestStatus.Skipped);
+        public static readonly ResultState Skipped = new ResultState(TestStatus.Skipped);
 
         /// <summary>
         /// The test has been ignored.
         /// </summary>
-        public readonly static ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
+        public static readonly ResultState Ignored = new ResultState(TestStatus.Skipped, "Ignored");
 
         /// <summary>
         /// The test was skipped because it is explicit
         /// </summary>
-        public readonly static ResultState Explicit = new ResultState(TestStatus.Skipped, "Explicit");
+        public static readonly ResultState Explicit = new ResultState(TestStatus.Skipped, "Explicit");
 
         /// <summary>
         /// The test succeeded
         /// </summary>
-        public readonly static ResultState Success = new ResultState(TestStatus.Passed);
+        public static readonly ResultState Success = new ResultState(TestStatus.Passed);
 
         /// <summary>
         /// The test issued a warning
         /// </summary>
-        public readonly static ResultState Warning = new ResultState(TestStatus.Warning);
+        public static readonly ResultState Warning = new ResultState(TestStatus.Warning);
 
         /// <summary>
         /// The test failed
         /// </summary>
-        public readonly static ResultState Failure = new ResultState(TestStatus.Failed);
+        public static readonly ResultState Failure = new ResultState(TestStatus.Failed);
 
         /// <summary>
         /// The test encountered an unexpected exception
         /// </summary>
-        public readonly static ResultState Error = new ResultState(TestStatus.Failed, "Error");
+        public static readonly ResultState Error = new ResultState(TestStatus.Failed, "Error");
 
         /// <summary>
         /// The test was cancelled by the user
         /// </summary>
-        public readonly static ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
+        public static readonly ResultState Cancelled = new ResultState(TestStatus.Failed, "Cancelled");
 
         /// <summary>
         /// The test was not runnable.
         /// </summary>
-        public readonly static ResultState NotRunnable = new ResultState(TestStatus.Failed, "Invalid");
+        public static readonly ResultState NotRunnable = new ResultState(TestStatus.Failed, "Invalid");
 
         /// <summary>
         /// A suite failed because one or more child tests failed or had errors
         /// </summary>
-        public readonly static ResultState ChildFailure = ResultState.Failure.WithSite(FailureSite.Child);
+        public static readonly ResultState ChildFailure = ResultState.Failure.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite failed because one or more child tests had warnings
         /// </summary>
-        public readonly static ResultState ChildWarning = ResultState.Warning.WithSite(FailureSite.Child);
+        public static readonly ResultState ChildWarning = ResultState.Warning.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite is marked ignored because one or more child tests were ignored
         /// </summary>
-        public readonly static ResultState ChildIgnored = ResultState.Ignored.WithSite(FailureSite.Child);
+        public static readonly ResultState ChildIgnored = ResultState.Ignored.WithSite(FailureSite.Child);
 
         /// <summary>
         /// A suite failed in its OneTimeSetUp
         /// </summary>
-        public readonly static ResultState SetUpFailure = ResultState.Failure.WithSite(FailureSite.SetUp);
+        public static readonly ResultState SetUpFailure = ResultState.Failure.WithSite(FailureSite.SetUp);
 
         /// <summary>
         /// A suite had an unexpected exception in its OneTimeSetUp
         /// </summary>
-        public readonly static ResultState SetUpError = ResultState.Error.WithSite(FailureSite.SetUp);
+        public static readonly ResultState SetUpError = ResultState.Error.WithSite(FailureSite.SetUp);
 
         /// <summary>
         /// A suite had an unexpected exception in its OneTimeDown
         /// </summary>
-        public readonly static ResultState TearDownError = ResultState.Error.WithSite(FailureSite.TearDown);
+        public static readonly ResultState TearDownError = ResultState.Error.WithSite(FailureSite.TearDown);
 
         #endregion
 
@@ -225,8 +225,8 @@ namespace NUnit.Framework.Interfaces
         /// </summary>
         public static bool operator ==(ResultState? left, ResultState? right)
         {
-            if (object.ReferenceEquals(left, null))
-                return object.ReferenceEquals(right, null);
+            if (left is null)
+                return right is null;
 
             return left.Equals(right);
         }

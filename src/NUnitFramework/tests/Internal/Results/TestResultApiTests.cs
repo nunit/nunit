@@ -29,14 +29,13 @@ namespace NUnit.Framework.Tests.Internal.Results
             foreach (var method in RecordExceptionMethods)
             {
                 foreach (var result in TestResults)
-            {
-                Assert.That(
-                    () => method.Invoke(result, null!),
-                    Throws.ArgumentNullException.With.Property("ParamName").EqualTo("ex"));
-            }
+                {
+                    Assert.That(
+                        () => method.Invoke(result, null!),
+                        Throws.ArgumentNullException.With.Property("ParamName").EqualTo("ex"));
+                }
             }
         }
-
 
         [Test]
         public void DoesNotThrowForMissingInnerException()
@@ -53,9 +52,9 @@ namespace NUnit.Framework.Tests.Internal.Results
                 foreach (var result in TestResults)
                 {
                     foreach (var exception in exceptions)
-            {
-                method.Invoke(result, exception);
-            }
+                    {
+                        method.Invoke(result, exception);
+                    }
                 }
             }
         }

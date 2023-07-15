@@ -23,7 +23,7 @@ namespace NUnitLite.Tests
         public void RunMockAssemblyTests()
         {
             ITestResult result = TestBuilder.RunTestFixture(typeof(MockTestFixture));
-            Assert.That(result,Is.Not.Null);
+            Assert.That(result, Is.Not.Null);
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
@@ -93,9 +93,9 @@ namespace NUnitLite.Tests
         [TestCase("errors", MockTestFixture.Failed_Error)]
         [TestCase("failures", MockTestFixture.Failed_Other)]
         [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.Skipped+MockTestFixture.Failed_NotRunnable)]
+        [TestCase("not-run", MockTestFixture.Skipped + MockTestFixture.Failed_NotRunnable)]
         [TestCase("ignored", MockTestFixture.Skipped_Ignored)]
-        [TestCase("skipped", MockTestFixture.Skipped-MockTestFixture.Skipped_Ignored-MockTestFixture.Skipped_Explicit)]
+        [TestCase("skipped", MockTestFixture.Skipped - MockTestFixture.Skipped_Ignored - MockTestFixture.Skipped_Explicit)]
         [TestCase("invalid", MockTestFixture.Failed_NotRunnable)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
@@ -152,7 +152,7 @@ namespace NUnitLite.Tests
             {
                 culture = System.Globalization.CultureInfo.CreateSpecificCulture(cultureName);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 // Do nothing - culture will be null
             }
@@ -187,7 +187,7 @@ namespace NUnitLite.Tests
             Assert.That(success, "{0} is an invalid value for time", timeString);
         }
 
-#region Helper Methods
+        #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
         {
@@ -197,6 +197,6 @@ namespace NUnitLite.Tests
             return attr.Value;
         }
 
-#endregion
+        #endregion
     }
 }

@@ -42,6 +42,5 @@ namespace NUnit.Framework.Tests.Internal.Filters
             Assert.That(_filter.Pass(DummyFixtureSuite), Is.EqualTo(_expected));
             Assert.That(_filter.Pass(DummyFixtureSuite.Tests[0]), Is.EqualTo(_expected));
         }
-
     }
 }

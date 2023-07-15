@@ -70,8 +70,8 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void ExactlyOneConstraintNotMatchingWhereCollectionIsTwo()
         {
-           Assert.Throws<AssertionException>(() =>
-                Assert.That(TestCollectionLen2, Has.One.EqualTo("blah")));
+            Assert.Throws<AssertionException>(() =>
+                 Assert.That(TestCollectionLen2, Has.One.EqualTo("blah")));
         }
     }
 }

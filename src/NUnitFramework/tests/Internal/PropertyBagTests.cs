@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void IndexSetsListOfValues()
         {
-            _bag["Zip"] = new[] {"junk", "more junk"};
+            _bag["Zip"] = new[] { "junk", "more junk" };
             Assert.That(_bag["Zip"], Has.Count.EqualTo(2));
             Assert.That(_bag["Zip"], Contains.Item("junk"));
             Assert.That(_bag["Zip"], Contains.Item("more junk"));

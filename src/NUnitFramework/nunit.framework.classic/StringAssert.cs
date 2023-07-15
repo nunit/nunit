@@ -21,7 +21,7 @@ namespace NUnit.Framework.Classic
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static bool Equals(object? a, object? b)
+        public static new bool Equals(object? a, object? b)
         {
             throw new InvalidOperationException("StringAssert.Equals should not be used. Use StringAssert.AreEqualIgnoringCase or Assert.AreEqual instead.");
         }
@@ -34,7 +34,7 @@ namespace NUnit.Framework.Classic
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static void ReferenceEquals(object? a, object? b)
+        public static new void ReferenceEquals(object? a, object? b)
         {
             throw new InvalidOperationException("StringAssert.ReferenceEquals should not be used.");
         }
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void DoesNotContain(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Not.Contain(expected), message, args );
+            Framework.Assert.That(actual, Does.Not.Contain(expected), message, args);
         }
 
         /// <summary>

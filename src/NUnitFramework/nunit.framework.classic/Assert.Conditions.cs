@@ -6,7 +6,6 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Classic
 {
-
     public abstract partial class Assert
     {
         #region True
@@ -104,7 +103,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void False(bool? condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.False, message, args);
+            Framework.Assert.That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

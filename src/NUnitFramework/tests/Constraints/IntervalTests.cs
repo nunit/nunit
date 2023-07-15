@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Constraints
             var interval = new Interval(1);
             Assert.That(interval.IsNotZero, Is.True);
 
-            interval =  new Interval(0);
+            interval = new Interval(0);
             Assert.That(interval.IsNotZero, Is.False);
         }
     }

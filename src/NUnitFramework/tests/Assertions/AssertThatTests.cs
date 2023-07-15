@@ -304,7 +304,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.That(async () => await AsyncReturnOne(), Is.EqualTo(2)));
         }
 
-        [Test, Platform(Exclude="Linux", Reason="Intermittent failures on Linux")]
+        [Test, Platform(Exclude = "Linux", Reason = "Intermittent failures on Linux")]
         public void AssertThatErrorTask()
         {
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint

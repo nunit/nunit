@@ -202,9 +202,9 @@ namespace NUnit.Framework
             Assume.That((object)code, constraint);
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
         #region Assume.That<TActual>
 

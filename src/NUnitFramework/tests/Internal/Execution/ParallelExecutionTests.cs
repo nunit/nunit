@@ -70,7 +70,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
             _result = workItem.Result;
         }
 
-
         [Test]
         public void AllTestsPassed()
         {
@@ -405,11 +404,11 @@ namespace NUnit.Framework.Tests.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
 
-#region ITestListener implementation
+        #region ITestListener implementation
 
-        void ITestListener. TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -419,7 +418,7 @@ namespace NUnit.Framework.Tests.Internal.Execution
             });
         }
 
-        void ITestListener. TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -438,9 +437,9 @@ namespace NUnit.Framework.Tests.Internal.Execution
         {
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static TestSuite Suite(string name)
         {
@@ -472,9 +471,9 @@ namespace NUnit.Framework.Tests.Internal.Execution
             return sb.ToString();
         }
 
-#endregion
+        #endregion
 
-#region Nested Types
+        #region Nested Types
 
         public enum TestAction
         {
@@ -579,6 +578,6 @@ namespace NUnit.Framework.Tests.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
     }
 }

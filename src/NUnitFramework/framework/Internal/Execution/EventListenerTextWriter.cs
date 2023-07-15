@@ -23,7 +23,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         /// <param name="streamName">The name of the stream to use for events</param>
         /// <param name="defaultWriter">The default writer to use if no listener is available</param>
-        public EventListenerTextWriter( string streamName, TextWriter defaultWriter )
+        public EventListenerTextWriter(string streamName, TextWriter defaultWriter)
         {
             _streamName = streamName;
             _defaultWriter = defaultWriter;

@@ -35,7 +35,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] { true, 2+2==4 };
+        private static readonly object[] SuccessData = new object[] { true, 2 + 2 == 4 };
         private static readonly object[] FailureData = new object[]
         {
             new object?[] { null, "null" },
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { false, 2 + 2 == 5 };
         private static readonly object[] FailureData = new object[]
-        { 
+        {
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
             new TestCaseData( true, "True" ),
@@ -85,10 +85,10 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { double.NaN, float.NaN };
         private static readonly object[] FailureData = new object[]
-        { 
+        {
             new TestCaseData( null, "null" ),
             new TestCaseData( "hello", "\"hello\"" ),
-            new TestCaseData( 42, "42" ), 
+            new TestCaseData( 42, "42" ),
             new TestCaseData( double.PositiveInfinity, double.PositiveInfinity.ToString() ),
             new TestCaseData( double.NegativeInfinity, double.NegativeInfinity.ToString() ),
             new TestCaseData( float.PositiveInfinity, double.PositiveInfinity.ToString() ),

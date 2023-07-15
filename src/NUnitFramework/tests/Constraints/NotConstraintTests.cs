@@ -7,7 +7,7 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class NotConstraintTests : ConstraintTestBase
     {
-        protected override Constraint TheConstraint { get; } = new NotConstraint( new EqualConstraint(null) );
+        protected override Constraint TheConstraint { get; } = new NotConstraint(new EqualConstraint(null));
 
         [SetUp]
         public void SetUp()
@@ -31,14 +31,14 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void NotHonorsIgnoreCaseUsingPrefixNotation()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( "abc", Is.Not.EqualTo( "ABC" ).IgnoreCase ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That("abc", Is.Not.EqualTo("ABC").IgnoreCase));
             Assert.That(ex.Message, Does.Contain("ignoring case"));
         }
 
         [Test]
         public void NotHonorsTolerance()
         {
-            var ex = Assert.Throws<AssertionException>(() => Assert.That( 4.99d, Is.Not.EqualTo( 5.0d ).Within( .05d ) ));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(4.99d, Is.Not.EqualTo(5.0d).Within(.05d)));
             Assert.That(ex.Message, Does.Contain("+/-"));
         }
 

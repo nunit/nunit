@@ -31,10 +31,10 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(five, Is.EqualTo(5));
             Assert.That(5, Is.EqualTo(five));
 
-//            Assert.Greater(five, 3);
-//            Assert.GreaterOrEqual(five, 5);
-//            Assert.Less(3, five);
-//            Assert.LessOrEqual(5, five);
+            //            Assert.Greater(five, 3);
+            //            Assert.GreaterOrEqual(five, 5);
+            //            Assert.Less(3, five);
+            //            Assert.LessOrEqual(5, five);
 
             Assert.That(five, Is.GreaterThan(3));
             Assert.That(five, Is.GreaterThanOrEqualTo(5));
@@ -56,10 +56,10 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(five, Is.EqualTo(5.0));
             Assert.That(5.0, Is.EqualTo(five));
 
-//            Assert.Greater(five, 3.0);
-//            Assert.GreaterOrEqual(five, 5.0);
-//            Assert.Less(3.0, five);
-//            Assert.LessOrEqual(5.0, five);
+            //            Assert.Greater(five, 3.0);
+            //            Assert.GreaterOrEqual(five, 5.0);
+            //            Assert.Less(3.0, five);
+            //            Assert.LessOrEqual(5.0, five);
 
             Assert.That(five, Is.GreaterThan(3.0));
             Assert.That(five, Is.GreaterThanOrEqualTo(5.0));
@@ -89,10 +89,10 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(five, Is.EqualTo(5m));
             Assert.That(5m, Is.EqualTo(five));
 
-//            Assert.Greater(five, 3m);
-//            Assert.GreaterOrEqual(five, 5m);
-//            Assert.Less(3m, five);
-//            Assert.LessOrEqual(5m, five);
+            //            Assert.Greater(five, 3m);
+            //            Assert.GreaterOrEqual(five, 5m);
+            //            Assert.Less(3m, five);
+            //            Assert.LessOrEqual(5m, five);
 
             Assert.That(five, Is.GreaterThan(3m));
             Assert.That(five, Is.GreaterThanOrEqualTo(5m));
@@ -167,12 +167,12 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(int5, Is.EqualTo(5m));
             Assert.That(double5, Is.EqualTo(5m));
 
-//            Assert.Greater(int5, 3.0);
-//            Assert.Greater(int5, 3m);
-//            Assert.Greater(double5, 3);
-//            Assert.Greater(double5, 3m);
-//            Assert.Greater(decimal5, 3);
-//            Assert.Greater(decimal5, 3.0);
+            //            Assert.Greater(int5, 3.0);
+            //            Assert.Greater(int5, 3m);
+            //            Assert.Greater(double5, 3);
+            //            Assert.Greater(double5, 3m);
+            //            Assert.Greater(decimal5, 3);
+            //            Assert.Greater(decimal5, 3.0);
 
             Assert.That(int5, Is.GreaterThan(3.0));
             Assert.That(int5, Is.GreaterThan(3m));
@@ -181,12 +181,12 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(decimal5, Is.GreaterThan(3));
             Assert.That(decimal5, Is.GreaterThan(3.0));
 
-//            Assert.Less(3.0, int5);
-//            Assert.Less(3m, int5);
-//            Assert.Less(3, double5);
-//            Assert.Less(3m, double5);
-//            Assert.Less(3, decimal5);
-//            Assert.Less(3.0, decimal5);
+            //            Assert.Less(3.0, int5);
+            //            Assert.Less(3m, int5);
+            //            Assert.Less(3, double5);
+            //            Assert.Less(3m, double5);
+            //            Assert.Less(3, decimal5);
+            //            Assert.Less(3.0, decimal5);
 
             //Assert.That(3.0, Is.LessThan(int5));
             //Assert.That(3m, Is.LessThan(int5));

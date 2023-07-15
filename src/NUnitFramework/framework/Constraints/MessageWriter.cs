@@ -14,7 +14,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class MessageWriter : StringWriter
     {
-
         /// <summary>
         /// Construct a MessageWriter given a culture
         /// </summary>

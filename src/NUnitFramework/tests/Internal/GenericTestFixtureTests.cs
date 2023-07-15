@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture(typeof(List<int>))]
-    [TestFixture(TypeArgs=new[] {typeof(List<object>)} )]
-    [TestFixture(TypeArgs=new[] {typeof(ArrayList)} )]
+    [TestFixture(TypeArgs = new[] { typeof(List<object>) })]
+    [TestFixture(TypeArgs = new[] { typeof(ArrayList) })]
     public class GenericTestFixture_IList<T> where T : IList, new()
     {
         [Test]

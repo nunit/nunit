@@ -77,56 +77,55 @@ namespace NUnit.Framework.Tests.Assertions
 
         [Test]
         public void MixedTypes()
-        {	
-            Classic.Assert.LessOrEqual( 5, 8L, "int to long");
-            Classic.Assert.LessOrEqual( 5, 8.2f, "int to float" );
-            Classic.Assert.LessOrEqual( 5, 8.2d, "int to double" );
-            Classic.Assert.LessOrEqual( 5, 8U, "int to uint" );
-            Classic.Assert.LessOrEqual( 5, 8UL, "int to ulong" );
-            Classic.Assert.LessOrEqual( 5, 8M, "int to decimal" );
+        {
+            Classic.Assert.LessOrEqual(5, 8L, "int to long");
+            Classic.Assert.LessOrEqual(5, 8.2f, "int to float");
+            Classic.Assert.LessOrEqual(5, 8.2d, "int to double");
+            Classic.Assert.LessOrEqual(5, 8U, "int to uint");
+            Classic.Assert.LessOrEqual(5, 8UL, "int to ulong");
+            Classic.Assert.LessOrEqual(5, 8M, "int to decimal");
 
-            Classic.Assert.LessOrEqual( 5L, 8, "long to int");
-            Classic.Assert.LessOrEqual( 5L, 8.2f, "long to float" );
-            Classic.Assert.LessOrEqual( 5L, 8.2d, "long to double" );
-            Classic.Assert.LessOrEqual( 5L, 8U, "long to uint" );
-            Classic.Assert.LessOrEqual( 5L, 8UL, "long to ulong" );
-            Classic.Assert.LessOrEqual( 5L, 8M, "long to decimal" );
+            Classic.Assert.LessOrEqual(5L, 8, "long to int");
+            Classic.Assert.LessOrEqual(5L, 8.2f, "long to float");
+            Classic.Assert.LessOrEqual(5L, 8.2d, "long to double");
+            Classic.Assert.LessOrEqual(5L, 8U, "long to uint");
+            Classic.Assert.LessOrEqual(5L, 8UL, "long to ulong");
+            Classic.Assert.LessOrEqual(5L, 8M, "long to decimal");
 
-            Classic.Assert.LessOrEqual( 3.5f, 5, "float to int" );
-            Classic.Assert.LessOrEqual( 3.5f, 8L, "float to long" );
-            Classic.Assert.LessOrEqual( 3.5f, 8.2d, "float to double" );
-            Classic.Assert.LessOrEqual( 3.5f, 8U, "float to uint" );
-            Classic.Assert.LessOrEqual( 3.5f, 8UL, "float to ulong" );
-            Classic.Assert.LessOrEqual( 3.5f, 8.2M, "float to decimal" );
+            Classic.Assert.LessOrEqual(3.5f, 5, "float to int");
+            Classic.Assert.LessOrEqual(3.5f, 8L, "float to long");
+            Classic.Assert.LessOrEqual(3.5f, 8.2d, "float to double");
+            Classic.Assert.LessOrEqual(3.5f, 8U, "float to uint");
+            Classic.Assert.LessOrEqual(3.5f, 8UL, "float to ulong");
+            Classic.Assert.LessOrEqual(3.5f, 8.2M, "float to decimal");
 
-            Classic.Assert.LessOrEqual( 3.5d, 5, "double to int" );
-            Classic.Assert.LessOrEqual( 3.5d, 5L, "double to long" );
-            Classic.Assert.LessOrEqual( 3.5d, 8.2f, "double to float" );
-            Classic.Assert.LessOrEqual( 3.5d, 8U, "double to uint" );
-            Classic.Assert.LessOrEqual( 3.5d, 8UL, "double to ulong" );
-            Classic.Assert.LessOrEqual( 3.5d, 8.2M, "double to decimal" );
-            
+            Classic.Assert.LessOrEqual(3.5d, 5, "double to int");
+            Classic.Assert.LessOrEqual(3.5d, 5L, "double to long");
+            Classic.Assert.LessOrEqual(3.5d, 8.2f, "double to float");
+            Classic.Assert.LessOrEqual(3.5d, 8U, "double to uint");
+            Classic.Assert.LessOrEqual(3.5d, 8UL, "double to ulong");
+            Classic.Assert.LessOrEqual(3.5d, 8.2M, "double to decimal");
 
-            Classic.Assert.LessOrEqual( 5U, 8, "uint to int" );
-            Classic.Assert.LessOrEqual( 5U, 8L, "uint to long" );
-            Classic.Assert.LessOrEqual( 5U, 8.2f, "uint to float" );
-            Classic.Assert.LessOrEqual( 5U, 8.2d, "uint to double" );
-            Classic.Assert.LessOrEqual( 5U, 8UL, "uint to ulong" );
-            Classic.Assert.LessOrEqual( 5U, 8M, "uint to decimal" );
-            
-            Classic.Assert.LessOrEqual( 5ul, 8, "ulong to int" );
-            Classic.Assert.LessOrEqual( 5UL, 8L, "ulong to long" );
-            Classic.Assert.LessOrEqual( 5UL, 8.2f, "ulong to float" );
-            Classic.Assert.LessOrEqual( 5UL, 8.2d, "ulong to double" );
-            Classic.Assert.LessOrEqual( 5UL, 8U, "ulong to uint" );
-            Classic.Assert.LessOrEqual( 5UL, 8M, "ulong to decimal" );
-            
-            Classic.Assert.LessOrEqual( 5M, 8, "decimal to int" );
-            Classic.Assert.LessOrEqual( 5M, 8L, "decimal to long" );
-            Classic.Assert.LessOrEqual( 5M, 8.2f, "decimal to float" );
-            Classic.Assert.LessOrEqual( 5M, 8.2d, "decimal to double" );
-            Classic.Assert.LessOrEqual( 5M, 8U, "decimal to uint" );
-            Classic.Assert.LessOrEqual( 5M, 8UL, "decimal to ulong" );
+            Classic.Assert.LessOrEqual(5U, 8, "uint to int");
+            Classic.Assert.LessOrEqual(5U, 8L, "uint to long");
+            Classic.Assert.LessOrEqual(5U, 8.2f, "uint to float");
+            Classic.Assert.LessOrEqual(5U, 8.2d, "uint to double");
+            Classic.Assert.LessOrEqual(5U, 8UL, "uint to ulong");
+            Classic.Assert.LessOrEqual(5U, 8M, "uint to decimal");
+
+            Classic.Assert.LessOrEqual(5ul, 8, "ulong to int");
+            Classic.Assert.LessOrEqual(5UL, 8L, "ulong to long");
+            Classic.Assert.LessOrEqual(5UL, 8.2f, "ulong to float");
+            Classic.Assert.LessOrEqual(5UL, 8.2d, "ulong to double");
+            Classic.Assert.LessOrEqual(5UL, 8U, "ulong to uint");
+            Classic.Assert.LessOrEqual(5UL, 8M, "ulong to decimal");
+
+            Classic.Assert.LessOrEqual(5M, 8, "decimal to int");
+            Classic.Assert.LessOrEqual(5M, 8L, "decimal to long");
+            Classic.Assert.LessOrEqual(5M, 8.2f, "decimal to float");
+            Classic.Assert.LessOrEqual(5M, 8.2d, "decimal to double");
+            Classic.Assert.LessOrEqual(5M, 8U, "decimal to uint");
+            Classic.Assert.LessOrEqual(5M, 8UL, "decimal to ulong");
         }
 
         [Test]
@@ -160,5 +159,3 @@ namespace NUnit.Framework.Tests.Assertions
         }
     }
 }
-
-

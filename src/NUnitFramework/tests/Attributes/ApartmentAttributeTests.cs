@@ -70,7 +70,7 @@ namespace NUnit.Framework.Tests.Attributes
             [Test]
             public void RequiresSTACanBeSetOnTestFixture()
             {
-                Assert.That( GetApartmentState( Thread.CurrentThread ), Is.EqualTo( ApartmentState.STA ) );
+                Assert.That(GetApartmentState(Thread.CurrentThread), Is.EqualTo(ApartmentState.STA));
             }
         }
 

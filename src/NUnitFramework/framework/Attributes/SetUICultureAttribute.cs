@@ -12,7 +12,7 @@ namespace NUnit.Framework
     /// fixture completes and is then reset to its original value.
     /// </summary>
     /// <seealso cref="SetCultureAttribute"/>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = true)]
     public class SetUICultureAttribute : PropertyAttribute, IApplyToContext
     {
         private readonly string _culture;

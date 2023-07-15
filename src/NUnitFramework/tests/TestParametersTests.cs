@@ -279,7 +279,7 @@ namespace NUnit.Framework.Tests
         public void GetDateTime_ValueIsCorrect()
         {
             _parameters.Add("SomeParm", "1-January-2016");
-            Assert.That(_parameters.Get("SomeParm", DEFAULT_DATE_TIME), Is.EqualTo(new DateTime(2016,1,1,0,0,0)));
+            Assert.That(_parameters.Get("SomeParm", DEFAULT_DATE_TIME), Is.EqualTo(new DateTime(2016, 1, 1, 0, 0, 0)));
         }
 
         [Test]

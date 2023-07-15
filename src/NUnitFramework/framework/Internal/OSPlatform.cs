@@ -13,7 +13,7 @@ namespace NUnit.Framework.Internal
     public class OSPlatform
     {
         #region Static Members
-        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new Lazy<OSPlatform> (() =>
+        private static readonly Lazy<OSPlatform> LazyCurrentPlatform = new Lazy<OSPlatform>(() =>
         {
             OSPlatform currentPlatform;
 
@@ -46,7 +46,6 @@ namespace NUnit.Framework.Internal
 
             return currentPlatform;
         });
-
 
         /// <summary>
         /// Platform ID for Unix as defined by .NET
@@ -113,7 +112,7 @@ namespace NUnit.Framework.Internal
                         // in the registry. We can't do this earlier because for backwards
                         // compatibility, Windows 10 also has 6.3 for this key.
                         var currentVersion = key.GetValue("CurrentVersion") as string;
-                        if(currentVersion == "6.3")
+                        if (currentVersion == "6.3")
                         {
                             return new Version(6, 3, build);
                         }
@@ -162,7 +161,7 @@ namespace NUnit.Framework.Internal
                     if (key is not null)
                     {
                         var installationType = key.GetValue("InstallationType") as string;
-                        switch(installationType)
+                        switch (installationType)
                         {
                             case "Client":
                                 return ProductType.WorkStation;
@@ -203,7 +202,7 @@ namespace NUnit.Framework.Internal
         [DllImport("Kernel32.dll")]
         private static extern bool GetVersionEx(ref OSVERSIONINFOEX osvi);
 #endif
-#endregion
+        #endregion
 
         /// <summary>
         /// Construct from a platform ID and version
@@ -218,7 +217,7 @@ namespace NUnit.Framework.Internal
         /// Construct from a platform ID, version and product type
         /// </summary>
         public OSPlatform(PlatformID platform, Version version, ProductType product)
-            : this( platform, version )
+            : this(platform, version)
         {
             Product = product;
         }
@@ -391,7 +390,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is Windows XP
         /// </summary>
-        public bool IsWinXP => IsNT5 && (Version.Minor == 1  || Version.Minor == 2 && Product == ProductType.WorkStation);
+        public bool IsWinXP => IsNT5 && (Version.Minor == 1 || Version.Minor == 2 && Product == ProductType.WorkStation);
 
         /// <summary>
         /// Return true if the platform is Windows 2003 Server
@@ -476,12 +475,12 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Return true if the platform is Windows 10
         /// </summary>
-        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor<22000 && Product == ProductType.WorkStation;
+        public bool IsWindows10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor < 22000 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows 11
         /// </summary>
-        public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor>=22000 && Product == ProductType.WorkStation;
+        public bool IsWindows11 => Platform == PlatformID.Win32NT && Version.Major == 10 && Version.Minor >= 22000 && Product == ProductType.WorkStation;
 
         /// <summary>
         /// Return true if the platform is Windows Server. This is named Windows

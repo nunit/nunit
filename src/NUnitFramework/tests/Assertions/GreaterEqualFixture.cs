@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void GreaterOrEqual_Int32()
         {
-            Classic.Assert.GreaterOrEqual(_i1, _i1);           
+            Classic.Assert.GreaterOrEqual(_i1, _i1);
             Classic.Assert.GreaterOrEqual(_i1, _i2);
         }
 
@@ -77,56 +77,55 @@ namespace NUnit.Framework.Tests.Assertions
 
         [Test]
         public void MixedTypes()
-        {	
-            Classic.Assert.GreaterOrEqual( 5, 3L, "int to long");
-            Classic.Assert.GreaterOrEqual( 5, 3.5f, "int to float" );
-            Classic.Assert.GreaterOrEqual( 5, 3.5d, "int to double" );
-            Classic.Assert.GreaterOrEqual( 5, 3U, "int to uint" );
-            Classic.Assert.GreaterOrEqual( 5, 3UL, "int to ulong" );
-            Classic.Assert.GreaterOrEqual( 5, 3M, "int to decimal" );
+        {
+            Classic.Assert.GreaterOrEqual(5, 3L, "int to long");
+            Classic.Assert.GreaterOrEqual(5, 3.5f, "int to float");
+            Classic.Assert.GreaterOrEqual(5, 3.5d, "int to double");
+            Classic.Assert.GreaterOrEqual(5, 3U, "int to uint");
+            Classic.Assert.GreaterOrEqual(5, 3UL, "int to ulong");
+            Classic.Assert.GreaterOrEqual(5, 3M, "int to decimal");
 
-            Classic.Assert.GreaterOrEqual( 5L, 3, "long to int");
-            Classic.Assert.GreaterOrEqual( 5L, 3.5f, "long to float" );
-            Classic.Assert.GreaterOrEqual( 5L, 3.5d, "long to double" );
-            Classic.Assert.GreaterOrEqual( 5L, 3U, "long to uint" );
-            Classic.Assert.GreaterOrEqual( 5L, 3UL, "long to ulong" );
-            Classic.Assert.GreaterOrEqual( 5L, 3M, "long to decimal" );
+            Classic.Assert.GreaterOrEqual(5L, 3, "long to int");
+            Classic.Assert.GreaterOrEqual(5L, 3.5f, "long to float");
+            Classic.Assert.GreaterOrEqual(5L, 3.5d, "long to double");
+            Classic.Assert.GreaterOrEqual(5L, 3U, "long to uint");
+            Classic.Assert.GreaterOrEqual(5L, 3UL, "long to ulong");
+            Classic.Assert.GreaterOrEqual(5L, 3M, "long to decimal");
 
-            Classic.Assert.GreaterOrEqual( 8.2f, 5, "float to int" );
-            Classic.Assert.GreaterOrEqual( 8.2f, 8L, "float to long" );
-            Classic.Assert.GreaterOrEqual( 8.2f, 3.5d, "float to double" );
-            Classic.Assert.GreaterOrEqual( 8.2f, 8U, "float to uint" );
-            Classic.Assert.GreaterOrEqual( 8.2f, 8UL, "float to ulong" );
-            Classic.Assert.GreaterOrEqual( 8.2f, 3.5M, "float to decimal" );
+            Classic.Assert.GreaterOrEqual(8.2f, 5, "float to int");
+            Classic.Assert.GreaterOrEqual(8.2f, 8L, "float to long");
+            Classic.Assert.GreaterOrEqual(8.2f, 3.5d, "float to double");
+            Classic.Assert.GreaterOrEqual(8.2f, 8U, "float to uint");
+            Classic.Assert.GreaterOrEqual(8.2f, 8UL, "float to ulong");
+            Classic.Assert.GreaterOrEqual(8.2f, 3.5M, "float to decimal");
 
-            Classic.Assert.GreaterOrEqual( 8.2d, 5, "double to int" );
-            Classic.Assert.GreaterOrEqual( 8.2d, 5L, "double to long" );
-            Classic.Assert.GreaterOrEqual( 8.2d, 3.5f, "double to float" );
-            Classic.Assert.GreaterOrEqual( 8.2d, 8U, "double to uint" );
-            Classic.Assert.GreaterOrEqual( 8.2d, 8UL, "double to ulong" );
-            Classic.Assert.GreaterOrEqual( 8.2d, 3.5M, "double to decimal" );
-            
+            Classic.Assert.GreaterOrEqual(8.2d, 5, "double to int");
+            Classic.Assert.GreaterOrEqual(8.2d, 5L, "double to long");
+            Classic.Assert.GreaterOrEqual(8.2d, 3.5f, "double to float");
+            Classic.Assert.GreaterOrEqual(8.2d, 8U, "double to uint");
+            Classic.Assert.GreaterOrEqual(8.2d, 8UL, "double to ulong");
+            Classic.Assert.GreaterOrEqual(8.2d, 3.5M, "double to decimal");
 
-            Classic.Assert.GreaterOrEqual( 5U, 3, "uint to int" );
-            Classic.Assert.GreaterOrEqual( 5U, 3L, "uint to long" );
-            Classic.Assert.GreaterOrEqual( 5U, 3.5f, "uint to float" );
-            Classic.Assert.GreaterOrEqual( 5U, 3.5d, "uint to double" );
-            Classic.Assert.GreaterOrEqual( 5U, 3UL, "uint to ulong" );
-            Classic.Assert.GreaterOrEqual( 5U, 3M, "uint to decimal" );
-            
-            Classic.Assert.GreaterOrEqual( 5ul, 3, "ulong to int" );
-            Classic.Assert.GreaterOrEqual( 5UL, 3L, "ulong to long" );
-            Classic.Assert.GreaterOrEqual( 5UL, 3.5f, "ulong to float" );
-            Classic.Assert.GreaterOrEqual( 5UL, 3.5d, "ulong to double" );
-            Classic.Assert.GreaterOrEqual( 5UL, 3U, "ulong to uint" );
-            Classic.Assert.GreaterOrEqual( 5UL, 3M, "ulong to decimal" );
-            
-            Classic.Assert.GreaterOrEqual( 5M, 3, "decimal to int" );
-            Classic.Assert.GreaterOrEqual( 5M, 3L, "decimal to long" );
-            Classic.Assert.GreaterOrEqual( 5M, 3.5f, "decimal to float" );
-            Classic.Assert.GreaterOrEqual( 5M, 3.5d, "decimal to double" );
-            Classic.Assert.GreaterOrEqual( 5M, 3U, "decimal to uint" );
-            Classic.Assert.GreaterOrEqual( 5M, 3UL, "decimal to ulong" );
+            Classic.Assert.GreaterOrEqual(5U, 3, "uint to int");
+            Classic.Assert.GreaterOrEqual(5U, 3L, "uint to long");
+            Classic.Assert.GreaterOrEqual(5U, 3.5f, "uint to float");
+            Classic.Assert.GreaterOrEqual(5U, 3.5d, "uint to double");
+            Classic.Assert.GreaterOrEqual(5U, 3UL, "uint to ulong");
+            Classic.Assert.GreaterOrEqual(5U, 3M, "uint to decimal");
+
+            Classic.Assert.GreaterOrEqual(5ul, 3, "ulong to int");
+            Classic.Assert.GreaterOrEqual(5UL, 3L, "ulong to long");
+            Classic.Assert.GreaterOrEqual(5UL, 3.5f, "ulong to float");
+            Classic.Assert.GreaterOrEqual(5UL, 3.5d, "ulong to double");
+            Classic.Assert.GreaterOrEqual(5UL, 3U, "ulong to uint");
+            Classic.Assert.GreaterOrEqual(5UL, 3M, "ulong to decimal");
+
+            Classic.Assert.GreaterOrEqual(5M, 3, "decimal to int");
+            Classic.Assert.GreaterOrEqual(5M, 3L, "decimal to long");
+            Classic.Assert.GreaterOrEqual(5M, 3.5f, "decimal to float");
+            Classic.Assert.GreaterOrEqual(5M, 3.5d, "decimal to double");
+            Classic.Assert.GreaterOrEqual(5M, 3U, "decimal to uint");
+            Classic.Assert.GreaterOrEqual(5M, 3UL, "decimal to ulong");
         }
 
         [Test]

@@ -40,7 +40,7 @@ namespace NUnit.ConsoleRunner.Tests
             Environment.SetEnvironmentVariable(EnvironmentVariableTeamcityProjectName, string.Empty);
 
             // Then
-            Assert.That(provider.TeamCity,Is.False);
+            Assert.That(provider.TeamCity, Is.False);
         }
 
         private static DefaultOptionsProvider CreateInstance()

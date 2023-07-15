@@ -103,4 +103,3 @@ namespace NUnit.Framework.Interfaces
         object?[] Arguments { get; }
     }
 }
-

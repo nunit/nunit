@@ -119,7 +119,6 @@ namespace NUnit.Framework.Tests
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
                 Assert.That(result.Output, Is.EqualTo(""));
-
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -170,7 +169,6 @@ namespace NUnit.Framework.Tests
 
         void ITestListener.SendMessage(TestMessage message)
         {
-            
         }
 
         #endregion

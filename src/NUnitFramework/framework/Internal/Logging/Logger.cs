@@ -10,8 +10,8 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class Logger : ILogger
     {
-        private readonly static string TIME_FMT = "HH:mm:ss.fff";
-        private readonly static string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
+        private static readonly string TIME_FMT = "HH:mm:ss.fff";
+        private static readonly string TRACE_FMT = "{0} {1,-5} [{2,2}] {3}: {4}";
 
         private readonly string _name;
         private readonly string _fullname;
@@ -136,7 +136,7 @@ namespace NUnit.Framework.Internal
         private void Log(InternalTraceLevel level, string format, params object[] args)
         {
             if (_maxLevel >= level)
-                WriteLog(level, string.Format( format, args ) );
+                WriteLog(level, string.Format(format, args));
         }
 
         private void WriteLog(InternalTraceLevel level, string message)

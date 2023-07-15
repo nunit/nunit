@@ -106,7 +106,7 @@ namespace NUnit.Framework.Tests.Compatibility
         private class A
         {
             [Author("John Doe")]
-            public int Add([Random(1)]int x, [Random(1)]int y)
+            public int Add([Random(1)] int x, [Random(1)] int y)
             {
                 return x + y;
             }

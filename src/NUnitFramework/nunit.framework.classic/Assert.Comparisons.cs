@@ -4,7 +4,6 @@ using System;
 
 namespace NUnit.Framework.Classic
 {
-
     public abstract partial class Assert
     {
         #region Greater

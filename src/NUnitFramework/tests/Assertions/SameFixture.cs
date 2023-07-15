@@ -17,8 +17,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void SameFails()
         {
-            Exception ex1 = new Exception( "one" );
-            Exception ex2 = new Exception( "two" );
+            Exception ex1 = new Exception("one");
+            Exception ex2 = new Exception("two");
             var expectedMessage =
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;

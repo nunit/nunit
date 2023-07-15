@@ -174,7 +174,6 @@ namespace NUnit.Framework.Tests.Attributes
             }
         }
 
-
         public class NestedTheoryThatSearchesInDeclaringTypes
         {
             private static readonly Type NestedType = typeof(TheoryFixture.NestedWhileSearchingInDeclaringType);

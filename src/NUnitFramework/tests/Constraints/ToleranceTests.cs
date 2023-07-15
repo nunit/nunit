@@ -27,7 +27,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(defaultTolerance.IsUnsetOrDefault, Is.True);
 
             var comparer = new NUnitEqualityComparer();
-            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance ), Is.True);
+            Assert.That(comparer.AreEqual(2.0d, 2.1d, ref defaultTolerance), Is.True);
         }
 
         [Test, DefaultFloatingPointTolerance(0.5)]

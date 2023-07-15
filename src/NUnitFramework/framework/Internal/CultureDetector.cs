@@ -27,9 +27,9 @@ namespace NUnit.Framework.Internal
         /// Construct a CultureDetector for a particular culture for testing.
         /// </summary>
         /// <param name="culture">The culture to be used</param>
-        public CultureDetector( string culture )
+        public CultureDetector(string culture)
         {
-            _currentCulture = new CultureInfo( culture );
+            _currentCulture = new CultureInfo(culture);
         }
 
         /// <summary>
@@ -38,11 +38,11 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="cultures"></param>
         /// <returns></returns>
-        public bool IsCultureSupported( string[] cultures )
+        public bool IsCultureSupported(string[] cultures)
         {
-            foreach( string culture in cultures )
+            foreach (string culture in cultures)
             {
-                if ( IsCultureSupported( culture ) )
+                if (IsCultureSupported(culture))
                     return true;
             }
 
@@ -55,7 +55,7 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="cultureAttribute">The attribute to examine</param>
         /// <returns></returns>
-        public bool IsCultureSupported( CultureAttribute cultureAttribute )
+        public bool IsCultureSupported(CultureAttribute cultureAttribute)
         {
             string? include = cultureAttribute.Include;
             string? exclude = cultureAttribute.Exclude;
@@ -81,18 +81,18 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="culture">Name of the culture or comma-separated list of culture ids</param>
         /// <returns>True if the culture is in use on the system</returns>
-        public bool IsCultureSupported( string culture )
+        public bool IsCultureSupported(string culture)
         {
             culture = culture.Trim();
 
-            if ( culture.IndexOf( ',' ) >= 0 )
+            if (culture.IndexOf(',') >= 0)
             {
-                if ( IsCultureSupported( culture.Split(',') ) )
+                if (IsCultureSupported(culture.Split(',')))
                     return true;
             }
             else
             {
-                if( _currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
+                if (_currentCulture.Name == culture || _currentCulture.TwoLetterISOLanguageName == culture)
                     return true;
             }
 

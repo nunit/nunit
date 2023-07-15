@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace NUnit.TestData.CultureAttributeData
 {
-    [TestFixture, Culture( "en,fr,de" )]
+    [TestFixture, Culture("en,fr,de")]
     public class FixtureWithCultureAttribute
     {
         [Test, Culture("en,de")]

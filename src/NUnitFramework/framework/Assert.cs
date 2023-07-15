@@ -39,7 +39,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static bool Equals(object a, object b)
+        public static new bool Equals(object a, object b)
         {
             throw new InvalidOperationException("Assert.Equals should not be used. Use Assert.AreEqual instead.");
         }
@@ -52,7 +52,7 @@ namespace NUnit.Framework
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static void ReferenceEquals(object a, object b)
+        public static new void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("Assert.ReferenceEquals should not be used. Use Assert.AreSame instead.");
         }
@@ -178,7 +178,7 @@ namespace NUnit.Framework
             else if (args is not null && args.Length > 0)
                 message = string.Format(message, args);
 
-            IssueWarning(message);
+            IssueWarning(ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -281,8 +281,6 @@ namespace NUnit.Framework
         }
 
         #endregion
-
-       
 
         #region Multiple
 
@@ -388,10 +386,10 @@ namespace NUnit.Framework
         /// <summary>
         /// Check if message comes with args, and convert that to a formatted string
         /// </summary>
-        protected static string? ConvertMessageWithArgs(string? message, object?[]? args) 
+        protected static string? ConvertMessageWithArgs(string? message, object?[]? args)
             => message is null ? null : args is null ? message : string.Format(message, args);
 
-        private static void ReportFailure(ConstraintResult result, string? message) 
+        private static void ReportFailure(ConstraintResult result, string? message)
             => ReportFailure(result, message, null);
 
         private static void ReportFailure(ConstraintResult result, string? message, params object?[]? args)
@@ -446,7 +444,7 @@ namespace NUnit.Framework
             }
         }
 
-        private static void IncrementAssertCount() 
+        private static void IncrementAssertCount()
             => TestExecutionContext.CurrentContext.IncrementAssertCount();
 
         #endregion

@@ -7,7 +7,6 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
 
-
 namespace NUnitLite.Tests
 {
     public static class SchemaTests

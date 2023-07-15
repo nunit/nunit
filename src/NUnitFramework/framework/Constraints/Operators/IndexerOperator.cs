@@ -18,7 +18,7 @@ namespace NUnit.Framework.Constraints
         public IndexerOperator(params object[] indexArgs)
         {
             _indexArguments = indexArgs;
-            
+
             // Indexer stacks on anything and allows only
             // prefix operators to stack on it.
             left_precedence = right_precedence = 1;

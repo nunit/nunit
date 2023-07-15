@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Specifies the maximum time (in milliseconds) for a test case to succeed.
     /// </summary>
-    [AttributeUsage( AttributeTargets.Method, AllowMultiple=false, Inherited=false )]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class MaxTimeAttribute : PropertyAttribute, IWrapSetUpTearDown
     {
         private readonly int _milliseconds;
@@ -17,8 +17,8 @@ namespace NUnit.Framework
         /// Construct a MaxTimeAttribute, given a time in milliseconds.
         /// </summary>
         /// <param name="milliseconds">The maximum elapsed time in milliseconds</param>
-        public MaxTimeAttribute( int milliseconds )
-            : base( milliseconds )
+        public MaxTimeAttribute(int milliseconds)
+            : base(milliseconds)
         {
             _milliseconds = milliseconds;
         }

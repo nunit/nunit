@@ -30,9 +30,9 @@ namespace NUnit.Framework.Tests.Assertions
             _goodDir2?.Dispose();
         }
 
-#region AreEqual
+        #region AreEqual
 
-#region Success Tests
+        #region Success Tests
 
         [Test]
         public void AreEqualPassesWithDirectoryInfos()
@@ -43,9 +43,9 @@ namespace NUnit.Framework.Tests.Assertions
             DirectoryAssert.AreEqual(expected, actual);
         }
 
-#endregion
+        #endregion
 
-#region Failure Tests
+        #region Failure Tests
 
         [Test]
         public void AreEqualFailsWithDirectoryInfos()
@@ -59,13 +59,13 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region AreNotEqual
+        #region AreNotEqual
 
-#region Success Tests
+        #region Success Tests
         [Test]
         public void AreNotEqualPassesIfExpectedIsNull()
         {
@@ -85,9 +85,9 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = _goodDir2.Directory;
             DirectoryAssert.AreNotEqual(expected, actual);
         }
-#endregion
+        #endregion
 
-#region Failure Tests
+        #region Failure Tests
 
         [Test]
         public void AreNotEqualFailsWithDirectoryInfos()
@@ -98,16 +98,16 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to <{0}>{2}  But was:  <{1}>{2}",
                 expected.FullName,
                 actual.FullName,
-                Environment.NewLine );
+                Environment.NewLine);
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreNotEqual(expected, actual));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
-#region Exists
+        #region Exists
 
         [Test]
         public void ExistsPassesWhenDirectoryInfoExists()
@@ -156,9 +156,9 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
 
-#endregion
+        #endregion
 
-#region DoesNotExist
+        #region DoesNotExist
 
         [Test]
         public void DoesNotExistFailsWhenDirectoryInfoExists()

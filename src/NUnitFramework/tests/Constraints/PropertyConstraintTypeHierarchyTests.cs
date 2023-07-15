@@ -19,7 +19,6 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(actual, Has.Property(nameof(ConstraintResult.Status)).EqualTo(ConstraintStatus.Success));
 
-            
             var existSut = new PropertyExistsConstraint(nameof(Derived.SomeProperty));
             var actualExist = existSut.ApplyTo(instance);
             Assert.That(actualExist.IsSuccess, Is.True);
@@ -31,7 +30,6 @@ namespace NUnit.Framework.Tests.Constraints
         {
             public int SomeProperty { get; set; } = 42;
         }
-
 
         private int[] _array;
         private PropertyConstraint _countPropertyConstraint;

@@ -21,7 +21,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ArrayIsEqualToItself()
         {
             string[] array = { "one", "two", "three" };
-            Assert.That( array, Is.SameAs(array) );
+            Assert.That(array, Is.SameAs(array));
             Assert.That(array, Is.EqualTo(array));
         }
 
@@ -30,7 +30,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             string[] array2 = { "one", "two", "three" };
-            Framework.Classic.Assert.IsFalse( array1 == array2 );
+            Framework.Classic.Assert.IsFalse(array1 == array2);
             Assert.That(array2, Is.EqualTo(array1));
             Assert.That(array1, Is.EqualTo(array2));
         }
@@ -76,7 +76,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             object[] array2 = { "one", "two", "three" };
-            Assert.That( array2, Is.EqualTo(array2), "String[] not equal to Object[]" );
+            Assert.That(array2, Is.EqualTo(array2), "String[] not equal to Object[]");
             Assert.That(array1, Is.EqualTo(array1), "Object[] not equal to String[]");
         }
 
@@ -102,8 +102,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void TripleDimensionedArrays()
         {
-            int[, ,] expected = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            int[,,] actual = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[,,] expected = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[,,] actual = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -111,8 +111,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void FiveDimensionedArrays()
         {
-            int[, , , ,] expected = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
-            int[, , , ,] actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
+            int[,,,,] expected = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
+            int[,,,,] actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -148,7 +148,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ArrayAndCollection()
         {
             int[] a = new[] { 1, 2, 3 };
-            ICollection b = new SimpleObjectCollection( 1, 2, 3 );
+            ICollection b = new SimpleObjectCollection(1, 2, 3);
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }

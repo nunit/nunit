@@ -285,9 +285,9 @@ namespace NUnit.Framework
             AddFormatter(next => val => (val is TSupported) ? formatter(val) : next(val));
         }
 
-#endregion
+        #endregion
 
-#region Nested TestAdapter Class
+        #region Nested TestAdapter Class
 
         /// <summary>
         /// TestAdapter adapts a Test for consumption by
@@ -297,7 +297,7 @@ namespace NUnit.Framework
         {
             private readonly Test _test;
 
-#region Constructor
+            #region Constructor
 
             /// <summary>
             /// Construct a TestAdapter for a Test
@@ -308,9 +308,9 @@ namespace NUnit.Framework
                 _test = test;
             }
 
-#endregion
+            #endregion
 
-#region Properties
+            #region Properties
 
             /// <summary>
             /// Gets the unique Id of a test
@@ -371,7 +371,7 @@ namespace NUnit.Framework
             /// <summary>
             /// The expected result if there is one for the test
             /// </summary>
-            public object? ExpectedResult 
+            public object? ExpectedResult
             {
                 get { return (_test as TestMethod)?.ExpectedResult; }
             }
@@ -379,9 +379,9 @@ namespace NUnit.Framework
             #endregion
         }
 
-#endregion
+        #endregion
 
-#region Nested ResultAdapter Class
+        #region Nested ResultAdapter Class
 
         /// <summary>
         /// ResultAdapter adapts a TestResult for consumption by
@@ -391,7 +391,7 @@ namespace NUnit.Framework
         {
             private readonly TestResult _result;
 
-#region Constructor
+            #region Constructor
 
             /// <summary>
             /// Construct a ResultAdapter for a TestResult
@@ -402,9 +402,9 @@ namespace NUnit.Framework
                 _result = result;
             }
 
-#endregion
+            #endregion
 
-#region Properties
+            #region Properties
 
             /// <summary>
             /// Gets a ResultState representing the outcome of the test
@@ -512,7 +512,7 @@ namespace NUnit.Framework
                 {
                     if (_source.TryGet(key, out var values))
                     {
-                        foreach(var item in values)
+                        foreach (var item in values)
                         {
                             yield return item;
                         }

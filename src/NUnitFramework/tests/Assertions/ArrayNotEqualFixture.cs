@@ -34,6 +34,5 @@ namespace NUnit.Framework.Tests.Assertions
             object[] array2 = { "one", "three", "two" };
             Classic.Assert.AreNotEqual(array1, array2);
         }
-
     }
 }

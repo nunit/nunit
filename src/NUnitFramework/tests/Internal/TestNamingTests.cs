@@ -131,7 +131,7 @@ namespace NUnit.Framework.Tests.Internal
         }
 
         [TestFixture(typeof(int), typeof(string), 42, "Forty-two")]
-        public class GenericParameterizedFixture<T1,T2> : TestNamingTests
+        public class GenericParameterizedFixture<T1, T2> : TestNamingTests
         {
             protected const string CURRENT_CLASS = "GenericParameterizedFixture`2";
 

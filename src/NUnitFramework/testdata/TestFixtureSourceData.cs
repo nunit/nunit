@@ -406,7 +406,6 @@ namespace NUnit.TestData.TestFixtureSourceData
         }
     }
 
-
     #region Source Data Classes
 
     internal class SourceData_IEnumerable : IEnumerable

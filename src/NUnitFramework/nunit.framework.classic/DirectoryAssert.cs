@@ -7,7 +7,6 @@ using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Classic
 {
-
     /// <summary>
     /// Asserts on Directories
     /// </summary>
@@ -23,7 +22,7 @@ namespace NUnit.Framework.Classic
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static bool Equals(object a, object b)
+        public static new bool Equals(object a, object b)
         {
             throw new InvalidOperationException(
                 "DirectoryAssert.Equals should not be used. Use DirectoryAssert.AreEqual instead.");
@@ -37,7 +36,7 @@ namespace NUnit.Framework.Classic
         /// <param name="a"></param>
         /// <param name="b"></param>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public new static void ReferenceEquals(object a, object b)
+        public static new void ReferenceEquals(object a, object b)
         {
             throw new InvalidOperationException("DirectoryAssert.ReferenceEquals should not be used.");
         }

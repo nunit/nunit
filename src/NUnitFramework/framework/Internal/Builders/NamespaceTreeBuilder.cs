@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal.Builders
         /// NamespaceDictionary of all test suites we have created to represent
         /// namespaces. Used to locate namespace parent suites for fixtures.
         /// </summary>
-        private readonly Dictionary<string, TestSuite> _namespaceIndex  = new Dictionary<string, TestSuite>();
+        private readonly Dictionary<string, TestSuite> _namespaceIndex = new Dictionary<string, TestSuite>();
 
         /// <summary>
         /// Point in the tree where items in the global namespace are added
@@ -31,7 +31,7 @@ namespace NUnit.Framework.Internal.Builders
         /// Initializes a new instance of the <see cref="NamespaceTreeBuilder"/> class.
         /// </summary>
         /// <param name="rootSuite">The root suite.</param>
-        public NamespaceTreeBuilder( TestSuite rootSuite )
+        public NamespaceTreeBuilder(TestSuite rootSuite)
         {
             Guard.ArgumentNotNull(rootSuite, nameof(rootSuite));
             RootSuite = _globalInsertionPoint = rootSuite;
@@ -55,25 +55,25 @@ namespace NUnit.Framework.Internal.Builders
         /// Adds the specified fixtures to the tree.
         /// </summary>
         /// <param name="fixtures">The fixtures to be added.</param>
-        public void Add( IList<Test> fixtures )
+        public void Add(IList<Test> fixtures)
         {
             foreach (TestSuite fixture in fixtures)
-                Add( fixture );
+                Add(fixture);
         }
 
         /// <summary>
         /// Adds the specified fixture to the tree.
         /// </summary>
         /// <param name="fixture">The fixture to be added.</param>
-        public void Add( TestSuite fixture )
+        public void Add(TestSuite fixture)
         {
             string ns = GetNamespaceForFixture(fixture);
-            TestSuite containingSuite = GetNamespaceSuite( ns );
+            TestSuite containingSuite = GetNamespaceSuite(ns);
 
             if (fixture is SetUpFixture)
                 AddSetUpFixture(fixture, containingSuite, ns);
             else
-                containingSuite.Add( fixture );
+                containingSuite.Add(fixture);
         }
 
         #endregion
@@ -90,11 +90,11 @@ namespace NUnit.Framework.Internal.Builders
             return ns;
         }
 
-        private TestSuite GetNamespaceSuite( string ns )
+        private TestSuite GetNamespaceSuite(string ns)
         {
             Guard.ArgumentNotNull(ns, nameof(ns));
 
-            if( ns  == "" ) return _globalInsertionPoint;
+            if (ns == "") return _globalInsertionPoint;
 
             if (_namespaceIndex.TryGetValue(ns, out TestSuite? suiteToReturn))
                 return suiteToReturn;
@@ -102,18 +102,18 @@ namespace NUnit.Framework.Internal.Builders
             TestSuite suite;
             int index = ns.LastIndexOf('.');
 
-            if( index == -1 )
+            if (index == -1)
             {
-                suite = new TestSuite( ns );
+                suite = new TestSuite(ns);
                 _globalInsertionPoint.Add(suite);
             }
             else
             {
-                string parentNamespace = ns.Substring( 0,index );
-                TestSuite parent = GetNamespaceSuite( parentNamespace );
-                string suiteName = ns.Substring( index+1 );
-                suite = new TestSuite( parentNamespace, suiteName );
-                parent.Add( suite );
+                string parentNamespace = ns.Substring(0, index);
+                TestSuite parent = GetNamespaceSuite(parentNamespace);
+                string suiteName = ns.Substring(index + 1);
+                suite = new TestSuite(parentNamespace, suiteName);
+                parent.Add(suite);
             }
 
             _namespaceIndex[ns] = suite;

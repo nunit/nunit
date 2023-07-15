@@ -84,7 +84,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code, string? message, params object?[]? args) where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(typeof (TActual), code, message, args);
+            return (TActual?)ThrowsAsync(typeof(TActual), code, message, args);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static TActual? CatchAsync<TActual>(AsyncTestDelegate code, string? message, params object?[]? args) where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof (TActual)), code, message, args);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         public static TActual? CatchAsync<TActual>(AsyncTestDelegate code) where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof (TActual)), code);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code);
         }
 
         #endregion

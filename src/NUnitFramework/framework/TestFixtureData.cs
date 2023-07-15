@@ -13,7 +13,6 @@ namespace NUnit.Framework
     /// </summary>
     public class TestFixtureData : TestFixtureParameters
     {
-
         #region Constructors
 
         /// <summary>
@@ -81,7 +80,8 @@ namespace NUnit.Framework
         /// <summary>
         /// Marks the test fixture as explicit.
         /// </summary>
-        public TestFixtureData Explicit()	{
+        public TestFixtureData Explicit()
+        {
             RunState = RunState.Explicit;
             return this;
         }

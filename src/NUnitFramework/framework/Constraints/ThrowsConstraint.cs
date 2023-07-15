@@ -52,7 +52,6 @@ namespace NUnit.Framework.Constraints
                     this,
                     _caughtException,
                     BaseConstraint.ApplyTo(_caughtException));
-
             }
             return new ThrowsConstraintResult(this);
         }

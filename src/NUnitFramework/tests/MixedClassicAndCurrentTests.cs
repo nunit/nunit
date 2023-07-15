@@ -2,7 +2,6 @@
 
 namespace NUnit.Framework.Tests
 {
-
     public class MixedClassicAndCurrentTests
     {
         [Test]

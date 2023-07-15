@@ -80,17 +80,17 @@ namespace NUnit.TestData.TestMethodSignatureFixture
             Framework.Classic.Assert.AreEqual(sum, x + y, 0.0001);
         }
         // ReSharper enable NUnit.IncorrectArgumentType
-        
+
         [TestCase(12, 3, 4)]
-        [TestCase( 12, 2, 6 )]
-        [TestCase( 12, 4, 3 )]
-        public void TestMethodWithMultipleTestCases( int n, int d, int q )
+        [TestCase(12, 2, 6)]
+        [TestCase(12, 4, 3)]
+        public void TestMethodWithMultipleTestCases(int n, int d, int q)
         {
-            Framework.Classic.Assert.AreEqual( q, n / d );
+            Framework.Classic.Assert.AreEqual(q, n / d);
         }
 
-//		[Test]
-//		public abstract void AbstractTestMethod() { }
+        //		[Test]
+        //		public abstract void AbstractTestMethod() { }
 
         [Test]
         protected void ProtectedTestMethod() { }

@@ -15,14 +15,14 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
         /// </summary>
-        public InvalidDataSourceException() : base() {}
+        public InvalidDataSourceException() : base() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         public InvalidDataSourceException(string message) : base(message)
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidTestFixtureException"/> class.
@@ -36,6 +36,6 @@ namespace NUnit.Framework.Internal
         /// Serialization Constructor
         /// </summary>
         protected InvalidDataSourceException(SerializationInfo info,
-            StreamingContext context) : base(info,context){}
+            StreamingContext context) : base(info, context) { }
     }
 }

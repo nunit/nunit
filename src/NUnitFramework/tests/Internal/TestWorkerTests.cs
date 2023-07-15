@@ -31,9 +31,9 @@ namespace NUnit.Framework.Tests.Internal
             StringBuilder sb = new StringBuilder();
             FakeWorkItem work = Fakes.GetWorkItem(this, "FakeMethod");
 
-            _worker.Busy += (s, ea) => { sb.Append("Busy"); };
-            work.Executed += (s, ea) => { sb.Append("Exec"); };
-            _worker.Idle += (s, ea) => { sb.Append ("Idle"); };
+            _worker.Busy += (s, ea) => sb.Append("Busy");
+            work.Executed += (s, ea) => sb.Append("Exec");
+            _worker.Idle += (s, ea) => sb.Append("Idle");
 
             _queue.Enqueue(work);
             _worker.Start();

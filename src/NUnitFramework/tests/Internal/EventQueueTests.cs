@@ -223,7 +223,7 @@ namespace NUnit.Framework.Tests.Internal
             }
         }
 
-#endregion
+        #endregion
 
         public abstract class ProducerConsumerTest
         {

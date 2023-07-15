@@ -206,7 +206,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(false);
         }
     }
-    
+
     internal class ComplexNumber
     {
         public ComplexNumber(double realPart, double imaginaryPart)

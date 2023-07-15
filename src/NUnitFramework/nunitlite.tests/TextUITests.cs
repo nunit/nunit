@@ -186,7 +186,7 @@ namespace NUnitLite.Tests
             var result = new TestCaseResult(Fakes.GetTestMethod(this, "MyFakeMethod"));
             result.SetResult(ResultState.Success);
 
-            result.OutWriter.Write(new [] { 'A', 'B', 'C' });
+            result.OutWriter.Write(new[] { 'A', 'B', 'C' });
             result.OutWriter.Write('+');
             result.OutWriter.WriteLine("XYZ");
 

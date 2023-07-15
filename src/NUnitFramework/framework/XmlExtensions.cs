@@ -55,7 +55,6 @@ namespace NUnit.Framework
                 writer.WriteCData(text);
         }
 
-
         [return: NotNullIfNotNull("str")]
         internal static string? EscapeInvalidXmlCharacters(string? str)
         {

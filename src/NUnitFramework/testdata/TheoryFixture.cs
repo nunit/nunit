@@ -67,14 +67,14 @@ namespace NUnit.TestData.TheoryFixture
         [Theory]
         public void TestWithBothDatapointAndAttributeData(
             int i,
-            [Values(0, 5)]decimal d)
+            [Values(0, 5)] decimal d)
         {
         }
 
         [Theory]
         public void TestWithAllDataSuppliedByAttributes(
-            [Values(1.0, 2.0)]double d1,
-            [Values(3.0, 4.0)]double d2)
+            [Values(1.0, 2.0)] double d1,
+            [Values(3.0, 4.0)] double d2)
         {
         }
 

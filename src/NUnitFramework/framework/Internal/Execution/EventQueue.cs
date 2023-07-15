@@ -6,7 +6,6 @@ using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework.Internal.Execution
 {
-
     #region Individual Event Classes
 
     /// <summary>
@@ -142,7 +141,7 @@ namespace NUnit.Framework.Internal.Execution
     {
         private const int SpinCount = 5;
 
-//        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
+        //        static readonly Logger log = InternalTrace.GetLogger("EventQueue");
 
         private readonly ConcurrentQueue<Event> _queue = new ConcurrentQueue<Event>();
 
@@ -259,7 +258,6 @@ namespace NUnit.Framework.Internal.Execution
                 // Validate that we are the current dequeuer
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
-
 
                 // Dequeue our work item
                 Event? e;

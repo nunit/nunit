@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [Test]
         public void OptimizeEmpty()
         {
-            var filter = new OrFilter(new TestFilter[] {});
+            var filter = new OrFilter(new TestFilter[] { });
 
             Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
 
             Assert.That(InFilter.TryOptimize(filter, out _), Is.False);
         }
-        
+
         [Test]
         public void BuildFromXmlFullName()
         {
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
             Assert.That(filter.Match(DummyFixtureSuite));
             Assert.That(filter.Match(AnotherFixtureSuite));
         }
-        
+
         [Test]
         public void WriteToXml()
         {

@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
         [Test]
         public void MatchTestEmpty()
         {
-            var filter = new OrFilter(new TestFilter[] {});
+            var filter = new OrFilter(new TestFilter[] { });
 
             Assert.That(filter.Match(DummyFixtureSuite), Is.False);
             Assert.That(filter.Match(AnotherFixtureSuite), Is.False);

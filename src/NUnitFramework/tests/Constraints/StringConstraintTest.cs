@@ -4,7 +4,6 @@ using System;
 
 namespace NUnit.Framework.Tests.Constraints
 {
-
     public abstract class StringConstraintTests : ConstraintTestBase
     {
         [Test]

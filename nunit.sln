@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.config = NuGet.config
 		NUnit.sln.DotSettings = NUnit.sln.DotSettings
 		README.md = README.md
+		src\NUnitFramework\StyleCop.Analyzers.globalconfig = src\NUnitFramework\StyleCop.Analyzers.globalconfig
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunitlite", "src\NUnitFramework\nunitlite\nunitlite.csproj", "{A77D9156-0C6E-47EE-A03C-C458BFF4F5BE}"
@@ -57,7 +58,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "nunit.testdata.fsharp", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.benchmarks", "src\NUnitFramework\benchmarks\nunit.framework.benchmarks\nunit.framework.benchmarks.csproj", "{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.classic", "src\NUnitFramework\nunit.framework.classic\nunit.framework.classic.csproj", "{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.classic", "src\NUnitFramework\nunit.framework.classic\nunit.framework.classic.csproj", "{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

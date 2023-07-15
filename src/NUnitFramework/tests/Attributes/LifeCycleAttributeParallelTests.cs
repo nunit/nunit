@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void EnsureParallelTestsRunInNewInstance1()
         {
             OutputReferenceId("EnsureParallelTestsRunInNewInstance1");
-            Assert.That(_constructorCount, Is.EqualTo(1)); 
+            Assert.That(_constructorCount, Is.EqualTo(1));
             Assert.That(_setupCount, Is.EqualTo(1));
         }
 

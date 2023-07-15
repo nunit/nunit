@@ -70,7 +70,7 @@ namespace NUnitLite.Tests
             using (var tf = new TestFile("TestListFile.txt"))
             using (var tf2 = new TestFile("TestListFile2.txt"))
             {
-                var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName );
+                var filter = GetFilter("--testlist:" + tf.File.FullName, "--testlist:" + tf2.File.FullName);
                 Assert.That(filter, Is.TypeOf<OrFilter>());
                 var filters = ((OrFilter)filter).Filters;
                 Assert.That(filters, Has.Length.EqualTo(6));

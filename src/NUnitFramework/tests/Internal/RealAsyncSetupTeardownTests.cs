@@ -23,7 +23,6 @@ namespace NUnit.Framework.Tests.Internal
             _initializedEveryTime = new object();
         }
 
-
         [Test]
         public void TestCurrentFixtureInitialization()
         {
@@ -48,7 +47,6 @@ namespace NUnit.Framework.Tests.Internal
         {
             Assume.That(_initializedOnce, Is.Null);
         }
-
     }
 #pragma warning restore 1998
 }

@@ -6,9 +6,6 @@ namespace NUnit.Framework.Classic
 {
     public abstract partial class Assert
     {
-        
-
-
         #region IsAssignableFrom
 
         /// <summary>
@@ -24,8 +21,6 @@ namespace NUnit.Framework.Classic
             var msg = ConvertMessageWithArgs(message, args);
             That(actual, Is.AssignableFrom(expected), msg);
         }
-
-        
 
         /// <summary>
         /// Asserts that an object may be assigned a value of a given Type. Returns without throwing an exception when

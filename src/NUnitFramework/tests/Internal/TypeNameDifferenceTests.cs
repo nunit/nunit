@@ -155,7 +155,6 @@ namespace NUnit.Framework.Tests.Internal
 
         private void TestShortenedNameDifference(object objA, object objB, string expectedA, string expectedB)
         {
-
             _differenceGetter.ResolveTypeNameDifference(
                  objA, objB, out var actualA, out var actualB);
 
@@ -350,7 +349,7 @@ namespace NUnit.Framework.Tests.Internal
 
             TestShortenedNameDifference(
                new B.GenC<A.GenA<List<int>>, B.GenC<string, B.GenC<string, int>>>(),
-               new A.GenA<B.GenC<string, B.GenC<string,int>>>(),
+               new A.GenA<B.GenC<string, B.GenC<string, int>>>(),
                "GenC`2[GenA`1[List`1[Int32]],GenC`2[String,GenC`2[String,Int32]]]",
                "GenA`1[GenC`2[String,GenC`2[String,Int32]]]");
 
@@ -407,7 +406,6 @@ namespace NUnit.Framework.Tests.Internal
 
         private void TestShortenTypeNames(object objA, object objB, string shortenedA, string shortenedB)
         {
-
             _differenceGetter.ShortenTypeNames(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
             Assert.That(actualA, Is.EqualTo(shortenedA));
@@ -426,7 +424,6 @@ namespace NUnit.Framework.Tests.Internal
 
         private void TestShortenGenericTopLevelTypeNames(object objA, object objB, string shortenedA, string shortenedB)
         {
-
             _differenceGetter.GetShortenedGenericTypes(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
             Assert.That(actualA, Is.EqualTo(shortenedA));

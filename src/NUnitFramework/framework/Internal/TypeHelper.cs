@@ -238,10 +238,10 @@ namespace NUnit.Framework.Internal
                             convert = arg is int || arg is long || arg is short || arg is byte || arg is sbyte;
                         else
                             if (targetType == typeof(long))
-                                convert = arg is int || arg is short || arg is byte || arg is sbyte;
-                            else
+                            convert = arg is int || arg is short || arg is byte || arg is sbyte;
+                        else
                                 if (targetType == typeof(short))
-                                    convert = arg is byte || arg is sbyte;
+                            convert = arg is byte || arg is sbyte;
                     }
 
                     if (convert)

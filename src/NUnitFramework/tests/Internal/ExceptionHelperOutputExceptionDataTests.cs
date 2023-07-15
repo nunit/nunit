@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             var exception = new Exception("blah");
             exception.Data["data-prop"] = "data-value";
-            
+
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("data-prop"));
@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.Internal
         {
             var exception = new Exception("blah");
             exception.Data["data-prop"] = null;
-            
+
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, Contains.Substring("data-prop"));
@@ -35,7 +35,7 @@ namespace NUnit.Framework.Tests.Internal
         public static void SkipsDataSectionOnEmptyData()
         {
             var exception = new Exception("blah");
-            
+
             var message = ExceptionHelper.BuildMessage(exception);
             Assert.That(message, Contains.Substring("blah"));
             Assert.That(message, !Contains.Substring("Data"));

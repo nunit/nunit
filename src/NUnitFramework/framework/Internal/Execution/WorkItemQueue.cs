@@ -254,7 +254,6 @@ namespace NUnit.Framework.Internal.Execution
                 if (Interlocked.CompareExchange(ref _removeId, cachedRemoveId + 1, cachedRemoveId) != cachedRemoveId)
                     continue;
 
-
                 // Dequeue our work item
                 WorkItem? work = null;
                 while (work is null)

@@ -276,7 +276,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCase("\x2029", "\\x2029", Description = "Paragraph separator character")]
         public static void EscapeControlCharsTest(string input, string expected)
         {
-            Assert.That( MsgUtils.EscapeControlChars(input), Is.EqualTo(expected) );
+            Assert.That(MsgUtils.EscapeControlChars(input), Is.EqualTo(expected));
         }
 
         [Test]
@@ -308,10 +308,10 @@ namespace NUnit.Framework.Tests.Constraints
 
         private const string S52 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        [TestCase(S52, 52, 0, S52, TestName="NoClippingNeeded")]
-        [TestCase(S52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName="ClipAtEnd")]
-        [TestCase(S52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName="ClipAtStart")]
-        [TestCase(S52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName="ClipAtStartAndEnd")]
+        [TestCase(S52, 52, 0, S52, TestName = "NoClippingNeeded")]
+        [TestCase(S52, 29, 0, "abcdefghijklmnopqrstuvwxyz...", TestName = "ClipAtEnd")]
+        [TestCase(S52, 29, 26, "...ABCDEFGHIJKLMNOPQRSTUVWXYZ", TestName = "ClipAtStart")]
+        [TestCase(S52, 28, 26, "...ABCDEFGHIJKLMNOPQRSTUV...", TestName = "ClipAtStartAndEnd")]
         public static void TestClipString(string input, int max, int start, string result)
         {
             System.Console.WriteLine("input=  \"{0}\"", input);
@@ -319,9 +319,9 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(MsgUtils.ClipString(input, max, start), Is.EqualTo(result));
         }
 
-#endregion
+        #endregion
 
-#region ClipExpectedAndActual
+        #region ClipExpectedAndActual
 
         [Test]
         public static void ClipExpectedAndActual_StringsFitInLine()
@@ -364,6 +364,6 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(s2, Is.EqualTo("...efghijklmno?qrstuvwxyz"));
         }
 
-#endregion
+        #endregion
     }
 }

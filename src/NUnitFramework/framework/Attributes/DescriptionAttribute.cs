@@ -8,7 +8,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Provides the descriptive text relating to the assembly, test fixture or test method.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public sealed class DescriptionAttribute : PropertyAttribute
     {
         /// <summary>
@@ -17,5 +17,4 @@ namespace NUnit.Framework
         /// <param name="description">The text of the description</param>
         public DescriptionAttribute(string description) : base(PropertyNames.Description, description) { }
     }
-
 }

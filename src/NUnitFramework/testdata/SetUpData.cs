@@ -30,7 +30,6 @@ namespace NUnit.TestData.SetUpData
         public void Success() { }
     }
 
-
     [TestFixture]
     public class SetUpAndTearDownCounterFixture
     {
@@ -50,20 +49,20 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void TestOne(){}
+        public void TestOne() { }
 
         [Test]
-        public void TestTwo(){}
+        public void TestTwo() { }
 
         [Test]
-        public void TestThree(){}
+        public void TestThree() { }
     }
 
     [TestFixture]
     public class InheritSetUpAndTearDown : SetUpAndTearDownFixture
     {
         [Test]
-        public void AnotherTest(){}
+        public void AnotherTest() { }
     }
 
     [TestFixture]
@@ -85,7 +84,7 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void AnotherTest(){}
+        public void AnotherTest() { }
     }
 
     public class MultipleSetUpTearDownFixture
@@ -169,6 +168,6 @@ namespace NUnit.TestData.SetUpData
         }
 
         [Test]
-        public void TestOne() {}
+        public void TestOne() { }
     }
 }

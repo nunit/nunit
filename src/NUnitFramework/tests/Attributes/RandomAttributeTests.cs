@@ -11,7 +11,6 @@ namespace NUnit.Framework.Tests.Attributes
 {
     public class RandomAttributeTests
     {
-
         [TestCaseSource(typeof(MethodNames))]
         public void CheckRandomResult(string methodName)
         {

@@ -82,7 +82,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.DoesNotThrow(() => test.ApplyTo(7));
         }
         [TestCaseSource(nameof(NoIComparableTestCase))]
-        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj,object from, object to, System.Collections.IComparer comparer)
+        public void RangeConstructorComparerThrowExceptionIfFromIsLessThanTo(object testObj, object from, object to, System.Collections.IComparer comparer)
         {
             RangeConstraint test = new RangeConstraint(from, to);
             test.Using(comparer);
@@ -95,5 +95,4 @@ namespace NUnit.Framework.Tests.Constraints
             yield return new object[] { new NoComparer("M"), new NoComparer("A"), new NoComparer("Z"), comparer };
         }
     }
-
 }

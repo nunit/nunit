@@ -30,7 +30,7 @@ namespace NUnit.Framework.Tests.Constraints
             var constraint = constraintExpression
                 .Member("3")
                 .Using<int, string>((i, s) => i.ToString() == s)
-                .Using((IComparer<string>) Comparer<string>.Default);
+                .Using((IComparer<string>)Comparer<string>.Default);
             var collection1 = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
             Assert.That(collection1, constraint);
         }

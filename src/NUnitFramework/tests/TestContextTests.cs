@@ -93,7 +93,7 @@ namespace NUnit.Framework.Tests
             yield return TestContext.CurrentContext.WorkDirectory;
         }
 
-    #endregion
+        #endregion
 
         #region Test
 

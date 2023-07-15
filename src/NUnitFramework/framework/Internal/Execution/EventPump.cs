@@ -124,7 +124,7 @@ namespace NUnit.Framework.Internal.Execution
         /// </summary>
         public void Stop()
         {
-            if (Interlocked.CompareExchange (ref _pumpState, (int)EventPumpState.Stopping, (int)EventPumpState.Pumping) == (int)EventPumpState.Pumping)
+            if (Interlocked.CompareExchange(ref _pumpState, (int)EventPumpState.Stopping, (int)EventPumpState.Pumping) == (int)EventPumpState.Pumping)
             {
                 _events.Stop();
                 _pumpThread?.Join();
@@ -149,8 +149,8 @@ namespace NUnit.Framework.Internal.Execution
             {
                 while (true)
                 {
-                    Event? e = _events.Dequeue( PumpState == EventPumpState.Pumping );
-                    if ( e is null )
+                    Event? e = _events.Dequeue(PumpState == EventPumpState.Pumping);
+                    if (e is null)
                         break;
                     try
                     {

@@ -245,7 +245,6 @@ namespace NUnit.Framework
                 Guard.OperationValid(CanUseRange() || !_inRange, $"The value type {parameter.ParameterType} does not support range of values.");
                 Guard.OperationValid(!(Distinct && _inRange && !CanBeDistinct(_min!, _max!, _count)), $"The range of values is [{_min}, {_max}[ and the random value count is {_count} so the values cannot be distinct.");
 
-
                 for (int i = 0; i < _count; i++)
                 {
                     if (Distinct)
@@ -280,7 +279,6 @@ namespace NUnit.Framework
             protected abstract T GetNext(Randomizer randomizer);
             protected abstract T GetNext(Randomizer randomizer, T min, T max);
             protected abstract bool CanBeDistinct(T min, T max, int count);
-
         }
 
         #endregion

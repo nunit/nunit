@@ -9,7 +9,7 @@ namespace NUnit.Framework
     /// <summary>
     /// Attaches information to a test assembly, fixture or method as a name/value pair.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class|AttributeTargets.Method|AttributeTargets.Assembly, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = true)]
     public class PropertyAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly PropertyBag _properties = new PropertyBag();
@@ -58,11 +58,11 @@ namespace NUnit.Framework
         /// types will cause a serialization Exception when
         /// in the client.
         /// </summary>
-        protected PropertyAttribute( object propertyValue )
+        protected PropertyAttribute(object propertyValue)
         {
             string propertyName = GetType().Name;
-            if ( propertyName.EndsWith( "Attribute", StringComparison.Ordinal ) )
-                propertyName = propertyName.Substring( 0, propertyName.Length - 9 );
+            if (propertyName.EndsWith("Attribute", StringComparison.Ordinal))
+                propertyName = propertyName.Substring(0, propertyName.Length - 9);
             _properties.Add(propertyName, propertyValue);
         }
 

@@ -16,10 +16,9 @@ namespace NUnit.Framework.Tests.TestUtilities
             var options = new CompilerParameters()
             {
                 GenerateInMemory = true,
-                
             };
             options.ReferencedAssemblies.AddRange(referencedAssemblies);
-            
+
             var codeProvider = CodeDomProvider.CreateProvider("CSharp");
             var result = codeProvider.CompileAssemblyFromSource(options, code);
 
@@ -40,8 +39,5 @@ namespace NUnit.Framework.Tests.TestUtilities
         public CompileErrorException(string message) : base(message) { }
         public CompileErrorException(string message, Exception inner) : base(message, inner) { }
     }
-
-
-
 }
 #endif

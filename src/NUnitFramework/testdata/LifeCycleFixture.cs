@@ -1,6 +1,5 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-
 using System;
 using System.Threading;
 using NUnit.Framework;
@@ -101,7 +100,7 @@ namespace NUnit.TestData.LifeCycleTests
         public void CountIsAlwaysOne()
         {
             Count++;
-            Assert.That(Count,Is.EqualTo(1));
+            Assert.That(Count, Is.EqualTo(1));
         }
 
         [Test]
@@ -231,11 +230,10 @@ namespace NUnit.TestData.LifeCycleTests
 
         public static int[] Args() => new[] { 1, 42 };
 
-
         [TestCaseSource(nameof(Args))]
         public void Test(int _)
         {
-            Assert.That(_counter++,Is.EqualTo(0));
+            Assert.That(_counter++, Is.EqualTo(0));
         }
     }
 

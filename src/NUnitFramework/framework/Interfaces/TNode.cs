@@ -405,7 +405,7 @@ namespace NUnit.Framework.Interfaces
                         throw new ArgumentException("Invalid property expression", nameof(xpath));
 
                     _nodeName = xpath.Substring(0, lbrack);
-                    string filter = xpath.Substring(lbrack+1, xpath.Length - lbrack - 2);
+                    string filter = xpath.Substring(lbrack + 1, xpath.Length - lbrack - 2);
 
                     int equals = filter.IndexOf('=');
                     if (equals < 0 || filter[0] != '@')
@@ -429,7 +429,6 @@ namespace NUnit.Framework.Interfaces
         }
 
         #endregion
-
 
         /// <summary>
         /// Class used to represent a list of XmlResults

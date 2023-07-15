@@ -4,7 +4,6 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-
 namespace NUnit.Framework.Tests.Attributes
 {
     public class TestDummy : NUnit.Framework.Internal.Test

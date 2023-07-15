@@ -37,7 +37,6 @@ namespace NUnit.Framework.Tests.Internal
                 nameof(NUnit.TestData.ParameterizedTestFixture.MethodWithParams)));
             var copiedparameterizedMethodSuite = parameterizedMethodSuite.Copy(TestFilter.Empty);
             Assert.That(copiedparameterizedMethodSuite, Is.TypeOf<ParameterizedMethodSuite>());
-
         }
 
         [Test]

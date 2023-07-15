@@ -42,7 +42,6 @@ namespace NUnit.Framework.Tests.Api
                 "Test.xsd");
         }
 
-
         [Test]
         public static void TestResultSchemaIsValid()
         {
@@ -97,7 +96,6 @@ namespace NUnit.Framework.Tests.Api
                     "TestResult.xsd");
             });
         }
-
 
         [Test]
         public static void TestResultSchemaDisallowsRootElement_Filter()
@@ -167,7 +165,6 @@ namespace NUnit.Framework.Tests.Api
                 </test-run>",
                 "TestResult.xsd");
         }
-
 
         [Test]
         public static void TestFilterSchemaIsValid()

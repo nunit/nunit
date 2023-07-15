@@ -33,7 +33,7 @@ namespace NUnit.Framework
         /// Serialization Constructor
         /// </summary>
         protected MultipleAssertException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info,context)
+            System.Runtime.Serialization.StreamingContext context) : base(info, context)
         {
         }
 #pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.

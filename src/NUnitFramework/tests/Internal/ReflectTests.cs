@@ -167,12 +167,21 @@ namespace NUnit.Framework.Tests.Internal
 
             internal int InternalProperty { get; set; }
 
-            public int this[object arg] { get => 0;
-                set { } }
-            public int this[int arg] { get => 0;
-                set { } }
-            public int this[byte a, byte b = 42] { get => 0;
-                set { } }
+            public int this[object arg]
+            {
+                get => 0;
+                set { }
+            }
+            public int this[int arg]
+            {
+                get => 0;
+                set { }
+            }
+            public int this[byte a, byte b = 42]
+            {
+                get => 0;
+                set { }
+            }
         }
 
         private class B : A

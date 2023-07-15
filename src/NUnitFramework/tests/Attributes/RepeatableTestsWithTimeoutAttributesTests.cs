@@ -1,5 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+#if !THREAD_ABORT
+#pragma warning disable format // Temporary until release of https://github.com/dotnet/roslyn/issues/62612
+#endif
+
 #if THREAD_ABORT
 
 using System;

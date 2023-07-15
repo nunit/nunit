@@ -29,7 +29,6 @@ namespace NUnit.Framework.Internal
 
         #region Overrides
 
-
         /// <summary>
         /// Gets the number of test cases that executed
         /// when running the test and all its children.
@@ -49,7 +48,6 @@ namespace NUnit.Framework.Internal
                 }
             }
         }
-
 
         /// <summary>
         /// Gets the number of test cases that failed

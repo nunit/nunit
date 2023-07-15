@@ -40,15 +40,15 @@ namespace NUnit.Framework.Tests.Constraints
                 { { {7}, {8}, {9} }, { {10}, {11}, {12} } }
             };
 
-            Assert.That(tester, Has.ItemAt(0,0,0,0).EqualTo(1));
-            Assert.That(tester, Has.ItemAt(1,1,2,0).EqualTo(12));
+            Assert.That(tester, Has.ItemAt(0, 0, 0, 0).EqualTo(1));
+            Assert.That(tester, Has.ItemAt(1, 1, 2, 0).EqualTo(12));
         }
 
         [Test]
         public void DoesNotMatchMissingIndexerEquality()
         {
             var expectedErrorMessage = $"  Expected string length 14 but was 13. Strings differ at index 0.{NL}  Expected: \"Second indexer\"{NL}  But was:  \"Third indexer\"{NL}  -----------^{NL}";
-            
+
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.ItemAt(4, 2).EqualTo("Second indexer")));

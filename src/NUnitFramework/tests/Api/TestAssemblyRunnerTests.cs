@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using NUnit.Framework.Api;
 using NUnit.Framework.Interfaces;
@@ -13,6 +12,7 @@ using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests;
 using NUnit.Tests.Assemblies;
 #if THREAD_ABORT
+using System.Text;
 #endif
 
 namespace NUnit.Framework.Tests.Api

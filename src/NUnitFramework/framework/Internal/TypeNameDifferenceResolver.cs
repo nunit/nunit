@@ -146,7 +146,6 @@ namespace NUnit.Framework.Internal
                 expectedTypeShortened = expectedOriginalType[expectedOriginalType.Length - 1];
                 actualTypeShortened = actualOriginalType[actualOriginalType.Length - 1];
             }
-
         }
 
         /// <summary>

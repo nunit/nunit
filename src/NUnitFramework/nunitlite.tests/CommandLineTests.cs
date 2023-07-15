@@ -12,7 +12,7 @@ namespace NUnitLite.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    
+
     [TestFixture]
     public class CommandLineTests
     {
@@ -97,7 +97,7 @@ namespace NUnitLite.Tests
             for (int ix = 0; ix < filespecs.Length; ++ix)
             {
                 var filespec = filespecs[ix];
-                var split = filespec.IndexOf( ':' );
+                var split = filespec.IndexOf(':');
                 if (split < 0) throw new Exception("Invalid test data");
 
                 var fileName = filespec.Substring(0, split);
@@ -121,7 +121,7 @@ namespace NUnitLite.Tests
             }
 
             Assert.That(expandedArgs, Is.EqualTo(expectedArgs));
-            Assert.That(options.ErrorMessages.Count,Is.Zero);
+            Assert.That(options.ErrorMessages.Count, Is.Zero);
         }
 
         [TestCase("--arg1 @file1.txt --arg2", "The file \"file1.txt\" was not found.")]
@@ -222,7 +222,7 @@ namespace NUnitLite.Tests
                 {
                     string optionPlusValue = $"--{option}:{value}";
                     var options = new NUnitLiteOptions(optionPlusValue);
-                    Assert.That(options.Validate(), Is.False,"Should not be valid: " + optionPlusValue);
+                    Assert.That(options.Validate(), Is.False, "Should not be valid: " + optionPlusValue);
                 }
             }
         }
@@ -310,7 +310,7 @@ namespace NUnitLite.Tests
         public void MissingValuesAreReported(string option)
         {
             var options = new NUnitLiteOptions(option + "=");
-            Assert.That(options.Validate(),Is.False, "Missing value should not be valid");
+            Assert.That(options.Validate(), Is.False, "Missing value should not be valid");
             Assert.That(options.ErrorMessages[0], Is.EqualTo("Missing required value for option '" + option + "'."));
         }
 
@@ -318,7 +318,7 @@ namespace NUnitLite.Tests
         public void AssemblyIsInvalidByDefault()
         {
             var options = new NUnitLiteOptions("nunit.tests.dll");
-            Assert.That(options.Validate(),Is.False);
+            Assert.That(options.Validate(), Is.False);
             Assert.That(options.ErrorMessages.Count, Is.EqualTo(1));
             Assert.That(options.ErrorMessages[0], Contains.Substring("Invalid entry: nunit.tests.dll"));
         }
@@ -443,7 +443,7 @@ namespace NUnitLite.Tests
         public void ResultOptionWithoutFileNameIsInvalid()
         {
             var options = new NUnitLiteOptions("-result:");
-            Assert.That(options.Validate(),Is.False, "Should not be valid");
+            Assert.That(options.Validate(), Is.False, "Should not be valid");
             Assert.That(options.ErrorMessages.Count, Is.EqualTo(1), "An error was expected");
         }
 
@@ -585,7 +585,7 @@ namespace NUnitLite.Tests
         {
             var options = new NUnitLiteOptions("--params=X=5");
             Assert.That(options.ErrorMessages, Is.Empty);
-            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { {"X", "5" } }));
+            Assert.That(options.TestParameters, Is.EqualTo(new Dictionary<string, string> { { "X", "5" } }));
         }
 
         [Test]
@@ -648,7 +648,7 @@ namespace NUnitLite.Tests
         private static PropertyInfo GetPropertyInfo(string propertyName)
         {
             PropertyInfo property = typeof(NUnitLiteOptions).GetProperty(propertyName);
-            Assert.That(property, Is.Not.Null,"The property '{0}' is not defined", propertyName);
+            Assert.That(property, Is.Not.Null, "The property '{0}' is not defined", propertyName);
             return property;
         }
 

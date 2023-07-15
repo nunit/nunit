@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.TestUtilities
             /// <returns>true, if there are expected events left to match, otherwise false.</returns>
             public bool MatchEvent(string @event, int item)
             {
-                Assert.That(_expectedEvents,Does.Contain(@event), $"Item {item}");
+                Assert.That(_expectedEvents, Does.Contain(@event), $"Item {item}");
                 _expectedEvents.Remove(@event);
                 return _expectedEvents.Count > 0;
             }
@@ -104,7 +104,6 @@ namespace NUnit.Framework.Tests.TestUtilities
             Events.Enqueue(evnt);
         }
 
-
         /// <summary>
         /// Verifies the specified expected events occurred and that they occurred in the specified order.
         /// </summary>
@@ -115,7 +114,7 @@ namespace NUnit.Framework.Tests.TestUtilities
             {
                 int item = 0;
                 string actual = Events.Count > 0 ? Events.Dequeue() : null;
-                Assert.That( actual,Is.EqualTo(expected), $"Item {++item}");
+                Assert.That(actual, Is.EqualTo(expected), $"Item {++item}");
             }
         }
 
@@ -143,8 +142,6 @@ namespace NUnit.TestData.SetupFixture
 {
     namespace StaticFixture
     {
-        using Framework.Tests.TestUtilities;
-
         #region SomeFixture
         [TestFixture]
         public class TestSetupFixtureStuff
@@ -180,7 +177,6 @@ namespace NUnit.TestData.SetupFixture
             }
         }
         #endregion SomeFixture
-
 
         [SetUpFixture]
         public static class StaticSetupTeardown
@@ -256,7 +252,6 @@ namespace NUnit.TestData.SetupFixture
 
     namespace Namespace2
     {
-
         #region Fixtures
         /// <summary>
         /// Summary description for SetUpFixtureTests.
@@ -351,8 +346,6 @@ namespace NUnit.TestData.SetupFixture
     {
         namespace SubNamespace
         {
-
-
             #region SomeFixture
             [TestFixture]
             public class SomeFixture
@@ -404,9 +397,7 @@ namespace NUnit.TestData.SetupFixture
                     SimpleEventRecorder.RegisterEvent("NS3.SubNamespace.OneTimeTearDown");
                 }
             }
-
         }
-
 
         #region SomeFixture
         [TestFixture]

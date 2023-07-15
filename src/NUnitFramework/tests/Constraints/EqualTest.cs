@@ -9,7 +9,6 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class EqualTests
     {
-
         [Test]
         public void FailedStringMatchShowsFailurePosition()
         {
@@ -52,7 +51,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void LongStringsAreTruncatedAtFrontEndIfNecessary()
         {
             string expected = TestString;
-            string actual = TestString  + "+++++";
+            string actual = TestString + "+++++";
 
             CheckExceptionMessage(
                 Assert.Throws<AssertionException>(() =>
@@ -61,20 +60,21 @@ namespace NUnit.Framework.Tests.Constraints
                 }));
         }
 
-//        [Test]
-//        public void NamedAndUnnamedColorsCompareAsEqual()
-//        {
-//            EqualConstraint.SetConstraintForType(typeof(Color), typeof(SameColorAs));
-//            Assert.That(System.Drawing.Color.Red,
-//                Is.EqualTo(System.Drawing.Color.FromArgb(255, 0, 0)));
-//        }
+        //        [Test]
+        //        public void NamedAndUnnamedColorsCompareAsEqual()
+        //        {
+        //            EqualConstraint.SetConstraintForType(typeof(Color), typeof(SameColorAs));
+        //            Assert.That(System.Drawing.Color.Red,
+        //                Is.EqualTo(System.Drawing.Color.FromArgb(255, 0, 0)));
+        //        }
 
         private static void CheckExceptionMessage(Exception ex)
         {
             string nl = Environment.NewLine;
 
             StringReader rdr = new StringReader(ex.Message);
-            /* skip */ rdr.ReadLine();
+            /* skip */
+            rdr.ReadLine();
             string? expected = rdr.ReadLine();
             Assert.That(expected, Is.Not.Null);
             if (expected.Length > 11)

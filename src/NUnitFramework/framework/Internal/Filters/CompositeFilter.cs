@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal.Filters
         /// Constructs a CompositeFilter from an array of filters
         /// </summary>
         /// <param name="filters"></param>
-        public CompositeFilter( params TestFilter[] filters )
+        public CompositeFilter(params TestFilter[] filters)
         {
             Filters = filters;
         }

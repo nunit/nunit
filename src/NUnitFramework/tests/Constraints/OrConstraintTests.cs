@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void CanCombineTestsWithOrOperator()
         {
-            Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99) );
+            Assert.That(99, new EqualConstraint(42) | new EqualConstraint(99));
         }
     }
 }

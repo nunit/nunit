@@ -18,7 +18,7 @@ namespace NUnit.Framework.Tests.Attributes
         [SetUp]
         public void CreateFixture()
         {
-            _fixture = TestBuilder.MakeFixture( typeof( FixtureWithCategories ) );
+            _fixture = TestBuilder.MakeFixture(typeof(FixtureWithCategories));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Tests.Attributes
         public void CanDeriveFromCategoryAttribute()
         {
             Test test2 = (Test)_fixture.Tests[1];
-            Assert.That(test2.Properties["Category"], Contains.Item("Critical") );
+            Assert.That(test2.Properties["Category"], Contains.Item("Critical"));
         }
 
         [Test]

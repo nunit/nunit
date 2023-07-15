@@ -7,7 +7,6 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class FloatingPointNumericsTests
     {
-
         /// <summary>Tests the floating point value comparison helper</summary>
         [Test]
         public void FloatEqualityWithUlps()

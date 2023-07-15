@@ -304,7 +304,7 @@ namespace NUnit.Framework.Tests.Internal
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
         }
 
-#region ITestListener implementation
+        #region ITestListener implementation
 
         private class TestListenerIntercepter : ITestListener
         {
@@ -337,10 +337,9 @@ namespace NUnit.Framework.Tests.Internal
 
             void ITestListener.SendMessage(TestMessage message)
             {
-
             }
         }
 
-#endregion
+        #endregion
     }
 }

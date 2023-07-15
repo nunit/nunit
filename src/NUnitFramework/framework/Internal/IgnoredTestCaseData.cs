@@ -62,7 +62,7 @@ namespace NUnit.Framework
                 {
                     RunState = _prevRunState;
                 }
-                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u") );
+                Properties.Set(PropertyNames.IgnoreUntilDate, datetime.ToString("u"));
             }
             return this;
         }

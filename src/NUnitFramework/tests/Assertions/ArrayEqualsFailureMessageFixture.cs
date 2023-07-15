@@ -93,8 +93,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void TripleDimensionedArrays()
         {
-            var expected = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            var actual = new[,,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
+            var expected = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            var actual = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
 
             var expectedMessage =
                 "  Expected and actual are both <System.Int32[2,2,2]>" + NL +

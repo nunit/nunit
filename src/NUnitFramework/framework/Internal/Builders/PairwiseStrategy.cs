@@ -56,19 +56,19 @@ namespace NUnit.Framework.Internal.Builders
             /// Initializes a new instance of the FleaRand class.
             /// </summary>
             /// <param name="seed">The seed.</param>
-            public FleaRand( uint seed )
+            public FleaRand(uint seed)
             {
                 _b = seed;
                 _c = seed;
                 _d = seed;
                 _z = seed;
 
-                for ( int i = 0; i < _m.Length; i++ )
+                for (int i = 0; i < _m.Length; i++)
                 {
                     _m[i] = seed;
                 }
 
-                for ( int i = 0; i < 10; i++ )
+                for (int i = 0; i < 10; i++)
                 {
                     Batch();
                 }
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal.Builders
 
             public uint Next()
             {
-                if ( _q == 0 )
+                if (_q == 0)
                 {
                     Batch();
                     _q = (uint)_r.Length - 1;
@@ -95,14 +95,14 @@ namespace NUnit.Framework.Internal.Builders
             {
                 uint a;
                 uint b = _b;
-                uint c = _c + ( ++_z );
+                uint c = _c + (++_z);
                 uint d = _d;
 
-                for ( int i = 0; i < _r.Length; i++ )
+                for (int i = 0; i < _r.Length; i++)
                 {
                     a = _m[b % _m.Length];
                     _m[b % _m.Length] = d;
-                    d = ( c << 19 ) + ( c >> 13 ) + b;
+                    d = (c << 19) + (c >> 13) + b;
                     c = b ^ _m[i];
                     b = a + d;
                     _r[i] = c;
@@ -132,7 +132,7 @@ namespace NUnit.Framework.Internal.Builders
             /// </summary>
             /// <param name="dimension">Index of a dimension.</param>
             /// <param name="feature">Index of a feature.</param>
-            public FeatureInfo( int dimension, int feature )
+            public FeatureInfo(int dimension, int feature)
             {
                 Dimension = dimension;
                 Feature = feature;
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Internal.Builders
             /// Initializes a new instance of FeatureTuple class for a single feature.
             /// </summary>
             /// <param name="feature1">Single feature.</param>
-            public FeatureTuple( FeatureInfo feature1 )
+            public FeatureTuple(FeatureInfo feature1)
             {
                 _features = new[] { feature1 };
             }
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Internal.Builders
             /// </summary>
             /// <param name="feature1">First feature.</param>
             /// <param name="feature2">Second feature.</param>
-            public FeatureTuple( FeatureInfo feature1, FeatureInfo feature2 )
+            public FeatureTuple(FeatureInfo feature1, FeatureInfo feature2)
             {
                 _features = new[] { feature1, feature2 };
             }
@@ -185,16 +185,16 @@ namespace NUnit.Framework.Internal.Builders
             /// Initializes a new instance of TestCaseInfo class.
             /// </summary>
             /// <param name="length">A number of features in the test case.</param>
-            public TestCaseInfo( int length )
+            public TestCaseInfo(int length)
             {
                 Features = new int[length];
             }
 
-            public bool IsTupleCovered( FeatureTuple tuple )
+            public bool IsTupleCovered(FeatureTuple tuple)
             {
-                for ( int i = 0; i < tuple.Length; i++ )
+                for (int i = 0; i < tuple.Length; i++)
                 {
-                    if ( Features[tuple[i].Dimension] != tuple[i].Feature )
+                    if (Features[tuple[i].Dimension] != tuple[i].Feature)
                     {
                         return false;
                     }
@@ -285,33 +285,33 @@ namespace NUnit.Framework.Internal.Builders
             /// <returns>
             /// A set of test cases.
             /// </returns>
-            public IEnumerable GetTestCases( int[] dimensions )
+            public IEnumerable GetTestCases(int[] dimensions)
             {
-                _prng = new FleaRand( 15485863 );
+                _prng = new FleaRand(15485863);
                 _dimensions = dimensions;
 
                 CreateAllTuples();
 
                 List<TestCaseInfo> testCases = new List<TestCaseInfo>();
 
-                while ( true )
+                while (true)
                 {
                     FeatureTuple? tuple = GetNextTuple();
 
-                    if ( tuple is null )
+                    if (tuple is null)
                     {
                         break;
                     }
 
-                    TestCaseInfo testCase = CreateTestCase( tuple );
+                    TestCaseInfo testCase = CreateTestCase(tuple);
 
-                    RemoveTuplesCoveredByTest( testCase );
+                    RemoveTuplesCoveredByTest(testCase);
 
-                    testCases.Add( testCase );
+                    testCases.Add(testCase);
                 }
 
 #if DEBUG
-                SelfTest( testCases );
+                SelfTest(testCases);
 #endif
 
                 return testCases;
@@ -319,37 +319,37 @@ namespace NUnit.Framework.Internal.Builders
 
             private int GetNextRandomNumber()
             {
-                return (int)( _prng!.Next() >> 1 );
+                return (int)(_prng!.Next() >> 1);
             }
 
             private void CreateAllTuples()
             {
                 _uncoveredTuples = new List<FeatureTuple>[_dimensions!.Length][];
 
-                for ( int d = 0; d < _dimensions.Length; d++ )
+                for (int d = 0; d < _dimensions.Length; d++)
                 {
                     _uncoveredTuples[d] = new List<FeatureTuple>[_dimensions[d]];
 
-                    for ( int f = 0; f < _dimensions[d]; f++ )
+                    for (int f = 0; f < _dimensions[d]; f++)
                     {
-                        _uncoveredTuples[d][f] = CreateTuples( d, f );
+                        _uncoveredTuples[d][f] = CreateTuples(d, f);
                     }
                 }
             }
 
-            private List<FeatureTuple> CreateTuples( int dimension, int feature )
+            private List<FeatureTuple> CreateTuples(int dimension, int feature)
             {
                 List<FeatureTuple> result = new List<FeatureTuple>();
 
-                result.Add( new FeatureTuple( new FeatureInfo( dimension, feature ) ) );
+                result.Add(new FeatureTuple(new FeatureInfo(dimension, feature)));
 
-                for ( int d = 0; d < _dimensions!.Length; d++ )
+                for (int d = 0; d < _dimensions!.Length; d++)
                 {
-                    if ( d != dimension )
+                    if (d != dimension)
                     {
-                        for ( int f = 0; f < _dimensions[d]; f++ )
+                        for (int f = 0; f < _dimensions[d]; f++)
                         {
-                            result.Add( new FeatureTuple( new FeatureInfo( dimension, feature ), new FeatureInfo( d, f ) ) );
+                            result.Add(new FeatureTuple(new FeatureInfo(dimension, feature), new FeatureInfo(d, f)));
                         }
                     }
                 }
@@ -359,16 +359,16 @@ namespace NUnit.Framework.Internal.Builders
 
             private FeatureTuple? GetNextTuple()
             {
-                for ( int d = 0; d < _uncoveredTuples!.Length; d++ )
+                for (int d = 0; d < _uncoveredTuples!.Length; d++)
                 {
-                    for ( int f = 0; f < _uncoveredTuples[d].Length; f++ )
+                    for (int f = 0; f < _uncoveredTuples[d].Length; f++)
                     {
                         List<FeatureTuple> tuples = _uncoveredTuples[d][f];
 
-                        if ( tuples.Count > 0 )
+                        if (tuples.Count > 0)
                         {
                             FeatureTuple tuple = tuples[0];
-                            tuples.RemoveAt( 0 );
+                            tuples.RemoveAt(0);
                             return tuple;
                         }
                     }
@@ -377,18 +377,18 @@ namespace NUnit.Framework.Internal.Builders
                 return null;
             }
 
-            private TestCaseInfo CreateTestCase( FeatureTuple tuple )
+            private TestCaseInfo CreateTestCase(FeatureTuple tuple)
             {
                 TestCaseInfo? bestTestCase = null;
                 int bestCoverage = -1;
 
-                for ( int i = 0; i < 7; i++ )
+                for (int i = 0; i < 7; i++)
                 {
-                    TestCaseInfo testCase = CreateRandomTestCase( tuple );
+                    TestCaseInfo testCase = CreateRandomTestCase(tuple);
 
-                    int coverage = MaximizeCoverage( testCase, tuple );
+                    int coverage = MaximizeCoverage(testCase, tuple);
 
-                    if ( coverage > bestCoverage )
+                    if (coverage > bestCoverage)
                     {
                         bestTestCase = testCase;
                         bestCoverage = coverage;
@@ -398,16 +398,16 @@ namespace NUnit.Framework.Internal.Builders
                 return bestTestCase!;
             }
 
-            private TestCaseInfo CreateRandomTestCase( FeatureTuple tuple )
+            private TestCaseInfo CreateRandomTestCase(FeatureTuple tuple)
             {
-                TestCaseInfo result = new TestCaseInfo( _dimensions!.Length );
+                TestCaseInfo result = new TestCaseInfo(_dimensions!.Length);
 
-                for ( int d = 0; d < _dimensions.Length; d++ )
+                for (int d = 0; d < _dimensions.Length; d++)
                 {
                     result.Features[d] = GetNextRandomNumber() % _dimensions[d];
                 }
 
-                for ( int i = 0; i < tuple.Length; i++ )
+                for (int i = 0; i < tuple.Length; i++)
                 {
                     result.Features[tuple[i].Dimension] = tuple[i].Feature;
                 }
@@ -415,66 +415,66 @@ namespace NUnit.Framework.Internal.Builders
                 return result;
             }
 
-            private int MaximizeCoverage( TestCaseInfo testCase, FeatureTuple tuple )
+            private int MaximizeCoverage(TestCaseInfo testCase, FeatureTuple tuple)
             {
                 // It starts with one because we always have one tuple which is covered by the test.
                 int totalCoverage = 1;
-                int[] mutableDimensions = GetMutableDimensions( tuple );
+                int[] mutableDimensions = GetMutableDimensions(tuple);
 
-                while ( true )
+                while (true)
                 {
                     bool progress = false;
 
-                    ScrambleDimensions( mutableDimensions );
+                    ScrambleDimensions(mutableDimensions);
 
-                    for ( int i = 0; i < mutableDimensions.Length; i++ )
+                    for (int i = 0; i < mutableDimensions.Length; i++)
                     {
                         int d = mutableDimensions[i];
 
-                        int bestCoverage = CountTuplesCoveredByTest( testCase, d, testCase.Features[d] );
+                        int bestCoverage = CountTuplesCoveredByTest(testCase, d, testCase.Features[d]);
 
-                        int newCoverage = MaximizeCoverageForDimension( testCase, d, bestCoverage );
+                        int newCoverage = MaximizeCoverageForDimension(testCase, d, bestCoverage);
 
                         totalCoverage += newCoverage;
 
-                        if ( newCoverage > bestCoverage )
+                        if (newCoverage > bestCoverage)
                         {
                             progress = true;
                         }
                     }
 
-                    if ( !progress )
+                    if (!progress)
                     {
                         return totalCoverage;
                     }
                 }
             }
 
-            private int[] GetMutableDimensions( FeatureTuple tuple )
+            private int[] GetMutableDimensions(FeatureTuple tuple)
             {
                 List<int> result = new List<int>();
 
                 bool[] immutableDimensions = new bool[_dimensions!.Length];
 
-                for ( int i = 0; i < tuple.Length; i++ )
+                for (int i = 0; i < tuple.Length; i++)
                 {
                     immutableDimensions[tuple[i].Dimension] = true;
                 }
 
-                for ( int d = 0; d < _dimensions.Length; d++ )
+                for (int d = 0; d < _dimensions.Length; d++)
                 {
-                    if ( !immutableDimensions[d] )
+                    if (!immutableDimensions[d])
                     {
-                        result.Add( d );
+                        result.Add(d);
                     }
                 }
 
                 return result.ToArray();
             }
 
-            private void ScrambleDimensions( int[] dimensions )
+            private void ScrambleDimensions(int[] dimensions)
             {
-                for ( int i = 0; i < dimensions.Length; i++ )
+                for (int i = 0; i < dimensions.Length; i++)
                 {
                     int j = GetNextRandomNumber() % dimensions.Length;
                     int t = dimensions[i];
@@ -483,25 +483,25 @@ namespace NUnit.Framework.Internal.Builders
                 }
             }
 
-            private int MaximizeCoverageForDimension( TestCaseInfo testCase, int dimension, int bestCoverage )
+            private int MaximizeCoverageForDimension(TestCaseInfo testCase, int dimension, int bestCoverage)
             {
-                List<int> bestFeatures = new List<int>( _dimensions![dimension] );
+                List<int> bestFeatures = new List<int>(_dimensions![dimension]);
 
-                for ( int f = 0; f < _dimensions[dimension]; f++ )
+                for (int f = 0; f < _dimensions[dimension]; f++)
                 {
                     testCase.Features[dimension] = f;
 
-                    int coverage = CountTuplesCoveredByTest( testCase, dimension, f );
+                    int coverage = CountTuplesCoveredByTest(testCase, dimension, f);
 
-                    if ( coverage >= bestCoverage )
+                    if (coverage >= bestCoverage)
                     {
-                        if ( coverage > bestCoverage )
+                        if (coverage > bestCoverage)
                         {
                             bestCoverage = coverage;
                             bestFeatures.Clear();
                         }
 
-                        bestFeatures.Add( f );
+                        bestFeatures.Add(f);
                     }
                 }
 
@@ -510,15 +510,15 @@ namespace NUnit.Framework.Internal.Builders
                 return bestCoverage;
             }
 
-            private int CountTuplesCoveredByTest( TestCaseInfo testCase, int dimension, int feature )
+            private int CountTuplesCoveredByTest(TestCaseInfo testCase, int dimension, int feature)
             {
                 int result = 0;
 
                 List<FeatureTuple> tuples = _uncoveredTuples![dimension][feature];
 
-                for ( int i = 0; i < tuples.Count; i++ )
+                for (int i = 0; i < tuples.Count; i++)
                 {
-                    if ( testCase.IsTupleCovered( tuples[i] ) )
+                    if (testCase.IsTupleCovered(tuples[i]))
                     {
                         result++;
                     }
@@ -527,19 +527,19 @@ namespace NUnit.Framework.Internal.Builders
                 return result;
             }
 
-            private void RemoveTuplesCoveredByTest( TestCaseInfo testCase )
+            private void RemoveTuplesCoveredByTest(TestCaseInfo testCase)
             {
-                for ( int d = 0; d < _uncoveredTuples!.Length; d++ )
+                for (int d = 0; d < _uncoveredTuples!.Length; d++)
                 {
-                    for ( int f = 0; f < _uncoveredTuples[d].Length; f++ )
+                    for (int f = 0; f < _uncoveredTuples[d].Length; f++)
                     {
                         List<FeatureTuple> tuples = _uncoveredTuples[d][f];
 
-                        for ( int i = tuples.Count - 1; i >= 0; i-- )
+                        for (int i = tuples.Count - 1; i >= 0; i--)
                         {
-                            if ( testCase.IsTupleCovered( tuples[i] ) )
+                            if (testCase.IsTupleCovered(tuples[i]))
                             {
-                                tuples.RemoveAt( i );
+                                tuples.RemoveAt(i);
                             }
                         }
                     }
@@ -547,19 +547,19 @@ namespace NUnit.Framework.Internal.Builders
             }
 
 #if DEBUG
-            private void SelfTest( List<TestCaseInfo> testCases )
+            private void SelfTest(List<TestCaseInfo> testCases)
             {
-                for ( int d1 = 0; d1 < _dimensions!.Length - 1; d1++ )
+                for (int d1 = 0; d1 < _dimensions!.Length - 1; d1++)
                 {
-                    for ( int d2 = d1 + 1; d2 < _dimensions.Length; d2++ )
+                    for (int d2 = d1 + 1; d2 < _dimensions.Length; d2++)
                     {
-                        for ( int f1 = 0; f1 < _dimensions[d1]; f1++ )
+                        for (int f1 = 0; f1 < _dimensions[d1]; f1++)
                         {
-                            for ( int f2 = 0; f2 < _dimensions[d2]; f2++ )
+                            for (int f2 = 0; f2 < _dimensions[d2]; f2++)
                             {
-                                FeatureTuple tuple = new FeatureTuple( new FeatureInfo( d1, f1 ), new FeatureInfo( d2, f2 ) );
+                                FeatureTuple tuple = new FeatureTuple(new FeatureInfo(d1, f1), new FeatureInfo(d2, f2));
 
-                                if ( !IsTupleCovered( testCases, tuple ) )
+                                if (!IsTupleCovered(testCases, tuple))
                                 {
                                     throw new InvalidOperationException($"PairwiseStrategy : Not all pairs are covered : {tuple}");
                                 }
@@ -569,11 +569,11 @@ namespace NUnit.Framework.Internal.Builders
                 }
             }
 
-            private bool IsTupleCovered( List<TestCaseInfo> testCases, FeatureTuple tuple )
+            private bool IsTupleCovered(List<TestCaseInfo> testCases, FeatureTuple tuple)
             {
-                foreach ( TestCaseInfo testCase in testCases )
+                foreach (TestCaseInfo testCase in testCases)
                 {
-                    if ( testCase.IsTupleCovered( tuple ) )
+                    if (testCase.IsTupleCovered(tuple))
                     {
                         return true;
                     }
@@ -596,7 +596,7 @@ namespace NUnit.Framework.Internal.Builders
             List<object?>[] valueSet = CreateValueSet(sources);
             int[] dimensions = CreateDimensions(valueSet);
 
-            IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator().GetTestCases( dimensions );
+            IEnumerable pairwiseTestCases = new PairwiseTestCaseGenerator().GetTestCases(dimensions);
 
             foreach (TestCaseInfo pairwiseTestCase in pairwiseTestCases)
             {

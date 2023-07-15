@@ -28,7 +28,7 @@ namespace NUnit.Framework
     /// }
     /// </example>
     /// 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TheoryAttribute : CombiningStrategyAttribute, ITestBuilder, IImplyFixture
     {
         /// <summary>

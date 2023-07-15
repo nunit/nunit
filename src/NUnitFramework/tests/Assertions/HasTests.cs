@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void HasMemberAnd()
         {
-            var collection1 = new [] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             var constraint = Has.Member(7).And.Contain(1);
             Assert.That(collection1, constraint);
         }
@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void HasMemberUsing()
         {
             Func<int, int, bool> myIntComparer = (x, y) => x == y;
-            var collection1 = new [] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             var constraint = Has.Member(7).Using(myIntComparer);
             Assert.That(collection1, constraint);
         }

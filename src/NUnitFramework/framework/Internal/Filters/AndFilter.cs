@@ -27,7 +27,7 @@ namespace NUnit.Framework.Internal.Filters
         /// <param name="test">The test to be matched</param>
         /// <param name="negated">If set to <see langword="true"/> we are carrying a negation through</param>
         /// <returns>True if all the component filters pass, otherwise false</returns>
-        public override bool Pass( ITest test, bool negated )
+        public override bool Pass(ITest test, bool negated)
         {
             // Use foreach-loop against array instead of LINQ for best performance
 
@@ -60,7 +60,7 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="test">The test to be matched</param>
         /// <returns>True if all the component filters match, otherwise false</returns>
-        public override bool Match( ITest test )
+        public override bool Match(ITest test)
         {
             // Use foreach-loop against array instead of LINQ for best performance
             foreach (var filter in Filters)
@@ -79,7 +79,7 @@ namespace NUnit.Framework.Internal.Filters
         /// </summary>
         /// <param name="test">The test to be matched</param>
         /// <returns>True if all the component filters explicit match, otherwise false</returns>
-        public override bool IsExplicitMatch( ITest test )
+        public override bool IsExplicitMatch(ITest test)
         {
             // Use foreach-loop against array instead of LINQ for best performance
             foreach (var filter in Filters)

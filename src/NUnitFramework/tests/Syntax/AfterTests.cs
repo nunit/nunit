@@ -53,7 +53,6 @@ namespace NUnit.Framework.Tests.Syntax
         }
     }
 
-
     public class AfterTest_PropertyTest : SyntaxTest
     {
         [SetUp]
@@ -137,7 +136,7 @@ namespace NUnit.Framework.Tests.Syntax
         [Test]
         public void GreaterTest()
         {
-            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000,200));
+            Assert.That(delegate { return Num; }, Is.GreaterThan(0).After(5000, 200));
         }
 
         [Test]

@@ -94,7 +94,6 @@ namespace NUnit.Framework.Interfaces
             get;
         }
 
-
         /// <summary>
         /// Gets the number of test cases that failed
         /// when running the test and all its children.

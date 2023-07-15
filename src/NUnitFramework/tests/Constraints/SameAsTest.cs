@@ -22,7 +22,7 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[] { Obj1 };
         private static readonly object[] FailureData = new object[]
-        { 
+        {
             new TestCaseData( Obj2, "<System.Object>" ),
             new TestCaseData( 3, "3" ),
             new TestCaseData( "Hello", "\"Hello\"" )

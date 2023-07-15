@@ -8,7 +8,6 @@ using NUnit.Framework.Internal.Builders;
 
 namespace NUnit.Framework.Tests.Internal
 {
-
     public class NamespaceTreeBuilderTests
     {
         private TestAssembly _testAssembly;
@@ -192,4 +191,3 @@ namespace Three
 {
     public class Fixture3 { }
 }
-

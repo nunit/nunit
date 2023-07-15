@@ -32,7 +32,7 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase("{x}", ExpectedResult = "{x}")]
         [TestCase("{n}.{c.{m}", ExpectedResult = "NUnit.Framework.Tests.Internal.{c.{m}")]
         [TestCase("{m}{a}", ExpectedResult = "TestMethod")]
-        [TestCase("{i}", ExpectedResult="THE_ID")]
+        [TestCase("{i}", ExpectedResult = "THE_ID")]
         public string SimpleTestNames(string pattern)
         {
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTest);
@@ -74,8 +74,8 @@ namespace NUnit.Framework.Tests.Internal
             return new TestNameGenerator(pattern).GetDisplayName(_simpleTestWithArgs, args);
         }
 
-        [TestCase("FIXED", ExpectedResult="FIXED")]
-        [TestCase("{m}",   ExpectedResult="GenericTest<T,U,V>")]
+        [TestCase("FIXED", ExpectedResult = "FIXED")]
+        [TestCase("{m}", ExpectedResult = "GenericTest<T,U,V>")]
         [TestCase("{n}", ExpectedResult = "NUnit.Framework.Tests.Internal")]
         [TestCase("{c}", ExpectedResult = "TestNameGeneratorTests")]
         [TestCase("{C}", ExpectedResult = "NUnit.Framework.Tests.Internal.TestNameGeneratorTests")]
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Tests.Internal
         [TestCase(sbyte.MinValue, ExpectedResult = "sbyte.MinValue")]
         public string SpecialNamedValues(object arg)
         {
-            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg } );
+            return new TestNameGenerator("{0}").GetDisplayName(_simpleTest, new[] { arg });
         }
 
         #region Methods Used as Data

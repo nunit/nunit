@@ -30,7 +30,7 @@ namespace NUnit.Framework.Tests.Syntax
         public void CanMatchCustomConstraintsUnderAndOperator()
         {
             IResolveConstraint constraint = Is.All.Matches(_custom).And.Matches(_another);
-            Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>")); 
+            Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<all <and <custom> <another>>>"));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace NUnit.Framework.Tests.Syntax
         [Test]
         public void CanMatchLambda()
         {
-            IResolveConstraint constraint = new ConstraintExpression().Matches<int>( (x) => (x & 1) == 0);
+            IResolveConstraint constraint = new ConstraintExpression().Matches<int>((x) => (x & 1) == 0);
             Assert.That(constraint.Resolve().ToString(), Is.EqualTo("<predicate>"));
             Assert.That(42, constraint);
         }

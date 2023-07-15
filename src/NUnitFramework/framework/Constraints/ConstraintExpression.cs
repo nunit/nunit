@@ -188,7 +188,6 @@ namespace NUnit.Framework.Constraints
                 builder.Append(new ExactCountOperator(1));
                 return new ItemsConstraintExpression(builder);
             }
-
         }
 
         #endregion

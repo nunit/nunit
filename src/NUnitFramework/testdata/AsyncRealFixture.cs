@@ -19,7 +19,7 @@ namespace NUnit.TestData
             Assert.That(result, Is.EqualTo(1));
         }
 
-#region async Task
+        #region async Task
 
         [Test]
         public async Task AsyncTaskSuccess()
@@ -111,7 +111,6 @@ namespace NUnit.TestData
 
         #endregion
 
-
         [Test]
         public async Task<int> AsyncTaskResult()
         {
@@ -124,7 +123,7 @@ namespace NUnit.TestData
             return ReturnOne();
         }
 
-#region async Task<T>
+        #region async Task<T>
 
         [TestCase(ExpectedResult = 1)]
         public async Task<int> AsyncTaskResultCheckSuccess()
@@ -144,10 +143,9 @@ namespace NUnit.TestData
             return await ThrowException();
         }
 
-#endregion
+        #endregion
 
-
-#region non-async Task<T>
+        #region non-async Task<T>
 
         [TestCase(ExpectedResult = 1)]
         public Task<int> TaskResultCheckSuccess()
@@ -167,7 +165,7 @@ namespace NUnit.TestData
             return ThrowException();
         }
 
-#endregion
+        #endregion
 
         [TestCase(1, 2)]
         public async Task AsyncTaskTestCaseWithParametersSuccess(int a, int b)
@@ -240,8 +238,8 @@ namespace NUnit.TestData
         {
             var testName = await GetTestNameFromContext();
 
-            Assert.That(testName,Is.Not.Null);
-            Assert.That(TestContext.CurrentContext.Test.Name,Is.EqualTo(testName));
+            Assert.That(testName, Is.Not.Null);
+            Assert.That(TestContext.CurrentContext.Test.Name, Is.EqualTo(testName));
         }
 
         [Test]
@@ -268,7 +266,7 @@ namespace NUnit.TestData
         private static Task<int> ThrowException()
         {
             Func<int> throws = () => { throw new InvalidOperationException(); };
-            return Task.Run( throws );
+            return Task.Run(throws);
         }
     }
 }

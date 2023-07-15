@@ -76,7 +76,6 @@ namespace NUnit.Framework.Tests
             }
         }
 
-
         [TestCaseSource(nameof(GetTargetApartmentTestData))]
         public void GetsTargetApartmentFromParentTests(Test test, ApartmentState expected)
         {
