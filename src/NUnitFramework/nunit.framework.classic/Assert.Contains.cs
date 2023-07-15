@@ -1,14 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections;
+using NUnit.Framework.Constraints;
 
 namespace NUnit.Framework.Classic
 {
-    public partial static class Assert
+    public partial class Assert
     {
         /// <summary>
         /// Asserts that an object is contained in a collection. Returns without throwing an exception when inside a
