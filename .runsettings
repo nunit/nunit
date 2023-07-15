@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- For more information, see https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019  -->
+
+<RunSettings>
+  <RunConfiguration>
+    <!-- See https://github.com/microsoft/vstest-docs/blob/master/docs/configure.md -->
+    <!-- 1. Test related settings -->
+    <!-- [x86] | x64: architecture of test host -->
+    <!--<TargetPlatform>x86</TargetPlatform>-->
+
+    <!-- Framework35 | [Framework40] | Framework45 -->
+    <!--<TargetFrameworkVersion>Framework40</TargetFrameworkVersion>-->
+
+    <!-- Path to Test Adapters -->
+    <!--<TestAdaptersPaths>%SystemDrive%\Temp\foo;%SystemDrive%\Temp\bar</TestAdaptersPaths>-->
+    <TreatTestAdapterErrorsAsWarnings>false</TreatTestAdapterErrorsAsWarnings>
+
+    <!-- Path relative to solution directory -->
+    <ResultsDirectory>.\TestResults</ResultsDirectory>
+
+    <!-- 0 = As many processes as possible, limited by number of cores on machine, 1 = Sequential (1 process), 2-> Given number of processes up to limit by number of cores on machine-->
+    <MaxCpuCount>0</MaxCpuCount>
+
+    <!-- TestSessionTimeout was introduced in Visual Studio 2017 version 15.5 -->
+    <!-- Specify timeout in milliseconds. A valid value should be >= 0. If 0, timeout will be infinity-->
+    <TestSessionTimeout>100000</TestSessionTimeout>
+
+    <!-- Specify a Boolean value, which defines the exit code when no tests are discovered.-->
+    <TreatNoTestsAsError>false</TreatNoTestsAsError>
+
+    <!-- STA | MTA  default is STA for .NET Full and MTA for .NET Core-->
+    <!--<ExecutionThreadApartmentState>STA</ExecutionThreadApartmentState>-->
+
+    <!-- Disables in-assembly parallel execution, applies to both MSTest and NUnit -->
+    <DisableParallelization>false</DisableParallelization>
+    <DisableAppDomain>false</DisableAppDomain>
+    <CollectSourceInformation>true</CollectSourceInformation>
+
+    <!-- Runner related configuration -->
+    <BatchSize>10</BatchSize>
+
+  </RunConfiguration>
+
+  <!-- <DataCollectionRunSettings>
+  <DataCollectors> -->
+  <!-- This option can help you isolate a problematic test that causes a test host crash. Running the collector creates an output file (Sequence.xml) in TestResults, which captures the order of execution of the test before the crash. -->
+  <!-- See https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2022#blame-data-collector-->
+  <!-- <DataCollector friendlyName="blame" enabled="True"> 
+     </DataCollectors> -->
+  <!-- </DataCollectionRunSettings> -->
+
+  <!--
+    <TestRunParameters>
+        <Parameter name="webAppUrl" value="http://localhost" />
+        <Parameter name="webAppUserName" value="Admin" />
+    </TestRunParameters>  -->
+
+  <!--  Section for loggers,  see https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?view=vs-2019#loggerrunsettings-element 
+  <LoggerRunSettings>
+      <Loggers>
+        <Logger friendlyName="console" enabled="True">
+          <Configuration>
+              <Verbosity>quiet</Verbosity>
+          </Configuration>
+        </Logger>
+        <Logger friendlyName="trx" enabled="True">
+          <Configuration>
+            <LogFileName>foo.trx</LogFileName>
+          </Configuration>
+        </Logger>
+        <Logger friendlyName="html" enabled="True">
+          <Configuration>
+            <LogFileName>foo.html</LogFileName>
+          </Configuration>
+        </Logger>
+      </Loggers>
+    </LoggerRunSettings>
+-->
+
+
+  <!-- Adapter Specific sections -->
+
+   <!-- NUnit3 adapter, uncomment sections to set as appropriate, numeric, booleans, enums have their default values below, except RandomSeed -->
+  <!-- For documentation, see https://docs.nunit.org/articles/vs-test-adapter/Tips-And-Tricks.html -->
+  <NUnit>
+    <!--<BasePath>D:\Dev\NUnit\nunit3-vs-adapter\demo\NUnitTestDemo\bin\Release</BasePath>-->
+    <!--<PrivateBinPath>extras;more.extras</PrivateBinPath>-->
+    <DefaultTimeout>0</DefaultTimeout>
+    <!--<WorkDirectory>work</WorkDirectory>-->
+    <InternalTraceLevel>Off</InternalTraceLevel>
+    <!--<RandomSeed>1234567</RandomSeed>-->
+    <NumberOfTestWorkers>-1</NumberOfTestWorkers>
+    <Verbosity>0</Verbosity>
+    <!--<UseVsKeepEngineRunning>false</UseVsKeepEngineRunning>-->
+    <!--<ShadowCopyFiles>false</ShadowCopyFiles>-->
+    <!--<DefaultTestNamePattern>{m}{a}</DefaultTestNamePattern>-->
+    <!--<DomainUsage>Single</DomainUsage>-->
+    <DumpXmlTestDiscovery>false</DumpXmlTestDiscovery>
+    <DumpXmlTestResults>false</DumpXmlTestResults>
+    <ShowInternalProperties>false</ShowInternalProperties>
+    <!--<TestOutputXml>TestOutputXml</TestOutputXml>-->
+    <!--<Where></Where>-->
+    <!-- NUnit filter expression, see https://docs.nunit.org/articles/nunit/running-tests/Test-Selection-Language.html  -->
+    <ConsoleOut>1</ConsoleOut>
+    <UseTestNameInConsoleOutput>true</UseTestNameInConsoleOutput>
+    <StopOnError>false</StopOnError>
+    <SkipNonTestAssemblies>false</SkipNonTestAssemblies>
+    <MapWarningTo>Skipped</MapWarningTo>
+    <!--Passed, Failed or Skipped-->
+    <DisplayName>Name</DisplayName>
+    <!--Name, FullName or FullNameSep-->
+    <FullnameSeparator>:</FullnameSeparator>
+    <DiscoveryMethod>Current</DiscoveryMethod>
+    <!--Legacy or Current-->
+    <AssemblySelectLimit>2000</AssemblySelectLimit>
+    <NewOutputXmlFileForEachRun>false</NewOutputXmlFileForEachRun>
+    <IncludeStackTraceForSuites>true</IncludeStackTraceForSuites>
+    <ExplicitMode>Strict</ExplicitMode>
+    <SkipExecutionWhenNoTests>false</SkipExecutionWhenNoTests>
+
+  </NUnit>
+</RunSettings>
+

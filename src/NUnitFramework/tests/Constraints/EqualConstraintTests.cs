@@ -548,15 +548,21 @@ namespace NUnit.Framework.Tests.Constraints
             [Test]
             public void CanMatchNegativeZeroToZeroForDoubles()
             {
-                Assert.That(0d, Is.EqualTo(-0d).Within(1).Ulps);
-                Assert.That(-0d, Is.EqualTo(0d).Within(1).Ulps);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(0d, Is.EqualTo(-0d).Within(1).Ulps);
+                    Assert.That(-0d, Is.EqualTo(0d).Within(1).Ulps);
+                });
             }
 
             [Test]
             public void CanMatchNegativeZeroToZeroForFloats()
             {
-                Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
-                Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(0f, Is.EqualTo(-0f).Within(1).Ulps);
+                    Assert.That(-0f, Is.EqualTo(0f).Within(1).Ulps);
+                });
             }
         }
 
@@ -583,8 +589,11 @@ namespace NUnit.Framework.Tests.Constraints
             public void UsesProvidedIComparer()
             {
                 var comparer = new ObjectComparer();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
@@ -601,72 +610,99 @@ namespace NUnit.Framework.Tests.Constraints
             public void UsesProvidedEqualityComparer()
             {
                 var comparer = new ObjectEqualityComparer();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.Called, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.Called, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedEqualityComparerForExpectedIsString()
             {
                 var comparer = new ObjectToStringEqualityComparer();
-                Assert.That(4, Is.EqualTo("4").Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(4, Is.EqualTo("4").Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedEqualityComparerForActualIsString()
             {
                 var comparer = new ObjectToStringEqualityComparer();
-                Assert.That("4", Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That("4", Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedComparerForExpectedIsString()
             {
                 var comparer = new ObjectToStringComparer();
-                Assert.That(4, Is.EqualTo("4").Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(4, Is.EqualTo("4").Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedComparerForActualIsString()
             {
                 var comparer = new ObjectToStringComparer();
-                Assert.That("4", Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That("4", Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericEqualityComparer()
             {
                 var comparer = new GenericEqualityComparer<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericComparer()
             {
                 var comparer = new GenericComparer<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericComparison()
             {
                 var comparer = new GenericComparison<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using(comparer.Delegate));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
             public void UsesProvidedGenericEqualityComparison()
             {
                 var comparer = new GenericEqualityComparison<int>();
-                Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
-                Assert.That(comparer.WasCalled, "Comparer was not called");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(2 + 2, Is.EqualTo(4).Using<int>(comparer.Delegate));
+                    Assert.That(comparer.WasCalled, "Comparer was not called");
+                });
             }
 
             [Test]
