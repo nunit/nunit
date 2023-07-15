@@ -41,7 +41,5 @@ namespace NUnit.Framework.Classic
         }
 
         #endregion
-
-        
     }
 }

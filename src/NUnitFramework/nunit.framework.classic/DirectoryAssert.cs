@@ -180,7 +180,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(DirectoryInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message,args));
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message,args));
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

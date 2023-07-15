@@ -32,7 +32,7 @@ namespace NUnit.Framework.Classic
         /// <param name="delta">The maximum acceptable difference between the the expected and the actual</param>
         public static void AreEqual(double expected, double actual, double delta)
         {
-            AssertDoublesAreEqual(expected, actual, delta, null,null);
+            AssertDoublesAreEqual(expected, actual, delta, null, null);
         }
 
         #endregion

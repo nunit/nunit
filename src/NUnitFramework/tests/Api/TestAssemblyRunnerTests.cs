@@ -503,10 +503,8 @@ namespace NUnit.Framework.Tests.Api
 
 #if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
 
-// Arbitrary delay for cancellation based on the time to run each case in SlowTests
+        // Arbitrary delay for cancellation based on the time to run each case in SlowTests
         private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
-
-
 
         [Test]
         public void StopRun_WhenNoTestIsRunning_DoesNotThrow([Values] bool force)
@@ -646,8 +644,7 @@ namespace NUnit.Framework.Tests.Api
 
         private ITest LoadSlowTests(int workers)
         {
-            var settings = new Dictionary<string, object>();
-            settings.Add(FrameworkPackageSettings.NumberOfTestWorkers, workers);
+            var settings = new Dictionary<string, object> { { FrameworkPackageSettings.NumberOfTestWorkers, workers } };
 
             return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SlowTestsFile), settings);
         }
@@ -658,7 +655,7 @@ namespace NUnit.Framework.Tests.Api
                 "DisplayRunParameters", result, true);
 
             Assert.That(childResult, Is.Not.Null);
-            Assert.That(childResult.Output, Is.EqualTo(
+            Assert.That(childResult!.Output, Is.EqualTo(
                 "Parameter X = 5" + Environment.NewLine +
                 "Parameter Y = 7" + Environment.NewLine));
         }
