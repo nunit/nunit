@@ -58,7 +58,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
-            Warn.Unless(del, expr.Resolve(), null, null);
+            Unless(del, expr.Resolve(), string.Empty);
         }
 
         /// <summary>
@@ -69,8 +69,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
+        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
         {
             var constraint = expr.Resolve();
 
@@ -78,12 +77,12 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message, args);
+                IssueWarning(result, message);
         }
 
-        private static void IssueWarning(ConstraintResult result, string? message, object?[]? args)
+        private static void IssueWarning(ConstraintResult result, string? message)
         {
-            MessageWriter writer = new TextMessageWriter(message, args);
+            MessageWriter writer = new TextMessageWriter(message);
             result.WriteMessageTo(writer);
             Assert.Warn(writer.ToString());
         }
@@ -107,7 +106,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), null);
+                IssueWarning(result, getExceptionMessage());
         }
 
         #endregion
@@ -119,10 +118,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless(bool condition, string? message, params object?[]? args)
+        public static void Unless(bool condition, string? message)
         {
-            Warn.Unless(condition, Is.True, message, args);
+            Unless(condition, Is.True, () => message);
         }
 
         /// <summary>
@@ -131,7 +129,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void Unless(bool condition)
         {
-            Warn.Unless(condition, Is.True, null, null);
+            Unless(condition, Is.True, () => string.Empty);
         }
 
         /// <summary>
@@ -141,7 +139,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless(bool condition, Func<string?> getExceptionMessage)
         {
-            Warn.Unless(condition, Is.True, getExceptionMessage);
+            Unless(condition, Is.True, getExceptionMessage);
         }
 
         #endregion
@@ -153,10 +151,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless(Func<bool> condition, string? message, params object?[]? args)
+        public static void Unless(Func<bool> condition, string? message)
         {
-            Warn.Unless(condition.Invoke(), Is.True, message, args);
+            Unless(condition.Invoke(), Is.True, message);
         }
 
         /// <summary>
@@ -165,7 +162,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         public static void Unless(Func<bool> condition)
         {
-            Warn.Unless(condition.Invoke(), Is.True, null, null);
+            Unless(condition.Invoke(), Is.True, string.Empty);
         }
 
         /// <summary>
@@ -175,7 +172,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless(Func<bool> condition, Func<string?> getExceptionMessage)
         {
-            Warn.Unless(condition.Invoke(), Is.True, getExceptionMessage);
+            Unless(condition.Invoke(), Is.True, getExceptionMessage);
         }
 
         #endregion
@@ -190,7 +187,7 @@ namespace NUnit.Framework
         /// <param name="constraint">A Constraint expression to be applied</param>
         public static void Unless(TestDelegate code, IResolveConstraint constraint)
         {
-            Warn.Unless((object)code, constraint);
+            Unless((object)code, constraint);
         }
 
         #endregion
@@ -206,7 +203,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         public static void Unless<TActual>(TActual actual, IResolveConstraint expression)
         {
-            Warn.Unless(actual, expression, null, null);
+            Unless(actual, expression, string.Empty);
         }
 
         /// <summary>
@@ -217,16 +214,9 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
+        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, string? message)
         {
-            var constraint = expression.Resolve();
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, message, args);
+            Unless(actual, expression, () => message);
         }
 
         /// <summary>
@@ -248,7 +238,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), null);
+                IssueWarning(result, getExceptionMessage());
         }
 
         #endregion
@@ -268,7 +258,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
-            Warn.If(del, expr.Resolve(), null, null);
+            If(del, expr.Resolve(), string.Empty);
         }
 
         /// <summary>
@@ -279,8 +269,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
+        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
         {
             var constraint = new NotConstraint(expr.Resolve());
 
@@ -288,15 +277,8 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message, args);
+                IssueWarning(result, message);
         }
-
-        //private static void IssueWarning(ConstraintResult result, string? message, object?[]? args)
-        //{
-        //    MessageWriter writer = new TextMessageWriter(message, args);
-        //    result.WriteMessageTo(writer);
-        //    Assert.Warn(writer.ToString());
-        //}
 
         /// <summary>
         /// Apply a constraint to an actual value, succeeding if the constraint
@@ -317,7 +299,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), null);
+                IssueWarning(result, getExceptionMessage());
         }
 
         #endregion
@@ -329,10 +311,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If(bool condition, string? message, params object?[]? args)
+        public static void If(bool condition, string? message)
         {
-            Warn.If(condition, Is.True, message, args);
+            If(condition, Is.True, () => message);
         }
 
         /// <summary>
@@ -341,7 +322,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void If(bool condition)
         {
-            Warn.If(condition, Is.True, null, null);
+            If(condition, Is.True, () => string.Empty);
         }
 
         /// <summary>
@@ -351,7 +332,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If(bool condition, Func<string?> getExceptionMessage)
         {
-            Warn.If(condition, Is.True, getExceptionMessage);
+            If(condition, Is.True, getExceptionMessage);
         }
 
         #endregion
@@ -363,10 +344,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is true</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If(Func<bool> condition, string? message, params object?[]? args)
+        public static void If(Func<bool> condition, string? message)
         {
-            Warn.If(condition.Invoke(), Is.True, message, args);
+            If(condition.Invoke(), Is.True, () => message);
         }
 
         /// <summary>
@@ -375,7 +355,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         public static void If(Func<bool> condition)
         {
-            Warn.If(condition.Invoke(), Is.True, null, null);
+            If(condition.Invoke(), Is.True, () => string.Empty);
         }
 
         /// <summary>
@@ -385,7 +365,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If(Func<bool> condition, Func<string?> getExceptionMessage)
         {
-            Warn.If(condition.Invoke(), Is.True, getExceptionMessage);
+            If(condition.Invoke(), Is.True, getExceptionMessage);
         }
 
         #endregion
@@ -401,7 +381,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         public static void If<TActual>(TActual actual, IResolveConstraint expression)
         {
-            Warn.If(actual, expression, null, null);
+            If(actual, expression, string.Empty);
         }
 
         /// <summary>
@@ -412,16 +392,9 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void If<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
+        public static void If<TActual>(TActual actual, IResolveConstraint expression, string? message)
         {
-            var constraint = new NotConstraint(expression.Resolve());
-
-            IncrementAssertCount();
-            var result = constraint.ApplyTo(actual);
-
-            if (!result.IsSuccess)
-                IssueWarning(result, message, args);
+            If(actual, expression, () => message);
         }
 
         /// <summary>
@@ -443,7 +416,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), null);
+                IssueWarning(result, getExceptionMessage());
         }
 
         #endregion

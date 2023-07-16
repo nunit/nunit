@@ -92,30 +92,28 @@ namespace NUnit.Framework.Internal
         {
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+                using var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                if (key is not null)
                 {
-                    if (key is not null)
+                    var buildStr = key.GetValue("CurrentBuildNumber") as string;
+                    int.TryParse(buildStr, out var build);
+
+                    // These two keys are in Windows 10 only and are DWORDS
+                    var major = key.GetValue("CurrentMajorVersionNumber") as int?;
+                    var minor = key.GetValue("CurrentMinorVersionNumber") as int?;
+                    if (major.HasValue && minor.HasValue)
                     {
-                        var buildStr = key.GetValue("CurrentBuildNumber") as string;
-                        int.TryParse(buildStr, out var build);
+                        return new Version(major.Value, minor.Value, build);
+                    }
 
-                        // These two keys are in Windows 10 only and are DWORDS
-                        var major = key.GetValue("CurrentMajorVersionNumber") as int?;
-                        var minor = key.GetValue("CurrentMinorVersionNumber") as int?;
-                        if (major.HasValue && minor.HasValue)
-                        {
-                            return new Version(major.Value, minor.Value, build);
-                        }
-
-                        // If we get here, we are not Windows 10, so we are Windows 8
-                        // or 8.1. 8.1 might report itself as 6.2, but will have 6.3
-                        // in the registry. We can't do this earlier because for backwards
-                        // compatibility, Windows 10 also has 6.3 for this key.
-                        var currentVersion = key.GetValue("CurrentVersion") as string;
-                        if (currentVersion == "6.3")
-                        {
-                            return new Version(6, 3, build);
-                        }
+                    // If we get here, we are not Windows 10, so we are Windows 8
+                    // or 8.1. 8.1 might report itself as 6.2, but will have 6.3
+                    // in the registry. We can't do this earlier because for backwards
+                    // compatibility, Windows 10 also has 6.3 for this key.
+                    var currentVersion = key.GetValue("CurrentVersion") as string;
+                    if (currentVersion == "6.3")
+                    {
+                        return new Version(6, 3, build);
                     }
                 }
             }

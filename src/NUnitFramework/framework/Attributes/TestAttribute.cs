@@ -101,8 +101,10 @@ namespace NUnit.Framework
 
             if (_hasExpectedResult)
             {
-                parms = new TestCaseParameters();
-                parms.ExpectedResult = ExpectedResult;
+                parms = new TestCaseParameters
+                {
+                    ExpectedResult = ExpectedResult
+                };
             }
 
             return _builder.BuildTestMethod(method, suite, parms);

@@ -32,7 +32,7 @@ namespace NUnit.Framework.Tests.TestUtilities
                 }
             }
 
-            Assert.Fail("After {0} attempts, only {1} value(s) found", maxTries, lookup.Count);
+            Assert.Fail($"After {maxTries} attempts, only {lookup.Count} value(s) found");
         }
     }
 }

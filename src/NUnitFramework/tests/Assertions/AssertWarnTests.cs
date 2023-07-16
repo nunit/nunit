@@ -21,17 +21,6 @@ namespace NUnit.Framework.Tests.Assertions
         }
 
         [Test]
-        public void AssertWarnWorksWithMessageAndArgs()
-        {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(WarningFixture),
-                "CallAssertWarnWithMessageAndArgs");
-
-            Classic.Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Classic.Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
-        }
-
-        [Test]
         public void WarningsAreDisplayedWithFailure()
         {
             ITestResult result = TestBuilder.RunTestCase(

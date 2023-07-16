@@ -18,25 +18,13 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ThrowsIgnoreException()
         {
-            Assert.That(
-                () => Assert.Ignore(),
-                Throws.TypeOf<IgnoreException>());
+            Assert.That(Assert.Ignore, Throws.TypeOf<IgnoreException>());
         }
 
         [Test]
         public void ThrowsIgnoreExceptionWithMessage()
         {
-            Assert.That(
-                () => Assert.Ignore("MESSAGE"),
-                Throws.TypeOf<IgnoreException>().With.Message.EqualTo("MESSAGE"));
-        }
-
-        [Test]
-        public void ThrowsIgnoreExceptionWithMessageAndArgs()
-        {
-            Assert.That(
-                () => Assert.Ignore("MESSAGE: {0}+{1}={2}", 2, 2, 4),
-                Throws.TypeOf<IgnoreException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
+            Assert.That(() => Assert.Ignore("MESSAGE"), Throws.TypeOf<IgnoreException>().With.Message.EqualTo("MESSAGE"));
         }
 
         [Test]
@@ -83,45 +71,6 @@ namespace NUnit.Framework.Tests.Assertions
             catch (IgnoreException ex)
             {
                 Classic.Assert.AreEqual("my message", ex.Message);
-            }
-        }
-
-        [Test]
-        public void IgnoreWithUserMessage_OneArg()
-        {
-            try
-            {
-                Assert.Ignore("The number is {0}", 5);
-            }
-            catch (IgnoreException ex)
-            {
-                Classic.Assert.AreEqual("The number is 5", ex.Message);
-            }
-        }
-
-        [Test]
-        public void IgnoreWithUserMessage_ThreeArgs()
-        {
-            try
-            {
-                Assert.Ignore("The numbers are {0}, {1} and {2}", 1, 2, 3);
-            }
-            catch (IgnoreException ex)
-            {
-                Classic.Assert.AreEqual("The numbers are 1, 2 and 3", ex.Message);
-            }
-        }
-
-        [Test]
-        public void IgnoreWithUserMessage_ArrayOfArgs()
-        {
-            try
-            {
-                Assert.Ignore("The numbers are {0}, {1} and {2}", new object[] { 1, 2, 3 });
-            }
-            catch (IgnoreException ex)
-            {
-                Classic.Assert.AreEqual("The numbers are 1, 2 and 3", ex.Message);
             }
         }
     }

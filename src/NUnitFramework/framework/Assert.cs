@@ -20,7 +20,7 @@ namespace NUnit.Framework
     /// Delegate used by tests that execute async code and
     /// capture any thrown exception.
     /// </summary>
-    public delegate System.Threading.Tasks.Task AsyncTestDelegate();
+    public delegate Task AsyncTestDelegate();
 
     /// <summary>
     /// The Assert class contains a collection of static methods that
@@ -75,7 +75,7 @@ namespace NUnit.Framework
         [DoesNotReturn]
         public static void Charlie()
         {
-            Assert.Pass(CharlieAppreciation);
+            Pass(CharlieAppreciation);
         }
 
         #endregion
@@ -88,31 +88,14 @@ namespace NUnit.Framework
         /// of success returned to NUnit.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        [DoesNotReturn]
-        public static void Pass(string? message, params object?[]? args)
-        {
-            if (message is null) message = string.Empty;
-            else if (args is not null && args.Length > 0)
-                message = string.Format(message, args);
-
-            // If we are in a multiple assert block, this is an error
-            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
-                throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
-
-            throw new SuccessException(message);
-        }
-
-        /// <summary>
-        /// Throws a <see cref="SuccessException"/> with the message and arguments
-        /// that are passed in. This allows a test to be cut short, with a result
-        /// of success returned to NUnit.
-        /// </summary>
-        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         [DoesNotReturn]
         public static void Pass(string? message)
         {
-            Assert.Pass(message, null);
+            // If we are in a multiple assert block, this is an error
+            if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
+                throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
+            message ??= string.Empty;
+            throw new SuccessException(message);
         }
 
         /// <summary>
@@ -123,7 +106,7 @@ namespace NUnit.Framework
         [DoesNotReturn]
         public static void Pass()
         {
-            Assert.Pass(string.Empty, null);
+            Pass(string.Empty);
         }
 
         #endregion
@@ -135,24 +118,10 @@ namespace NUnit.Framework
         /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Fail(string? message, params object?[]? args)
-        {
-            if (message is null) message = string.Empty;
-            else if (args is not null && args.Length > 0)
-                message = string.Format(message, args);
-
-            ReportFailure(message);
-        }
-
-        /// <summary>
-        /// Marks the test as failed with the message that is passed in. Returns without throwing an exception when
-        /// inside a multiple assert block.
-        /// </summary>
-        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         public static void Fail(string? message)
         {
-            Assert.Fail(message, null);
+            message ??= string.Empty;
+            ReportFailure(message);
         }
 
         /// <summary>
@@ -160,7 +129,7 @@ namespace NUnit.Framework
         /// </summary>
         public static void Fail()
         {
-            Assert.Fail(string.Empty, null);
+            Fail(string.Empty);
         }
 
         #endregion
@@ -171,22 +140,9 @@ namespace NUnit.Framework
         /// Issues a warning using the message and arguments provided.
         /// </summary>
         /// <param name="message">The message to display.</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void Warn(string? message, params object?[]? args)
-        {
-            if (message is null) message = string.Empty;
-            else if (args is not null && args.Length > 0)
-                message = string.Format(message, args);
-
-            IssueWarning(message);
-        }
-
-        /// <summary>
-        /// Issues a warning using the message provided.
-        /// </summary>
-        /// <param name="message">The message to display.</param>
         public static void Warn(string? message)
         {
+            message ??= string.Empty;
             IssueWarning(message);
         }
 
@@ -199,30 +155,14 @@ namespace NUnit.Framework
         /// that are passed in.  This causes the test to be reported as ignored.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
         [DoesNotReturn]
-        public static void Ignore(string? message, params object?[]? args)
+        public static void Ignore(string? message)
         {
-            if (message is null) message = string.Empty;
-            else if (args is not null && args.Length > 0)
-                message = string.Format(message, args);
-
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
                 throw new Exception("Assert.Ignore may not be used in a multiple assertion block.");
 
             throw new IgnoreException(message);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="IgnoreException"/> with the message that is
-        /// passed in. This causes the test to be reported as ignored.
-        /// </summary>
-        /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        [DoesNotReturn]
-        public static void Ignore(string? message)
-        {
-            Assert.Ignore(message, null);
         }
 
         /// <summary>
@@ -232,7 +172,7 @@ namespace NUnit.Framework
         [DoesNotReturn]
         public static void Ignore()
         {
-            Assert.Ignore(string.Empty, null);
+            Ignore(string.Empty);
         }
 
         #endregion
@@ -244,30 +184,14 @@ namespace NUnit.Framework
         /// that are passed in.  This causes the test to be reported as inconclusive.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
         [DoesNotReturn]
-        public static void Inconclusive(string? message, params object?[]? args)
+        public static void Inconclusive(string? message)
         {
-            if (message is null) message = string.Empty;
-            else if (args is not null && args.Length > 0)
-                message = string.Format(message, args);
-
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
                 throw new Exception("Assert.Inconclusive may not be used in a multiple assertion block.");
 
             throw new InconclusiveException(message);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="InconclusiveException"/> with the message that is
-        /// passed in. This causes the test to be reported as inconclusive.
-        /// </summary>
-        /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
-        [DoesNotReturn]
-        public static void Inconclusive(string? message)
-        {
-            Assert.Inconclusive(message, null);
         }
 
         /// <summary>
@@ -277,7 +201,7 @@ namespace NUnit.Framework
         [DoesNotReturn]
         public static void Inconclusive()
         {
-            Assert.Inconclusive(string.Empty, null);
+            Inconclusive(string.Empty);
         }
 
         #endregion
@@ -307,7 +231,7 @@ namespace NUnit.Framework
                 context.MultipleAssertLevel--;
             }
 
-            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
+            if (context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
             {
                 context.CurrentResult.RecordTestCompletion();
                 if (context.CurrentResult.AssertionResults.Count > oldCount)
@@ -340,7 +264,7 @@ namespace NUnit.Framework
                 context.MultipleAssertLevel--;
             }
 
-            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
+            if (context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
             {
                 context.CurrentResult.RecordTestCompletion();
                 if (context.CurrentResult.AssertionResults.Count > oldCount)
@@ -372,7 +296,7 @@ namespace NUnit.Framework
                 context.MultipleAssertLevel--;
             }
 
-            if (context.MultipleAssertLevel == 0 && context.CurrentResult.PendingFailures > 0)
+            if (context is { MultipleAssertLevel: 0, CurrentResult: { PendingFailures: > 0 } })
             {
                 context.CurrentResult.RecordTestCompletion();
                 throw new MultipleAssertException(context.CurrentResult);

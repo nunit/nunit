@@ -20,15 +20,7 @@ namespace NUnit.Framework.Tests.Assertions
                 () => Assert.Pass("MESSAGE"),
                 Throws.TypeOf<SuccessException>().With.Message.EqualTo("MESSAGE"));
         }
-
-        [Test]
-        public void ThrowsSuccessExceptionWithMessageAndArgs()
-        {
-            Assert.That(
-                () => Assert.Pass("MESSAGE: {0}+{1}={2}", 2, 2, 4),
-                Throws.TypeOf<SuccessException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
-        }
-
+        
         [Test]
         public void AssertPassReturnsSuccess()
         {

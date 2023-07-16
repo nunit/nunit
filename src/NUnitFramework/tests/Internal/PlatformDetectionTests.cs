@@ -59,9 +59,9 @@ namespace NUnit.Framework.Tests.Internal
                 bool didPass = helper.IsPlatformSupported(testPlatform);
 
                 if (shouldPass && !didPass)
-                    Assert.Fail("Failed to detect {0}", testPlatform);
+                    Assert.Fail($"Failed to detect {testPlatform}");
                 else if (didPass && !shouldPass)
-                    Assert.Fail("False positive on {0}", testPlatform);
+                    Assert.Fail($"False positive on {testPlatform}");
                 else if (!shouldPass && !didPass)
                     Assert.That(helper.Reason, Is.EqualTo("Only supported on " + testPlatform));
             }

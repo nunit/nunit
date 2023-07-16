@@ -58,7 +58,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [TestCase(4)]
         public void Success(int i)
         {
-            Assert.Pass("Passed with test case {0}", i);
+            Assert.Pass($"Passed with test case {i}");
         }
     }
 
@@ -97,7 +97,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
         [Theory]
         public void TheoryTest(Data entry)
         {
-            Assert.Pass("Passed with theory id {0}", entry.Id);
+            Assert.Pass($"Passed with theory id {entry.Id}");
         }
     }
 
