@@ -418,7 +418,7 @@ namespace NUnit.TestData.OneTimeSetUpTearDownData
     public class DisposableFixture : IDisposable
     {
         public int DisposeCalled = 0;
-        public List<String> Actions = new List<String>();
+        public List<string> Actions = new();
 
         [OneTimeSetUp]
         public void OneTimeSetUp()

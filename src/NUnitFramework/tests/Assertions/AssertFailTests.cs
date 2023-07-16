@@ -36,7 +36,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "CallAssertFail");
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(1));
+            Assert.That(result.AssertionResults, Has.Count.EqualTo(1));
             var assertion = result.AssertionResults[0];
             Assert.That(assertion.Status, Is.EqualTo(AssertionStatus.Failed));
         }
@@ -45,10 +45,12 @@ namespace NUnit.Framework.Tests.Assertions
         public void AssertFailWorksWithMessage()
         {
             ITestResult result = TestBuilder.RunTestCase(typeof(AssertFailFixture), "CallAssertFailWithMessage");
-
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.Message, Is.EqualTo("MESSAGE"));
-            Assert.That(result.AssertionResults.Count, Is.EqualTo(1));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.Message, Is.EqualTo("MESSAGE"));
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(1));
+            });
             var assertion = result.AssertionResults[0];
             Assert.Multiple(() =>
             {

@@ -32,21 +32,22 @@ namespace NUnit.Framework.Tests.Attributes
 
             ActionAttributeFixture.ClearResults();
 
-            IDictionary<string, object> options = new Dictionary<string, object>();
-            options["LOAD"] = new[] { "NUnit.TestData.ActionAttributeTests" };
-            // No need for the overhead of parallel execution here
-            options["NumberOfTestWorkers"] = 0;
+            IDictionary<string, object> options = new Dictionary<string, object>
+            {
+                ["LOAD"] = new[] { "NUnit.TestData.ActionAttributeTests" },
+                // No need for the overhead of parallel execution here
+                ["NumberOfTestWorkers"] = 0
+            };
 
             ITest test = runner.Load(ASSEMBLY_PATH, options);
             Assert.Multiple(() =>
             {
                 Assert.That(test, Is.Not.Null, "Assembly not loaded");
                 Assert.That(runner.LoadedTest, Is.SameAs(test));
+                Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
             });
-            Assert.That(test.RunState, Is.EqualTo(RunState.Runnable));
 
             _result = runner.Run(TestListener.NULL, TestFilter.Empty);
-
             _numEvents = ActionAttributeFixture.Events.Count;
         }
 

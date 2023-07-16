@@ -157,8 +157,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(SlowpathData))]
         public void SlowPath_TakenWhenSpecialTypes(IEnumerable<object> testData)
         {
-            var allData = new List<object>();
-            allData.Add(new TestValueType() { A = 1 });
+            var allData = new List<object> { new TestValueType() { A = 1 } };
             allData.AddRange(testData);
 
             var items = new SimpleObjectCollection(allData);
