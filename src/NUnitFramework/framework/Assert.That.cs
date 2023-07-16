@@ -31,7 +31,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void That(bool condition)
         {
-            That(condition, Is.True, "");
+            That(condition, Is.True, string.Empty);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         public static void That(Func<bool> condition)
         {
-            That(condition.Invoke(), Is.True, "");
+            That(condition.Invoke(), Is.True, string.Empty);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
-            That(del, expr.Resolve(), "");
+            That(del, expr.Resolve(), string.Empty);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace NUnit.Framework
         /// <param name="constraint">A Constraint expression to be applied</param>
         public static void That(TestDelegate code, IResolveConstraint constraint)
         {
-            That(code, constraint, "");
+            That(code, constraint, string.Empty);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression)
         {
-            That(actual, expression, "");
+            That(actual, expression, string.Empty);
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         public static void ByVal(object? actual, IResolveConstraint expression)
         {
-            That(actual, expression, "");
+            That(actual, expression, string.Empty);
         }
 
         /// <summary>

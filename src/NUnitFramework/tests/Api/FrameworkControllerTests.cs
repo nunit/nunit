@@ -35,7 +35,7 @@ namespace NUnit.Framework.Tests.Api
             get
             {
                 yield return new TestCaseData(default(object?[]?));
-                yield return new TestCaseData("");
+                yield return new TestCaseData(string.Empty);
                 yield return new TestCaseData(EMPTY_FILTER);
             }
         }
@@ -215,7 +215,7 @@ namespace NUnit.Framework.Tests.Api
         private static IEnumerable SettingsData()
         {
             yield return new TestCaseData("value");
-            yield return new TestCaseData("");
+            yield return new TestCaseData(string.Empty);
             yield return new TestCaseData("<value>");
             yield return new TestCaseData("\"value\"");
             yield return new TestCaseData("'value'");

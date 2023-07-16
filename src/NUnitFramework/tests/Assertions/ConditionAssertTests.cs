@@ -130,7 +130,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void IsEmpty()
         {
-            Classic.Assert.IsEmpty("", "Failed on empty String");
+            Classic.Assert.IsEmpty(string.Empty, "Failed on empty String");
             Classic.Assert.IsEmpty(Array.Empty<int>(), "Failed on empty Array");
             Classic.Assert.IsEmpty(Enumerable.Empty<int>(), "Failed on empty IEnumerable");
 
@@ -200,7 +200,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <string.Empty>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.IsNotEmpty(""));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.IsNotEmpty(string.Empty));
             Assert.That(ex.Message, Is.EqualTo(expectedMessage));
         }
 

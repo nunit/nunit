@@ -38,7 +38,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool? condition)
         {
-            Framework.Assert.That(condition, Is.True, "");
+            Framework.Assert.That(condition, Is.True);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void True(bool condition)
         {
-            Framework.Assert.That(condition, Is.True, "");
+            Framework.Assert.That(condition, Is.True);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool? condition)
         {
-            Framework.Assert.That(condition, Is.True, "");
+            Framework.Assert.That(condition, Is.True);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void IsTrue(bool condition)
         {
-            Framework.Assert.That(condition, Is.True, "");
+            Framework.Assert.That(condition, Is.True);
         }
 
         #endregion
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool? condition)
         {
-            Framework.Assert.That(condition, Is.False, "");
+            Framework.Assert.That(condition, Is.False);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void False(bool condition)
         {
-            Framework.Assert.That(condition, Is.False, "");
+            Framework.Assert.That(condition, Is.False);
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool? condition)
         {
-            Framework.Assert.That(condition, Is.False, "");
+            Framework.Assert.That(condition, Is.False);
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace NUnit.Framework.Classic
         /// <param name="condition">The evaluated condition</param>
         public static void IsFalse(bool condition)
         {
-            Framework.Assert.That(condition, Is.False, "");
+            Framework.Assert.That(condition, Is.False);
         }
 
         #endregion
@@ -204,7 +204,7 @@ namespace NUnit.Framework.Classic
         /// <param name="anObject">The object that is to be tested</param>
         public static void NotNull(object? anObject)
         {
-            Framework.Assert.That(anObject, Is.Not.Null, "");
+            Framework.Assert.That(anObject, Is.Not.Null);
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Classic
         /// <param name="anObject">The object that is to be tested</param>
         public static void IsNotNull(object? anObject)
         {
-            Framework.Assert.That(anObject, Is.Not.Null, "");
+            Framework.Assert.That(anObject, Is.Not.Null);
         }
 
         #endregion
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Classic
         /// <param name="anObject">The object that is to be tested</param>
         public static void Null(object? anObject)
         {
-            Framework.Assert.That(anObject, Is.Null, "");
+            Framework.Assert.That(anObject, Is.Null);
         }
 
         /// <summary>
@@ -274,7 +274,7 @@ namespace NUnit.Framework.Classic
         /// <param name="anObject">The object that is to be tested</param>
         public static void IsNull(object? anObject)
         {
-            Framework.Assert.That(anObject, Is.Null, "");
+            Framework.Assert.That(anObject, Is.Null);
         }
 
         #endregion
@@ -300,7 +300,7 @@ namespace NUnit.Framework.Classic
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double aDouble)
         {
-            Framework.Assert.That(aDouble, Is.NaN, "");
+            Framework.Assert.That(aDouble, Is.NaN);
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace NUnit.Framework.Classic
         /// <param name="aDouble">The value that is to be tested</param>
         public static void IsNaN(double? aDouble)
         {
-            Framework.Assert.That(aDouble, Is.NaN, "");
+            Framework.Assert.That(aDouble, Is.NaN);
         }
 
         #endregion
@@ -348,7 +348,7 @@ namespace NUnit.Framework.Classic
         /// <param name="aString">The string to be tested</param>
         public static void IsEmpty(string? aString)
         {
-            Framework.Assert.That(aString, new EmptyStringConstraint(), "");
+            Framework.Assert.That(aString, new EmptyStringConstraint());
         }
 
         #endregion
@@ -374,7 +374,7 @@ namespace NUnit.Framework.Classic
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsEmpty(IEnumerable collection)
         {
-            Framework.Assert.That(collection, new EmptyCollectionConstraint(), "");
+            Framework.Assert.That(collection, new EmptyCollectionConstraint());
         }
 
         #endregion
@@ -404,7 +404,7 @@ namespace NUnit.Framework.Classic
         /// <param name="aString">The string to be tested</param>
         public static void IsNotEmpty(string? aString)
         {
-            Framework.Assert.That(aString, Is.Not.Empty, "");
+            Framework.Assert.That(aString, Is.Not.Empty);
         }
 
         #endregion
@@ -430,7 +430,7 @@ namespace NUnit.Framework.Classic
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         public static void IsNotEmpty(IEnumerable collection)
         {
-            Framework.Assert.That(collection, Is.Not.Empty, "");
+            Framework.Assert.That(collection, Is.Not.Empty);
         }
 
         #endregion

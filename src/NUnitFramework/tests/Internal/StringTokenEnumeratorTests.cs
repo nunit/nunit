@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Internal
         [Test]
         public void Empty()
         {
-            var tokens = Enumerate("", ',');
+            var tokens = Enumerate(string.Empty, ',');
             Assert.That(tokens, Is.Empty);
         }
 

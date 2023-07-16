@@ -71,7 +71,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">A directory containing the actual value</param>
         public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual)
         {
-            AreEqual(expected, actual, string.Empty);
+            AreEqual(expected, actual, string.Empty, null);
         }
 
         #endregion
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">A directory containing the actual value</param>
         public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual)
         {
-            AreNotEqual(expected, actual, string.Empty);
+            AreNotEqual(expected, actual, string.Empty, null);
         }
 
         #endregion

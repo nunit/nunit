@@ -264,7 +264,7 @@ namespace NUnit.Framework.Internal
             {
                 runtime = ParseRuntimeType(parts[0]);
                 string vstring = parts[1];
-                if (vstring != "")
+                if (vstring != string.Empty)
                 {
                     version = new Version(vstring);
 

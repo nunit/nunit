@@ -197,7 +197,7 @@ namespace NUnitLite.Tests
             var testCaseNodes = _suiteNode.SelectNodes("test-suite[@name='SkippedTest']/test-case");
             Assert.That(testCaseNodes, Is.Not.Null.And.Count.EqualTo(3));
 
-            foreach (XmlNode testCase in testCaseNodes!)
+            foreach (XmlNode testCase in testCaseNodes)
             {
                 string startTimeStr = RequiredAttribute(testCase, "start-time");
                 string endTimeStr = RequiredAttribute(testCase, "end-time");

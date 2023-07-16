@@ -58,7 +58,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object under examination</param>
         public static void IsAssignableFrom<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), "");
+            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)));
         }
 
         #endregion
@@ -86,7 +86,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object under examination</param>
         public static void IsNotAssignableFrom(Type expected, object? actual)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(expected), "");
+            Assert.That(actual, Is.Not.AssignableFrom(expected));
         }
 
         #endregion
@@ -114,7 +114,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object under examination</param>
         public static void IsNotAssignableFrom<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), "");
+            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)));
         }
 
         #endregion
@@ -142,7 +142,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsInstanceOf(Type expected, object? actual)
         {
-            Assert.That(actual, Is.InstanceOf(expected), "");
+            Assert.That(actual, Is.InstanceOf(expected));
         }
 
         #endregion
@@ -170,7 +170,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsInstanceOf<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), "");
+            Assert.That(actual, Is.InstanceOf(typeof(TExpected)));
         }
 
         #endregion
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsNotInstanceOf(Type expected, object? actual)
         {
-            Assert.That(actual, Is.Not.InstanceOf(expected), "");
+            Assert.That(actual, Is.Not.InstanceOf(expected));
         }
 
         #endregion
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The object being examined</param>
         public static void IsNotInstanceOf<TExpected>(object? actual)
         {
-            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), "");
+            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)));
         }
 
         #endregion

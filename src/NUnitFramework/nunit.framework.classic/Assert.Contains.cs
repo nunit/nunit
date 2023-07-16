@@ -28,7 +28,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The collection to be examined</param>
         public static void Contains(object? expected, ICollection? actual)
         {
-            Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)), "");
+            Assert.That(actual, new SomeItemsConstraint(new EqualConstraint(expected)));
         }
     }
 }

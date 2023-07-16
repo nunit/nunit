@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests
             var result = TestBuilder.ExecuteWorkItem(work);
 
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-            Assert.That(result.Output, Is.EqualTo(""));
+            Assert.That(result.Output, Is.EqualTo(string.Empty));
 
             Assert.That(_testMessage, Is.Not.Null);
             Assert.That(_testMessage.Destination, Is.EqualTo(SOME_DESTINATION));

@@ -218,7 +218,7 @@ namespace NUnit.Framework.Internal.Builders
                 parameters = testMethod.Method.GetParameters();
             }
 
-            if (parms is not null && parms.TestName is not null && parms.TestName.Trim() == "")
+            if (parms is not null && parms.TestName is not null && string.IsNullOrWhiteSpace(parms.TestName))
                 return MarkAsNotRunnable(testMethod, "Test name cannot be all white-space or empty.");
 
             if (arglist is not null && parameters is not null)

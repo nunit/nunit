@@ -41,7 +41,7 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");
@@ -118,7 +118,7 @@ namespace NUnit.Framework.Tests
             Assert.Multiple(() =>
             {
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.Success));
-                Assert.That(result.Output, Is.EqualTo(""));
+                Assert.That(result.Output, Is.EqualTo(string.Empty));
             });
 
             Assert.That(_testOutput, Is.Not.Null, "No output received");

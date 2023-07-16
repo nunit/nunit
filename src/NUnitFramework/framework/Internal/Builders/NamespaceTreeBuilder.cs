@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             Guard.ArgumentNotNull(ns, nameof(ns));
 
-            if (ns == "") return _globalInsertionPoint;
+            if (ns == string.Empty) return _globalInsertionPoint;
 
             if (_namespaceIndex.TryGetValue(ns, out TestSuite? suiteToReturn))
                 return suiteToReturn;
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Internal.Builders
             _namespaceIndex[ns] = newSetupFixture;
 
             // Update global insertion point for global setup fixtures
-            if (ns == "")
+            if (ns == string.Empty)
                 _globalInsertionPoint = newSetupFixture;
         }
 

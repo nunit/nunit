@@ -1106,7 +1106,7 @@ namespace NUnit.Options
                     --end;
                 bool writeContinuation = end != description.Length && !IsEolChar(c);
                 string line = description.Substring(start, end - start) +
-                        (writeContinuation ? "-" : "");
+                        (writeContinuation ? "-" : string.Empty);
                 yield return line;
                 start = end;
                 if (char.IsWhiteSpace(c))

@@ -11,7 +11,7 @@ namespace NUnit.Framework.Classic
     /// A set of Assert methods operating on one or more collections
     /// </summary>
     // Abstract because we support syntax extension by inheriting and declaring new static members.
-    public abstract class CollectionAssert : Framework.Assert
+    public abstract class CollectionAssert : AssertBase
     {
         #region Equals and ReferenceEquals
 
@@ -301,7 +301,7 @@ namespace NUnit.Framework.Classic
         /// </summary>
         /// <param name="collection">IEnumerable of objects to be considered</param>
         /// <param name="actual">Object that cannot exist within collection</param>
-        public static void DoesNotContain(IEnumerable collection, Object actual)
+        public static void DoesNotContain(IEnumerable collection, object actual)
         {
             DoesNotContain(collection, actual, string.Empty, null);
         }
@@ -313,7 +313,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">Object that cannot exist within collection</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void DoesNotContain(IEnumerable collection, Object actual, string message, params object?[]? args)
+        public static void DoesNotContain(IEnumerable collection, object actual, string message, params object?[]? args)
         {
             Framework.Assert.That(collection, Has.No.Member(actual), ConvertMessageWithArgs(message, args));
         }

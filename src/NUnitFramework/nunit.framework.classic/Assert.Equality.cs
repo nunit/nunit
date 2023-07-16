@@ -62,7 +62,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The actual value</param>
         public static void AreEqual(object? expected, object? actual)
         {
-            Framework.Assert.That(actual, Is.EqualTo(expected), "");
+            Framework.Assert.That(actual, Is.EqualTo(expected));
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The actual value</param>
         public static void AreNotEqual(object? expected, object? actual)
         {
-            Framework.Assert.That(actual, Is.Not.EqualTo(expected), "");
+            Framework.Assert.That(actual, Is.Not.EqualTo(expected));
         }
 
         #endregion
@@ -126,7 +126,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The actual object</param>
         public static void AreSame(object? expected, object? actual)
         {
-            Framework.Assert.That(actual, Is.SameAs(expected), "");
+            Framework.Assert.That(actual, Is.SameAs(expected));
         }
 
         #endregion
@@ -154,7 +154,7 @@ namespace NUnit.Framework.Classic
         /// <param name="actual">The actual object</param>
         public static void AreNotSame(object? expected, object? actual)
         {
-            Framework.Assert.That(actual, Is.Not.SameAs(expected), "");
+            Framework.Assert.That(actual, Is.Not.SameAs(expected));
         }
 
         #endregion
