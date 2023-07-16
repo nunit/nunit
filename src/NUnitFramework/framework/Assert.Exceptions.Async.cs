@@ -30,7 +30,7 @@ namespace NUnit.Framework
                 caughtException = e;
             }
 
-            Assert.That(caughtException, expression, ConvertMessageWithArgs(message, args));
+            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
 
             return caughtException;
         }
@@ -186,7 +186,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotThrowAsync(AsyncTestDelegate code, string? message, params object?[]? args)
         {
-            Assert.That(code, new ThrowsNothingConstraint(), ConvertMessageWithArgs(message, args));
+            Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
         }
         /// <summary>
         /// Verifies that an async delegate does not throw an exception.

@@ -52,7 +52,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void Contains(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Contain(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.Contain(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void DoesNotContain(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Not.Contain(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.Not.Contain(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void StartsWith(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.StartWith(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.StartWith(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void DoesNotStartWith(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Not.StartWith(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.Not.StartWith(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void EndsWith(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.EndWith(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.EndWith(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void DoesNotEndWith(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Not.EndWith(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.Not.EndWith(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void AreEqualIgnoringCase(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.EqualTo(expected).IgnoreCase, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.EqualTo(expected).IgnoreCase, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void AreNotEqualIgnoringCase(string expected, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.EqualTo(expected).IgnoreCase, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.EqualTo(expected).IgnoreCase, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void IsMatch(string pattern, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Match(pattern), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.Match(pattern), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments used in formatting the message</param>
         public static void DoesNotMatch(string pattern, string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Does.Not.Match(pattern), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Does.Not.Match(pattern), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

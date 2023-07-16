@@ -59,7 +59,7 @@ namespace NUnit.Framework.Classic
         public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual, string message,
             params object?[]? args)
         {
-            Assert.AreEqual(expected, actual, ConvertMessageWithArgs(message, args));
+            Assert.AreEqual(expected, actual, message, args);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Classic
         public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual, string message,
             params object?[]? args)
         {
-            Assert.AreNotEqual(expected, actual, ConvertMessageWithArgs(message, args));
+            Assert.AreNotEqual(expected, actual, message, args);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(DirectoryInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void Exists(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreFiles, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(DirectoryInfo actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotExist(string actual, string message, params object?[]? args)
         {
-            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreFiles), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

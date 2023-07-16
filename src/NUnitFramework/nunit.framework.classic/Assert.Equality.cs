@@ -50,7 +50,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void AreEqual(object? expected, object? actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.EqualTo(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void AreNotEqual(object? expected, object? actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.EqualTo(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void AreSame(object? expected, object? actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.SameAs(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.SameAs(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void AreNotSame(object? expected, object? actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.SameAs(expected), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.SameAs(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -175,9 +175,9 @@ namespace NUnit.Framework.Classic
             object?[]? args)
         {
             if (double.IsNaN(expected) || double.IsInfinity(expected))
-                Framework.Assert.That(actual, Is.EqualTo(expected), ConvertMessageWithArgs(message, args));
+                Framework.Assert.That(actual, Is.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
             else
-                Framework.Assert.That(actual, Is.EqualTo(expected).Within(delta), ConvertMessageWithArgs(message, args));
+                Framework.Assert.That(actual, Is.EqualTo(expected).Within(delta), () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion

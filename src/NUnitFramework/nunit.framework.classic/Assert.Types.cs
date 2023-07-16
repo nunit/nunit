@@ -47,7 +47,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsAssignableFrom<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.AssignableFrom(typeof(TExpected)), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotAssignableFrom(Type expected, object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(expected), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.Not.AssignableFrom(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotAssignableFrom<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.Not.AssignableFrom(typeof(TExpected)), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsInstanceOf(Type expected, object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.InstanceOf(expected), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.InstanceOf(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsInstanceOf<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.InstanceOf(typeof(TExpected)), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotInstanceOf(Type expected, object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.InstanceOf(expected), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.Not.InstanceOf(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotInstanceOf<TExpected>(object? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), ConvertMessageWithArgs(message, args));
+            Assert.That(actual, Is.Not.InstanceOf(typeof(TExpected)), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

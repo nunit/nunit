@@ -18,7 +18,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void True(bool? condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.True, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void True(bool condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.True, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsTrue(bool? condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.True, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsTrue(bool condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.True, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void False(bool condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.False, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsFalse(bool? condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.False, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsFalse(bool condition, string? message, params object?[]? args)
         {
-            Framework.Assert.That(condition, Is.False, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotNull(object? anObject, string? message, params object?[]? args)
         {
-            Framework.Assert.That(anObject, Is.Not.Null, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(anObject, Is.Not.Null, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotNull(object? anObject, string? message, params object?[]? args)
         {
-            Framework.Assert.That(anObject, Is.Not.Null, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(anObject, Is.Not.Null, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Null(object? anObject, string? message, params object?[]? args)
         {
-            Framework.Assert.That(anObject, Is.Null, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(anObject, Is.Null, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNull(object? anObject, string? message, params object?[]? args)
         {
-            Framework.Assert.That(anObject, Is.Null, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(anObject, Is.Null, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNaN(double aDouble, string? message, params object?[]? args)
         {
-            Framework.Assert.That(aDouble, Is.NaN, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(aDouble, Is.NaN, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNaN(double? aDouble, string? message, params object?[]? args)
         {
-            Framework.Assert.That(aDouble, Is.NaN, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(aDouble, Is.NaN, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsEmpty(string? aString, string? message, params object?[]? args)
         {
-            Framework.Assert.That(aString, new EmptyStringConstraint(), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(aString, new EmptyStringConstraint(), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsEmpty(IEnumerable collection, string? message, params object?[]? args)
         {
-            Framework.Assert.That(collection, new EmptyCollectionConstraint(), ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(collection, new EmptyCollectionConstraint(), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -394,7 +394,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotEmpty(string? aString, string? message, params object?[]? args)
         {
-            Framework.Assert.That(aString, Is.Not.Empty, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(aString, Is.Not.Empty, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsNotEmpty(IEnumerable collection, string? message, params object?[]? args)
         {
-            Framework.Assert.That(collection, Is.Not.Empty, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(collection, Is.Not.Empty, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -458,7 +458,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Zero(int actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -486,7 +486,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void Zero(uint actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -510,7 +510,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Zero(long actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -538,7 +538,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void Zero(ulong actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -562,7 +562,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Zero(decimal actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -586,7 +586,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Zero(double actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -610,7 +610,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Zero(float actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -638,7 +638,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotZero(int actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -666,7 +666,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void NotZero(uint actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -690,7 +690,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotZero(long actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -718,7 +718,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void NotZero(ulong actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -742,7 +742,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotZero(decimal actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -766,7 +766,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotZero(double actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -790,7 +790,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void NotZero(float actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Not.Zero, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -818,7 +818,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Positive(int actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -846,7 +846,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void Positive(uint actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -870,7 +870,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Positive(long actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -898,7 +898,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void Positive(ulong actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -924,7 +924,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Positive(decimal actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -949,7 +949,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Positive(double actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -973,7 +973,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Positive(float actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Positive, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1001,7 +1001,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(int actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1029,7 +1029,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void Negative(uint actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1053,7 +1053,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(long actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1081,7 +1081,7 @@ namespace NUnit.Framework.Classic
         [CLSCompliant(false)]
         public static void Negative(ulong actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1107,7 +1107,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(decimal actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1133,7 +1133,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(double actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
@@ -1157,7 +1157,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void Negative(float actual, string? message, params object?[]? args)
         {
-            Framework.Assert.That(actual, Is.Negative, ConvertMessageWithArgs(message, args));
+            Framework.Assert.That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
 
         #endregion
