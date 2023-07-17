@@ -526,7 +526,9 @@ namespace NUnit.Options
 
         public string OptionName => _option;
 
+#if !NET6_0_OR_GREATER
         [SecurityPermission(SecurityAction.LinkDemand, SerializationFormatter = true)]
+#endif
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

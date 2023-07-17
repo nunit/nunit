@@ -15,8 +15,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 4.6.2 Debug")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0 Debug")]
-#elif NETCOREAPP2_1
-[assembly: AssemblyConfiguration(".NET Core 2.1 Debug")]
 #elif NETCOREAPP3_1
 [assembly: AssemblyConfiguration(".NET Core 3.1 Debug")]
 #elif NET5_0
@@ -33,8 +31,6 @@ using System.Reflection;
 [assembly: AssemblyConfiguration(".NET Framework 4.6.2")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyConfiguration(".NET Standard 2.0")]
-#elif NETCOREAPP2_1
-[assembly: AssemblyConfiguration(".NET Core 2.1")]
 #elif NETCOREAPP3_1
 [assembly: AssemblyConfiguration(".NET Core 3.1")]
 #elif NET5_0

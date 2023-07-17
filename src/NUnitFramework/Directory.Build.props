@@ -6,8 +6,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <NUnitLibraryFrameworks>net462;netstandard2.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;netcoreapp3.1;net6.0;net7.0</NUnitRuntimeFrameworks>
+    <NUnitLibraryFrameworks>net462;netstandard2.0;net6.0;net6.0-windows</NUnitLibraryFrameworks>
+    <NUnitRuntimeFrameworks>net462;netcoreapp3.1;net6.0;net6.0-windows;net7.0;net7.0-windows</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>

@@ -144,11 +144,7 @@ namespace NUnitLite
         public void DisplayRuntimeEnvironment()
         {
             WriteSectionHeader("Runtime Environment");
-#if NETSTANDARD2_0
-            Writer.WriteLabelLine("   OS Version: ", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            Writer.WriteLabelLine("   OS Version: ", OSPlatform.CurrentPlatform);
-#endif
+            Writer.WriteLabelLine("   OS Version: ", OSPlatform.OSDescription);
             Writer.WriteLabelLine("  CLR Version: ", Environment.Version);
             Writer.WriteLine();
         }

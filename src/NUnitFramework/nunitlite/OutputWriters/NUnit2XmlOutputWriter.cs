@@ -96,13 +96,8 @@ namespace NUnitLite
                                            assemblyName.Version.ToString());
             _xmlWriter.WriteAttributeString("clr-version",
                 Environment.Version.ToString());
-#if NETSTANDARD2_0
             _xmlWriter.WriteAttributeString("os-version",
-                                           System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            _xmlWriter.WriteAttributeString("os-version",
-                                           OSPlatform.CurrentPlatform.ToString());
-#endif
+                                           OSPlatform.OSDescription);
             _xmlWriter.WriteAttributeString("platform",
                 Environment.OSVersion.Platform.ToString());
             _xmlWriter.WriteAttributeString("cwd",

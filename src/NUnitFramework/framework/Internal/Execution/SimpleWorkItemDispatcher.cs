@@ -36,6 +36,12 @@ namespace NUnit.Framework.Internal.Execution
 
             if (topLevelWorkItem.TargetApartment != ApartmentState.Unknown)
             {
+#if NET6_0_OR_GREATER
+                if (OperatingSystem.IsWindows())
+                    _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
+                else
+                    topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
+#else
                 try
                 {
                     _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
@@ -44,6 +50,7 @@ namespace NUnit.Framework.Internal.Execution
                 {
                     topLevelWorkItem.MarkNotRunnable("Apartment state cannot be set on this platform.");
                 }
+#endif
             }
 
             _runnerThread.Start(topLevelWorkItem);

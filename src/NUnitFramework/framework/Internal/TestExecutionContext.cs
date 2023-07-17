@@ -455,19 +455,6 @@ namespace NUnit.Framework.Internal
 
         #endregion
 
-        #region InitializeLifetimeService
-
-        /// <summary>
-        /// Obtain lifetime service object
-        /// </summary>
-        /// <returns></returns>
-        public override object InitializeLifetimeService()
-        {
-            return null!;
-        }
-
-        #endregion
-
         #region Nested IsolatedContext Class
 
         /// <summary>

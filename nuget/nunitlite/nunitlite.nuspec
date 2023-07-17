@@ -63,6 +63,8 @@ How to use this package:
     <file src="bin/netcoreapp3.1/nunitlite-runner.pdb" target="lib\netcoreapp3.1" />
     <file src="bin/net6.0/nunitlite.dll" target="lib\net6.0" />
     <file src="bin/net6.0/nunitlite.pdb" target="lib\net6.0" />
+    <file src="bin/net6.0-windows/nunitlite.dll" target="lib\net6.0-windows" />
+    <file src="bin/net6.0-windows/nunitlite.pdb" target="lib\net6.0-windows" />
     <file src="bin/net7.0/nunitlite.dll" target="lib\net7.0" />
     <file src="bin/net7.0/nunitlite.pdb" target="lib\net7.0" />
   </files>

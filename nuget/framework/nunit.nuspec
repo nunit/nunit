@@ -29,6 +29,7 @@ Supported platforms:
       <group targetFramework="netstandard2.0">
         <dependency id="NETStandard.Library" version="2.0.0" />
       </group>
+      <group targetFramework="net6.0" />
     </dependencies>
   </metadata>
   <files>
@@ -49,6 +50,18 @@ Supported platforms:
     <file src="bin/netstandard2.0/nunit.framework.classic.dll" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunit.framework.classic.xml" target="lib\netstandard2.0" />
     <file src="bin/netstandard2.0/nunit.framework.classic.pdb" target="lib\netstandard2.0" />
+    <file src="bin/net6.0/nunit.framework.dll" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.xml" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.pdb" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.classic.dll" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.classic.xml" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.classic.pdb" target="lib\net6.0" />
+    <file src="bin/net6.0-windows/nunit.framework.dll" target="lib\net6.0-windows" />
+    <file src="bin/net6.0-windows/nunit.framework.xml" target="lib\net6.0-windows" />
+    <file src="bin/net6.0-windows/nunit.framework.pdb" target="lib\net6.0-windows" />
+    <file src="bin/net6.0-windows/nunit.framework.classic.dll" target="lib\net6.0-windows" />
+    <file src="bin/net6.0-windows/nunit.framework.classic.xml" target="lib\net6.0-windows" />
+    <file src="bin/net6.0-windows/nunit.framework.classic.pdb" target="lib\net6.0-windows" />
     <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>
 </package>
