@@ -22,7 +22,7 @@ public class CompositeWorkItemBenchmark
             { "ProcessModel", "InProcess" },
             { "DomainUsage", "None" },
             { "ShadowCopyFiles", false },
-            { "TestParametersDictionary", "" },
+            { "TestParametersDictionary", string.Empty },
             { "NumberOfTestWorkers", 0 },
             { "SynchronousEvents", "false" },
             { "RandomSeed", 878248866 },

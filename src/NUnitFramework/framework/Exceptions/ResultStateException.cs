@@ -14,7 +14,7 @@ namespace NUnit.Framework
     {
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
-        public ResultStateException(string? message) : base(message)
+        protected ResultStateException(string? message) : base(message)
         { }
 
         /// <param name="message">The error message that explains

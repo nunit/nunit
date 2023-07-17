@@ -15,7 +15,7 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class CollectionOrderedConstraint : CollectionConstraint
     {
-        private readonly List<OrderingStep> _steps = new List<OrderingStep>();
+        private readonly List<OrderingStep> _steps = new();
         // The step we are currently building
         private OrderingStep _activeStep;
         // If not ordered, index where ordering breaks

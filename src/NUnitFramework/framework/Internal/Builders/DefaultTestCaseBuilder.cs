@@ -21,7 +21,7 @@ namespace NUnit.Framework.Internal.Builders
     /// </summary>
     public class DefaultTestCaseBuilder : ITestCaseBuilder
     {
-        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _nunitTestCaseBuilder = new();
 
         /// <summary>
         /// Determines if the method can be used to build an NUnit test
@@ -87,7 +87,7 @@ namespace NUnit.Framework.Internal.Builders
             {
                 var metadata = MethodInfoCache.Get(method);
 
-                List<ITestBuilder> builders = new List<ITestBuilder>(metadata.TestBuilderAttributes);
+                List<ITestBuilder> builders = new(metadata.TestBuilderAttributes);
 
                 // See if we need to add a CombinatorialAttribute for parameterized data
                 if (method.MethodInfo.GetParameters().Any(param => param.HasAttribute<IParameterDataSource>(false))

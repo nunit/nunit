@@ -239,12 +239,12 @@ namespace NUnit.Framework.Tests.Internal
         {
             TestShortenedNameDifference(
                 new DummyGenericClass<Dummy>(new Dummy(1)),
-                new KeyValuePair<int, string>(1, ""),
+                new KeyValuePair<int, string>(1, string.Empty),
                 "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]",
                 "KeyValuePair`2[Int32,String]");
 
             TestShortenedNameDifference(
-                new KeyValuePair<int, string>(1, ""),
+                new KeyValuePair<int, string>(1, string.Empty),
                 new DummyGenericClass<Dummy>(new Dummy(1)),
                 "KeyValuePair`2[Int32,String]",
                 "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]");

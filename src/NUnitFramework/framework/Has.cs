@@ -100,7 +100,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Length property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Length => Property("Length");
+        public static ResolvableConstraintExpression Length => Property(nameof(Length));
 
         #endregion
 
@@ -110,7 +110,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Count property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Count => Property("Count");
+        public static ResolvableConstraintExpression Count => Property(nameof(Count));
 
         #endregion
 
@@ -120,7 +120,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the Message property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression Message => Property("Message");
+        public static ResolvableConstraintExpression Message => Property(nameof(Message));
 
         #endregion
 
@@ -130,7 +130,7 @@ namespace NUnit.Framework
         /// Returns a new ConstraintExpression, which will apply the following
         /// constraint to the InnerException property of the object being tested.
         /// </summary>
-        public static ResolvableConstraintExpression InnerException => Property("InnerException");
+        public static ResolvableConstraintExpression InnerException => Property(nameof(InnerException));
 
         #endregion
 

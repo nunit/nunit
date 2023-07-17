@@ -23,12 +23,12 @@ namespace NUnit.Framework.Constraints
         /// <summary>
         /// Returns a default Tolerance object, equivalent to a default matching rules.
         /// </summary>
-        public static readonly Tolerance Default = new Tolerance(0, ToleranceMode.Unset);
+        public static readonly Tolerance Default = new(0, ToleranceMode.Unset);
 
         /// <summary>
         /// Returns an empty Tolerance object, equivalent to an exact match.
         /// </summary>
-        public static readonly Tolerance Exact = new Tolerance(0, ToleranceMode.Linear);
+        public static readonly Tolerance Exact = new(0, ToleranceMode.Linear);
 
         #endregion
 

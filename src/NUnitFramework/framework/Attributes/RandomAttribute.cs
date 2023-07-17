@@ -218,7 +218,7 @@ namespace NUnit.Framework
             private readonly int _count;
             private readonly bool _inRange;
 
-            private readonly List<T> _previousValues = new List<T>();
+            private readonly List<T> _previousValues = new();
 
             protected RandomDataSource(int count) : base(typeof(T))
             {
@@ -614,7 +614,7 @@ namespace NUnit.Framework
         {
             private readonly int _count;
 
-            private readonly List<object> _previousValues = new List<object>();
+            private readonly List<object> _previousValues = new();
 
             public EnumDataSource(int count) : base(typeof(Enum))
             {

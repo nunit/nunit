@@ -23,7 +23,7 @@ namespace NUnit.Framework.Tests.Internal.Filters
 
             Assert.That(optimized.Match(new TestDummy { Id = "id-1" }), Is.False);
             Assert.That(optimized.Match(new TestDummy { Id = "Id-" }), Is.False);
-            Assert.That(optimized.Match(new TestDummy { Id = "" }), Is.False);
+            Assert.That(optimized.Match(new TestDummy { Id = string.Empty }), Is.False);
         }
 
         [Test]

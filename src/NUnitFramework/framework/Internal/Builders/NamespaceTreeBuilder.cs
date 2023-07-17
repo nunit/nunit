@@ -16,7 +16,7 @@ namespace NUnit.Framework.Internal.Builders
         /// NamespaceDictionary of all test suites we have created to represent
         /// namespaces. Used to locate namespace parent suites for fixtures.
         /// </summary>
-        private readonly Dictionary<string, TestSuite> _namespaceIndex = new Dictionary<string, TestSuite>();
+        private readonly Dictionary<string, TestSuite> _namespaceIndex = new();
 
         /// <summary>
         /// Point in the tree where items in the global namespace are added
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Internal.Builders
         {
             Guard.ArgumentNotNull(ns, nameof(ns));
 
-            if (ns == "") return _globalInsertionPoint;
+            if (ns == string.Empty) return _globalInsertionPoint;
 
             if (_namespaceIndex.TryGetValue(ns, out TestSuite? suiteToReturn))
                 return suiteToReturn;
@@ -162,7 +162,7 @@ namespace NUnit.Framework.Internal.Builders
             _namespaceIndex[ns] = newSetupFixture;
 
             // Update global insertion point for global setup fixtures
-            if (ns == "")
+            if (ns == string.Empty)
                 _globalInsertionPoint = newSetupFixture;
         }
 

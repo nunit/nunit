@@ -292,7 +292,7 @@ namespace NUnit.Framework.Internal.Builders
 
                 CreateAllTuples();
 
-                List<TestCaseInfo> testCases = new List<TestCaseInfo>();
+                List<TestCaseInfo> testCases = new();
 
                 while (true)
                 {
@@ -339,7 +339,7 @@ namespace NUnit.Framework.Internal.Builders
 
             private List<FeatureTuple> CreateTuples(int dimension, int feature)
             {
-                List<FeatureTuple> result = new List<FeatureTuple>();
+                List<FeatureTuple> result = new();
 
                 result.Add(new FeatureTuple(new FeatureInfo(dimension, feature)));
 
@@ -592,7 +592,7 @@ namespace NUnit.Framework.Internal.Builders
         /// <returns>A set of test cases.</returns>
         public IEnumerable<ITestCaseData> GetTestCases(IEnumerable[] sources)
         {
-            List<ITestCaseData> testCases = new List<ITestCaseData>();
+            List<ITestCaseData> testCases = new();
             List<object?>[] valueSet = CreateValueSet(sources);
             int[] dimensions = CreateDimensions(valueSet);
 

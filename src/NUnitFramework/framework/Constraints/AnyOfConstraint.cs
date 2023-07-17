@@ -12,7 +12,7 @@ namespace NUnit.Framework.Constraints
     public class AnyOfConstraint : Constraint
     {
         private readonly ICollection _expected;
-        private readonly NUnitEqualityComparer _comparer = new NUnitEqualityComparer();
+        private readonly NUnitEqualityComparer _comparer = new();
 
         /// <summary>
         /// Construct a <see cref="AnyOfConstraint"/>

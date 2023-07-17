@@ -12,7 +12,7 @@ namespace NUnit.Framework.Internal.Builders
     {
         // we would otherwise do a lot of attribute allocations when repeatedly checking the same method for example
         // in case of building TestCaseAttribute-based tests
-        private static readonly ConcurrentDictionary<IMethodInfo, TestMethodMetadata> MethodMetadataCache = new ConcurrentDictionary<IMethodInfo, TestMethodMetadata>();
+        private static readonly ConcurrentDictionary<IMethodInfo, TestMethodMetadata> MethodMetadataCache = new();
 
         /// <summary>
         /// Returns cached metadata for method instance.

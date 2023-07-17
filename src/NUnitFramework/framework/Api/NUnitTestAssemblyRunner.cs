@@ -28,7 +28,7 @@ namespace NUnit.Framework.Api
         private static readonly Logger Log = InternalTrace.GetLogger("DefaultTestAssemblyRunner");
 
         private readonly ITestAssemblyBuilder _builder;
-        private readonly ManualResetEventSlim _runComplete = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _runComplete = new();
 
         // Saved Console.Out and Console.Error
         private TextWriter? _savedOut;

@@ -20,13 +20,5 @@ namespace NUnit.Framework.Tests.Assertions
                 () => Assert.Inconclusive("MESSAGE"),
                 Throws.TypeOf<InconclusiveException>().With.Message.EqualTo("MESSAGE"));
         }
-
-        [Test]
-        public void ThrowsInconclusiveExceptionWithMessageAndArgs()
-        {
-            Assert.That(
-                () => Assert.Inconclusive("MESSAGE: {0}+{1}={2}", 2, 2, 4),
-                Throws.TypeOf<InconclusiveException>().With.Message.EqualTo("MESSAGE: 2+2=4"));
-        }
     }
 }

@@ -174,7 +174,7 @@ namespace NUnitLite.Tests
             string[] prototypes = pattern.Split('|');
 
             PropertyInfo property = GetPropertyInfo(propertyName);
-            Assert.That(property.PropertyType, Is.EqualTo(typeof(bool)), "Property '{0}' is wrong type", propertyName);
+            Assert.That(property.PropertyType, Is.EqualTo(typeof(bool)), $"Property '{propertyName}' is wrong type");
 
             NUnitLiteOptions options;
             foreach (string option in prototypes)
@@ -648,7 +648,7 @@ namespace NUnitLite.Tests
         private static PropertyInfo GetPropertyInfo(string propertyName)
         {
             PropertyInfo property = typeof(NUnitLiteOptions).GetProperty(propertyName);
-            Assert.That(property, Is.Not.Null, "The property '{0}' is not defined", propertyName);
+            Assert.That(property, Is.Not.Null, $"The property '{propertyName}' is not defined");
             return property;
         }
 

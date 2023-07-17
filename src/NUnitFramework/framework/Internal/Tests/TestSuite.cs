@@ -19,7 +19,7 @@ namespace NUnit.Framework.Internal
         /// <summary>
         /// Our collection of child tests
         /// </summary>
-        private readonly List<ITest> _tests = new List<ITest>();
+        private readonly List<ITest> _tests = new();
 
         #endregion
 

@@ -24,8 +24,8 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #pragma warning disable IDE0052 // Remove unread private members
-        private static readonly object[] SuccessData = new object[] { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
-        private static readonly object[] FailureData = new object[] { new object[] {
+        private static readonly object[] SuccessData = { new[] { 1, 3, 17, -2, 34 }, Array.Empty<object>() };
+        private static readonly object[] FailureData = { new object[] {
             new[] { 1, 3, 17, 3, 34 },
             "< 1, 3, 17, 3, 34 >" + Environment.NewLine + "  Not unique items: < 3 >" }
         };
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Constraints
             var constraint = new UniqueItemsConstraint().IgnoreCase;
             var result = constraint.ApplyTo(actual);
 
-            Assert.That(result.IsSuccess, Is.False, "{0} should not be unique ignoring case", actual);
+            Assert.That(result.IsSuccess, Is.False, $"{actual} should not be unique ignoring case");
         }
 
         private static readonly object[] IgnoreCaseData =
@@ -55,56 +55,56 @@ namespace NUnit.Framework.Tests.Constraints
             new object[] {new[] { 2, 1, 2, 3, 3 }, new[] { 2, 3 }},
             new object[] {new[] { "x", null, "x" }, new[] { "x" }}
         };
-        private static readonly IEnumerable<int> RANGE = Enumerable.Range(0, 10000);
-        private static readonly TestCaseData[] PerformanceData_FastPath =
+        private static readonly IEnumerable<int> Range = Enumerable.Range(0, 10000);
+        private static readonly TestCaseData[] PerformanceDataFastPath =
         {
             // Generic container
-            new TestCaseData(RANGE, false),
-            new TestCaseData(new List<int>(RANGE), false),
-            new TestCaseData(new List<double>(RANGE.Select(v => (double)v)), false),
-            new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), false),
-            new TestCaseData(new List<string>(RANGE.Select(v => v.ToString())), true),
+            new(Range, false),
+            new(new List<int>(Range), false),
+            new(new List<double>(Range.Select(v => (double)v)), false),
+            new(new List<string>(Range.Select(v => v.ToString())), false),
+            new(new List<string>(Range.Select(v => v.ToString())), true),
             
             // Non-generic container
-            new TestCaseData(new SimpleObjectCollection(RANGE), false)
+            new(new SimpleObjectCollection(Range), false)
             {
                 ArgDisplayNames = new[] { "IEnumerable<int>", "false" }
             },
-            new TestCaseData(new SimpleObjectCollection(RANGE.Cast<object>()), false)
+            new(new SimpleObjectCollection(Range.Cast<object>()), false)
             {
                 ArgDisplayNames = new[] { "IEnumerable<object>", "false" },
             },
-            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => (double)v).Cast<object>()), false)
+            new(new SimpleObjectCollection(Range.Select(v => (double)v).Cast<object>()), false)
             {
                 ArgDisplayNames = new[] { "IEnumerable<double>", "false" }
             },
-            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => v.ToString()).Cast<object>()), false)
+            new(new SimpleObjectCollection(Range.Select(v => v.ToString())), false)
             {
                 ArgDisplayNames = new[] { "IEnumerable<string>", "false" }
             },
-            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => v.ToString()).Cast<object>()), true)
+            new(new SimpleObjectCollection(Range.Select(v => v.ToString())), true)
             {
                 ArgDisplayNames = new[] { "IEnumerable<string>", "true" }
             },
-            new TestCaseData(new SimpleObjectCollection(RANGE.Select(v => new TestReferenceType() { A = v }).Cast<object>()), true)
+            new(new SimpleObjectCollection(Range.Select(v => new TestReferenceType() { A = v })), true)
             {
                 ArgDisplayNames = new[] { "IEnumerable<TestReferenceType>", "true" }
             },
         };
 
-        private static TestCaseData[] PerformanceData_FastPath_MixedTypes
+        private static TestCaseData[] PerformanceDataFastPathMixedTypes
         {
             get
             {
-                var refTypes = RANGE.Take(5000).Select(o => new TestReferenceType() { A = o }).Cast<object>();
-                var valueTypes = RANGE.Skip<int>(5000).Select(o => new TestValueType() { A = o }).Cast<object>();
+                var refTypes = Range.Take(5000).Select(o => new TestReferenceType() { A = o }).Cast<object>();
+                var valueTypes = Range.Skip<int>(5000).Select(o => new TestValueType() { A = o }).Cast<object>();
                 var container = new List<object>();
 
                 container.AddRange(refTypes);
                 container.AddRange(valueTypes);
 
                 return new[] {
-                    new TestCaseData(new SimpleObjectCollection(container.Cast<object>()), true)
+                    new TestCaseData(new SimpleObjectCollection(container), true)
                     {
                         ArgDisplayNames = new[] { "IEnumerable<dynamic>", "true" }
                     }
@@ -112,8 +112,8 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
-        [TestCaseSource(nameof(PerformanceData_FastPath))]
-        [TestCaseSource(nameof(PerformanceData_FastPath_MixedTypes))]
+        [TestCaseSource(nameof(PerformanceDataFastPath))]
+        [TestCaseSource(nameof(PerformanceDataFastPathMixedTypes))]
         public void PerformanceTests_FastPath(IEnumerable values, bool ignoreCase)
         {
             Warn.Unless(() =>
@@ -125,30 +125,30 @@ namespace NUnit.Framework.Tests.Constraints
             }, HelperConstraints.HasMaxTime(100));
         }
 
-        private static readonly IEnumerable<int> RANGE_SLOWPATH = Enumerable.Range(0, 750);
+        private static readonly IEnumerable<int> RangeSlowpath = Enumerable.Range(0, 750);
         private static readonly TestCaseData[] SlowpathData =
         {
-            new TestCaseData(RANGE_SLOWPATH.Select(o => o.ToString()).Cast<object>())
+            new(RangeSlowpath.Select(o => o.ToString()))
             {
                 ArgDisplayNames = new[] { "IEnumerable<string>" }
             },
-            new TestCaseData(RANGE_SLOWPATH.Select(o => new DateTimeOffset(o, TimeSpan.Zero)).Cast<object>())
+            new(RangeSlowpath.Select(o => new DateTimeOffset(o, TimeSpan.Zero)).Cast<object>())
             {
                 ArgDisplayNames = new[] { "IEnumerable<DateTimeOffset>" }
             },
-            new TestCaseData(RANGE_SLOWPATH.Select(o => (char)o).Cast<object>())
+            new(RangeSlowpath.Select(o => (char)o).Cast<object>())
             {
                 ArgDisplayNames = new[] { "IEnumerable<char>" }
             },
-            new TestCaseData(RANGE_SLOWPATH.Select(o => (double)o).Cast<object>())
+            new(RangeSlowpath.Select(o => (double)o).Cast<object>())
             {
                 ArgDisplayNames = new[] { "IEnumerable<double>" }
             },
-            new TestCaseData(RANGE_SLOWPATH.Select(o => new KeyValuePair<int, int>(o, o)).Cast<object>())
+            new(RangeSlowpath.Select(o => new KeyValuePair<int, int>(o, o)).Cast<object>())
             {
                 ArgDisplayNames = new[] { "IEnumerable<KeyValuePair<,>>" }
             },
-            new TestCaseData(RANGE_SLOWPATH.Select(o => new DictionaryEntry(o, o)).Cast<object>())
+            new(RangeSlowpath.Select(o => new DictionaryEntry(o, o)).Cast<object>())
             {
                 ArgDisplayNames = new[] { "IEnumerable<DictionaryEntry>" }
             }
@@ -157,8 +157,7 @@ namespace NUnit.Framework.Tests.Constraints
         [TestCaseSource(nameof(SlowpathData))]
         public void SlowPath_TakenWhenSpecialTypes(IEnumerable<object> testData)
         {
-            var allData = new List<object>();
-            allData.Add(new TestValueType() { A = 1 });
+            var allData = new List<object> { new TestValueType() { A = 1 } };
             allData.AddRange(testData);
 
             var items = new SimpleObjectCollection(allData);
@@ -203,7 +202,7 @@ namespace NUnit.Framework.Tests.Constraints
             var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result!.IsSuccess, Is.True);
         }
 
         private static TestCaseData[] RequiresDefaultComparer
@@ -253,8 +252,8 @@ namespace NUnit.Framework.Tests.Constraints
                         Arguments = new object[]
                         {
                             new SimpleObjectCollection(
-                                new TestReferenceType_OverridesEquals() { A = 1 },
-                                new TestReferenceType_OverridesEquals() { A = 1 }
+                                new TestReferenceTypeOverridesEquals() { A = 1 },
+                                new TestReferenceTypeOverridesEquals() { A = 1 }
                             ),
                             false
                         },
@@ -289,7 +288,7 @@ namespace NUnit.Framework.Tests.Constraints
             var result = constraint.ApplyTo(items) as UniqueItemsConstraintResult;
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsSuccess, Is.EqualTo(success));
+            Assert.That(result!.IsSuccess, Is.EqualTo(success));
         }
 
         private sealed class TestReferenceType
@@ -297,13 +296,13 @@ namespace NUnit.Framework.Tests.Constraints
             public int A { get; set; }
         }
 
-        private sealed class TestReferenceType_OverridesEquals
+        private sealed class TestReferenceTypeOverridesEquals
         {
             public int A { get; set; }
 
             public override bool Equals(object? obj)
             {
-                if (obj is TestReferenceType_OverridesEquals other)
+                if (obj is TestReferenceTypeOverridesEquals other)
                     return other.A == A;
                 return false;
             }

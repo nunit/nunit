@@ -23,7 +23,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = false)]
     public class TestCaseSourceAttribute : NUnitAttribute, ITestBuilder, IImplyFixture
     {
-        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new();
 
         #region Constructors
 
@@ -141,7 +141,7 @@ namespace NUnit.Framework
 
         private IEnumerable<ITestCaseData> GetTestCasesFor(IMethodInfo method)
         {
-            List<ITestCaseData> data = new List<ITestCaseData>();
+            List<ITestCaseData> data = new();
 
             try
             {

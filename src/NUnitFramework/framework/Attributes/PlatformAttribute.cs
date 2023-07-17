@@ -12,7 +12,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
     public class PlatformAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private readonly PlatformHelper _platformHelper = new PlatformHelper();
+        private readonly PlatformHelper _platformHelper = new();
 
         /// <summary>
         /// Constructor with no platforms specified, for use

@@ -77,12 +77,12 @@ namespace NUnit.Framework.Interfaces
         /// <summary>
         /// Gets the dictionary of attributes
         /// </summary>
-        public AttributeDictionary Attributes => new AttributeDictionary(this);
+        public AttributeDictionary Attributes => new(this);
 
         /// <summary>
         /// Gets a list of child nodes
         /// </summary>
-        public NodeList ChildNodes => new NodeList(this);
+        public NodeList ChildNodes => new(this);
 
         /// <summary>
         /// Gets the first ChildNode
@@ -361,7 +361,7 @@ namespace NUnit.Framework.Interfaces
                 tail = xpath.Substring(slash + 1);
             }
 
-            List<TNode> resultNodes = new List<TNode>();
+            List<TNode> resultNodes = new();
             NodeFilter filter = new NodeFilter(head);
 
             var nodeListCount = nodeList.Count;

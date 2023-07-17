@@ -59,7 +59,7 @@ namespace NUnit.Framework
         /// <param name="expr">A Constraint expression to be applied</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
         {
-            Assume.That(del, expr.Resolve(), null, null);
+            That(del, expr.Resolve(), string.Empty);
         }
 
         /// <summary>
@@ -70,8 +70,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message, params object?[]? args)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
         {
             CheckMultipleAssertLevel();
 
@@ -79,12 +78,12 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                ReportFailure(result, message, args);
+                ReportFailure(result, message);
         }
 
-        private static void ReportFailure(ConstraintResult result, string? message, object?[]? args)
+        private static void ReportFailure(ConstraintResult result, string? message)
         {
-            MessageWriter writer = new TextMessageWriter(message, args);
+            MessageWriter writer = new TextMessageWriter(message);
             result.WriteMessageTo(writer);
             throw new InconclusiveException(writer.ToString());
         }
@@ -123,10 +122,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That([DoesNotReturnIf(false)] bool condition, string? message, params object?[]? args)
+        public static void That([DoesNotReturnIf(false)] bool condition, string? message)
         {
-            Assume.That(condition, Is.True, message, args);
+            That(condition, Is.True, message);
         }
 
         /// <summary>
@@ -136,7 +134,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         public static void That([DoesNotReturnIf(false)] bool condition)
         {
-            Assume.That(condition, Is.True, null, null);
+            That(condition, Is.True);
         }
 
         /// <summary>
@@ -147,7 +145,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That([DoesNotReturnIf(false)] bool condition, Func<string?> getExceptionMessage)
         {
-            Assume.That(condition, Is.True, getExceptionMessage);
+            That(condition, Is.True, getExceptionMessage);
         }
 
         #endregion
@@ -160,10 +158,9 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That(Func<bool> condition, string? message, params object?[]? args)
+        public static void That(Func<bool> condition, string? message)
         {
-            Assume.That(condition.Invoke(), Is.True, message, args);
+            That(condition.Invoke(), Is.True, message);
         }
 
         /// <summary>
@@ -173,7 +170,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         public static void That(Func<bool> condition)
         {
-            Assume.That(condition.Invoke(), Is.True, null, null);
+            That(condition.Invoke(), Is.True);
         }
 
         /// <summary>
@@ -184,7 +181,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(Func<bool> condition, Func<string?> getExceptionMessage)
         {
-            Assume.That(condition.Invoke(), Is.True, getExceptionMessage);
+            That(condition.Invoke(), Is.True, getExceptionMessage);
         }
 
         #endregion
@@ -199,7 +196,7 @@ namespace NUnit.Framework
         /// <param name="constraint">A ThrowsConstraint used in the test</param>
         public static void That(TestDelegate code, IResolveConstraint constraint)
         {
-            Assume.That((object)code, constraint);
+            That((object)code, constraint);
         }
 
         #endregion
@@ -217,7 +214,7 @@ namespace NUnit.Framework
         /// <param name="expression">A Constraint expression to be applied</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression)
         {
-            Assume.That(actual, expression, null, null);
+            That(actual, expression, string.Empty);
         }
 
         /// <summary>
@@ -228,8 +225,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, string? message, params object?[]? args)
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, string? message)
         {
             CheckMultipleAssertLevel();
 
@@ -238,7 +234,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
             {
-                MessageWriter writer = new TextMessageWriter(message, args);
+                MessageWriter writer = new TextMessageWriter(message);
                 result.WriteMessageTo(writer);
                 throw new InconclusiveException(writer.ToString());
             }

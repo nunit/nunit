@@ -52,7 +52,7 @@ namespace NUnitLite
             AssemblyName assemblyName = AssemblyHelper.GetAssemblyName(executingAssembly);
             Version version = assemblyName.Version;
             string copyright = "Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt";
-            string build = "";
+            string build = string.Empty;
 
             var copyrightAttr = executingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>();
             if (copyrightAttr is not null)

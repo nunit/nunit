@@ -65,7 +65,7 @@ namespace NUnit.Framework.Internal.Execution
             _topLevelWorkItem.Execute();
         }
 
-        private readonly object _cancelLock = new object();
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Cancel (abort or stop) the ongoing run.

@@ -21,18 +21,15 @@ namespace NUnit.Framework.Tests.Api
     [NonParallelizable]
     public class TestAssemblyRunnerTests : ITestListener
     {
-        private const string MOCK_ASSEMBLY_FILE = "mock-assembly.dll";
-        private const string COULD_NOT_LOAD_MSG = "Could not load";
-        private const string BAD_FILE = "mock-assembly.pdb";
-        private const string SLOW_TESTS_FILE = "slow-nunit-tests.dll";
-        private const string MISSING_FILE = "junk.dll";
+        private const string MockAssemblyFile = "mock-assembly.dll";
+        private const string CouldNotLoadMsg = "Could not load";
+        private const string BadFile = "mock-assembly.pdb";
+        private const string SlowTestsFile = "slow-nunit-tests.dll";
+        private const string MissingFile = "junk.dll";
 
-        // Arbitrary delay for cancellation based on the time to run each case in SlowTests
-        private const int CANCEL_TEST_DELAY = SlowTests.SINGLE_TEST_DELAY * 2;
+        private const string InvalidFilterElementMessage = "Invalid filter element: {0}";
 
-        private const string INVALID_FILTER_ELEMENT_MESSAGE = "Invalid filter element: {0}";
-
-        private static readonly IDictionary<string, object> EMPTY_SETTINGS = new Dictionary<string, object>();
+        private static readonly IDictionary<string, object> EmptySettings = new Dictionary<string, object>();
 
         private ITestAssemblyRunner _runner;
 
@@ -77,7 +74,7 @@ namespace NUnit.Framework.Tests.Api
             {
                 Assert.That(result.IsSuite);
                 Assert.That(result, Is.TypeOf<TestAssembly>());
-                Assert.That(result.Name, Is.EqualTo(MOCK_ASSEMBLY_FILE));
+                Assert.That(result.Name, Is.EqualTo(MockAssemblyFile));
                 Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.Runnable));
                 Assert.That(result.TestCaseCount, Is.EqualTo(MockAssembly.Tests));
             });
@@ -86,34 +83,34 @@ namespace NUnit.Framework.Tests.Api
         [Test, SetUICulture("en-US")]
         public void Load_FileNotFound_ReturnsNonRunnableSuite()
         {
-            var result = _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
+            var result = _runner.Load(MissingFile, EmptySettings);
 
             Assert.Multiple(() =>
             {
                 Assert.That(result.IsSuite);
                 Assert.That(result, Is.TypeOf<TestAssembly>());
-                Assert.That(result.Name, Is.EqualTo(MISSING_FILE));
+                Assert.That(result.Name, Is.EqualTo(MissingFile));
                 Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.NotRunnable));
                 Assert.That(result.TestCaseCount, Is.EqualTo(0));
                 Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                    Does.StartWith(COULD_NOT_LOAD_MSG));
+                    Does.StartWith(CouldNotLoadMsg));
             });
         }
 
         [Test, SetUICulture("en-US")]
         public void Load_BadFile_ReturnsNonRunnableSuite()
         {
-            var result = _runner.Load(BAD_FILE, EMPTY_SETTINGS);
+            var result = _runner.Load(BadFile, EmptySettings);
 
             Assert.Multiple(() =>
             {
                 Assert.That(result.IsSuite);
                 Assert.That(result, Is.TypeOf<TestAssembly>());
-                Assert.That(result.Name, Is.EqualTo(BAD_FILE));
+                Assert.That(result.Name, Is.EqualTo(BadFile));
                 Assert.That(result.RunState, Is.EqualTo(Framework.Interfaces.RunState.NotRunnable));
                 Assert.That(result.TestCaseCount, Is.EqualTo(0));
                 Assert.That(result.Properties.Get(PropertyNames.SkipReason),
-                    Does.StartWith(COULD_NOT_LOAD_MSG).And.Contains(BAD_FILE));
+                    Does.StartWith(CouldNotLoadMsg).And.Contains(BadFile));
             });
         }
 
@@ -172,14 +169,14 @@ namespace NUnit.Framework.Tests.Api
         [Test]
         public void CountTestCases_FileNotFound_ReturnsZero()
         {
-            _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
+            _runner.Load(MissingFile, EmptySettings);
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
         [Test]
         public void CountTestCases_BadFile_ReturnsZero()
         {
-            _runner.Load(BAD_FILE, EMPTY_SETTINGS);
+            _runner.Load(BadFile, EmptySettings);
             Assert.That(_runner.CountTestCases(TestFilter.Empty), Is.EqualTo(0));
         }
 
@@ -197,7 +194,7 @@ namespace NUnit.Framework.Tests.Api
         [Test]
         public void ExploreTests_FileNotFound_ReturnsZeroTests()
         {
-            _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
+            _runner.Load(MissingFile, EmptySettings);
             var explorer = _runner.ExploreTests(TestFilter.Empty);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(0));
         }
@@ -205,7 +202,7 @@ namespace NUnit.Framework.Tests.Api
         [Test]
         public void ExploreTests_BadFile_ReturnsZeroTests()
         {
-            _runner.Load(BAD_FILE, EMPTY_SETTINGS);
+            _runner.Load(BadFile, EmptySettings);
             var explorer = _runner.ExploreTests(TestFilter.Empty);
             Assert.That(explorer.TestCaseCount, Is.EqualTo(0));
         }
@@ -238,7 +235,7 @@ namespace NUnit.Framework.Tests.Api
 
         private void CheckForDuplicates(ITest test, Dictionary<string, bool> dict)
         {
-            Assert.That(dict.ContainsKey(test.Id), Is.False, "Duplicate key: {0}", test.Id);
+            Assert.That(dict.ContainsKey(test.Id), Is.False, $"Duplicate key: {test.Id}");
             dict.Add(test.Id, true);
 
             foreach (var child in test.Tests)
@@ -343,7 +340,7 @@ namespace NUnit.Framework.Tests.Api
         [Test, SetUICulture("en-US")]
         public void Run_FileNotFound_ReturnsNonRunnableSuite()
         {
-            _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
+            _runner.Load(MissingFile, EmptySettings);
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
 
             Assert.Multiple(() =>
@@ -353,7 +350,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
                 Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-                Assert.That(result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+                Assert.That(result.Message, Does.StartWith(CouldNotLoadMsg));
             });
         }
 
@@ -365,18 +362,19 @@ namespace NUnit.Framework.Tests.Api
             var ex = Assert.Throws<ArgumentException>(() =>
                 TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>"));
 
-            Assert.That(ex.Message, Does.StartWith(string.Format(INVALID_FILTER_ELEMENT_MESSAGE, "invalidElement")));
+            Assert.That(ex.Message, Does.StartWith(string.Format(InvalidFilterElementMessage, "invalidElement")));
         }
 
         [Test]
         public void Run_WithParameters()
         {
-            var dict = new Dictionary<string, string>();
-            dict.Add("X", "5");
-            dict.Add("Y", "7");
+            var dict = new Dictionary<string, string>
+            {
+                { "X", "5" },
+                { "Y", "7" }
+            };
 
-            var settings = new Dictionary<string, object>();
-            settings.Add("TestParametersDictionary", dict);
+            var settings = new Dictionary<string, object> { { "TestParametersDictionary", dict } };
             LoadMockAssembly(settings);
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
             CheckParameterOutput(result);
@@ -385,8 +383,7 @@ namespace NUnit.Framework.Tests.Api
         [Test]
         public void Run_WithLegacyParameters()
         {
-            var settings = new Dictionary<string, object>();
-            settings.Add("TestParameters", "X=5;Y=7");
+            var settings = new Dictionary<string, object> { { "TestParameters", "X=5;Y=7" } };
             LoadMockAssembly(settings);
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
             CheckParameterOutput(result);
@@ -395,7 +392,7 @@ namespace NUnit.Framework.Tests.Api
         [Test, SetUICulture("en-US")]
         public void Run_BadFile_ReturnsNonRunnableSuite()
         {
-            _runner.Load(BAD_FILE, EMPTY_SETTINGS);
+            _runner.Load(BadFile, EmptySettings);
             var result = _runner.Run(TestListener.NULL, TestFilter.Empty);
 
             Assert.Multiple(() =>
@@ -405,7 +402,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
                 Assert.That(result.Test.TestCaseCount, Is.EqualTo(0));
                 Assert.That(result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-                Assert.That(result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+                Assert.That(result.Message, Does.StartWith(CouldNotLoadMsg));
             });
         }
 
@@ -465,7 +462,7 @@ namespace NUnit.Framework.Tests.Api
         [Test, SetUICulture("en-US")]
         public void RunAsync_FileNotFound_ReturnsNonRunnableSuite()
         {
-            _runner.Load(MISSING_FILE, EMPTY_SETTINGS);
+            _runner.Load(MissingFile, EmptySettings);
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
@@ -477,14 +474,14 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
                 Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-                Assert.That(_runner.Result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+                Assert.That(_runner.Result.Message, Does.StartWith(CouldNotLoadMsg));
             });
         }
 
         [Test, SetUICulture("en-US")]
         public void RunAsync_BadFile_ReturnsNonRunnableSuite()
         {
-            _runner.Load(BAD_FILE, EMPTY_SETTINGS);
+            _runner.Load(BadFile, EmptySettings);
             _runner.RunAsync(TestListener.NULL, TestFilter.Empty);
             _runner.WaitForCompletion(Timeout.Infinite);
 
@@ -496,7 +493,7 @@ namespace NUnit.Framework.Tests.Api
                 Assert.That(_runner.Result.Test.RunState, Is.EqualTo(RunState.NotRunnable));
                 Assert.That(_runner.Result.Test.TestCaseCount, Is.EqualTo(0));
                 Assert.That(_runner.Result.ResultState, Is.EqualTo(ResultState.NotRunnable.WithSite(FailureSite.SetUp)));
-                Assert.That(_runner.Result.Message, Does.StartWith(COULD_NOT_LOAD_MSG));
+                Assert.That(_runner.Result.Message, Does.StartWith(CouldNotLoadMsg));
             });
         }
 
@@ -505,6 +502,10 @@ namespace NUnit.Framework.Tests.Api
         #region StopRun
 
 #if THREAD_ABORT // Can't stop run on platforms without ability to abort thread
+
+        // Arbitrary delay for cancellation based on the time to run each case in SlowTests
+        private const int CancelTestDelay = SlowTests.SINGLE_TEST_DELAY * 2;
+
         [Test]
         public void StopRun_WhenNoTestIsRunning_DoesNotThrow([Values] bool force)
         {
@@ -529,11 +530,11 @@ namespace NUnit.Framework.Tests.Api
             _runner.RunAsync(this, TestFilter.Empty);
 
             // Ensure that at least one test started, otherwise we aren't testing anything!
-            SpinWait.SpinUntil(() => _testStartedCount > 0, CANCEL_TEST_DELAY);
+            SpinWait.SpinUntil(() => _testStartedCount > 0, CancelTestDelay);
 
             _runner.StopRun(force);
 
-            var completionWasSignaled = _runner.WaitForCompletion(CANCEL_TEST_DELAY);
+            var completionWasSignaled = _runner.WaitForCompletion(CancelTestDelay);
 
             // Use Assert.Multiple so we can see everything that went wrong at one time
             Assert.Multiple(() =>
@@ -631,22 +632,21 @@ namespace NUnit.Framework.Tests.Api
 
         private ITest LoadMockAssembly()
         {
-            return LoadMockAssembly(EMPTY_SETTINGS);
+            return LoadMockAssembly(EmptySettings);
         }
 
         private ITest LoadMockAssembly(IDictionary<string, object> settings)
         {
             return _runner.Load(
-                Path.Combine(TestContext.CurrentContext.TestDirectory, MOCK_ASSEMBLY_FILE),
+                Path.Combine(TestContext.CurrentContext.TestDirectory, MockAssemblyFile),
                 settings);
         }
 
         private ITest LoadSlowTests(int workers)
         {
-            var settings = new Dictionary<string, object>();
-            settings.Add(FrameworkPackageSettings.NumberOfTestWorkers, workers);
+            var settings = new Dictionary<string, object> { { FrameworkPackageSettings.NumberOfTestWorkers, workers } };
 
-            return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SLOW_TESTS_FILE), settings);
+            return _runner.Load(Path.Combine(TestContext.CurrentContext.TestDirectory, SlowTestsFile), settings);
         }
 
         private void CheckParameterOutput(ITestResult result)
@@ -655,7 +655,7 @@ namespace NUnit.Framework.Tests.Api
                 "DisplayRunParameters", result, true);
 
             Assert.That(childResult, Is.Not.Null);
-            Assert.That(childResult.Output, Is.EqualTo(
+            Assert.That(childResult!.Output, Is.EqualTo(
                 "Parameter X = 5" + Environment.NewLine +
                 "Parameter Y = 7" + Environment.NewLine));
         }

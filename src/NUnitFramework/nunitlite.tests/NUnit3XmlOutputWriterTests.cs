@@ -97,14 +97,14 @@ namespace NUnitLite.Tests
         public void TestResults_HasValidStartTimeAttribute()
         {
             string startTimeString = RequiredAttribute(_topNode, "start-time");
-            Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid start time attribute: {0}. Expecting DateTime in 'o' format.", startTimeString);
+            Assert.That(DateTime.TryParseExact(startTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), $"Invalid start time attribute: {startTimeString}. Expecting DateTime in 'o' format.");
         }
 
         [Test]
         public void TestResults_HasValidEndTimeAttribute()
         {
             string endTimeString = RequiredAttribute(_topNode, "end-time");
-            Assert.That(DateTime.TryParseExact(endTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), "Invalid end time attribute: {0}. Expecting DateTime in 'o' format.", endTimeString);
+            Assert.That(DateTime.TryParseExact(endTimeString, "o", CultureInfo.InvariantCulture, DateTimeStyles.None, out _), $"Invalid end time attribute: {endTimeString}. Expecting DateTime in 'o' format.");
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace NUnitLite.Tests
                 // Do nothing - culture will be null
             }
 
-            Assert.That(culture, Is.Not.Null, "Invalid value for {0}: {1}", name, cultureName);
+            Assert.That(culture, Is.Not.Null, $"Invalid value for {name}: {cultureName}");
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace NUnitLite.Tests
             var startTimeString = RequiredAttribute(_suiteNode, "start-time");
 
             var success = DateTime.TryParse(startTimeString, out _);
-            Assert.That(success, "{0} is an invalid value for start time", startTimeString);
+            Assert.That(success, $"{startTimeString} is an invalid value for start time");
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace NUnitLite.Tests
             var endTimeString = RequiredAttribute(_suiteNode, "end-time");
 
             var success = DateTime.TryParse(endTimeString, out _);
-            Assert.That(success, "{0} is an invalid value for end time", endTimeString);
+            Assert.That(success, $"{endTimeString} is an invalid value for end time");
         }
 
         [Test]
@@ -201,15 +201,17 @@ namespace NUnitLite.Tests
             {
                 string startTimeStr = RequiredAttribute(testCase, "start-time");
                 string endTimeStr = RequiredAttribute(testCase, "end-time");
+                Assert.Multiple(() =>
+                {
+                    Assert.That(startTimeStr, Does.EndWith("Z"), "Ignored start-time is not UTC");
+                    Assert.That(endTimeStr, Does.EndWith("Z"), "Ignored end-time is not UTC");
 
-                Assert.That(startTimeStr, Does.EndWith("Z"), "Ignored start-time is not UTC");
-                Assert.That(endTimeStr, Does.EndWith("Z"), "Ignored end-time is not UTC");
+                    Assert.That(DateTime.TryParse(startTimeStr, out var startTime));
+                    Assert.That(DateTime.TryParse(endTimeStr, out var endTime));
 
-                Assert.That(DateTime.TryParse(startTimeStr, out var startTime));
-                Assert.That(DateTime.TryParse(endTimeStr, out var endTime));
-
-                Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
-                Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the end time of test suite");
+                    Assert.That(startTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the start time of test suite");
+                    Assert.That(endTime, Is.InRange(testRunStartTime, testRunEndTime), "Ignored test cases should be set to approximately the end time of test suite");
+                });
             }
         }
 
@@ -241,8 +243,8 @@ namespace NUnitLite.Tests
 
         private string RequiredAttribute(XmlNode node, string name)
         {
-            XmlAttribute attr = node.Attributes[name];
-            Assert.That(attr, Is.Not.Null, "Missing attribute {0} on element {1}", name, node.Name);
+            XmlAttribute attr = node.Attributes?[name];
+            Assert.That(attr, Is.Not.Null, $"Missing attribute {name} on element {node.Name}");
 
             return attr.Value;
         }

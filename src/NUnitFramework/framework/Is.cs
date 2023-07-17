@@ -39,7 +39,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for null
         /// </summary>
-        public static NullConstraint Null => new NullConstraint();
+        public static NullConstraint Null => new();
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for default value
         /// </summary>
-        public static DefaultConstraint Default => new DefaultConstraint();
+        public static DefaultConstraint Default => new();
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for True
         /// </summary>
-        public static TrueConstraint True => new TrueConstraint();
+        public static TrueConstraint True => new();
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for False
         /// </summary>
-        public static FalseConstraint False => new FalseConstraint();
+        public static FalseConstraint False => new();
 
         #endregion
 
@@ -75,7 +75,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for a positive value
         /// </summary>
-        public static GreaterThanConstraint Positive => new GreaterThanConstraint(0);
+        public static GreaterThanConstraint Positive => new(0);
 
         #endregion
 
@@ -84,7 +84,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for a negative value
         /// </summary>
-        public static LessThanConstraint Negative => new LessThanConstraint(0);
+        public static LessThanConstraint Negative => new(0);
 
         #endregion
 
@@ -93,7 +93,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for equality with zero
         /// </summary>
-        public static EqualConstraint Zero => new EqualConstraint(0);
+        public static EqualConstraint Zero => new(0);
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for NaN
         /// </summary>
-        public static NaNConstraint NaN => new NaNConstraint();
+        public static NaNConstraint NaN => new();
 
         #endregion
 
@@ -111,7 +111,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests for empty
         /// </summary>
-        public static EmptyConstraint Empty => new EmptyConstraint();
+        public static EmptyConstraint Empty => new();
 
         #endregion
 
@@ -121,19 +121,19 @@ namespace NUnit.Framework
         /// Returns a constraint that tests whether a collection
         /// contains all unique items.
         /// </summary>
-        public static UniqueItemsConstraint Unique => new UniqueItemsConstraint();
+        public static UniqueItemsConstraint Unique => new();
 
         #endregion
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in binary format.
         /// </summary>
-        public static BinarySerializableConstraint BinarySerializable => new BinarySerializableConstraint();
+        public static BinarySerializableConstraint BinarySerializable => new();
 
         /// <summary>
         /// Returns a constraint that tests whether an object graph is serializable in XML format.
         /// </summary>
-        public static XmlSerializableConstraint XmlSerializable => new XmlSerializableConstraint();
+        public static XmlSerializableConstraint XmlSerializable => new();
 
         #region EqualTo
 
@@ -362,7 +362,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Returns a constraint that tests whether a collection is ordered
         /// </summary>
-        public static CollectionOrderedConstraint Ordered => new CollectionOrderedConstraint();
+        public static CollectionOrderedConstraint Ordered => new();
 
         #endregion
 

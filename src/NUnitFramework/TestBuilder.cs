@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests.TestUtilities
         public static TestMethod MakeTestCase(Type type, string methodName)
         {
             var test = MakeTestFromMethod(type, methodName) as TestMethod;
-            Assert.That(test, Is.Not.Null, "Unable to create TestMethod from {0}", methodName);
+            Assert.That(test, Is.Not.Null, $"Unable to create TestMethod from {methodName}");
 
             return test;
         }

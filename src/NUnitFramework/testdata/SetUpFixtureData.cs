@@ -75,10 +75,7 @@ namespace NUnit.Framework.Tests.TestUtilities
                 {
                     if (eventMatcher is null)
                     {
-                        Assert.Fail(
-                            "More events than expected were recorded. Current event: {0} (Item {1})",
-                            actualEvent,
-                            item);
+                        Assert.Fail($"More events than expected were recorded. Current event: {actualEvent} (Item {item})");
                     }
 
                     if (!eventMatcher.MatchEvent(actualEvent, item++))
@@ -93,7 +90,7 @@ namespace NUnit.Framework.Tests.TestUtilities
         // Currently, only one fixture uses it, if more use it, they should not be run in parallel.
         // TODO: Create a utility that can be used by multiple fixtures
 
-        private static readonly Queue<string> Events = new Queue<string>();
+        private static readonly Queue<string> Events = new();
 
         /// <summary>
         /// Registers an event.
