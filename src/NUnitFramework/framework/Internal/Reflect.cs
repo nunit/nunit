@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 
 namespace NUnit.Framework.Internal
 {
@@ -182,7 +181,9 @@ namespace NUnit.Framework.Internal
         /// <param name="fixture">The object on which to invoke the method</param>
         /// <param name="args">The argument list for the method</param>
         /// <returns>The return value from the invoked method</returns>
-        [HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
+#if NETFRAMEWORK
+        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions] //put here to handle C++ exceptions.
+#endif
         public static object? InvokeMethod(MethodInfo method, object? fixture, params object?[]? args)
         {
             try

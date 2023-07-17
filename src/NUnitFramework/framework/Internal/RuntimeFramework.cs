@@ -78,7 +78,7 @@ namespace NUnit.Framework.Internal
                 major = 0;
                 minor = 0;
             }
-            else /* It's windows */
+            else /* It's .net framework */
 #if NETSTANDARD2_0
             {
                 minor = 5;

@@ -329,11 +329,7 @@ namespace NUnit.Framework.Api
 
             env.AddAttribute("framework-version", typeof(FrameworkController).Assembly.GetName().Version?.ToString() ?? "Unknown");
             env.AddAttribute("clr-version", Environment.Version.ToString());
-#if NETSTANDARD2_0
-            env.AddAttribute("os-version", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-#else
-            env.AddAttribute("os-version", OSPlatform.CurrentPlatform.ToString());
-#endif
+            env.AddAttribute("os-version", OSPlatform.OSDescription);
             env.AddAttribute("platform", Environment.OSVersion.Platform.ToString());
             env.AddAttribute("cwd", Directory.GetCurrentDirectory());
             env.AddAttribute("machine-name", Environment.MachineName);
