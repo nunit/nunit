@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Assertions
                 () => Assert.Pass("MESSAGE"),
                 Throws.TypeOf<SuccessException>().With.Message.EqualTo("MESSAGE"));
         }
-        
+
         [Test]
         public void AssertPassReturnsSuccess()
         {
