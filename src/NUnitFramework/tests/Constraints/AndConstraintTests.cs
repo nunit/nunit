@@ -9,7 +9,7 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class AndConstraintTests : ConstraintTestBase
     {
-        private TextMessageWriter _messageWriter;
+        private TextMessageWriter? _messageWriter;
 
         protected override Constraint TheConstraint { get; } = new AndConstraint(new GreaterThanConstraint(40), new LessThanConstraint(50));
 

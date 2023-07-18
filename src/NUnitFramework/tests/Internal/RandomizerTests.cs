@@ -9,7 +9,7 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class RandomizerTests
     {
-        private Randomizer _randomizer;
+        private Randomizer? _randomizer;
 
         [SetUp]
         public void CreateRandomizer()

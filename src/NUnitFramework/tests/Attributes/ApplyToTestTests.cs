@@ -10,7 +10,7 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     public class ApplyToTestTests
     {
-        private NUnit.Framework.Internal.Test _test;
+        private NUnit.Framework.Internal.Test? _test;
 
         [SetUp]
         public void SetUp()

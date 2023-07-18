@@ -12,8 +12,8 @@ namespace NUnit.Framework.Tests.Constraints
     {
         private readonly List<string> _expected = new List<string> { "one", "two" };
 
-        private CollectionEquivalentConstraint _constraint;
-        private TextMessageWriter _writer;
+        private CollectionEquivalentConstraint? _constraint;
+        private TextMessageWriter? _writer;
 
         [SetUp]
         public void TestSetup()

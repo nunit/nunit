@@ -14,8 +14,8 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class NUnitEqualityComparerTests
     {
-        private Tolerance _tolerance;
-        private NUnitEqualityComparer _comparer;
+        private Tolerance? _tolerance;
+        private NUnitEqualityComparer? _comparer;
 
         [SetUp]
         public void Setup()

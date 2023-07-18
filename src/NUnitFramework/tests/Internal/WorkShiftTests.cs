@@ -8,7 +8,7 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class WorkShiftTests
     {
-        private WorkShift _shift;
+        private WorkShift? _shift;
 
         [SetUp]
         public void CreateShift()

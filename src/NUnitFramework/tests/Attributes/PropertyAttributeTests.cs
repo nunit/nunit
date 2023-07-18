@@ -1,15 +1,15 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Internal;
-using NUnit.TestData.PropertyAttributeTests;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.PropertyAttributeTests;
 
 namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public class PropertyAttributeTests
     {
-        private TestSuite _fixture;
+        private TestSuite? _fixture;
 
         [SetUp]
         public void CreateFixture()

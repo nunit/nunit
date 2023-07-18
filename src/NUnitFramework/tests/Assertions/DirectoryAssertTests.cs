@@ -10,8 +10,8 @@ namespace NUnit.Framework.Tests.Assertions
     [TestFixture]
     public class DirectoryAssertTests
     {
-        private TestDirectory _goodDir1;
-        private TestDirectory _goodDir2;
+        private TestDirectory? _goodDir1;
+        private TestDirectory? _goodDir2;
         private const string BAD_DIRECTORY = @"\I\hope\this\is\garbage";
 
         [SetUp]

@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class WorkItemQueueTests
     {
-        private WorkItemQueue _queue;
+        private WorkItemQueue? _queue;
 
         [SetUp]
         public void CreateQueue()

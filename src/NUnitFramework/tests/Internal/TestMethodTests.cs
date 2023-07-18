@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture]
     internal class TestMethodTests
     {
-        private DefaultTestCaseBuilder _builder;
+        private DefaultTestCaseBuilder? _builder;
 
         [SetUp]
         public void Setup()

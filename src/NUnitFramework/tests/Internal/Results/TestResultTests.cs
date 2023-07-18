@@ -12,11 +12,11 @@ namespace NUnit.Framework.Tests.Internal.Results
     public abstract class TestResultTests
     {
         protected const string NonWhitespaceIgnoreReason = "because";
-        protected TestMethod Test;
-        protected TestResult TestResult;
+        protected TestMethod? Test;
+        protected TestResult? TestResult;
 
-        protected TestSuite Suite;
-        protected TestSuiteResult SuiteResult;
+        protected TestSuite? Suite;
+        protected TestSuiteResult? SuiteResult;
 
         [SetUp]
         public void SetUp()

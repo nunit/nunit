@@ -10,9 +10,9 @@ namespace NUnit.Framework.Tests.Internal
     [TestFixture]
     public class TestXmlTests
     {
-        private TestSuite _testSuite;
-        private TestFixture _testFixture;
-        private TestMethod _testMethod;
+        private TestSuite? _testSuite;
+        private TestFixture? _testFixture;
+        private TestMethod? _testMethod;
 
         [SetUp]
         public void SetUp()

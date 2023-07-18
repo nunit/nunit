@@ -7,22 +7,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.TestContextData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.TestContextData;
 
 namespace NUnit.Framework.Tests
 {
     [TestFixture]
     public class TestContextTests
     {
-        private TestContext _setupContext;
+        private TestContext? _setupContext;
 
         private readonly string _name = TestContext.CurrentContext.Test.Name;
 
         private readonly string _testDirectory = TestContext.CurrentContext.TestDirectory;
         private readonly string _workDirectory = TestContext.CurrentContext.WorkDirectory;
 
-        private string _tempFilePath;
+        private string? _tempFilePath;
 
         private const string TempFileName = "TestContextTests.tmp";
 

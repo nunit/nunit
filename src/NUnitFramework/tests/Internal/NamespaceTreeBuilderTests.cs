@@ -10,8 +10,8 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class NamespaceTreeBuilderTests
     {
-        private TestAssembly _testAssembly;
-        private NamespaceTreeBuilder _builder;
+        private TestAssembly? _testAssembly;
+        private NamespaceTreeBuilder? _builder;
         private const string NameofDll = "mytest.dll";
 
         [SetUp]

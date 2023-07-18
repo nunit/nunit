@@ -12,8 +12,8 @@ namespace NUnit.Framework.Tests
 {
     public class WorkItemTests
     {
-        private WorkItem _workItem;
-        private TestExecutionContext _context;
+        private WorkItem? _workItem;
+        private TestExecutionContext? _context;
 
         [SetUp]
         public void CreateWorkItems()

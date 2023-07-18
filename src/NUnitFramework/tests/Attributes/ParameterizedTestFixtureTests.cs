@@ -86,7 +86,7 @@ namespace NUnit.Framework.Tests.Attributes
 
     public class ParameterizedTestFixtureNamingTests
     {
-        private TestSuite _fixture;
+        private TestSuite? _fixture;
 
         [SetUp]
         public void MakeFixture()

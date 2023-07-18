@@ -3,8 +3,8 @@
 using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.UnexpectedExceptionFixture;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.UnexpectedExceptionFixture;
 
 namespace NUnit.Framework.Tests.Internal
 {

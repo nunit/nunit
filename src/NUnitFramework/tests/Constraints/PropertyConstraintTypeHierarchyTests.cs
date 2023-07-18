@@ -31,9 +31,9 @@ namespace NUnit.Framework.Tests.Constraints
             public int SomeProperty { get; set; } = 42;
         }
 
-        private int[] _array;
-        private PropertyConstraint _countPropertyConstraint;
-        private PropertyExistsConstraint _countPropertyExistsConstraint;
+        private int[]? _array;
+        private PropertyConstraint? _countPropertyConstraint;
+        private PropertyExistsConstraint? _countPropertyExistsConstraint;
 
         [SetUp]
         public void BeforeEveryTest()

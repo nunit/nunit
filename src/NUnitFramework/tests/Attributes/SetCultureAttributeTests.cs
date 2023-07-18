@@ -8,8 +8,8 @@ namespace NUnit.Framework.Tests.Attributes
     [TestFixture]
     public class SetCultureAttributeTests
     {
-        private CultureInfo _originalCulture;
-        private CultureInfo _originalUICulture;
+        private CultureInfo? _originalCulture;
+        private CultureInfo? _originalUICulture;
 
         [SetUp]
         public void Setup()

@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Framework.Internal;
 using System;
 using System.Collections;
 using System.Text;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Constraints
 {

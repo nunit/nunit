@@ -10,8 +10,8 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class PropertyBagAdapterTests
     {
-        private IPropertyBag _source;
-        private PropertyBagAdapter _adapter;
+        private IPropertyBag? _source;
+        private PropertyBagAdapter? _adapter;
 
         [SetUp]
         public void SetUp()

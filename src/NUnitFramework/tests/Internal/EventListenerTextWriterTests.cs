@@ -16,10 +16,10 @@ namespace NUnit.Framework.Tests.Internal
         private static readonly string NL = Environment.NewLine;
 
 #pragma warning disable IDE1006 // Naming Styles
-        private TestListenerIntercepter ListenerResult;
+        private TestListenerIntercepter? ListenerResult;
 #pragma warning restore IDE1006 // Naming Styles
 #pragma warning disable IDE1006 // Naming Styles
-        private TextWriter ListenerWriter;
+        private TextWriter? ListenerWriter;
 #pragma warning restore IDE1006 // Naming Styles
 
         [SetUp]

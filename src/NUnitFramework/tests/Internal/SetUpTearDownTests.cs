@@ -4,8 +4,8 @@ using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestData.SetUpData;
 using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.SetUpData;
 
 namespace NUnit.Framework.Tests.Internal
 {

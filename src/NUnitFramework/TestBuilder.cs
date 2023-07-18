@@ -3,12 +3,67 @@
 using System;
 using System.Reflection;
 using System.Threading;
+
+/* Unmerged change from project 'nunit.framework.tests(netcoreapp3.1)'
+Before:
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+
+/* Unmerged change from project 'nunit.framework.tests(net6.0)'
+Before:
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+
+/* Unmerged change from project 'nunit.framework.tests(net7.0)'
+Before:
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+
+/* Unmerged change from project 'nunitlite.tests(net462)'
+Before:
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+
+/* Unmerged change from project 'nunitlite.tests(netcoreapp3.1)'
+Before:
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+
+/* Unmerged change from project 'nunitlite.tests(net6.0)'
+Before:
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+
+/* Unmerged change from project 'nunitlite.tests(net7.0)'
+Before:
+using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+After:
+using NUnit.Framework.Interfaces;
+*/
+using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Abstractions;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Execution;
-using NUnit.Framework.Internal.Abstractions;
 
 #nullable enable
 

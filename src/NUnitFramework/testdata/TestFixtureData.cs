@@ -9,7 +9,6 @@ namespace NUnit.TestData.TestFixtureTests
     /// <summary>
     /// Classes used for testing NUnit
     /// </summary>
-
     [TestFixture]
     public class RegularFixtureWithOneTest
     {
