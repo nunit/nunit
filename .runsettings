@@ -95,8 +95,8 @@
     <!--<ShadowCopyFiles>false</ShadowCopyFiles>-->
     <!--<DefaultTestNamePattern>{m}{a}</DefaultTestNamePattern>-->
     <!--<DomainUsage>Single</DomainUsage>-->
-    <DumpXmlTestDiscovery>false</DumpXmlTestDiscovery>
-    <DumpXmlTestResults>false</DumpXmlTestResults>
+    <DumpXmlTestDiscovery>true</DumpXmlTestDiscovery>
+    <DumpXmlTestResults>true</DumpXmlTestResults>
     <ShowInternalProperties>false</ShowInternalProperties>
     <!--<TestOutputXml>TestOutputXml</TestOutputXml>-->
     <!--<Where></Where>-->

@@ -3,9 +3,10 @@
 using System;
 using System.IO;
 using System.Text;
+using NUnit.Framework.Tests.Assertions;
 using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Tests.Assertions
+namespace NUnit.Framework.Tests.ClassicAssertions
 {
     [TestFixture]
     public class AssertEqualsTests
@@ -562,40 +563,6 @@ namespace NUnit.Framework.Tests.Assertions
             {
                 return _i.Equals(other);
             }
-        }
-    }
-
-    /// <summary>
-    /// This class is for testing issue #1301 where ToString() is called on
-    /// a class to create the description of the constraint even where that
-    /// description is not used because the test passes.
-    /// </summary>
-    internal sealed class ThrowsIfToStringIsCalled
-    {
-        private readonly int _x;
-
-        public ThrowsIfToStringIsCalled(int x)
-        {
-            _x = x;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not ThrowsIfToStringIsCalled other)
-                return false;
-
-            return _x == other._x;
-        }
-
-        public override int GetHashCode()
-        {
-            return _x;
-        }
-
-        public override string ToString()
-        {
-            Assert.Fail("Should not call ToString() if Assert does not fail");
-            return base.ToString()!;
         }
     }
 }

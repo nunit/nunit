@@ -23,31 +23,37 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void PositiveNumbersPassPositiveAssertion()
         {
-            Classic.Assert.Positive(_i1);
-            Classic.Assert.Positive(_l1);
-            Classic.Assert.Positive(_f1);
-            Classic.Assert.Positive(_de1);
-            Classic.Assert.Positive(_d1);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_i1, Is.Positive);
+                Assert.That(_l1, Is.Positive);
+                Assert.That(_f1, Is.Positive);
+                Assert.That(_de1, Is.Positive);
+                Assert.That(_d1, Is.Positive);
+            });
         }
 
         [Test]
         public void AssertNegativeNumbersFailPositiveAssertion()
         {
-            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_i2));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_l2));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_f2));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_de2));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_d2));
+            Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Positive));
+            Assert.Throws<AssertionException>(() => Assert.That(_l2, Is.Positive));
+            Assert.Throws<AssertionException>(() => Assert.That(_f2, Is.Positive));
+            Assert.Throws<AssertionException>(() => Assert.That(_de2, Is.Positive));
+            Assert.Throws<AssertionException>(() => Assert.That(_d2, Is.Positive));
         }
 
         [Test]
         public void NegativeNumbersPassNegativeAssertion()
         {
-            Classic.Assert.Negative(_i2);
-            Classic.Assert.Negative(_l2);
-            Classic.Assert.Negative(_f2);
-            Classic.Assert.Negative(_de2);
-            Classic.Assert.Negative(_d2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(_i2, Is.Negative);
+                Assert.That(_l2, Is.Negative);
+                Assert.That(_f2, Is.Negative);
+                Assert.That(_de2, Is.Negative);
+                Assert.That(_d2, Is.Negative);
+            });
         }
 
         [Test]
@@ -66,7 +72,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void IsNegativeWithMessageOverload()
         {
             Assert.That(
-                () => Classic.Assert.Negative(1, "MESSAGE"),
+                () => Assert.That(1, Is.Negative, "MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
         }
 
@@ -74,20 +80,20 @@ namespace NUnit.Framework.Tests.Assertions
         public void IsPositiveWithMessageOverload()
         {
             Assert.That(
-                () => Classic.Assert.Positive(-1, "MESSAGE"),
+                () => Assert.That(-1, Is.Positive, "MESSAGE"),
                 Throws.TypeOf<AssertionException>().With.Message.Contains("MESSAGE"));
         }
 
         [Test]
         public void IsPositiveWithMessageOverloadPasses()
         {
-            Classic.Assert.Positive(1, "Message");
+            Assert.That(1, Is.Positive, "Message");
         }
 
         [Test]
         public void IsNegativeWithMessageOverloadPasses()
         {
-            Classic.Assert.Negative(-1, "Message");
+            Assert.That(-1, Is.Negative, "Message");
         }
 
         [Test]
@@ -96,8 +102,8 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: greater than 0" + Environment.NewLine +
                 "  But was:  -1" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Positive(_i2));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Positive));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -106,8 +112,8 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: less than 0" + Environment.NewLine +
                 "  But was:  1" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_i1));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(_i1, Is.Negative));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
     }
 }

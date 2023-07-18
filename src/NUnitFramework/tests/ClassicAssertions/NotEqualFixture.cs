@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Tests.Assertions;
 
-namespace NUnit.Framework.Tests.Assertions
+namespace NUnit.Framework.Tests.ClassicAssertions
 {
     [TestFixture]
     public class NotEqualFixture
@@ -20,7 +21,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to 5" + Environment.NewLine +
                 "  But was:  5" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotEqual(5, 5));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -36,7 +37,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotEqual(null, null));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -52,7 +53,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to < 1, 2, 3 >" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotEqual(new object[] { 1, 2, 3 }, new object[] { 1, 2, 3 }));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]

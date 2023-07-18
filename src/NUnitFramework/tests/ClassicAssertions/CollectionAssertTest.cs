@@ -9,7 +9,7 @@ using NUnit.Framework.Tests.Constraints;
 using NUnit.Framework.Tests.TestUtilities.Collections;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Tests.Assertions
+namespace NUnit.Framework.Tests.ClassicAssertions
 {
     /// <summary>
     /// Test Library for the NUnit CollectionAssert class.
@@ -271,8 +271,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraysAreEqualWithCollectionsObjectsImplementingIEquatable()
         {
-            SimpleIEquatableObj[] set1 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
-            SimpleIEquatableObj[] set2 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
+            var set1 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
+            var set2 = new SimpleIEquatableObj[] { new SimpleIEquatableObj() };
 
             CollectionAssert.AreEqual(set1, set2);
         }

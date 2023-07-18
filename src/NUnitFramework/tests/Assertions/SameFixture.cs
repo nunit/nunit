@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Tests.ClassicAssertions;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -23,7 +24,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ex2, Is.SameAs(ex1)));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -36,7 +37,7 @@ namespace NUnit.Framework.Tests.Assertions
 #pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(index, Is.SameAs(index)));
 #pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
