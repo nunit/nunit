@@ -14,16 +14,6 @@
         <PackageReference Include="IsExternalInit" Version="1.0.3" PrivateAssets="all" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-        <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-        <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
-        <Reference Include="System.Web" />
-        <Reference Include="System.Windows.Forms" />
-    </ItemGroup>
-
     <ItemGroup>
         <Compile Include="..\..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
         <Compile Include="..\FrameworkVersion.cs" Link="Properties\FrameworkVersion.cs" />
