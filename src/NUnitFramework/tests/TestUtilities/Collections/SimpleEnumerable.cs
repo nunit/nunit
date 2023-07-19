@@ -12,7 +12,7 @@ namespace NUnit.Framework.Tests.TestUtilities.Collections
     /// </summary>
     public class SimpleEnumerable : IEnumerable
     {
-        private readonly List<object> _contents = new List<object>();
+        private readonly List<object> _contents = new();
 
         public SimpleEnumerable(IEnumerable<object> source)
         {

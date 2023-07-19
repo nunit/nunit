@@ -131,13 +131,15 @@ namespace NUnit.Framework.Tests.Assertions
             Classic.Assert.AreEqual(double5, decimal5);
             Classic.Assert.AreEqual(decimal5, int5);
             Classic.Assert.AreEqual(decimal5, double5);
-
-            Assert.That(int5, Is.EqualTo(double5));
-            Assert.That(int5, Is.EqualTo(decimal5));
-            Assert.That(double5, Is.EqualTo(int5));
-            Assert.That(double5, Is.EqualTo(decimal5));
-            Assert.That(decimal5, Is.EqualTo(int5));
-            Assert.That(decimal5, Is.EqualTo(double5));
+            Assert.Multiple(() =>
+            {
+                Assert.That(int5, Is.EqualTo(double5));
+                Assert.That(int5, Is.EqualTo(decimal5));
+                Assert.That(double5, Is.EqualTo(int5));
+                Assert.That(double5, Is.EqualTo(decimal5));
+                Assert.That(decimal5, Is.EqualTo(int5));
+                Assert.That(decimal5, Is.EqualTo(double5));
+            });
 
             Classic.Assert.AreEqual(5, double5);
             Classic.Assert.AreEqual(5, decimal5);
@@ -180,20 +182,6 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(double5, Is.GreaterThan(3m));
             Assert.That(decimal5, Is.GreaterThan(3));
             Assert.That(decimal5, Is.GreaterThan(3.0));
-
-            //            Assert.Less(3.0, int5);
-            //            Assert.Less(3m, int5);
-            //            Assert.Less(3, double5);
-            //            Assert.Less(3m, double5);
-            //            Assert.Less(3, decimal5);
-            //            Assert.Less(3.0, decimal5);
-
-            //Assert.That(3.0, Is.LessThan(int5));
-            //Assert.That(3m, Is.LessThan(int5));
-            //Assert.That(3, Is.LessThan(double5));
-            //Assert.That(3m, Is.LessThan(double5));
-            //Assert.That(3, Is.LessThan(decimal5));
-            //Assert.That(3.0, Is.LessThan(decimal5));
         }
 
         private readonly struct MyStruct

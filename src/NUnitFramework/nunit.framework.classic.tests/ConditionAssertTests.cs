@@ -154,7 +154,7 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsEmpty(default(string)));
+            var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsEmpty(default));
             Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
