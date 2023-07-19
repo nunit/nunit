@@ -158,8 +158,8 @@ dotnet_diagnostic.IDE0011.severity = warning
 # IDE0044: Add readonly modifier
 dotnet_diagnostic.IDE0044.severity = warning
 
-# IDE0055: Fix formatting
-dotnet_diagnostic.IDE0055.severity = warning
+# IDE0055: Fix formatting  (Skipping this as it doesnt say WHAT is wrong. Rely on StyleCop instead)
+dotnet_diagnostic.IDE0055.severity = none
 
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = warning
