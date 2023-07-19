@@ -29,7 +29,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
                 "  First non-matching item at index [2]:  null" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null)))));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -75,7 +75,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "< 12, 27, 19, 32, 107, 99, 26 >" + NL +
                 "  First non-matching item at index [4]:  107" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100))));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "< 'a', \"b\", 'c' >" + NL +
                 "  First non-matching item at index [1]:  \"b\"" + NL;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char)))));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]

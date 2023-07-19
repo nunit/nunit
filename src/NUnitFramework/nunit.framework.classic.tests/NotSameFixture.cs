@@ -24,7 +24,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
                 "  Expected: not same as \"S1\"" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotSame(_s1, _s1));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]

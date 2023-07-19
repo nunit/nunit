@@ -32,21 +32,23 @@ namespace NUnit.Framework.Tests.Assertions
         {
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnore");
-            Classic.Assert.AreEqual(ResultState.Ignored, result.ResultState);
-            Classic.Assert.AreEqual("Ignore me", result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
+            Assert.That(result.Message,Is.EqualTo("Ignore me"));
         }
 
         [Test]
         public void IgnoreWorksForTestSuite()
         {
-            TestSuite suite = new TestSuite("IgnoredTestFixture");
+            var suite = new TestSuite("IgnoredTestFixture");
             suite.Add(TestBuilder.MakeFixture(typeof(IgnoredTestSuiteFixture)));
             ITestResult fixtureResult = TestBuilder.RunTest(suite).Children.ToArray()[0];
 
-            Classic.Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.SetUp), fixtureResult.ResultState);
+            Assert.That(fixtureResult.ResultState,Is.EqualTo(ResultState.Ignored.WithSite(FailureSite.SetUp)));
 
             foreach (ITestResult testResult in fixtureResult.Children)
-                Classic.Assert.AreEqual(ResultState.Ignored.WithSite(FailureSite.Parent), testResult.ResultState);
+            {
+                Assert.That(testResult.ResultState, Is.EqualTo(ResultState.Ignored.WithSite(FailureSite.Parent)));
+            }
         }
 
         [Test]
@@ -58,7 +60,7 @@ namespace NUnit.Framework.Tests.Assertions
             //Assert.AreEqual(ResultState.Ignored, fixtureResult.ResultState);
 
             foreach (var testResult in fixtureResult.Children)
-                Classic.Assert.AreEqual(ResultState.Ignored, testResult.ResultState);
+                Assert.That(testResult.ResultState, Is.EqualTo(ResultState.Ignored));
         }
 
         [Test]
@@ -70,7 +72,7 @@ namespace NUnit.Framework.Tests.Assertions
             }
             catch (IgnoreException ex)
             {
-                Classic.Assert.AreEqual("my message", ex.Message);
+                Assert.That(ex.Message,Is.EqualTo("my message"));
             }
         }
     }

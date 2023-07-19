@@ -163,7 +163,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.CountTestCases(TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.ExploreTests(TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before exploring them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before exploring them."));
         }
 
         [Test]
@@ -334,7 +334,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.Run(TestListener.NULL, TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test, SetUICulture("en-US")]
@@ -362,7 +362,7 @@ namespace NUnit.Framework.Tests.Api
             var ex = Assert.Throws<ArgumentException>(() =>
                 TestFilter.FromXml("<filter><invalidElement>foo</invalidElement></filter>"));
 
-            Assert.That(ex.Message, Does.StartWith(string.Format(InvalidFilterElementMessage, "invalidElement")));
+            Assert.That(ex?.Message, Does.StartWith(string.Format(InvalidFilterElementMessage, "invalidElement")));
         }
 
         [Test]
@@ -456,7 +456,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                     () => _runner.RunAsync(TestListener.NULL, TestFilter.Empty));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test, SetUICulture("en-US")]

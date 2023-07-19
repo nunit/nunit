@@ -7,7 +7,7 @@ namespace NUnit.Framework.Tests.Assertions
     /// a class to create the description of the constraint even where that
     /// description is not used because the test passes.
     /// </summary>
-    internal sealed class ThrowsIfToStringIsCalled
+    public sealed class ThrowsIfToStringIsCalled
     {
         private readonly int _x;
 

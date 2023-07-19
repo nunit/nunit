@@ -29,7 +29,9 @@ namespace NUnit.Framework.Tests.Assertions
         public void AreEqualPassesWithSameStream()
         {
             Stream exampleStream = new MemoryStream(new byte[] { 1, 2, 3 });
+#pragma warning disable NUnit2009 // The same value has been provided as both the actual and the expected argument
             Assert.That(exampleStream, Is.EqualTo(exampleStream));
+#pragma warning restore NUnit2009 // The same value has been provided as both the actual and the expected argument
         }
 
         [Test]

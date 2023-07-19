@@ -28,9 +28,9 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = new ArgumentException();
 
-            Classic.Assert.IsInstanceOf(typeof(Exception), ex);
             Assert.That(ex, Is.InstanceOf(typeof(Exception)));
-            Classic.Assert.IsInstanceOf<Exception>(ex);
+            Assert.That(ex, Is.InstanceOf<Exception>());
+
         }
 
         [Test]
@@ -46,9 +46,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void IsNotInstanceOf()
         {
-            Classic.Assert.IsNotInstanceOf(typeof(int), "abc123");
             Assert.That("abc123", Is.Not.InstanceOf(typeof(int)));
-            Classic.Assert.IsNotInstanceOf<int>("abc123");
+            Assert.That("abc123", Is.Not.TypeOf<int>());
         }
 
         [Test, SetUICulture("en-US")]
@@ -64,18 +63,17 @@ namespace NUnit.Framework.Tests.Assertions
         [Test()]
         public void IsAssignableFrom()
         {
-            int[] array10 = new int[10];
+            var array10 = new int[10];
 
-            Classic.Assert.IsAssignableFrom(typeof(int[]), array10);
             Assert.That(array10, Is.AssignableFrom(typeof(int[])));
-            Classic.Assert.IsAssignableFrom<int[]>(array10);
+            Assert.That(array10, Is.AssignableFrom<int>());
         }
 
         [Test]
         public void IsAssignableFromFails()
         {
-            int[] array10 = new int[10];
-            int[,] array2 = new int[2, 2];
+            var array10 = new int[10];
+            var array2 = new int[2, 2];
 
             var expectedMessage =
                 "  Expected: assignable from <System.Int32[,]>" + Environment.NewLine +
@@ -87,18 +85,17 @@ namespace NUnit.Framework.Tests.Assertions
         [Test()]
         public void IsNotAssignableFrom()
         {
-            int[] array10 = new int[10];
+            var array10 = new int[10];
 
-            Classic.Assert.IsNotAssignableFrom(typeof(int[,]), array10);
             Assert.That(array10, Is.Not.AssignableFrom(typeof(int[,])));
-            Classic.Assert.IsNotAssignableFrom<int[,]>(array10);
+            Assert.That(array10, Is.Not.AssignableFrom<int[,]>());
         }
 
         [Test]
         public void IsNotAssignableFromFails()
         {
-            int[] array10 = new int[10];
-            int[] array2 = new int[2];
+            var array10 = new int[10];
+            var array2 = new int[2];
 
             var expectedMessage =
                 "  Expected: not assignable from <System.Int32[]>" + Environment.NewLine +

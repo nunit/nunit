@@ -348,8 +348,8 @@ namespace NUnit.Framework.Tests.Constraints
                 var a = DateTimeOffset.Parse("2012-01-01T12:00Z");
                 var b = DateTimeOffset.Parse("2012-01-01T12:01Z");
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(a, new EqualConstraint(b).Within(10).Seconds));
-                Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(TimeSpan.FromSeconds(10))}"));
-                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(TimeSpan.FromMinutes(1))}"));
+                Assert.That(ex?.Message, Does.Contain($"+/- {MsgUtils.FormatValue(TimeSpan.FromSeconds(10))}"));
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(TimeSpan.FromMinutes(1))}"));
             }
         }
 
@@ -433,7 +433,7 @@ namespace NUnit.Framework.Tests.Constraints
             public void FailsOnDoublesOutsideOfUlpTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000000000000.0).Within(1).Ulps));
-                Assert.That(ex.Message, Does.Contain("+/- 1 Ulps"));
+                Assert.That(ex?.Message, Does.Contain("+/- 1 Ulps"));
             }
 
             [TestCase(19999998.0f)]
@@ -448,7 +448,7 @@ namespace NUnit.Framework.Tests.Constraints
             public void FailsOnSinglesOutsideOfUlpTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(20000000.0f).Within(1).Ulps));
-                Assert.That(ex.Message, Does.Contain("+/- 1 Ulps"));
+                Assert.That(ex?.Message, Does.Contain("+/- 1 Ulps"));
             }
 
             [TestCase(9500.0)]
@@ -464,9 +464,9 @@ namespace NUnit.Framework.Tests.Constraints
             public void FailsOnDoublesOutsideOfRelativeTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0).Within(10.0).Percent));
-                Assert.That(ex.Message, Does.Contain("+/- 10.0d Percent"));
+                Assert.That(ex?.Message, Does.Contain("+/- 10.0d Percent"));
                 var expectedPercentDiff = (10000 - (double)value) / 100;
-                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
             [TestCase(9500.0f)]
@@ -482,9 +482,9 @@ namespace NUnit.Framework.Tests.Constraints
             public void FailsOnSinglesOutsideOfRelativeTolerance(object value)
             {
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(10000.0f).Within(10.0f).Percent));
-                Assert.That(ex.Message, Does.Contain("+/- 10.0f Percent"));
+                Assert.That(ex?.Message, Does.Contain("+/- 10.0f Percent"));
                 double expectedPercentDiff = (10000 - (float)value) / 100;
-                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedPercentDiff)} Percent"));
             }
 
             [TestCase(1.21)]
@@ -493,9 +493,9 @@ namespace NUnit.Framework.Tests.Constraints
             {
                 const double tolerance = 0.001;
                 var ex = Assert.Throws<AssertionException>(() => Assert.That(value, new EqualConstraint(1.2).Within(tolerance)));
-                Assert.That(ex.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
+                Assert.That(ex?.Message, Does.Contain($"+/- {MsgUtils.FormatValue(tolerance)}"));
                 var expectedAbsoluteDiff = 1.2 - (double)value;
-                Assert.That(ex.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
+                Assert.That(ex?.Message, Does.Contain($"{MsgUtils.FormatValue(expectedAbsoluteDiff)}"));
             }
 
             /// <summary>Applies both the Percent and Ulps modifiers to cause an exception</summary>
@@ -898,7 +898,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
                 "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
 
-            Assert.That(ex.Message, Is.EqualTo(expectedMsg));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMsg));
         }
 
         [Test]
@@ -912,7 +912,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
+            Assert.That(ex?.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
         }
     }
     namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip

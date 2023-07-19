@@ -91,7 +91,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: 0" + Environment.NewLine +
                 "  But was:  1234" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Zero));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
     }
 }

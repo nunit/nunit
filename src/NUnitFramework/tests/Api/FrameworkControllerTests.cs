@@ -373,7 +373,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.ExploreTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before exploring them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before exploring them."));
         }
 
         [Test]
@@ -432,7 +432,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.CountTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before counting test cases."));
         }
 
         [Test]
@@ -489,7 +489,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunTestsAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         [Test]
@@ -540,7 +540,7 @@ namespace NUnit.Framework.Tests.Api
         {
             var ex = Assert.Throws<InvalidOperationException>(
                 () => new FrameworkController.RunAsyncAction(_controller, EMPTY_FILTER, _handler));
-            Assert.That(ex.Message, Is.EqualTo("Tests must be loaded before running them."));
+            Assert.That(ex?.Message, Is.EqualTo("Tests must be loaded before running them."));
         }
 
         #endregion

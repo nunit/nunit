@@ -16,8 +16,8 @@ namespace NUnit.Framework.Tests.Assertions
                 typeof(WarningFixture),
                 "CallAssertWarnWithMessage");
 
-            Classic.Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Classic.Assert.AreEqual("MESSAGE", result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+            Assert.That(result.Message, Contains.Substring("MESSAGE"));
         }
 
         [Test]

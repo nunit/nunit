@@ -74,7 +74,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "Assertion should have failed");
 #pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than " + expected));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than " + expected));
         }
 
         [TestCase(6.0, 5.0, 1)]
@@ -106,7 +106,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "Assertion should have failed");
 #pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
         }
     }
 }

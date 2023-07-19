@@ -52,7 +52,7 @@ namespace NUnit.Framework.Tests.Constraints
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.ItemAt(4, 2).EqualTo("Second indexer")));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Tests.Constraints
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Second indexer")));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Tests.Constraints
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<ArgumentException>(() => Assert.That(tester, Has.No.ItemAt(21d).EqualTo("Should Throw")));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]

@@ -59,13 +59,13 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void AssertPositiveNumbersFailNegativeAssertion()
         {
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_i1));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_u1));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_l1));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_ul1));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_f1));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_de1));
-            Assert.Throws<AssertionException>(() => Classic.Assert.Negative(_d1));
+            Assert.Throws<AssertionException>(() => Assert.That(_i1, Is.Negative));
+            Assert.Throws<AssertionException>(() => Assert.That(_u1, Is.Negative));
+            Assert.Throws<AssertionException>(() => Assert.That(_l1, Is.Negative));
+            Assert.Throws<AssertionException>(() => Assert.That(_ul1, Is.Negative));
+            Assert.Throws<AssertionException>(() => Assert.That(_f1, Is.Negative));
+            Assert.Throws<AssertionException>(() => Assert.That(_de1, Is.Negative));
+            Assert.Throws<AssertionException>(() => Assert.That(_d1, Is.Negative));
         }
 
         [Test]

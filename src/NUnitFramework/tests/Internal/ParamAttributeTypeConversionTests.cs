@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections;
-using NUnit.Framework.Classic;
+
 using NUnit.Framework.Internal;
 
 namespace NUnit.Framework.Tests.Internal
@@ -30,9 +30,9 @@ namespace NUnit.Framework.Tests.Internal
         {
             var data = new object[] { 1, 2, 3 };
 
-            IEnumerable result = ParamAttributeTypeConversions.ConvertData(data, targetType);
+            var result = ParamAttributeTypeConversions.ConvertData(data, targetType);
 
-            CollectionAssert.AllItemsAreInstancesOfType(result, targetType);
+            Assert.That(result, Is.All.InstanceOf(targetType));
         }
 
         [Test]
