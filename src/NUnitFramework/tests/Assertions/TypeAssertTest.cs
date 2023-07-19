@@ -65,7 +65,7 @@ namespace NUnit.Framework.Tests.Assertions
             var array10 = new int[10];
 
             Assert.That(array10, Is.AssignableFrom(typeof(int[])));
-            Assert.That(array10, Is.AssignableFrom<int>());
+            Assert.That(array10, Is.Not.AssignableFrom<int>());
         }
 
         [Test]
