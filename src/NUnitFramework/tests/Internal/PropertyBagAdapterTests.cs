@@ -9,11 +9,10 @@ namespace NUnit.Framework.Tests.Internal
 {
     public class PropertyBagAdapterTests
     {
-        private IPropertyBag _source;
-        private PropertyBagAdapter _adapter;
+        private readonly IPropertyBag _source;
+        private readonly PropertyBagAdapter _adapter;
 
-        [SetUp]
-        public void SetUp()
+        public PropertyBagAdapterTests()
         {
             _source = new PropertyBag();
 
@@ -31,7 +30,7 @@ namespace NUnit.Framework.Tests.Internal
             {
                 Assert.That(_adapter.Get("key"), Is.EqualTo("val1"));
                 Assert.That(_adapter.Get("meaningOfLife"), Is.EqualTo(42));
-                Assert.That(_adapter.Get("nonExistantKey"), Is.EqualTo(null));
+                Assert.That(_adapter.Get("nonExistentKey"), Is.EqualTo(null));
             });
         }
 
@@ -42,7 +41,7 @@ namespace NUnit.Framework.Tests.Internal
             {
                 Assert.That(_adapter.ContainsKey("key"), Is.True);
                 Assert.That(_adapter.ContainsKey("meaningOfLife"), Is.True);
-                Assert.That(_adapter.ContainsKey("nonExistantKey"), Is.False);
+                Assert.That(_adapter.ContainsKey("nonExistentKey"), Is.False);
             });
         }
 

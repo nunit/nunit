@@ -30,16 +30,19 @@ namespace NUnit.Framework.Tests.Assertions
         {
             string[] array1 = { "one", "two", "three" };
             string[] array2 = { "one", "two", "three" };
-            Framework.Classic.Assert.IsFalse(array1 == array2);
-            Assert.That(array2, Is.EqualTo(array1));
-            Assert.That(array1, Is.EqualTo(array2));
+            Assert.That(array1 == array2, Is.False);
+            Assert.Multiple(() =>
+            {
+                Assert.That(array2, Is.EqualTo(array1));
+                Assert.That(array1, Is.EqualTo(array2));
+            });
         }
 
         [Test]
         public void ArraysOfInt()
         {
-            int[] a = new[] { 1, 2, 3 };
-            int[] b = new[] { 1, 2, 3 };
+            int[] a = { 1, 2, 3 };
+            int[] b = { 1, 2, 3 };
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }
@@ -47,8 +50,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraysOfDouble()
         {
-            double[] a = new[] { 1.0, 2.0, 3.0 };
-            double[] b = new[] { 1.0, 2.0, 3.0 };
+            double[] a = { 1.0, 2.0, 3.0 };
+            double[] b = { 1.0, 2.0, 3.0 };
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }
@@ -56,8 +59,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraysOfDecimal()
         {
-            decimal[] a = new[] { 1.0m, 2.0m, 3.0m };
-            decimal[] b = new[] { 1.0m, 2.0m, 3.0m };
+            decimal[] a = { 1.0m, 2.0m, 3.0m };
+            decimal[] b = { 1.0m, 2.0m, 3.0m };
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }
@@ -65,8 +68,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArrayOfIntAndArrayOfDouble()
         {
-            int[] a = new[] { 1, 2, 3 };
-            double[] b = new[] { 1.0, 2.0, 3.0 };
+            int[] a = { 1, 2, 3 };
+            double[] b = { 1.0, 2.0, 3.0 };
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }
@@ -84,8 +87,8 @@ namespace NUnit.Framework.Tests.Assertions
         public void ArraysOfMixedTypes()
         {
             DateTime now = DateTime.Now;
-            object[] array1 = new object[] { 1, 2.0f, 3.5d, 7.000m, "Hello", now };
-            object[] array2 = new object[] { 1.0d, 2, 3.5, 7, "Hello", now };
+            object[] array1 = { 1, 2.0f, 3.5d, 7.000m, "Hello", now };
+            object[] array2 = { 1.0d, 2, 3.5, 7, "Hello", now };
             Assert.That(array2, Is.EqualTo(array1));
             Assert.That(array1, Is.EqualTo(array2));
         }
@@ -93,8 +96,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void DoubleDimensionedArrays()
         {
-            int[,] a = new[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-            int[,] b = new[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] a = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            int[,] b = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }
@@ -102,8 +105,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void TripleDimensionedArrays()
         {
-            int[,,] expected = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
-            int[,,] actual = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[,,] expected = { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
+            int[,,] actual = { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } };
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -120,8 +123,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraysOfArrays()
         {
-            int[][] a = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
-            int[][] b = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
+            int[][] a = { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
+            int[][] b = { new[] { 1, 2, 3 }, new[] { 4, 5, 6 }, new[] { 7, 8, 9 } };
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
         }
@@ -129,8 +132,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void JaggedArrays()
         {
-            int[][] expected = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
-            int[][] actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
+            int[][] expected = { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
+            int[][] actual = { new[] { 1, 2, 3 }, new[] { 4, 5, 6, 7 }, new[] { 8, 9 } };
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -147,7 +150,7 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArrayAndCollection()
         {
-            int[] a = new[] { 1, 2, 3 };
+            int[] a = { 1, 2, 3 };
             ICollection b = new SimpleObjectCollection(1, 2, 3);
             Assert.That(b, Is.EqualTo(a));
             Assert.That(a, Is.EqualTo(b));
@@ -156,8 +159,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraysWithDifferentRanksComparedAsCollection()
         {
-            int[] expected = new[] { 1, 2, 3, 4 };
-            int[,] actual = new[,] { { 1, 2 }, { 3, 4 } };
+            int[] expected = { 1, 2, 3, 4 };
+            int[,] actual = { { 1, 2 }, { 3, 4 } };
 
             Assert.That(actual, Is.Not.EqualTo(expected));
             Assert.That(actual, Is.EqualTo(expected).AsCollection);
@@ -166,8 +169,8 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ArraysWithDifferentDimensionsMatchedAsCollection()
         {
-            int[,] expected = new[,] { { 1, 2, 3 }, { 4, 5, 6 } };
-            int[,] actual = new[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+            int[,] expected = { { 1, 2, 3 }, { 4, 5, 6 } };
+            int[,] actual = { { 1, 2 }, { 3, 4 }, { 5, 6 } };
 
             Assert.That(actual, Is.Not.EqualTo(expected));
             Assert.That(actual, Is.EqualTo(expected).AsCollection);

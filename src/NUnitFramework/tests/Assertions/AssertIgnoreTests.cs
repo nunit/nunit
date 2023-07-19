@@ -33,7 +33,7 @@ namespace NUnit.Framework.Tests.Assertions
             Type fixtureType = typeof(IgnoredTestCaseFixture);
             ITestResult result = TestBuilder.RunTestCase(fixtureType, "CallsIgnore");
             Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
-            Assert.That(result.Message,Is.EqualTo("Ignore me"));
+            Assert.That(result.Message, Is.EqualTo("Ignore me"));
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests.Assertions
             suite.Add(TestBuilder.MakeFixture(typeof(IgnoredTestSuiteFixture)));
             ITestResult fixtureResult = TestBuilder.RunTest(suite).Children.ToArray()[0];
 
-            Assert.That(fixtureResult.ResultState,Is.EqualTo(ResultState.Ignored.WithSite(FailureSite.SetUp)));
+            Assert.That(fixtureResult.ResultState, Is.EqualTo(ResultState.Ignored.WithSite(FailureSite.SetUp)));
 
             foreach (ITestResult testResult in fixtureResult.Children)
             {
@@ -72,7 +72,7 @@ namespace NUnit.Framework.Tests.Assertions
             }
             catch (IgnoreException ex)
             {
-                Assert.That(ex.Message,Is.EqualTo("my message"));
+                Assert.That(ex.Message, Is.EqualTo("my message"));
             }
         }
     }

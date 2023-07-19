@@ -30,7 +30,6 @@ namespace NUnit.Framework.Tests.Assertions
 
             Assert.That(ex, Is.InstanceOf(typeof(Exception)));
             Assert.That(ex, Is.InstanceOf<Exception>());
-
         }
 
         [Test]
