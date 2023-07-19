@@ -396,7 +396,6 @@ namespace NUnit.Framework.Api
                 MessageBoxIcon.Information);
         }
 #endif
-
 #if NETFRAMEWORK
         /// <summary>
         /// Executes the action within an <see cref="NUnitCallContext" />
@@ -418,7 +417,6 @@ namespace NUnit.Framework.Api
             action();
 #endif
         }
-
 #if NETFRAMEWORK
         /// <summary>
         /// Executes the function within an <see cref="NUnitCallContext" />
@@ -441,6 +439,5 @@ namespace NUnit.Framework.Api
 #endif
         }
     }
-
     #endregion
 }

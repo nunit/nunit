@@ -10,19 +10,17 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public abstract class TypeConstraint : Constraint
     {
+#pragma warning disable IDE1006
         /// <summary>
         /// The expected Type used by the constraint
         /// </summary>
-#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
         protected Type expectedType;
-#pragma warning restore IDE1006
 
         /// <summary>
         /// The type of the actual argument to which the constraint was applied
         /// </summary>
-#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
         protected Type? actualType;
