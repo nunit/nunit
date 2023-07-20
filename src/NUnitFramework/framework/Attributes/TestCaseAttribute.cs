@@ -266,6 +266,9 @@ namespace NUnit.Framework
         /// <summary>
         /// Gets and sets the ignore until date for this test case.
         /// </summary>
+#if NET7_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.DateTimeFormat)]
+#endif
         [DisallowNull]
         public string? Until
         {

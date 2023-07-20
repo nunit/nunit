@@ -39,6 +39,9 @@ namespace NUnit.Framework
         /// property set which will appear in the test results.
         /// </remarks>
         /// <exception cref="FormatException">The string does not contain a valid string representation of a date and time.</exception>
+#if NET7_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.DateTimeFormat)]
+#endif
         [DisallowNull]
         public string? Until
         {
