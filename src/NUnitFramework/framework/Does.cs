@@ -109,7 +109,11 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public static RegexConstraint Match(string pattern)
+        public static RegexConstraint Match(
+#if NET7_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
+#endif
+            string pattern)
         {
             return new RegexConstraint(pattern);
         }

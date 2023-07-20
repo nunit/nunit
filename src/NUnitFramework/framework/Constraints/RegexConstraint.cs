@@ -34,7 +34,11 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="RegexConstraint"/> class.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
-        public RegexConstraint(string pattern) : base(pattern)
+        public RegexConstraint(
+#if NET7_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
+#endif
+            string pattern) : base(pattern)
         {
             _regex = new Regex(pattern);
         }
