@@ -10,9 +10,8 @@ namespace NUnit.Framework
     /// This works around a conflict between mixed-mode assembly initialization and
     /// tests running in their own AppDomain in some cases.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple=false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class TestAssemblyDirectoryResolveAttribute : NUnitAttribute
     {
     }
-
 }

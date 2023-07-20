@@ -14,13 +14,13 @@ namespace NUnit.Framework.Internal
         /// Called when a test has just started
         /// </summary>
         /// <param name="test">The test that is starting</param>
-        public void TestStarted(ITest test){}
+        public void TestStarted(ITest test) { }
 
         /// <summary>
         /// Called when a test case has finished
         /// </summary>
         /// <param name="result">The result of the test</param>
-        public void TestFinished(ITestResult result){}
+        public void TestFinished(ITestResult result) { }
 
         /// <summary>
         /// Called when a test produces output for immediate display

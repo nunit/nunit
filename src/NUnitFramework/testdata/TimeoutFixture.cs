@@ -30,7 +30,6 @@ namespace NUnit.TestData
             while (true) { }
         }
 
-
         [Test, Timeout(500)]
         public void TimeoutWithMessagePumpShouldAbort()
         {

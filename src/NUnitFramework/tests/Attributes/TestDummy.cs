@@ -4,9 +4,9 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
-    public class TestDummy : Test
+    public class TestDummy : NUnit.Framework.Internal.Test
     {
         public TestDummy() : base("TestDummy") { }
 
@@ -23,7 +23,7 @@ namespace NUnit.Framework.Attributes
             throw new NotImplementedException();
         }
 
-        public Internal.Commands.TestCommand MakeTestCommand()
+        public Framework.Internal.Commands.TestCommand MakeTestCommand()
         {
             throw new NotImplementedException();
         }

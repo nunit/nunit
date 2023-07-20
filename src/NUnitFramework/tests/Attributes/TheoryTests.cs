@@ -1,11 +1,12 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-using System;
-using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
-using NUnit.TestData.TheoryFixture;
-using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Attributes
+using System;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
+using NUnit.TestData.TheoryFixture;
+
+namespace NUnit.Framework.Tests.Attributes
 {
     public class TheoryTests
     {
@@ -172,7 +173,6 @@ namespace NUnit.Framework.Attributes
                 Assert.That(sqrt * sqrt, Is.EqualTo(num).Within(0.000001));
             }
         }
-
 
         public class NestedTheoryThatSearchesInDeclaringTypes
         {

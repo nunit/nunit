@@ -20,8 +20,6 @@ namespace NUnit.Framework.Constraints
     /// </summary>
     public class ConstraintExpression
     {
-        #region Instance Fields
-
         /// <summary>
         /// The ConstraintBuilder holding the elements recognized so far
         /// </summary>
@@ -30,9 +28,6 @@ namespace NUnit.Framework.Constraints
         // Disregarding naming convention for back-compat
         protected readonly ConstraintBuilder builder;
 #pragma warning restore IDE1006
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -188,7 +183,6 @@ namespace NUnit.Framework.Constraints
                 builder.Append(new ExactCountOperator(1));
                 return new ItemsConstraintExpression(builder);
             }
-
         }
 
         #endregion

@@ -2,8 +2,11 @@
 
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters {
+namespace NUnit.Framework.Tests.Internal.Filters
+{
     public class DeMorganOnFiltersTest : TestFilterTests
     {
         private static readonly List<TestFilter[]> FilterPairs;
@@ -22,12 +25,12 @@ namespace NUnit.Framework.Internal.Filters {
             foreach (var part1 in filterParts)
             {
                 foreach (var part2 in filterParts)
-            {
-                var and = new AndFilter(part1, new NotFilter(part2));
-                var or = new OrFilter(new NotFilter(part1), part2);
-                FilterPairs.Add(new TestFilter[2] {new NotFilter(and), or});
-                FilterPairs.Add(new TestFilter[2] {and, new NotFilter(or)});
-            }
+                {
+                    var and = new AndFilter(part1, new NotFilter(part2));
+                    var or = new OrFilter(new NotFilter(part1), part2);
+                    FilterPairs.Add(new TestFilter[2] { new NotFilter(and), or });
+                    FilterPairs.Add(new TestFilter[2] { and, new NotFilter(or) });
+                }
             }
         }
 
@@ -53,7 +56,6 @@ namespace NUnit.Framework.Internal.Filters {
         [TestCaseSource(nameof(FilterPairs))]
         public void DeMorganPassTests(TestFilter andFilter, TestFilter orFilter)
         {
-
             var disagreements = new List<string>();
             foreach (var test in GetTests())
             {

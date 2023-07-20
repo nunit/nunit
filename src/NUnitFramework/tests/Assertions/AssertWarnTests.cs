@@ -2,9 +2,9 @@
 
 using NUnit.Framework.Interfaces;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AssertWarnTests
@@ -16,19 +16,8 @@ namespace NUnit.Framework.Assertions
                 typeof(WarningFixture),
                 "CallAssertWarnWithMessage");
 
-            Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Assert.AreEqual("MESSAGE", result.Message);
-        }
-
-        [Test]
-        public void AssertWarnWorksWithMessageAndArgs()
-        {
-            ITestResult result = TestBuilder.RunTestCase(
-                typeof(WarningFixture),
-                "CallAssertWarnWithMessageAndArgs");
-
-            Assert.AreEqual(ResultState.Warning, result.ResultState);
-            Assert.AreEqual("MESSAGE: 2+2=4", result.Message);
+            Assert.That(result.ResultState, Is.EqualTo(ResultState.Warning));
+            Assert.That(result.Message, Contains.Substring("MESSAGE"));
         }
 
         [Test]
@@ -37,12 +26,14 @@ namespace NUnit.Framework.Assertions
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
                 "TwoWarningsAndFailure");
-
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
-            Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
-            Assert.That(result.Message, Contains.Substring("First warning"));
-            Assert.That(result.Message, Contains.Substring("Second warning"));
-            Assert.That(result.Message, Contains.Substring("This fails"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Failure));
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
+                Assert.That(result.Message, Contains.Substring("First warning"));
+                Assert.That(result.Message, Contains.Substring("Second warning"));
+                Assert.That(result.Message, Contains.Substring("This fails"));
+            });
         }
 
         [Test, Ignore("Currently Fails: Ignored message is displayed without the warnings")]
@@ -51,12 +42,14 @@ namespace NUnit.Framework.Assertions
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
                 "TwoWarningsAndIgnore");
-
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
-            Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
-            Assert.That(result.Message, Contains.Substring("First warning"));
-            Assert.That(result.Message, Contains.Substring("Second warning"));
-            Assert.That(result.Message, Contains.Substring("Ignore this"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Ignored));
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
+                Assert.That(result.Message, Contains.Substring("First warning"));
+                Assert.That(result.Message, Contains.Substring("Second warning"));
+                Assert.That(result.Message, Contains.Substring("Ignore this"));
+            });
         }
 
         [Test, Ignore("Currently Fails: Inconclusive message is displayed without the warnings")]
@@ -65,12 +58,14 @@ namespace NUnit.Framework.Assertions
             ITestResult result = TestBuilder.RunTestCase(
                 typeof(WarningFixture),
                 "TwoWarningsAndInconclusive");
-
-            Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
-            Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
-            Assert.That(result.Message, Contains.Substring("First warning"));
-            Assert.That(result.Message, Contains.Substring("Second warning"));
-            Assert.That(result.Message, Contains.Substring("This is inconclusive"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState, Is.EqualTo(ResultState.Inconclusive));
+                Assert.That(result.AssertionResults, Has.Count.EqualTo(3));
+                Assert.That(result.Message, Contains.Substring("First warning"));
+                Assert.That(result.Message, Contains.Substring("Second warning"));
+                Assert.That(result.Message, Contains.Substring("This is inconclusive"));
+            });
         }
     }
 }

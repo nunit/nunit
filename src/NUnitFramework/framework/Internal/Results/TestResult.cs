@@ -48,7 +48,7 @@ namespace NUnit.Framework.Internal
 
         //        static Logger log = InternalTrace.GetLogger("TestResult");
 
-        private readonly StringBuilder _output = new StringBuilder();
+        private readonly StringBuilder _output = new();
         private double _duration;
 
         /// <summary>
@@ -60,13 +60,13 @@ namespace NUnit.Framework.Internal
         private string? _message;
         private string? _stackTrace;
 
-        private readonly List<AssertionResult> _assertionResults = new List<AssertionResult>();
-        private readonly List<TestAttachment> _testAttachments = new List<TestAttachment>();
+        private readonly List<AssertionResult> _assertionResults = new();
+        private readonly List<TestAttachment> _testAttachments = new();
 
         /// <summary>
         /// ReaderWriterLock
         /// </summary>
-        protected ReaderWriterLockSlim RwLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        protected ReaderWriterLockSlim RwLock = new(LockRecursionPolicy.SupportsRecursion);
 
         #endregion
 
@@ -174,7 +174,6 @@ namespace NUnit.Framework.Internal
                 {
                     RwLock.ExitReadLock();
                 }
-
             }
             private set => _message = value;
         }
@@ -589,7 +588,6 @@ namespace NUnit.Framework.Internal
         {
             RecordAssertion(status, message, null);
         }
-
 
         /// <summary>
         /// Creates a failure message incorporating failures

@@ -15,7 +15,7 @@ namespace NUnit.Framework
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
         public AssertionException(string? message) : base(message)
-        {}
+        { }
 
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
@@ -23,14 +23,14 @@ namespace NUnit.Framework
         /// current exception</param>
         public AssertionException(string? message, Exception? inner) :
             base(message, inner)
-        {}
+        { }
 
         /// <summary>
         /// Serialization Constructor
         /// </summary>
         protected AssertionException(System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info,context)
-        {}
+            System.Runtime.Serialization.StreamingContext context) : base(info, context)
+        { }
 
         /// <summary>
         /// Gets the ResultState provided by this exception

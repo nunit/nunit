@@ -7,10 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Execution;
 using NUnit.TestData.ParallelExecutionData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal.Execution
 {
     [TestFixtureSource(nameof(GetParallelSuites))]
     [NonParallelizable]
@@ -67,7 +69,6 @@ namespace NUnit.Framework.Internal.Execution
 
             _result = workItem.Result;
         }
-
 
         [Test]
         public void AllTestsPassed()
@@ -403,11 +404,11 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
 
-#region ITestListener implementation
+        #region ITestListener implementation
 
-        void ITestListener. TestStarted(ITest test)
+        void ITestListener.TestStarted(ITest test)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -417,7 +418,7 @@ namespace NUnit.Framework.Internal.Execution
             });
         }
 
-        void ITestListener. TestFinished(ITestResult result)
+        void ITestListener.TestFinished(ITestResult result)
         {
             _events.Enqueue(new TestEvent()
             {
@@ -436,9 +437,9 @@ namespace NUnit.Framework.Internal.Execution
         {
         }
 
-#endregion
+        #endregion
 
-#region Helper Methods
+        #region Helper Methods
 
         private static TestSuite Suite(string name)
         {
@@ -470,9 +471,9 @@ namespace NUnit.Framework.Internal.Execution
             return sb.ToString();
         }
 
-#endregion
+        #endregion
 
-#region Nested Types
+        #region Nested Types
 
         public enum TestAction
         {
@@ -577,6 +578,6 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-#endregion
+        #endregion
     }
 }

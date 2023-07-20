@@ -12,11 +12,16 @@ indent_style = space
 insert_final_newline = true
 charset = utf-8
 
-[*.{sln,*proj}]
+[*.{sln,*proj,props}]
 charset = utf-8-bom
+indent_style = space
+indent_size = 2
+tab_width = 2
 
 [*.{cs,cake}]
+indent_style = space
 indent_size = 4
+tab_width = 4
 
 [*]
 file_header_template = Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
@@ -122,11 +127,11 @@ dotnet_diagnostic.DOC100.severity = silent
 csharp_style_expression_bodied_accessors = when_on_single_line:warning
 csharp_style_expression_bodied_constructors = false:none
 csharp_style_expression_bodied_indexers = when_on_single_line:warning
-csharp_style_expression_bodied_lambdas = when_on_single_line:warning
-csharp_style_expression_bodied_local_functions = when_on_single_line:warning
+csharp_style_expression_bodied_lambdas = when_on_single_line:suggestion
+csharp_style_expression_bodied_local_functions = when_on_single_line:suggestion
 csharp_style_expression_bodied_methods = false:none
-csharp_style_expression_bodied_operators = when_on_single_line:warning
-csharp_style_expression_bodied_properties = when_on_single_line:warning
+csharp_style_expression_bodied_operators = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
 
 ############################################################################################
 # CSharp Analysis
@@ -153,8 +158,14 @@ dotnet_diagnostic.IDE0011.severity = warning
 # IDE0044: Add readonly modifier
 dotnet_diagnostic.IDE0044.severity = warning
 
+# IDE0055: Fix formatting  (Skipping this as it doesnt say WHAT is wrong. Rely on StyleCop instead)
+dotnet_diagnostic.IDE0055.severity = none
+
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = warning
+
+# IDE0036: Order modifiers
+dotnet_diagnostic.IDE0036.severity = warning
 
 ##################################################################################
 # CSharpIsNull Analyzers

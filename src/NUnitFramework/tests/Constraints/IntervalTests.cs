@@ -1,4 +1,4 @@
-﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
+// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using NUnit.Framework.Constraints;
 
@@ -13,7 +13,7 @@ namespace NUnit.Framework.Tests.Constraints
             var interval = new Interval(1);
             Assert.That(interval.IsNotZero, Is.True);
 
-            interval =  new Interval(0);
+            interval = new Interval(0);
             Assert.That(interval.IsNotZero, Is.False);
         }
     }

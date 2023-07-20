@@ -55,7 +55,6 @@ namespace NUnit.Framework.Constraints
             return false;
         }
 
-
         /// <summary>
         /// Checks the type of the object, returning true if
         /// the object is a fixed point numeric type.
@@ -203,7 +202,6 @@ namespace NUnit.Framework.Constraints
                     tolerance = temp;
             }
 
-
             switch (tolerance.Mode)
             {
                 case ToleranceMode.Unset:
@@ -226,7 +224,6 @@ namespace NUnit.Framework.Constraints
                     throw new ArgumentException("Unknown tolerance mode specified", "mode");
             }
         }
-
 
         private static bool AreEqual(decimal expected, decimal actual, Tolerance tolerance)
         {

@@ -222,7 +222,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private readonly ManualResetEventSlim _completionEvent = new ManualResetEventSlim();
+        private readonly ManualResetEventSlim _completionEvent = new();
 
         /// <summary>
         /// Wait until the execution of this item is complete
@@ -243,7 +243,7 @@ namespace NUnit.Framework.Internal.Execution
         }
 
 #if THREAD_ABORT
-        private readonly object _threadLock = new object();
+        private readonly object _threadLock = new();
         private int _nativeThreadId;
 #endif
 
@@ -288,9 +288,9 @@ namespace NUnit.Framework.Internal.Execution
 #endif
         }
 
-#endregion
+        #endregion
 
-#region IDisposable Implementation
+        #region IDisposable Implementation
 
         /// <summary>
         /// Standard Dispose
@@ -300,9 +300,9 @@ namespace NUnit.Framework.Internal.Execution
             _completionEvent?.Dispose();
         }
 
-#endregion
+        #endregion
 
-#region Protected Methods
+        #region Protected Methods
 
         /// <summary>
         /// Method that performs actually performs the work. It should
@@ -426,9 +426,9 @@ namespace NUnit.Framework.Internal.Execution
             Result.SetResult(resultState, message);
         }
 
-#endregion
+        #endregion
 
-#region Private Methods
+        #region Private Methods
 
         private Thread? _thread;
 
@@ -528,6 +528,6 @@ namespace NUnit.Framework.Internal.Execution
             return apartment;
         }
 
-#endregion
+        #endregion
     }
 }

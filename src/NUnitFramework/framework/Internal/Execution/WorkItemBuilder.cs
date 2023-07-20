@@ -22,7 +22,7 @@ namespace NUnit.Framework.Internal.Execution
         /// <param name="filter">The filter to be used in selecting any child Tests.</param>
         /// <param name="recursive">True if child work items should be created and added.</param>
         /// <returns></returns>
-        static public WorkItem? CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
+        public static WorkItem? CreateWorkItem(ITest test, ITestFilter filter, bool recursive = false)
         {
             return CreateWorkItem(test, filter, new DebuggerProxy(), recursive);
         }
@@ -50,7 +50,7 @@ namespace NUnit.Framework.Internal.Execution
                 return null;
             }
 
-            CompositeWorkItem? work = root ? new CompositeWorkItem(suite, filter): null;
+            CompositeWorkItem? work = root ? new CompositeWorkItem(suite, filter) : null;
 
             if (recursive)
             {
@@ -79,7 +79,6 @@ namespace NUnit.Framework.Internal.Execution
 
                 if (countOrderedItems > 0)
                     work!.Children.Sort(0, countOrderedItems, new WorkItemOrderComparer());
-
             }
             return work;
         }

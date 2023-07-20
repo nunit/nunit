@@ -25,13 +25,13 @@ namespace NUnit.Framework
     /// }
     /// </example>
     ///
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class TestAttribute : NUnitAttribute, ISimpleTestBuilder, IApplyToTest, IImplyFixture
     {
         private object? _expectedResult;
         private bool _hasExpectedResult = false; // needed in case result is set to null
 
-        private readonly NUnitTestCaseBuilder _builder = new NUnitTestCaseBuilder();
+        private readonly NUnitTestCaseBuilder _builder = new();
 
         /// <summary>
         /// Descriptive text for this test
@@ -84,7 +84,6 @@ namespace NUnit.Framework
 
             if (_hasExpectedResult && test.Method.GetParameters().Length > 0)
                 test.MakeInvalid("The 'TestAttribute.ExpectedResult' property may not be used on parameterized methods.");
-
         }
 
         #endregion
@@ -102,8 +101,10 @@ namespace NUnit.Framework
 
             if (_hasExpectedResult)
             {
-                parms = new TestCaseParameters();
-                parms.ExpectedResult = ExpectedResult;
+                parms = new TestCaseParameters
+                {
+                    ExpectedResult = ExpectedResult
+                };
             }
 
             return _builder.BuildTestMethod(method, suite, parms);

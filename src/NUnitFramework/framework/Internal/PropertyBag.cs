@@ -17,7 +17,7 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public class PropertyBag : IPropertyBag
     {
-        private readonly Dictionary<string, IList> _inner = new Dictionary<string, IList>();
+        private readonly Dictionary<string, IList> _inner = new();
 
         #region IPropertyBagMembers
 

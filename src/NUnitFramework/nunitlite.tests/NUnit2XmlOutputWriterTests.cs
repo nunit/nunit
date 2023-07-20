@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
 
 namespace NUnitLite.Tests
@@ -21,8 +22,8 @@ namespace NUnitLite.Tests
         [OneTimeSetUp]
         public void RunMockAssemblyTests()
         {
-            ITestResult result = NUnit.TestUtilities.TestBuilder.RunTestFixture(typeof(MockTestFixture));
-            Assert.NotNull(result);
+            ITestResult result = TestBuilder.RunTestFixture(typeof(MockTestFixture));
+            Assert.That(result, Is.Not.Null);
 
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
@@ -92,9 +93,9 @@ namespace NUnitLite.Tests
         [TestCase("errors", MockTestFixture.Failed_Error)]
         [TestCase("failures", MockTestFixture.Failed_Other)]
         [TestCase("inconclusive", MockTestFixture.Inconclusive)]
-        [TestCase("not-run", MockTestFixture.Skipped+MockTestFixture.Failed_NotRunnable)]
+        [TestCase("not-run", MockTestFixture.Skipped + MockTestFixture.Failed_NotRunnable)]
         [TestCase("ignored", MockTestFixture.Skipped_Ignored)]
-        [TestCase("skipped", MockTestFixture.Skipped-MockTestFixture.Skipped_Ignored-MockTestFixture.Skipped_Explicit)]
+        [TestCase("skipped", MockTestFixture.Skipped - MockTestFixture.Skipped_Ignored - MockTestFixture.Skipped_Explicit)]
         [TestCase("invalid", MockTestFixture.Failed_NotRunnable)]
         public void TestResults_CounterIsCorrect(string name, int count)
         {
@@ -105,14 +106,14 @@ namespace NUnitLite.Tests
         public void TestResults_HasValidDateAttribute()
         {
             string dateString = RequiredAttribute(_topNode, "date");
-            Assert.That(DateTime.TryParse(dateString, out _), "Invalid date attribute: {0}", dateString);
+            Assert.That(DateTime.TryParse(dateString, out _), $"Invalid date attribute: {dateString}");
         }
 
         [Test]
         public void TestResults_HasValidTimeAttribute()
         {
             string timeString = RequiredAttribute(_topNode, "time");
-            Assert.That(DateTime.TryParse(timeString, out _), "Invalid time attribute: {0}", timeString);
+            Assert.That(DateTime.TryParse(timeString, out _), $"Invalid time attribute: {timeString}");
         }
 
         [Test]
@@ -151,12 +152,12 @@ namespace NUnitLite.Tests
             {
                 culture = System.Globalization.CultureInfo.CreateSpecificCulture(cultureName);
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 // Do nothing - culture will be null
             }
 
-            Assert.That(culture, Is.Not.Null, "Invalid value for {0}: {1}", name, cultureName);
+            Assert.That(culture, Is.Not.Null, $"Invalid value for {name}: {cultureName}");
         }
 
         [Test]
@@ -183,19 +184,19 @@ namespace NUnitLite.Tests
             var timeString = RequiredAttribute(_suiteNode, "time");
             // NOTE: We use the TryParse overload with 4 args because it's supported in .NET 1.1
             var success = double.TryParse(timeString, System.Globalization.NumberStyles.Float, System.Globalization.NumberFormatInfo.InvariantInfo, out _);
-            Assert.That(success, "{0} is an invalid value for time", timeString);
+            Assert.That(success, $"{timeString} is an invalid value for time");
         }
 
-#region Helper Methods
+        #region Helper Methods
 
         private string RequiredAttribute(XmlNode node, string name)
         {
-            XmlAttribute attr = node.Attributes[name];
-            Assert.That(attr, Is.Not.Null, "Missing attribute {0} on element {1}", name, node.Name);
+            XmlAttribute attr = node.Attributes?[name];
+            Assert.That(attr, Is.Not.Null, $"Missing attribute {name} on element {node.Name}");
 
             return attr.Value;
         }
 
-#endregion
+        #endregion
     }
 }

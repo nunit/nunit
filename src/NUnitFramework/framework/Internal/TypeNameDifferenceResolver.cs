@@ -61,8 +61,8 @@ namespace NUnit.Framework.Internal
         /// <param name="shortenedParamsActual">Shortened generic parameters of the actual <see cref="Type"/>.</param>
         private void GetShortenedGenericParams(Type expectedFullType, Type actualFullType, out List<string> shortenedParamsExpected, out List<string> shortenedParamsActual)
         {
-            List<Type> templateParamsExpected = new List<Type>(expectedFullType.GetGenericArguments());
-            List<Type> templateParamsActual = new List<Type>(actualFullType.GetGenericArguments());
+            List<Type> templateParamsExpected = new(expectedFullType.GetGenericArguments());
+            List<Type> templateParamsActual = new(actualFullType.GetGenericArguments());
 
             shortenedParamsExpected = new List<string>();
             shortenedParamsActual = new List<string>();
@@ -97,8 +97,8 @@ namespace NUnit.Framework.Internal
             {
                 string genericTypeDefinition = genericType.GetGenericTypeDefinition().Name;
 
-                List<Type> genericParams = new List<Type>(genericType.GetGenericArguments());
-                List<string> shortenedGenericParams = new List<string>();
+                List<Type> genericParams = new(genericType.GetGenericArguments());
+                List<string> shortenedGenericParams = new();
                 genericParams.ForEach(x => shortenedGenericParams.Add(FullyShortenTypeName(x)));
 
                 return ReconstructGenericTypeName(genericTypeDefinition, shortenedGenericParams);
@@ -146,7 +146,6 @@ namespace NUnit.Framework.Internal
                 expectedTypeShortened = expectedOriginalType[expectedOriginalType.Length - 1];
                 actualTypeShortened = actualOriginalType[actualOriginalType.Length - 1];
             }
-
         }
 
         /// <summary>

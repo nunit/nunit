@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     public class OrFilterTests : TestFilterTests
     {
@@ -48,7 +50,7 @@ namespace NUnit.Framework.Internal.Filters
         [Test]
         public void MatchTestEmpty()
         {
-            var filter = new OrFilter(new TestFilter[] {});
+            var filter = new OrFilter(new TestFilter[] { });
 
             Assert.That(filter.Match(DummyFixtureSuite), Is.False);
             Assert.That(filter.Match(AnotherFixtureSuite), Is.False);

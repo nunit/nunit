@@ -35,6 +35,5 @@ namespace NUnit.TestData
         [Author("Charlie Poole", "charlie@poole.org"), Author("NUnit")]
         public void TestMethodMultipleAuthors()
         { }
-
     }
 }

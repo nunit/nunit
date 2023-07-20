@@ -1,10 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections.Generic;
-using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// UniqueValues is used to check a set of values to ensure
@@ -33,7 +32,7 @@ namespace NUnit.TestUtilities
                 }
             }
 
-            Assert.Fail("After {0} attempts, only {1} value(s) found", maxTries, lookup.Count);
+            Assert.Fail($"After {maxTries} attempts, only {lookup.Count} value(s) found");
         }
     }
 }

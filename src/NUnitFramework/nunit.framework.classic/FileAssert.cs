@@ -5,12 +5,12 @@ using System.IO;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework
+namespace NUnit.Framework.Classic
 {
     /// <summary>
     /// Asserts on Files
     /// </summary>
-    public static class FileAssert
+    public abstract class FileAssert : AssertBase
     {
         #region Equals and ReferenceEquals
 
@@ -55,9 +55,9 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
+        public static void AreEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.EqualTo(expected), message, args);
+            Framework.Assert.That(actual, Is.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        static public void AreEqual(Stream? expected, Stream? actual)
+        public static void AreEqual(Stream? expected, Stream? actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -84,13 +84,11 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(FileInfo expected, FileInfo actual, string message, params object?[]? args)
+        public static void AreEqual(FileInfo expected, FileInfo actual, string message, params object?[]? args)
         {
-            using (FileStream exStream = expected.OpenRead())
-            using (FileStream acStream = actual.OpenRead())
-            {
-                AreEqual(exStream, acStream, message, args);
-            }
+            using FileStream exStream = expected.OpenRead();
+            using FileStream acStream = actual.OpenRead();
+            AreEqual(exStream, acStream, message, args);
         }
 
         /// <summary>
@@ -100,7 +98,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
-        static public void AreEqual(FileInfo expected, FileInfo actual)
+        public static void AreEqual(FileInfo expected, FileInfo actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -117,13 +115,11 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreEqual(string expected, string actual, string message, params object?[]? args)
+        public static void AreEqual(string expected, string actual, string message, params object?[]? args)
         {
-            using (FileStream exStream = File.OpenRead(expected))
-            using (FileStream acStream = File.OpenRead(actual))
-            {
-                AreEqual(exStream, acStream, message, args);
-            }
+            using FileStream exStream = File.OpenRead(expected);
+            using FileStream acStream = File.OpenRead(actual);
+            AreEqual(exStream, acStream, message, args);
         }
 
         /// <summary>
@@ -133,7 +129,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        static public void AreEqual(string expected, string actual)
+        public static void AreEqual(string expected, string actual)
         {
             AreEqual(expected, actual, string.Empty, null);
         }
@@ -153,9 +149,9 @@ namespace NUnit.Framework
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to be displayed when the two Stream are the same.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
+        public static void AreNotEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
         {
-            Assert.That(actual, Is.Not.EqualTo(expected), message, args);
+            Framework.Assert.That(actual, Is.Not.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -164,7 +160,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The expected Stream</param>
         /// <param name="actual">The actual Stream</param>
-        static public void AreNotEqual(Stream? expected, Stream? actual)
+        public static void AreNotEqual(Stream? expected, Stream? actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
@@ -179,13 +175,11 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(FileInfo expected, FileInfo actual, string message, params object?[]? args)
+        public static void AreNotEqual(FileInfo expected, FileInfo actual, string message, params object?[]? args)
         {
-            using (FileStream exStream = expected.OpenRead())
-            using (FileStream acStream = actual.OpenRead())
-            {
-                AreNotEqual(exStream, acStream, message, args);
-            }
+            using FileStream exStream = expected.OpenRead();
+            using FileStream acStream = actual.OpenRead();
+            AreNotEqual(exStream, acStream, message, args);
         }
 
         /// <summary>
@@ -194,7 +188,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">A file containing the value that is expected</param>
         /// <param name="actual">A file containing the actual value</param>
-        static public void AreNotEqual(FileInfo expected, FileInfo actual)
+        public static void AreNotEqual(FileInfo expected, FileInfo actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
@@ -210,13 +204,11 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void AreNotEqual(string expected, string actual, string message, params object?[]? args)
+        public static void AreNotEqual(string expected, string actual, string message, params object?[]? args)
         {
-            using (FileStream exStream = File.OpenRead(expected))
-            using (FileStream acStream = File.OpenRead(actual))
-            {
-                AreNotEqual(exStream, acStream, message, args);
-            }
+            using FileStream exStream = File.OpenRead(expected);
+            using FileStream acStream = File.OpenRead(actual);
+            AreNotEqual(exStream, acStream, message, args);
         }
 
         /// <summary>
@@ -225,7 +217,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="expected">The path to a file containing the value that is expected</param>
         /// <param name="actual">The path to a file containing the actual value</param>
-        static public void AreNotEqual(string expected, string actual)
+        public static void AreNotEqual(string expected, string actual)
         {
             AreNotEqual(expected, actual, string.Empty, null);
         }
@@ -244,9 +236,9 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Exists(FileInfo actual, string message, params object?[]? args)
+        public static void Exists(FileInfo actual, string message, params object?[]? args)
         {
-            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -254,7 +246,7 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">A file containing the actual value</param>
-        static public void Exists(FileInfo actual)
+        public static void Exists(FileInfo actual)
         {
             Exists(actual, string.Empty, null);
         }
@@ -269,9 +261,9 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void Exists(string actual, string message, params object?[]? args)
+        public static void Exists(string actual, string message, params object?[]? args)
         {
-            Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, message, args);
+            Framework.Assert.That(actual, new FileOrDirectoryExistsConstraint().IgnoreDirectories, () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -279,7 +271,7 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">The path to a file containing the actual value</param>
-        static public void Exists(string actual)
+        public static void Exists(string actual)
         {
             Exists(actual, string.Empty, null);
         }
@@ -298,9 +290,9 @@ namespace NUnit.Framework
         /// <param name="actual">A file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void DoesNotExist(FileInfo actual, string message, params object?[]? args)
+        public static void DoesNotExist(FileInfo actual, string message, params object?[]? args)
         {
-            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -308,7 +300,7 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">A file containing the actual value</param>
-        static public void DoesNotExist(FileInfo actual)
+        public static void DoesNotExist(FileInfo actual)
         {
             DoesNotExist(actual, string.Empty, null);
         }
@@ -323,9 +315,9 @@ namespace NUnit.Framework
         /// <param name="actual">The path to a file containing the actual value</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        static public void DoesNotExist(string actual, string message, params object?[]? args)
+        public static void DoesNotExist(string actual, string message, params object?[]? args)
         {
-            Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), message, args);
+            Framework.Assert.That(actual, new NotConstraint(new FileOrDirectoryExistsConstraint().IgnoreDirectories), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>
@@ -333,7 +325,7 @@ namespace NUnit.Framework
         /// an <see cref="AssertionException"/> is thrown.
         /// </summary>
         /// <param name="actual">The path to a file containing the actual value</param>
-        static public void DoesNotExist(string actual)
+        public static void DoesNotExist(string actual)
         {
             DoesNotExist(actual, string.Empty, null);
         }

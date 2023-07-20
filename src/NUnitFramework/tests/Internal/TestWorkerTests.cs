@@ -2,9 +2,10 @@
 
 using System.Text;
 using System.Threading;
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal.Execution;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal.Execution
+namespace NUnit.Framework.Tests.Internal
 {
     public class TestWorkerTests
     {
@@ -30,9 +31,9 @@ namespace NUnit.Framework.Internal.Execution
             StringBuilder sb = new StringBuilder();
             FakeWorkItem work = Fakes.GetWorkItem(this, "FakeMethod");
 
-            _worker.Busy += (s, ea) => { sb.Append("Busy"); };
-            work.Executed += (s, ea) => { sb.Append("Exec"); };
-            _worker.Idle += (s, ea) => { sb.Append ("Idle"); };
+            _worker.Busy += (s, ea) => sb.Append("Busy");
+            work.Executed += (s, ea) => sb.Append("Exec");
+            _worker.Idle += (s, ea) => sb.Append("Idle");
 
             _queue.Enqueue(work);
             _worker.Start();

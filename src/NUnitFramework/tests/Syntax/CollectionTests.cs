@@ -1,9 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     public class UniqueTest : SyntaxTest
     {
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    public class CollectionOrderedTest_Descending : SyntaxTest
+    public class CollectionOrderedTestDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -38,25 +38,25 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    public class CollectionOrderedTest_Comparer : SyntaxTest
+    public class CollectionOrderedTestComparer : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
             IComparer comparer = ObjectComparer.Default;
-            ParseTree = "<ordered NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<ordered NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.Using(comparer);
             BuilderSyntax = Builder().Ordered.Using(comparer);
         }
     }
 
-    public class CollectionOrderedTest_Comparer_Descending : SyntaxTest
+    public class CollectionOrderedTestComparerDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
             IComparer comparer = ObjectComparer.Default;
-            ParseTree = "<ordered descending NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<ordered descending NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.Using(comparer).Descending;
             BuilderSyntax = Builder().Ordered.Using(comparer).Descending;
         }
@@ -73,7 +73,7 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    public class CollectionOrderedByTest_Descending : SyntaxTest
+    public class CollectionOrderedByTestDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
@@ -84,23 +84,23 @@ namespace NUnit.Framework.Syntax
         }
     }
 
-    public class CollectionOrderedByTest_Comparer : SyntaxTest
+    public class CollectionOrderedByTestComparer : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            ParseTree = "<orderedby SomePropertyName NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<orderedby SomePropertyName NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
             BuilderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default);
         }
     }
 
-    public class CollectionOrderedByTest_Comparer_Descending : SyntaxTest
+    public class CollectionOrderedByTestComparerDescending : SyntaxTest
     {
         [SetUp]
         public void SetUp()
         {
-            ParseTree = "<orderedby SomePropertyName descending NUnit.TestUtilities.Comparers.ObjectComparer>";
+            ParseTree = "<orderedby SomePropertyName descending NUnit.Framework.Tests.TestUtilities.Comparers.ObjectComparer>";
             StaticSyntax = Is.Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
             BuilderSyntax = Builder().Ordered.By("SomePropertyName").Using(ObjectComparer.Default).Descending;
         }

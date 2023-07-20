@@ -56,7 +56,7 @@ namespace NUnit.TestData
         private static void AssertAndUseCurrentExecutionContext()
         {
 #if NETFRAMEWORK
-            Assert.Null(CallContext.LogicalGetData("WasUsed"));
+            Assert.That(CallContext.LogicalGetData("WasUsed"), Is.Null);
 
             CallContext.LogicalSetData("WasUsed", true);
 #else

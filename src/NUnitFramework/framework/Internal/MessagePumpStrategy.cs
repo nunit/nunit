@@ -25,7 +25,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class NoMessagePumpStrategy : MessagePumpStrategy
         {
-            public static readonly NoMessagePumpStrategy Instance = new NoMessagePumpStrategy();
+            public static readonly NoMessagePumpStrategy Instance = new();
             private NoMessagePumpStrategy() { }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)
@@ -167,7 +167,7 @@ namespace NUnit.Framework.Internal
 
         private sealed class SingleThreadedTestMessagePumpStrategy : MessagePumpStrategy
         {
-            public static readonly SingleThreadedTestMessagePumpStrategy Instance = new SingleThreadedTestMessagePumpStrategy();
+            public static readonly SingleThreadedTestMessagePumpStrategy Instance = new();
             private SingleThreadedTestMessagePumpStrategy() { }
 
             public override void WaitForCompletion(AwaitAdapter awaiter)

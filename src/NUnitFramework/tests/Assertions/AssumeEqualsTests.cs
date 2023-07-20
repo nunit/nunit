@@ -2,7 +2,7 @@
 
 using System;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AssumeEqualsTests
@@ -11,14 +11,14 @@ namespace NUnit.Framework.Assertions
         public void EqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => Assume.Equals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("Assume.Equals should not be used."));
+            Assert.That(ex?.Message, Does.StartWith("Assume.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
             var ex = Assert.Throws<InvalidOperationException>(() => Assume.ReferenceEquals(string.Empty, string.Empty));
-            Assert.That(ex.Message, Does.StartWith("Assume.ReferenceEquals should not be used."));
+            Assert.That(ex?.Message, Does.StartWith("Assume.ReferenceEquals should not be used."));
         }
     }
 }

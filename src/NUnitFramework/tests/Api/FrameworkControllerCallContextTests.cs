@@ -4,10 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Messaging;
+using NUnit.Framework.Api;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Api
+namespace NUnit.Framework.Tests.Api
 {
     // https://github.com/nunit/nunit/issues/2614
     internal class FrameworkControllerCallContextTests

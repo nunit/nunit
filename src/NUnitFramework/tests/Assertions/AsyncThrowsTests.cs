@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     [TestFixture]
     public class AsyncThrowsTests

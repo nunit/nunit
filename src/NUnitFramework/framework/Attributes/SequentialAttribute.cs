@@ -10,7 +10,7 @@ namespace NUnit.Framework
     /// Arguments will be combined into test cases, taking the next value of
     /// each argument until all are used.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class SequentialAttribute : CombiningStrategyAttribute
     {
         /// <summary>

@@ -14,7 +14,7 @@ namespace NUnit.Framework
     {
         private static readonly IFormatProvider MODIFIED_INVARIANT_CULTURE = CreateModifiedInvariantCulture();
 
-        private readonly Dictionary<string, string> _parameters = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _parameters = new();
 
         /// <summary>
         /// Gets the number of test parameters

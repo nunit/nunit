@@ -63,8 +63,8 @@ namespace NUnit.TestData.ActionAttributeTests
             Events.Add($"{TestContext.CurrentContext.Test.Name}.SetUpTearDown.After.Test");
         }
 
-        [TestCase("One", TestName="CaseOne")]
-        [TestCase("Two", TestName="CaseTwo")]
+        [TestCase("One", TestName = "CaseOne")]
+        [TestCase("Two", TestName = "CaseTwo")]
         [TaggedAction("OnMethod", ActionTargets.Suite | ActionTargets.Test)] // Applies to both suite and test
         [TaggedAction("OnMethod", ActionTargets.Suite)] // Applies to parameterized suite
         [TaggedAction("OnMethod", ActionTargets.Test)] // Applies to each case
@@ -110,7 +110,7 @@ namespace NUnit.TestData.ActionAttributeTests
     {
     }
 
-    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple=true, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
     public class TaggedActionAttribute : TestActionAttribute
     {
         private readonly string _tag = null;
@@ -143,7 +143,7 @@ namespace NUnit.TestData.ActionAttributeTests
         {
             string message = $"{test.Name}.{_tag}.{phase}.{_targets}";
 
-            if(ActionAttributeFixture.Events is not null)
+            if (ActionAttributeFixture.Events is not null)
                 ActionAttributeFixture.Events.Add(message);
         }
     }

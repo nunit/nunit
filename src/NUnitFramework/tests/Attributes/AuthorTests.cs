@@ -4,9 +4,9 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture(Author = "Rob Prouse <rob@prouse.org>"), Author("Charlie Poole", "Charlie@poole.org")]
     [Author("NUnit")]
@@ -71,13 +71,13 @@ namespace NUnit.Framework.Attributes
         }
 
         #region Multiple Authors
-        [Test(Author = "Rob Prouse <rob@prouse.org>"),Author("Charlie Poole", "charlie@poole.org")]
+        [Test(Author = "Rob Prouse <rob@prouse.org>"), Author("Charlie Poole", "charlie@poole.org")]
         [Author("NUnit")]
         public void TestMethodMultipleAuthors()
         {
             Test test = TestBuilder.MakeTestFromMethod(FixtureType, nameof(AuthorFixture.TestMethodMultipleAuthors));
             Assert.That(test.Properties[PropertyNames.Author], Is.EquivalentTo(
-                new[] { "Rob Prouse <rob@prouse.org>","Charlie Poole <charlie@poole.org>", "NUnit"}));
+                new[] { "Rob Prouse <rob@prouse.org>", "Charlie Poole <charlie@poole.org>", "NUnit" }));
         }
 
         [Test]

@@ -15,7 +15,7 @@ namespace NUnit.TestData
             new TestDataSpec(new object[] { }, null, "()"),
             new TestDataSpec(new object[] { }, Array.Empty<string>(), "()"),
             new TestDataSpec(new object[] { }, new[] { "display1" }, "(display1)"),
-            new TestDataSpec(new object[] { }, new[] { ",", " ", "", null, "\r\n" }, "(,,  , , , \r\n)"),
+            new TestDataSpec(new object[] { }, new[] { ",", " ", string.Empty, null, "\r\n" }, "(,,  , , , \r\n)"),
         };
 
         public object[] Arguments { get; }

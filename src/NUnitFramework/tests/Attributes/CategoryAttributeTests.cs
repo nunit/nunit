@@ -3,9 +3,9 @@
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.CategoryAttributeData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     /// <summary>
     /// Summary description for CategoryAttributeTests.
@@ -18,7 +18,7 @@ namespace NUnit.Framework.Attributes
         [SetUp]
         public void CreateFixture()
         {
-            _fixture = TestBuilder.MakeFixture( typeof( FixtureWithCategories ) );
+            _fixture = TestBuilder.MakeFixture(typeof(FixtureWithCategories));
         }
 
         [Test]
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Attributes
         public void CanDeriveFromCategoryAttribute()
         {
             Test test2 = (Test)_fixture.Tests[1];
-            Assert.That(test2.Properties["Category"], Contains.Item("Critical") );
+            Assert.That(test2.Properties["Category"], Contains.Item("Critical"));
         }
 
         [Test]

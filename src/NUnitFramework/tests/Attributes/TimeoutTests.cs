@@ -3,19 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-#if THREAD_ABORT
 using System.Linq;
-#endif
 using System.Threading;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Abstractions;
-#if THREAD_ABORT
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData;
+#if THREAD_ABORT
 #endif
-using NUnit.TestUtilities;
+#if THREAD_ABORT
+#endif
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [NonParallelizable]
     public class TimeoutTests : ThreadingTests

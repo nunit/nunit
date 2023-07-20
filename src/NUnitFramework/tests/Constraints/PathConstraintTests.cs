@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     /// <summary>
     /// Summary description for PathConstraintTests.
@@ -8,7 +10,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture, Platform("Win")]
     public class SamePathTest_Windows : StringConstraintTests
     {
-        protected override Constraint TheConstraint { get; } = new SamePathConstraint( @"C:\folder1\file.tmp" ).IgnoreCase;
+        protected override Constraint TheConstraint { get; } = new SamePathConstraint(@"C:\folder1\file.tmp").IgnoreCase;
 
         [SetUp]
         public void SetUp()
@@ -19,8 +21,8 @@ namespace NUnit.Framework.Constraints
 
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[]
-        { 
-            @"C:\folder1\file.tmp", 
+        {
+            @"C:\folder1\file.tmp",
             @"C:\Folder1\File.TMP",
             @"C:\folder1\.\file.tmp",
             @"C:\folder1\folder2\..\file.tmp",
@@ -28,7 +30,7 @@ namespace NUnit.Framework.Constraints
             @"C:/folder1/file.tmp"
         };
         private static readonly object[] FailureData = new object[]
-        { 
+        {
             new TestCaseData( @"C:\folder2\file.tmp", "\"C:\\folder2\\file.tmp\"" ),
             new TestCaseData( @"C:\folder1\.\folder2\..\file.temp", "\"C:\\folder1\\.\\folder2\\..\\file.temp\"" )
         };
@@ -55,8 +57,8 @@ namespace NUnit.Framework.Constraints
 
 #pragma warning disable IDE0052 // Remove unread private members
         private static readonly object[] SuccessData = new object[]
-        { 
-            @"/folder1/folder2", 
+        {
+            @"/folder1/folder2",
             @"/folder1/folder2/",
             @"/folder1/./folder2",
             @"/folder1/./folder2/",
@@ -68,7 +70,7 @@ namespace NUnit.Framework.Constraints
             @"\folder1\folder2\"
         };
         private static readonly object[] FailureData = new object[]
-        { 
+        {
             new TestCaseData( "folder1/folder2", "\"folder1/folder2\""),
             new TestCaseData( "//folder1/folder2", "\"//folder1/folder2\""),
             new TestCaseData( @"/junk/folder2", "\"/junk/folder2\"" ),
@@ -171,7 +173,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture, Platform("Win")]
     public class SamePathOrUnderTest_Windows : StringConstraintTests
     {
-        protected override Constraint TheConstraint { get; } = new SamePathOrUnderConstraint( @"C:\folder1\folder2" ).IgnoreCase;
+        protected override Constraint TheConstraint { get; } = new SamePathOrUnderConstraint(@"C:\folder1\folder2").IgnoreCase;
 
         [SetUp]
         public void SetUp()
@@ -206,7 +208,7 @@ namespace NUnit.Framework.Constraints
     [TestFixture, Platform("Unix")]
     public class SamePathOrUnderTest_Linux : StringConstraintTests
     {
-        protected override Constraint TheConstraint { get; } = new SamePathOrUnderConstraint( @"/folder1/folder2"  ).RespectCase;
+        protected override Constraint TheConstraint { get; } = new SamePathOrUnderConstraint(@"/folder1/folder2").RespectCase;
 
         [SetUp]
         public void SetUp()

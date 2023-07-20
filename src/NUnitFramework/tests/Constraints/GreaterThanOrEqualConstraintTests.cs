@@ -1,6 +1,8 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Constraints
+using NUnit.Framework.Constraints;
+
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class GreaterThanOrEqualConstraintTests : ComparisonConstraintTestBase
@@ -72,7 +74,7 @@ namespace NUnit.Framework.Constraints
                 "Assertion should have failed");
 #pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + expected));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than or equal to " + expected));
         }
 
         [TestCase(6.0, 5.0, 1)]
@@ -102,7 +104,7 @@ namespace NUnit.Framework.Constraints
                 "Assertion should have failed");
 #pragma warning restore NUnit2042 // Comparison constraint on object
 
-            Assert.That(ex.Message, Contains.Substring("Expected: greater than or equal to " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent" ));
+            Assert.That(ex?.Message, Contains.Substring("Expected: greater than or equal to " + MsgUtils.FormatValue(expected) + " within " + MsgUtils.FormatValue(tolerance) + " percent"));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace NUnit.Framework
     /// to be run sequentially on the current thread.
     /// Any <see cref="ParallelScope"/> setting is ignored.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class SingleThreadedAttribute : NUnitAttribute, IApplyToContext
     {
         #region IApplyToContext Members

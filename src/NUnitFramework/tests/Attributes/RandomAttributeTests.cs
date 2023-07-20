@@ -1,17 +1,16 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System.Collections;
-using System.Text;
 using System.Linq;
+using System.Text;
 using NUnit.Framework.Interfaces;
 using NUnit.TestData.RandomAttributeTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class RandomAttributeTests
     {
-
         [TestCaseSource(typeof(MethodNames))]
         public void CheckRandomResult(string methodName)
         {

@@ -3,7 +3,7 @@
 using System;
 using NUnit.Framework.Interfaces;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Classic.Tests
 {
     [TestFixture]
     public class LessEqualFixture
@@ -77,56 +77,55 @@ namespace NUnit.Framework.Assertions
 
         [Test]
         public void MixedTypes()
-        {	
-            Assert.LessOrEqual( 5, 8L, "int to long");
-            Assert.LessOrEqual( 5, 8.2f, "int to float" );
-            Assert.LessOrEqual( 5, 8.2d, "int to double" );
-            Assert.LessOrEqual( 5, 8U, "int to uint" );
-            Assert.LessOrEqual( 5, 8UL, "int to ulong" );
-            Assert.LessOrEqual( 5, 8M, "int to decimal" );
+        {
+            Assert.LessOrEqual(5, 8L, "int to long");
+            Assert.LessOrEqual(5, 8.2f, "int to float");
+            Assert.LessOrEqual(5, 8.2d, "int to double");
+            Assert.LessOrEqual(5, 8U, "int to uint");
+            Assert.LessOrEqual(5, 8UL, "int to ulong");
+            Assert.LessOrEqual(5, 8M, "int to decimal");
 
-            Assert.LessOrEqual( 5L, 8, "long to int");
-            Assert.LessOrEqual( 5L, 8.2f, "long to float" );
-            Assert.LessOrEqual( 5L, 8.2d, "long to double" );
-            Assert.LessOrEqual( 5L, 8U, "long to uint" );
-            Assert.LessOrEqual( 5L, 8UL, "long to ulong" );
-            Assert.LessOrEqual( 5L, 8M, "long to decimal" );
+            Assert.LessOrEqual(5L, 8, "long to int");
+            Assert.LessOrEqual(5L, 8.2f, "long to float");
+            Assert.LessOrEqual(5L, 8.2d, "long to double");
+            Assert.LessOrEqual(5L, 8U, "long to uint");
+            Assert.LessOrEqual(5L, 8UL, "long to ulong");
+            Assert.LessOrEqual(5L, 8M, "long to decimal");
 
-            Assert.LessOrEqual( 3.5f, 5, "float to int" );
-            Assert.LessOrEqual( 3.5f, 8L, "float to long" );
-            Assert.LessOrEqual( 3.5f, 8.2d, "float to double" );
-            Assert.LessOrEqual( 3.5f, 8U, "float to uint" );
-            Assert.LessOrEqual( 3.5f, 8UL, "float to ulong" );
-            Assert.LessOrEqual( 3.5f, 8.2M, "float to decimal" );
+            Assert.LessOrEqual(3.5f, 5, "float to int");
+            Assert.LessOrEqual(3.5f, 8L, "float to long");
+            Assert.LessOrEqual(3.5f, 8.2d, "float to double");
+            Assert.LessOrEqual(3.5f, 8U, "float to uint");
+            Assert.LessOrEqual(3.5f, 8UL, "float to ulong");
+            Assert.LessOrEqual(3.5f, 8.2M, "float to decimal");
 
-            Assert.LessOrEqual( 3.5d, 5, "double to int" );
-            Assert.LessOrEqual( 3.5d, 5L, "double to long" );
-            Assert.LessOrEqual( 3.5d, 8.2f, "double to float" );
-            Assert.LessOrEqual( 3.5d, 8U, "double to uint" );
-            Assert.LessOrEqual( 3.5d, 8UL, "double to ulong" );
-            Assert.LessOrEqual( 3.5d, 8.2M, "double to decimal" );
-            
+            Assert.LessOrEqual(3.5d, 5, "double to int");
+            Assert.LessOrEqual(3.5d, 5L, "double to long");
+            Assert.LessOrEqual(3.5d, 8.2f, "double to float");
+            Assert.LessOrEqual(3.5d, 8U, "double to uint");
+            Assert.LessOrEqual(3.5d, 8UL, "double to ulong");
+            Assert.LessOrEqual(3.5d, 8.2M, "double to decimal");
 
-            Assert.LessOrEqual( 5U, 8, "uint to int" );
-            Assert.LessOrEqual( 5U, 8L, "uint to long" );
-            Assert.LessOrEqual( 5U, 8.2f, "uint to float" );
-            Assert.LessOrEqual( 5U, 8.2d, "uint to double" );
-            Assert.LessOrEqual( 5U, 8UL, "uint to ulong" );
-            Assert.LessOrEqual( 5U, 8M, "uint to decimal" );
-            
-            Assert.LessOrEqual( 5ul, 8, "ulong to int" );
-            Assert.LessOrEqual( 5UL, 8L, "ulong to long" );
-            Assert.LessOrEqual( 5UL, 8.2f, "ulong to float" );
-            Assert.LessOrEqual( 5UL, 8.2d, "ulong to double" );
-            Assert.LessOrEqual( 5UL, 8U, "ulong to uint" );
-            Assert.LessOrEqual( 5UL, 8M, "ulong to decimal" );
-            
-            Assert.LessOrEqual( 5M, 8, "decimal to int" );
-            Assert.LessOrEqual( 5M, 8L, "decimal to long" );
-            Assert.LessOrEqual( 5M, 8.2f, "decimal to float" );
-            Assert.LessOrEqual( 5M, 8.2d, "decimal to double" );
-            Assert.LessOrEqual( 5M, 8U, "decimal to uint" );
-            Assert.LessOrEqual( 5M, 8UL, "decimal to ulong" );
+            Assert.LessOrEqual(5U, 8, "uint to int");
+            Assert.LessOrEqual(5U, 8L, "uint to long");
+            Assert.LessOrEqual(5U, 8.2f, "uint to float");
+            Assert.LessOrEqual(5U, 8.2d, "uint to double");
+            Assert.LessOrEqual(5U, 8UL, "uint to ulong");
+            Assert.LessOrEqual(5U, 8M, "uint to decimal");
+
+            Assert.LessOrEqual(5ul, 8, "ulong to int");
+            Assert.LessOrEqual(5UL, 8L, "ulong to long");
+            Assert.LessOrEqual(5UL, 8.2f, "ulong to float");
+            Assert.LessOrEqual(5UL, 8.2d, "ulong to double");
+            Assert.LessOrEqual(5UL, 8U, "ulong to uint");
+            Assert.LessOrEqual(5UL, 8M, "ulong to decimal");
+
+            Assert.LessOrEqual(5M, 8, "decimal to int");
+            Assert.LessOrEqual(5M, 8L, "decimal to long");
+            Assert.LessOrEqual(5M, 8.2f, "decimal to float");
+            Assert.LessOrEqual(5M, 8.2d, "decimal to double");
+            Assert.LessOrEqual(5M, 8U, "decimal to uint");
+            Assert.LessOrEqual(5M, 8UL, "decimal to ulong");
         }
 
         [Test]
@@ -135,8 +134,8 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than or equal to 5" + Environment.NewLine +
                 "  But was:  8" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(_i2, _i1));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Framework.Assert.Throws<AssertionException>(() => Assert.LessOrEqual(_i2, _i1));
+            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -145,8 +144,8 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than or equal to Explicit" + Environment.NewLine +
                 "  But was:  Ignored" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(_e2, _e1));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Framework.Assert.Throws<AssertionException>(() => Assert.LessOrEqual(_e2, _e1));
+            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -155,10 +154,8 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: less than or equal to 4" + Environment.NewLine +
                 "  But was:  9" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.LessOrEqual(9, 4));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Framework.Assert.Throws<AssertionException>(() => Assert.LessOrEqual(9, 4));
+            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
     }
 }
-
-

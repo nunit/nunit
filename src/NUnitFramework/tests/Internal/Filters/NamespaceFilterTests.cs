@@ -1,8 +1,11 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Internal.Filters
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Filters;
+
+namespace NUnit.Framework.Tests.Internal.Filters
 {
-    [TestFixture("NUnit.Framework.Internal.Filters", false, true)]
+    [TestFixture("NUnit.Framework.Tests.Internal.Filters", false, true)]
     [TestFixture("NUnit.Framework.*", true, true)]
     [TestFixture("NUnit.Framework", false, false)]
     public class NamespaceFilterTests : TestFilterTests
@@ -39,6 +42,5 @@ namespace NUnit.Framework.Internal.Filters
             Assert.That(_filter.Pass(DummyFixtureSuite), Is.EqualTo(_expected));
             Assert.That(_filter.Pass(DummyFixtureSuite.Tests[0]), Is.EqualTo(_expected));
         }
-
     }
 }

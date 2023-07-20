@@ -597,7 +597,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="istart">The index in the strings at which comparison should start</param>
         /// <param name="ignoreCase">Boolean indicating whether case should be ignored</param>
         /// <returns>-1 if no mismatch found, or the index where mismatch found</returns>
-        static public int FindMismatchPosition(string expected, string actual, int istart, bool ignoreCase)
+        public static int FindMismatchPosition(string expected, string actual, int istart, bool ignoreCase)
         {
             int length = Math.Min(expected.Length, actual.Length);
 

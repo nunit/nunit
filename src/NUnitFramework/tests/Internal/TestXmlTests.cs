@@ -3,8 +3,9 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class TestXmlTests
@@ -35,23 +36,18 @@ namespace NUnit.Framework.Internal
         [Test]
         public void TestTypeTests()
         {
-            Assert.That(_testMethod.TestType,
-                Is.EqualTo("TestMethod"));
-            Assert.That(_testFixture.TestType,
-                Is.EqualTo("TestFixture"));
-            Assert.That(_testSuite.TestType,
-                Is.EqualTo("TestSuite"));
-            Assert.That(new TestAssembly("junk").TestType,
-                Is.EqualTo("Assembly"));
-            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType,
-                Is.EqualTo("GenericMethod"));
-            Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType,
-                Is.EqualTo("ParameterizedMethod"));
-            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(typeof(DummyFixture))).TestType,
-                Is.EqualTo("ParameterizedFixture"));
+            Assert.Multiple(() =>
+            {
+                Assert.That(_testMethod.TestType, Is.EqualTo("TestMethod"));
+                Assert.That(_testFixture.TestType, Is.EqualTo("TestFixture"));
+                Assert.That(_testSuite.TestType, Is.EqualTo("TestSuite"));
+                Assert.That(new TestAssembly("junk").TestType, Is.EqualTo("Assembly"));
+                Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "GenericMethod")).TestType, Is.EqualTo("GenericMethod"));
+                Assert.That(new ParameterizedMethodSuite(new MethodWrapper(typeof(DummyFixture), "ParameterizedMethod")).TestType, Is.EqualTo("ParameterizedMethod"));
+                Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(typeof(DummyFixture))).TestType, Is.EqualTo("ParameterizedFixture"));
+            });
             Type genericType = typeof(DummyGenericFixture<int>).GetGenericTypeDefinition();
-            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(genericType)).TestType,
-                Is.EqualTo("GenericFixture"));
+            Assert.That(new ParameterizedFixtureSuite(new TypeWrapper(genericType)).TestType, Is.EqualTo("GenericFixture"));
         }
 
         [Test]
@@ -158,8 +154,11 @@ namespace NUnit.Framework.Internal
                 {
                     string? name = node.Attributes["name"];
                     string? value = node.Attributes["value"];
-                    Assert.That(name, Is.Not.Null);
-                    Assert.That(value, Is.Not.Null);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(name, Is.Not.Null);
+                        Assert.That(value, Is.Not.Null);
+                    });
                     actualProps.Add(name + "=" + value);
                 }
 
@@ -174,7 +173,7 @@ namespace NUnit.Framework.Internal
                     {
                         string xpathQuery = $"{child.XmlElementName}[@id={child.Id}]";
                         TNode? childNode = topNode.SelectSingleNode(xpathQuery);
-                        Assert.That(childNode, Is.Not.Null, "Expected node for test with ID={0}, Name={1}", child.Id, child.Name);
+                        Assert.That(childNode, Is.Not.Null, $"Expected node for test with ID={child.Id}, Name={child.Name}");
 
                         CheckXmlForTest(child, childNode, recursive);
                     }

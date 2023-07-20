@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture(45, 45, 90)]
     [TestFixture(null, null, null)]
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void TestAddition()
         {
-            if(_one.HasValue && _two.HasValue && _expected.HasValue)
+            if (_one.HasValue && _two.HasValue && _expected.HasValue)
             {
                 Assert.That(_one.Value + _two.Value, Is.EqualTo(_expected.Value));
             }
@@ -129,7 +129,7 @@ namespace NUnit.Framework.Attributes
         {
             TestSuite instance = (TestSuite)_fixture.Tests[0];
             Test? method = TestFinder.Find("MethodWithoutParams", instance, false);
-            Assert.That(method, Is.Not.Null );
+            Assert.That(method, Is.Not.Null);
             Assert.That(method.FullName, Is.EqualTo(instance.FullName + ".MethodWithoutParams"));
         }
 
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Attributes
             TestSuite instance = (TestSuite)_fixture.Tests[0];
             TestSuite? method = (TestSuite?)TestFinder.Find("MethodWithParams", instance, false);
             Assert.That(method, Is.Not.Null);
-            
+
             Test testcase = (Test)method.Tests[0];
             Assert.That(testcase.Name, Is.EqualTo("MethodWithParams(10,20)"));
             Assert.That(testcase.FullName, Is.EqualTo(instance.FullName + ".MethodWithParams(10,20)"));

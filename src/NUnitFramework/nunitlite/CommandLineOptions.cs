@@ -234,7 +234,6 @@ namespace NUnit.Common
 
         protected virtual void CheckOptionCombinations()
         {
-
         }
 
         /// <summary>

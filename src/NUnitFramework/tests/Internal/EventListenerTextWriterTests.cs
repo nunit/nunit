@@ -4,9 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Execution;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     [TestFixture]
     public class EventListenerTextWriterTests
@@ -303,7 +304,7 @@ namespace NUnit.Framework.Internal
             Assert.That(ListenerResult.Outputs[0], Is.EqualTo(expected));
         }
 
-#region ITestListener implementation
+        #region ITestListener implementation
 
         private class TestListenerIntercepter : ITestListener
         {
@@ -336,10 +337,9 @@ namespace NUnit.Framework.Internal
 
             void ITestListener.SendMessage(TestMessage message)
             {
-
             }
         }
 
-#endregion
+        #endregion
     }
 }

@@ -148,7 +148,6 @@ namespace NUnitLite
             ((IDisposable)_xmlWriter).Dispose();
         }
 
-
         #region Element Creation Helpers
 
         private void StartTestElement(ITestResult result)
@@ -301,9 +300,9 @@ namespace NUnitLite
             _xmlWriter.WriteEndElement();
         }
 
-#endregion
+        #endregion
 
-#region Output Helpers
+        #region Output Helpers
         ///// <summary>
         ///// Makes string safe for xml parsing, replacing control chars with '?'
         ///// </summary>
@@ -357,6 +356,6 @@ namespace NUnitLite
                 _xmlWriter.WriteCData(text);
         }
 
-#endregion
+        #endregion
     }
 }

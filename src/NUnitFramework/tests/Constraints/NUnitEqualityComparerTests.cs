@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
-using NUnit.TestUtilities;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class NUnitEqualityComparerTests
@@ -452,7 +453,6 @@ namespace NUnit.Framework.Constraints
         {
             _disposedValue = true;
         }
-
     }
 
     public class NeverEqualIEquatableWithOverriddenAlwaysTrueEquals : IEquatable<NeverEqualIEquatableWithOverriddenAlwaysTrueEquals>
@@ -546,7 +546,7 @@ namespace NUnit.Framework.Constraints
             if (other is null)
                 return false;
 
-            return OtherProperty == other.OtherProperty && Equals((EquatableObject) other);
+            return OtherProperty == other.OtherProperty && Equals((EquatableObject)other);
         }
     }
 

@@ -4,9 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Internal.Extensions;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Internal.Extensions
+namespace NUnit.Framework.Tests.Internal.Extensions
 {
     public class IEnumerableExtensionTests
     {

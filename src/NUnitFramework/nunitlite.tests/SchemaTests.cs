@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.Tests.Assemblies;
-using NUnit.TestUtilities;
 
 namespace NUnitLite.Tests
 {

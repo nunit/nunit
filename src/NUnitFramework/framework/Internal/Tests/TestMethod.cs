@@ -18,9 +18,9 @@ namespace NUnit.Framework.Internal
         /// </summary>
         internal TestCaseParameters? Parms;
 
-#endregion
+        #endregion
 
-#region Constructor
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestMethod"/> class.
@@ -41,17 +41,17 @@ namespace NUnit.Framework.Internal
                 FullName = parentSuite.FullName + "." + Name;
         }
 
-#endregion
+        #endregion
 
-#region Properties
+        #region Properties
 
-        internal bool HasExpectedResult => Parms is {HasExpectedResult: true};
+        internal bool HasExpectedResult => Parms is { HasExpectedResult: true };
 
         internal object? ExpectedResult => Parms?.ExpectedResult;
 
         #endregion
 
-#region Test Overrides
+        #region Test Overrides
 
         /// <summary>
         /// Gets a MethodInfo for the method implementing this test.

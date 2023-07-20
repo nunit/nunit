@@ -161,10 +161,10 @@ namespace NUnit.Framework.Constraints
         {
             if (comparisonText is null)
                 throw new ArgumentNullException(nameof(comparisonText), "Comparison text can not be null");
-            
+
             StringBuilder sb = new StringBuilder(comparisonText);
             sb.Append(MsgUtils.FormatValue(_expected));
-                
+
             if (_tolerance is not null && _tolerance.HasVariance)
             {
                 sb.Append(" within ");
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Constraints
                     sb.Append(" percent");
                 }
             }
-                
+
             return sb.ToString();
         }
 

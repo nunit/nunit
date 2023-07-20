@@ -8,11 +8,12 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
-using NUnit.TestUtilities.Comparers;
+using NUnit.Framework.Tests.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Comparers;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     public class CollectionEquivalentConstraintTests
     {
@@ -101,15 +102,15 @@ namespace NUnit.Framework.Constraints
 
         [Test]
         [TestCaseSource(typeof(IgnoreCaseDataProvider), nameof(IgnoreCaseDataProvider.TestCases))]
-        public void HonorsIgnoreCase( IEnumerable expected, IEnumerable actual )
+        public void HonorsIgnoreCase(IEnumerable expected, IEnumerable actual)
         {
-            var constraint = new CollectionEquivalentConstraint( expected ).IgnoreCase;
-            var constraintResult = constraint.ApplyTo( actual );
-            if ( !constraintResult.IsSuccess )
+            var constraint = new CollectionEquivalentConstraint(expected).IgnoreCase;
+            var constraintResult = constraint.ApplyTo(actual);
+            if (!constraintResult.IsSuccess)
             {
                 MessageWriter writer = new TextMessageWriter();
-                constraintResult.WriteMessageTo( writer );
-                Assert.Fail( writer.ToString() );
+                constraintResult.WriteMessageTo(writer);
+                Assert.Fail(writer.ToString());
             }
         }
 
@@ -120,21 +121,20 @@ namespace NUnit.Framework.Constraints
                 get
                 {
                     yield return new TestCaseData(new SimpleObjectCollection("x", "y", "z"), new SimpleObjectCollection("z", "Y", "X"));
-                    yield return new TestCaseData(new[] {'A', 'B', 'C'}, new object[] {'a', 'c', 'b'});
-                    yield return new TestCaseData(new[] {"a", "b", "c"}, new object[] {"A", "C", "B"});
-                    yield return new TestCaseData(new Dictionary<int, string> {{2, "b"}, {1, "a"}}, new Dictionary<int, string> {{1, "A"}, {2, "b"}});
-                    yield return new TestCaseData(new Dictionary<int, char> {{1, 'A'}}, new Dictionary<int, char> {{1, 'a'}});
-                    yield return new TestCaseData(new Dictionary<string, int> {{ "b", 2 }, { "a", 1 } }, new Dictionary<string, int> {{"A", 1}, {"b", 2}});
-                    yield return new TestCaseData(new Dictionary<char, int> {{'A', 1 }}, new Dictionary<char, int> {{'a', 1}});
+                    yield return new TestCaseData(new[] { 'A', 'B', 'C' }, new object[] { 'a', 'c', 'b' });
+                    yield return new TestCaseData(new[] { "a", "b", "c" }, new object[] { "A", "C", "B" });
+                    yield return new TestCaseData(new Dictionary<int, string> { { 2, "b" }, { 1, "a" } }, new Dictionary<int, string> { { 1, "A" }, { 2, "b" } });
+                    yield return new TestCaseData(new Dictionary<int, char> { { 1, 'A' } }, new Dictionary<int, char> { { 1, 'a' } });
+                    yield return new TestCaseData(new Dictionary<string, int> { { "b", 2 }, { "a", 1 } }, new Dictionary<string, int> { { "A", 1 }, { "b", 2 } });
+                    yield return new TestCaseData(new Dictionary<char, int> { { 'A', 1 } }, new Dictionary<char, int> { { 'a', 1 } });
 
-                    yield return new TestCaseData(new Hashtable {{1, "a"}, {2, "b"}}, new Hashtable {{1, "A"},{2, "B"}});
-                    yield return new TestCaseData(new Hashtable {{1, 'A'}, {2, 'B'}}, new Hashtable {{1, 'a'},{2, 'b'}});
-                    yield return new TestCaseData(new Hashtable {{"b", 2}, {"a", 1}}, new Hashtable {{"A", 1}, {"b", 2}});
-                    yield return new TestCaseData(new Hashtable {{'A', 1}}, new Hashtable {{'a', 1}});
+                    yield return new TestCaseData(new Hashtable { { 1, "a" }, { 2, "b" } }, new Hashtable { { 1, "A" }, { 2, "B" } });
+                    yield return new TestCaseData(new Hashtable { { 1, 'A' }, { 2, 'B' } }, new Hashtable { { 1, 'a' }, { 2, 'b' } });
+                    yield return new TestCaseData(new Hashtable { { "b", 2 }, { "a", 1 } }, new Hashtable { { "A", 1 }, { "b", 2 } });
+                    yield return new TestCaseData(new Hashtable { { 'A', 1 } }, new Hashtable { { 'a', 1 } });
                 }
             }
         }
-
 
         [Test]
         public void EquivalentHonorsUsing()
@@ -368,7 +368,7 @@ namespace NUnit.Framework.Constraints
         {
             var actual = new StringCollection();
             var expected = new StringCollection();
-            foreach(var i in Enumerable.Range(0, SIZE))
+            foreach (var i in Enumerable.Range(0, SIZE))
             {
                 actual.Add(i.ToString());
                 expected.Add(i.ToString());

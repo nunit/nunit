@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class NumericsTests
@@ -87,7 +88,7 @@ namespace NUnit.Framework.Constraints
         public void CanCompareDecimalsWithHighPrecision()
         {
             var expected = 95217168582.206969750145956m;
-            var actual =   95217168582.20696975014595521m;
+            var actual = 95217168582.20696975014595521m;
 
             var result = Numerics.Compare(expected, actual);
 
@@ -148,7 +149,7 @@ namespace NUnit.Framework.Constraints
         public void CanCompareMidRangeDecimalAndDouble()
         {
             var expected = 3.14159m;
-            var actual =   2.718281d;
+            var actual = 2.718281d;
 
             var result = Numerics.Difference(expected, actual, ToleranceMode.Linear);
 

@@ -11,7 +11,7 @@ namespace NUnit.TestData.RepeatingTests
         public void SucceedsEveryTime()
         {
             Count++;
-            Assert.IsTrue(true);
+            Assert.Pass();
         }
     }
 
@@ -21,7 +21,7 @@ namespace NUnit.TestData.RepeatingTests
         public void FailsEveryTime()
         {
             Count++;
-            Assert.IsFalse(true);
+            Assert.Fail();
         }
     }
 
@@ -33,7 +33,7 @@ namespace NUnit.TestData.RepeatingTests
             Count++;
 
             if (Count < 2)
-                Assert.IsTrue(false);
+                Assert.Fail();
         }
     }
 
@@ -45,7 +45,7 @@ namespace NUnit.TestData.RepeatingTests
             Count++;
 
             if (Count < 3)
-                Assert.IsTrue(false);
+                Assert.Fail();
         }
     }
 
@@ -140,7 +140,7 @@ namespace NUnit.TestData.RepeatingTests
         public void TestWithCategory()
         {
             Count++;
-            Assert.IsTrue(true);
+            Assert.Pass();
         }
     }
 
@@ -151,7 +151,7 @@ namespace NUnit.TestData.RepeatingTests
         public void FailsEveryTime(int unused)
         {
             Count++;
-            Assert.IsTrue(false);
+            Assert.Fail();
         }
     }
 

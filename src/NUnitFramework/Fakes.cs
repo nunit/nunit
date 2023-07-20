@@ -6,7 +6,7 @@ using NUnit.Framework.Internal.Execution;
 
 #nullable enable
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     /// <summary>
     /// Fakes provides static methods for creating test dummies of various kinds

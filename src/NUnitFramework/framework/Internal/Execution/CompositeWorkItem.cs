@@ -169,7 +169,7 @@ namespace NUnit.Framework.Internal.Execution
                 // ParameterizedMethodSuites and individual test cases both use the same
                 // MethodInfo as a source of attributes. We handle the Test and Default targets
                 // in the test case, so we don't want to doubly handle it here.
-                bool applyToSuite =  action.Targets.HasFlag(ActionTargets.Suite)
+                bool applyToSuite = action.Targets.HasFlag(ActionTargets.Suite)
                     || action.Targets == ActionTargets.Default && !(Test is ParameterizedMethodSuite);
 
                 bool applyToTest = action.Targets.HasFlag(ActionTargets.Test)
@@ -346,7 +346,7 @@ namespace NUnit.Framework.Internal.Execution
             return (string?)Test.Properties.Get(PropertyNames.ProviderStackTrace);
         }
 
-        private readonly object _childCompletionLock = new object();
+        private readonly object _childCompletionLock = new();
 
         private void OnChildItemCompleted(object? sender, EventArgs e)
         {
@@ -384,7 +384,7 @@ namespace NUnit.Framework.Internal.Execution
                 Context.Dispatcher.Dispatch(new OneTimeTearDownWorkItem(this));
         }
 
-        private readonly object _cancelLock = new object();
+        private readonly object _cancelLock = new();
 
         /// <summary>
         /// Cancel (abort or stop) a CompositeWorkItem and all of its children
@@ -418,7 +418,7 @@ namespace NUnit.Framework.Internal.Execution
         {
             private readonly CompositeWorkItem _originalWorkItem;
 
-            private readonly object _teardownLock = new object();
+            private readonly object _teardownLock = new();
 
             /// <summary>
             /// Construct a OneTimeTearDownWOrkItem wrapping a CompositeWorkItem
@@ -487,4 +487,3 @@ namespace NUnit.Framework.Internal.Execution
         #endregion
     }
 }
-

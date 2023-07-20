@@ -43,7 +43,7 @@ namespace NUnit.Framework
         /// use within a test, but it should not be used
         /// outside the test for which it is created.
         /// </summary>
-        public static TestContext CurrentContext => new TestContext(TestExecutionContext.CurrentContext);
+        public static TestContext CurrentContext => new(TestExecutionContext.CurrentContext);
 
         /// <summary>
         /// Gets a TextWriter that will send output to the current test result.
@@ -63,7 +63,7 @@ namespace NUnit.Framework
         /// <summary>
         /// TestParameters object holds parameters for the test run, if any are specified
         /// </summary>
-        public static readonly TestParameters Parameters = new TestParameters();
+        public static readonly TestParameters Parameters = new();
 
         /// <summary>
         /// Static DefaultWorkDirectory is now used as the source
@@ -149,10 +149,10 @@ namespace NUnit.Framework
         public static void Write(double value) { Out.Write(value); }
 
         /// <summary>Write the string representation of an Int32 value to the current result</summary>
-        public static void Write(Int32 value) { Out.Write(value); }
+        public static void Write(int value) { Out.Write(value); }
 
         /// <summary>Write the string representation of an Int64 value to the current result</summary>
-        public static void Write(Int64 value) { Out.Write(value); }
+        public static void Write(long value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a decimal value to the current result</summary>
         public static void Write(decimal value) { Out.Write(value); }
@@ -161,18 +161,18 @@ namespace NUnit.Framework
         public static void Write(object? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a Single value to the current result</summary>
-        public static void Write(Single value) { Out.Write(value); }
+        public static void Write(float value) { Out.Write(value); }
 
         /// <summary>Write a string to the current result</summary>
         public static void Write(string? value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a UInt32 value to the current result</summary>
         [CLSCompliant(false)]
-        public static void Write(UInt32 value) { Out.Write(value); }
+        public static void Write(uint value) { Out.Write(value); }
 
         /// <summary>Write the string representation of a UInt64 value to the current result</summary>
         [CLSCompliant(false)]
-        public static void Write(UInt64 value) { Out.Write(value); }
+        public static void Write(ulong value) { Out.Write(value); }
 
         /// <summary>Write a formatted string to the current result</summary>
         public static void Write(string format, object? arg1) { Out.Write(format, arg1); }
@@ -202,10 +202,10 @@ namespace NUnit.Framework
         public static void WriteLine(double value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of an Int32 value to the current result followed by a line terminator</summary>
-        public static void WriteLine(Int32 value) { Out.WriteLine(value); }
+        public static void WriteLine(int value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of an Int64 value to the current result followed by a line terminator</summary>
-        public static void WriteLine(Int64 value) { Out.WriteLine(value); }
+        public static void WriteLine(long value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a decimal value to the current result followed by a line terminator</summary>
         public static void WriteLine(decimal value) { Out.WriteLine(value); }
@@ -214,18 +214,18 @@ namespace NUnit.Framework
         public static void WriteLine(object? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a Single value to the current result followed by a line terminator</summary>
-        public static void WriteLine(Single value) { Out.WriteLine(value); }
+        public static void WriteLine(float value) { Out.WriteLine(value); }
 
         /// <summary>Write a string to the current result followed by a line terminator</summary>
         public static void WriteLine(string? value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a UInt32 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
-        public static void WriteLine(UInt32 value) { Out.WriteLine(value); }
+        public static void WriteLine(uint value) { Out.WriteLine(value); }
 
         /// <summary>Write the string representation of a UInt64 value to the current result followed by a line terminator</summary>
         [CLSCompliant(false)]
-        public static void WriteLine(UInt64 value) { Out.WriteLine(value); }
+        public static void WriteLine(ulong value) { Out.WriteLine(value); }
 
         /// <summary>Write a formatted string to the current result followed by a line terminator</summary>
         public static void WriteLine(string format, object? arg1) { Out.WriteLine(format, arg1); }
@@ -285,9 +285,9 @@ namespace NUnit.Framework
             AddFormatter(next => val => (val is TSupported) ? formatter(val) : next(val));
         }
 
-#endregion
+        #endregion
 
-#region Nested TestAdapter Class
+        #region Nested TestAdapter Class
 
         /// <summary>
         /// TestAdapter adapts a Test for consumption by
@@ -297,7 +297,7 @@ namespace NUnit.Framework
         {
             private readonly Test _test;
 
-#region Constructor
+            #region Constructor
 
             /// <summary>
             /// Construct a TestAdapter for a Test
@@ -308,9 +308,9 @@ namespace NUnit.Framework
                 _test = test;
             }
 
-#endregion
+            #endregion
 
-#region Properties
+            #region Properties
 
             /// <summary>
             /// Gets the unique Id of a test
@@ -371,7 +371,7 @@ namespace NUnit.Framework
             /// <summary>
             /// The expected result if there is one for the test
             /// </summary>
-            public object? ExpectedResult 
+            public object? ExpectedResult
             {
                 get { return (_test as TestMethod)?.ExpectedResult; }
             }
@@ -379,9 +379,9 @@ namespace NUnit.Framework
             #endregion
         }
 
-#endregion
+        #endregion
 
-#region Nested ResultAdapter Class
+        #region Nested ResultAdapter Class
 
         /// <summary>
         /// ResultAdapter adapts a TestResult for consumption by
@@ -391,7 +391,7 @@ namespace NUnit.Framework
         {
             private readonly TestResult _result;
 
-#region Constructor
+            #region Constructor
 
             /// <summary>
             /// Construct a ResultAdapter for a TestResult
@@ -402,9 +402,9 @@ namespace NUnit.Framework
                 _result = result;
             }
 
-#endregion
+            #endregion
 
-#region Properties
+            #region Properties
 
             /// <summary>
             /// Gets a ResultState representing the outcome of the test
@@ -512,7 +512,7 @@ namespace NUnit.Framework
                 {
                     if (_source.TryGet(key, out var values))
                     {
-                        foreach(var item in values)
+                        foreach (var item in values)
                         {
                             yield return item;
                         }

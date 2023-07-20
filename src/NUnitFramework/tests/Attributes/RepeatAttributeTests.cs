@@ -7,6 +7,7 @@
 //
 // #1 is feasible but doesn't provide much benefit
 // #2 requires infrastructure for dynamic test cases first
+
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
@@ -14,9 +15,9 @@ using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Builders;
 using NUnit.Framework.Internal.Commands;
 using NUnit.TestData.RepeatingTests;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     [TestFixture]
     public partial class RepeatAttributeTests
@@ -34,15 +35,17 @@ namespace NUnit.Framework.Attributes
         [TestCase(typeof(RepeatErrorOnThirdTryFixture), "Failed(Child)", 3)]
         public void RepeatWorksAsExpected(Type fixtureType, string outcome, int nTries)
         {
-            RepeatingTestsFixtureBase fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
+            var fixture = (RepeatingTestsFixtureBase)Reflect.Construct(fixtureType);
             ITestResult result = TestBuilder.RunTestFixture(fixture);
-
-            Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
-            Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
-            Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
-            Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
-            Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
-            Assert.That(fixture.Count, Is.EqualTo(nTries));
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.ResultState.ToString(), Is.EqualTo(outcome));
+                Assert.That(fixture.FixtureSetupCount, Is.EqualTo(1));
+                Assert.That(fixture.FixtureTeardownCount, Is.EqualTo(1));
+                Assert.That(fixture.SetupCount, Is.EqualTo(nTries));
+                Assert.That(fixture.TeardownCount, Is.EqualTo(nTries));
+                Assert.That(fixture.Count, Is.EqualTo(nTries));
+            });
         }
 
         [Test]
@@ -69,7 +72,7 @@ namespace NUnit.Framework.Attributes
         public void CategoryWorksWithRepeatedTest()
         {
             TestSuite suite = TestBuilder.MakeFixture(typeof(RepeatedTestWithCategory));
-            Test? test = suite.Tests[0] as Test;
+            var test = suite.Tests[0] as Test;
             Assert.That(test, Is.Not.Null);
             System.Collections.IList categories = test.Properties["Category"];
             Assert.That(categories, Is.Not.Null);

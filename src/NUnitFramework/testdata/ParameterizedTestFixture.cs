@@ -13,7 +13,7 @@ namespace NUnit.TestData
         {
         }
 
-        [TestCase(10,20)]
+        [TestCase(10, 20)]
         public void MethodWithParams(int x, int y)
         {
         }

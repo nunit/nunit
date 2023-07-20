@@ -37,4 +37,4 @@ namespace NUnit.Framework.Constraints
                 stack.Push(new AttributeConstraint(_type, stack.Pop()));
         }
     }
- }
+}

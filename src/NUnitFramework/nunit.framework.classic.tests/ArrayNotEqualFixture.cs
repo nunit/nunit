@@ -1,6 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Classic.Tests
 {
     /// <summary>
     /// Summary description for ArrayNotEqualFixture.
@@ -34,6 +34,5 @@ namespace NUnit.Framework.Assertions
             object[] array2 = { "one", "three", "two" };
             Assert.AreNotEqual(array1, array2);
         }
-
     }
 }

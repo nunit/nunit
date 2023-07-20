@@ -40,7 +40,7 @@ namespace NUnit.TestData.AssertIgnoreData
         [SetUp]
         public void SetUp()
         {
-            Assert.Ignore( "Ignore this test" );
+            Assert.Ignore("Ignore this test");
         }
 
         [Test]

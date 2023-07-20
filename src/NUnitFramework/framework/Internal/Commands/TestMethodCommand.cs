@@ -43,7 +43,7 @@ namespace NUnit.Framework.Internal.Commands
             var result = RunTestMethod(context);
 
             if (_testMethod.HasExpectedResult)
-                Assert.AreEqual(_testMethod.ExpectedResult, result);
+                Assert.That(result, Is.EqualTo(_testMethod.ExpectedResult));
 
             context.CurrentResult.SetResult(ResultState.Success);
 

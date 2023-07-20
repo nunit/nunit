@@ -3,7 +3,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class IndexerConstraintTests
@@ -40,19 +40,19 @@ namespace NUnit.Framework.Constraints
                 { { {7}, {8}, {9} }, { {10}, {11}, {12} } }
             };
 
-            Assert.That(tester, Has.ItemAt(0,0,0,0).EqualTo(1));
-            Assert.That(tester, Has.ItemAt(1,1,2,0).EqualTo(12));
+            Assert.That(tester, Has.ItemAt(0, 0, 0, 0).EqualTo(1));
+            Assert.That(tester, Has.ItemAt(1, 1, 2, 0).EqualTo(12));
         }
 
         [Test]
         public void DoesNotMatchMissingIndexerEquality()
         {
             var expectedErrorMessage = $"  Expected string length 14 but was 13. Strings differ at index 0.{NL}  Expected: \"Second indexer\"{NL}  But was:  \"Third indexer\"{NL}  -----------^{NL}";
-            
+
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.ItemAt(4, 2).EqualTo("Second indexer")));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]
@@ -63,18 +63,18 @@ namespace NUnit.Framework.Constraints
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo("Second indexer")));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]
         public void DoesNotMatchWhenIndexerIsNotExpectedToBeEqual()
         {
-            var expectedErrorMessage = "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Constraints.IndexerConstraintTests+IndexerTester.";
+            var expectedErrorMessage = "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Tests.Constraints.IndexerConstraintTests+IndexerTester.";
 
             var tester = new IndexerTester();
 
             var ex = Assert.Throws<ArgumentException>(() => Assert.That(tester, Has.No.ItemAt(21d).EqualTo("Should Throw")));
-            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
         }
 
         [Test]

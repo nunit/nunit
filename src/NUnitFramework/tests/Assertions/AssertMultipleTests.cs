@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.TestData.AssertMultipleData;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 using AM = NUnit.TestData.AssertMultipleData.AssertMultipleFixture;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.Assertions
 {
     public class AssertMultipleTests
     {
@@ -206,7 +206,7 @@ namespace NUnit.Framework.Assertions
             Assert.That(false);
         }
     }
-    
+
     internal class ComplexNumber
     {
         public ComplexNumber(double realPart, double imaginaryPart)

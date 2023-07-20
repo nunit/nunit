@@ -40,8 +40,8 @@ namespace NUnit.Framework.Constraints
         /// <returns>True for success, false for failure</returns>
         public override ConstraintResult ApplyTo<TActual>(TActual actual)
         {
-            if ( _from is null || _to is null || actual is null)
-                throw new ArgumentException( "Cannot compare using a null reference", nameof(actual) );
+            if (_from is null || _to is null || actual is null)
+                throw new ArgumentException("Cannot compare using a null reference", nameof(actual));
             CompareFromAndTo();
             bool isInsideRange = _comparer.Compare(_from, actual) <= 0 && _comparer.Compare(_to, actual) >= 0;
             return new ConstraintResult(this, actual, isInsideRange);

@@ -36,7 +36,7 @@ namespace NUnit.Framework
                 }
             }
 
-            Assert.That(caughtException, expression, message, args);
+            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
 
             return caughtException;
         }
@@ -190,7 +190,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotThrow(TestDelegate code, string? message, params object?[]? args)
         {
-            Assert.That(code, new ThrowsNothingConstraint(), message, args);
+            Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

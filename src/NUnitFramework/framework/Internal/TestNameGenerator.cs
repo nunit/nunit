@@ -162,7 +162,6 @@ namespace NUnit.Framework.Internal
                 start = rcurly + 1;
             }
 
-
             // Output any trailing plain text
             if (start < pattern.Length)
                 fragments.Add(new FixedTextFragment(pattern.Substring(start)));
@@ -203,7 +202,7 @@ namespace NUnit.Framework.Internal
                     ? "null"
                     : Convert.ToString(arg, System.Globalization.CultureInfo.InvariantCulture)!;
 
-                if (arg is Array {Rank: 1} argArray)
+                if (arg is Array { Rank: 1 } argArray)
                 {
                     if (argArray.Length == 0)
                     {
@@ -224,7 +223,7 @@ namespace NUnit.Framework.Internal
 
                             var element = argArray.GetValue(i);
 
-                            if (element is Array {Rank: 1} childArray)
+                            if (element is Array { Rank: 1 } childArray)
                             {
                                 builder.Append(childArray.GetType().GetElementType()!.Name);
                                 builder.Append("[]");

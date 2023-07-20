@@ -4,13 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NUnit.TestUtilities.Collections
+namespace NUnit.Framework.Tests.TestUtilities.Collections
 {
     /// <summary>
     /// SimpleObjectCollection is used in testing to ensure that only
     /// methods of the ICollection interface are accessible.
     /// </summary>
-    internal class SimpleObjectCollection : ICollection
+    public class SimpleObjectCollection : ICollection
     {
         private readonly List<object?> _contents;
 

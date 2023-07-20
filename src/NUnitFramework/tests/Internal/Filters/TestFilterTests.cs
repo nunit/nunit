@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.TestUtilities;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Internal.Filters
+namespace NUnit.Framework.Tests.Internal.Filters
 {
     // Filter XML formats
     //
@@ -38,15 +39,15 @@ namespace NUnit.Framework.Internal.Filters
 
     public abstract class TestFilterTests
     {
-        public const string DUMMY_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+DummyFixture";
-        public const string ANOTHER_CLASS = "NUnit.Framework.Internal.Filters.TestFilterTests+AnotherFixture";
+        public const string DUMMY_CLASS = "NUnit.Framework.Tests.Internal.Filters.TestFilterTests+DummyFixture";
+        public const string ANOTHER_CLASS = "NUnit.Framework.Tests.Internal.Filters.TestFilterTests+AnotherFixture";
         public const string DUMMY_CLASS_REGEX = "NUnit.*\\+DummyFixture";
         public const string ANOTHER_CLASS_REGEX = "NUnit.*\\+AnotherFixture";
 
         protected readonly TestSuite DummyFixtureSuite = TestBuilder.MakeFixture(typeof(DummyFixture));
         protected readonly TestSuite AnotherFixtureSuite = TestBuilder.MakeFixture(typeof(AnotherFixture));
         protected readonly TestSuite YetAnotherFixtureSuite = TestBuilder.MakeFixture(typeof(YetAnotherFixture));
-        protected readonly TestSuite FixtureWithMultipleTestsSuite = TestBuilder.MakeFixture (typeof (FixtureWithMultipleTests));
+        protected readonly TestSuite FixtureWithMultipleTestsSuite = TestBuilder.MakeFixture(typeof(FixtureWithMultipleTests));
         protected readonly TestSuite NestingFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture));
         protected readonly TestSuite NestedFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture.NestedFixture));
         protected readonly TestSuite EmptyNestedFixtureSuite = TestBuilder.MakeFixture(typeof(NestingFixture.EmptyNestedFixture));
@@ -74,9 +75,7 @@ namespace NUnit.Framework.Internal.Filters
         {
             [Test]
             public void Test() { }
-
         }
-
 
         [Category("Special,Character-Fixture+!")]
         private class SpecialCharactersFixture
@@ -98,10 +97,10 @@ namespace NUnit.Framework.Internal.Filters
         private class FixtureWithMultipleTests
         {
             [Test]
-            public void Test1 () {}
+            public void Test1() { }
 
-            [Test, Category ("Dummy")]
-            public void Test2 () {}
+            [Test, Category("Dummy")]
+            public void Test2() { }
         }
 
         private class NestingFixture

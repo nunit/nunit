@@ -57,7 +57,6 @@ namespace NUnit.TestData
         public void TestWithGeneric_PassingInGenericParameter_ThatIsRunnable<T>(T parameter)
         {
             Assert.That(parameter, Is.EqualTo(1));
-
         }
     }
 }

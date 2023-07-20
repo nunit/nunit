@@ -13,7 +13,6 @@ namespace NUnit.Framework.Internal
     /// </summary>
     public static class ExceptionHelper
     {
-
         /// <summary>
         /// Rethrows an exception, preserving its stack trace
         /// </summary>
@@ -31,7 +30,7 @@ namespace NUnit.Framework.Internal
         /// <param name="exception">The exception.</param>
         /// <param name="excludeExceptionNames">Flag indicating whether exception names should be excluded.</param>
         /// <returns>A combined message string.</returns>
-        public static string BuildMessage(Exception exception, bool excludeExceptionNames=false)
+        public static string BuildMessage(Exception exception, bool excludeExceptionNames = false)
         {
             Guard.ArgumentNotNull(exception, nameof(exception));
 

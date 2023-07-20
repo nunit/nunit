@@ -297,8 +297,8 @@ namespace NUnit.TestData.AssertMultipleData
         {
             Assert.Multiple(() =>
             {
-                Assert.AreEqual(5, 2 + 2, "Failure 1");
-                Assert.True(1 == 0, "Failure 2");
+                Assert.That(2 + 2, Is.EqualTo(5), "Failure 1");
+                NUnit.Framework.Classic.Assert.True(1 == 0, "Failure 2");
                 throw new Exception("Simulated Error");
             });
         }
@@ -369,7 +369,7 @@ namespace NUnit.TestData.AssertMultipleData
                 await Task.Delay(100);
                 Assert.That(2 + 2, Is.EqualTo(4));
 
-                Assert.Multiple(async () =>
+                await Assert.MultipleAsync(async () =>
                 {
                     await Task.Delay(100);
                     Assert.That(Complex.RealPart, Is.EqualTo(5.2));

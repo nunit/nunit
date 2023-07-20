@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     #region Mock types
 
@@ -154,7 +155,6 @@ namespace NUnit.Framework.Internal
 
         private void TestShortenedNameDifference(object objA, object objB, string expectedA, string expectedB)
         {
-
             _differenceGetter.ResolveTypeNameDifference(
                  objA, objB, out var actualA, out var actualB);
 
@@ -239,12 +239,12 @@ namespace NUnit.Framework.Internal
         {
             TestShortenedNameDifference(
                 new DummyGenericClass<Dummy>(new Dummy(1)),
-                new KeyValuePair<int, string>(1, ""),
+                new KeyValuePair<int, string>(1, string.Empty),
                 "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]",
                 "KeyValuePair`2[Int32,String]");
 
             TestShortenedNameDifference(
-                new KeyValuePair<int, string>(1, ""),
+                new KeyValuePair<int, string>(1, string.Empty),
                 new DummyGenericClass<Dummy>(new Dummy(1)),
                 "KeyValuePair`2[Int32,String]",
                 "TypeNameDifferenceTests+DummyGenericClass`1[TypeNameDifferenceTests+Dummy]");
@@ -349,7 +349,7 @@ namespace NUnit.Framework.Internal
 
             TestShortenedNameDifference(
                new B.GenC<A.GenA<List<int>>, B.GenC<string, B.GenC<string, int>>>(),
-               new A.GenA<B.GenC<string, B.GenC<string,int>>>(),
+               new A.GenA<B.GenC<string, B.GenC<string, int>>>(),
                "GenC`2[GenA`1[List`1[Int32]],GenC`2[String,GenC`2[String,Int32]]]",
                "GenA`1[GenC`2[String,GenC`2[String,Int32]]]");
 
@@ -377,7 +377,7 @@ namespace NUnit.Framework.Internal
         {
             var generic = new DifferingNamespace1.DummyGeneric<int>(1).GetType();
 
-            var expected = "NUnit.Framework.Internal.DifferingNamespace1.DummyGeneric`1";
+            var expected = "NUnit.Framework.Tests.Internal.DifferingNamespace1.DummyGeneric`1";
 
             var actual = _differenceGetter.GetGenericTypeName(generic);
 
@@ -406,7 +406,6 @@ namespace NUnit.Framework.Internal
 
         private void TestShortenTypeNames(object objA, object objB, string shortenedA, string shortenedB)
         {
-
             _differenceGetter.ShortenTypeNames(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
             Assert.That(actualA, Is.EqualTo(shortenedA));
@@ -425,7 +424,6 @@ namespace NUnit.Framework.Internal
 
         private void TestShortenGenericTopLevelTypeNames(object objA, object objB, string shortenedA, string shortenedB)
         {
-
             _differenceGetter.GetShortenedGenericTypes(objA.GetType(), objB.GetType(), out var actualA, out var actualB);
 
             Assert.That(actualA, Is.EqualTo(shortenedA));

@@ -25,7 +25,6 @@ namespace NUnit.Framework.Constraints
 
         #region Write Methods
 
-
         /// <summary>
         /// Write the additional failure message for a failing constraint to a
         /// MessageWriter.
@@ -38,5 +37,4 @@ namespace NUnit.Framework.Constraints
 
         #endregion
     }
-
 }

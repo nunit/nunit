@@ -3,9 +3,9 @@
 using System;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Syntax
+namespace NUnit.Framework.Tests.Syntax
 {
     [TestFixture]
     public class ThrowsTests
@@ -123,7 +123,7 @@ namespace NUnit.Framework.Syntax
                 Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.TypeOf<ArgumentException>()));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex.Message, Does.StartWith(
+            Assert.That(ex?.Message, Does.StartWith(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
         }
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Syntax
                 Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.InstanceOf<ArgumentException>()));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex.Message, Does.StartWith(
+            Assert.That(ex?.Message, Does.StartWith(
                 "  Expected: instance of <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
         }

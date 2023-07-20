@@ -5,10 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
-using NUnit.TestUtilities.Collections;
+using NUnit.Framework.Tests.TestUtilities.Collections;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     internal class CollectionEqualsTests
@@ -57,7 +58,7 @@ namespace NUnit.Framework.Constraints
             IEnumerable<int> actual = expected.Take(2);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(
+            Assert.That(ex?.Message, Is.EqualTo(
                 $"  Expected is {MsgUtils.GetTypeRepresentation(expected)}, actual is {MsgUtils.GetTypeRepresentation(actual)}" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  Missing:  < 3, ... >"));
@@ -70,8 +71,8 @@ namespace NUnit.Framework.Constraints
             ICollection actual = new SimpleObjectCollection(1, 5, 3);
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex.Message, Is.EqualTo(
-                "  Expected is <System.Int32[3]>, actual is <NUnit.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
+            Assert.That(ex?.Message, Is.EqualTo(
+                "  Expected is <System.Int32[3]>, actual is <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [1]" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "2" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));

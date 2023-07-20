@@ -62,7 +62,7 @@ namespace NUnit.Framework.Internal.Filters
                     break;
                 }
 
-                expectedValues.Add(((ValueMatchFilter) filter).ExpectedValue);
+                expectedValues.Add(((ValueMatchFilter)filter).ExpectedValue);
             }
 
             if (hashCommonTypeAndNonRegex)

@@ -59,7 +59,7 @@ namespace NUnit.Framework.Internal
         /// <param name="args"></param>
         public TextMessageWriter(string? userMessage, params object?[]? args)
         {
-            if (userMessage is not null && userMessage != string.Empty)
+            if (!string.IsNullOrEmpty(userMessage))
                 WriteMessageLine(userMessage, args);
         }
         #endregion
@@ -117,7 +117,8 @@ namespace NUnit.Framework.Internal
         /// <param name="actual">The actual value causing the failure</param>
         /// <param name="expectedType">Output of the unique type name for expected</param>
         /// <param name="actualType">Output of the unique type name for actual</param>
-        private void ResolveTypeNameDifference(object expected, object actual, out string expectedType, out string actualType) {
+        private void ResolveTypeNameDifference(object expected, object actual, out string expectedType, out string actualType)
+        {
             TypeNameDifferenceResolver resolver = new TypeNameDifferenceResolver();
             resolver.ResolveTypeNameDifference(expected, actual, out expectedType, out actualType);
 
@@ -135,7 +136,7 @@ namespace NUnit.Framework.Internal
         /// <param name="actual">The actual value causing the failure</param>
         public override void DisplayDifferences(object? expected, object? actual)
         {
-            DisplayDifferences(expected, actual,null);
+            DisplayDifferences(expected, actual, null);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace NUnit.Framework.Internal
                 - PrefixLength   // Allow for prefix
                 - 2;             // 2 quotation marks
 
-            if ( clipping )
+            if (clipping)
                 MsgUtils.ClipExpectedAndActual(ref expected, ref actual, maxDisplayLength, mismatch);
 
             expected = MsgUtils.EscapeControlChars(expected);
@@ -186,12 +187,12 @@ namespace NUnit.Framework.Internal
             // The mismatch position may have changed due to clipping or white space conversion
             mismatch = MsgUtils.FindMismatchPosition(expected, actual, 0, ignoreCase);
 
-            Write( Pfx_Expected );
-            Write( MsgUtils.FormatValue(expected) );
-            if ( ignoreCase )
-                Write( ", ignoring case" );
+            Write(Pfx_Expected);
+            Write(MsgUtils.FormatValue(expected));
+            if (ignoreCase)
+                Write(", ignoring case");
             WriteLine();
-            WriteActualLine( actual );
+            WriteActualLine(actual);
             //DisplayDifferences(expected, actual);
             if (mismatch >= 0)
                 WriteCaretLine(mismatch);
@@ -253,7 +254,8 @@ namespace NUnit.Framework.Internal
         {
             Write(Pfx_Expected);
             Write(MsgUtils.FormatValue(expected));
-            if (_sameValDiffTypes) {
+            if (_sameValDiffTypes)
+            {
                 Write(_expectedType);
             }
             if (tolerance is not null && tolerance.HasVariance)

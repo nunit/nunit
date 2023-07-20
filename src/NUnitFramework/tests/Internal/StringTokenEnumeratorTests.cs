@@ -2,15 +2,16 @@
 
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Internal;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     public class StringTokenEnumeratorTests
     {
         [Test]
         public void Empty()
         {
-            var tokens = Enumerate("", ',');
+            var tokens = Enumerate(string.Empty, ',');
             Assert.That(tokens, Is.Empty);
         }
 

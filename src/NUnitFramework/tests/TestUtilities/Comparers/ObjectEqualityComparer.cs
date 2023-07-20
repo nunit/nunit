@@ -2,7 +2,7 @@
 
 using System.Collections;
 
-namespace NUnit.TestUtilities.Comparers
+namespace NUnit.Framework.Tests.TestUtilities.Comparers
 {
     /// <summary>
     /// ObjectEqualityComparer is used in testing to ensure that only

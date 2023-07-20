@@ -2,9 +2,8 @@
 
 using System;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
-
     public abstract class StringConstraintTests : ConstraintTestBase
     {
         [Test]

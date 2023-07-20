@@ -18,7 +18,7 @@ namespace NUnit.Framework
         /// presence of a particular object in the collection.
         /// </summary>
         public static SomeItemsConstraint Item(object? expected) =>
-            new SomeItemsConstraint(new EqualConstraint(expected));
+            new(new EqualConstraint(expected));
 
         #endregion
 

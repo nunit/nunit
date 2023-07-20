@@ -11,10 +11,10 @@ namespace NUnit.Framework
     /// <summary>
     /// Marks an assembly, test fixture or test method as applying to a specific Culture.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited=false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     public class CultureAttribute : IncludeExcludeAttribute, IApplyToTest
     {
-        private readonly CultureDetector _cultureDetector = new CultureDetector();
+        private readonly CultureDetector _cultureDetector = new();
         private readonly CultureInfo _currentCulture = CultureInfo.CurrentCulture;
 
         /// <summary>

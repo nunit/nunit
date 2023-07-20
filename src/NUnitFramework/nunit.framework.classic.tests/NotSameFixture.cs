@@ -1,8 +1,9 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Tests.Assertions;
 
-namespace NUnit.Framework.Assertions
+namespace NUnit.Framework.Tests.ClassicAssertions
 {
     [TestFixture]
     public class NotSameFixture
@@ -13,7 +14,7 @@ namespace NUnit.Framework.Assertions
         [Test]
         public void NotSame()
         {
-            Assert.AreNotSame(_s1, _s2);
+            Classic.Assert.AreNotSame(_s1, _s2);
         }
 
         [Test]
@@ -22,8 +23,8 @@ namespace NUnit.Framework.Assertions
             var expectedMessage =
                 "  Expected: not same as \"S1\"" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.AreNotSame( _s1, _s1 ));
-            Assert.That(ex.Message, Is.EqualTo(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotSame(_s1, _s1));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
         [Test]
@@ -32,7 +33,7 @@ namespace NUnit.Framework.Assertions
             var actual = new ThrowsIfToStringIsCalled(1);
             var expected = new ThrowsIfToStringIsCalled(1);
 
-            Assert.AreNotSame(expected, actual);
+            Classic.Assert.AreNotSame(expected, actual);
         }
     }
 }

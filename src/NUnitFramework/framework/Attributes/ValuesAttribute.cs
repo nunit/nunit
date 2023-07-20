@@ -13,6 +13,7 @@ namespace NUnit.Framework
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
     public class ValuesAttribute : NUnitAttribute, IParameterDataSource
     {
+#pragma warning disable IDE1006
         /// <summary>
         /// The collection of data to be returned. Must
         /// be set by any derived attribute classes.
@@ -20,7 +21,6 @@ namespace NUnit.Framework
         /// elements may have their type changed in GetData
         /// if necessary
         /// </summary>
-#pragma warning disable IDE1006
         // ReSharper disable once InconsistentNaming
         // Disregarding naming convention for back-compat
         protected object?[] data;

@@ -30,7 +30,7 @@ namespace NUnit.Framework
                 caughtException = e;
             }
 
-            Assert.That(caughtException, expression, message, args);
+            Assert.That(caughtException, expression, () => ConvertMessageWithArgs(message, args));
 
             return caughtException;
         }
@@ -84,7 +84,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static TActual? ThrowsAsync<TActual>(AsyncTestDelegate code, string? message, params object?[]? args) where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(typeof (TActual), code, message, args);
+            return (TActual?)ThrowsAsync(typeof(TActual), code, message, args);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static TActual? CatchAsync<TActual>(AsyncTestDelegate code, string? message, params object?[]? args) where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof (TActual)), code, message, args);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code, message, args);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace NUnit.Framework
         /// <param name="code">A TestDelegate</param>
         public static TActual? CatchAsync<TActual>(AsyncTestDelegate code) where TActual : Exception
         {
-            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof (TActual)), code);
+            return (TActual?)ThrowsAsync(new InstanceOfTypeConstraint(typeof(TActual)), code);
         }
 
         #endregion
@@ -186,7 +186,7 @@ namespace NUnit.Framework
         /// <param name="args">Arguments to be used in formatting the message</param>
         public static void DoesNotThrowAsync(AsyncTestDelegate code, string? message, params object?[]? args)
         {
-            Assert.That(code, new ThrowsNothingConstraint(), message, args);
+            Assert.That(code, new ThrowsNothingConstraint(), () => ConvertMessageWithArgs(message, args));
         }
         /// <summary>
         /// Verifies that an async delegate does not throw an exception.

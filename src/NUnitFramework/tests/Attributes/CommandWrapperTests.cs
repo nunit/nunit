@@ -4,9 +4,9 @@ using System;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
-using NUnit.TestUtilities;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     public class CommandWrapperTests
     {
@@ -98,7 +98,7 @@ namespace NUnit.Framework.Attributes
                     {
                         innerCommand.Execute(context);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         if (ex is NUnitException)
                             ex = ex.InnerException!;
@@ -121,7 +121,7 @@ namespace NUnit.Framework.Attributes
                     }
 
                     return context.CurrentResult;
-}
+                }
             }
         }
     }

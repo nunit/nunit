@@ -55,8 +55,8 @@ namespace NUnit.Common
 
         public static bool operator ==(Token t1, Token t2)
         {
-            bool t1Null = ReferenceEquals(t1, null);
-            bool t2Null = ReferenceEquals(t2, null);
+            bool t1Null = t1 is null;
+            bool t2Null = t2 is null;
 
             if (t1Null && t2Null)
                 return true;
@@ -143,7 +143,7 @@ namespace NUnit.Common
                 case '=':
                 case '!':
                     GetChar();
-                    foreach(string dbl in DOUBLE_CHAR_SYMBOLS)
+                    foreach (string dbl in DOUBLE_CHAR_SYMBOLS)
                     {
                         if (ch == dbl[0] && NextChar == dbl[1])
                         {

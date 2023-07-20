@@ -38,7 +38,6 @@ var LibraryFrameworks = new string[]
 var NetCoreTests = new String[]
 {
     "netcoreapp3.1",
-    "net5.0",
     "net6.0",
     "net7.0"
 };
@@ -54,6 +53,7 @@ var IMAGE_DIR = PROJECT_DIR + "images/";
 var NUNITFRAMWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
 var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
 var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
+var NUNITFRAMEWORKCLASSICBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.classic/bin/" + configuration + "/";
 var NUNITLITEBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite/bin/" + configuration + "/";
 var NUNITLITERUNNERBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite-runner/bin/" + configuration + "/";
 
@@ -129,6 +129,7 @@ Task("Clean")
     .Does(() =>
     {
         CleanDirectory(NUNITFRAMEWORKBIN);
+        CleanDirectory(NUNITFRAMEWORKCLASSICBIN);
         CleanDirectory(NUNITLITEBIN);
         CleanDirectory(NUNITLITERUNNERBIN);
     });
@@ -221,7 +222,8 @@ var RootFiles = new FilePath[]
 {
     "LICENSE.txt",
     "NOTICES.txt",
-    "CHANGES.md"
+    "CHANGES.md",
+    "README.md"
 };
 
 // Not all of these are present in every framework
@@ -232,8 +234,11 @@ var FrameworkFiles = new FilePath[]
     "mock-assembly.dll",
     "mock-assembly.exe",
     "nunit.framework.dll",
+    "nunit.framework.classic.dll",
     "nunit.framework.pdb",
+    "nunit.framework.classic.pdb",
     "nunit.framework.xml",
+    "nunit.framework.classic.xml",
     "nunit.framework.tests.dll",
     "nunit.testdata.dll",
     "nunitlite.dll",
@@ -269,6 +274,7 @@ Task("CreateImage")
         var directories = new String[]
         {
             NUNITFRAMEWORKBIN,
+            NUNITFRAMEWORKCLASSICBIN,
             NUNITLITEBIN
         };
         foreach (var dir in directories)

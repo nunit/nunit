@@ -2,9 +2,10 @@
 
 using System;
 using System.IO;
-using NUnit.TestUtilities;
+using NUnit.Framework.Constraints;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Constraints
+namespace NUnit.Framework.Tests.Constraints
 {
     [TestFixture]
     public class FileOrDirectoryExistsConstraintTests
@@ -81,7 +82,7 @@ namespace NUnit.Framework.Constraints
             {
                 var constraint = new FileOrDirectoryExistsConstraint().IgnoreFiles;
                 var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(tf.File));
-                Assert.That(ex.Message, Does.StartWith("The actual value must be a string or DirectoryInfo"));
+                Assert.That(ex?.Message, Does.StartWith("The actual value must be a string or DirectoryInfo"));
             }
         }
 
@@ -97,7 +98,7 @@ namespace NUnit.Framework.Constraints
         {
             var constraint = new FileOrDirectoryExistsConstraint().IgnoreDirectories;
             var ex = Assert.Throws<ArgumentException>(() => constraint.ApplyTo(_goodDir.Directory));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a string or FileInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a string or FileInfo"));
         }
 
         [Test]
@@ -134,35 +135,35 @@ namespace NUnit.Framework.Constraints
         public void FailsWhenNotStringOrDirectoryInfo()
         {
             var ex = Assert.Throws<ArgumentException>(() => _constraint.ApplyTo(42));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a string, FileInfo or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenFileInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo(default(FileInfo)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenDirectoryInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo(default(DirectoryInfo)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenStringIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => _constraint.ApplyTo(default(string)!));
-            Assert.That(ex.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string, FileInfo or DirectoryInfo"));
         }
 
         [Test]
         public void FailsWhenStringIsEmpty()
         {
             var ex = Assert.Throws<ArgumentException>(() => _constraint.ApplyTo(string.Empty));
-            Assert.That(ex.Message, Does.StartWith("The actual value cannot be an empty string"));
+            Assert.That(ex?.Message, Does.StartWith("The actual value cannot be an empty string"));
         }
     }
 }

@@ -2,11 +2,11 @@
 
 using System;
 using NUnit.Framework.Interfaces;
-using NUnit.TestData;
-using NUnit.TestUtilities;
 using NUnit.Framework.Internal;
+using NUnit.TestData;
+using NUnit.Framework.Tests.TestUtilities;
 
-namespace NUnit.Framework.Attributes
+namespace NUnit.Framework.Tests.Attributes
 {
     // TODO: Review to see if we need these tests
 
@@ -19,7 +19,7 @@ namespace NUnit.Framework.Attributes
         public void ReflectionTest()
         {
             Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.Method));
-            Assert.That( testCase.RunState, Is.EqualTo(RunState.Runnable));
+            Assert.That(testCase.RunState, Is.EqualTo(RunState.Runnable));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace NUnit.Framework.Attributes
         [Test]
         public void NoDescription()
         {
-            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.NoDescriptionMethod) );
+            Test testCase = TestBuilder.MakeTestCase(FixtureType, nameof(DescriptionFixture.NoDescriptionMethod));
             Assert.That(testCase.Properties.Get(PropertyNames.Description), Is.Null);
         }
 
@@ -47,7 +47,7 @@ namespace NUnit.Framework.Attributes
         public void FixtureDescription()
         {
             TestSuite suite = new TestSuite("suite");
-            suite.Add( TestBuilder.MakeFixture( typeof( DescriptionFixture ) ) );
+            suite.Add(TestBuilder.MakeFixture(typeof(DescriptionFixture)));
 
             TestSuite mockFixtureSuite = (TestSuite)suite.Tests[0];
 

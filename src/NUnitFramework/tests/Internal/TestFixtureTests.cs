@@ -3,11 +3,12 @@
 using System;
 using System.Linq;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.OneTimeSetUpTearDownData;
-using NUnit.TestUtilities;
 using NUnit.TestData.TestFixtureTests;
 
-namespace NUnit.Framework.Internal
+namespace NUnit.Framework.Tests.Internal
 {
     /// <summary>
     /// Tests of the NUnitTestFixture class
@@ -140,7 +141,8 @@ namespace NUnit.Framework.Internal
         }
 
         [Test]
-        public void FixtureWithNestedIgnoreAttributeIsIgnored() {
+        public void FixtureWithNestedIgnoreAttributeIsIgnored()
+        {
             TestSuite suite = TestBuilder.MakeFixture(typeof(FixtureUsingIgnoreAttribute.SubFixture));
             Assert.That(suite.RunState, Is.EqualTo(RunState.Ignored));
             Assert.That(suite.Properties.Get(PropertyNames.SkipReason), Is.EqualTo("testing ignore a fixture"));
@@ -188,11 +190,11 @@ namespace NUnit.Framework.Internal
             TestAssert.IsRunnable(typeof(DerivedFromAbstractDerivedTestFixture));
         }
 
-//		[Test]
-//		public void CannotRunAbstractDerivedFixture()
-//		{
-//            TestAssert.IsNotRunnable(typeof(AbstractDerivedTestFixture));
-//		}
+        //		[Test]
+        //		public void CannotRunAbstractDerivedFixture()
+        //		{
+        //            TestAssert.IsNotRunnable(typeof(AbstractDerivedTestFixture));
+        //		}
 
         [Test]
         public void FixtureInheritingTwoTestFixtureAttributesIsLoadedOnlyOnce()
@@ -242,16 +244,16 @@ namespace NUnit.Framework.Internal
             Assert.That(suite.Tests, Has.Count.EqualTo(2));
         }
 
-//        [Test]
-//        public void CannotRunGenericFixtureWithNoTestFixtureAttribute()
-//        {
-//            TestSuite suite = TestBuilder.MakeFixture(
-//                GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1"));
-//
-//            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
-//            Assert.That(suite.Properties.Get(PropertyNames.SkipReason),
-//                Does.StartWith("Fixture type contains generic parameters"));
-//        }
+        //        [Test]
+        //        public void CannotRunGenericFixtureWithNoTestFixtureAttribute()
+        //        {
+        //            TestSuite suite = TestBuilder.MakeFixture(
+        //                GetTestDataType("NUnit.TestData.TestFixtureData.GenericFixtureWithNoTestFixtureAttribute`1"));
+        //
+        //            Assert.That(suite.RunState, Is.EqualTo(RunState.NotRunnable));
+        //            Assert.That(suite.Properties.Get(PropertyNames.SkipReason),
+        //                Does.StartWith("Fixture type contains generic parameters"));
+        //        }
 
         [Test]
         public void CannotRunGenericFixtureWithNoArgsProvided()
@@ -405,22 +407,22 @@ namespace NUnit.Framework.Internal
             TestAssert.IsRunnable(typeof(StaticFixtureTearDown));
         }
 
-//		[TestFixture]
-//			[Category("fixture category")]
-//			[Category("second")]
-//			private class HasCategories
-//		{
-//			[Test] public void OneTest()
-//			{}
-//		}
-//
-//		[Test]
-//		public void LoadCategories()
-//		{
-//			TestSuite fixture = LoadFixture("NUnit.Core.Tests.TestFixtureBuilderTests+HasCategories");
-//			Assert.IsNotNull(fixture);
-//			Assert.AreEqual(2, fixture.Categories.Count);
-//		}
+        //		[TestFixture]
+        //			[Category("fixture category")]
+        //			[Category("second")]
+        //			private class HasCategories
+        //		{
+        //			[Test] public void OneTest()
+        //			{}
+        //		}
+        //
+        //		[Test]
+        //		public void LoadCategories()
+        //		{
+        //			TestSuite fixture = LoadFixture("NUnit.Core.Tests.TestFixtureBuilderTests+HasCategories");
+        //			Assert.IsNotNull(fixture);
+        //			Assert.AreEqual(2, fixture.Categories.Count);
+        //		}
 
         [Test]
         public void CannotRunFixtureTearDownWithReturnValue()

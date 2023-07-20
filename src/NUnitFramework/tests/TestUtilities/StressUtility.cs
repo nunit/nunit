@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Threading;
 using NUnit.Framework.Internal;
 
-namespace NUnit.TestUtilities
+namespace NUnit.Framework.Tests.TestUtilities
 {
     public static class StressUtility
     {

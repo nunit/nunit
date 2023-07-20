@@ -326,7 +326,7 @@ namespace NUnit.Framework.Internal
         public void ApplyAttributesToTest(Type type)
         {
             foreach (var t in GetNestedTypes(type).Reverse())
-                ApplyAttributesToTest((ICustomAttributeProvider) t);
+                ApplyAttributesToTest((ICustomAttributeProvider)t);
         }
 
         private void ApplyAttributesToTest(IEnumerable<IApplyToTest> attributes)
@@ -375,9 +375,9 @@ namespace NUnit.Framework.Internal
             return Array.Empty<TAttr>();
         }
 
-#endregion
+        #endregion
 
-#region Protected Methods
+        #region Protected Methods
 
         /// <summary>
         /// Add standard attributes and members to a test node.
@@ -412,9 +412,9 @@ namespace NUnit.Framework.Internal
             }
         }
 
-#endregion
+        #endregion
 
-#region IXmlNodeBuilder Members
+        #region IXmlNodeBuilder Members
 
         /// <summary>
         /// Returns the XML representation of the test
@@ -435,9 +435,9 @@ namespace NUnit.Framework.Internal
         /// <returns></returns>
         public abstract TNode AddToXml(TNode parentNode, bool recursive);
 
-#endregion
+        #endregion
 
-#region IComparable Members
+        #region IComparable Members
 
         /// <summary>Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.</summary>
         /// <param name="obj">An object to compare with this instance. </param>
@@ -453,6 +453,6 @@ namespace NUnit.Framework.Internal
             return other is null ? -1 : FullName.CompareTo(other.FullName);
         }
 
-#endregion
+        #endregion
     }
 }

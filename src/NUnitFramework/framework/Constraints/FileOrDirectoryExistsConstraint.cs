@@ -41,7 +41,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
         /// will check files and directories.
         /// </summary>
-        public FileOrDirectoryExistsConstraint(){}
+        public FileOrDirectoryExistsConstraint() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileOrDirectoryExistsConstraint"/> class that
