@@ -34,7 +34,7 @@ namespace NUnit.Framework
             try
             {
                 await code();
-                Assert.That(() => { }, constraint, message);
+                Assert.That(() => { }, constraint, message??string.Empty);
             }
             catch (Exception ex)
             {

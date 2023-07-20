@@ -57,11 +57,12 @@ namespace NUnit.Framework.Internal
         /// </summary>
         /// <param name="userMessage"></param>
         /// <param name="args"></param>
-        public TextMessageWriter(string? userMessage, params object?[]? args)
+        public TextMessageWriter(string? userMessage)
         {
             if (!string.IsNullOrEmpty(userMessage))
-                WriteMessageLine(userMessage, args);
+                WriteMessageLine(userMessage);
         }
+        
         #endregion
 
         #region Properties

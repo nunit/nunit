@@ -306,9 +306,14 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
-        private static void ReportFailure(ConstraintResult result, string? message)
+        private static void ReportFailure(ConstraintResult result, string? message,string? actualExpression,string? constraintExpression)
         {
-            MessageWriter writer = new TextMessageWriter(message);
+            var msg = !string.IsNullOrEmpty(actualExpression) && !string.IsNullOrEmpty(constraintExpression)
+                ? (!string.IsNullOrEmpty(message) 
+                    ? $"{message}\nAssert.That({actualExpression},{constraintExpression})"
+                    : $"Assert.That({actualExpression},{constraintExpression})")
+                : message;
+            MessageWriter writer = new TextMessageWriter(msg);
             result.WriteMessageTo(writer);
 
             ReportFailure(writer.ToString());

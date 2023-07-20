@@ -40,6 +40,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("NUnit Framework (.NET Framework 4.6.2)")]
 #elif NETSTANDARD2_0
 [assembly: AssemblyTitle("NUnit Framework (.NET Standard 2.0)")]
+#elif NET6_0
+[assembly: AssemblyTitle("NUnit Framework (.NET 6.0)")]
 #else
 #error Missing AssemblyTitle attribute for this target.
 #endif
