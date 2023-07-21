@@ -36,7 +36,7 @@ namespace NUnit.Framework.Constraints
         /// <param name="pattern">The pattern.</param>
         public RegexConstraint(
 #if NET7_0_OR_GREATER
-        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
+            [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
 #endif
             string pattern) : base(pattern)
         {

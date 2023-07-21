@@ -111,7 +111,7 @@ namespace NUnit.Framework
         /// </summary>
         public static RegexConstraint Match(
 #if NET7_0_OR_GREATER
-        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
+            [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
 #endif
             string pattern)
         {
