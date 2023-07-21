@@ -1,6 +1,7 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
 using System;
+using NUnit.Framework.Tests.Internal;
 
 namespace NUnit.Framework.Tests.Assertions
 {
@@ -100,6 +101,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ExpectedFailureMessageExistsForIsPositive()
         {
             var expectedMessage =
+                "  Assert.That(_i2, Is.Positive)" + Environment.NewLine +
                 "  Expected: greater than 0" + Environment.NewLine +
                 "  But was:  -1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Positive));
@@ -110,6 +112,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ExpectedFailureMessageExistsForIsNegative()
         {
             var expectedMessage =
+                "  Assert.That(_i1, Is.Negative)" + Environment.NewLine +
                 "  Expected: less than 0" + Environment.NewLine +
                 "  But was:  1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i1, Is.Negative));

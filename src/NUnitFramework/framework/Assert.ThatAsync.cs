@@ -29,12 +29,12 @@ namespace NUnit.Framework
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <returns>Awaitable.</returns>
-        public static async Task ThatAsync(AsyncTestDelegate code, IResolveConstraint constraint, string? message)
+        public static async Task ThatAsync(AsyncTestDelegate code, IResolveConstraint constraint, string message)
         {
             try
             {
                 await code();
-                Assert.That(() => { }, constraint, message??string.Empty);
+                Assert.That(() => { }, constraint, message,null,null);
             }
             catch (Exception ex)
             {
@@ -61,7 +61,7 @@ namespace NUnit.Framework
         /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         /// <returns>Awaitable.</returns>
-        public static async Task ThatAsync<T>(Func<Task<T>> code, IResolveConstraint constraint, string? message)
+        public static async Task ThatAsync<T>(Func<Task<T>> code, IResolveConstraint constraint, string message)
         {
             try
             {

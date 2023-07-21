@@ -10,7 +10,7 @@ namespace NUnit.Framework
         /// <summary>
         /// Check if message comes with args, and convert that to a formatted string
         /// </summary>
-        protected static string? ConvertMessageWithArgs(string? message, object?[]? args)
-            => message is null ? null : (args is null || args.Length == 0) ? message : string.Format(message, args);
+        protected static string ConvertMessageWithArgs(string? message, object?[]? args)
+            => message is null ? string.Empty : (args is null || args.Length == 0) ? message : string.Format(message, args);
     }
 }
