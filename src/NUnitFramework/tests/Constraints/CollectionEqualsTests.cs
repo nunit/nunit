@@ -59,6 +59,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex?.Message, Is.EqualTo(
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 $"  Expected is {MsgUtils.GetTypeRepresentation(expected)}, actual is {MsgUtils.GetTypeRepresentation(actual)}" + Environment.NewLine +
                 "  Values differ at index [2]" + Environment.NewLine +
                 "  Missing:  < 3, ... >"));
@@ -72,6 +73,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
             Assert.That(ex?.Message, Is.EqualTo(
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected is <System.Int32[3]>, actual is <NUnit.Framework.Tests.TestUtilities.Collections.SimpleObjectCollection> with 3 elements" + Environment.NewLine +
                 "  Values differ at index [1]" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "2" + Environment.NewLine +

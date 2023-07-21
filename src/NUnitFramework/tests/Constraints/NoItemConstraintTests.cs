@@ -14,15 +14,16 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void NoItemsAreNotNull()
         {
-            object[] c = new object[] { 1, "hello", 3, Environment.NewLine };
+            var c = new object[] { 1, "hello", 3, Environment.NewLine };
             Assert.That(c, new NoItemConstraint(Is.Null));
         }
 
         [Test]
         public void NoItemsAreNotNullFails()
         {
-            object?[] c = new object?[] { 1, "hello", null, 3 };
+            var c = new object?[] { 1, "hello", null, 3 };
             var expectedMessage =
+                "  Assert.That(c, new NoItemConstraint(Is.Null))" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "no item null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
                 "  First non-matching item at index [2]:  null" + NL;
@@ -34,8 +35,8 @@ namespace NUnit.Framework.Tests.Constraints
         public void FailsWhenNotUsedAgainstAnEnumerable()
         {
             var notEnumerable = 42;
-            TestDelegate act = () => Assert.That(notEnumerable, new NoItemConstraint(Is.Null));
-            Assert.That(act, Throws.ArgumentException.With.Message.Contains("IEnumerable"));
+            void Act() => Assert.That(notEnumerable, new NoItemConstraint(Is.Null));
+            Assert.That(Act, Throws.ArgumentException.With.Message.Contains("IEnumerable"));
         }
     }
 }

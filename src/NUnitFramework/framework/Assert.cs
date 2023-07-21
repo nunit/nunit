@@ -310,8 +310,8 @@ namespace NUnit.Framework
         {
             var msg = !string.IsNullOrEmpty(actualExpression) && !string.IsNullOrEmpty(constraintExpression)
                 ? (!string.IsNullOrEmpty(message) 
-                    ? $"{message}\nAssert.That({actualExpression},{constraintExpression})"
-                    : $"Assert.That({actualExpression},{constraintExpression})")
+                    ? $"{message}\nAssert.That({actualExpression}, {constraintExpression})"
+                    : $"Assert.That({actualExpression}, {constraintExpression})")
                 : message;
             MessageWriter writer = new TextMessageWriter(msg);
             result.WriteMessageTo(writer);

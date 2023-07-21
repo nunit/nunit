@@ -25,6 +25,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ArrayFails()
         {
             var expectedMessage =
+                "  Assert.That(TestArray, Has.Some.EqualTo(\"def\"))" + Environment.NewLine +
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(TestArray, Has.Some.EqualTo("def")));
@@ -35,6 +36,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void EmptyArrayFails()
         {
             var expectedMessage =
+                "  Assert.That(Array.Empty<object>(), Has.Some.EqualTo(\"def\"))" + Environment.NewLine +
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<object>(), Has.Some.EqualTo("def")));
@@ -62,6 +64,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ArrayListFails()
         {
             var expectedMessage =
+                "  Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo(\"def\"))" + Environment.NewLine +
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo("def")));

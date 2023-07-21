@@ -182,6 +182,7 @@ namespace NUnit.Framework.Tests.Constraints
         public void IsOrdered_Fails()
         {
             var expectedMessage =
+                "  Assert.That(new[] { \"x\", \"z\", \"y\" }, Is.Ordered)" + Environment.NewLine +
                 "  Expected: collection ordered" + NL +
                 "  But was:  < \"x\", \"z\", \"y\" >" + NL +
                 "  Ordering breaks at index [2]:  \"y\"" + NL;
@@ -197,6 +198,7 @@ namespace NUnit.Framework.Tests.Constraints
             actual[90] = 1000;
 
             var expectedMessage =
+                "  Assert.That(actual, Is.Ordered)" + Environment.NewLine +
                 "  Expected: collection ordered" + NL +
                 "  But was:  < ...83, 84, 85, 86, 87, 88, 89, 1000, 91, 92... >" + NL +
                 "  Ordering breaks at index [91]:  91" + NL;

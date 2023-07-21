@@ -25,6 +25,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             object?[] c = new object?[] { 1, "hello", null, 3 };
             var expectedMessage =
+                "  Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))))" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
                 TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
                 "  First non-matching item at index [2]:  null" + NL;
@@ -71,6 +72,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             int[] c = new int[] { 12, 27, 19, 32, 107, 99, 26 };
             var expectedMessage =
+                "  Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100)))" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "all items in range (10,100)" + NL +
                 TextMessageWriter.Pfx_Actual + "< 12, 27, 19, 32, 107, 99, 26 >" + NL +
                 "  First non-matching item at index [4]:  107" + NL;
@@ -90,6 +92,7 @@ namespace NUnit.Framework.Tests.Constraints
         {
             object[] c = new object[] { 'a', "b", 'c' };
             var expectedMessage =
+                "  Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char))))" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "all items instance of <System.Char>" + NL +
                 TextMessageWriter.Pfx_Actual + "< 'a', \"b\", 'c' >" + NL +
                 "  First non-matching item at index [1]:  \"b\"" + NL;

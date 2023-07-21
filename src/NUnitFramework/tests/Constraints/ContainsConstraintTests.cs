@@ -39,6 +39,7 @@ namespace NUnit.Framework.Tests.Constraints
             var expected = "bcd";
 
             var expectedMessage =
+                "  Assert.That(actualString, Does.Contain(expected))" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "String containing \"bcd\"" + NL +
                 TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
 
@@ -53,6 +54,7 @@ namespace NUnit.Framework.Tests.Constraints
             var expected = "bcd";
 
             var expectedMessage =
+                "  Assert.That(actualString, Does.Contain(expected).IgnoreCase)" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "String containing \"bcd\", ignoring case" + NL +
                 TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
 
@@ -67,6 +69,7 @@ namespace NUnit.Framework.Tests.Constraints
             var expected = "c";
 
             var expectedMessage =
+                "  Assert.That(actualItems, Does.Contain(expected))" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "some item equal to \"c\"" + NL +
                 TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
 
@@ -81,6 +84,7 @@ namespace NUnit.Framework.Tests.Constraints
             var expected = "c";
 
             var expectedMessage =
+                "  Assert.That(actualItems, Does.Contain(expected).IgnoreCase)" + Environment.NewLine +
                 TextMessageWriter.Pfx_Expected + "some item equal to \"c\", ignoring case" + NL +
                 TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
 

@@ -88,6 +88,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void ExpectedFailureMessageExists()
         {
             var expectedMessage =
+                "  Assert.That(_i2, Is.Zero)" + Environment.NewLine +
                 "  Expected: 0" + Environment.NewLine +
                 "  But was:  1234" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Zero));

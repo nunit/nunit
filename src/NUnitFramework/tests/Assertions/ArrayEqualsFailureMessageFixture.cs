@@ -22,6 +22,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[,] { { 1, 2 }, { 3, 4 } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
@@ -35,6 +36,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[] { 1, 2, 3 };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected is <System.Int32[5]>, actual is <System.Int32[3]>" + NL +
                 "  Values differ at index [3]" + NL +
                 "  Missing:  < 4, 5 >";
@@ -50,6 +52,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[] { 1, 2, 3, 4, 5, 6, 7 };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected is <System.Int32[3]>, actual is <System.Int32[7]>" + NL +
                 "  Values differ at index [3]" + NL +
                 "  Extra:    < 4, 5, 6... >";
@@ -65,6 +68,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[] { 1, 5, 3 };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected and actual are both <System.Int32[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 TextMessageWriter.Pfx_Expected + "2" + NL +
@@ -81,6 +85,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[,] { { 1, 3, 2 }, { 4, 0, 6 } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected and actual are both <System.Int32[2,3]>" + NL +
                 "  Values differ at index [0,1]" + NL +
                 TextMessageWriter.Pfx_Expected + "2" + NL +
@@ -97,6 +102,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[, ,] { { { 1, 2 }, { 3, 4 } }, { { 0, 6 }, { 7, 8 } } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected and actual are both <System.Int32[2,2,2]>" + NL +
                 "  Values differ at index [1,0,0]" + NL +
                 TextMessageWriter.Pfx_Expected + "5" + NL +
@@ -113,6 +119,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new int[2, 2, 2, 2, 2] { { { { { 1, 2 }, { 4, 3 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } }, { { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } }, { { { 1, 2 }, { 3, 4 } }, { { 5, 6 }, { 7, 8 } } } } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected and actual are both <System.Int32[2,2,2,2,2]>" + NL +
                 "  Values differ at index [0,0,0,1,0]" + NL +
                 TextMessageWriter.Pfx_Expected + "3" + NL +
@@ -129,6 +136,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 0, 7 }, new[] { 8, 9 } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected and actual are both <System.Int32[3][]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "    Expected and actual are both <System.Int32[4]>" + NL +
@@ -147,6 +155,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[] { new[] { 1, 2, 3 }, new[] { 4, 5, 0, 7 }, new[] { 8, 9 } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected is <System.Int32[9]>, actual is <System.Int32[3][]>" + NL +
                 "  Values differ at index [0]" + NL +
                 TextMessageWriter.Pfx_Expected + "1" + NL +
@@ -165,6 +174,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[,] { { 1, 0 }, { 3, 4 } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected).AsCollection)" + Environment.NewLine +
                 "  Expected is <System.Int32[4]>, actual is <System.Int32[2,2]>" + NL +
                 "  Values differ at expected index [1], actual index [0,1]" + NL +
                 TextMessageWriter.Pfx_Expected + "2" + NL +
@@ -181,6 +191,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new[,] { { 1, 2 }, { 3, 0 }, { 5, 6 } };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected).AsCollection)" + Environment.NewLine +
                 "  Expected is <System.Int32[2,3]>, actual is <System.Int32[3,2]>" + NL +
                 "  Values differ at expected index [1,0], actual index [1,1]" + NL +
                 TextMessageWriter.Pfx_Expected + "4" + NL +
@@ -197,6 +208,7 @@ namespace NUnit.Framework.Tests.Assertions
             string[] expected = { "one", "two", "ten" };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected and actual are both <System.String[3]>" + NL +
                 "  Values differ at index [2]" + NL +
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +
@@ -215,6 +227,7 @@ namespace NUnit.Framework.Tests.Assertions
             object[] expected = { "one", "three", "two" };
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected))" + Environment.NewLine +
                 "  Expected is <System.Object[3]>, actual is <System.String[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected string length 5 but was 3. Strings differ at index 1." + NL +
@@ -233,6 +246,7 @@ namespace NUnit.Framework.Tests.Assertions
             var actual = new List<int>(new[] { 1, 3 });
 
             var expectedMessage =
+                "  Assert.That(actual, Is.EqualTo(expected).AsCollection)" + Environment.NewLine +
                 "  Expected is <System.Int32[3]>, actual is <System.Collections.Generic.List`1[System.Int32]> with 2 elements" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected: 2" + NL +
@@ -249,6 +263,7 @@ namespace NUnit.Framework.Tests.Assertions
             object[] array2 = { "one", "three", "two" };
 
             var expectedMessage =
+                "  Assert.That(array2, Is.EqualTo(array1))" + Environment.NewLine +
                 "  Expected is <System.String[3]>, actual is <System.Object[3]>" + NL +
                 "  Values differ at index [1]" + NL +
                 "  Expected string length 3 but was 5. Strings differ at index 1." + NL +

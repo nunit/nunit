@@ -835,7 +835,10 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL, Is.EqualTo(ex.Message));
+            string expectedMsg =
+                "  Assert.That(new IntPtr(0), Is.EqualTo(0))" + Environment.NewLine +
+                "  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL;
+            Assert.That(ex?.Message, Is.EqualTo(expectedMsg));
         }
 
         private class Dummy
@@ -895,6 +898,7 @@ namespace NUnit.Framework.Tests.Constraints
             var ex = Assert.Throws<AssertionException>(() => Assert.That(dc2, Is.EqualTo(dc1)));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
             var expectedMsg =
+                "  Assert.That(dc2, Is.EqualTo(dc1))" + Environment.NewLine +
                 "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
                 "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
 
@@ -905,14 +909,20 @@ namespace NUnit.Framework.Tests.Constraints
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Is.Zero, Is.EqualTo(Is.Zero)));
-            Assert.That("  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL, Is.EqualTo(ex.Message));
+            string? actual = ex?.Message;
+            string expected =
+                "  Assert.That(Is.Zero, Is.EqualTo(Is.Zero))" + Environment.NewLine +
+                "  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL;
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.EqualTo(expected)));
-            Assert.That(ex?.Message, Does.Match(@"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)"));
+            string expectedMsg =
+                @"\s*Expected\s*:\s*.*\s*\(.+\)\r?\n\s*But\s*was\s*:\s*.*\s*\(.+\)";
+            Assert.That(ex?.Message, Does.Match(expectedMsg));
         }
     }
     namespace ExampleTest.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Outer.Middle.Inner.Clip

@@ -73,7 +73,8 @@ namespace NUnit.Framework.Tests.Constraints
             string nl = Environment.NewLine;
 
             StringReader rdr = new StringReader(ex.Message);
-            /* skip */
+            /* skip two first lines*/
+            rdr.ReadLine();
             rdr.ReadLine();
             string? expected = rdr.ReadLine();
             Assert.That(expected, Is.Not.Null);

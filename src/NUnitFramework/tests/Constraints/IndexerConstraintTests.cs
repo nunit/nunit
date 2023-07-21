@@ -47,7 +47,9 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DoesNotMatchMissingIndexerEquality()
         {
-            var expectedErrorMessage = $"  Expected string length 14 but was 13. Strings differ at index 0.{NL}  Expected: \"Second indexer\"{NL}  But was:  \"Third indexer\"{NL}  -----------^{NL}";
+            var expectedErrorMessage =
+                "  Assert.That(tester, Has.ItemAt(4, 2).EqualTo(\"Second indexer\"))" + Environment.NewLine +
+                $"  Expected string length 14 but was 13. Strings differ at index 0.{NL}  Expected: \"Second indexer\"{NL}  But was:  \"Third indexer\"{NL}  -----------^{NL}";
 
             var tester = new IndexerTester();
 
@@ -58,7 +60,9 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DoesNotMatchWhenIndexerValueIsNotExpectedToBeEqual()
         {
-            var expectedErrorMessage = $"  Expected: not Default indexer accepting arguments < <string.Empty> > equal to \"Second indexer\"{NL}  But was:  \"Second indexer\"{NL}";
+            var expectedErrorMessage =
+                "  Assert.That(tester, Has.No.ItemAt(string.Empty).EqualTo(\"Second indexer\"))" + Environment.NewLine +
+                $"  Expected: not Default indexer accepting arguments < <string.Empty> > equal to \"Second indexer\"{NL}  But was:  \"Second indexer\"{NL}";
 
             var tester = new IndexerTester();
 
@@ -69,7 +73,9 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void DoesNotMatchWhenIndexerIsNotExpectedToBeEqual()
         {
-            var expectedErrorMessage = "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Tests.Constraints.IndexerConstraintTests+IndexerTester.";
+            var expectedErrorMessage =
+              //  "  Assert.That(tester, Has.No.ItemAt(21d).EqualTo(\"Should Throw\"))" + Environment.NewLine +
+                "Default indexer accepting arguments < 21.0d > was not found on NUnit.Framework.Tests.Constraints.IndexerConstraintTests+IndexerTester.";
 
             var tester = new IndexerTester();
 
