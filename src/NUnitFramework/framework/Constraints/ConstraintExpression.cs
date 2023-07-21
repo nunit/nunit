@@ -792,7 +792,7 @@ namespace NUnit.Framework.Constraints
         /// </summary>
         public RegexConstraint Matches(
 #if NET7_0_OR_GREATER
-        [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
+            [System.Diagnostics.CodeAnalysis.StringSyntax(System.Diagnostics.CodeAnalysis.StringSyntaxAttribute.Regex)]
 #endif
             string pattern)
         {
