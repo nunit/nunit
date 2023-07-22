@@ -50,6 +50,7 @@ var PACKAGE_DIR = Argument("artifact-dir", PROJECT_DIR + "package") + "/";
 var BIN_DIR = PROJECT_DIR + "bin/" + configuration + "/";
 var IMAGE_DIR = PROJECT_DIR + "images/";
 var NUNITFRAMEWORKTESTSBIN = PROJECT_DIR + "src/NUnitFramework/tests/bin/" + configuration + "/";
+var NUNITFRAMEWORKCLASSICTESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.classic.tests/bin/" + configuration + "/";
 var NUNITLITETESTSBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite.tests/bin/" + configuration + "/";
 var NUNITFRAMEWORKBIN = PROJECT_DIR + "src/NUnitFramework/framework/bin/" + configuration + "/";
 var NUNITFRAMEWORKCLASSICBIN = PROJECT_DIR + "src/NUnitFramework/nunit.framework.classic/bin/" + configuration + "/";
@@ -63,6 +64,7 @@ var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
 // Test Assemblies
 var FRAMEWORK_TESTS = "nunit.framework.tests.dll";
+var FRAMEWORKCLASSIC_TESTS = "nunit.framework.classic.tests.dll";
 var EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE = "nunitlite-runner.exe";
 var EXECUTABLE_NUNITLITE_TESTS_EXE = "nunitlite.tests.exe";
 var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
@@ -182,7 +184,9 @@ Task("TestNetFramework")
         var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
         Information("Run tests for " + runtime + " in " + dir + "using runner");
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
-        //RunNUnitTests(dir, FRAMEWORK_TESTS, runtime, ref ErrorDetail);
+        dir = NUNITFRAMEWORKCLASSICTESTSBIN + runtime + "/";
+        Information("Run classic tests for " + runtime + " in " + dir + "using runner");
+        RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORKCLASSIC_TESTS, dir + "nunit.framework.classic.tests.xml", runtime, ref ErrorDetail);
         dir = NUNITLITETESTSBIN + runtime + "/";
         Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
         RunTest(dir + EXECUTABLE_NUNITLITE_TESTS_EXE, dir, runtime, ref ErrorDetail);
@@ -204,6 +208,9 @@ foreach (var runtime in NetCoreTests)
             var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
             Information("Run tests for " + runtime + " in " + dir);
             RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORK_TESTS, runtime, GetResultXmlPath(FRAMEWORK_TESTS, runtime), ref ErrorDetail);
+            dir = NUNITFRAMEWORKCLASSICTESTSBIN + runtime + "/";
+            Information("Run classic tests for " + runtime + " in " + dir);
+            RunDotnetCoreTests(dir + NUNITLITE_RUNNER_DLL, dir, FRAMEWORKCLASSIC_TESTS, runtime, GetResultXmlPath(FRAMEWORKCLASSIC_TESTS, runtime), ref ErrorDetail);
             dir = NUNITLITETESTSBIN + runtime + "/";
             Information("Run tests for " + runtime + " in " + dir + " for nunitlite.tests");
             RunDotnetCoreTests(dir + EXECUTABLE_NUNITLITE_TESTS_DLL, dir, runtime, ref ErrorDetail);
