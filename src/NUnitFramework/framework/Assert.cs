@@ -306,9 +306,21 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
-        private static void ReportFailure(ConstraintResult result, string? message)
+
+        internal static string? ExtendedMessage(string? message, string actualExpression, string constraintExpression)
         {
-            MessageWriter writer = new TextMessageWriter(message);
+#if DEBUG
+            return message;
+#else
+            string context = $"Assert.That({actualExpression}, {constraintExpression})";
+            string extendedMessage = string.IsNullOrEmpty(message) ? context : $"{message}\n{context}";
+
+            return extendedMessage;
+#endif
+        }
+        private static void ReportFailure(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
+        {
+            MessageWriter writer = new TextMessageWriter(ExtendedMessage(message, actualExpression, constraintExpression));
             result.WriteMessageTo(writer);
 
             ReportFailure(writer.ToString());
@@ -357,6 +369,6 @@ namespace NUnit.Framework
         private static void IncrementAssertCount()
             => TestExecutionContext.CurrentContext.IncrementAssertCount();
 
-        #endregion
+#endregion
     }
 }

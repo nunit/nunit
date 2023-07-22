@@ -3,6 +3,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
@@ -57,9 +58,13 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(del, expr.Resolve(), string.Empty);
+            That(del, expr, string.Empty, actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -70,7 +75,11 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, NUnitString message)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, NUnitString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -78,7 +87,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                ReportFailure(result, message.ToString());
+                ReportInconclusive(result, message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -89,7 +98,11 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, FormattableString message)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, FormattableString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -97,12 +110,12 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                ReportFailure(result, message.ToString());
+                ReportInconclusive(result, message.ToString(), actualExpression, constraintExpression);
         }
 
-        private static void ReportFailure(ConstraintResult result, string? message)
+        private static void ReportInconclusive(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
         {
-            MessageWriter writer = new TextMessageWriter(message);
+            MessageWriter writer = new TextMessageWriter(Assert.ExtendedMessage(message, actualExpression, constraintExpression));
             result.WriteMessageTo(writer);
             throw new InconclusiveException(writer.ToString());
         }
@@ -118,7 +131,11 @@ namespace NUnit.Framework
         public static void That<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            Func<string?> getExceptionMessage)
+            Func<string?> getExceptionMessage,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(del))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -127,7 +144,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
             if (!result.IsSuccess)
             {
-                throw new InconclusiveException(getExceptionMessage());
+                ReportInconclusive(result, getExceptionMessage(), actualExpression, constraintExpression);
             }
         }
 
@@ -141,9 +158,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That([DoesNotReturnIf(false)] bool condition, NUnitString message)
+        public static void That([DoesNotReturnIf(false)] bool condition, NUnitString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition, Is.True, message);
+            That(condition, Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
 
         /// <summary>
@@ -152,9 +172,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That([DoesNotReturnIf(false)] bool condition, FormattableString message)
+        public static void That([DoesNotReturnIf(false)] bool condition, FormattableString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition, Is.True, message);
+            That(condition, Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
 
         /// <summary>
@@ -162,9 +185,12 @@ namespace NUnit.Framework
         /// method throws an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
-        public static void That([DoesNotReturnIf(false)] bool condition)
+        public static void That([DoesNotReturnIf(false)] bool condition,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition, Is.True);
+            That(condition, Is.True, string.Empty, actualExpression, Assert.IsTrueExpression);
         }
 
         /// <summary>
@@ -173,9 +199,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That([DoesNotReturnIf(false)] bool condition, Func<string?> getExceptionMessage)
+        public static void That([DoesNotReturnIf(false)] bool condition, Func<string?> getExceptionMessage,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition, Is.True, getExceptionMessage);
+            That(condition, Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
         }
 
         #endregion
@@ -188,9 +217,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That(Func<bool> condition, NUnitString message)
+        public static void That(Func<bool> condition, NUnitString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition.Invoke(), Is.True, message);
+            That(condition.Invoke(), Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
 
         /// <summary>
@@ -199,9 +231,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That(Func<bool> condition, FormattableString message)
+        public static void That(Func<bool> condition, FormattableString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition.Invoke(), Is.True, message);
+            That(condition.Invoke(), Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
 
         /// <summary>
@@ -209,9 +244,12 @@ namespace NUnit.Framework
         /// an <see cref="InconclusiveException"/>.
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
-        public static void That(Func<bool> condition)
+        public static void That(Func<bool> condition,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition.Invoke(), Is.True);
+            That(condition.Invoke(), Is.True, string.Empty, actualExpression, Assert.IsTrueExpression);
         }
 
         /// <summary>
@@ -220,9 +258,12 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
-        public static void That(Func<bool> condition, Func<string?> getExceptionMessage)
+        public static void That(Func<bool> condition, Func<string?> getExceptionMessage,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(condition.Invoke(), Is.True, getExceptionMessage);
+            That(condition.Invoke(), Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
         }
 
         #endregion
@@ -235,9 +276,13 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
         /// <param name="constraint">A ThrowsConstraint used in the test</param>
-        public static void That(TestDelegate code, IResolveConstraint constraint)
+        public static void That(TestDelegate code, IResolveConstraint constraint,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(code))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(constraint))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That((object)code, constraint);
+            That((object)code, constraint, string.Empty, actualExpression, constraintExpression);
         }
 
         #endregion
@@ -253,9 +298,13 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression)
+        public static void That<TActual>(TActual actual, IResolveConstraint expression,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            That(actual, expression, string.Empty);
+            That(actual, expression, string.Empty, actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -266,7 +315,11 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, NUnitString message)
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, NUnitString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -275,9 +328,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
             {
-                MessageWriter writer = new TextMessageWriter(message.ToString());
-                result.WriteMessageTo(writer);
-                throw new InconclusiveException(writer.ToString());
+                ReportInconclusive(result, message.ToString(), actualExpression, constraintExpression);
             }
         }
 
@@ -289,7 +340,11 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, FormattableString message)
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, FormattableString message,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -298,9 +353,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
             {
-                MessageWriter writer = new TextMessageWriter(message.ToString());
-                result.WriteMessageTo(writer);
-                throw new InconclusiveException(writer.ToString());
+                ReportInconclusive(result, message.ToString(), actualExpression, constraintExpression);
             }
         }
 
@@ -315,7 +368,11 @@ namespace NUnit.Framework
         public static void That<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            Func<string?> getExceptionMessage)
+            Func<string?> getExceptionMessage,
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+            [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
+            [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -324,7 +381,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
             {
-                throw new InconclusiveException(getExceptionMessage());
+                ReportInconclusive(result, getExceptionMessage(), actualExpression, constraintExpression);
             }
         }
 
