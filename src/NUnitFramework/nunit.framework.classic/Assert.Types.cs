@@ -19,7 +19,7 @@ namespace NUnit.Framework.Classic
         public static void IsAssignableFrom(Type expected, object? actual, string? message, params object?[]? args)
         {
             var msg = ConvertMessageWithArgs(message, args);
-            That(actual, Is.AssignableFrom(expected), msg);
+            That(actual, Is.AssignableFrom(expected), (NUnitString)msg);
         }
 
         /// <summary>
