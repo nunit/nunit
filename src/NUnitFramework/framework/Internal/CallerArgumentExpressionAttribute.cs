@@ -9,7 +9,7 @@ namespace System.Runtime.CompilerServices
     /// Indicates that a parameter captures the expression passed for another parameter as a string.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
-    public sealed class CallerArgumentExpressionAttribute : Attribute
+    internal sealed class CallerArgumentExpressionAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CallerArgumentExpressionAttribute"/> class.
