@@ -69,7 +69,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
+        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, NUnitString message)
         {
             var constraint = expr.Resolve();
 
@@ -77,7 +77,26 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message);
+                IssueWarning(result, message.ToString());
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and issuing a warning on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static void Unless<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, FormattableString message)
+        {
+            var constraint = expr.Resolve();
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(del);
+
+            if (!result.IsSuccess)
+                IssueWarning(result, message.ToString());
         }
 
         private static void IssueWarning(ConstraintResult result, string? message)
@@ -118,9 +137,19 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void Unless(bool condition, string? message)
+        public static void Unless(bool condition, NUnitString message)
         {
-            Unless(condition, Is.True, () => message);
+            Unless(condition, Is.True, () => message.ToString());
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        public static void Unless(bool condition, FormattableString message)
+        {
+            Unless(condition, Is.True, () => message.ToString());
         }
 
         /// <summary>
@@ -151,7 +180,17 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void Unless(Func<bool> condition, string? message)
+        public static void Unless(Func<bool> condition, NUnitString message)
+        {
+            Unless(condition.Invoke(), Is.True, message);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false, a warning is issued.
+        /// </summary>
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        public static void Unless(Func<bool> condition, FormattableString message)
         {
             Unless(condition.Invoke(), Is.True, message);
         }
@@ -214,9 +253,22 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, string? message)
+        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, NUnitString message)
         {
-            Unless(actual, expression, () => message);
+            Unless(actual, expression, () => message.ToString());
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and issuing a warning on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static void Unless<TActual>(TActual actual, IResolveConstraint expression, FormattableString message)
+        {
+            Unless(actual, expression, () => message.ToString());
         }
 
         /// <summary>
@@ -269,7 +321,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
+        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, NUnitString message)
         {
             var constraint = new NotConstraint(expr.Resolve());
 
@@ -277,7 +329,26 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message);
+                IssueWarning(result, message.ToString());
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning on success.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static void If<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, FormattableString message)
+        {
+            var constraint = new NotConstraint(expr.Resolve());
+
+            IncrementAssertCount();
+            var result = constraint.ApplyTo(del);
+
+            if (!result.IsSuccess)
+                IssueWarning(result, message.ToString());
         }
 
         /// <summary>
@@ -311,9 +382,19 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void If(bool condition, string? message)
+        public static void If(bool condition, NUnitString message)
         {
-            If(condition, Is.True, () => message);
+            If(condition, Is.True, () => message.ToString());
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true, a warning is issued.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        public static void If(bool condition, FormattableString message)
+        {
+            If(condition, Is.True, () => message.ToString());
         }
 
         /// <summary>
@@ -344,9 +425,19 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is true</param>
-        public static void If(Func<bool> condition, string? message)
+        public static void If(Func<bool> condition, NUnitString message)
         {
-            If(condition.Invoke(), Is.True, () => message);
+            If(condition.Invoke(), Is.True, () => message.ToString());
+        }
+
+        /// <summary>
+        /// Asserts that a condition is false. If the condition is true a warning is issued.
+        /// </summary>
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="message">The message to display if the condition is true</param>
+        public static void If(Func<bool> condition, FormattableString message)
+        {
+            If(condition.Invoke(), Is.True, () => message.ToString());
         }
 
         /// <summary>
@@ -392,9 +483,22 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void If<TActual>(TActual actual, IResolveConstraint expression, string? message)
+        public static void If<TActual>(TActual actual, IResolveConstraint expression, NUnitString message)
         {
-            If(actual, expression, () => message);
+            If(actual, expression, () => message.ToString());
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// fails and issuing a warning if it succeeds.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static void If<TActual>(TActual actual, IResolveConstraint expression, FormattableString message)
+        {
+            If(actual, expression, () => message.ToString());
         }
 
         /// <summary>

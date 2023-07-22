@@ -235,6 +235,32 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
         }
 
+        [Test]
+        public void OnlyFailingAssertion_FormatsString()
+        {
+            const string text = "String was formatted";
+            var formatCounter = new FormatCounter();
+
+            Assert.That(1 + 1, Is.EqualTo(2), $"{text} {formatCounter}");
+            Assert.That(formatCounter.NumberOfToStringCalls, Is.EqualTo(0), "The interpolated string should not have been evaluated");
+
+            Assert.That(() => Assert.That(1 + 1, Is.Not.EqualTo(2), $"{text} {formatCounter}"),
+                Throws.InstanceOf<AssertionException>().With.Message.Contains(text));
+
+            Assert.That(formatCounter.NumberOfToStringCalls, Is.EqualTo(1), "The interpolated string should have been evaluated once");
+        }
+
+        private sealed class FormatCounter
+        {
+            public int NumberOfToStringCalls { get; private set; }
+
+            public override string ToString()
+            {
+                NumberOfToStringCalls++;
+                return string.Empty;
+            }
+        }
+
         private int ReturnsFive()
         {
             return 5;

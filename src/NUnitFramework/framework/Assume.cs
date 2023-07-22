@@ -70,7 +70,7 @@ namespace NUnit.Framework
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, string? message)
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, NUnitString message)
         {
             CheckMultipleAssertLevel();
 
@@ -78,7 +78,26 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                ReportFailure(result, message);
+                ReportFailure(result, message.ToString());
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
+        /// <param name="expr">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr, FormattableString message)
+        {
+            CheckMultipleAssertLevel();
+
+            var constraint = expr.Resolve();
+            var result = constraint.ApplyTo(del);
+
+            if (!result.IsSuccess)
+                ReportFailure(result, message.ToString());
         }
 
         private static void ReportFailure(ConstraintResult result, string? message)
@@ -122,7 +141,18 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That([DoesNotReturnIf(false)] bool condition, string? message)
+        public static void That([DoesNotReturnIf(false)] bool condition, NUnitString message)
+        {
+            That(condition, Is.True, message);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false, the method throws
+        /// an <see cref="InconclusiveException"/>.
+        /// </summary>
+        /// <param name="condition">The evaluated condition</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        public static void That([DoesNotReturnIf(false)] bool condition, FormattableString message)
         {
             That(condition, Is.True, message);
         }
@@ -158,7 +188,18 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That(Func<bool> condition, string? message)
+        public static void That(Func<bool> condition, NUnitString message)
+        {
+            That(condition.Invoke(), Is.True, message);
+        }
+
+        /// <summary>
+        /// Asserts that a condition is true. If the condition is false, the method throws
+        /// an <see cref="InconclusiveException"/>.
+        /// </summary>
+        /// <param name="condition">A lambda that returns a Boolean</param>
+        /// <param name="message">The message to display if the condition is false</param>
+        public static void That(Func<bool> condition, FormattableString message)
         {
             That(condition.Invoke(), Is.True, message);
         }
@@ -225,7 +266,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void That<TActual>(TActual actual, IResolveConstraint expression, string? message)
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, NUnitString message)
         {
             CheckMultipleAssertLevel();
 
@@ -234,7 +275,30 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
             if (!result.IsSuccess)
             {
-                MessageWriter writer = new TextMessageWriter(message);
+                MessageWriter writer = new TextMessageWriter(message.ToString());
+                result.WriteMessageTo(writer);
+                throw new InconclusiveException(writer.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Apply a constraint to an actual value, succeeding if the constraint
+        /// is satisfied and throwing an InconclusiveException on failure.
+        /// </summary>
+        /// <typeparam name="TActual">The Type being compared.</typeparam>
+        /// <param name="actual">The actual value to test</param>
+        /// <param name="expression">A Constraint expression to be applied</param>
+        /// <param name="message">The message that will be displayed on failure</param>
+        public static void That<TActual>(TActual actual, IResolveConstraint expression, FormattableString message)
+        {
+            CheckMultipleAssertLevel();
+
+            var constraint = expression.Resolve();
+
+            var result = constraint.ApplyTo(actual);
+            if (!result.IsSuccess)
+            {
+                MessageWriter writer = new TextMessageWriter(message.ToString());
                 result.WriteMessageTo(writer);
                 throw new InconclusiveException(writer.ToString());
             }
