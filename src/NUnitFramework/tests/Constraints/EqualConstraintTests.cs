@@ -814,7 +814,7 @@ namespace NUnit.Framework.Tests.Constraints
         #endregion
 
         #region TypeEqualityMessages
-        private static readonly string NL = Environment.NewLine;
+       
         private static IEnumerable DifferentTypeSameValueTestData
         {
             get
@@ -876,6 +876,7 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
 #if NET5_0_OR_GREATER
+        private static readonly string NL = Environment.NewLine;
         [Test]
         public void SameValueDifferentTypeExactMessageMatch()
         {

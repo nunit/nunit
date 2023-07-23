@@ -2,7 +2,7 @@
 
 using System;
 using NUnit.Framework.Constraints;
-using NUnit.Framework.Internal;
+
 using NUnit.Framework.Tests.TestUtilities.Collections;
 using NUnit.Framework.Tests.TestUtilities.Comparers;
 
@@ -11,8 +11,6 @@ namespace NUnit.Framework.Tests.Constraints
     [TestFixture]
     public class AllItemsConstraintTests
     {
-        private static readonly string NL = Environment.NewLine;
-
         [Test]
         public void AllItemsAreNotNull()
         {
@@ -53,7 +51,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(comparer.Delegate)));
             Assert.That(comparer.WasCalled);
         }
-        
+
         [Test]
         public void AllItemsAreInstancesOfType()
         {

@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
-         [Test]
+        [Test]
         public void ArrayListFails()
         {
             var expectedMessage =
@@ -70,8 +70,6 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(list, Has.Some.EqualTo(123));
             Assert.That(list, Has.Some.EqualTo("xyz"));
         }
-
-       
 
         [Test]
         public void DifferentTypesMayBeEqual()
@@ -111,9 +109,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void DoesContainUsing()
         {
-            Func<int, int, bool> myIntComparer = (x, y) => x == y;
+            bool MyIntComparer(int x, int y) => x == y;
             var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            var constraint = Does.Contain(7).Using(myIntComparer);
+            var constraint = Does.Contain(7).Using((Func<int, int, bool>)MyIntComparer);
             Assert.That(collection1, constraint);
         }
 
@@ -135,9 +133,9 @@ namespace NUnit.Framework.Tests.Assertions
         [Test]
         public void ContainsItemUsing()
         {
-            Func<int, int, bool> myIntComparer = (x, y) => x == y;
+            bool MyIntComparer(int x, int y) => x == y;
             var collection1 = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            var constraint = Contains.Item(7).Using(myIntComparer);
+            var constraint = Contains.Item(7).Using((Func<int, int, bool>)MyIntComparer);
             Assert.That(collection1, constraint);
         }
     }
