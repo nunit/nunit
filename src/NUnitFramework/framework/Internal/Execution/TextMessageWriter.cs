@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using NUnit.Framework.Constraints;
 
-
 namespace NUnit.Framework.Internal
 {
     /// <summary>
@@ -62,7 +61,7 @@ namespace NUnit.Framework.Internal
             if (!string.IsNullOrEmpty(userMessage))
                 WriteMessageLine(userMessage);
         }
-        
+
         #endregion
 
         #region Properties
