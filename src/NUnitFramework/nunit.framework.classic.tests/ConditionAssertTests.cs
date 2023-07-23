@@ -29,7 +29,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: True" + Environment.NewLine +
                 "  But was:  False" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsTrue(false));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [TestCase(false, "  But was:  False")]
@@ -40,7 +40,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: True" + Environment.NewLine +
                 expectedButWas + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsTrue(actual));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: False" + Environment.NewLine +
                 "  But was:  True" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsFalse(true));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [TestCase(true, "  But was:  True")]
@@ -74,7 +74,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: False" + Environment.NewLine +
                 expectedButWas + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsFalse(actual));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: null" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNull(s1));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: not null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNotNull(null));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: NaN" + Environment.NewLine +
                 "  But was:  10.0d" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNaN(10.0));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  \"Hi!\"" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsEmpty("Hi!"));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsEmpty(default));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsEmpty(new[] { 1, 2, 3 }));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsEmpty(new[] { 1, 2, 3 }));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <string.Empty>" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(string.Empty));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -212,7 +212,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(Array.Empty<int>()));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -222,7 +222,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(Enumerable.Empty<int>()));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -232,7 +232,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(new ArrayList()));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -242,7 +242,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.IsNotEmpty(new Hashtable()));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

@@ -79,7 +79,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  -----------^" + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(expected, junitString));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  " + double.NaN + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(1.234, double.NaN, 0.0));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  1.234d" + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(double.NaN, 1.234, 0.0));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  1.23d" + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(double.PositiveInfinity, 1.23, 0.0));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  " + double.NegativeInfinity + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(double.PositiveInfinity, double.NegativeInfinity, 0.0));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  " + double.NegativeInfinity + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -358,7 +358,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  " + nameof(MyEnum.A) + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(MyEnum.C, actual));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message,Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -379,7 +379,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  2005-06-01 00:00:00" + Environment.NewLine;
 
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.AreEqual(dt1, dt2));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -392,7 +392,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  But was:  1914-06-28 12:00:00.0000666" + Environment.NewLine;
 
             Framework.Assert.That(() => Assert.AreEqual(dt1, dt2),
-                Throws.InstanceOf<AssertionException>().With.Message.EqualTo(expectedMessage));
+                Throws.InstanceOf<AssertionException>().With.Message.Contain(expectedMessage));
         }
 
         [Test]

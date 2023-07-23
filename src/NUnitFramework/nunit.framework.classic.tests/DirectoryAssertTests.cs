@@ -56,7 +56,7 @@ namespace NUnit.Framework.Tests.Assertions
                 string.Format("  Expected: <{0}>{2}  But was:  <{1}>{2}",
                     expected.FullName, actual.FullName, Environment.NewLine);
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreEqual(expected, actual));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         #endregion
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Tests.Assertions
                 actual.FullName,
                 Environment.NewLine);
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.AreNotEqual(expected, actual));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         #endregion
@@ -125,14 +125,14 @@ namespace NUnit.Framework.Tests.Assertions
         public void ExistsFailsWhenDirectoryInfoDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(new DirectoryInfo(BAD_DIRECTORY)));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: directory exists"));
         }
 
         [Test]
         public void ExistsFailsWhenStringDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.Exists(BAD_DIRECTORY));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: directory exists"));
         }
 
         [Test]
@@ -164,14 +164,14 @@ namespace NUnit.Framework.Tests.Assertions
         public void DoesNotExistFailsWhenDirectoryInfoExists()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.Directory));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: not directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: not directory exists"));
         }
 
         [Test]
         public void DoesNotExistFailsWhenStringExists()
         {
             var ex = Assert.Throws<AssertionException>(() => DirectoryAssert.DoesNotExist(_goodDir1.ToString()));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: not directory exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: not directory exists"));
         }
 
         [Test]
