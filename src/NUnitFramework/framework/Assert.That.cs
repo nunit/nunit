@@ -4,8 +4,8 @@ using System;
 using NUnit.Framework.Constraints;
 #if NET6_0
 using System.Runtime.CompilerServices;
-#pragma warning disable CS1573
 #endif
+#pragma warning disable CS1573
 
 namespace NUnit.Framework
 {
