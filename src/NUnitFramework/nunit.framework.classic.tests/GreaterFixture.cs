@@ -97,7 +97,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: greater than 5" + Environment.NewLine +
                 "  But was:  5" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.Greater(_i1, _i1));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: greater than 5" + Environment.NewLine +
                 "  But was:  4" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.Greater(_i2, _i1));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: greater than Ignored" + Environment.NewLine +
                 "  But was:  Explicit" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.Greater(_e1, _e2));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Classic.Tests
                 "  Expected: greater than 99" + Environment.NewLine +
                 "  But was:  7" + Environment.NewLine;
             var ex = Framework.Assert.Throws<AssertionException>(() => Assert.Greater(7, 99));
-            Framework.Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

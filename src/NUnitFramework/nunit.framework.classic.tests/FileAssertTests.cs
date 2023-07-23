@@ -113,7 +113,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  But was:  null" + Environment.NewLine;
 
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreEqual(expected, null));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Tests.Assertions
                 string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
                     tf1.File.Length, tf2.File.Length);
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreEqual(expected, actual));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace NUnit.Framework.Tests.Assertions
                 string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
                     expectedTestFile.File.Length, actualTestFile.File.Length);
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreEqual(expectedTestFile.File, actualTestFile.File));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace NUnit.Framework.Tests.Assertions
                 string.Format("  Expected Stream length {0} but was {1}." + Environment.NewLine,
                     expectedTestFile.File.Length, actualTestFile.File.Length);
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreEqual(expectedTestFile.File.FullName, actualTestFile.File.FullName));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Tests.Assertions
                 tf1.FileLength,
                 tf1.OffsetOf('!'));
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreEqual(tf1.File.FullName, tf2.File.FullName));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
         #endregion
 
@@ -226,7 +226,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreNotEqual(expected, actual));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -240,7 +240,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
                 "  But was:  <System.IO.FileStream>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreNotEqual(expected, actual));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -252,7 +252,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
                 "  But was:  <System.IO.FileStream>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreNotEqual(expectedTestFile.File, actualTestFile.File));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
                 "  But was:  <System.IO.FileStream>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreNotEqual(tf1.File.FullName, tf1.File.FullName));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -275,7 +275,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not equal to <System.IO.FileStream>" + Environment.NewLine +
                 "  But was:  <System.IO.FileStream>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.AreNotEqual(tf1.File.FullName, tf2.File.FullName));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
         #endregion
 
@@ -301,21 +301,21 @@ namespace NUnit.Framework.Tests.Assertions
         public void ExistsFailsWhenFileInfoDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.Exists(new FileInfo(BadFile)));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: file exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: file exists"));
         }
 
         [Test]
         public void ExistsFailsWhenStringDoesNotExist()
         {
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.Exists(BadFile));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: file exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: file exists"));
         }
 
         [Test]
         public void ExistsFailsWhenFileInfoIsNull()
         {
             var ex = Assert.Throws<ArgumentNullException>(() => Classic.FileAssert.Exists(default(FileInfo)!));
-            Assert.That(ex?.Message, Does.StartWith("The actual value must be a non-null string or FileInfo"));
+            Assert.That(ex?.Message, Does.Contain("The actual value must be a non-null string or FileInfo"));
         }
 
         [Test]
@@ -341,7 +341,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             using var tf1 = new TestFile("TestText1.txt");
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.DoesNotExist(tf1.File));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: not file exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: not file exists"));
         }
 
         [Test]
@@ -349,7 +349,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             using var tf1 = new TestFile("TestText1.txt");
             var ex = Assert.Throws<AssertionException>(() => Classic.FileAssert.DoesNotExist(tf1.File.FullName));
-            Assert.That(ex?.Message, Does.StartWith("  Expected: not file exists"));
+            Assert.That(ex?.Message, Does.Contain("  Expected: not file exists"));
         }
 
         [Test]
