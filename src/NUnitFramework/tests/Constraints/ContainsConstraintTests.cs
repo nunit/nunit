@@ -1,15 +1,14 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
-
-using System;
 using NUnit.Framework.Constraints;
+#if NET5_0_OR_GREATER
+using System;
 using NUnit.Framework.Internal;
+#endif
 
 namespace NUnit.Framework.Tests.Constraints
 {
     public class ContainsConstraintTests
     {
-        private static readonly string NL = Environment.NewLine;
-
         [Test]
         public void HonorsIgnoreCaseForStringCollection()
         {
@@ -32,6 +31,7 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(result.IsSuccess);
         }
 #if NET5_0_OR_GREATER
+        private static readonly string NL = Environment.NewLine;
         [Test]
         public void ContainsSubstringErrorMessage()
         {
