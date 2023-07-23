@@ -53,7 +53,7 @@ namespace NUnit.Framework.Tests.Attributes
             attr.ApplyToTest(fixture);
 
             ITestResult result = TestBuilder.RunTest(fixture);
-            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message);
+            Assert.That(result.ResultState.Status, Is.EqualTo(TestStatus.Passed), result.Message??string.Empty);
 
             BaseLifeCycle.VerifyInstancePerTestCase(3);
         }

@@ -461,6 +461,9 @@ namespace NUnit.Framework.Internal
         /// Obtain lifetime service object
         /// </summary>
         /// <returns></returns>
+#if NET6_0_OR_GREATER
+        [Obsolete("Preventing throwing PlatformNotSupportedException")]
+#endif
         public override object InitializeLifetimeService()
         {
             return null!;

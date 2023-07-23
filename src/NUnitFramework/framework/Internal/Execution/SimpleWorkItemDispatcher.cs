@@ -38,7 +38,9 @@ namespace NUnit.Framework.Internal.Execution
             {
                 try
                 {
+#pragma warning disable CA1416 // Validate platform compatibility
                     _runnerThread.SetApartmentState(topLevelWorkItem.TargetApartment);
+#pragma warning restore CA1416 // Validate platform compatibility
                 }
                 catch (PlatformNotSupportedException)
                 {

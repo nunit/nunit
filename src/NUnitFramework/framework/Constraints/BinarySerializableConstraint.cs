@@ -36,11 +36,13 @@ namespace NUnit.Framework.Constraints
 
             try
             {
+#pragma warning disable SYSLIB0011
                 _serializer.Serialize(stream, actual);
 
                 stream.Seek(0, SeekOrigin.Begin);
 
                 succeeded = _serializer.Deserialize(stream) is not null;
+#pragma warning restore SYSLIB0011
             }
             catch (SerializationException)
             {
