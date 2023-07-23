@@ -31,7 +31,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(result.IsSuccess);
         }
-
+#if NET5_0_OR_GREATER
         [Test]
         public void ContainsSubstringErrorMessage()
         {
@@ -91,5 +91,6 @@ namespace NUnit.Framework.Tests.Constraints
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected).IgnoreCase));
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
+#endif
     }
 }

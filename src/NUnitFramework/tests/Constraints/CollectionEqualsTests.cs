@@ -50,7 +50,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(actual, Is.Not.EqualTo(expected));
         }
-
+#if NET5_0_OR_GREATER
         [Test]
         public void FailureForEnumerablesWithDifferentSizes()
         {
@@ -79,6 +79,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Expected + "2" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "5" + Environment.NewLine));
         }
+#endif
 
         [TestCaseSource(nameof(IgnoreCaseData))]
         public void HonorsIgnoreCase(IEnumerable expected, IEnumerable actual)

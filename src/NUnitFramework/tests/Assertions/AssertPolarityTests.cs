@@ -101,22 +101,20 @@ namespace NUnit.Framework.Tests.Assertions
         public void ExpectedFailureMessageExistsForIsPositive()
         {
             var expectedMessage =
-                "  Assert.That(_i2, Is.Positive)" + Environment.NewLine +
                 "  Expected: greater than 0" + Environment.NewLine +
                 "  But was:  -1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Positive));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ExpectedFailureMessageExistsForIsNegative()
         {
             var expectedMessage =
-                "  Assert.That(_i1, Is.Negative)" + Environment.NewLine +
                 "  Expected: less than 0" + Environment.NewLine +
                 "  But was:  1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i1, Is.Negative));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

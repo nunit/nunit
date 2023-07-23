@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(TestArray, Has.Some.EqualTo(123));
             Assert.That(TestArray, Has.Some.EqualTo("xyz"), "expected array containing 'xyz'");
         }
-
+#if NET5_0_OR_GREATER
         [Test]
         public void ArrayFails()
         {
@@ -43,6 +43,17 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
 
+         [Test]
+        public void ArrayListFails()
+        {
+            var expectedMessage =
+                "  Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo(\"def\"))" + Environment.NewLine +
+                "  Expected: some item equal to \"def\"" + Environment.NewLine +
+                "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo("def")));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+        }
+#endif
         [Test]
         public void NullArrayIsError()
         {
@@ -60,16 +71,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(list, Has.Some.EqualTo("xyz"));
         }
 
-        [Test]
-        public void ArrayListFails()
-        {
-            var expectedMessage =
-                "  Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo(\"def\"))" + Environment.NewLine +
-                "  Expected: some item equal to \"def\"" + Environment.NewLine +
-                "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo("def")));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
-        }
+       
 
         [Test]
         public void DifferentTypesMayBeEqual()

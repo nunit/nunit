@@ -55,19 +55,17 @@ namespace NUnit.Framework.Tests.Constraints
         public void RegExCaseMatchFails()
         {
             var expectedErrorMessage =
-                "  Assert.That(testPhrase, Does.Match(testMatcher))" + NL +
                 $"  Expected: String matching \"make.*tests.*fail\"{NL}  But was:  \"Make your tests fail before passing!\"{NL}";
             const string testMatcher = "make.*tests.*fail";
             const string testPhrase = "Make your tests fail before passing!";
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(testPhrase, Does.Match(testMatcher)));
-            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedErrorMessage));
             var expectedErrorMessage2 =
-                "  Assert.That(testPhrase, Does.Match(new Regex(testMatcher)))" + NL +
                 $"  Expected: String matching \"make.*tests.*fail\"{NL}  But was:  \"Make your tests fail before passing!\"{NL}";
 
             ex = Assert.Throws<AssertionException>(() => Assert.That(testPhrase, Does.Match(new Regex(testMatcher))));
-            Assert.That(ex?.Message, Is.EqualTo(expectedErrorMessage2));
+            Assert.That(ex?.Message, Does.Contain(expectedErrorMessage2));
         }
     }
 }

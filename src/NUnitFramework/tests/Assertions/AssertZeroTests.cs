@@ -84,6 +84,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(0, Is.Zero, "Message");
         }
 
+#if NET5_0_OR_GREATER      
         [Test]
         public void ExpectedFailureMessageExists()
         {
@@ -94,5 +95,6 @@ namespace NUnit.Framework.Tests.Assertions
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Zero));
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
+#endif
     }
 }

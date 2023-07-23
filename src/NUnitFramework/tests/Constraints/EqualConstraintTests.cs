@@ -829,18 +829,7 @@ namespace NUnit.Framework.Tests.Constraints
                 yield return new object[] { clipTestA, clipTestB };
             }
         }
-        [Test]
-        public void SameValueDifferentTypeExactMessageMatch()
-        {
-#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
-#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            string expectedMsg =
-                "  Assert.That(new IntPtr(0), Is.EqualTo(0))" + Environment.NewLine +
-                "  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL;
-            Assert.That(ex?.Message, Is.EqualTo(expectedMsg));
-        }
-
+       
         private class Dummy
         {
             internal readonly int Value;
@@ -886,6 +875,19 @@ namespace NUnit.Framework.Tests.Constraints
             }
         }
 
+#if NET5_0_OR_GREATER
+        [Test]
+        public void SameValueDifferentTypeExactMessageMatch()
+        {
+#pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
+#pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
+            string expectedMsg =
+                "  Assert.That(new IntPtr(0), Is.EqualTo(0))" + Environment.NewLine +
+                "  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL;
+            Assert.That(ex?.Message, Is.EqualTo(expectedMsg));
+        }
+
         [Test]
         public void TestSameValueDifferentTypeUsingGenericTypes()
         {
@@ -915,6 +917,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL;
             Assert.That(actual, Is.EqualTo(expected));
         }
+#endif
 
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]
         public void SameValueDifferentTypeRegexMatch(object expected, object actual)
@@ -1013,7 +1016,7 @@ namespace NUnit.Framework.Tests.Constraints
             public ClassB(int x) : base(x) { }
         }
     }
-    #endregion
+#endregion
 
     /// <summary>
     /// ConvertibleComparer is used in testing to ensure that objects

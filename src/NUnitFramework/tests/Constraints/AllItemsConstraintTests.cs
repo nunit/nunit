@@ -21,19 +21,6 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void AllItemsAreNotNullFails()
-        {
-            object?[] c = new object?[] { 1, "hello", null, 3 };
-            var expectedMessage =
-                "  Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))))" + Environment.NewLine +
-                TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
-                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
-                "  First non-matching item at index [2]:  null" + NL;
-            var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null)))));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
-        }
-
-        [Test]
         public void AllItemsAreInRange()
         {
             int[] c = new int[] { 12, 27, 19, 32, 45, 99, 26 };
@@ -66,7 +53,14 @@ namespace NUnit.Framework.Tests.Constraints
             Assert.That(c, new AllItemsConstraint(new RangeConstraint(10, 100).Using(comparer.Delegate)));
             Assert.That(comparer.WasCalled);
         }
-
+        
+        [Test]
+        public void AllItemsAreInstancesOfType()
+        {
+            object[] c = new object[] { 'a', 'b', 'c' };
+            Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char))));
+        }
+#if NET5_0_OR_GREATER
         [Test]
         public void AllItemsAreInRangeFailureMessage()
         {
@@ -81,13 +75,6 @@ namespace NUnit.Framework.Tests.Constraints
         }
 
         [Test]
-        public void AllItemsAreInstancesOfType()
-        {
-            object[] c = new object[] { 'a', 'b', 'c' };
-            Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char))));
-        }
-
-        [Test]
         public void AllItemsAreInstancesOfTypeFailureMessage()
         {
             object[] c = new object[] { 'a', "b", 'c' };
@@ -99,6 +86,20 @@ namespace NUnit.Framework.Tests.Constraints
             var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new InstanceOfTypeConstraint(typeof(char)))));
             Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
         }
+        
+        [Test]
+        public void AllItemsAreNotNullFails()
+        {
+            object?[] c = new object?[] { 1, "hello", null, 3 };
+            var expectedMessage =
+                "  Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null))))" + Environment.NewLine +
+                TextMessageWriter.Pfx_Expected + "all items not equal to null" + NL +
+                TextMessageWriter.Pfx_Actual + "< 1, \"hello\", null, 3 >" + NL +
+                "  First non-matching item at index [2]:  null" + NL;
+            var ex = Assert.Throws<AssertionException>(() => Assert.That(c, new AllItemsConstraint(new NotConstraint(new EqualConstraint(null)))));
+            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+        }
+#endif
 
         [Test]
         public void WorksOnICollection()

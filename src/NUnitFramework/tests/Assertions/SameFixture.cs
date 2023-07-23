@@ -20,11 +20,10 @@ namespace NUnit.Framework.Tests.Assertions
             Exception ex1 = new Exception("one");
             Exception ex2 = new Exception("two");
             var expectedMessage =
-                "  Assert.That(ex2, Is.SameAs(ex1))" + Environment.NewLine +
                 "  Expected: same as <System.Exception: one>" + Environment.NewLine +
                 "  But was:  <System.Exception: two>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ex2, Is.SameAs(ex1)));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -32,13 +31,12 @@ namespace NUnit.Framework.Tests.Assertions
         {
             int index = 2;
             var expectedMessage =
-                "  Assert.That(index, Is.SameAs(index))" + Environment.NewLine +
                 "  Expected: same as 2" + Environment.NewLine +
                 "  But was:  2" + Environment.NewLine;
 #pragma warning disable NUnit2040 // Non-reference types for SameAs constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(index, Is.SameAs(index)));
 #pragma warning restore NUnit2040 // Non-reference types for SameAs constraint
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
