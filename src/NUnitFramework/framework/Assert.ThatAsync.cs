@@ -4,7 +4,9 @@ using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using System;
 using NUnit.Framework.Constraints;
+#if NET6_0
 using System.Runtime.CompilerServices;
+#endif
 #pragma warning disable CS1573
 
 namespace NUnit.Framework

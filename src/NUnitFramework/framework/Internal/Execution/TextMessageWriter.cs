@@ -56,7 +56,6 @@ namespace NUnit.Framework.Internal
         /// and optional formatting arguments.
         /// </summary>
         /// <param name="userMessage"></param>
-        /// <param name="args"></param>
         public TextMessageWriter(string? userMessage)
         {
             if (!string.IsNullOrEmpty(userMessage))

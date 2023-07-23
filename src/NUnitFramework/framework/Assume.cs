@@ -3,7 +3,9 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+#if NET6_0
 using System.Runtime.CompilerServices;
+#endif
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 #pragma warning disable CS1573
