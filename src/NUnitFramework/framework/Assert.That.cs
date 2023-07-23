@@ -4,6 +4,7 @@ using System;
 using NUnit.Framework.Constraints;
 #if NET6_0
 using System.Runtime.CompilerServices;
+#pragma warning disable CS1573
 #endif
 
 namespace NUnit.Framework
@@ -23,19 +24,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That(bool condition, string message="", [CallerArgumentExpression("condition")] string? actualExpression = null)
+        public static void That(bool condition, string message = "", [CallerArgumentExpression("condition")] string? actualExpression = null)
         {
             That(condition, Is.True, message, actualExpression, "Is.True");
         }
-
-        /// <summary>
-        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="condition">The evaluated condition</param>
-        //public static void That(bool condition, [CallerArgumentExpression("condition")] string? actualExpression = null)
-        //{
-        //    That(condition, Is.True, string.Empty, actualExpression, "Is.True");
-        //}
 
         /// <summary>
         /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
@@ -57,21 +49,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="message">The message to display if the condition is false</param>
-        public static void That(Func<bool> condition, string message="",
+        public static void That(Func<bool> condition, string message = "",
             [CallerArgumentExpression("condition")] string? actualExpression = null)
         {
             That(condition.Invoke(), Is.True, message, actualExpression, "Is.True");
         }
-
-        /// <summary>
-        /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="condition">A lambda that returns a Boolean</param>
-        //public static void That(Func<bool> condition,
-        //    [CallerArgumentExpression("condition")] string? actualExpression = null)
-        //{
-        //    That(condition.Invoke(), Is.True, string.Empty, actualExpression, "Is.True");
-        //}
 
         /// <summary>
         /// Asserts that a condition is true. Returns without throwing an exception when inside a multiple assert block.
@@ -94,26 +76,11 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
         /// <param name="expr">A Constraint expression to be applied</param>
-        //public static void That<TActual>(
-        //    ActualValueDelegate<TActual> del,
-        //    IResolveConstraint expr,
-        //    [CallerArgumentExpression("del")] string? actualExpression = null,
-        //    [CallerArgumentExpression("expr")] string? constraintExpression = null)
-        //{
-        //    That(del, expr.Resolve(), string.Empty, actualExpression, constraintExpression);
-        //}
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="del">An ActualValueDelegate returning the value to be tested</param>
-        /// <param name="expr">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            string message="",
+            string message = "",
             [CallerArgumentExpression("del")] string? actualExpression = null,
             [CallerArgumentExpression("expr")] string? constraintExpression = null)
         {
@@ -156,24 +123,10 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="code">A TestDelegate to be executed</param>
         /// <param name="constraint">A Constraint expression to be applied</param>
-        //public static void That(
-        //    TestDelegate code,
-        //    IResolveConstraint constraint,
-        //    [CallerArgumentExpression("code")] string? actualExpression = null,
-        //    [CallerArgumentExpression("constraint")] string? constraintExpression = null)
-        //{
-        //    That(code, constraint, string.Empty, actualExpression, constraintExpression);
-        //}
-
-        /// <summary>
-        /// Apply a constraint to a delegate. Returns without throwing an exception when inside a multiple assert block.
-        /// </summary>
-        /// <param name="code">A TestDelegate to be executed</param>
-        /// <param name="constraint">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That(
-            TestDelegate code, 
-            IResolveConstraint constraint, 
+            TestDelegate code,
+            IResolveConstraint constraint,
             string message = "",
             [CallerArgumentExpression("code")] string? actualExpression = null,
             [CallerArgumentExpression("constraint")] string? constraintExpression = null)
@@ -207,27 +160,11 @@ namespace NUnit.Framework
         /// <typeparam name="TActual">The Type being compared.</typeparam>
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
-        //public static void That<TActual>(
-        //    TActual actual, 
-        //    IResolveConstraint expression,
-        //    [CallerArgumentExpression("actual")] string? actualExpression = null,
-        //    [CallerArgumentExpression("expression")] string? constraintExpression = null)
-        //{
-        //    That(actual, expression, string.Empty, actualExpression, constraintExpression);
-        //}
-
-        /// <summary>
-        /// Apply a constraint to an actual value. Returns without throwing an exception when inside a multiple assert
-        /// block.
-        /// </summary>
-        /// <typeparam name="TActual">The Type being compared.</typeparam>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            string message="",
+            string message = "",
             [CallerArgumentExpression("actual")] string? actualExpression = null,
             [CallerArgumentExpression("expression")] string? constraintExpression = null)
         {
@@ -271,20 +208,6 @@ namespace NUnit.Framework
         /// block. Used as a synonym for That in rare cases where a private setter causes a Visual Basic compilation
         /// error.
         /// </summary>
-        /// <param name="actual">The actual value to test</param>
-        /// <param name="expression">A Constraint expression to be applied</param>
-        public static void ByVal(object? actual, IResolveConstraint expression,
-            [CallerArgumentExpression("actual")] string? actualExpression = null,
-            [CallerArgumentExpression("expression")] string? constraintExpression = null)
-        {
-            That(actual, expression, string.Empty, actualExpression, constraintExpression);
-        }
-
-        /// <summary>
-        /// Apply a constraint to an actual value. Returns without throwing an exception when inside a multiple assert
-        /// block. Used as a synonym for That in rare cases where a private setter causes a Visual Basic compilation
-        /// error.
-        /// </summary>
         /// <remarks>
         /// This method is provided for use by VB developers needing to test the value of properties with private
         /// setters.
@@ -292,7 +215,7 @@ namespace NUnit.Framework
         /// <param name="actual">The actual value to test</param>
         /// <param name="expression">A Constraint expression to be applied</param>
         /// <param name="message">The message that will be displayed on failure</param>
-        public static void ByVal(object? actual, IResolveConstraint expression, string? message,
+        public static void ByVal(object? actual, IResolveConstraint expression, string message = "",
             [CallerArgumentExpression("actual")] string? actualExpression = null,
             [CallerArgumentExpression("expression")] string? constraintExpression = null)
         {
