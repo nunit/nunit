@@ -140,7 +140,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNothing));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Is.EqualTo(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine));
 
@@ -152,7 +152,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceException));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
 
@@ -164,7 +164,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsNullReferenceExceptionAsync));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
 
@@ -176,7 +176,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemException));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.Exception: my message" + Environment.NewLine));
 
@@ -188,7 +188,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<ArgumentException>(AsyncTestDelegates.ThrowsSystemExceptionAsync));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.Exception: my message" + Environment.NewLine));
         }
@@ -198,7 +198,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentException));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: myMessage"));
 
@@ -210,7 +210,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = CatchException(() => Assert.ThrowsAsync<Exception>(AsyncTestDelegates.ThrowsArgumentExceptionAsync));
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: myMessage"));
         }

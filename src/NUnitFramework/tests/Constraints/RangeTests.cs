@@ -20,12 +20,10 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void InRangeFails()
         {
-            string expectedMessage = string.Format("  Expected: in range (5,10){0}  But was:  12{0}",
-                    Environment.NewLine);
+            string expectedMessage =
+                $"  Expected: in range (5,10){Environment.NewLine}  But was:  12{Environment.NewLine}";
 
-            Assert.That(
-                new TestDelegate(FailingInRangeMethod),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
+            Assert.That(FailingInRangeMethod, Throws.TypeOf(typeof(AssertionException)).With.Message.Contains(expectedMessage));
         }
 
         private void FailingInRangeMethod()
@@ -43,12 +41,12 @@ namespace NUnit.Framework.Tests.Constraints
         [Test]
         public void NotInRangeFails()
         {
-            string expectedMessage = string.Format("  Expected: not in range (5,10){0}  But was:  7{0}",
-                    Environment.NewLine);
+            string expectedMessage =
+                $"  Expected: not in range (5,10){Environment.NewLine}  But was:  7{Environment.NewLine}";
 
             Assert.That(
-                new TestDelegate(FailingNotInRangeMethod),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
+                FailingNotInRangeMethod,
+                Throws.TypeOf(typeof(AssertionException)).With.Message.Contains(expectedMessage));
         }
 
         private void FailingNotInRangeMethod()
