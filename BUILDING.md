@@ -118,14 +118,14 @@ Feature constants are defined in [Directory.Build.props](src/NUnitFramework/Dire
 - `THREAD_ABORT` enables timeouts and forcible cancellation
 
 Platform constants are defined by convention by the csproj SDK, one per target framework.
-For example, `NET462`, `NETSTANDARD2_0`, `NETCOREAPP2_1`, and so on.
+For example, `NET462`, `NETSTANDARD2_0`, `NET6_0`, and so on.
 It is most helpful to call out which platforms are the exception in rather than the rule
 in a given scenario. Keep in mind the effect the preprocessor would have on a newly added platform.
 
 For example, rather than this code:
 
 ```cs
-#if NETSTANDARD2_0 || NETSTANDARD2_1
+#if NETSTANDARD2_0 || NET6_0
 // Something that .NET Framework can't do
 #endif
 ```
