@@ -350,7 +350,9 @@ namespace NUnit.Framework
         // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
         // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
         // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
+#pragma warning disable SYSLIB0032
         [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+#pragma warning restore SYSLIB0032
         private static string GetEnvironmentStackTraceWithoutThrowing()
         {
             try
