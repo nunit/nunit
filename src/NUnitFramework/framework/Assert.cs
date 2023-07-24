@@ -4,7 +4,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -306,12 +305,13 @@ namespace NUnit.Framework
         #endregion
 
         #region Helper Methods
-        private static void ReportFailure(ConstraintResult result, string? message)
-        {
-            MessageWriter writer = new TextMessageWriter(message);
-            result.WriteMessageTo(writer);
 
-            ReportFailure(writer.ToString());
+        internal static string ExtendedMessage(string methodName, string? message, string actualExpression, string constraintExpression)
+        {
+            string context = $"{methodName}({actualExpression}, {constraintExpression})";
+            string extendedMessage = string.IsNullOrEmpty(message) ? context : $"{message}\n{context}";
+
+            return extendedMessage;
         }
 
         private static void ReportFailure(string? message)
@@ -342,10 +342,6 @@ namespace NUnit.Framework
         /// If <see cref="Exception.StackTrace"/> throws, returns "SomeException was thrown by the
         /// Environment.StackTrace property." See also <see cref="ExceptionExtensions.GetStackTraceWithoutThrowing"/>.
         /// </summary>
-        // https://github.com/dotnet/coreclr/issues/19698 is also currently present in .NET Framework 4.7 and 4.8. A
-        // race condition between threads reading the same PDB file to obtain file and line info for a stack trace
-        // results in AccessViolationException when the stack trace is accessed even indirectly e.g. Exception.ToString.
-        [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
         private static string GetEnvironmentStackTraceWithoutThrowing()
         {
             try
@@ -361,6 +357,6 @@ namespace NUnit.Framework
         private static void IncrementAssertCount()
             => TestExecutionContext.CurrentContext.IncrementAssertCount();
 
-        #endregion
+#endregion
     }
 }

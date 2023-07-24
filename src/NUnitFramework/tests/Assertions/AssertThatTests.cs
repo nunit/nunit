@@ -104,6 +104,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, "message"));
             Assert.That(ex?.Message, Does.Contain("message"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2 == 5, Is.True)"));
         }
 
         [Test]
@@ -112,6 +113,7 @@ namespace NUnit.Framework.Tests.Assertions
             string GetExceptionMessage() => "Not Equal to 4";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2 == 5, GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("Not Equal to 4"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2 == 5, Is.True)"));
         }
 #pragma warning restore NUnit2010 // Use EqualConstraint for better assertion messages in case of failure
 
@@ -126,6 +128,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
@@ -134,6 +137,7 @@ namespace NUnit.Framework.Tests.Assertions
             string GetExceptionMessage() => "error";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(2 + 2, Is.EqualTo(5), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
@@ -147,6 +151,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(() => 2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
@@ -155,6 +160,7 @@ namespace NUnit.Framework.Tests.Assertions
             string GetExceptionMessage() => "error";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(() => 2 + 2, Is.EqualTo(5), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(() => 2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
@@ -168,6 +174,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(ReturnsFive, Is.EqualTo(4))"));
         }
 
         [Test]
@@ -176,6 +183,7 @@ namespace NUnit.Framework.Tests.Assertions
             string GetExceptionMessage() => "error";
             var ex = Assert.Throws<AssertionException>(() => Assert.That(ReturnsFive, Is.EqualTo(4), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(ReturnsFive, Is.EqualTo(4))"));
         }
 
         [Test]
@@ -232,7 +240,37 @@ namespace NUnit.Framework.Tests.Assertions
 
             // Assert
             Assert.That(ex?.Message, Does.Contain("Func was called"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(1 + 1 == 1, Is.True)"));
             Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
+        }
+
+        [Test]
+        public void OnlyFailingAssertion_FormatsString()
+        {
+            const string text = "String was formatted";
+            var formatCounter = new FormatCounter();
+
+            Assert.That(1 + 1, Is.EqualTo(2), $"{text} {formatCounter}");
+            Assert.That(formatCounter.NumberOfToStringCalls, Is.EqualTo(0), "The interpolated string should not have been evaluated");
+
+            Assert.That(() => Assert.That(1 + 1, Is.Not.EqualTo(2), $"{text} {formatCounter}"),
+                Throws.InstanceOf<AssertionException>()
+                    .With.Message.Contains(text).
+                    And
+                    .With.Message.Contains("Assert.That(1 + 1, Is.Not.EqualTo(2)"));
+
+            Assert.That(formatCounter.NumberOfToStringCalls, Is.EqualTo(1), "The interpolated string should have been evaluated once");
+        }
+
+        private sealed class FormatCounter
+        {
+            public int NumberOfToStringCalls { get; private set; }
+
+            public override string ToString()
+            {
+                NumberOfToStringCalls++;
+                return string.Empty;
+            }
         }
 
         private int ReturnsFive()
@@ -303,6 +341,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(() => false, "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assert.That(() => false, Is.True)"));
         }
     }
 }

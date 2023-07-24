@@ -103,7 +103,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: greater than 0" + Environment.NewLine +
                 "  But was:  -1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i2, Is.Positive));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: less than 0" + Environment.NewLine +
                 "  But was:  1" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(_i1, Is.Negative));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

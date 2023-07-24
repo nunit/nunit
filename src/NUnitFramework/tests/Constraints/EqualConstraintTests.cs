@@ -835,7 +835,7 @@ namespace NUnit.Framework.Tests.Constraints
 #pragma warning disable NUnit2021 // Incompatible types for EqualTo constraint
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new IntPtr(0), Is.EqualTo(0)));
 #pragma warning restore NUnit2021 // Incompatible types for EqualTo constraint
-            Assert.That("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL, Is.EqualTo(ex.Message));
+            Assert.That(ex?.Message, Does.Contain("  Expected: 0 (Int32)" + NL + "  But was:  0 (IntPtr)" + NL));
         }
 
         private class Dummy
@@ -898,14 +898,14 @@ namespace NUnit.Framework.Tests.Constraints
                 "  Expected: <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy])" + Environment.NewLine +
                 "  But was:  <Dummy 12> (EqualConstraintTests+DummyGenericClass`1[EqualConstraintTests+Dummy1])" + Environment.NewLine;
 
-            Assert.That(ex?.Message, Is.EqualTo(expectedMsg));
+            Assert.That(ex?.Message, Does.Contain(expectedMsg));
         }
 
         [Test]
         public void SameValueAndTypeButDifferentReferenceShowNotShowTypeDifference()
         {
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Is.Zero, Is.EqualTo(Is.Zero)));
-            Assert.That("  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL, Is.EqualTo(ex.Message));
+            Assert.That(ex?.Message, Does.Contain("  Expected: <<equal 0>>" + NL + "  But was:  <<equal 0>>" + NL));
         }
 
         [Test, TestCaseSource(nameof(DifferentTypeSameValueTestData))]

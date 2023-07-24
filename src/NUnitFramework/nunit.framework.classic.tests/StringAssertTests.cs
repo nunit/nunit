@@ -23,7 +23,7 @@ namespace NUnit.Framework.Tests.Assertions
                 TextMessageWriter.Pfx_Expected + "String containing \"abc\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abxcdxbc\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.Contains("abc", "abxcdxbc"));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Tests.Assertions
                 TextMessageWriter.Pfx_Expected + "String starting with \"xyz\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abcxyz\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.StartsWith("xyz", "abcxyz"));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace NUnit.Framework.Tests.Assertions
                 TextMessageWriter.Pfx_Expected + "String ending with \"xyz\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"abcdef\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.EndsWith("xyz", "abcdef"));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace NUnit.Framework.Tests.Assertions
                 + TextMessageWriter.Pfx_Actual + "\"NAMES\"" + Environment.NewLine
                 + "  ---------------^" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.AreEqualIgnoringCase("Name", "NAMES"));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace NUnit.Framework.Tests.Assertions
                 TextMessageWriter.Pfx_Expected + "String matching \"a?b*c\"" + Environment.NewLine +
                 TextMessageWriter.Pfx_Actual + "\"12ab456\"" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.StringAssert.IsMatch("a?b*c", "12ab456"));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]

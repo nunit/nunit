@@ -92,6 +92,7 @@ namespace NUnit.Framework.Tests.Assertions
         public void WarningFails(string methodName, string? expectedMessage)
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
+            string expectedMethodName = methodName.Contains("WarnUnless") ? "Warn.Unless" : "Warn.If";
 
             Assert.Multiple(() =>
             {
@@ -106,9 +107,10 @@ namespace NUnit.Framework.Tests.Assertions
             string? stackTrace = result.AssertionResults[0].StackTrace;
             Assert.That(stackTrace, Is.Not.Null, "StackTrace should not be null");
             Assert.That(stackTrace, Does.Contain("WarningFixture"));
-            Assert.That(stackTrace!.Split(new[] { '\n' }), Has.Length.LessThan(3));
+            Assert.That(stackTrace.Split(new[] { '\n' }), Has.Length.LessThan(3));
             Assert.That(result.Message, Is.Not.Null, "Result Message should not be null");
-            Assert.That(result.Message, Contains.Substring(message!), "Result message should contain assertion message");
+            Assert.That(result.Message, Contains.Substring(message), "Result message should contain assertion message");
+            Assert.That(result.Message, Contains.Substring(expectedMethodName), "Result message should contain assert method name");
 
             if (expectedMessage is not null)
             {

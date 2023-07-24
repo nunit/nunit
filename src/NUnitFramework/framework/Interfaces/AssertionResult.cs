@@ -51,8 +51,8 @@ namespace NUnit.Framework.Interfaces
         {
             var hashCode = -783279553;
             hashCode = hashCode * -1521134295 + Status.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Message);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(StackTrace);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(Message ?? string.Empty);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(StackTrace ?? string.Empty);
             return hashCode;
         }
 

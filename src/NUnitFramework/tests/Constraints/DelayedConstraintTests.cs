@@ -244,7 +244,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "  Missing (1): < 3 >" + Environment.NewLine +
                 "  Extra (1): < 1 >" + Environment.NewLine;
 
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            Assert.That(exception.Message, Does.Contain(expectedMessage));
         }
 
         private static int _setValuesDelay;

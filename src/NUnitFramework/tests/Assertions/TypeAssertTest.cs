@@ -20,7 +20,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: <System.Int32>" + Environment.NewLine +
                 "  But was:  <System.String>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That("Hello", Is.TypeOf(typeof(int))));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: instance of <System.Int32>" + Environment.NewLine +
                 "  But was:  <System.String>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That("abc123", Is.InstanceOf(typeof(int))));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not instance of <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: Value does not fall within the expected range.>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Classic.Assert.IsNotInstanceOf(typeof(Exception), new ArgumentException()));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test()]
@@ -78,7 +78,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: assignable from <System.Int32[,]>" + Environment.NewLine +
                 "  But was:  <System.Int32[]>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(array10, Is.AssignableFrom(array2.GetType())));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test()]
@@ -100,7 +100,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: not assignable from <System.Int32[]>" + Environment.NewLine +
                 "  But was:  <System.Int32[]>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(array10, Is.Not.AssignableFrom(array2.GetType())));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

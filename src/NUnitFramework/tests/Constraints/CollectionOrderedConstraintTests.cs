@@ -187,7 +187,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "  Ordering breaks at index [2]:  \"y\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new[] { "x", "z", "y" }, Is.Ordered));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace NUnit.Framework.Tests.Constraints
                 "  Ordering breaks at index [91]:  91" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actual, Is.Ordered));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         #endregion

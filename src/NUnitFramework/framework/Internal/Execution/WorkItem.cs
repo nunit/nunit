@@ -445,6 +445,20 @@ namespace NUnit.Framework.Internal.Execution
                 RunOnCurrentThread();
             });
 
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+            {
+                _thread.SetApartmentState(apartment);
+            }
+            else
+            {
+                const string msg = "Apartment state cannot be set on this platform.";
+                Log.Error(msg);
+                Result.SetResult(ResultState.Skipped, msg);
+                WorkItemComplete();
+                return;
+            }
+#else
             try
             {
                 _thread.SetApartmentState(apartment);
@@ -457,6 +471,7 @@ namespace NUnit.Framework.Internal.Execution
                 WorkItemComplete();
                 return;
             }
+#endif
 
             _thread.Start();
             _thread.Join();

@@ -7,10 +7,6 @@ on:
       - release
       - 'v3.13-dev'
   pull_request:
-    branches:
-      - master
-      - release
-      - 'v3.13-dev'
 
 jobs:
   build-windows:
@@ -25,11 +21,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 5.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '5.0.x'
 
     - name: 🛠️ Setup .NET Core SDK 6.0.x
       uses: actions/setup-dotnet@v3
@@ -77,11 +68,6 @@ jobs:
       with:
         dotnet-version: '3.1.x'
 
-    - name: 🛠️ Setup .NET Core SDK 5.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '5.0.x'
-
     - name: 🛠️ Setup .NET Core SDK 6.0.x
       uses: actions/setup-dotnet@v3
       with:
@@ -121,11 +107,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '3.1.x'
-
-    - name: 🛠️ Setup .NET Core SDK 5.0.x
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '5.0.x'
 
     - name: 🛠️ Setup .NET Core SDK 6.0.x
       uses: actions/setup-dotnet@v3

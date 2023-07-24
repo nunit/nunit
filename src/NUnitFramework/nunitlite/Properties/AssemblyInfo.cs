@@ -13,8 +13,8 @@ using System.Runtime.CompilerServices;
 
 #if NET462
 [assembly: AssemblyTitle("NUnitLite Runner (.NET Framework 4.6.2)")]
-#elif NETSTANDARD2_0
-[assembly: AssemblyTitle("NUnitLite Runner (.NET Standard 2.0)")]
+#elif NET6_0
+[assembly: AssemblyTitle("NUnitLite Runner (.NET 6.0)")]
 #else
 #error Missing AssemblyTitle attribute for this target.
 #endif

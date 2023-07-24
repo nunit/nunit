@@ -21,17 +21,18 @@ namespace NUnit.Framework.Internal
 
             if (os.Platform == PlatformID.Win32NT && os.Version.Major >= 5)
             {
-                if (os.Version.Major == 6 && os.Version.Minor >= 2)
+                if (
+#if NET6_0_OR_GREATER
+                    OperatingSystem.IsWindows() &&
+#endif
+
+                    os.Version.Major == 6 && os.Version.Minor >= 2)
+                {
                     os = new OperatingSystem(os.Platform, GetWindows81PlusVersion(os.Version));
-#if NETSTANDARD2_0
+                }
+
                 ProductType productType = GetProductType();
                 currentPlatform = new OSPlatform(os.Platform, os.Version, productType);
-#else
-                Osversioninfoex osvi = new Osversioninfoex();
-                osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
-                GetVersionEx(ref osvi);
-                currentPlatform = new OSPlatform(os.Platform, os.Version, (ProductType)osvi.ProductType);
-#endif
             }
             else if (CheckIfIsMacOSX(os.Platform))
             {
@@ -88,6 +89,9 @@ namespace NUnit.Framework.Internal
         /// </remarks>
         /// <param name="version">The original version</param>
         /// <returns>The correct OS version</returns>
+#if NET6_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
         private static Version GetWindows81PlusVersion(Version version)
         {
             try
@@ -149,8 +153,23 @@ namespace NUnit.Framework.Internal
             Server,
         }
 
-#if NETSTANDARD2_0
         private static ProductType GetProductType()
+        {
+#if NET6_0_OR_GREATER
+            if (OperatingSystem.IsWindows())
+                return GetWindowsProductType();
+
+            return ProductType.Unknown;
+#else
+            return GetWindowsProductType();
+#endif
+        }
+
+#if !NETFRAMEWORK
+#if NET6_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#endif
+        private static ProductType GetWindowsProductType()
         {
             try
             {
@@ -185,17 +204,26 @@ namespace NUnit.Framework.Internal
             public readonly uint dwPlatformId;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
             public readonly string szCSDVersion;
-            public readonly Int16 wServicePackMajor;
-            public readonly Int16 wServicePackMinor;
-            public readonly Int16 wSuiteMask;
+            public readonly short wServicePackMajor;
+            public readonly short wServicePackMinor;
+            public readonly short wSuiteMask;
 #pragma warning restore IDE1006
-            public readonly Byte ProductType;
-            public readonly Byte Reserved;
+            public readonly byte ProductType;
+            public readonly byte Reserved;
         }
 
         [DllImport("Kernel32.dll")]
         private static extern bool GetVersionEx(ref Osversioninfoex osvi);
+
+        private static ProductType GetWindowsProductType()
+        {
+            var osvi = new Osversioninfoex();
+            osvi.dwOSVersionInfoSize = (uint)Marshal.SizeOf(osvi);
+            GetVersionEx(ref osvi);
+            return (ProductType)osvi.ProductType;
+        }
 #endif
+
         #endregion
 
         /// <summary>
@@ -481,5 +509,15 @@ namespace NUnit.Framework.Internal
         /// Server 10 to distinguish it from previous versions of Windows Server.
         /// </summary>
         public bool IsWindowsServer10 => Platform == PlatformID.Win32NT && Version.Major == 10 && Product == ProductType.Server;
+
+        /// <summary>
+        /// Gets a description for the current OS.
+        /// </summary>
+        public static string OSDescription =>
+#if NET462
+            LazyCurrentPlatform.Value.ToString();
+#else
+            System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+#endif
     }
 }

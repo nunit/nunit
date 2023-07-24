@@ -3,7 +3,7 @@
 using System;
 using System.IO;
 using System.Reflection;
-#if NETSTANDARD2_0
+#if !NETFRAMEWORK
 using System.Runtime.Loader;
 #endif
 
@@ -29,10 +29,16 @@ namespace NUnit.Framework.Internal
         /// <returns>The path.</returns>
         public static string GetAssemblyPath(Assembly assembly)
         {
+#if NETFRAMEWORK
+            // https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location 
+            // .NET Framework only: 
+            // If the loaded file was shadow-copied, the location is that of the file after being shadow-copied.
+            // To get the location before the file has been shadow-copied, use the CodeBase property.
             string? codeBase = assembly.CodeBase;
 
             if (codeBase is not null && IsFileUri(codeBase))
                 return GetAssemblyPathFromCodeBase(codeBase);
+#endif
 
             return assembly.Location;
         }
@@ -69,7 +75,7 @@ namespace NUnit.Framework.Internal
 
         #region Load
 
-#if NETSTANDARD2_0
+#if !NETFRAMEWORK
         private sealed class ReflectionAssemblyLoader
         {
             private static ReflectionAssemblyLoader? _instance;

@@ -123,7 +123,7 @@ namespace NUnit.Framework.Tests.Syntax
                 Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.TypeOf<ArgumentException>()));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex?.Message, Does.StartWith(
+            Assert.That(ex?.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
         }
@@ -135,7 +135,7 @@ namespace NUnit.Framework.Tests.Syntax
                 Assert.That(TestDelegates.ThrowsNullReferenceException, Throws.InstanceOf<ArgumentException>()));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex?.Message, Does.StartWith(
+            Assert.That(ex?.Message, Does.Contain(
                 "  Expected: instance of <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
         }

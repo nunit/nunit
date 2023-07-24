@@ -1,13 +1,13 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">9</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">11</LangVersion>
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <NUnitLibraryFrameworks>net462;netstandard2.0</NUnitLibraryFrameworks>
-    <NUnitRuntimeFrameworks>net462;netcoreapp3.1;net6.0;net7.0</NUnitRuntimeFrameworks>
+    <NUnitLibraryFrameworks>net462;net6.0</NUnitLibraryFrameworks>
+    <NUnitRuntimeFrameworks>net462;net6.0;net7.0</NUnitRuntimeFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <!--<OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>-->
     <CheckEolTargetFramework>false</CheckEolTargetFramework>
