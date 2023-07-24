@@ -7,6 +7,9 @@ using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
 using NUnit.Framework.Internal;
 
+// Disabled because of the CallerArgumentExpression attributes which are only for the compiler.
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+
 namespace NUnit.Framework
 {
     /// <summary>
@@ -61,10 +64,8 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             NUnitString message = default,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -85,10 +86,8 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That<TActual>(ActualValueDelegate<TActual> del, IResolveConstraint expr,
             FormattableString message,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -111,10 +110,8 @@ namespace NUnit.Framework
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
             Func<string?> getExceptionMessage,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -139,9 +136,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to display if the condition is false</param>
         public static void That([DoesNotReturnIf(false)] bool condition,
             NUnitString message = default,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(condition, Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
@@ -154,9 +149,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to display if the condition is false</param>
         public static void That([DoesNotReturnIf(false)] bool condition,
             FormattableString message,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(condition, Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
@@ -169,9 +162,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That([DoesNotReturnIf(false)] bool condition,
             Func<string?> getExceptionMessage,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(condition, Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
         }
@@ -188,9 +179,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to display if the condition is false</param>
         public static void That(Func<bool> condition,
             NUnitString message = default,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(condition.Invoke(), Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
@@ -203,9 +192,7 @@ namespace NUnit.Framework
         /// <param name="message">The message to display if the condition is false</param>
         public static void That(Func<bool> condition,
             FormattableString message,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(condition.Invoke(), Is.True, message, actualExpression, Assert.IsTrueExpression);
         }
@@ -218,9 +205,7 @@ namespace NUnit.Framework
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void That(Func<bool> condition,
             Func<string?> getExceptionMessage,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(condition.Invoke(), Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
         }
@@ -241,10 +226,8 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression,
             NUnitString message = default,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -267,10 +250,8 @@ namespace NUnit.Framework
         /// <param name="message">The message that will be displayed on failure</param>
         public static void That<TActual>(TActual actual, IResolveConstraint expression,
             FormattableString message,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
@@ -295,10 +276,8 @@ namespace NUnit.Framework
             TActual actual,
             IResolveConstraint expression,
             Func<string?> getExceptionMessage,
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             CheckMultipleAssertLevel();
 
