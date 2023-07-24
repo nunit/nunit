@@ -4,7 +4,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using NUnit.Framework.Constraints;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
@@ -307,20 +306,12 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        internal static string? ExtendedMessage(string? message, string actualExpression, string constraintExpression)
+        internal static string? ExtendedMessage(string methodName, string? message, string actualExpression, string constraintExpression)
         {
-            string context = $"Assert.That({actualExpression}, {constraintExpression})";
+            string context = $"{methodName}({actualExpression}, {constraintExpression})";
             string extendedMessage = string.IsNullOrEmpty(message) ? context : $"{message}\n{context}";
 
             return extendedMessage;
-        }
-
-        private static void ReportFailure(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
-        {
-            MessageWriter writer = new TextMessageWriter(ExtendedMessage(message, actualExpression, constraintExpression));
-            result.WriteMessageTo(writer);
-
-            ReportFailure(writer.ToString());
         }
 
         private static void ReportFailure(string? message)

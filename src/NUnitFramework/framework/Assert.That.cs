@@ -3,6 +3,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using NUnit.Framework.Constraints;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -330,6 +331,20 @@ namespace NUnit.Framework
 #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
             That(actual, expression, message, actualExpression, constraintExpression);
+        }
+
+        #endregion
+
+        #region Helper Method
+
+        private static void ReportFailure(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
+        {
+            MessageWriter writer = new TextMessageWriter(
+                ExtendedMessage($"{nameof(Assert)}.{nameof(Assert.That)}",
+                message, actualExpression, constraintExpression));
+            result.WriteMessageTo(writer);
+
+            ReportFailure(writer.ToString());
         }
 
         #endregion

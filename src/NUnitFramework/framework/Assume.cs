@@ -323,7 +323,9 @@ namespace NUnit.Framework
 
         private static void ReportInconclusive(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
         {
-            MessageWriter writer = new TextMessageWriter(Assert.ExtendedMessage(message, actualExpression, constraintExpression));
+            MessageWriter writer = new TextMessageWriter(
+                Assert.ExtendedMessage($"{nameof(Assume)}.{nameof(Assume.That)}",
+                message, actualExpression, constraintExpression));
             result.WriteMessageTo(writer);
             throw new InconclusiveException(writer.ToString());
         }

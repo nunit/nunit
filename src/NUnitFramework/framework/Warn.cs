@@ -71,7 +71,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message.ToString(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(Unless), message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message.ToString(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(Unless), message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(Unless), getExceptionMessage(), actualExpression, constraintExpression);
         }
 
         #endregion
@@ -279,7 +279,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(Unless), getExceptionMessage(), actualExpression, constraintExpression);
         }
 
         #endregion
@@ -311,7 +311,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message.ToString(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(If), message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -335,7 +335,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, message.ToString(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(If), message.ToString(), actualExpression, constraintExpression);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(del);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(If), getExceptionMessage(), actualExpression, constraintExpression);
         }
 
         #endregion
@@ -519,7 +519,7 @@ namespace NUnit.Framework
             var result = constraint.ApplyTo(actual);
 
             if (!result.IsSuccess)
-                IssueWarning(result, getExceptionMessage(), actualExpression, constraintExpression);
+                IssueWarning(result, nameof(If), getExceptionMessage(), actualExpression, constraintExpression);
         }
 
         #endregion
@@ -533,9 +533,10 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-        private static void IssueWarning(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
+        private static void IssueWarning(ConstraintResult result, string method, string? message, string actualExpression, string constraintExpression)
         {
-            MessageWriter writer = new TextMessageWriter(Assert.ExtendedMessage(message, actualExpression, constraintExpression));
+            MessageWriter writer = new TextMessageWriter(
+                Assert.ExtendedMessage($"{nameof(Warn)}.{method}", message, actualExpression, constraintExpression));
             result.WriteMessageTo(writer);
             Assert.Warn(writer.ToString());
         }

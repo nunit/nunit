@@ -117,14 +117,16 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2 == 5, "message"));
             Assert.That(ex?.Message, Does.Contain("message"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(2 + 2 == 5, Is.True)"));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_BooleanWithMessageStringFunc()
         {
             string GetExceptionMessage() => "got 5";
-            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2 == 5, (Func<string>)GetExceptionMessage));
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2 == 5, GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("got 5"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(2 + 2 == 5, Is.True)"));
         }
 
         [Test]
@@ -138,14 +140,16 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5, "message"));
             Assert.That(ex?.Message, Does.Contain("message"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(() => 2 + 2 == 5, Is.True)"));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_BooleanLambdaWithMessageStringFunc()
         {
             string GetExceptionMessage() => "got 5";
-            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5, (Func<string>)GetExceptionMessage));
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2 == 5, GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("got 5"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(() => 2 + 2 == 5, Is.True)"));
         }
 
         [Test]
@@ -159,14 +163,16 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_ActualAndConstraintWithMessageStringFunc()
         {
             string GetExceptionMessage() => "Should be 5";
-            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), (Func<string>)GetExceptionMessage));
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(2 + 2, Is.EqualTo(5), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("Should be 5"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
@@ -180,14 +186,16 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(() => 2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
         public void FailureThrowsInconclusiveException_ActualLambdaAndConstraintWithMessageStringFunc()
         {
             string GetExceptionMessage() => "Should be 5";
-            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), (Func<string>)GetExceptionMessage));
+            var ex = Assert.Throws<InconclusiveException>(() => Assume.That(() => 2 + 2, Is.EqualTo(5), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("Should be 5"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(() => 2 + 2, Is.EqualTo(5))"));
         }
 
         [Test]
@@ -201,6 +209,7 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var ex = Assert.Throws<InconclusiveException>(() => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), "Error"));
             Assert.That(ex?.Message, Does.Contain("Error"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4))"));
         }
 
         [Test]
@@ -210,6 +219,7 @@ namespace NUnit.Framework.Tests.Assertions
             var ex = Assert.Throws<InconclusiveException>(
                 () => Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4), GetExceptionMessage));
             Assert.That(ex?.Message, Does.Contain("Should be 4"));
+            Assert.That(ex?.Message, Does.Contain("Assume.That(new ActualValueDelegate<int>(ReturnsFive), Is.EqualTo(4))"));
         }
 
         [Test]
@@ -250,6 +260,7 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.Multiple(() =>
             {
                 Assert.That(ex?.Message, Does.Contain("Func was called"));
+                Assert.That(ex?.Message, Does.Contain("Assume.That(1 + 1 == 1, Is.True)"));
                 Assert.That(funcWasCalled, "The getExceptionMessage function was not called when it should have been.");
             });
         }
