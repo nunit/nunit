@@ -309,15 +309,12 @@ namespace NUnit.Framework
 
         internal static string? ExtendedMessage(string? message, string actualExpression, string constraintExpression)
         {
-#if DEBUG
-            return message;
-#else
             string context = $"Assert.That({actualExpression}, {constraintExpression})";
             string extendedMessage = string.IsNullOrEmpty(message) ? context : $"{message}\n{context}";
 
             return extendedMessage;
-#endif
         }
+
         private static void ReportFailure(ConstraintResult result, string? message, string actualExpression, string constraintExpression)
         {
             MessageWriter writer = new TextMessageWriter(ExtendedMessage(message, actualExpression, constraintExpression));
