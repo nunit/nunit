@@ -117,7 +117,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNothing));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Is.EqualTo(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine));
 
@@ -131,7 +131,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsNullReferenceException));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.NullReferenceException: my message" + Environment.NewLine));
 
@@ -145,7 +145,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<ArgumentException>(TestDelegates.ThrowsSystemException));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.ArgumentException>" + Environment.NewLine +
                 "  But was:  <System.Exception: my message" + Environment.NewLine));
 
@@ -159,7 +159,7 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.Throws<Exception>(TestDelegates.ThrowsArgumentException));
 
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Message, Does.StartWith(
+            Assert.That(ex!.Message, Does.Contain(
                 "  Expected: <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: myMessage"));
 

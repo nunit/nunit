@@ -28,7 +28,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(TestArray, Has.Some.EqualTo("def")));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(Array.Empty<object>(), Has.Some.EqualTo("def")));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace NUnit.Framework.Tests.Assertions
                 "  Expected: some item equal to \"def\"" + Environment.NewLine +
                 "  But was:  < \"abc\", 123, \"xyz\" >" + Environment.NewLine;
             var ex = Assert.Throws<AssertionException>(() => Assert.That(new SimpleObjectList(TestArray), Has.Some.EqualTo("def")));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]

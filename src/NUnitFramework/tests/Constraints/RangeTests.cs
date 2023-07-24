@@ -25,7 +25,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(
                 new TestDelegate(FailingInRangeMethod),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
+                Throws.TypeOf(typeof(AssertionException)).With.Message.Contains(expectedMessage));
         }
 
         private void FailingInRangeMethod()
@@ -48,7 +48,7 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(
                 new TestDelegate(FailingNotInRangeMethod),
-                Throws.TypeOf(typeof(AssertionException)).With.Message.EqualTo(expectedMessage));
+                Throws.TypeOf(typeof(AssertionException)).With.Message.Contains(expectedMessage));
         }
 
         private void FailingNotInRangeMethod()

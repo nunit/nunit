@@ -43,7 +43,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualString, Does.Contain(expected)));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "\"abc\"" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualString, Does.Contain(expected).IgnoreCase));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected)));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace NUnit.Framework.Tests.Constraints
                 TextMessageWriter.Pfx_Actual + "< \"a\", \"b\" >" + NL;
 
             var ex = Assert.Throws<AssertionException>(() => Assert.That(actualItems, Does.Contain(expected).IgnoreCase));
-            Assert.That(ex?.Message, Is.EqualTo(expectedMessage));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }

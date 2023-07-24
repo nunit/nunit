@@ -75,6 +75,7 @@ namespace NUnit.Framework.Tests.Constraints
             StringReader rdr = new StringReader(ex.Message);
             /* skip */
             rdr.ReadLine();
+            rdr.ReadLine(); // Skip actualExpression, constraintExpression string
             string? expected = rdr.ReadLine();
             Assert.That(expected, Is.Not.Null);
             if (expected.Length > 11)
