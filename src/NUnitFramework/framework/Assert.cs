@@ -306,7 +306,7 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        internal static string? ExtendedMessage(string methodName, string? message, string actualExpression, string constraintExpression)
+        internal static string ExtendedMessage(string methodName, string? message, string actualExpression, string constraintExpression)
         {
             string context = $"{methodName}({actualExpression}, {constraintExpression})";
             string extendedMessage = string.IsNullOrEmpty(message) ? context : $"{message}\n{context}";

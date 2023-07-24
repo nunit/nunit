@@ -38,14 +38,8 @@ using System.Runtime.CompilerServices;
 
 #if NET462
 [assembly: AssemblyTitle("NUnit Framework Classic (.NET Framework 4.6.2)")]
-#elif NETSTANDARD2_0
-[assembly: AssemblyTitle("NUnit Framework Classic (.NET Standard 2.0)")]
 #elif NET6_0
-#if WINDOWS
 [assembly: AssemblyTitle("NUnit Framework Classic (.NET 6.0)")]
-#else
-[assembly: AssemblyTitle("NUnit Framework Classic (.NET 6.0-windows)")]
-#endif
 #else
 #error Missing AssemblyTitle attribute for this target.
 #endif

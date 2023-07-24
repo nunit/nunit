@@ -18,8 +18,7 @@ namespace NUnit.Framework.Classic
         /// <param name="args">Array of objects to be used in formatting the message</param>
         public static void IsAssignableFrom(Type expected, object? actual, string? message, params object?[]? args)
         {
-            var msg = ConvertMessageWithArgs(message, args);
-            That(actual, Is.AssignableFrom(expected), (NUnitString)msg);
+            That(actual, Is.AssignableFrom(expected), () => ConvertMessageWithArgs(message, args));
         }
 
         /// <summary>

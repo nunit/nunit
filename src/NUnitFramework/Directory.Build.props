@@ -1,7 +1,7 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">10</LangVersion>
+    <LangVersion Condition="'$(MSBuildProjectExtension)' == '.csproj'">11</LangVersion>
     <Features>strict</Features>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
