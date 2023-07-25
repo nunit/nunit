@@ -29,12 +29,12 @@ namespace NUnit.Framework
             try
             {
                 await code();
-                Assert.That(() => { }, constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => { }, constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
             catch (Exception ex)
             {
                 var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => edi.Throw(), constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
         }
 
@@ -55,12 +55,12 @@ namespace NUnit.Framework
             try
             {
                 await code();
-                Assert.That(() => { }, constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => { }, constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
             catch (Exception ex)
             {
                 var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => edi.Throw(), constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
         }
 
@@ -81,12 +81,12 @@ namespace NUnit.Framework
             try
             {
                 var result = await code();
-                Assert.That(() => result, constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => result, constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
             catch (Exception ex)
             {
                 var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => edi.Throw(), constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
         }
 
@@ -107,12 +107,12 @@ namespace NUnit.Framework
             try
             {
                 var result = await code();
-                Assert.That(() => result, constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => result, constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
             catch (Exception ex)
             {
                 var edi = ExceptionDispatchInfo.Capture(ex);
-                Assert.That(() => edi.Throw(), constraint, message, actualExpression, constraintExpression);
+                Assert.That(() => edi.Throw(), constraint, () => message.ToString(), actualExpression, constraintExpression);
             }
         }
 
