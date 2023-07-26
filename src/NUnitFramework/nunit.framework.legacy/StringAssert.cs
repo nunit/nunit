@@ -3,7 +3,7 @@
 using System;
 using System.ComponentModel;
 
-namespace NUnit.Framework.Classic
+namespace NUnit.Framework.Legacy
 {
     /// <summary>
     /// Basic Asserts on strings.

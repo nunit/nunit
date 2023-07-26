@@ -55,7 +55,7 @@ namespace NUnit.Framework.Tests.Assertions
             var expectedMessage =
                 "  Expected: not instance of <System.Exception>" + Environment.NewLine +
                 "  But was:  <System.ArgumentException: Value does not fall within the expected range.>" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.IsNotInstanceOf(typeof(Exception), new ArgumentException()));
+            var ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotInstanceOf(typeof(Exception), new ArgumentException()));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 

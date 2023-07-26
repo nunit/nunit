@@ -14,7 +14,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
         [Test]
         public void NotSame()
         {
-            Classic.Assert.AreNotSame(_s1, _s2);
+            Legacy.ClassicAssert.AreNotSame(_s1, _s2);
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             var expectedMessage =
                 "  Expected: not same as \"S1\"" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotSame(_s1, _s1));
+            var ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.AreNotSame(_s1, _s1));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
@@ -33,7 +33,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             var actual = new ThrowsIfToStringIsCalled(1);
             var expected = new ThrowsIfToStringIsCalled(1);
 
-            Classic.Assert.AreNotSame(expected, actual);
+            Legacy.ClassicAssert.AreNotSame(expected, actual);
         }
     }
 }

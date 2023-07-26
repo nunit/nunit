@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests;
 using NUnit.Framework.Tests.Constraints;
 using NUnit.Framework.Tests.TestUtilities.Collections;
@@ -178,7 +179,7 @@ namespace NUnit.Framework.Classic.Tests
             CollectionAssert.AreEqual(set1, set2);
             CollectionAssert.AreEqual(set1, set2, new TestComparer());
 
-            Assert.AreEqual(set1, set2);
+            Legacy.ClassicAssert.AreEqual(set1, set2);
         }
 
         [Test]
@@ -325,8 +326,8 @@ namespace NUnit.Framework.Classic.Tests
             var y = new EnumerableObject<int>(new[] { 1, 2, 3, 4, 5 }, 15);
 
             // They are not equal using Assert
-            Assert.AreNotEqual(x, y, "Assert 1");
-            Assert.AreNotEqual(y, x, "Assert 2");
+            Legacy.ClassicAssert.AreNotEqual(x, y, "Assert 1");
+            Legacy.ClassicAssert.AreNotEqual(y, x, "Assert 2");
 
             // Using CollectionAssert they are equal
             CollectionAssert.AreEqual(x, y, "CollectionAssert 1");
@@ -435,8 +436,8 @@ namespace NUnit.Framework.Classic.Tests
             var y = new EnumerableObject<int>(new[] { 5, 4, 3, 2, 1 }, 42);
 
             // Equal using Assert
-            Assert.AreEqual(x, y, "Assert 1");
-            Assert.AreEqual(y, x, "Assert 2");
+            Legacy.ClassicAssert.AreEqual(x, y, "Assert 1");
+            Legacy.ClassicAssert.AreEqual(y, x, "Assert 2");
 
             // Not equal using CollectionAssert
             CollectionAssert.AreNotEqual(x, y, "CollectionAssert 1");
@@ -758,7 +759,7 @@ namespace NUnit.Framework.Classic.Tests
             CollectionAssert.AreEqual(set1, set2);
             CollectionAssert.AreEqual(set1, set2, new TestComparer());
 
-            Assert.AreEqual(set1, set2);
+            Legacy.ClassicAssert.AreEqual(set1, set2);
         }
 
         [Test]

@@ -2,9 +2,9 @@
 
 using System;
 
-namespace NUnit.Framework.Classic
+namespace NUnit.Framework.Legacy
 {
-    public partial class Assert
+    public partial class ClassicAssert
     {
         #region IsAssignableFrom
 

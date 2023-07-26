@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Classic
+namespace NUnit.Framework.Legacy
 {
     /// <summary>
     /// Asserts on Directories
@@ -59,7 +59,7 @@ namespace NUnit.Framework.Classic
         public static void AreEqual(DirectoryInfo expected, DirectoryInfo actual, string message,
             params object?[]? args)
         {
-            Assert.AreEqual(expected, actual, message, args);
+            Legacy.ClassicAssert.AreEqual(expected, actual, message, args);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace NUnit.Framework.Classic
         public static void AreNotEqual(DirectoryInfo? expected, DirectoryInfo? actual, string message,
             params object?[]? args)
         {
-            Assert.AreNotEqual(expected, actual, message, args);
+            Legacy.ClassicAssert.AreNotEqual(expected, actual, message, args);
         }
 
         /// <summary>

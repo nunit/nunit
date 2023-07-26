@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\framework\nunit.framework.csproj" />
-    <ProjectReference Include="..\nunit.framework.classic\nunit.framework.classic.csproj" />
+    <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />
   </ItemGroup>
 
 </Project>

@@ -58,9 +58,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "nunit.testdata.fsharp", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.benchmarks", "src\NUnitFramework\benchmarks\nunit.framework.benchmarks\nunit.framework.benchmarks.csproj", "{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.classic", "src\NUnitFramework\nunit.framework.classic\nunit.framework.classic.csproj", "{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy", "src\NUnitFramework\nunit.framework.legacy\nunit.framework.legacy.csproj", "{C09BC425-D524-4F75-9BEF-1724B93789B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nunit.framework.classic.tests", "src\NUnitFramework\nunit.framework.classic.tests\nunit.framework.classic.tests.csproj", "{F5F8F550-43FE-450E-8A83-40F6014DDC05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunit.framework.legacy.tests", "src\NUnitFramework\nunit.framework.legacy.tests\nunit.framework.legacy.tests.csproj", "{59DC5039-5FCD-4C0C-AC92-7F06610136D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,14 +108,14 @@ Global
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0D08E09-8FF4-487D-AE61-C9CCCCA8CBB0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D6426C4-1EE4-4165-BFC4-F5FB389C3211}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5F8F550-43FE-450E-8A83-40F6014DDC05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5F8F550-43FE-450E-8A83-40F6014DDC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5F8F550-43FE-450E-8A83-40F6014DDC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5F8F550-43FE-450E-8A83-40F6014DDC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C09BC425-D524-4F75-9BEF-1724B93789B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59DC5039-5FCD-4C0C-AC92-7F06610136D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

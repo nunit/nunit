@@ -4,9 +4,9 @@ using System;
 using System.Collections;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Classic
+namespace NUnit.Framework.Legacy
 {
-    public partial class Assert
+    public partial class ClassicAssert
     {
         #region True
 

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>$(NUnitLibraryFrameworks)</TargetFrameworks>
-        <RootNamespace>NUnit.Framework.Classic</RootNamespace>
+        <RootNamespace>NUnit.Framework.Legacy</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <Nullable>enable</Nullable>
         <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
