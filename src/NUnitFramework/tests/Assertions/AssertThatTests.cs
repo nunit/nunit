@@ -343,5 +343,43 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(ex?.Message, Does.Contain("Error"));
             Assert.That(ex?.Message, Does.Contain("Assert.That(() => false, Is.True)"));
         }
+
+        [Test]
+        public void AssertThatEqualsWithClass()
+        {
+            var zero = new SomeClass(0, 0.0, string.Empty, null);
+            var instance = new SomeClass(1, 1.1, "1.1", zero);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(new SomeClass(1, 1.1, "1.1", zero), Is.EqualTo(instance));
+                Assert.That(new SomeClass(1, 1.2, "1.1", zero), Is.EqualTo(instance).Within(0.1));
+                Assert.That(new SomeClass(1, 1.1, "1.1", null), Is.Not.EqualTo(instance));
+                Assert.That(new SomeClass(1, 1.1, "2.2", zero), Is.Not.EqualTo(instance));
+                Assert.That(new SomeClass(1, 2.2, "1.1", zero), Is.Not.EqualTo(instance));
+                Assert.That(new SomeClass(2, 1.1, "1.1", zero), Is.Not.EqualTo(instance));
+            });
+        }
+
+        private sealed class SomeClass
+        {
+            public SomeClass(int valueA, double valueB, string valueC, SomeClass? chained)
+            {
+                ValueA = valueA;
+                ValueB = valueB;
+                ValueC = valueC;
+                Chained = chained;
+            }
+
+            public int ValueA { get; }
+            public double ValueB { get; }
+            public string ValueC { get; }
+            public SomeClass? Chained { get; }
+
+            public override string ToString()
+            {
+                return $"{ValueA} {ValueB} '{ValueC}' [{Chained}]";
+            }
+        }
     }
 }
