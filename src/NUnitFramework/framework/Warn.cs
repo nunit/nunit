@@ -108,7 +108,7 @@ namespace NUnit.Framework
         public static void Unless<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
@@ -155,7 +155,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless(bool condition,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
         {
             Unless(condition, Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
@@ -195,7 +195,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void Unless(Func<bool> condition,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
         {
             Unless(condition.Invoke(), Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
@@ -248,7 +248,7 @@ namespace NUnit.Framework
         public static void Unless<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
@@ -324,7 +324,7 @@ namespace NUnit.Framework
         public static void If<TActual>(
             ActualValueDelegate<TActual> del,
             IResolveConstraint expr,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(del))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expr))] string constraintExpression = "")
         {
@@ -371,7 +371,7 @@ namespace NUnit.Framework
         /// <param name="condition">The evaluated condition</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If(bool condition,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
         {
             If(condition, Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
@@ -411,7 +411,7 @@ namespace NUnit.Framework
         /// <param name="condition">A lambda that returns a Boolean</param>
         /// <param name="getExceptionMessage">A function to build the message included with the Exception</param>
         public static void If(Func<bool> condition,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(condition))] string actualExpression = "")
         {
             If(condition.Invoke(), Is.True, getExceptionMessage, actualExpression, Assert.IsTrueExpression);
@@ -464,7 +464,7 @@ namespace NUnit.Framework
         public static void If<TActual>(
             TActual actual,
             IResolveConstraint expression,
-            Func<string?> getExceptionMessage,
+            Func<string> getExceptionMessage,
             [CallerArgumentExpression(nameof(actual))] string actualExpression = "",
             [CallerArgumentExpression(nameof(expression))] string constraintExpression = "")
         {
@@ -488,7 +488,7 @@ namespace NUnit.Framework
             TestExecutionContext.CurrentContext.IncrementAssertCount();
         }
 
-        private static void IssueWarning(ConstraintResult result, string method, string? message, string actualExpression, string constraintExpression)
+        private static void IssueWarning(ConstraintResult result, string method, string message, string actualExpression, string constraintExpression)
         {
             MessageWriter writer = new TextMessageWriter(
                 Assert.ExtendedMessage($"{nameof(Warn)}.{method}", message, actualExpression, constraintExpression));

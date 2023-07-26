@@ -235,7 +235,6 @@ namespace NUnit.Framework.Tests.Assertions
         {
             var result = TestBuilder.RunTestCase(typeof(WarningFixture), methodName);
             if (result.FailCount != 0 &&
-                result.Message is not null &&
                 result.Message.StartsWith(typeof(PlatformNotSupportedException).FullName()))
             {
                 return; // BeginInvoke causes PlatformNotSupportedException on .NET Core

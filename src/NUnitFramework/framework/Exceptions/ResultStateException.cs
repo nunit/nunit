@@ -14,14 +14,14 @@ namespace NUnit.Framework
     {
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
-        protected ResultStateException(string? message) : base(message)
+        protected ResultStateException(string message) : base(message)
         { }
 
         /// <param name="message">The error message that explains
         /// the reason for the exception</param>
         /// <param name="inner">The exception that caused the
         /// current exception</param>
-        public ResultStateException(string? message, Exception? inner) :
+        public ResultStateException(string message, Exception? inner) :
             base(message, inner)
         { }
 

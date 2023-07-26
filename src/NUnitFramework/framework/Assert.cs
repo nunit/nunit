@@ -88,12 +88,11 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         [DoesNotReturn]
-        public static void Pass(string? message)
+        public static void Pass(string message)
         {
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
                 throw new Exception("Assert.Pass may not be used in a multiple assertion block.");
-            message ??= string.Empty;
             throw new SuccessException(message);
         }
 
@@ -117,9 +116,8 @@ namespace NUnit.Framework
         /// exception when inside a multiple assert block.
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
-        public static void Fail(string? message)
+        public static void Fail(string message)
         {
-            message ??= string.Empty;
             ReportFailure(message);
         }
 
@@ -139,9 +137,8 @@ namespace NUnit.Framework
         /// Issues a warning using the message and arguments provided.
         /// </summary>
         /// <param name="message">The message to display.</param>
-        public static void Warn(string? message)
+        public static void Warn(string message)
         {
-            message ??= string.Empty;
             IssueWarning(message);
         }
 
@@ -155,7 +152,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="AssertionException"/> with.</param>
         [DoesNotReturn]
-        public static void Ignore(string? message)
+        public static void Ignore(string message)
         {
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
@@ -184,7 +181,7 @@ namespace NUnit.Framework
         /// </summary>
         /// <param name="message">The message to initialize the <see cref="InconclusiveException"/> with.</param>
         [DoesNotReturn]
-        public static void Inconclusive(string? message)
+        public static void Inconclusive(string message)
         {
             // If we are in a multiple assert block, this is an error
             if (TestExecutionContext.CurrentContext.MultipleAssertLevel > 0)
@@ -306,7 +303,7 @@ namespace NUnit.Framework
 
         #region Helper Methods
 
-        internal static string ExtendedMessage(string methodName, string? message, string actualExpression, string constraintExpression)
+        internal static string ExtendedMessage(string methodName, string message, string actualExpression, string constraintExpression)
         {
             string context = $"{methodName}({actualExpression}, {constraintExpression})";
             string extendedMessage = string.IsNullOrEmpty(message) ? context : $"{message}\n{context}";
@@ -314,7 +311,7 @@ namespace NUnit.Framework
             return extendedMessage;
         }
 
-        private static void ReportFailure(string? message)
+        private static void ReportFailure(string message)
         {
             // Record the failure in an <assertion> element
             var result = TestExecutionContext.CurrentContext.CurrentResult;
@@ -326,7 +323,7 @@ namespace NUnit.Framework
                 throw new AssertionException(result.Message);
         }
 
-        private static void IssueWarning(string? message)
+        private static void IssueWarning(string message)
         {
             var result = TestExecutionContext.CurrentContext.CurrentResult;
             result.RecordAssertion(AssertionStatus.Warning, message, GetStackTrace());

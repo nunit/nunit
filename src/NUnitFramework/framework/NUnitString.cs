@@ -14,13 +14,14 @@ namespace NUnit.Framework
     /// </remarks>
     public readonly struct NUnitString
     {
+        // Keep as nullable, as default(NUnitString) will set this to null.
         private readonly string? _message;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NUnitString"/> class.
         /// </summary>
         /// <param name="message">The message formattable to hold.</param>
-        public NUnitString(string? message)
+        public NUnitString(string message)
         {
             _message = message;
         }
@@ -40,9 +41,9 @@ namespace NUnit.Framework
         /// Implicit conversion from a <see cref="string"/> to a <see cref="NUnitString"/>.
         /// </summary>
         /// <param name="message">The message formattable to hold.</param>
-        public static implicit operator NUnitString(string? message) => new(message);
+        public static implicit operator NUnitString(string message) => new(message);
 
         /// <inheritdoc/>
-        public override string? ToString() => _message;
+        public override string ToString() => _message ?? string.Empty;
     }
 }

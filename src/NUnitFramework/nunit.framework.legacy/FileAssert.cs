@@ -55,7 +55,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to display if Streams are not equal</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
+        public static void AreEqual(Stream? expected, Stream? actual, string message, params object?[]? args)
         {
             Framework.Assert.That(actual, Is.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
         }
@@ -149,7 +149,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The actual Stream</param>
         /// <param name="message">The message to be displayed when the two Stream are the same.</param>
         /// <param name="args">Arguments to be used in formatting the message</param>
-        public static void AreNotEqual(Stream? expected, Stream? actual, string? message, params object?[]? args)
+        public static void AreNotEqual(Stream? expected, Stream? actual, string message, params object?[]? args)
         {
             Framework.Assert.That(actual, Is.Not.EqualTo(expected), () => ConvertMessageWithArgs(message, args));
         }

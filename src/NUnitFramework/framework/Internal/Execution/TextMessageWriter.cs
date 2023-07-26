@@ -84,7 +84,7 @@ namespace NUnit.Framework.Internal
         /// <param name="level">The indentation level of the message</param>
         /// <param name="message">The message to be written</param>
         /// <param name="args">Any arguments used in formatting the message</param>
-        public override void WriteMessageLine(int level, string? message, params object?[]? args)
+        public override void WriteMessageLine(int level, string message, params object?[]? args)
         {
             if (message is not null)
             {

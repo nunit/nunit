@@ -13,13 +13,6 @@ namespace NUnit.Framework.Tests.Internal.Results
         }
     }
 
-    public class TestResultIgnoredWithNullReasonGivenTests : TestResultIgnoredTests
-    {
-        public TestResultIgnoredWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
-        {
-        }
-    }
-
     public class TestResultIgnoredWithEmptyReasonGivenTests : TestResultIgnoredTests
     {
         public TestResultIgnoredWithEmptyReasonGivenTests() : base(string.Empty, NoReasonNodeExpectedValidation)
@@ -36,10 +29,10 @@ namespace NUnit.Framework.Tests.Internal.Results
 
     public abstract class TestResultIgnoredTests : TestResultTests
     {
-        private readonly string? _ignoreReason;
+        private readonly string _ignoreReason;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
-        protected TestResultIgnoredTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultIgnoredTests(string ignoreReason, Action<TNode> xmlReasonNodeValidation)
         {
             _ignoreReason = ignoreReason;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
