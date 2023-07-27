@@ -17,10 +17,21 @@ namespace NUnit.Framework.Constraints.Comparers
 
             if (xType != yType)
             {
-                return null;
+                return null; // Both operands need to be the same type.
             }
 
-            PropertyInfo[] properties = xType.GetProperties();
+            if (xType.IsPrimitive)
+            {
+                // We should never get here if the order in NUnitEqualityComparer is correct.
+                return null; // We don't do built-in value types
+            }
+
+            PropertyInfo[] properties = xType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            if (properties.Length == 0)
+            {
+                return null;    // We can't compare if there are no properties.
+            }
+
             foreach (var property in properties)
             {
                 object? xPropertyValue = property.GetValue(x, null);

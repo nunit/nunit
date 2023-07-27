@@ -49,6 +49,7 @@ namespace NUnit.Framework.Constraints
             StructuralComparer.Equal,
             EquatablesComparer.Equal,
             EnumerablesComparer.Equal,
+            EqualsComparer.Equal,
             PropertiesComparer.Equal,
         };
 

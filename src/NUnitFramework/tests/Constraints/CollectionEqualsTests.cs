@@ -107,7 +107,8 @@ namespace NUnit.Framework.Tests.Constraints
 
             Assert.That(integerTypes, equalsConstraint);
 
-            Assert.That(equalsConstraint.Tolerance, Is.Not.EqualTo(originalTolerance));
+            Assert.That(equalsConstraint.Tolerance, Is.Not.SameAs(originalTolerance));
+            Assert.That(equalsConstraint.Tolerance.Amount, Is.Not.EqualTo(originalTolerance.Amount).Within(0.0));
             Assert.That(equalsConstraint.Tolerance.Mode, Is.Not.EqualTo(originalTolerance.Mode));
         }
 
