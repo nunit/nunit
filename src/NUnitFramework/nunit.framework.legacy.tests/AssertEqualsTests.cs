@@ -78,8 +78,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  But was:  \"Goodbye JUnit\"" + Environment.NewLine +
                 "  -----------^" + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(expected, junitString));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(expected, junitString));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -89,8 +89,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: 1.234d +/- 0.0d" + Environment.NewLine +
                 "  But was:  " + double.NaN + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(1.234, double.NaN, 0.0));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(1.234, double.NaN, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -100,8 +100,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: " + double.NaN + Environment.NewLine +
                 "  But was:  1.234d" + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.NaN, 1.234, 0.0));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.NaN, 1.234, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -129,8 +129,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: " + double.PositiveInfinity + Environment.NewLine +
                 "  But was:  1.23d" + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.PositiveInfinity, 1.23, 0.0));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.PositiveInfinity, 1.23, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -140,8 +140,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: " + double.PositiveInfinity + Environment.NewLine +
                 "  But was:  " + double.NegativeInfinity + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.PositiveInfinity, double.NegativeInfinity, 0.0));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(double.PositiveInfinity, double.NegativeInfinity, 0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -151,22 +151,22 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: " + double.PositiveInfinity + Environment.NewLine +
                 "  But was:  " + double.NegativeInfinity + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(float.PositiveInfinity, float.NegativeInfinity, (float)0.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void EqualsThrowsException()
         {
             var o = new object();
-            Framework.Assert.Throws<InvalidOperationException>(() => Framework.Assert.Equals(o, o));
+            Assert.Throws<InvalidOperationException>(() => Assert.Equals(o, o));
         }
 
         [Test]
         public void ReferenceEqualsThrowsException()
         {
             var o = new object();
-            Framework.Assert.Throws<InvalidOperationException>(() => Framework.Assert.ReferenceEquals(o, o));
+            Assert.Throws<InvalidOperationException>(() => Assert.ReferenceEquals(o, o));
         }
 
         [Test]
@@ -357,8 +357,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: " + nameof(MyEnum.C) + Environment.NewLine +
                 "  But was:  " + nameof(MyEnum.A) + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(MyEnum.C, actual));
-            Framework.Assert.That(ex?.Message,Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(MyEnum.C, actual));
+            Assert.That(ex?.Message,Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -378,8 +378,8 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: 2005-06-01 07:00:00" + Environment.NewLine +
                 "  But was:  2005-06-01 00:00:00" + Environment.NewLine;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(dt1, dt2));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(dt1, dt2));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -391,7 +391,7 @@ namespace NUnit.Framework.Legacy.Tests
                 "  Expected: 1914-06-28 12:00:00" + Environment.NewLine +
                 "  But was:  1914-06-28 12:00:00.0000666" + Environment.NewLine;
 
-            Framework.Assert.That(() => ClassicAssert.AreEqual(dt1, dt2),
+            Assert.That(() => ClassicAssert.AreEqual(dt1, dt2),
                 Throws.InstanceOf<AssertionException>().With.Message.Contain(expectedMessage));
         }
 
@@ -409,7 +409,7 @@ namespace NUnit.Framework.Legacy.Tests
         {
             using var one = new TestDirectory();
             using var two = new TestDirectory();
-            Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(one.Directory, two.Directory));
+            Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(one.Directory, two.Directory));
         }
 
         private enum MyEnum
@@ -423,7 +423,7 @@ namespace NUnit.Framework.Legacy.Tests
             double d1 = 36.1;
             double d2 = 36.099999999999994;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
 
             var message = ex?.Message;
             ClassicAssert.NotNull(message);
@@ -443,7 +443,7 @@ namespace NUnit.Framework.Legacy.Tests
             float f1 = 36.125F;
             float f2 = 36.125004F;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(f1, f2));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(f1, f2));
 
             var message = ex?.Message;
             ClassicAssert.NotNull(message);
@@ -464,9 +464,9 @@ namespace NUnit.Framework.Legacy.Tests
             double d2 = 0.12;
             double tol = 0.005;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2, tol));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2, tol));
 
-            Framework.Assert.That(ex?.Message, Does.Contain("+/- 0.005"));
+            Assert.That(ex?.Message, Does.Contain("+/- 0.005"));
         }
 
         [Test]
@@ -476,9 +476,9 @@ namespace NUnit.Framework.Legacy.Tests
             float f2 = 0.12F;
             float tol = 0.001F;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(f1, f2, tol));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(f1, f2, tol));
 
-            Framework.Assert.That(ex?.Message, Does.Contain("+/- 0.001"));
+            Assert.That(ex?.Message, Does.Contain("+/- 0.001"));
         }
 
         [Test, DefaultFloatingPointTolerance(0.005)]
@@ -487,8 +487,8 @@ namespace NUnit.Framework.Legacy.Tests
             double d1 = 0.15;
             double d2 = 0.12;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
-            Framework.Assert.That(ex?.Message, Does.Contain("+/- 0.005"));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
+            Assert.That(ex?.Message, Does.Contain("+/- 0.005"));
         }
 
         [Test, DefaultFloatingPointTolerance(0.005)]
@@ -497,8 +497,8 @@ namespace NUnit.Framework.Legacy.Tests
             double d1 = double.NaN;
             double d2 = 0.12;
 
-            var ex = Framework.Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
-            Framework.Assert.That(ex?.Message.IndexOf("+/-") == -1);
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.AreEqual(d1, d2));
+            Assert.That(ex?.Message.IndexOf("+/-") == -1);
         }
 
         [Test]
@@ -515,11 +515,11 @@ namespace NUnit.Framework.Legacy.Tests
         {
             var a = new IntEquatable(1);
 
-            Framework.Assert.Multiple(() =>
+            Assert.Multiple(() =>
             {
-                Framework.Assert.That(a, Is.EqualTo(1));
+                Assert.That(a, Is.EqualTo(1));
 #pragma warning disable NUnit2007 // The actual value should not be a constant
-                Framework.Assert.That(1, Is.EqualTo(a));
+                Assert.That(1, Is.EqualTo(a));
 #pragma warning restore NUnit2007 // The actual value should not be a constant
             });
         }
@@ -527,14 +527,14 @@ namespace NUnit.Framework.Legacy.Tests
         [Test]
         public void EqualsFailsWhenUsed()
         {
-            Framework.Assert.That(() => Framework.Assert.Equals(string.Empty, string.Empty),
+            Assert.That(() => Assert.Equals(string.Empty, string.Empty),
                 Throws.InvalidOperationException.With.Message.StartWith("Assert.Equals should not be used."));
         }
 
         [Test]
         public void ReferenceEqualsFailsWhenUsed()
         {
-            Framework.Assert.That(() => Framework.Assert.ReferenceEquals(string.Empty, string.Empty),
+            Assert.That(() => Assert.ReferenceEquals(string.Empty, string.Empty),
                 Throws.InvalidOperationException.With.Message.StartWith("Assert.ReferenceEquals should not be used."));
         }
 

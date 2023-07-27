@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Linq;
 
-namespace NUnit.Framework.Classic.Tests
+namespace NUnit.Framework.Legacy.Tests
 {
     [TestFixture]
     public class ConditionAssertTests
@@ -12,14 +12,14 @@ namespace NUnit.Framework.Classic.Tests
         [Test]
         public void IsTrue()
         {
-            Legacy.ClassicAssert.IsTrue(true);
+            ClassicAssert.IsTrue(true);
         }
 
         [Test]
         public void IsTrueNullable()
         {
             bool? actual = true;
-            Legacy.ClassicAssert.IsTrue(actual);
+            ClassicAssert.IsTrue(actual);
         }
 
         [Test]
@@ -28,8 +28,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: True" + Environment.NewLine +
                 "  But was:  False" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsTrue(false));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsTrue(false));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [TestCase(false, "  But was:  False")]
@@ -39,21 +39,21 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: True" + Environment.NewLine +
                 expectedButWas + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsTrue(actual));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsTrue(actual));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void IsFalse()
         {
-            Legacy.ClassicAssert.IsFalse(false);
+            ClassicAssert.IsFalse(false);
         }
 
         [Test]
         public void IsFalseNullable()
         {
             bool? actual = false;
-            Legacy.ClassicAssert.IsFalse(actual);
+            ClassicAssert.IsFalse(actual);
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: False" + Environment.NewLine +
                 "  But was:  True" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsFalse(true));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsFalse(true));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [TestCase(true, "  But was:  True")]
@@ -73,14 +73,14 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: False" + Environment.NewLine +
                 expectedButWas + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsFalse(actual));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsFalse(actual));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void IsNull()
         {
-            Legacy.ClassicAssert.IsNull(null);
+            ClassicAssert.IsNull(null);
         }
 
         [Test]
@@ -90,15 +90,15 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: null" + Environment.NewLine +
                 "  But was:  \"S1\"" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNull(s1));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNull(s1));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void IsNotNull()
         {
             string s1 = "S1";
-            Legacy.ClassicAssert.IsNotNull(s1);
+            ClassicAssert.IsNotNull(s1);
         }
 
         [Test]
@@ -107,14 +107,14 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: not null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotNull(null));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNotNull(null));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void IsNaN()
         {
-            Legacy.ClassicAssert.IsNaN(double.NaN);
+            ClassicAssert.IsNaN(double.NaN);
         }
 
         [Test]
@@ -123,19 +123,19 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: NaN" + Environment.NewLine +
                 "  But was:  10.0d" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNaN(10.0));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNaN(10.0));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void IsEmpty()
         {
-            Legacy.ClassicAssert.IsEmpty(string.Empty, "Failed on empty String");
-            Legacy.ClassicAssert.IsEmpty(Array.Empty<int>(), "Failed on empty Array");
-            Legacy.ClassicAssert.IsEmpty(Enumerable.Empty<int>(), "Failed on empty IEnumerable");
+            ClassicAssert.IsEmpty(string.Empty, "Failed on empty String");
+            ClassicAssert.IsEmpty(Array.Empty<int>(), "Failed on empty Array");
+            ClassicAssert.IsEmpty(Enumerable.Empty<int>(), "Failed on empty IEnumerable");
 
-            Legacy.ClassicAssert.IsEmpty(new ArrayList(), "Failed on empty ArrayList");
-            Legacy.ClassicAssert.IsEmpty(new Hashtable(), "Failed on empty Hashtable");
+            ClassicAssert.IsEmpty(new ArrayList(), "Failed on empty ArrayList");
+            ClassicAssert.IsEmpty(new Hashtable(), "Failed on empty Hashtable");
         }
 
         [Test]
@@ -144,8 +144,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  \"Hi!\"" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsEmpty("Hi!"));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsEmpty("Hi!"));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -154,8 +154,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsEmpty(default));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsEmpty(default));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -164,8 +164,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsEmpty(new[] { 1, 2, 3 }));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsEmpty(new[] { 1, 2, 3 }));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -174,8 +174,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: <empty>" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsEmpty(new[] { 1, 2, 3 }));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsEmpty(new[] { 1, 2, 3 }));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -183,16 +183,16 @@ namespace NUnit.Framework.Classic.Tests
         {
             int[] array = new[] { 1, 2, 3 };
 
-            Legacy.ClassicAssert.IsNotEmpty("Hi!", "Failed on String");
-            Legacy.ClassicAssert.IsNotEmpty(array, "Failed on Array");
+            ClassicAssert.IsNotEmpty("Hi!", "Failed on String");
+            ClassicAssert.IsNotEmpty(array, "Failed on Array");
             IEnumerable enumerable = array;
-            Legacy.ClassicAssert.IsNotEmpty(enumerable, "Failed on IEnumerable");
+            ClassicAssert.IsNotEmpty(enumerable, "Failed on IEnumerable");
 
             var list = new ArrayList(array);
             var hash = new Hashtable { { "array", array } };
 
-            Legacy.ClassicAssert.IsNotEmpty(list, "Failed on ArrayList");
-            Legacy.ClassicAssert.IsNotEmpty(hash, "Failed on Hashtable");
+            ClassicAssert.IsNotEmpty(list, "Failed on ArrayList");
+            ClassicAssert.IsNotEmpty(hash, "Failed on Hashtable");
         }
 
         [Test]
@@ -201,8 +201,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <string.Empty>" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotEmpty(string.Empty));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNotEmpty(string.Empty));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -211,8 +211,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotEmpty(Array.Empty<int>()));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNotEmpty(Array.Empty<int>()));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -221,8 +221,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotEmpty(Enumerable.Empty<int>()));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNotEmpty(Enumerable.Empty<int>()));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -231,8 +231,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotEmpty(new ArrayList()));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNotEmpty(new ArrayList()));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
@@ -241,8 +241,8 @@ namespace NUnit.Framework.Classic.Tests
             var expectedMessage =
                 "  Expected: not <empty>" + Environment.NewLine +
                 "  But was:  <empty>" + Environment.NewLine;
-            var ex = Framework.Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.IsNotEmpty(new Hashtable()));
-            Framework.Assert.That(ex?.Message, Does.Contain(expectedMessage));
+            var ex = Assert.Throws<AssertionException>(() => ClassicAssert.IsNotEmpty(new Hashtable()));
+            Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
     }
 }
