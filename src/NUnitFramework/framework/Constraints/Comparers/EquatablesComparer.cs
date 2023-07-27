@@ -65,9 +65,9 @@ namespace NUnit.Framework.Constraints.Comparers
             return implementations;
         }
 
-        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo? equals)
+        private static bool InvokeFirstIEquatableEqualsSecond(object first, object second, MethodInfo equals)
         {
-            return equals is not null && (bool)equals.Invoke(first, new[] { second })!;
+            return (bool)equals.Invoke(first, new[] { second })!;
         }
 
         private readonly struct EquatableMethodImpl
