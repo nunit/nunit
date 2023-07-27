@@ -11,7 +11,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
         [Test]
         public void NotEqual()
         {
-            Classic.Assert.AreNotEqual(5, 3);
+            Legacy.ClassicAssert.AreNotEqual(5, 3);
         }
 
         [Test]
@@ -20,14 +20,14 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             var expectedMessage =
                 "  Expected: not equal to 5" + Environment.NewLine +
                 "  But was:  5" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotEqual(5, 5));
+            var ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.AreNotEqual(5, 5));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void NullNotEqualToNonNull()
         {
-            Classic.Assert.AreNotEqual(null, 3);
+            Legacy.ClassicAssert.AreNotEqual(null, 3);
         }
 
         [Test]
@@ -36,14 +36,14 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             var expectedMessage =
                 "  Expected: not equal to null" + Environment.NewLine +
                 "  But was:  null" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotEqual(null, null));
+            var ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.AreNotEqual(null, null));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
         [Test]
         public void ArraysNotEqual()
         {
-            Classic.Assert.AreNotEqual(new object[] { 1, 2, 3 }, new object[] { 1, 3, 2 });
+            Legacy.ClassicAssert.AreNotEqual(new object[] { 1, 2, 3 }, new object[] { 1, 3, 2 });
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             var expectedMessage =
                 "  Expected: not equal to < 1, 2, 3 >" + Environment.NewLine +
                 "  But was:  < 1, 2, 3 >" + Environment.NewLine;
-            var ex = Assert.Throws<AssertionException>(() => Classic.Assert.AreNotEqual(new object[] { 1, 2, 3 }, new object[] { 1, 2, 3 }));
+            var ex = Assert.Throws<AssertionException>(() => Legacy.ClassicAssert.AreNotEqual(new object[] { 1, 2, 3 }, new object[] { 1, 2, 3 }));
             Assert.That(ex?.Message, Does.Contain(expectedMessage));
         }
 
@@ -61,7 +61,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
         {
             uint u1 = 5;
             uint u2 = 8;
-            Classic.Assert.AreNotEqual(u1, u2);
+            Legacy.ClassicAssert.AreNotEqual(u1, u2);
         }
 
         [Test]
@@ -90,28 +90,28 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             short i21 = 35;
             ushort i22 = 35;
 
-            Classic.Assert.AreNotEqual(23, b1);
-            Classic.Assert.AreNotEqual(23, sb2);
-            Classic.Assert.AreNotEqual(23, d4);
-            Classic.Assert.AreNotEqual(23, d5);
-            Classic.Assert.AreNotEqual(23, f6);
-            Classic.Assert.AreNotEqual(23, i7);
-            Classic.Assert.AreNotEqual(23, u8);
-            Classic.Assert.AreNotEqual(23, l9);
-            Classic.Assert.AreNotEqual(23, s10);
-            Classic.Assert.AreNotEqual(23, us11);
+            Legacy.ClassicAssert.AreNotEqual(23, b1);
+            Legacy.ClassicAssert.AreNotEqual(23, sb2);
+            Legacy.ClassicAssert.AreNotEqual(23, d4);
+            Legacy.ClassicAssert.AreNotEqual(23, d5);
+            Legacy.ClassicAssert.AreNotEqual(23, f6);
+            Legacy.ClassicAssert.AreNotEqual(23, i7);
+            Legacy.ClassicAssert.AreNotEqual(23, u8);
+            Legacy.ClassicAssert.AreNotEqual(23, l9);
+            Legacy.ClassicAssert.AreNotEqual(23, s10);
+            Legacy.ClassicAssert.AreNotEqual(23, us11);
 
-            Classic.Assert.AreNotEqual(23, b12);
-            Classic.Assert.AreNotEqual(23, sb13);
-            Classic.Assert.AreNotEqual(23, d14);
-            Classic.Assert.AreNotEqual(23, d15);
-            Classic.Assert.AreNotEqual(23, s16);
-            Classic.Assert.AreNotEqual(23, i17);
-            Classic.Assert.AreNotEqual(23, ui18);
-            Classic.Assert.AreNotEqual(23, i19);
-            Classic.Assert.AreNotEqual(23, ui20);
-            Classic.Assert.AreNotEqual(23, i21);
-            Classic.Assert.AreNotEqual(23, i22);
+            Legacy.ClassicAssert.AreNotEqual(23, b12);
+            Legacy.ClassicAssert.AreNotEqual(23, sb13);
+            Legacy.ClassicAssert.AreNotEqual(23, d14);
+            Legacy.ClassicAssert.AreNotEqual(23, d15);
+            Legacy.ClassicAssert.AreNotEqual(23, s16);
+            Legacy.ClassicAssert.AreNotEqual(23, i17);
+            Legacy.ClassicAssert.AreNotEqual(23, ui18);
+            Legacy.ClassicAssert.AreNotEqual(23, i19);
+            Legacy.ClassicAssert.AreNotEqual(23, ui20);
+            Legacy.ClassicAssert.AreNotEqual(23, i21);
+            Legacy.ClassicAssert.AreNotEqual(23, i22);
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace NUnit.Framework.Tests.ClassicAssertions
             var actual = new ThrowsIfToStringIsCalled(1);
             var expected = new ThrowsIfToStringIsCalled(2);
 
-            Classic.Assert.AreNotEqual(expected, actual);
+            Legacy.ClassicAssert.AreNotEqual(expected, actual);
         }
     }
 }

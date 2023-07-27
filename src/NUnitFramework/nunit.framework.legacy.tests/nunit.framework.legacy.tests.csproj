@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(NUnitRuntimeFrameworks)</TargetFrameworks>
-    <RootNamespace>NUnit.Framework.Classic.Tests</RootNamespace>
+    <RootNamespace>NUnit.Framework.Legacy.Tests</RootNamespace>
     <Nullable>enable</Nullable>
     <AnnotatedReferenceAssemblyVersion>7.0.0</AnnotatedReferenceAssemblyVersion>
     <GenerateNullableAttributes>false</GenerateNullableAttributes>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\nunit.framework.classic\nunit.framework.classic.csproj" />
+    <ProjectReference Include="..\nunit.framework.legacy\nunit.framework.legacy.csproj" />
     <ProjectReference Include="..\tests\nunit.framework.tests.csproj" />
   </ItemGroup>
 

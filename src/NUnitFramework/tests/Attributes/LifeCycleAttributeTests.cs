@@ -3,6 +3,7 @@
 using System.Linq;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
+using NUnit.Framework.Legacy;
 using NUnit.Framework.Tests.TestUtilities;
 using NUnit.TestData.LifeCycleTests;
 
@@ -221,7 +222,7 @@ namespace NUnit.Framework.Tests.Attributes
         {
             typeof(Test).Assembly.Location,
             typeof(BaseLifeCycle).Assembly.Location,
-            typeof(Classic.DirectoryAssert).Assembly.Location
+            typeof(DirectoryAssert).Assembly.Location
         };
 
         [Test]

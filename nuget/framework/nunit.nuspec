@@ -38,15 +38,15 @@ Supported platforms:
     <file src="bin/net462/nunit.framework.dll" target="lib\net462" />
     <file src="bin/net462/nunit.framework.xml" target="lib\net462" />
     <file src="bin/net462/nunit.framework.pdb" target="lib\net462" />
-    <file src="bin/net462/nunit.framework.classic.dll" target="lib\net462" />
-    <file src="bin/net462/nunit.framework.classic.xml" target="lib\net462" />
-    <file src="bin/net462/nunit.framework.classic.pdb" target="lib\net462" />
+    <file src="bin/net462/nunit.framework.legacy.dll" target="lib\net462" />
+    <file src="bin/net462/nunit.framework.legacy.xml" target="lib\net462" />
+    <file src="bin/net462/nunit.framework.legacy.pdb" target="lib\net462" />
     <file src="bin/net6.0/nunit.framework.dll" target="lib\net6.0" />
     <file src="bin/net6.0/nunit.framework.xml" target="lib\net6.0" />
     <file src="bin/net6.0/nunit.framework.pdb" target="lib\net6.0" />
-    <file src="bin/net6.0/nunit.framework.classic.dll" target="lib\net6.0" />
-    <file src="bin/net6.0/nunit.framework.classic.xml" target="lib\net6.0" />
-    <file src="bin/net6.0/nunit.framework.classic.pdb" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.legacy.dll" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.legacy.xml" target="lib\net6.0" />
+    <file src="bin/net6.0/nunit.framework.legacy.pdb" target="lib\net6.0" />
     <file src="..\..\nuget\framework\NUnit.props" target="build" />
   </files>
 </package>

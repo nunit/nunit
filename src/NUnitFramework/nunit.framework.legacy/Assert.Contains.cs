@@ -3,9 +3,9 @@
 using System.Collections;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Classic
+namespace NUnit.Framework.Legacy
 {
-    public partial class Assert
+    public partial class ClassicAssert
     {
         /// <summary>
         /// Asserts that an object is contained in a collection. Returns without throwing an exception when inside a

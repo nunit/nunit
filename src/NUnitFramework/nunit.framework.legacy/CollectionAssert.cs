@@ -5,7 +5,7 @@ using System.Collections;
 using System.ComponentModel;
 using NUnit.Framework.Constraints;
 
-namespace NUnit.Framework.Classic
+namespace NUnit.Framework.Legacy
 {
     /// <summary>
     /// A set of Assert methods operating on one or more collections

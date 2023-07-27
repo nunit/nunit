@@ -11,8 +11,8 @@ namespace NUnit.Framework.Tests.Assertions
             int? nullInt = null;
             int? five = 5;
 
-            Classic.Assert.IsNull(nullInt);
-            Classic.Assert.IsNotNull(five);
+            Legacy.ClassicAssert.IsNull(nullInt);
+            Legacy.ClassicAssert.IsNotNull(five);
             Assert.That(nullInt, Is.Null);
             Assert.That(five, Is.Not.Null);
         }
@@ -23,9 +23,9 @@ namespace NUnit.Framework.Tests.Assertions
             int? five = 5;
             int? answer = 2 + 3;
 
-            Classic.Assert.AreEqual(five, answer);
-            Classic.Assert.AreEqual(five, 5);
-            Classic.Assert.AreEqual(5, five);
+            Legacy.ClassicAssert.AreEqual(five, answer);
+            Legacy.ClassicAssert.AreEqual(five, 5);
+            Legacy.ClassicAssert.AreEqual(5, five);
 
             Assert.That(five, Is.EqualTo(answer));
             Assert.That(five, Is.EqualTo(5));
@@ -48,9 +48,9 @@ namespace NUnit.Framework.Tests.Assertions
             double? five = 5.0;
             double? answer = 2.0 + 3.0;
 
-            Classic.Assert.AreEqual(five, answer);
-            Classic.Assert.AreEqual(five, 5.0);
-            Classic.Assert.AreEqual(5.0, five);
+            Legacy.ClassicAssert.AreEqual(five, answer);
+            Legacy.ClassicAssert.AreEqual(five, 5.0);
+            Legacy.ClassicAssert.AreEqual(5.0, five);
 
             Assert.That(five, Is.EqualTo(answer));
             Assert.That(five, Is.EqualTo(5.0));
@@ -81,9 +81,9 @@ namespace NUnit.Framework.Tests.Assertions
             decimal? five = 5m;
             decimal? answer = 2m + 3m;
 
-            Classic.Assert.AreEqual(five, answer);
-            Classic.Assert.AreEqual(five, 5m);
-            Classic.Assert.AreEqual(5m, five);
+            Legacy.ClassicAssert.AreEqual(five, answer);
+            Legacy.ClassicAssert.AreEqual(five, 5m);
+            Legacy.ClassicAssert.AreEqual(5m, five);
 
             Assert.That(five, Is.EqualTo(answer));
             Assert.That(five, Is.EqualTo(5m));
@@ -113,9 +113,9 @@ namespace NUnit.Framework.Tests.Assertions
             Colors? color = Colors.Red;
             Colors? other = Colors.Red;
 
-            Classic.Assert.AreEqual(color, other);
-            Classic.Assert.AreEqual(color, Colors.Red);
-            Classic.Assert.AreEqual(Colors.Red, color);
+            Legacy.ClassicAssert.AreEqual(color, other);
+            Legacy.ClassicAssert.AreEqual(color, Colors.Red);
+            Legacy.ClassicAssert.AreEqual(Colors.Red, color);
         }
 
         [Test]
@@ -125,12 +125,12 @@ namespace NUnit.Framework.Tests.Assertions
             double? double5 = 5.0;
             decimal? decimal5 = 5.00m;
 
-            Classic.Assert.AreEqual(int5, double5);
-            Classic.Assert.AreEqual(int5, decimal5);
-            Classic.Assert.AreEqual(double5, int5);
-            Classic.Assert.AreEqual(double5, decimal5);
-            Classic.Assert.AreEqual(decimal5, int5);
-            Classic.Assert.AreEqual(decimal5, double5);
+            Legacy.ClassicAssert.AreEqual(int5, double5);
+            Legacy.ClassicAssert.AreEqual(int5, decimal5);
+            Legacy.ClassicAssert.AreEqual(double5, int5);
+            Legacy.ClassicAssert.AreEqual(double5, decimal5);
+            Legacy.ClassicAssert.AreEqual(decimal5, int5);
+            Legacy.ClassicAssert.AreEqual(decimal5, double5);
             Assert.Multiple(() =>
             {
                 Assert.That(int5, Is.EqualTo(double5));
@@ -141,12 +141,12 @@ namespace NUnit.Framework.Tests.Assertions
                 Assert.That(decimal5, Is.EqualTo(double5));
             });
 
-            Classic.Assert.AreEqual(5, double5);
-            Classic.Assert.AreEqual(5, decimal5);
-            Classic.Assert.AreEqual(5.0, int5);
-            Classic.Assert.AreEqual(5.0, decimal5);
-            Classic.Assert.AreEqual(5m, int5);
-            Classic.Assert.AreEqual(5m, double5);
+            Legacy.ClassicAssert.AreEqual(5, double5);
+            Legacy.ClassicAssert.AreEqual(5, decimal5);
+            Legacy.ClassicAssert.AreEqual(5.0, int5);
+            Legacy.ClassicAssert.AreEqual(5.0, decimal5);
+            Legacy.ClassicAssert.AreEqual(5m, int5);
+            Legacy.ClassicAssert.AreEqual(5m, double5);
 
             Assert.That(5, Is.EqualTo(double5));
             Assert.That(5, Is.EqualTo(decimal5));
@@ -155,12 +155,12 @@ namespace NUnit.Framework.Tests.Assertions
             Assert.That(5m, Is.EqualTo(int5));
             Assert.That(5m, Is.EqualTo(double5));
 
-            Classic.Assert.AreEqual(double5, 5);
-            Classic.Assert.AreEqual(decimal5, 5);
-            Classic.Assert.AreEqual(int5, 5.0);
-            Classic.Assert.AreEqual(decimal5, 5.0);
-            Classic.Assert.AreEqual(int5, 5m);
-            Classic.Assert.AreEqual(double5, 5m);
+            Legacy.ClassicAssert.AreEqual(double5, 5);
+            Legacy.ClassicAssert.AreEqual(decimal5, 5);
+            Legacy.ClassicAssert.AreEqual(int5, 5.0);
+            Legacy.ClassicAssert.AreEqual(decimal5, 5.0);
+            Legacy.ClassicAssert.AreEqual(int5, 5m);
+            Legacy.ClassicAssert.AreEqual(double5, 5m);
 
             Assert.That(double5, Is.EqualTo(5));
             Assert.That(decimal5, Is.EqualTo(5));
@@ -206,10 +206,10 @@ namespace NUnit.Framework.Tests.Assertions
             MyStruct? one = new MyStruct(5, "Hello");
             MyStruct? two = new MyStruct(5, "Hello");
 
-            Classic.Assert.AreEqual(struct1, struct2); // Control
-            Classic.Assert.AreEqual(one, two);
-            Classic.Assert.AreEqual(one, struct1);
-            Classic.Assert.AreEqual(struct2, two);
+            Legacy.ClassicAssert.AreEqual(struct1, struct2); // Control
+            Legacy.ClassicAssert.AreEqual(one, two);
+            Legacy.ClassicAssert.AreEqual(one, struct1);
+            Legacy.ClassicAssert.AreEqual(struct2, two);
         }
     }
 }

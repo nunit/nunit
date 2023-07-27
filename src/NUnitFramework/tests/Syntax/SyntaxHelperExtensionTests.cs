@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework.Classic;
+using NUnit.Framework.Legacy;
 
 namespace NUnit.Framework.Tests.Syntax
 {
@@ -51,15 +51,13 @@ namespace NUnit.Framework.Tests.Syntax
 
         private static bool IsAccessibleFromExternalSubclass(MethodBase method)
         {
-            switch (method.Attributes & MethodAttributes.MemberAccessMask)
+            return (method.Attributes & MethodAttributes.MemberAccessMask) switch
             {
-                case MethodAttributes.Public:
-                case MethodAttributes.Family:
-                case MethodAttributes.FamORAssem:
-                    return true;
-                default:
-                    return false;
-            }
+                MethodAttributes.Public => true,
+                MethodAttributes.Family => true,
+                MethodAttributes.FamORAssem => true,
+                _ => false
+            };
         }
     }
 }
