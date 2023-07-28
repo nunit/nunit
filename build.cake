@@ -24,24 +24,6 @@ var dbgSuffix = configuration == "Debug" ? "-dbg" : "";
 var packageVersion = version + modifier + dbgSuffix;
 
 //////////////////////////////////////////////////////////////////////
-// SUPPORTED FRAMEWORKS
-//////////////////////////////////////////////////////////////////////
-
-// Equivalent of NUnitLibraryFrameworks in Directory.Build.props
-var LibraryFrameworks = new string[]
-{
-    "net462",
-    "net6.0",
-};
-
-// Subset of NUnitRuntimeFrameworks in Directory.Build.props
-var NetCoreTests = new String[]
-{
-    "net6.0",
-    "net7.0",
-};
-
-//////////////////////////////////////////////////////////////////////
 // DEFINE RUN CONSTANTS
 //////////////////////////////////////////////////////////////////////
 
@@ -59,6 +41,8 @@ var NUNITLITERUNNERBIN = PROJECT_DIR + "src/NUnitFramework/nunitlite-runner/bin/
 
 var SOLUTION_FILE = "./nunit.sln";
 
+var DIRECTORY_BUILD_PROPS = PROJECT_DIR + "src/NUnitFramework/Directory.Build.props";
+
 // Test Runners
 var NUNITLITE_RUNNER_DLL = "nunitlite-runner.dll";
 
@@ -71,6 +55,16 @@ var EXECUTABLE_NUNITLITE_TESTS_DLL = "nunitlite.tests.dll";
 
 // Packages
 var ZIP_PACKAGE = PACKAGE_DIR + "NUnit.Framework-" + packageVersion + ".zip";
+
+//////////////////////////////////////////////////////////////////////
+// SUPPORTED FRAMEWORKS
+//////////////////////////////////////////////////////////////////////
+
+var LibraryFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitLibraryFrameworks").Split(';');
+var RuntimeFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitRuntimeFrameworks").Split(';');
+
+var NetCoreTestRuntimes = RuntimeFrameworks.Where(s => !s.StartsWith("net4")).ToArray();
+var NetFrameworkTestRuntime = RuntimeFrameworks.Where(s => s.StartsWith("net4")).Single();
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
@@ -180,7 +174,7 @@ Task("TestNetFramework")
     .OnError(exception => { ErrorDetail.Add(exception.Message); })
     .Does(() =>
     {
-        var runtime = "net462";
+        var runtime = NetFrameworkTestRuntime;
         var dir = NUNITFRAMEWORKTESTSBIN + runtime + "/";
         Information("Run tests for " + runtime + " in " + dir + "using runner");
         RunTest(dir + EXECUTABLE_NUNITLITE_TEST_RUNNER_EXE, dir, FRAMEWORK_TESTS, dir + "nunit.framework.tests.xml", runtime, ref ErrorDetail);
@@ -196,7 +190,7 @@ Task("TestNetFramework")
 var testCore = Task("TestNetCore")
     .Description("Tests the .NET Core (6.0+) version of the framework");
 
-foreach (var runtime in NetCoreTests)
+foreach (var runtime in NetCoreTestRuntimes)
 {
     var task = Task("TestNetCore on " + runtime)
         .Description("Tests the .NET Core (6.0+) version of the framework on " + runtime)
@@ -304,14 +298,13 @@ Task("CreateImage")
             }
         }    
         
-        foreach (var dir in NetCoreTests)
+        foreach (var dir in RuntimeFrameworks)
         {
             var targetDir = imageBinDir + Directory(dir);
             var sourceDir = NUNITLITERUNNERBIN + Directory(dir);
             Information("Copying " + sourceDir + " to " + targetDir);
             CopyDirectory(sourceDir, targetDir);
-        } 
-        CopyDirectory(NUNITLITERUNNERBIN + Directory("net462"),imageBinDir+Directory("net462"));
+        }
     });
 
 Task("PackageFramework")
