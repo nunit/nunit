@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using NUnit.Framework.Constraints;
 
@@ -109,7 +110,7 @@ namespace NUnit.Framework
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public static RegexConstraint Match(string pattern)
+        public static RegexConstraint Match([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
         {
             return new RegexConstraint(pattern);
         }

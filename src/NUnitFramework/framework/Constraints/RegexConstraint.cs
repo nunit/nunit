@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
@@ -34,7 +35,7 @@ namespace NUnit.Framework.Constraints
         /// Initializes a new instance of the <see cref="RegexConstraint"/> class.
         /// </summary>
         /// <param name="pattern">The pattern.</param>
-        public RegexConstraint(string pattern) : base(pattern)
+        public RegexConstraint([StringSyntax(StringSyntaxAttribute.Regex)] string pattern) : base(pattern)
         {
             _regex = new Regex(pattern);
         }

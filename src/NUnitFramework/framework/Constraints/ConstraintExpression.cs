@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace NUnit.Framework.Constraints
@@ -768,7 +769,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public RegexConstraint Match(string pattern)
+        public RegexConstraint Match([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
         {
             return (RegexConstraint)Append(new RegexConstraint(pattern));
         }
@@ -786,7 +787,7 @@ namespace NUnit.Framework.Constraints
         /// Returns a constraint that succeeds if the actual
         /// value matches the regular expression supplied as an argument.
         /// </summary>
-        public RegexConstraint Matches(string pattern)
+        public RegexConstraint Matches([StringSyntax(StringSyntaxAttribute.Regex)] string pattern)
         {
             return (RegexConstraint)Append(new RegexConstraint(pattern));
         }
