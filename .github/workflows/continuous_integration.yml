@@ -34,7 +34,7 @@ jobs:
       run: dotnet cake --target=Package --configuration=Release
 
     - name: 📦 Publish package
-      run: dotnet nuget push --skip-duplicate --source https://nuget.pkg.github.com/nunit/index.json --api-key "${{secrets.GITHUB_TOKEN}}" 'package/*.nupkg'
+      run: dotnet nuget push --skip-duplicate --source https://nuget.pkg.github.com/nunit/index.json --api-key "${{secrets.GITHUB_TOKEN}}" 'package\*.nupkg'
 
     - name: 💾 Upload build artifacts
       uses: actions/upload-artifact@v2
