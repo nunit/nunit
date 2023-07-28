@@ -22,7 +22,7 @@ namespace NUnit.Framework
         /// internally by NUnit but is provided to facilitate debugging.
         /// </param>
         public MultipleAssertException(ITestResult testResult)
-            : base(testResult?.Message)
+            : base(testResult.Message)
         {
             Guard.ArgumentNotNull(testResult, "testResult");
             TestResult = testResult;

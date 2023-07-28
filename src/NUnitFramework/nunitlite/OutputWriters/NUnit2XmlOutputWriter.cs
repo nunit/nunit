@@ -121,7 +121,7 @@ namespace NUnitLite
             switch (result.ResultState.Status)
             {
                 case TestStatus.Skipped:
-                    if (result.Message is not null)
+                    if (!string.IsNullOrEmpty(result.Message))
                         WriteReasonElement(result.Message);
                     break;
                 case TestStatus.Failed:

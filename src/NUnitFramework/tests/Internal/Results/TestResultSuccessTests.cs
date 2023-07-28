@@ -12,13 +12,6 @@ namespace NUnit.Framework.Tests.Internal.Results
         }
     }
 
-    public class TestResultSuccessWithNullReasonGivenTests : TestResultSuccessTests
-    {
-        public TestResultSuccessWithNullReasonGivenTests() : base(null, NoReasonNodeExpectedValidation)
-        {
-        }
-    }
-
     public class TestResultSuccessWithEmptyReasonGivenTests : TestResultSuccessTests
     {
         public TestResultSuccessWithEmptyReasonGivenTests() : base(string.Empty, NoReasonNodeExpectedValidation)
@@ -35,14 +28,14 @@ namespace NUnit.Framework.Tests.Internal.Results
 
     public abstract class TestResultSuccessTests : TestResultTests
     {
-        private readonly string? _successMessage;
+        private readonly string _successMessage;
         private readonly Action<TNode> _xmlReasonNodeValidation;
 
         public const string TestPassedReason = "Test passed!";
 
-        protected TestResultSuccessTests(string? ignoreReason, Action<TNode> xmlReasonNodeValidation)
+        protected TestResultSuccessTests(string successMessage, Action<TNode> xmlReasonNodeValidation)
         {
-            _successMessage = ignoreReason;
+            _successMessage = successMessage;
             _xmlReasonNodeValidation = xmlReasonNodeValidation;
         }
 

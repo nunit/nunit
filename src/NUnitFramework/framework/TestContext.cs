@@ -422,7 +422,7 @@ namespace NUnit.Framework
             /// Gets the message associated with a test
             /// failure or with not running the test
             /// </summary>
-            public string? Message => _result.Message;
+            public string Message => _result.Message;
 
             /// <summary>
             /// Gets any stack trace associated with an

@@ -16,7 +16,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void True(bool? condition, string? message, params object?[]? args)
+        public static void True(bool? condition, string message, params object?[]? args)
         {
             That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
@@ -27,7 +27,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void True(bool condition, string? message, params object?[]? args)
+        public static void True(bool condition, string message, params object?[]? args)
         {
             That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
@@ -56,7 +56,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsTrue(bool? condition, string? message, params object?[]? args)
+        public static void IsTrue(bool? condition, string message, params object?[]? args)
         {
             That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
@@ -67,7 +67,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsTrue(bool condition, string? message, params object?[]? args)
+        public static void IsTrue(bool condition, string message, params object?[]? args)
         {
             That(condition, Is.True, () => ConvertMessageWithArgs(message, args));
         }
@@ -101,7 +101,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void False(bool? condition, string? message, params object?[]? args)
+        public static void False(bool? condition, string message, params object?[]? args)
         {
             That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
@@ -113,7 +113,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void False(bool condition, string? message, params object?[]? args)
+        public static void False(bool condition, string message, params object?[]? args)
         {
             That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
@@ -144,7 +144,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsFalse(bool? condition, string? message, params object?[]? args)
+        public static void IsFalse(bool? condition, string message, params object?[]? args)
         {
             That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
@@ -156,7 +156,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="condition">The evaluated condition</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsFalse(bool condition, string? message, params object?[]? args)
+        public static void IsFalse(bool condition, string message, params object?[]? args)
         {
             That(condition, Is.False, () => ConvertMessageWithArgs(message, args));
         }
@@ -192,7 +192,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotNull(object? anObject, string? message, params object?[]? args)
+        public static void NotNull(object? anObject, string message, params object?[]? args)
         {
             That(anObject, Is.Not.Null, () => ConvertMessageWithArgs(message, args));
         }
@@ -214,7 +214,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotNull(object? anObject, string? message, params object?[]? args)
+        public static void IsNotNull(object? anObject, string message, params object?[]? args)
         {
             That(anObject, Is.Not.Null, () => ConvertMessageWithArgs(message, args));
         }
@@ -240,7 +240,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Null(object? anObject, string? message, params object?[]? args)
+        public static void Null(object? anObject, string message, params object?[]? args)
         {
             That(anObject, Is.Null, () => ConvertMessageWithArgs(message, args));
         }
@@ -262,7 +262,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="anObject">The object that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNull(object? anObject, string? message, params object?[]? args)
+        public static void IsNull(object? anObject, string message, params object?[]? args)
         {
             That(anObject, Is.Null, () => ConvertMessageWithArgs(message, args));
         }
@@ -288,7 +288,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNaN(double aDouble, string? message, params object?[]? args)
+        public static void IsNaN(double aDouble, string message, params object?[]? args)
         {
             That(aDouble, Is.NaN, () => ConvertMessageWithArgs(message, args));
         }
@@ -310,7 +310,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="aDouble">The value that is to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNaN(double? aDouble, string? message, params object?[]? args)
+        public static void IsNaN(double? aDouble, string message, params object?[]? args)
         {
             That(aDouble, Is.NaN, () => ConvertMessageWithArgs(message, args));
         }
@@ -337,7 +337,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsEmpty(string? aString, string? message, params object?[]? args)
+        public static void IsEmpty(string? aString, string message, params object?[]? args)
         {
             That(aString, new EmptyStringConstraint(), () => ConvertMessageWithArgs(message, args));
         }
@@ -362,7 +362,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsEmpty(IEnumerable collection, string? message, params object?[]? args)
+        public static void IsEmpty(IEnumerable collection, string message, params object?[]? args)
         {
             That(collection, new EmptyCollectionConstraint(), () => ConvertMessageWithArgs(message, args));
         }
@@ -392,7 +392,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="aString">The string to be tested</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotEmpty(string? aString, string? message, params object?[]? args)
+        public static void IsNotEmpty(string? aString, string message, params object?[]? args)
         {
             That(aString, Is.Not.Empty, () => ConvertMessageWithArgs(message, args));
         }
@@ -418,7 +418,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="collection">An array, list or other collection implementing ICollection</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void IsNotEmpty(IEnumerable collection, string? message, params object?[]? args)
+        public static void IsNotEmpty(IEnumerable collection, string message, params object?[]? args)
         {
             That(collection, Is.Not.Empty, () => ConvertMessageWithArgs(message, args));
         }
@@ -456,7 +456,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(int actual, string? message, params object?[]? args)
+        public static void Zero(int actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -484,7 +484,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Zero(uint actual, string? message, params object?[]? args)
+        public static void Zero(uint actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -508,7 +508,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(long actual, string? message, params object?[]? args)
+        public static void Zero(long actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -536,7 +536,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Zero(ulong actual, string? message, params object?[]? args)
+        public static void Zero(ulong actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -560,7 +560,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(decimal actual, string? message, params object?[]? args)
+        public static void Zero(decimal actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -584,7 +584,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(double actual, string? message, params object?[]? args)
+        public static void Zero(double actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -608,7 +608,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Zero(float actual, string? message, params object?[]? args)
+        public static void Zero(float actual, string message, params object?[]? args)
         {
             That(actual, Is.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -636,7 +636,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(int actual, string? message, params object?[]? args)
+        public static void NotZero(int actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -664,7 +664,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void NotZero(uint actual, string? message, params object?[]? args)
+        public static void NotZero(uint actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -688,7 +688,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(long actual, string? message, params object?[]? args)
+        public static void NotZero(long actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -716,7 +716,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void NotZero(ulong actual, string? message, params object?[]? args)
+        public static void NotZero(ulong actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -740,7 +740,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(decimal actual, string? message, params object?[]? args)
+        public static void NotZero(decimal actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -764,7 +764,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(double actual, string? message, params object?[]? args)
+        public static void NotZero(double actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -788,7 +788,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void NotZero(float actual, string? message, params object?[]? args)
+        public static void NotZero(float actual, string message, params object?[]? args)
         {
             That(actual, Is.Not.Zero, () => ConvertMessageWithArgs(message, args));
         }
@@ -816,7 +816,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(int actual, string? message, params object?[]? args)
+        public static void Positive(int actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -844,7 +844,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Positive(uint actual, string? message, params object?[]? args)
+        public static void Positive(uint actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -868,7 +868,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(long actual, string? message, params object?[]? args)
+        public static void Positive(long actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -896,7 +896,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Positive(ulong actual, string? message, params object?[]? args)
+        public static void Positive(ulong actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -922,7 +922,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(decimal actual, string? message, params object?[]? args)
+        public static void Positive(decimal actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -947,7 +947,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(double actual, string? message, params object?[]? args)
+        public static void Positive(double actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -971,7 +971,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Positive(float actual, string? message, params object?[]? args)
+        public static void Positive(float actual, string message, params object?[]? args)
         {
             That(actual, Is.Positive, () => ConvertMessageWithArgs(message, args));
         }
@@ -999,7 +999,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(int actual, string? message, params object?[]? args)
+        public static void Negative(int actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
@@ -1027,7 +1027,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Negative(uint actual, string? message, params object?[]? args)
+        public static void Negative(uint actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
@@ -1051,7 +1051,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(long actual, string? message, params object?[]? args)
+        public static void Negative(long actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
@@ -1079,7 +1079,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
         [CLSCompliant(false)]
-        public static void Negative(ulong actual, string? message, params object?[]? args)
+        public static void Negative(ulong actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
@@ -1105,7 +1105,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(decimal actual, string? message, params object?[]? args)
+        public static void Negative(decimal actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
@@ -1131,7 +1131,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(double actual, string? message, params object?[]? args)
+        public static void Negative(double actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }
@@ -1155,7 +1155,7 @@ namespace NUnit.Framework.Legacy
         /// <param name="actual">The number to be examined</param>
         /// <param name="message">The message to display in case of failure</param>
         /// <param name="args">Array of objects to be used in formatting the message</param>
-        public static void Negative(float actual, string? message, params object?[]? args)
+        public static void Negative(float actual, string message, params object?[]? args)
         {
             That(actual, Is.Negative, () => ConvertMessageWithArgs(message, args));
         }

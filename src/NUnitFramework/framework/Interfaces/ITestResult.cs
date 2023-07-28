@@ -63,7 +63,7 @@ namespace NUnit.Framework.Interfaces
         /// Gets the message associated with a test
         /// failure or with not running the test
         /// </summary>
-        string? Message
+        string Message
         {
             get;
         }

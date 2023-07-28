@@ -295,7 +295,7 @@ namespace NUnit.Framework.Internal.Execution
             }
         }
 
-        private void SkipFixture(ResultState resultState, string? message, string? stackTrace)
+        private void SkipFixture(ResultState resultState, string message, string? stackTrace)
         {
             Result.SetResult(resultState.WithSite(FailureSite.SetUp), message, StackFilter.DefaultFilter.Filter(stackTrace));
             SkipChildren(this, resultState.WithSite(FailureSite.Parent), "OneTimeSetUp: " + message);
@@ -336,9 +336,9 @@ namespace NUnit.Framework.Internal.Execution
             _teardownCommand?.Execute(Context);
         }
 
-        private string? GetSkipReason()
+        private string GetSkipReason()
         {
-            return (string?)Test.Properties.Get(PropertyNames.SkipReason);
+            return (string?)Test.Properties.Get(PropertyNames.SkipReason) ?? string.Empty;
         }
 
         private string? GetProviderStackTrace()
