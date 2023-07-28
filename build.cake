@@ -64,7 +64,7 @@ var LibraryFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/N
 var RuntimeFrameworks = XmlPeek(DIRECTORY_BUILD_PROPS, "/Project/PropertyGroup/NUnitRuntimeFrameworks").Split(';');
 
 var NetCoreTestRuntimes = RuntimeFrameworks.Where(s => !s.StartsWith("net4")).ToArray();
-var NetFrameworkTestRuntime = RuntimeFrameworks.Where(s => s.StartsWith("net4")).Single();
+var NetFrameworkTestRuntime = RuntimeFrameworks.Except(NetCoreTestRuntimes).Single();
 
 ///////////////////////////////////////////////////////////////////////////////
 // SETUP / TEARDOWN
