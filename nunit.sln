@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuGet.config = NuGet.config
 		NUnit.sln.DotSettings = NUnit.sln.DotSettings
 		README.md = README.md
+		THIRD_PARTY_NOTICES.md = THIRD_PARTY_NOTICES.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nunitlite", "src\NUnitFramework\nunitlite\nunitlite.csproj", "{A77D9156-0C6E-47EE-A03C-C458BFF4F5BE}"
