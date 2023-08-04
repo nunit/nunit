@@ -45,6 +45,7 @@ How to use this package:
     <file src="LICENSE.txt" />
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
+    <file src="THIRD_PARTY_NOTICES.md" />
     <file src="..\..\nuget\icon.png" />
     <file src="bin/net462/nunitlite.dll" target="lib\net462" />
     <file src="bin/net462/nunitlite.pdb" target="lib\net462" />

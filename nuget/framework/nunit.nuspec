@@ -34,6 +34,7 @@ Supported platforms:
     <file src="NOTICES.txt" />
     <file src="CHANGES.md" />
     <file src="README.md" />
+    <file src="THIRD_PARTY_NOTICES.md" />
     <file src="..\..\nuget\icon.png" />
     <file src="bin/net462/nunit.framework.dll" target="lib\net462" />
     <file src="bin/net462/nunit.framework.xml" target="lib\net462" />
