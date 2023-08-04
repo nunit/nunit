@@ -223,7 +223,8 @@ var RootFiles = new FilePath[]
     "LICENSE.txt",
     "NOTICES.txt",
     "CHANGES.md",
-    "README.md"
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
 };
 
 // Not all of these are present in every framework
