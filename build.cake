@@ -221,7 +221,7 @@ foreach (var runtime in NetCoreTestRuntimes)
 var RootFiles = new FilePath[]
 {
     "LICENSE.txt",
-    "NOTICES.txt",
+    "NOTICES.md",
     "CHANGES.md",
     "README.md",
     "THIRD_PARTY_NOTICES.md"

@@ -31,7 +31,7 @@ Supported platforms:
   </metadata>
   <files>
     <file src="LICENSE.txt" />
-    <file src="NOTICES.txt" />
+    <file src="NOTICES.md" />
     <file src="CHANGES.md" />
     <file src="README.md" />
     <file src="THIRD_PARTY_NOTICES.md" />

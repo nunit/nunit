@@ -43,7 +43,7 @@ How to use this package:
   </metadata>
   <files>
     <file src="LICENSE.txt" />
-    <file src="NOTICES.txt" />
+    <file src="NOTICES.md" />
     <file src="CHANGES.md" />
     <file src="THIRD_PARTY_NOTICES.md" />
     <file src="..\..\nuget\icon.png" />
